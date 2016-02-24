@@ -77,10 +77,11 @@ WSGI_APPLICATION = 'santropolFeast.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'USER': 'santropolUser',
-	'PASSWORD': 'santropolPass',
-	'HOST': '',
-	'NAME': 'santropolFeast',
+        'NAME': 'feast',
+        'USER': 'root',
+        'PASSWORD':'123456',
+        'HOST':'db',
+        'port':'3306',
     }
 }
 

@@ -1,0 +1,17 @@
+db:
+  image: mariadb
+
+
+  environment:
+    MYSQL_ROOT_PASSWORD: 123456
+    MYSQL_DATABASE: feast
+
+web:
+  build: .
+  command: python3 django/santropolfeast/manage.py runserver 0.0.0.0:8000
+  volumes:
+    - .:/code
+  ports:
+    - "8000:8000"
+  links:
+    - db
