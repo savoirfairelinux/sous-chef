@@ -28,7 +28,7 @@ class Address(models.Model):
 	apartment = models.CharField(max_length=10, verbose_name=_('Apartment number'))
 	floor= models.CharField(max_length=3, verbose_name=_('Floor number'))
 	city = models.CharField(max_length=50, verbose_name=_('City'))
-	postalcode = models.CharField(max_length=6, verbose_name=_('Postal code'))
+	postal_code = models.CharField(max_length=6, verbose_name=_('Postal code'))
 	member = models.ForeignKey(Member, verbose_name=_('Member'))
 
 
@@ -46,6 +46,8 @@ class Client(models.Model):
 		verbose_name_plural = _('Clients')
 
 	#Client information
-        billingAddress = models.ForeignKey(Address, verbose_name=_('Billing address'))	
+        billing_address = models.ForeignKey(Address, verbose_name=_('Billing address'))	
         member = models.ForeignKey(Member, verbose_name=_('Member'))
+        restrictions = models.ManyToManyField(Ingredient, related_name='restricted_clients'))
+        allergies = models.ManyToManyField(Allergy, related_name='allergic_clients'))
 
