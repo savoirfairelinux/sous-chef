@@ -8,9 +8,9 @@ db:
 
 web:
   build: .
-  command: python3 django/santropolfeast/manage.py runserver 0.0.0.0:8000
+  command: python3 manage.py runserver 0.0.0.0:8000
   volumes:
-    - .:/code
+    - santropolFeast/:/code
   ports:
     - "8000:8000"
   links:
