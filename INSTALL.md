@@ -8,21 +8,30 @@ https://docs.docker.com/engine/installation/
 2. docker-compose
 https://docs.docker.com/compose/install/
 
-## Python Dependancy
 
-1. django
-2. mysqlclient
+## Docker initialization
 
-##Configuration
+```
+git clone https://github.com/savoirfairelinux/santropol-feast/
+docker-compose build
+docker-compose up
+```
+docker must be up and running at this point.
 
-1. git clone project
-2. docker-compose build
-3. docker-compose up
-4. docker exec -it containerid (web django) bash
-5. python3 /django/santropolFeast/manage.py migrate
-6. python3 /django/santropolFeast/manage.py createsuperuser
+## Django initialization
+
+You need the docker container_id to execute bash. You can get the container_id by running ```docker ps```.
+
+```
+docker exec -it [container_id] bash
+python3 /django/santropolFeast/manage.py migrate
+python3 /django/santropolFeast/manage.py createsuperuser
+```
+
+## Connection to application
+
+To connect to the django application go to http://localhost:8000 .
 
 ##Troubleshooting
-1. "TERM environment not set"
-https://github.com/dockerfile/mariadb/issues/3
-2. "Cant connect to docker" Verify that you are root or sudo
+1. ```TERM environment not set``` https://github.com/dockerfile/mariadb/issues/3
+
