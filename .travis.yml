@@ -6,12 +6,14 @@ python:
 install:
   - pip install -r requirements.txt
   - pip install coveralls
+  - pip install pep8
 
 before_script:
-  mv django/santropolFeast/santropolFeast/settings_test.py django/santropolFeast/santropolFeast/settings.py
+  - mv django/santropolFeast/santropolFeast/settings_test.py django/santropolFeast/santropolFeast/settings.py
 
 script:
-  coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test
+  - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test
+  - pep8 --count --show-source django/santropolFeast/
 
 after_success:
-  coveralls
+  - coveralls
