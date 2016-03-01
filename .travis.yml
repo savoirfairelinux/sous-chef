@@ -7,7 +7,11 @@ install:
   - pip install -r requirements.txt
   - pip install coveralls
 
+before_script:
+  mv django/santropolFeast/santropolFeast/settings_test.py django/santropolFeast/santropolFeast/settings.py
+
 script:
   coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test
+
 after_success:
   coveralls
