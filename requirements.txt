@@ -1,2 +1,2 @@
-Django
-mysqlclient
+django==1.9.2
+mysqlclient==1.3.7
