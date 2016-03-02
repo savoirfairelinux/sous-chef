@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/savoirfairelinux/santropol-feast.svg?branch=master)](https://travis-ci.org/savoirfairelinux/santropol-feast)
+
 Santropol Roulant
 =================
 
@@ -9,3 +11,5 @@ Feast plateform
 ===============
 
 Based on Django framework.
+
+
