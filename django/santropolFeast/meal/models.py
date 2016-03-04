@@ -43,6 +43,6 @@ class Allergy(models.Model):
         'meal.Ingredient',
         related_name='related_allergies'
     )
-    
+
     def __str__(self):
         return self.nom
