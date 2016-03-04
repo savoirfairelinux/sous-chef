@@ -15,7 +15,7 @@ class Meal(models.Model):
         related_name='related_meals'
     )
 
-    def __str__( self ):
+    def __str__(self):
         return self.nom
 
 
@@ -27,8 +27,9 @@ class Ingredient(models.Model):
     # Ingredient information
     nom = models.CharField(max_length=50, verbose_name=_('name'))
 
-    def __str__( self ):
+    def __str__(self):
         return self.nom
+
 
 class Allergy(models.Model):
 
@@ -43,5 +44,5 @@ class Allergy(models.Model):
         related_name='related_allergies'
     )
     
-    def __str__( self ):
+    def __str__(self):
         return self.nom
