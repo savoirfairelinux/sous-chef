@@ -14,16 +14,16 @@ class Member(models.Model):
     class Meta:
         verbose_name_plural = _('members')
 
-        # Member information
-        firstname = models.CharField(
-            max_length=50,
-            verbose_name=_('firstname')
-        )
+    # Member information
+    firstname = models.CharField(
+        max_length=50,
+        verbose_name=_('firstname')
+    )
 
-        lastname = models.CharField(
-            max_length=50,
-            verbose_name=_('lastname')
-        )
+    lastname = models.CharField(
+        max_length=50,
+        verbose_name=_('lastname')
+    )
 
 
 class Address(models.Model):
@@ -63,7 +63,7 @@ class Address(models.Model):
     )
 
     member = models.ForeignKey(
-        'Member',
+        'member.Member',
         verbose_name=_('member')
     )
 
@@ -75,6 +75,7 @@ class Contact(models.Model):
 
     # Member contact information
     type = models.CharField(
+        max_length=100,
         choices=CONTACT_TYPE_CHOICES,
         verbose_name=_('contact_type')
     )
@@ -83,7 +84,7 @@ class Contact(models.Model):
         verbose_name=_('value')
     )
     member = models.ForeignKey(
-        'Member',
+        'member.Member',
         verbose_name=_('member')
     )
 
@@ -96,18 +97,18 @@ class Client(models.Model):
         # Client information
 
     billing_address = models.ForeignKey(
-        'Address',
+        'member.Address',
         verbose_name=_('billing_address')
     )
     member = models.ForeignKey(
-        'Member',
+        'member.Member',
         verbose_name=_('member')
     )
     restrictions = models.ManyToManyField(
-        'Ingredient',
+        'meal.Ingredient',
         related_name='restricted_clients'
     )
     allergies = models.ManyToManyField(
-        'Allergy',
+        'meal.Allergy',
         related_name='allergic_clients'
     )

@@ -26,6 +26,7 @@ class Order(models.Model):
     )
 
     type = models.CharField(
+        max_length=100,
         choices=ORDER_STATUS_CHOICES,
         verbose_name=_('order_status')
     )
@@ -36,12 +37,12 @@ class Order(models.Model):
     )
 
     client = models.ForeignKey(
-        'Client',
+        'member.Client',
         verbose_name=_('client')
     )
 
     order_items = models.ManyToManyField(
-        'OrderItem',
+        'order.OrderItem',
         related_name='order_items'
     )
 
@@ -53,7 +54,7 @@ class OrderItem(models.Model):
 
     # Foreign Key to meal to get information
     meal = models.ForeignKey(
-        'Meal',
+        'meal.Meal',
         verbose_name=_('meal')
     )
 

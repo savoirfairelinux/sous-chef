@@ -13,7 +13,7 @@ before_script:
 
 script:
   - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test
-  - pep8 --count --show-source django/santropolFeast/
+  - pep8 --count --show-source --exclude=migrations django/santropolFeast/
 
 after_success:
   - coveralls
