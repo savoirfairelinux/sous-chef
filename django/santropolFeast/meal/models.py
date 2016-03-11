@@ -8,7 +8,10 @@ class Meal(models.Model):
         verbose_name_plural = _('meals')
 
     # Meal information
-    nom = models.CharField(max_length=50, verbose_name=_('name'))
+    name = models.CharField(
+        max_length=50,
+        verbose_name=_('name')
+    )
     description = models.TextField(verbose_name=_('description'))
     ingredients = models.ManyToManyField(
         'meal.Ingredient',
@@ -16,7 +19,7 @@ class Meal(models.Model):
     )
 
     def __str__(self):
-        return self.nom
+        return self.name
 
 
 class Ingredient(models.Model):
@@ -25,10 +28,13 @@ class Ingredient(models.Model):
         verbose_name_plural = _('ingredients')
 
     # Ingredient information
-    nom = models.CharField(max_length=50, verbose_name=_('name'))
+    name = models.CharField(
+        max_length=50,
+        verbose_name=_('name')
+    )
 
     def __str__(self):
-        return self.nom
+        return self.name
 
 
 class Allergy(models.Model):
@@ -37,7 +43,10 @@ class Allergy(models.Model):
         verbose_name_plural = _('allergies')
 
     # Allergy information
-    nom = models.CharField(max_length=50, verbose_name=_('name'))
+    name = models.CharField(
+        max_length=50,
+        verbose_name=_('name')
+    )
     description = models.TextField(verbose_name=_('description'))
     ingredients = models.ManyToManyField(
         'meal.Ingredient',
@@ -45,4 +54,4 @@ class Allergy(models.Model):
     )
 
     def __str__(self):
-        return self.nom
+        return self.name
