@@ -32,8 +32,7 @@ class Address(models.Model):
         verbose_name_plural = _('addresses')
 
     # Member address information
-    number = models.CharField(
-        max_length=50,
+    number = models.PositiveIntegerField(
         verbose_name=_('street_number')
     )
 
@@ -42,12 +41,13 @@ class Address(models.Model):
         verbose_name=_('street')
     )
 
+    # Can look like B02 so can't be an IntegerField
     apartment = models.CharField(
         max_length=10,
         verbose_name=_('apartment')
     )
 
-    floor = models.CharField(
+    floor = models.IntegerField(
         max_length=3,
         verbose_name=_('floor')
     )
@@ -57,6 +57,7 @@ class Address(models.Model):
         verbose_name=_('city')
     )
 
+    # Montreal postal code look like H3E 1C2
     postal_code = models.CharField(
         max_length=6,
         verbose_name=_('postal_code')
@@ -98,7 +99,7 @@ class Client(models.Model):
 
     billing_address = models.ForeignKey(
         'member.Address',
-        verbose_name=_('billing_address')
+        verbose_name=_('billing_Address')
     )
     member = models.ForeignKey(
         'member.Member',
