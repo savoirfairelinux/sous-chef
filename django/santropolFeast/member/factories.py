@@ -1,6 +1,7 @@
 # coding=utf-8
 import factory
-from santropolFeast.member.models import Member, Address, Contact ,Client
+from santropolFeast.member.models import Member,Address,Contact,Client
+
 
 class MemberFactory (factory.DjangoModelFactory):
     class Meta:
@@ -22,13 +23,15 @@ class AdressFactory (factory.DjangoModelFactory):
     postal_code = "H3C2C2"
     Member = MemberFactory
 
+
 class ContactFactory (factory.DjangoModelFactory):
     class Meta:
         model = Contact
 
     type = "Home Phone"
-    value = "514-555-2556
+    value = "514-555-2556"
     Member = MemberFactory
+
 
 class ClientFactory (factory.DjangoModelFactory):
     class Meta:
