@@ -1,6 +1,6 @@
 # coding=utf-8
 import factory
-from santropolFeast.member.models import Member,Address,Contact,Client
+from santropolFeast.member.models import Member, Address, Contact, Client
 
 
 class MemberFactory (factory.DjangoModelFactory):
@@ -36,4 +36,3 @@ class ContactFactory (factory.DjangoModelFactory):
 class ClientFactory (factory.DjangoModelFactory):
     class Meta:
         model = Client
-
