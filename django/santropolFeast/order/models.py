@@ -21,7 +21,7 @@ class Order(models.Model):
         verbose_name_plural = _('orders')
 
     # Order information
-    order_date = models.DateField(
+    creation_date = models.DateField(
         verbose_name=_('date')
     )
 
@@ -60,5 +60,6 @@ class OrderItem(models.Model):
 
     price = models.DecimalField(
         max_digits=6,
-        decimal_places=2
+        decimal_places=2,
+        verbose_name=_('price')
     )
