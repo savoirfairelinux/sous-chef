@@ -8,9 +8,7 @@ CONTACT_TYPE_CHOICES = (
     ('Email', 4),
 )
 
-
 class Member(models.Model):
-
     class Meta:
         verbose_name_plural = _('members')
 
@@ -25,6 +23,15 @@ class Member(models.Model):
         verbose_name=_('lastname')
     )
 
+    gender = models.CharField(
+        max_length=1,
+        choices=(
+            (0, 'H'),
+            (1, 'F'),
+            (2, 'U'),
+        ),
+        default=2
+    )
 
 class Address(models.Model):
 
@@ -48,7 +55,6 @@ class Address(models.Model):
     )
 
     floor = models.IntegerField(
-        max_length=3,
         verbose_name=_('floor')
     )
 
@@ -91,7 +97,21 @@ class Contact(models.Model):
 
 
 class Client(models.Model):
+    PENDING='D'
+    ACTIVE='A'
+    PAUSED='S'
+    STOPNOCONTACT='N'
+    STOPCONTACT='C'
+    DECEASED='I'
 
+    CLIENT_STATUS = (
+        (PENDING, _('pending')),
+        (ACTIVE, _('active')),
+        (PAUSED, _('paused')),
+        (STOPNOCONTACT, _('stopnocontact')),
+        (STOPCONTACT, _('stopcontact')),
+        (DECEASED, _('deceased')),
+    )
     class Meta:
         verbose_name_plural = _('clients')
 
@@ -104,6 +124,11 @@ class Client(models.Model):
     member = models.ForeignKey(
         'member.Member',
         verbose_name=_('member')
+    )
+    status = models.CharField(
+        max_length=1,
+        choices=CLIENT_STATUS,
+        default=PENDING
     )
     restrictions = models.ManyToManyField(
         'meal.Ingredient',

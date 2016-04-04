@@ -3,6 +3,13 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Meal(models.Model):
+    REGULAR = 'R'
+    LARGE = 'L'
+
+    SIZE = (
+        (REGULAR, _('regular')),
+        (LARGE, _('large')),
+    )
 
     class Meta:
         verbose_name_plural = _('meals')
@@ -13,6 +20,11 @@ class Meal(models.Model):
         verbose_name=_('name')
     )
     description = models.TextField(verbose_name=_('description'))
+    size = models.CharField(
+        max_length=1,
+        choices=SIZE,
+        default=REGULAR
+    )
     ingredients = models.ManyToManyField(
         'meal.Ingredient',
         related_name='related_meals'
