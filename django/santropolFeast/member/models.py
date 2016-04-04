@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
 CONTACT_TYPE_CHOICES = (
     ('Home phone', 1),
@@ -25,6 +26,25 @@ class Member(models.Model):
         verbose_name=_('lastname')
     )
 
+    gender = models.CharField(
+        max_length=1,
+        choices=(
+            ('H', 'Homme'),
+            ('F', 'Femme'),
+            ('U', 'Inconnu'),
+        ),
+        default=1
+    )
+
+    birthdate = models.DateField(
+        auto_now=False,
+        auto_now_add=False,
+        default=timezone.now
+    )
+
+    def __str__(self):
+        return "{} {}".format(self.firstname, self.lastname)
+
 
 class Address(models.Model):
 
@@ -48,7 +68,6 @@ class Address(models.Model):
     )
 
     floor = models.IntegerField(
-        max_length=3,
         verbose_name=_('floor')
     )
 
@@ -80,10 +99,12 @@ class Contact(models.Model):
         choices=CONTACT_TYPE_CHOICES,
         verbose_name=_('contact_type')
     )
+
     value = models.CharField(
         max_length=50,
         verbose_name=_('value')
     )
+
     member = models.ForeignKey(
         'member.Member',
         verbose_name=_('member')
@@ -92,23 +113,48 @@ class Contact(models.Model):
 
 class Client(models.Model):
 
+    # Characters are used to keep a backward-compatibility
+    # with the previous system.
+    PENDING = 'D'
+    ACTIVE = 'A'
+    PAUSED = 'S'
+    STOPNOCONTACT = 'N'
+    STOPCONTACT = 'C'
+    DECEASED = 'I'
+
+    CLIENT_STATUS = (
+        (PENDING, _('pending')),
+        (ACTIVE, _('active')),
+        (PAUSED, _('paused')),
+        (STOPNOCONTACT, _('stopnocontact')),
+        (STOPCONTACT, _('stopcontact')),
+        (DECEASED, _('deceased')),
+    )
+
     class Meta:
         verbose_name_plural = _('clients')
-
-        # Client information
 
     billing_address = models.ForeignKey(
         'member.Address',
         verbose_name=_('billing_Address')
     )
+
     member = models.ForeignKey(
         'member.Member',
         verbose_name=_('member')
     )
+
+    status = models.CharField(
+        max_length=1,
+        choices=CLIENT_STATUS,
+        default=PENDING
+    )
+
     restrictions = models.ManyToManyField(
         'meal.Ingredient',
         related_name='restricted_clients'
     )
+
     allergies = models.ManyToManyField(
         'meal.Allergy',
         related_name='allergic_clients'
