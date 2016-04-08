@@ -52,6 +52,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'santropolFeast.urls'
@@ -63,6 +64,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.core.context_processors.i18n',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -125,6 +127,23 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+#not import the real utils here! We don't want an infiny loop
+gettext = lambda x: x
+
+#List of supported languages
+LANGUAGES = (
+   ('fr', gettext('French')),
+   ('en', gettext('English')),
+)
+
+LOCALE_PATHS = (
+    'meal/locale/',
+    'member/locale/',
+    'notification/locale/',
+    'order/locale/',
+)
+
 
 
 # Static files (CSS, JavaScript, Images)
