@@ -17,10 +17,28 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^meal/', include('meal.urls', namespace="meal")),
-    url(r'^member/', include('member.urls', namespace="member")),
-    url(r'^notification/', include('notification.urls', namespace="notification")),
-    url(r'^order/', include('order.urls', namespace="order")),
-    url(r'^pages/', include('page.urls', namespace="page")),
+    url(
+        r'^admin/',
+        admin.site.urls
+    ),
+    url(
+        r'^meal/',
+        include('meal.urls', namespace="meal")
+    ),
+    url(
+        r'^member/',
+        include('member.urls', namespace="member")
+    ),
+    url(
+        r'^notification/',
+        include('notification.urls', namespace="notification")
+    ),
+    url(
+        r'^order/',
+        include('order.urls', namespace="order")
+    ),
+    url(
+        r'^pages/',
+        include('page.urls', namespace="page")
+    ),
 ]
