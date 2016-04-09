@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'meal',
     'member',
     'order',
-    'notification'
+    'notification',
+    'page'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -128,10 +129,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-#not import the real utils here! We don't want an infiny loop
+# not import the real utils here! We don't want an infiny loop
 gettext = lambda x: x
 
-#List of supported languages
+# List of supported languages
 LANGUAGES = (
    ('fr', gettext('French')),
    ('en', gettext('English')),
@@ -142,8 +143,8 @@ LOCALE_PATHS = (
     'member/locale/',
     'notification/locale/',
     'order/locale/',
+    'page/locale/',
 )
-
 
 
 # Static files (CSS, JavaScript, Images)
