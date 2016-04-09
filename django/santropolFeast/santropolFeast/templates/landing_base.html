@@ -14,6 +14,9 @@
 </head>
 
 <body>
+    <!------------------
+    Top menu of the page
+    ------------------->
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -40,11 +43,41 @@
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
+
     <div class="row">
         <div class="col-sm-3">
             <p class="alert alert-info">Le menu devrais s'insérer ici.</p>
         </div>
         <div class="col-sm-9">
+            <!----------------------------------
+            Display message of context processor
+            ----------------------------------->
+            <div class="col-sm-offset-1 col-sm-10">
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.tags == 'error' %}
+                            <div class="alert alert-danger alert-dismissible" style="margin-top: 10px;">
+                        {% elif message.tags == 'success'%}
+                            <div class="alert alert-success alert-dismissible" style="margin-top: 10px;">
+                        {% elif message.tags == 'info'%}
+                            <div class="alert alert-info alert-dismissible" style="margin-top: 10px;">
+                        {% elif message.tags == 'warning'%}
+                            <div class="alert alert-warning alert-dismissible" style="margin-top: 10px;">
+                        {% else %}
+                            <div class="alert alert-info alert-dismissible" style="margin-top: 10px;">
+                        {% endif %}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-----------------
+            Content of the page
+            ------------------>
             {%block content%}{%endblock%}
         </div>
     </div>
