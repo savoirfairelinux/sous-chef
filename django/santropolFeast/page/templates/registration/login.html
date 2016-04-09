@@ -1,0 +1,47 @@
+{% extends "landing_base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block title %}CDVU | Home{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-header">
+                <h2>A propos du CDVU</h2>
+            </div>
+            <p class="text-justify">Le Comité du développement de la vie universitaire vise à améliorer la vie étudiante à l’École. Le comité a pour mission de proposer des projets à l’Association afin d’affecter ses surplus budgétaires. Le comité doit favoriser la concertation étudiante quant à ces projets ou à tout autres projet concernant la vie étudiante à l’École. Le Comité du développement de la vie universitaire siège sur le Comité de concertation à la vie étudiante de l’École.</p>
+        </div>
+        <div class="col-sm-5 col-sm-offset-1">
+            {% if not user.username %}
+            <div class="page-header">
+                <h1>Connexion : </h1>
+            </div>
+            <form method="post" action='{% url "pages:home" %}'>{% csrf_token%}
+                <div class="form-group">
+                    <label class="control-label" for="id_username">Courriel étudiant</label>
+                    <input class="form-control" id="id_username" maxlength="254" name="username" placeholder="prénom.nom.2@ens.etsmtl.ca" required="required" title="" type="text" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="id_password">Password</label>
+                    <input class="form-control" id="id_password" name="password" placeholder="Password" required="required" title="" type="password" />
+                </div>
+
+                <input type="hidden" name="next" value="{{ next }}"/>
+                <button type="submit" class="btn btn-default">Connexion</button> ou <a href="{% url 'pages:register'%}">s'inscrire</a>
+            </form>
+            {% else %}
+            <div class="alert alert-info text-justify">
+                <h2>Le saviez-vous?</h2>
+                <p>
+                    Cette plateforme est développé sous licence <em>GNU General Public License</em> qui est une licence libre, vous avez donc la possibilité de voir notre code source er de vous assurer de l'anonymat que nous vous offrons lorsque vous voter sur notre plateforme.
+                </p>
+                <p>
+                    Cette licence vous donne aussi la possibilité de contribuer librement à l'amélioration de cet outil afin de nous aider à répondre aux mieux à vos attentes.
+                </p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
