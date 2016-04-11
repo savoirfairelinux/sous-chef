@@ -1,0 +1,13 @@
+# coding=utf-8
+
+import factory
+from meal.model import Meal, Ingredient, Allergy
+
+class MealFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Meal
+
+    nom = "Tomato Soupe"
+    description = "A Simple Tomato Soupe"
+    Ingredients = ()
+
