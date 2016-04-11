@@ -25,6 +25,7 @@
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
+            {% if user.username %}
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
@@ -36,11 +37,12 @@
                             <li><a href="#">Mon profil</a></li>
                             <li><a href="#">Modifier mon mot de passe</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#">Déconnexion</a></li>
+                            <li><a href="{% url 'page:logout' %}">Déconnexion</a></li>
                         </ul>
                     </li>
                 </ul>
             </div><!-- /.navbar-collapse -->
+            {% endif %}
         </div><!-- /.container-fluid -->
     </nav>
 
