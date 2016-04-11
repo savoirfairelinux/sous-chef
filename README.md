@@ -10,6 +10,8 @@ Lien vers le projet sur le site de la Maison du Logiciel Libre: https://maisonlo
 Feast plateform
 ===============
 
+Notre workflow est disponible à cette adresse: https://waffle.io/savoirfairelinux/santropol-feast
+
 Based on Django framework: https://www.djangoproject.com/
 
 
