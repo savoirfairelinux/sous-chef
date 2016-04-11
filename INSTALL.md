@@ -35,4 +35,3 @@ You should now be ready to run the Django application by pointing your browser t
 
 1. ```TERM environment not set```: https://github.com/dockerfile/mariadb/issues/3
 2. ```listen tcp 0.0.0.0:8000: bind: address already in use``` : an another application already uses the 8000 port. Vagrant applications often use the same port for instance. Locate the application and shut it down, or select an other port.
-
