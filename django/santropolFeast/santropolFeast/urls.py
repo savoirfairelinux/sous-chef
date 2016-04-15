@@ -38,7 +38,7 @@ urlpatterns = [
         include('order.urls', namespace="order")
     ),
     url(
-        r'^pages/',
+        r'^p/',
         include('page.urls', namespace="page")
     ),
 ]

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}Feast On Wheels{% endblock %}
+    </title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css" rel="stylesheet">
+
+    {% block extrahead %}{% endblock %}
+
+    <style type="text/css">
+        body {
+          background-color: #DADADA;
+        }
+        body > .grid {
+          height: 100%;
+        }
+        .image {
+          margin-top: -100px;
+        }
+        .column {
+          max-width: 450px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ui middle aligned center aligned grid">
+
+        <div class="column">
+            {%block content%}{%endblock%}
+        </div>
+
+    </div>
+
+    <script src="{% static 'jquery/jquery-2.2.2.min.js' %}" type="application/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js" type="application/javascript"></script>
+
+    <!-- WARNING :  Do not move this line before a manual import of script! -->
+    {% block extrajs %}{% endblock %}
+</body>
+
+</html>

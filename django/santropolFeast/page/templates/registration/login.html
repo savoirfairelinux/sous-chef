@@ -1,24 +1,39 @@
-{% extends "base.html" %}
+{% extends "splash.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
 
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<div class="ui main text container">
-    <h1 class="ui header">Login</h1>
-    <p>This is the login page</p>
+<h2 class="ui teal image header">
+    <div class="content">
+        Log-in to your account
+    </div>
+</h2>
 
-    {% if not user.username %}
-    <form method="post" action='{% url "page:home" %}'>{% csrf_token%}
-        {{form.as_p}}
+{% if not user.username %}
+<form method="post" action='{% url "page:home" %}' class="ui large form">{% csrf_token%}
+    <div class="ui stacked segment">
+        <div class="field">
+            <div class="ui left icon input">
+                <i class="user icon"></i>
+                <input id="id_username" maxlength="254" name="username" type="text" placeholder="Username" pb-role="username">
+            </div>
+        </div>
+        <div class="field">
+            <div class="ui left icon input">
+                <i class="lock icon"></i>
+                <input id="id_password" name="password" placeholder="Password" type="password">
+            </div>
+        </div>
 
         <input type="hidden" name="next" value="{{ next }}"/>
-        <button type="submit" class="btn btn-default">Login</button>
-    </form>
-    {% else %}
-        <p>Connecté</p>
-    {% endif %}
-</div>
+
+        <button class="ui fluid large teal button" type="submit">Login</button>
+    </div>
+</form>
+{% else %}
+    <p>Connecté</p>
+{% endif %}
 
 {% endblock %}
