@@ -9,6 +9,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+
 def logout_view(request):
     logout(request)
     messages.add_message(
@@ -18,6 +19,7 @@ def logout_view(request):
     )
     # Redirect to a success page.
     return HttpResponseRedirect(reverse_lazy("page:home"))
+
 
 @login_required
 def home(request):

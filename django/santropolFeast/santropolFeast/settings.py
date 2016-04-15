@@ -140,8 +140,8 @@ gettext = lambda x: x
 
 # List of supported languages
 LANGUAGES = (
-   ('fr', gettext('French')),
-   ('en', gettext('English')),
+    ('fr', gettext('French')),
+    ('en', gettext('English')),
 )
 
 LOCALE_PATHS = (
