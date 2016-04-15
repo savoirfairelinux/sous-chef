@@ -1,4 +1,4 @@
-{% extends "landing_base.html" %}
+{% extends "base.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
 
@@ -9,7 +9,7 @@
         <div class="col-sm-12 text-center">
             {% if not user.username %}
             <div class="page-header">
-                <h1>Connexion : </h1>
+                <h1>Connexion</h1>
             </div>
             <form method="post" action='{% url "page:home" %}'>{% csrf_token%}
                 {{form.as_p}}
