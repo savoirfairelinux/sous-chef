@@ -118,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGIN_URL = reverse_lazy('page:home')
+LOGIN_URL = reverse_lazy('page:login')
 LOGIN_REDIRECT_URL = reverse_lazy('page:home')
 
 
