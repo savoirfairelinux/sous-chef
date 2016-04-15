@@ -84,3 +84,23 @@ class ClientAllergiesUpdate(generic.UpdateView):
         # You can use for example reverse_lazy()
 
         return 0
+
+
+class ClientPreferenceUpdate(generic.UpdateView):
+    # Display the form to update preference of a client
+    model = Client
+    template_name = "client/update.html"
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        # Here you need to check if the client exist
+        # You can use for example get_object_or_404()
+        # note: self.kwargs["pk"] is the ID of the client given by the urls.py
+
+        return super(ClientPreferenceUpdate, self).dispatch(*args, **kwargs)
+
+    def get_success_url(self):
+        # Here you redirect to the next page
+        # You can use for example reverse_lazy()
+
+        return 0
