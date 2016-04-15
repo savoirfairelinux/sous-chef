@@ -14,25 +14,89 @@
 </head>
 
 <body>
+
     <div class="ui borderless main menu">
         <div class="ui text container">
             <div href="#" class="header item">
                 <img class="logo" src="{% static 'assets/logo.png' %}" title="Logo Feast"/>Feast On Wheels
             </div>
-            <a href="{% url 'page:login' %}" class="item">Login</a>
-            <a href="#" class="item">Page 2</a>
+            <a href="{% url 'page:login' %}" class="item">Link 1</a>
+            <a href="#" class="item">Link 2</a>
+            <a href="#" class="ui right floated dropdown item"><img src="{% static 'assets/katrina.jpg' %}" class="ui circular avatar image">
+                <div class="content">
+                    <div class="ui sub header">Katrina</div>
+                    Coordinator
+                </div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="item">
+                         <div class="item">Logout</div>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 
     <div class="ui text container">
 
+        <div class="ui message">
+            <div class="header">
+                Messages
+            </div>
+            <ul class="list">
+                <li>You can now have cover images on blog pages</li>
+                <li>Drafts will now auto-save while writing</li>
+            </ul>
+        </div>
+
         {%block content%}{%endblock%}
 
     </div>
 
+    <div class="ui inverted vertical footer segment">
+        <div class="ui center aligned container">
+            <div class="ui stackable inverted divided grid">
+                <div class="four wide column">
+                    <h4 class="ui inverted header">Links</h4>
+                    <div class="ui inverted link list">
+                        <a href="#" class="item">Site Map</a>
+                        <a href="#" class="item">Contact Us</a>
+                        <a href="#" class="item">Terms and Conditions</a>
+                        <a href="#" class="item">Privacy Policy</a>
+                    </div>
+                </div>
+
+                <div class="four wide column">
+                    <h4 class="ui inverted header">Group 2</h4>
+                    <div class="ui inverted link list">
+                        <a href="#" class="item">Link One</a>
+                        <a href="#" class="item">Link Two</a>
+                        <a href="#" class="item">Link Three</a>
+                        <a href="#" class="item">Link Four</a>
+                    </div>
+                </div>
+
+                <div class="seven wide column">
+                    <h4 class="ui inverted header">About the Roulant</h4>
+                    <p>Santropol Roulant is an intergenerational community food hub where we grow, prepare and deliver food. In doing so, we create a continuum of engaging services that help build a stronger social fabric, and increase food security and social inclusion for Montrealers.</p>
+                </div>
+            </div>
+            <div class="ui inverted section divider"></div>
+            <img src="{% static 'assets/logo.png' %}" class="ui centered mini image">
+            <div class="ui horizontal inverted small divided link list">
+                <p>Made with &nbsp;<i class="heart teal icon"></i> in Montreal, Canada</p>
+            </div>
+        </div>
+    </div>
+
     <script src="{% static 'jquery/jquery-2.2.2.min.js' %}" type="application/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js" type="application/javascript"></script>
-
+    <script type="text/javascript">
+        $('.ui.dropdown')
+            .dropdown({
+                transition: 'drop'
+            });
+    </script>
     <!-- WARNING :  Do not move this line before a manual import of script! -->
     {% block extrajs %}{% endblock %}
 </body>
