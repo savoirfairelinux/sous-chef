@@ -1,4 +1,7 @@
 {% extends "splash.html" %}
+
+{% load staticfiles %}
+
 <!-- Load internationalisation utils-->
 {% load i18n %}
 
@@ -6,6 +9,7 @@
 
 {% block content %}
 <h2 class="ui teal image header">
+    <img src="{% static 'assets/logo.png' %}" class="image">
     <div class="content">
         Log-in to your account
     </div>
