@@ -2,6 +2,7 @@ from django.test import TestCase
 from member.models import Member
 from datetime import date
 
+
 class MemberTestCase(TestCase):
 
     def setUp(self):
