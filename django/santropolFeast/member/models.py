@@ -52,9 +52,9 @@ class Member(models.Model):
         Returns integer specifying person's age in years on date given.
 
         >>> from datetime import date
-        >>> p = Member()
+        >>> p = Member(birthdate=date(1950, 4, 19)
         >>> p.age_on_date(date(2016, 4, 19))
-        85
+        66
         """
         if date < self.birthdate:
             return 0
