@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
+import math
+
 CONTACT_TYPE_CHOICES = (
     ('Home phone', 1),
     ('Cell phone', 2),
@@ -44,6 +46,19 @@ class Member(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.firstname, self.lastname)
+
+    def age_on_date(self, date):
+        """
+        Returns integer specifying person's age in years on date given.
+
+        >>> from datetime import date
+        >>> p = Member()
+        >>> p.age_on_date(date(2016, 4, 19))
+        85
+        """
+        if date < self.birthdate:
+            return 0
+        return math.floor((date - self.birthdate).days / 365)
 
 
 class Address(models.Model):
