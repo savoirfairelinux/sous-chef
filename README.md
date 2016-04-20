@@ -1,5 +1,6 @@
-[![Stories in Ready](https://badge.waffle.io/savoirfairelinux/santropol-feast.png?label=ready&title=Ready)](https://waffle.io/savoirfairelinux/santropol-feast)
 [![Build Status](https://travis-ci.org/savoirfairelinux/santropol-feast.svg?branch=master)](https://travis-ci.org/savoirfairelinux/santropol-feast)
+[![Coverage Status](https://coveralls.io/repos/github/savoirfairelinux/santropol-feast/badge.svg?branch=dev)](https://coveralls.io/github/savoirfairelinux/santropol-feast?branch=dev)
+[![Stories in Ready](https://badge.waffle.io/savoirfairelinux/santropol-feast.png?label=ready&title=Ready)](https://waffle.io/savoirfairelinux/santropol-feast)
 
 Santropol Roulant
 =================
