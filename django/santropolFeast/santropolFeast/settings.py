@@ -90,7 +90,7 @@ DATABASES = {
         'NAME': 'feast',
         'USER': 'root',
         'PASSWORD': '123456',
-        'HOST': '127.0.0.1',
+        'HOST': 'db',
         'port': '3306',
     }
 }
