@@ -28,19 +28,163 @@ class ClientList(generic.ListView):
         return context
 
 
-class ClientView(generic.DetailView):
+class ClientInfoView(generic.DetailView):
     # Display detail of one client
     model = Client
-    template_name = 'client/detail.html'
+    template_name = 'client/view/information.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(ClientView, self).dispatch(*args, **kwargs)
+        return super(ClientInfoView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(ClientView, self).get_context_data(**kwargs)
+        context = super(ClientInfoView, self).get_context_data(**kwargs)
 
-        # Here you add some variable of context to display on template
+        """
+        Here we need to add some variable of context to send to template :
+         1 - A string active_tab who can be:
+            'info'
+            'referent'
+            'address'
+            'payment'
+            'allergies'
+            'preferences'
+        """
+        context['myVariableOfContext'] = 0
+
+        return context
+
+
+class ClientReferentView(generic.DetailView):
+    # Display detail of one client
+    model = Client
+    template_name = 'client/view/referent.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ClientReferentView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ClientReferentView, self).get_context_data(**kwargs)
+
+        """
+        Here we need to add some variable of context to send to template :
+         1 - A string active_tab who can be:
+            'info'
+            'referent'
+            'address'
+            'payment'
+            'allergies'
+            'preferences'
+        """
+        context['myVariableOfContext'] = 0
+
+        return context
+
+
+class ClientAddressView(generic.DetailView):
+    # Display detail of one client
+    model = Client
+    template_name = 'client/view/address.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ClientAddressView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ClientAddressView, self).get_context_data(**kwargs)
+
+        """
+        Here we need to add some variable of context to send to template :
+         1 - A string active_tab who can be:
+            'info'
+            'referent'
+            'address'
+            'payment'
+            'allergies'
+            'preferences'
+        """
+        context['myVariableOfContext'] = 0
+
+        return context
+
+
+class ClientPaymentView(generic.DetailView):
+    # Display detail of one client
+    model = Client
+    template_name = 'client/view/payment.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ClientPaymentView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ClientPaymentView, self).get_context_data(**kwargs)
+
+        """
+        Here we need to add some variable of context to send to template :
+         1 - A string active_tab who can be:
+            'info'
+            'referent'
+            'address'
+            'payment'
+            'allergies'
+            'preferences'
+        """
+        context['myVariableOfContext'] = 0
+
+        return context
+
+
+class ClientAllergiesView(generic.DetailView):
+    # Display detail of one client
+    model = Client
+    template_name = 'client/view/allergies.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ClientAllergiesView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ClientAllergiesView, self).get_context_data(**kwargs)
+
+        """
+        Here we need to add some variable of context to send to template :
+         1 - A string active_tab who can be:
+            'info'
+            'referent'
+            'address'
+            'payment'
+            'allergies'
+            'preferences'
+        """
+        context['myVariableOfContext'] = 0
+
+        return context
+
+
+class ClientPreferencesView(generic.DetailView):
+    # Display detail of one client
+    model = Client
+    template_name = 'client/view/preferences.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ClientPreferencesView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ClientPreferencesView, self).get_context_data(**kwargs)
+
+        """
+        Here we need to add some variable of context to send to template :
+         1 - A string active_tab who can be:
+            'info'
+            'referent'
+            'address'
+            'payment'
+            'allergies'
+            'preferences'
+        """
         context['myVariableOfContext'] = 0
 
         return context
@@ -49,7 +193,7 @@ class ClientView(generic.DetailView):
 class MemberUpdate(generic.UpdateView):
     # Display the form to update a member
     model = Member
-    template_name = "member/update.html"
+    template_name = "client/update.html"
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -64,6 +208,23 @@ class MemberUpdate(generic.UpdateView):
         # You can use for example reverse_lazy()
 
         return 0
+
+    def get_context_data(self, **kwargs):
+        context = super(MemberUpdate, self).get_context_data(**kwargs)
+
+        """
+        Here we need to add some variable of context to send to template :
+         1 - A string active_tab who can be:
+            'info'
+            'referent'
+            'address'
+            'payment'
+            'allergies'
+            'preferences'
+        """
+        context['myVariableOfContext'] = 0
+
+        return context
 
 
 class ClientAllergiesUpdate(generic.UpdateView):
@@ -85,8 +246,25 @@ class ClientAllergiesUpdate(generic.UpdateView):
 
         return 0
 
+    def get_context_data(self, **kwargs):
+        context = super(ClientAllergiesUpdate, self).get_context_data(**kwargs)
 
-class ClientPreferenceUpdate(generic.UpdateView):
+        """
+        Here we need to add some variable of context to send to template :
+         1 - A string active_tab who can be:
+            'info'
+            'referent'
+            'address'
+            'payment'
+            'allergies'
+            'preferences'
+        """
+        context['myVariableOfContext'] = 0
+
+        return context
+
+
+class ClientPreferencesUpdate(generic.UpdateView):
     # Display the form to update preference of a client
     model = Client
     template_name = "client/update.html"
@@ -97,10 +275,28 @@ class ClientPreferenceUpdate(generic.UpdateView):
         # You can use for example get_object_or_404()
         # note: self.kwargs["pk"] is the ID of the client given by the urls.py
 
-        return super(ClientPreferenceUpdate, self).dispatch(*args, **kwargs)
+        return super(ClientPreferencesUpdate, self).dispatch(*args, **kwargs)
 
     def get_success_url(self):
         # Here you redirect to the next page
         # You can use for example reverse_lazy()
 
         return 0
+
+    def get_context_data(self, **kwargs):
+        context = super(ClientPreferencesUpdate, self).\
+            get_context_data(**kwargs)
+
+        """
+        Here we need to add some variable of context to send to template :
+         1 - A string active_tab who can be:
+            'info'
+            'referent'
+            'address'
+            'payment'
+            'allergies'
+            'preferences'
+        """
+        context['myVariableOfContext'] = 0
+
+        return context
