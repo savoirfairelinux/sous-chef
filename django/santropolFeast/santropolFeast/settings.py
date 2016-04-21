@@ -118,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGIN_URL = reverse_lazy('page:home')
+LOGIN_URL = reverse_lazy('page:login')
 LOGIN_REDIRECT_URL = reverse_lazy('page:home')
 
 
@@ -140,8 +140,8 @@ gettext = lambda x: x
 
 # List of supported languages
 LANGUAGES = (
-   ('fr', gettext('French')),
-   ('en', gettext('English')),
+    ('fr', gettext('French')),
+    ('en', gettext('English')),
 )
 
 LOCALE_PATHS = (

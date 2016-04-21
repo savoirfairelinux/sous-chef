@@ -12,7 +12,7 @@ before_script:
   - mv django/santropolFeast/santropolFeast/settings_test.py django/santropolFeast/santropolFeast/settings.py
 
 script:
-  - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test
+  - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test member
   - pep8 --count --show-source --exclude=migrations django/santropolFeast/
 
 after_success:
