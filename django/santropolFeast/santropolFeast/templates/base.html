@@ -22,18 +22,17 @@
             </div>
             <a href="{% url 'page:login' %}" class="item">Link 1</a>
             <a href="#" class="item">Link 2</a>
-            <a href="#" class="ui right floated dropdown item"><img src="{% static 'assets/katrina.jpg' %}" class="ui circular avatar image">
+            <div class="ui right floated dropdown item">
+                <img src="{% static 'assets/katrina.jpg' %}" class="ui circular avatar image">
                 <div class="content">
                     <div class="ui sub header">Katrina</div>
                     Coordinator
                 </div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                    <div class="item">
-                         <div class="item">Logout</div>
-                    </div>
+                    <a href="{% url 'page:logout' %}" class="item">Logout</a>
                 </div>
-            </a>
+            </div>
         </div>
     </div>
 

@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url
 from page import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = patterns(
     '',
@@ -15,7 +16,8 @@ urlpatterns = patterns(
     ),
     url(
         r'^logout$',
-        views.logout_view,
+        'django.contrib.auth.views.logout',
+        {'next_page': '/'},
         name='logout'
     ),
 
