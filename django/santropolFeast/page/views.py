@@ -17,8 +17,10 @@ def home(request):
 
 
 def custom_login(request):
+    '''Custom login function.
+
+    Redirects user to homepage if already logged in.'''
     if request.user.is_authenticated():
-        # Redirect to home if already logged in.
         return HttpResponseRedirect(reverse_lazy("page:home"))
     else:
         return login(request)
