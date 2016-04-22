@@ -5,7 +5,7 @@
         <img src="{% static 'assets/katrina.jpg' %}">
     </div>
     <div class="content">
-        <a class="header">Katrina</a>
+        <a class="header">{{ request.user.username }}</a>
         <div class="meta">
             <span class="date">Joined in 2010</span>
         </div>
