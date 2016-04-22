@@ -70,6 +70,7 @@ class Member(models.Model):
             print(c.type)
         return self.member_contact.filter(type=HOME).first() or ''
 
+
 class Address(models.Model):
 
     class Meta:
