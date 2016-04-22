@@ -6,8 +6,20 @@
 
 {% block content %}
 
-<!--
-    1 - We need the list of clients
--->
-
+    <table class="ui celled striped padded table" style="margin-bottom:40px"> <!--TODO: Replace margin-bottom with real styling-->
+    <th class="single line">{% trans 'Gender' %}</th>
+    <th class="single line">{% trans 'First Name' %}</th>
+    <th class="single line">{% trans 'Last Name' %}</th>
+    <th class="single line">{% trans 'Phone Number' %}</th>
+    <th class="single line">{% trans 'Referant' %}</th>
+    {% for client in clients %}
+        <tr>
+            <td>{{ client.member.gender }}</td>
+            <td>{{ client.member.firstname }}</td>
+            <td>{{ client.member.lastname }}</td>
+            <td>{{ client.member.get_home_phone.value }}</td>
+            <td>TBD</td>
+        </tr>
+    {% endfor %}
+    </table>
 {% endblock %}

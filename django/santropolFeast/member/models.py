@@ -4,11 +4,16 @@ from django.utils import timezone
 
 import math
 
+HOME = 'Home phone'
+CELL = 'Cell phone'
+WORK = 'Work phone'
+EMAIL = 'Email'
+
 CONTACT_TYPE_CHOICES = (
-    ('Home phone', 1),
-    ('Cell phone', 2),
-    ('Work phone', 3),
-    ('Email', 4),
+    (HOME, HOME),
+    (CELL, CELL),
+    (WORK, WORK),
+    (EMAIL, EMAIL),
 )
 
 
@@ -60,6 +65,10 @@ class Member(models.Model):
             return 0
         return math.floor((date - self.birthdate).days / 365)
 
+    def get_home_phone(self):
+        for c in self.member_contact.all():
+            print(c.type)
+        return self.member_contact.filter(type=HOME).first() or ''
 
 class Address(models.Model):
 
@@ -124,7 +133,8 @@ class Contact(models.Model):
 
     member = models.ForeignKey(
         'member.Member',
-        verbose_name=_('member')
+        verbose_name=_('member'),
+        related_name='member_contact'
     )
 
 

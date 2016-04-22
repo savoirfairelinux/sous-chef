@@ -8,16 +8,13 @@ from member.models import Client, Member
 
 class ClientList(generic.ListView):
     # Display the list of clients
+    model = Client
     template_name = 'client/list.html'
-    context_object_name = 'client'
+    context_object_name = 'clients'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ClientList, self).dispatch(*args, **kwargs)
-
-    def get_queryset(self):
-        # Here you need to return the list of clients
-        return 0
 
     def get_context_data(self, **kwargs):
         context = super(ClientList, self).get_context_data(**kwargs)
