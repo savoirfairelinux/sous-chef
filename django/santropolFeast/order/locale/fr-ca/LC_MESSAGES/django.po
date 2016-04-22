@@ -3,76 +3,76 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-04-08 18:56+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2016-04-21 20:13-0400\n"
+"Language: fr_CA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: Julie Moussu <julie.moussu@savoirfairelinux.com>\n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.8.4\n"
 
 #: order/models.py:5
 msgid "ordered"
-msgstr ""
+msgstr "commandée"
 
 #: order/models.py:6
 msgid "delivered"
-msgstr ""
+msgstr "livrée"
 
 #: order/models.py:7
 msgid "no_charge"
-msgstr ""
+msgstr "non facturée"
 
 #: order/models.py:8
 msgid "paid"
-msgstr ""
+msgstr "payée"
 
 #: order/models.py:12
 msgid "half"
-msgstr ""
+msgstr "moitié"
 
 #: order/models.py:13
 msgid "regular"
-msgstr ""
+msgstr "standard"
 
 #: order/models.py:14
 msgid "double"
-msgstr ""
+msgstr "double"
 
 #: order/models.py:21
 msgid "orders"
-msgstr ""
+msgstr "commandes"
 
 #: order/models.py:25
 msgid "date"
-msgstr ""
+msgstr "date"
 
 #: order/models.py:31
 msgid "order_status"
-msgstr ""
+msgstr "statut de la commande"
 
 #: order/models.py:36
 msgid "value"
-msgstr ""
+msgstr "valeur"
 
 #: order/models.py:41
 msgid "client"
-msgstr ""
+msgstr "client"
 
 #: order/models.py:53
 msgid "order_items"
-msgstr ""
+msgstr "éléments de la commande"
 
 #: order/models.py:58
 msgid "meal"
-msgstr ""
+msgstr "repas"
 
 #: order/models.py:64
 msgid "price"
-msgstr ""
+msgstr "prix"
