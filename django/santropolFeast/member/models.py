@@ -79,11 +79,13 @@ class Address(models.Model):
     # Can look like B02 so can't be an IntegerField
     apartment = models.CharField(
         max_length=10,
-        verbose_name=_('apartment')
+        verbose_name=_('apartment'),
+        blank=True
     )
 
     floor = models.IntegerField(
-        verbose_name=_('floor')
+        verbose_name=_('floor'),
+        blank=True
     )
 
     city = models.CharField(
@@ -174,10 +176,12 @@ class Client(models.Model):
 
     restrictions = models.ManyToManyField(
         'meal.Ingredient',
-        related_name='restricted_clients'
+        related_name='restricted_clients',
+        blank=True
     )
 
     allergies = models.ManyToManyField(
         'meal.Allergy',
-        related_name='allergic_clients'
+        related_name='allergic_clients',
+        blank=True
     )
