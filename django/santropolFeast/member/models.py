@@ -159,12 +159,25 @@ class Client(models.Model):
         (DECEASED, _('deceased')),
     )
 
+    FACTURATION_TYPE = (
+        ('default', _('default')),
+        ('low income',_('low income')),
+        ('solidary',_('solidary')),
+    )
+
     class Meta:
         verbose_name_plural = _('clients')
 
     billing_address = models.ForeignKey(
         'member.Address',
-        verbose_name=_('billing_Address')
+        verbose_name=_('Billing Address')
+    )
+
+    facturation = models.CharField(
+        verbose_name=_('Billing type'),
+        max_length=10,
+        choices=FACTURATION_TYPE,
+        default='default'
     )
 
     member = models.ForeignKey(
@@ -174,7 +187,7 @@ class Client(models.Model):
 
     emergency_contact = models.ForeignKey(
         'member.Member',
-        verbose_name=_('emergency_contact'),
+        verbose_name=_('Emergency Contact'),
         related_name='emergency_contact',
         null=True,
     )
@@ -195,12 +208,4 @@ class Client(models.Model):
         'meal.Allergy',
         related_name='allergic_clients',
         blank=True
-    )
-
-    facturation = models.CharField(
-        max_length=1,
-        choices=('default',
-                 'low income',
-                 'solidary'),
-        default='default'
     )
