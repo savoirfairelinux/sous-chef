@@ -11,7 +11,7 @@ urlpatterns = patterns(
     ),
     url(
         r'^login$',
-        'django.contrib.auth.views.login',
+        views.custom_login,
         name='login'
     ),
     url(
