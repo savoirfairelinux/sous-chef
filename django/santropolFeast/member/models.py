@@ -196,3 +196,11 @@ class Client(models.Model):
         related_name='allergic_clients',
         blank=True
     )
+
+    facturation = models.CharField(
+        max_length=1,
+        choices=('default',
+                 'low income',
+                 'solidary'),
+        default='default'
+    )
