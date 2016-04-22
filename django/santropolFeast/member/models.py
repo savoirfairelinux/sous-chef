@@ -159,6 +159,13 @@ class Client(models.Model):
         verbose_name=_('member')
     )
 
+    emergency_contact = models.ForeignKey(
+        'member.Member',
+        verbose_name=_('emergency_contact'),
+        related_name='emergency_contact',
+        null=True,
+    )
+
     status = models.CharField(
         max_length=1,
         choices=CLIENT_STATUS,
