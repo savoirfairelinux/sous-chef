@@ -3,104 +3,104 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-04-08 18:56+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2016-04-21 19:43-0400\n"
+"Language: fr_CA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: Julie Moussu <julie.moussu@savoirfairelinux.com>\n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.8.4\n"
 
 #: member/models.py:16
 msgid "members"
-msgstr ""
+msgstr "membres"
 
 #: member/models.py:21
 msgid "firstname"
-msgstr ""
+msgstr "prénom"
 
 #: member/models.py:26
 msgid "lastname"
-msgstr ""
+msgstr "nom"
 
 #: member/models.py:52
 msgid "addresses"
-msgstr ""
+msgstr "adresses"
 
 #: member/models.py:56
 msgid "street_number"
-msgstr ""
+msgstr "numéro de rue"
 
 #: member/models.py:61
 msgid "street"
-msgstr ""
+msgstr "rue"
 
 #: member/models.py:67
 msgid "apartment"
-msgstr ""
+msgstr "appartement"
 
 #: member/models.py:71
 msgid "floor"
-msgstr ""
+msgstr "étage"
 
 #: member/models.py:76
 msgid "city"
-msgstr ""
+msgstr "ville"
 
 #: member/models.py:82
 msgid "postal_code"
-msgstr ""
+msgstr "code postal"
 
 #: member/models.py:87 member/models.py:110 member/models.py:144
 msgid "member"
-msgstr ""
+msgstr "membre"
 
 #: member/models.py:94
 msgid "contacts"
-msgstr ""
+msgstr "contacts"
 
 #: member/models.py:100
 msgid "contact_type"
-msgstr ""
+msgstr "type de contact"
 
 #: member/models.py:105
 msgid "value"
-msgstr ""
+msgstr "valeur"
 
 #: member/models.py:126
 msgid "pending"
-msgstr ""
+msgstr "en attente"
 
 #: member/models.py:127
 msgid "active"
-msgstr ""
+msgstr "actif"
 
 #: member/models.py:128
 msgid "paused"
-msgstr ""
+msgstr "en pause"
 
 #: member/models.py:129
 msgid "stopnocontact"
-msgstr ""
+msgstr "arrêté - pas de contact"
 
 #: member/models.py:130
 msgid "stopcontact"
-msgstr ""
+msgstr "arrêté - en contact"
 
 #: member/models.py:131
 msgid "deceased"
-msgstr ""
+msgstr "décédé"
 
 #: member/models.py:135
 msgid "clients"
-msgstr ""
+msgstr "clients"
 
 #: member/models.py:139
 msgid "billing_Address"
-msgstr ""
+msgstr "adresse de facturation"
