@@ -11,7 +11,13 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+.. autosummary::
+   :toctree: _autosummary
 
+   member.views
+
+.. automodule:: member
+   :members:
 
 Indices and tables
 ==================
