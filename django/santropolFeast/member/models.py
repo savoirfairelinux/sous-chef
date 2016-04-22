@@ -161,8 +161,8 @@ class Client(models.Model):
 
     FACTURATION_TYPE = (
         ('default', _('default')),
-        ('low income',_('low income')),
-        ('solidary',_('solidary')),
+        ('low income', _('low income')),
+        ('solidary', _('solidary')),
     )
 
     class Meta:
