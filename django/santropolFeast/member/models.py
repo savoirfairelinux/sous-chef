@@ -159,12 +159,25 @@ class Client(models.Model):
         (DECEASED, _('deceased')),
     )
 
+    FACTURATION_TYPE = (
+        ('default', _('default')),
+        ('low income', _('low_income')),
+        ('solidary', _('solidary')),
+    )
+
     class Meta:
         verbose_name_plural = _('clients')
 
     billing_address = models.ForeignKey(
         'member.Address',
         verbose_name=_('billing_Address')
+    )
+
+    facturation = models.CharField(
+        verbose_name=_('facturation_type'),
+        max_length=10,
+        choices=FACTURATION_TYPE,
+        default='default'
     )
 
     member = models.ForeignKey(
