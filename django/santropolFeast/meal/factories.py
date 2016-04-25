@@ -8,22 +8,40 @@ class MealFactory(factory.DjangoModelFactory):
     class Meta:
         model = Meal
 
-    nom = "Tomato Soupe"
+    name = "Tomato Soupe"
     description = "A Simple Tomato Soupe"
-    Ingredients = "Tomato"
+    size = "R"
+
+    @classmethod
+    def __init__(self, **kwargs):
+        name = kwargs.pop("name", None)
+
+        meal = super(MealFactory, self).__init__(self, **kwargs)
+        meal.save()
 
 
 class IngredientFactory(factory.DjangoModelFactory):
     class Meta:
         model = Ingredient
 
-    Ingredient = "Tomato"
+    name = "Tomato"
+
+    @classmethod
+    def __init__(self, **kwargs):
+        name = kwargs.pop('name', None)
+        ingredients = super(IngredientFactory, self).__init__(self, **kwargs)
+        ingredients.save()
 
 
 class AllergyFactory(factory.DjangoModelFactory):
     class Meta:
         model = Allergy
 
-    nom = "Tomato"
+    name = "Tomato"
     description = "A Simple Tomato"
-    Ingredient = "Tomato"
+
+    @classmethod
+    def __init__(self, **kwargs):
+        name = kwargs.pop("name", None)
+        allergy = super(AllergyFactory, self).__init__(self, **kwargs)
+        allergy.save()
