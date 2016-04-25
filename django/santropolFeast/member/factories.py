@@ -10,6 +10,13 @@ class MemberFactory (factory.DjangoModelFactory):
     firstname = "VaÈËÇç"
     lastname = "ËÏÉéè"
 
+    @classmethod
+    def __init__(self, **kwargs):
+        contact = kwargs.pop('contact', None)
+        address = kwargs.pop('address', None)
+        member = super(MemberFactory, self).__init__(self, **kwargs)
+        member.save()
+
 
 class AdressFactory (factory.DjangoModelFactory):
     class Meta:
