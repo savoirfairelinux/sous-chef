@@ -36,11 +36,11 @@ class Member(models.Model):
     gender = models.CharField(
         max_length=1,
         choices=(
-            ('M', 'Male'),
-            ('F', 'Female'),
-            ('U', 'Unknown'),
+            ('M', _('male')),
+            ('F', _('female')),
+            ('U', _('unknown')),
         ),
-        default=2
+        default='U'
     )
 
     birthdate = models.DateField(
