@@ -67,3 +67,25 @@ class Allergy(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Menu(models.Model):
+
+    class Meta:
+        verbose_name_plural = _('menus')
+
+    # Menu information
+    name = models.CharField(
+        max_length=50,
+        verbose_name=_('name')
+    )
+
+    date = models.DateField(verbose_name=_('date'))
+
+    ingredients = models.ManyToManyField(
+        'meal.Ingredient',
+        related_name='related_menus'
+    )
+
+    def __str__(self):
+        return self.name
