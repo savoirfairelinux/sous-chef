@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+import datetime
 
 import math
 
@@ -209,3 +210,22 @@ class Client(models.Model):
         related_name='allergic_clients',
         blank=True
     )
+
+
+class Referencing (models.Model):
+
+    class Meta:
+        verbose_name_plural = _('referents')
+
+    referent = models.ForeignKey('member.Member',
+                                 verbose_name=_('referent'))
+
+    client = models.ForeignKey('member.Client',
+                               verbose_name=_('client'))
+
+    referral_reason = models.TextField(
+            verbose_name=_("referral_reason"))
+
+    date = models.DateField(verbose_name=_("referral_date"),
+                            auto_now=False, auto_now_add=False,
+                            default=datetime.date.today())
