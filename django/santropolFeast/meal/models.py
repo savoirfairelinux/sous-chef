@@ -27,7 +27,7 @@ class Meal(models.Model):
     )
     ingredients = models.ManyToManyField(
         'meal.Ingredient',
-        related_name='related_meals'
+        related_name='meals'
     )
 
     def __str__(self):
@@ -62,7 +62,7 @@ class Allergy(models.Model):
     description = models.TextField(verbose_name=_('description'))
     ingredients = models.ManyToManyField(
         'meal.Ingredient',
-        related_name='related_allergies'
+        related_name='allergies'
     )
 
     def __str__(self):
@@ -84,7 +84,7 @@ class Menu(models.Model):
 
     ingredients = models.ManyToManyField(
         'meal.Ingredient',
-        related_name='related_menus'
+        related_name='menus'
     )
 
     def __str__(self):
