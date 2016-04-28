@@ -17,6 +17,7 @@
 
 {% if not user.username %}
 <form method="post" action='' class="ui large form">{% csrf_token%}
+    <div class="ui error message"></div>
     <div class="ui stacked segment">
         <div class="field">
             <div class="ui left icon input">
@@ -36,6 +37,45 @@
         <button class="ui fluid large teal button" type="submit">Login</button>
     </div>
 </form>
+
+
+<script type="text/javascript">
+document.addEventListener( 'DOMContentLoaded', function () {
+
+
+
+        $('.ui.large.form')
+    .form({
+        on: 'submit', revalidate: 'false',
+        fields: {
+        username: {
+            identifier: 'username',
+            rules: [
+            {
+                type   : 'empty',
+                prompt : 'Please enter a username'
+            }
+            ]
+        },
+        password: {
+            identifier: 'password',
+            rules: [
+            {
+                type   : 'empty',
+                prompt : 'Please enter a password'
+            },
+            {
+                type   : 'minLength[6]',
+                prompt : 'Your password must be at least {ruleValue} characters'
+            }
+            ]
+      }
+    }
+  })
+}, false );
+
+</script>
+
 {% else %}
     <p>Connecté</p>
 {% endif %}
