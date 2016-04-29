@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 import datetime
@@ -229,3 +231,33 @@ class Referencing (models.Model):
     date = models.DateField(verbose_name=_("referral_date"),
                             auto_now=False, auto_now_add=False,
                             default=datetime.date.today())
+
+
+class Profile(models.Model):
+
+    class Meta:
+        verbose_name_plural = _('profiles')
+
+    user = models.OneToOneField(
+        User,
+        verbose_name=_('user'),
+    )
+
+    avatar = models.ImageField(
+        upload_to='avatars/',
+        null=True,
+        blank=True,
+        verbose_name=_('avatar'),
+    )
+
+    description = models.CharField(
+        max_length=20,
+        verbose_name=_('description')
+    )
+
+
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+post_save.connect(create_user_profile, sender=User)

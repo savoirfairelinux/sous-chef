@@ -23,10 +23,14 @@
             <a href="{% url 'page:login' %}" class="item">Link 1</a>
             <a href="#" class="item">Link 2</a>
             <div class="ui right floated dropdown item">
+                {% if profile.avatar %}
+                <img src="/media/{{ profile.avatar }}" class="ui circular avatar image">
+                {% else %}
                 <img src="{% static 'assets/katrina.jpg' %}" class="ui circular avatar image">
+                {% endif %}
                 <div class="content">
                     <div class="ui sub header">{{request.user.username}}</div>
-                    Coordinator
+                    {{profile.description}}
                 </div>
                 <i class="dropdown icon"></i>
                 <div class="menu">

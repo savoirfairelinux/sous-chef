@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.conf import settings
 
 from page.views import home
 
@@ -43,5 +44,10 @@ urlpatterns = [
         r'^p/',
         include('page.urls', namespace="page")
     ),
-    url(r'^$', home, name='home')
+    url(r'^$', home, name='home'),
+    url(
+        r'^media/(?P<path>.*)$',
+        'django.views.static.serve',
+        {'document_root': settings.MEDIA_ROOT}
+    ),
 ]
