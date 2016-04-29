@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+from django.contrib.auth.models import User
 import datetime
 
 import math
@@ -229,3 +230,33 @@ class Referencing (models.Model):
     date = models.DateField(verbose_name=_("referral_date"),
                             auto_now=False, auto_now_add=False,
                             default=datetime.date.today())
+
+
+class Note (models.Model):
+
+    class Meta:
+        verbose_name_plural = _('notes')
+
+    note = models.TextField(verbose_name=_('text_note'))
+
+    author = models.ForeignKey(
+            User,
+            verbose_name=_('author'),
+            related_name='notes'
+    )
+
+    creation_date = models.DateField(
+            verbose_name=_('creation_date'),
+            auto_now_add=True
+    )
+
+    is_read = models.BooleanField(
+            verbose_name=_('is_read'),
+            default=False
+    )
+
+    member = models.ForeignKey(
+        'member.Member',
+        verbose_name=_('member'),
+        related_name='notes'
+    )
