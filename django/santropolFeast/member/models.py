@@ -212,6 +212,11 @@ class Client(models.Model):
         blank=True
     )
 
+    alert = models.TextField(
+        verbose_name=_('alert_client'),
+        blank=True
+    )
+
 
 class Referencing (models.Model):
 
