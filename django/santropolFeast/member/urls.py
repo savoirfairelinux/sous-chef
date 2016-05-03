@@ -5,6 +5,6 @@ from member.views import *
 
 urlpatterns = patterns(
     '',
-    url(_(r'^clients/$'),
-        ClientList.as_view(), name='client_list'),
+    url(_(r'^list/$'),
+        ClientList.as_view(), name='list'),
 )
