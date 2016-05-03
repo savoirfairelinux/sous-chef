@@ -7,35 +7,37 @@
 {% block title %}Homepage{% endblock %}
 
 {% block content %}
-<h1 class="ui teal image header">Welcome !</h1>
+<h1 class="ui teal image header">Welcome {{request.user.username}} !</h1>
 
 <div class="two column stackable ui grid padded">
     <div class="column">
             <div class="ui card">
                 <div class="content">
-                    <div class="header">Heartbeat</div>
+                    <div class="header">Notification</div>
                 </div>
                 <div class="content">
-                    <h4 class="ui sub header">Activity</h4>
                     <div class="ui small feed">
                         <div class="event">
                             <div class="content">
                                 <div class="summary">
-                                    <a>Pier Line</a> added <a>Jenny Hess</a> to the project
+                                    Notification 1
+                                    <i class="hide icon"></i>
                                 </div>
                             </div>
                         </div>
                         <div class="event">
                             <div class="content">
                                 <div class="summary">
-                                    <a>Katrina Astrid Heyde</a> was added as an <a>Administrator</a>
+                                    Notification 2
+                                    <i class="hide icon"></i>
                                 </div>
                             </div>
                         </div>
                         <div class="event">
                             <div class="content">
                                 <div class="summary">
-                                    <a>Helen Troy</a> added two clients
+                                    Notification 3
+                                    <i class="hide icon"></i>
                                 </div>
                             </div>
                         </div>
