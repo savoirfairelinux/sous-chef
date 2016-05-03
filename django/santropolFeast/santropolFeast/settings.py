@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'member',
     'order',
     'notification',
-    'page'
+    'page',
+    'formtools',
 ]
 
 MIDDLEWARE_CLASSES = [

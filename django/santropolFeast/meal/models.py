@@ -1,6 +1,12 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+ALLERGY_CHOICES = (
+    ('Tomato', _('Tomato')),
+    (('Milk'), _('Milk')),
+    (('Peanut'), _('Peanut'))
+)
+
 
 class Meal(models.Model):
     REGULAR = 'R'

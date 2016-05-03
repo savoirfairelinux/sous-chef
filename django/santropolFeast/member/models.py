@@ -11,11 +11,23 @@ CELL = 'Cell phone'
 WORK = 'Work phone'
 EMAIL = 'Email'
 
+GENDER_CHOICES = (
+    ('M', _('male')),
+    ('F', _('female')),
+    ('U', _('unknown')),
+)
+
 CONTACT_TYPE_CHOICES = (
     (HOME, HOME),
     (CELL, CELL),
     (WORK, WORK),
     (EMAIL, EMAIL),
+)
+
+FACTURATION_TYPE = (
+    ('default', _('default')),
+    ('low income', _('low_income')),
+    ('solidary', _('solidary')),
 )
 
 
@@ -37,14 +49,10 @@ class Member(models.Model):
 
     gender = models.CharField(
         max_length=1,
-        choices=(
-            ('M', _('male')),
-            ('F', _('female')),
-            ('U', _('unknown')),
-        ),
         default='U',
         blank="True",
-        null="True"
+        null="True",
+        choices=GENDER_CHOICES,
     )
 
     birthdate = models.DateField(
@@ -168,12 +176,6 @@ class Client(models.Model):
         (STOPNOCONTACT, _('stopnocontact')),
         (STOPCONTACT, _('stopcontact')),
         (DECEASED, _('deceased')),
-    )
-
-    FACTURATION_TYPE = (
-        ('default', _('default')),
-        ('low income', _('low_income')),
-        ('solidary', _('solidary')),
     )
 
     class Meta:

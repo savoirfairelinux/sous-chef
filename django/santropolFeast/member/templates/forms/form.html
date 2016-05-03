@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block head %}
+{{ wizard.form.media}}
+{% endblock %}
+
+{% block content %}
+
+<div class="ui two column grid">
+  <div class="column">
+    <div class="ui fluid vertical steps">
+      {% if wizard.steps.step1 == 1 %}
+        <div class="step active">
+      {% else %}
+            <div class="completed step">
+                {% endif %}
+        <i class="male icon"></i>
+        <div class="content">
+          <div class="title">Client Information</div>
+        </div>
+      </div>
+            {% if wizard.steps.step1 == 2 %}
+      <div class="step active">
+          {% elif wizard.steps.step1 >= 3 %}
+          <div class="completed step">
+          {% else %}
+          <div class="step">
+              {% endif %}
+        <i class="home icon"></i>
+        <div class="content">
+          <div class="title"> Address Information</div>
+        </div>
+      </div>
+              {% if wizard.steps.step1 == 3 %}
+        <div class="step active">
+              {% elif wizard.steps.step1 >= 4 %}
+            <div class="completed step">
+                {% else %}
+                <div class="step">
+                    {% endif %}
+            <i class="treatment icon"></i>
+            <div class="content">
+                <div class="title">Referent information</div>
+            </div>
+        </div>
+                {% if wizard.steps.step1 == 4 %}
+        <div class="step active">
+            {% elif wizard.steps.step1 >= 5%}
+            <div class="completed step">
+                {% else %}
+                <div class="step">
+                    {% endif %}
+            <i class="dollar icon"></i>
+            <div class="content">
+                <div class="title">Payment information</div>
+        </div>
+    </div>
+      {% if wizard.steps.step1 == 5 %}
+      <div class="step active">
+        {% elif wizard.steps.step1 == 6 %}
+        <div class="completed step">
+          {% else %}
+          <div class="step">
+            {% endif %}
+            <i class="food icon"></i>
+              <div class="content">
+                <div class="title">Dietary information</div>
+              </div>
+            </div>
+            {% if wizard.steps.step1 == 6 %}
+            <div class="step active">
+              {% else %}
+              <div class="step">
+                {% endif %}
+                <i class="first aid icon"></i>
+                <div class="content">
+                  <div class="title">Emergency contact</div>
+                </div>
+              </div>
+          </div>
+        </div>
+      <div class="column">
+<form action="" method="post">{% csrf_token %}
+    <table class="ui compact table">
+        {{wizard.management_form}}
+
+        {% if wizard.form.forms %}
+
+            {{wizard.form.management_form}}
+
+            {% for form in wizard.form.forms}
+
+
+                {{ form }}
+
+        {% else %}
+
+            {{wizard.form}}
+
+        {% endif %}
+    </table>
+    {% if wizard.steps.prev %}
+
+    <button class="ui secondary left labeled icon button" name="wizard_goto_step" type="submit" value="{{wizard.steps.first}}">
+        <i class="fast backward icon"></i>
+        {% trans "First Step" %}
+    </button>
+    <button class="ui secondary left labeled icon button" name="wizard_goto_step" type="submit" value="{{wizard.steps.prev}}">
+        <i class="left arrow icon"></i>
+        {% trans "Previous Step"%}
+    </button>
+
+    {% endif %}
+
+    {% if wizard.steps.step1 == 6 %}
+    <input class="ui primary button" type="submit"/>
+
+    {% else %}
+    <button  class="ui primary right labeled icon button" name="wizard_goto_step" type="submit"><i class="right arrow icon"></i>Next Step </button>
+
+    {% endif %}
+
+</form>
+  </div>
+</div>
+
+
+{% endblock %}
