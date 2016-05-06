@@ -238,7 +238,7 @@ class Referencing (models.Model):
                                verbose_name=_('client'))
 
     referral_reason = models.TextField(
-            verbose_name=_("referral_reason"))
+        verbose_name=_("referral_reason"))
 
     date = models.DateField(verbose_name=_("referral_date"),
                             auto_now=False, auto_now_add=False,
@@ -253,19 +253,19 @@ class Note (models.Model):
     note = models.TextField(verbose_name=_('text_note'))
 
     author = models.ForeignKey(
-            User,
-            verbose_name=_('author'),
-            related_name='notes'
+        User,
+        verbose_name=_('author'),
+        related_name='notes'
     )
 
     creation_date = models.DateField(
-            verbose_name=_('creation_date'),
-            auto_now_add=True
+        verbose_name=_('creation_date'),
+        auto_now_add=True
     )
 
     is_read = models.BooleanField(
-            verbose_name=_('is_read'),
-            default=False
+        verbose_name=_('is_read'),
+        default=False
     )
 
     member = models.ForeignKey(

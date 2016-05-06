@@ -6,7 +6,8 @@ from datetime import date
 class MemberTestCase(TestCase):
 
     def setUp(self):
-        Member.objects.create(firstname='Katrina', lastname='Heide', birthdate=date(1980, 4, 19))
+        Member.objects.create(firstname='Katrina',
+                              lastname='Heide', birthdate=date(1980, 4, 19))
 
     def test_age_on_date(self):
         """The age on given date is properly computed"""
@@ -16,6 +17,6 @@ class MemberTestCase(TestCase):
         self.assertEqual(katrina.age_on_date(katrina.birthdate), 0)
 
     def test_str_is_fullname(self):
-        """The member model must be rendered using the firstname and the lastname"""
+        """A member must be listed using his/her fullname"""
         member = Member.objects.get(firstname='Katrina')
         self.assertEqual(str(member), 'Katrina Heide')
