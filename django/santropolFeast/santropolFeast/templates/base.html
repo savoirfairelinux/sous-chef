@@ -15,7 +15,7 @@
 <body>
 
     <div class="ui borderless main menu">
-        <div class="ui text container">
+        <div class="ui container">
             <a href="{%url 'page:home'%}">
             <div class="header item">
                 <img class="logo" src="{% static 'assets/logo.png' %}" title="Logo Feast"/>Feast On Wheels
@@ -62,9 +62,12 @@
         </div>
     </div>
 
-    <div class="ui text container">
+    <div class="ui container">
+
+        {% include "breadcrumb.html" %}
 
         <div class="ui message">
+            <i class="close icon"></i>
             <div class="header">
                 Messages
             </div>
@@ -110,6 +113,15 @@
             .dropdown({
                 transition: 'drop'
             });
+
+        $('.message .close')
+            .on('click', function() {
+                $(this)
+                    .closest('.message')
+                    .transition('fade')
+                    ;
+                })
+            ;
     </script>
     <!-- WARNING :  Do not move this line before a manual import of script! -->
     {% block extrajs %}{% endblock %}
