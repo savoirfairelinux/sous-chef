@@ -92,12 +92,14 @@ class Address(models.Model):
     apartment = models.CharField(
         max_length=10,
         verbose_name=_('apartment'),
-        blank=True
+        blank=True,
+        null=True,
     )
 
     floor = models.IntegerField(
         verbose_name=_('floor'),
-        blank=True
+        blank=True,
+        null=True,
     )
 
     city = models.CharField(
@@ -115,6 +117,9 @@ class Address(models.Model):
         'member.Member',
         verbose_name=_('member')
     )
+
+    def __str__(self):
+        return "{} {}".format(self.number, self.street)
 
 
 class Contact(models.Model):
