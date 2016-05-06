@@ -84,16 +84,8 @@ WSGI_APPLICATION = 'santropolFeast.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'feast',
-        'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': '',
-        'port': '3306',
-    }
-}
+import dj-database-url
+DATABASES['default'] =  dj_database_url.config()
 
 
 # Password validation
