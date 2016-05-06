@@ -92,12 +92,14 @@ class Address(models.Model):
     apartment = models.CharField(
         max_length=10,
         verbose_name=_('apartment'),
-        blank=True
+        blank=True,
+        null=True,
     )
 
     floor = models.IntegerField(
         verbose_name=_('floor'),
-        blank=True
+        blank=True,
+        null=True,
     )
 
     city = models.CharField(
@@ -115,6 +117,9 @@ class Address(models.Model):
         'member.Member',
         verbose_name=_('member')
     )
+
+    def __str__(self):
+        return "{} {}".format(self.number, self.street)
 
 
 class Contact(models.Model):
@@ -217,6 +222,9 @@ class Client(models.Model):
         blank=True
     )
 
+    def __str__(self):
+        return self.member
+
 
 class Referencing (models.Model):
 
@@ -230,7 +238,7 @@ class Referencing (models.Model):
                                verbose_name=_('client'))
 
     referral_reason = models.TextField(
-            verbose_name=_("referral_reason"))
+        verbose_name=_("referral_reason"))
 
     date = models.DateField(verbose_name=_("referral_date"),
                             auto_now=False, auto_now_add=False,
@@ -245,19 +253,19 @@ class Note (models.Model):
     note = models.TextField(verbose_name=_('text_note'))
 
     author = models.ForeignKey(
-            User,
-            verbose_name=_('author'),
-            related_name='notes'
+        User,
+        verbose_name=_('author'),
+        related_name='notes'
     )
 
     creation_date = models.DateField(
-            verbose_name=_('creation_date'),
-            auto_now_add=True
+        verbose_name=_('creation_date'),
+        auto_now_add=True
     )
 
     is_read = models.BooleanField(
-            verbose_name=_('is_read'),
-            default=False
+        verbose_name=_('is_read'),
+        default=False
     )
 
     member = models.ForeignKey(
