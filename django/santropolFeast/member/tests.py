@@ -1,12 +1,12 @@
 from django.test import TestCase
-from member.models import Member
+from member.models import Member, Client
 from datetime import date
 
 
 class MemberTestCase(TestCase):
 
     def setUp(self):
-        Member.objects.create(firstname='Katrina', birthdate=date(1980, 4, 19))
+        Member.objects.create(firstname='Katrina', lastname='Heide', birthdate=date(1980, 4, 19))
 
     def test_age_on_date(self):
         """The age on given date is properly computed"""
@@ -14,3 +14,8 @@ class MemberTestCase(TestCase):
         self.assertEqual(katrina.age_on_date(date(2016, 4, 19)), 36)
         self.assertEqual(katrina.age_on_date(date(1950, 4, 19)), 0)
         self.assertEqual(katrina.age_on_date(katrina.birthdate), 0)
+
+    def test_str_is_fullname(self):
+        """The member model must be rendered using the firstname and the lastname"""
+        member = Member.objects.get(firstname='Katrina')
+        self.assertEqual(str(member), 'Katrina Heide')
