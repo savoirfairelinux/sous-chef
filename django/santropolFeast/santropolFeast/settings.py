@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'santropolFeast.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-import dj-database-url
+import dj_database_url
 DATABASES['default'] =  dj_database_url.config()
 
 
