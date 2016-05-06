@@ -217,6 +217,9 @@ class Client(models.Model):
         blank=True
     )
 
+    def __str__(self):
+        return self.member
+
 
 class Referencing (models.Model):
 
