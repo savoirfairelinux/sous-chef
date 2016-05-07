@@ -1,0 +1,16 @@
+## instructions
+
+1. In your application create a folder "locale"
+2. In "settings.py" add the locale path in "LOCALE_PATHS",
+  for exemple
+```
+    LOCALE_PATHS = (
+    'meal/locale/',
+    'member/locale/',
+    'notification/locale/',
+    'order/locale/',
+    'page/locale/',
+    )
+```
+3. Run "python3 manage.py makemessages -l en-ca"
+4. Run "python3 manage.py makemessages -l fr-ca"
