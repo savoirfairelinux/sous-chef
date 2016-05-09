@@ -223,7 +223,7 @@ class Client(models.Model):
     )
 
     def __str__(self):
-        return self.member
+        return str(self.member)
 
 
 class Referencing (models.Model):
