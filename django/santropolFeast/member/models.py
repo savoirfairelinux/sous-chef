@@ -180,8 +180,8 @@ class Client(models.Model):
         verbose_name=_('Billing address')
     )
 
-    facturation = models.CharField(
-        verbose_name=_('facturation_type'),
+    billing_type = models.CharField(
+        verbose_name=_('Billing type'),
         max_length=10,
         choices=FACTURATION_TYPE,
         default='default'

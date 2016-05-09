@@ -13,7 +13,7 @@ class ClientAdmin(admin.ModelAdmin):
         (
             _('Identification'), {
                 'fields': (
-                    ('member', 'status', 'facturation'),
+                    ('member', 'status', 'billing_type'),
                     'emergency_contact',
                     'billing_address',
                 )
