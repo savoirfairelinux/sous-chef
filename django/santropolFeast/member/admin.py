@@ -13,9 +13,15 @@ class ClientAdmin(admin.ModelAdmin):
         (
             _('Identification'), {
                 'fields': (
-                    ('member', 'status', 'billing_type'),
+                    ('member', 'status',),
                     'emergency_contact',
-                    'billing_address',
+                )
+            },
+        ),
+        (
+            _('Billing'), {
+                'fields': (
+                    ('billing_address', 'billing_type',),
                 )
             },
         ),
