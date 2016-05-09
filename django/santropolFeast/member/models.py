@@ -176,8 +176,8 @@ class Client(models.Model):
         verbose_name_plural = _('clients')
 
     billing_address = models.ForeignKey(
-        'member.Address',
-        verbose_name=_('billing_Address')
+        'Address',
+        verbose_name=_('Billing address')
     )
 
     facturation = models.CharField(
