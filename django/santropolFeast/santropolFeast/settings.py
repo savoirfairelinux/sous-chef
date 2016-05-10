@@ -135,13 +135,11 @@ USE_L10N = True
 
 USE_TZ = True
 
-# not import the real utils here! We don't want an infiny loop
-gettext = lambda x: x
 
 # List of supported languages
 LANGUAGES = (
-    ('fr', gettext('French')),
-    ('en', gettext('English')),
+    ('fr', 'French'),
+    ('en', 'English'),
 )
 
 LOCALE_PATHS = (
