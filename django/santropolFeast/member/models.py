@@ -273,3 +273,37 @@ class Note (models.Model):
         verbose_name=_('member'),
         related_name='notes'
     )
+
+class Action (models.Model):
+
+    class Meta:
+        verbose_name_plural = _('actions')
+
+    action = models.TextField(verbose_name=_('text_action'))
+
+    author = models.ForeignKey(
+        User,
+        verbose_name=_('author'),
+        related_name='actions'
+    )
+
+    creation_date = models.DateField(
+        verbose_name=_('creation_date'),
+        auto_now_add=True
+    )
+
+    is_read = models.BooleanField(
+        verbose_name=_('is_read'),
+        default=False
+    )
+
+    is_resolved = models.BooleanField(
+        verbose_name=_('is_resolved'),
+        default=False
+    )
+
+    member = models.ForeignKey(
+        'member.Member',
+        verbose_name=_('member'),
+        related_name='actions'
+    )
