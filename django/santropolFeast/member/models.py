@@ -176,12 +176,12 @@ class Client(models.Model):
         verbose_name_plural = _('clients')
 
     billing_address = models.ForeignKey(
-        'member.Address',
-        verbose_name=_('billing_Address')
+        'Address',
+        verbose_name=_('Billing address')
     )
 
-    facturation = models.CharField(
-        verbose_name=_('facturation_type'),
+    billing_type = models.CharField(
+        verbose_name=_('Billing type'),
         max_length=10,
         choices=FACTURATION_TYPE,
         default='default'
@@ -223,7 +223,7 @@ class Client(models.Model):
     )
 
     def __str__(self):
-        return self.member
+        return str(self.member)
 
 
 class Referencing (models.Model):
