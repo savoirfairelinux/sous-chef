@@ -3,6 +3,9 @@
 [![Coverage Status](https://coveralls.io/repos/MaisonLogicielLibre/Website/badge.svg?branch=develop&service=github)](https://coveralls.io/github/MaisonLogicielLibre/Website?branch=develop)
 [![Build Status](https://travis-ci.org/MaisonLogicielLibre/Website.svg?branch=develop)](https://travis-ci.org/MaisonLogicielLibre/Website)
 
+[![Data model image UML](http://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/lamontfr/santropol-feast/dev/docs/data_model.uml)
+
+
 # Site
 Site internet de la Maison du Logiciel Libre (MLL) codé à l'aide du framework [CakePHP](http://cakephp.org/) 3.0.
 
