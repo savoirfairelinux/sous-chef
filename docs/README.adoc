@@ -20,8 +20,8 @@ image::https://badge.waffle.io/savoirfairelinux/santropol-feast.png?label=ready&
 
 Some useful resources:
 
-Data Model Image 
-* http://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/lamontfr/santropol-feast/dev/docs/data_model.uml
+
+* http://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/lamontfr/santropol-feast/dev/docs/data_model.uml[Data Model Image]
 
 * https://www.python.org/dev/peps/pep-0008/[Coding style guide]
 * https://travis-ci.org/savoirfairelinux/santropol-feast[CI server (Travis)]
