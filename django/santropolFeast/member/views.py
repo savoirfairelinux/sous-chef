@@ -3,8 +3,8 @@
 from django.views import generic
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from member.models import Client, Member
-from formtools.wizard.views import NamedUrlSessionWizardView
+from member.models import Client, Member, Address, Contact, Referencing
+from formtools.wizard.views import *
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.forms import Form
@@ -15,10 +15,102 @@ class ClientWizard(NamedUrlSessionWizardView):
     template_name = 'forms/form.html'
 
     def done(self, form_list, form_dict, **kwargs):
-
-        save_form(form_list)
-
+        self.form_dict = form_dict
+        self.save()
         return HttpResponseRedirect('/member/list')
+
+    def save(self):
+        """Save the client"""
+
+        basic_info = self.form_dict['basic_info']
+        address_information = self.form_dict['address_information']
+        referent_information = self.form_dict['referent_information']
+        dietary_restriction = self.form_dict['dietary_restriction']
+        emergency_contact = self.form_dict['emergency_contact']
+
+        print(basic_info.cleaned_data.get('firstname'))
+        print(emergency_contact.cleaned_data.get('firstname'))
+        print(referent_information.cleaned_data.get('firstname'))
+
+        member = Member.objects.create(
+            firstname=basic_info.cleaned_data.get('firstname'),
+            lastname=basic_info.cleaned_data.get('lastname'),
+            gender=basic_info.cleaned_data.get('gender'),
+            birthdate=basic_info.cleaned_data.get('birthdate'),
+        )
+        member.save()
+
+        address = Address.objects.create(
+            number=address_information.cleaned_data.get('number'),
+            street=address_information.cleaned_data.get('street'),
+            apartment=address_information.cleaned_data.get(
+                'apartment'
+                ),
+            floor=address_information.cleaned_data.get('floor'),
+            city=address_information.cleaned_data.get('city'),
+            postal_code=address_information.cleaned_data.get('postal_code'),
+            member=member,
+        )
+        address.save()
+
+        contact = Contact.objects.create(
+            # type=basic_info.cleaned_data.get('contact_type'),
+            type='Home phone',
+            # value=basic_info.cleaned_data.get("contact_value"),
+            value='514-555-5554',
+            member=member,
+        )
+        contact.save()
+
+        emergency = Member.objects.create(
+            firstname=emergency_contact.cleaned_data.get("firstname"),
+            lastname=emergency_contact.cleaned_data.get('lastname'),
+        )
+        emergency.save()
+
+        client_emergency_contact = Contact.objects.create(
+            # Hardcoded string for testing purpose only
+            # type=emergency_contact.cleaned_data.get("contact_type"),
+            # value=emergency_contact.cleaned_data.get(
+            #     "contact_value"
+            #     ),
+            type='Home phone',
+            value='514-555-5554',
+            member=emergency,
+        )
+        client_emergency_contact.save()
+
+        client = Client.objects.create(
+            # Hardcoded string for testing purpose only
+            # facturation=payment_information.cleaned_data.get("facturation"),
+            facturation='default',
+            member=member,
+            billing_address=address,
+            emergency_contact=emergency,
+            status="PENDING",
+            alert=basic_info.cleaned_data.get("alert"),
+        )
+        client.save()
+
+        referent = Member.objects.create(
+            firstname=referent_information.cleaned_data.get(
+                "firstname"
+                ),
+            lastname=referent_information.cleaned_data.get(
+                "lastname"
+                ),
+        )
+        referent.save()
+
+        referencing = Referencing.objects.create(
+            referent=referent,
+            client=client,
+            referral_reason=referent_information.cleaned_data.get(
+                "referral_reason"
+            ),
+            date='2012-12-12'
+        )
+        referencing.save()
 
 
 class ClientList(generic.ListView):
@@ -312,9 +404,3 @@ class ClientPreferencesUpdate(generic.UpdateView):
         context['myVariableOfContext'] = 0
 
         return context
-
-
-def save_form(form_list):
-
-    for form in form_list:
-        pass

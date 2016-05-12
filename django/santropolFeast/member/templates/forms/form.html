@@ -108,16 +108,22 @@
     </table>
     {% if wizard.steps.prev %}
 
-    <button name="wizard_goto_step" type="submit" value="{{wizard.steps.first}}">{% trans "First Step" %}</button>
-    <button name="wizard_goto_step" type="submit" value="{{wizard.steps.prev}}">{% trans "Previous Step"%}</button>
+    <button class="ui secondary left labeled icon button" name="wizard_goto_step" type="submit" value="{{wizard.steps.first}}">
+        <i class="fast backward icon"></i>
+        {% trans "First Step" %}
+    </button>
+    <button class="ui secondary left labeled icon button" name="wizard_goto_step" type="submit" value="{{wizard.steps.prev}}">
+        <i class="left arrow icon"></i>
+        {% trans "Previous Step"%}
+    </button>
 
     {% endif %}
 
     {% if wizard.steps.step1 == 6 %}
-    <input type="submit"/>
+    <input class="ui primary button" type="submit"/>
 
     {% else %}
-    <button name="wizard_goto_step" type="submit">Next Step </button>
+    <button  class="ui primary right labeled icon button" name="wizard_goto_step" type="submit"><i class="right arrow icon"></i>Next Step </button>
 
     {% endif %}
 </form>

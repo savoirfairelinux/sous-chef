@@ -1,38 +1,42 @@
 from django import forms
+from member.models import Member
 
 
 class ClientBasicInformation (forms.Form):
 
-    first_name = forms.CharField(max_length=100)
-    last_name = forms.CharField(max_length=100)
+    firstname = forms.CharField(max_length=100, label="First Name")
+    lastname = forms.CharField(max_length=100, label="Last Name")
 
-    gender = forms.CheckboxInput()
+    gender = forms.ChoiceField()
 
-    birthday = forms.DateField()
+    # For test purpose only must be required for final version
+    gender.required = False
 
-    phone_number = forms.CharField()
+    birthdate = forms.DateField()
 
-    email = forms.EmailField()
-    email.required = False
+    contact_type = forms.ChoiceField()
+    # Remove the require = False
+    contact_type.required = False
+    contact_value = forms.CharField()
 
     alert = forms.CharField()
 
 
 class ClientAddressInformation(forms.Form):
 
-    street_number = forms.IntegerField()
+    number = forms.IntegerField(label="Street Number")
 
-    apartment_number = forms.IntegerField()
-    apartment_number.required = False
+    apartment = forms.IntegerField(label="Apartment Number")
+    apartment.required = False
 
-    floor_number = forms.IntegerField()
-    floor_number.required = False
+    floor = forms.IntegerField(label="Floor")
+    floor.required = False
 
-    street_name = forms.CharField(max_length=100)
+    street = forms.CharField(max_length=100, label="Street Name")
 
-    city_name = forms.CharField(max_length=50)
+    city = forms.CharField(max_length=50, label="City Name")
 
-    postal_code = forms.CharField(max_length=6)
+    postal_code = forms.CharField(max_length=6, label="Postal Code")
 
 
 class ClientRestrictionsInformation(forms.Form):
@@ -44,39 +48,45 @@ class ClientRestrictionsInformation(forms.Form):
 
 class ClientReferentInformation(forms.Form):
 
-    referent_first_name = forms.CharField(max_length=100)
-    referent_last_name = forms.CharField(max_length=100)
-
-    # gender = forms.CheckboxInput()
+    firstname = forms.CharField(max_length=100, label="First Name")
+    lastname = forms.CharField(max_length=100, label="Last Name")
+    referral_reason = forms.CharField(label="Referral Reason")
+    date = forms.DateField(label="Referral Date")
 
 
 class ClientPaymentInformation(forms.Form):
 
-    billing_type = forms.ChoiceField()
-    billing_type.required = False
+    facturation = forms.ChoiceField(label="Billing Type")
+    # Remove the require = False
+    facturation.required = False
 
-    billing_first_name = forms.CharField()
+    firstname = forms.CharField(label="First Name")
 
-    billing_last_name = forms.CharField()
+    lastname = forms.CharField(label="Last Name")
 
-    billing_street_number = forms.IntegerField()
+    number = forms.IntegerField(label="Street Number")
 
-    billing_apartment_number = forms.IntegerField()
-    billing_apartment_number.required = False
+    apartement = forms.CharField(label="Apartement Number")
+    apartement.required = False
 
-    billing_floor_number = forms.IntegerField()
-    billing_floor_number.required = False
+    floor = forms.IntegerField(label="Floor")
+    floor.require = False
 
-    billing_street_name = forms.CharField()
+    street = forms.CharField(label="Street Name")
 
-    billing_city_name = forms.CharField()
+    city = forms.CharField(label="City Name")
 
-    billing_postal_code = forms.CharField()
+    postal_code = forms.CharField(label="Postal Code")
 
 
 class ClientEmergencyContactInformation(forms.Form):
 
-    emergency_contact_first_name = forms.CharField()
-    emergency_contact_last_name = forms.CharField()
+    firstname = forms.CharField(label="First Name")
 
-    emergency_contact_telephone = forms.CharField()
+    lastname = forms.CharField(label="Last Name")
+
+    contact_type = forms.ChoiceField(label="Contact Type")
+    # Remove the require = False
+    contact_type = False
+
+    contact_value = forms.CharField(label="Contact")
