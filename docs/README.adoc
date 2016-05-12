@@ -22,9 +22,9 @@ Some useful resources:
 
 
 * http://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/lamontfr/santropol-feast/dev/docs/data_model.uml[Data Model Image]
-test
+* test
 image::http://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/lamontfr/santropol-feast/dev/docs/data_model.uml
-test
+* test
 * https://www.python.org/dev/peps/pep-0008/[Coding style guide]
 * https://travis-ci.org/savoirfairelinux/santropol-feast[CI server (Travis)]
 * https://waffle.io/savoirfairelinux/santropol-feast[Waffle Dashboard]
