@@ -59,8 +59,8 @@ class ClientFactory (factory.DjangoModelFactory):
     def __init__(self, **kwargs):
         member = kwargs.pop("member", MemberFactory())
         billing_address = kwargs.pop(
-                "billing_address",
-                AddressFactory(member=member)
+            "billing_address",
+            AddressFactory(member=member)
         )
         emergency_contact = kwargs.pop("emergency_contact", MemberFactory())
 

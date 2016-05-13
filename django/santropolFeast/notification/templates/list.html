@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+
+{% block title %}Staff notes{% endblock %}
+
+{% block content %}
+
+<h1>Staff Notes</h1>
+
+<div class="ui feed">
+    {% for notification in notifications %}
+    <div class="event">
+        <div class="label">
+            <i class="{% if notification.priority == 'urgent' %} announcement red {% else %} green info {% endif %} icon"></i>
+        </div>
+        <div class="content">
+            <div class="date">
+                {{ notification.member }}
+            </div>
+            <div class="summary">
+                {{ notification.description }}
+                <div class="date">
+                    {{ notification.date }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

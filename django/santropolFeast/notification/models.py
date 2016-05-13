@@ -5,16 +5,30 @@ from django.utils import timezone
 
 class Notification(models.Model):
 
+    PRIORITY_LEVEL_NORMAL = 'normal'
+    PRIORITY_LEVEL_URGENT = 'urgent'
+
+    PRIORITY_LEVEL = (
+        (PRIORITY_LEVEL_NORMAL, _('Normal')),
+        (PRIORITY_LEVEL_URGENT, _('Urgent')),
+    )
+
     class Meta:
-        verbose_name_plural = _('notifications')
+        verbose_name_plural = _('Notifications')
 
     description = models.TextField(
-        verbose_name=_('description')
+        verbose_name=_('Description')
     )
 
     member = models.ForeignKey(
         'member.Member',
-        verbose_name=_('member')
+        verbose_name=_('Member')
+    )
+
+    priority = models.CharField(
+        max_length=15,
+        choices=PRIORITY_LEVEL,
+        default=PRIORITY_LEVEL_NORMAL
     )
 
     date = models.DateField(
