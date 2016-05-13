@@ -42,13 +42,17 @@ class Member(models.Model):
             ('F', _('female')),
             ('U', _('unknown')),
         ),
-        default='U'
+        default='U',
+        blank="True",
+        null="True"
     )
 
     birthdate = models.DateField(
         auto_now=False,
         auto_now_add=False,
-        default=timezone.now
+        default=timezone.now,
+        blank="True",
+        null="True"
     )
 
     def __str__(self):
