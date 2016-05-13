@@ -260,29 +260,48 @@ class Referencing (models.Model):
 
 class Note (models.Model):
 
-    class Meta:
-        verbose_name_plural = _('notes')
+    PRIORITY_LEVEL_NORMAL = 'normal'
+    PRIORITY_LEVEL_URGENT = 'urgent'
 
-    note = models.TextField(verbose_name=_('text note'))
+    PRIORITY_LEVEL = (
+        (PRIORITY_LEVEL_NORMAL, _('Normal')),
+        (PRIORITY_LEVEL_URGENT, _('Urgent')),
+    )
+
+    class Meta:
+        verbose_name_plural = _('Notes')
+
+    note = models.TextField(
+        verbose_name=_('Note')
+    )
 
     author = models.ForeignKey(
         User,
-        verbose_name=_('author'),
-        related_name='notes'
+        verbose_name=_('Author'),
+        related_name='Notes'
     )
 
-    creation_date = models.DateField(
-        verbose_name=_('creation date'),
-        auto_now_add=True
+    date = models.DateField(
+        verbose_name=_('Date'),
+        default=timezone.now,
     )
 
     is_read = models.BooleanField(
-        verbose_name=_('is read'),
+        verbose_name=_('Is read'),
         default=False
     )
 
     member = models.ForeignKey(
         'member.Member',
-        verbose_name=_('member'),
-        related_name='notes'
+        verbose_name=_('Member'),
+        related_name='Notes'
     )
+
+    priority = models.CharField(
+        max_length=15,
+        choices=PRIORITY_LEVEL,
+        default=PRIORITY_LEVEL_NORMAL
+    )
+
+    def __str__(self):
+        return self.note

@@ -399,3 +399,10 @@ class ClientPreferencesUpdate(generic.UpdateView):
         context['myVariableOfContext'] = 0
 
         return context
+
+
+class NoteList(generic.ListView):
+    # Display the list of clients
+    model = Note
+    template_name = 'notes/list.html'
+    context_object_name = 'notes'

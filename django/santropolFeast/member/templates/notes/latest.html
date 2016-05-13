@@ -1,0 +1,32 @@
+{% load staticfiles %}
+
+<div class="ui card">
+    <div class="content">
+        <div class="header"><i class="bullseye icon"></i>{{ _('Staff Notes') }}</div>
+    </div>
+    <div class="content">
+        <div class="ui small feed">
+            {% for note in notes %}
+            <div class="event">
+                <div class="label">
+                    <i class="{% if note.priority == 'urgent' %} announcement red {% else %} green info {% endif %} icon"></i>
+                </div>
+                <div class="content">
+                    <div class="date">
+                        {{ note.member }}
+                    </div>
+                    <div class="summary">
+                        {{ note.note }}
+                        <div class="date">
+                            {{ note.date }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+     </div>
+     <div class="extra content">
+         <a href="{% url 'member:notes' %}" class="ui button">{{ _('See all') }}</a>
+     </div>
+</div>
