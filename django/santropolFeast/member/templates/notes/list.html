@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<h1>Staff Notes</h1>
+<h1>{{ _('Staff Notes') }}</h1>
 
 <div class="ui feed">
     {% for note in notes %}
@@ -23,6 +23,15 @@
                 <div class="date">
                     {{ note.date }}
                 </div>
+            </div>
+            <div class="meta">
+                <a class="like" href="{% url 'member:read' note.id %}">
+                    {% if note.is_read %}
+                        <i class="large unhide icon"></i> {{ _('Unmark as read') }}
+                    {% else %}
+                        <i class="large hide icon"></i> {{ _('Mark as read') }}
+                    {% endif %}
+                </a>
             </div>
         </div>
     </div>

@@ -305,3 +305,9 @@ class Note (models.Model):
 
     def __str__(self):
         return self.note
+
+    def mark_as_read(self):
+        """Mark a note as read."""
+        if not self.is_read:
+            self.is_read = True
+            self.save()
