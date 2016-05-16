@@ -7,6 +7,7 @@ from santropolFeast.member.models import Member, Address, Contact, Client,\
 
 
 class MemberFactory (factory.DjangoModelFactory):
+
     class Meta:
         model = Member
 
@@ -18,6 +19,7 @@ class MemberFactory (factory.DjangoModelFactory):
 
 
 class AddressFactory (factory.DjangoModelFactory):
+
     class Meta:
         model = Address
 
@@ -37,6 +39,7 @@ class AddressFactory (factory.DjangoModelFactory):
 
 
 class ContactFactory (factory.DjangoModelFactory):
+
     class Meta:
         model = Contact
 
@@ -52,6 +55,7 @@ class ContactFactory (factory.DjangoModelFactory):
 
 
 class ClientFactory (factory.DjangoModelFactory):
+
     class Meta:
         model = Client
 
@@ -59,13 +63,14 @@ class ClientFactory (factory.DjangoModelFactory):
     def __init__(self, **kwargs):
         member = kwargs.pop("member", MemberFactory())
         billing_address = kwargs.pop(
-                "billing_address",
-                AddressFactory(member=member)
+            "billing_address",
+            AddressFactory(member=member)
         )
         emergency_contact = kwargs.pop("emergency_contact", MemberFactory())
 
 
 class ProfileFactory(factory.DjangoModelFactory):
+
     class Meta:
         model = Profile
 
@@ -77,6 +82,7 @@ class ProfileFactory(factory.DjangoModelFactory):
 
 
 class AdminFactory(factory.DjangoModelFactory):
+
     class Meta:
         model = User
 
@@ -91,6 +97,7 @@ class AdminFactory(factory.DjangoModelFactory):
 
 
 class AdminProfileFactory(factory.DjangoModelFactory):
+
     class Meta:
         model = User
 

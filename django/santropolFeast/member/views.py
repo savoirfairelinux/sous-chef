@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-from member.models import Client, Member, Address, Contact, Referencing
+from member.models import Client, Member, Address, Contact, Referencing, Note
 from formtools.wizard.views import *
 from django.shortcuts import *
 
@@ -48,7 +48,7 @@ class ClientWizard(NamedUrlSessionWizardView):
             street=address_information.cleaned_data.get('street'),
             apartment=address_information.cleaned_data.get(
                 'apartment'
-                ),
+            ),
             floor=address_information.cleaned_data.get('floor'),
             city=address_information.cleaned_data.get('city'),
             postal_code=address_information.cleaned_data.get('postal_code'),
@@ -70,12 +70,12 @@ class ClientWizard(NamedUrlSessionWizardView):
         emergency.save()
 
         client_emergency_contact = Contact.objects.create(
-             type=emergency_contact.cleaned_data.get("contact_type"),
-             value=emergency_contact.cleaned_data.get(
-                 "contact_value"
-                 ),
+            type=emergency_contact.cleaned_data.get("contact_type"),
+            value=emergency_contact.cleaned_data.get(
+                "contact_value"
+            ),
 
-             member=emergency,
+            member=emergency,
         )
         client_emergency_contact.save()
 
@@ -93,10 +93,10 @@ class ClientWizard(NamedUrlSessionWizardView):
         referent = Member.objects.create(
             firstname=referent_information.cleaned_data.get(
                 "firstname"
-                ),
+            ),
             lastname=referent_information.cleaned_data.get(
                 "lastname"
-                ),
+            ),
         )
         referent.save()
 
@@ -409,6 +409,7 @@ class NoteList(generic.ListView):
     model = Note
     template_name = 'notes/list.html'
     context_object_name = 'notes'
+
 
 def mark_as_read(request, id):
     note = get_object_or_404(Note, pk=id)
