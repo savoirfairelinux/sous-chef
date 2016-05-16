@@ -138,7 +138,7 @@ USE_TZ = True
 
 # List of supported languages
 LANGUAGES = (
-    ('fr', 'French'),
+    ('fr', 'Français'),
     ('en', 'English'),
 )
 
