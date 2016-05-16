@@ -229,7 +229,7 @@ class Client(models.Model):
     )
 
     def __str__(self):
-        return self.member
+        return "{} {}".format(self.member.firstname, self.member.lastname)
 
 
 class Referencing (models.Model):
