@@ -28,13 +28,6 @@ class AddressFactory (factory.DjangoModelFactory):
     city = "Montréal"
     postal_code = "H3C2C2"
 
-    @classmethod
-    def __init__(self, **kwargs):
-        member = kwargs.pop("member", MemberFactory())
-        address = super(AddressFactory, self).__init__(self, **kwargs)
-
-        address.save()
-
 
 class ContactFactory (factory.DjangoModelFactory):
     class Meta:
@@ -60,7 +53,7 @@ class ClientFactory (factory.DjangoModelFactory):
         member = kwargs.pop("member", MemberFactory())
         billing_address = kwargs.pop(
                 "billing_address",
-                AddressFactory(member=member)
+                AddressFactory()
         )
         emergency_contact = kwargs.pop("emergency_contact", MemberFactory())
 
