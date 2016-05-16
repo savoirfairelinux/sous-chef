@@ -6,20 +6,31 @@
 
 {% block content %}
 
-    <table class="ui celled striped padded table" style="margin-bottom:40px"> <!--TODO: Replace margin-bottom with real styling-->
-    <th class="single line">{% trans 'Gender' %}</th>
-    <th class="single line">{% trans 'First Name' %}</th>
-    <th class="single line">{% trans 'Last Name' %}</th>
-    <th class="single line">{% trans 'Phone Number' %}</th>
-    <th class="single line">{% trans 'Referant' %}</th>
+    <table class="ui sortable celled table" style="margin-bottom:40px"> <!--TODO: Replace margin-bottom with real styling-->
+      <thead>
+        <tr>
+          <th class="sorted descending">{% trans 'First Name' %}</th>
+          <th class="">{% trans 'Last Name' %}</th>
+          <th class="">{% trans 'Phone Number' %}</th>
+          <th class="">{% trans 'Gender' %}</th>
+          <th class="">{% trans 'Client Status' %}</th>
+        </tr>
+      </thead>
+    <tbody>
     {% for client in clients %}
         <tr>
-            <td>{{ client.member.gender }}</td>
             <td>{{ client.member.firstname }}</td>
             <td>{{ client.member.lastname }}</td>
             <td>{{ client.member.get_home_phone.value }}</td>
-            <td>TBD</td>
+            <td>{{ client.member.gender }}</td>
+            <td>{{ client.status }}</td>
         </tr>
     {% endfor %}
+    </tbody>
     </table>
+<script type="text/javascript">
+    document.addEventListener( 'DOMContentLoaded', function () {
+      $('table').tablesort();
+    })
+</script>
 {% endblock %}
