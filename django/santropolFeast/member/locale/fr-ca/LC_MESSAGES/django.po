@@ -7,100 +7,205 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-08 18:56+0000\n"
+"POT-Creation-Date: 2016-05-16 00:55+0000\n"
 "PO-Revision-Date: 2016-04-21 19:43-0400\n"
+"Last-Translator: Julie Moussu <julie.moussu@savoirfairelinux.com>\n"
+"Language-Team: \n"
 "Language: fr_CA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Last-Translator: Julie Moussu <julie.moussu@savoirfairelinux.com>\n"
-"Language-Team: \n"
 "X-Generator: Poedit 1.8.4\n"
 
-#: member/models.py:16
+#: django/santropolFeast/member/models.py:25
 msgid "members"
 msgstr "membres"
 
-#: member/models.py:21
+#: django/santropolFeast/member/models.py:30
 msgid "firstname"
 msgstr "prénom"
 
-#: member/models.py:26
+#: django/santropolFeast/member/models.py:35
 msgid "lastname"
 msgstr "nom"
 
-#: member/models.py:52
+#: django/santropolFeast/member/models.py:41
+msgid "Male"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:42
+msgid "Female"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:43
+msgid "Unknown"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:83
 msgid "addresses"
 msgstr "adresses"
 
-#: member/models.py:56
-msgid "street_number"
+#: django/santropolFeast/member/models.py:87
+msgid "street number"
 msgstr "numéro de rue"
 
-#: member/models.py:61
+#: django/santropolFeast/member/models.py:92
 msgid "street"
 msgstr "rue"
 
-#: member/models.py:67
+#: django/santropolFeast/member/models.py:98
 msgid "apartment"
 msgstr "appartement"
 
-#: member/models.py:71
+#: django/santropolFeast/member/models.py:104
 msgid "floor"
 msgstr "étage"
 
-#: member/models.py:76
+#: django/santropolFeast/member/models.py:111
 msgid "city"
 msgstr "ville"
 
-#: member/models.py:82
-msgid "postal_code"
+#: django/santropolFeast/member/models.py:117
+msgid "postal code"
 msgstr "code postal"
 
-#: member/models.py:87 member/models.py:110 member/models.py:144
+#: django/santropolFeast/member/models.py:122
+#: django/santropolFeast/member/models.py:148
+#: django/santropolFeast/member/models.py:196
+#: django/santropolFeast/member/models.py:278
 msgid "member"
 msgstr "membre"
 
-#: member/models.py:94
+#: django/santropolFeast/member/models.py:132
 msgid "contacts"
 msgstr "contacts"
 
-#: member/models.py:100
-msgid "contact_type"
+#: django/santropolFeast/member/models.py:138
+msgid "contact type"
 msgstr "type de contact"
 
-#: member/models.py:105
+#: django/santropolFeast/member/models.py:143
 msgid "value"
 msgstr "valeur"
 
-#: member/models.py:126
-msgid "pending"
+#: django/santropolFeast/member/models.py:165
+msgid "Pending"
 msgstr "en attente"
 
-#: member/models.py:127
-msgid "active"
+#: django/santropolFeast/member/models.py:166
+msgid "Active"
 msgstr "actif"
 
-#: member/models.py:128
-msgid "paused"
+#: django/santropolFeast/member/models.py:167
+msgid "Paused"
 msgstr "en pause"
 
-#: member/models.py:129
-msgid "stopnocontact"
+#: django/santropolFeast/member/models.py:168
+msgid "Stop: no contact"
 msgstr "arrêté - pas de contact"
 
-#: member/models.py:130
-msgid "stopcontact"
+#: django/santropolFeast/member/models.py:169
+#, fuzzy
+#| msgid "Stop contact"
+msgid "Stop: contact"
 msgstr "arrêté - en contact"
 
-#: member/models.py:131
-msgid "deceased"
+#: django/santropolFeast/member/models.py:170
+msgid "Deceased"
 msgstr "décédé"
 
-#: member/models.py:135
+#: django/santropolFeast/member/models.py:174
+msgid "Default"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:175
+msgid "Low income"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:176
+msgid "Solidary"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:180
 msgid "clients"
 msgstr "clients"
 
-#: member/models.py:139
-msgid "billing_Address"
+#: django/santropolFeast/member/models.py:184
+msgid "billing address"
 msgstr "adresse de facturation"
+
+#: django/santropolFeast/member/models.py:188
+msgid "facturation type"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:201
+msgid "emergency contact"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:225
+msgid "alert client"
+msgstr "clients"
+
+#: django/santropolFeast/member/models.py:236
+msgid "referents"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:239
+msgid "referent"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:242
+msgid "client"
+msgstr "clients"
+
+#: django/santropolFeast/member/models.py:245
+msgid "Referral reason"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:248
+msgid "Referral date"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:256
+msgid "notes"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:258
+msgid "text note"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:262
+msgid "author"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:267
+msgid "creation date"
+msgstr ""
+
+#: django/santropolFeast/member/models.py:272
+msgid "is read"
+msgstr ""
+
+#: django/santropolFeast/member/templates/client/list.html:10
+msgid "Gender"
+msgstr ""
+
+#: django/santropolFeast/member/templates/client/list.html:11
+msgid "First Name"
+msgstr "prénom"
+
+#: django/santropolFeast/member/templates/client/list.html:12
+msgid "Last Name"
+msgstr ""
+
+#: django/santropolFeast/member/templates/client/list.html:13
+msgid "Phone Number"
+msgstr ""
+
+#: django/santropolFeast/member/templates/client/list.html:14
+msgid "Referant"
+msgstr ""
+
+#: django/santropolFeast/member/urls.py:8
+msgid "^list/$"
+msgstr ""
