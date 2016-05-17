@@ -184,8 +184,8 @@ class Client(models.Model):
         verbose_name=_('billing address')
     )
 
-    facturation = models.CharField(
-        verbose_name=_('facturation type'),
+    billing_type = models.CharField(
+        verbose_name=_('billing type'),
         max_length=10,
         choices=FACTURATION_TYPE,
         default='default'
@@ -227,7 +227,7 @@ class Client(models.Model):
     )
 
     def __str__(self):
-        return self.member
+        return str(self.member)
 
 
 class Referencing (models.Model):
