@@ -13,8 +13,8 @@ class Meal(models.Model):
     LARGE = 'L'
 
     SIZE = (
-        (REGULAR, _('regular')),
-        (LARGE, _('large')),
+        (REGULAR, _('Regular')),
+        (LARGE, _('Large')),
     )
 
     class Meta:

@@ -2,16 +2,16 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 ORDER_STATUS_CHOICES = (
-    (_('ordered'), 1),
-    (_('delivered'), 2),
-    (_('no_charge'), 3),
-    (_('paid'), 4),
+    (_('Ordered'), 1),
+    (_('Delivered'), 2),
+    (_('No charge'), 3),
+    (_('Paid'), 4),
 )
 
 ORDERITEM_TYPE_CHOICES = (
-    (_('half'), 1),
-    (_('regular'), 2),
-    (_('double'), 3),
+    (_('Half'), 1),
+    (_('Regular'), 2),
+    (_('Double'), 3),
 )
 
 
@@ -28,7 +28,7 @@ class Order(models.Model):
     type = models.CharField(
         max_length=100,
         choices=ORDER_STATUS_CHOICES,
-        verbose_name=_('order_status')
+        verbose_name=_('order status')
     )
 
     value = models.CharField(
@@ -50,7 +50,7 @@ class Order(models.Model):
 class OrderItem(models.Model):
 
     class Meta:
-        verbose_name_plural = _('order_items')
+        verbose_name_plural = _('order items')
 
     # Foreign Key to meal to get information
     meal = models.ForeignKey(

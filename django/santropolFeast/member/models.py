@@ -92,7 +92,7 @@ class Address(models.Model):
 
     # Member address information
     number = models.PositiveIntegerField(
-        verbose_name=_('street_number')
+        verbose_name=_('street number')
     )
 
     street = models.CharField(
@@ -122,7 +122,7 @@ class Address(models.Model):
     # Montreal postal code look like H3E 1C2
     postal_code = models.CharField(
         max_length=6,
-        verbose_name=_('postal_code')
+        verbose_name=_('postal code')
     )
 
     member = models.ForeignKey(
@@ -143,7 +143,7 @@ class Contact(models.Model):
     type = models.CharField(
         max_length=100,
         choices=CONTACT_TYPE_CHOICES,
-        verbose_name=_('contact_type')
+        verbose_name=_('contact type')
     )
 
     value = models.CharField(
@@ -170,12 +170,18 @@ class Client(models.Model):
     DECEASED = 'I'
 
     CLIENT_STATUS = (
-        (PENDING, _('pending')),
-        (ACTIVE, _('active')),
-        (PAUSED, _('paused')),
-        (STOPNOCONTACT, _('stopnocontact')),
-        (STOPCONTACT, _('stopcontact')),
-        (DECEASED, _('deceased')),
+        (PENDING, _('Pending')),
+        (ACTIVE, _('Active')),
+        (PAUSED, _('Paused')),
+        (STOPNOCONTACT, _('Stop: no contact')),
+        (STOPCONTACT, _('Stop: contact')),
+        (DECEASED, _('Deceased')),
+    )
+
+    FACTURATION_TYPE = (
+        ('default', _('Default')),
+        ('low income', _('Low income')),
+        ('solidary', _('Solidary')),
     )
 
     class Meta:
@@ -183,11 +189,11 @@ class Client(models.Model):
 
     billing_address = models.ForeignKey(
         'member.Address',
-        verbose_name=_('billing_Address')
+        verbose_name=_('billing address')
     )
 
     facturation = models.CharField(
-        verbose_name=_('facturation_type'),
+        verbose_name=_('facturation type'),
         max_length=10,
         choices=FACTURATION_TYPE,
         default='default'
@@ -200,7 +206,7 @@ class Client(models.Model):
 
     emergency_contact = models.ForeignKey(
         'member.Member',
-        verbose_name=_('emergency_contact'),
+        verbose_name=_('emergency contact'),
         related_name='emergency_contact',
         null=True,
     )
@@ -224,7 +230,7 @@ class Client(models.Model):
     )
 
     alert = models.TextField(
-        verbose_name=_('alert_client'),
+        verbose_name=_('alert client'),
         blank=True
     )
 
@@ -244,9 +250,10 @@ class Referencing (models.Model):
                                verbose_name=_('client'))
 
     referral_reason = models.TextField(
-        verbose_name=_("referral_reason"))
+        verbose_name=_("Referral reason")
+    )
 
-    date = models.DateField(verbose_name=_("referral_date"),
+    date = models.DateField(verbose_name=_("Referral date"),
                             auto_now=False, auto_now_add=False,
                             default=datetime.date.today())
 
@@ -256,7 +263,7 @@ class Note (models.Model):
     class Meta:
         verbose_name_plural = _('notes')
 
-    note = models.TextField(verbose_name=_('text_note'))
+    note = models.TextField(verbose_name=_('text note'))
 
     author = models.ForeignKey(
         User,
@@ -265,12 +272,12 @@ class Note (models.Model):
     )
 
     creation_date = models.DateField(
-        verbose_name=_('creation_date'),
+        verbose_name=_('creation date'),
         auto_now_add=True
     )
 
     is_read = models.BooleanField(
-        verbose_name=_('is_read'),
+        verbose_name=_('is read'),
         default=False
     )
 

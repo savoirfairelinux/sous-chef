@@ -7,72 +7,78 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-08 18:56+0000\n"
+"POT-Creation-Date: 2016-05-16 00:55+0000\n"
 "PO-Revision-Date: 2016-04-21 20:13-0400\n"
+"Last-Translator: Julie Moussu <julie.moussu@savoirfairelinux.com>\n"
+"Language-Team: \n"
 "Language: fr_CA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Last-Translator: Julie Moussu <julie.moussu@savoirfairelinux.com>\n"
-"Language-Team: \n"
 "X-Generator: Poedit 1.8.4\n"
 
-#: order/models.py:5
-msgid "ordered"
+#: django/santropolFeast/order/models.py:5
+msgid "Ordered"
 msgstr "commandée"
 
-#: order/models.py:6
-msgid "delivered"
+#: django/santropolFeast/order/models.py:6
+msgid "Delivered"
 msgstr "livrée"
 
-#: order/models.py:7
-msgid "no_charge"
+#: django/santropolFeast/order/models.py:7
+msgid "No charge"
 msgstr "non facturée"
 
-#: order/models.py:8
-msgid "paid"
-msgstr "payée"
+#: django/santropolFeast/order/models.py:8
+msgid "Paid"
+msgstr ""
 
-#: order/models.py:12
-msgid "half"
-msgstr "moitié"
+#: django/santropolFeast/order/models.py:12
+msgid "Half"
+msgstr ""
 
-#: order/models.py:13
-msgid "regular"
+#: django/santropolFeast/order/models.py:13
+msgid "Regular"
 msgstr "standard"
 
-#: order/models.py:14
-msgid "double"
+#: django/santropolFeast/order/models.py:14
+msgid "Double"
 msgstr "double"
 
-#: order/models.py:21
+#: django/santropolFeast/order/models.py:21
 msgid "orders"
 msgstr "commandes"
 
-#: order/models.py:25
+#: django/santropolFeast/order/models.py:25
 msgid "date"
 msgstr "date"
 
-#: order/models.py:31
-msgid "order_status"
+#: django/santropolFeast/order/models.py:31
+msgid "order status"
 msgstr "statut de la commande"
 
-#: order/models.py:36
+#: django/santropolFeast/order/models.py:36
 msgid "value"
 msgstr "valeur"
 
-#: order/models.py:41
+#: django/santropolFeast/order/models.py:41
 msgid "client"
 msgstr "client"
 
-#: order/models.py:53
-msgid "order_items"
+#: django/santropolFeast/order/models.py:53
+msgid "order items"
 msgstr "éléments de la commande"
 
-#: order/models.py:58
+#: django/santropolFeast/order/models.py:58
 msgid "meal"
 msgstr "repas"
 
-#: order/models.py:64
+#: django/santropolFeast/order/models.py:64
 msgid "price"
 msgstr "prix"
+
+#~ msgid "paid"
+#~ msgstr "payée"
+
+#~ msgid "half"
+#~ msgstr "moitié"

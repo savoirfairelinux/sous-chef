@@ -3,76 +3,76 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-08 18:57+0000\n"
-"PO-Revision-Date: 2016-04-21 19:47-0400\n"
-"Language: en_CA\n"
+"POT-Creation-Date: 2016-05-16 00:55+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Last-Translator: Julie Moussu <julie.moussu@savoirfairelinux.com>\n"
-"Language-Team: \n"
-"X-Generator: Poedit 1.8.4\n"
 
-#: order/models.py:5
-msgid "ordered"
-msgstr "ordered"
+#: django/santropolFeast/order/models.py:5
+msgid "Ordered"
+msgstr ""
 
-#: order/models.py:6
-msgid "delivered"
-msgstr "delivered"
+#: django/santropolFeast/order/models.py:6
+msgid "Delivered"
+msgstr ""
 
-#: order/models.py:7
-msgid "no_charge"
-msgstr "no charge"
+#: django/santropolFeast/order/models.py:7
+msgid "No charge"
+msgstr ""
 
-#: order/models.py:8
-msgid "paid"
-msgstr "paid"
+#: django/santropolFeast/order/models.py:8
+msgid "Paid"
+msgstr ""
 
-#: order/models.py:12
-msgid "half"
-msgstr "half"
+#: django/santropolFeast/order/models.py:12
+msgid "Half"
+msgstr ""
 
-#: order/models.py:13
-msgid "regular"
-msgstr "regular"
+#: django/santropolFeast/order/models.py:13
+msgid "Regular"
+msgstr ""
 
-#: order/models.py:14
-msgid "double"
-msgstr "double"
+#: django/santropolFeast/order/models.py:14
+msgid "Double"
+msgstr ""
 
-#: order/models.py:21
+#: django/santropolFeast/order/models.py:21
 msgid "orders"
-msgstr "orders"
+msgstr ""
 
-#: order/models.py:25
+#: django/santropolFeast/order/models.py:25
 msgid "date"
-msgstr "date"
+msgstr ""
 
-#: order/models.py:31
-msgid "order_status"
-msgstr "order status"
+#: django/santropolFeast/order/models.py:31
+msgid "order status"
+msgstr ""
 
-#: order/models.py:36
+#: django/santropolFeast/order/models.py:36
 msgid "value"
-msgstr "value"
+msgstr ""
 
-#: order/models.py:41
+#: django/santropolFeast/order/models.py:41
 msgid "client"
-msgstr "client"
+msgstr ""
 
-#: order/models.py:53
-msgid "order_items"
-msgstr "order items"
+#: django/santropolFeast/order/models.py:53
+msgid "order items"
+msgstr ""
 
-#: order/models.py:58
+#: django/santropolFeast/order/models.py:58
 msgid "meal"
-msgstr "meal"
+msgstr ""
 
-#: order/models.py:64
+#: django/santropolFeast/order/models.py:64
 msgid "price"
-msgstr "price"
+msgstr ""
