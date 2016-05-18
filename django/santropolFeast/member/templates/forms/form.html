@@ -1,129 +1,97 @@
 {% extends "base.html" %}
+
 {% load i18n %}
 
 {% block head %}
 {{ wizard.form.media}}
 {% endblock %}
 
+{% block title %}Create a new client{% endblock %}
+
 {% block content %}
 
-<div class="ui two column grid">
-  <div class="column">
-    <div class="ui fluid vertical steps">
-      {% if wizard.steps.step1 == 1 %}
-        <div class="step active">
-      {% else %}
-            <div class="completed step">
-                {% endif %}
-        <i class="male icon"></i>
-        <div class="content">
-          <div class="title">Client Information</div>
-        </div>
-      </div>
-            {% if wizard.steps.step1 == 2 %}
-      <div class="step active">
-          {% elif wizard.steps.step1 >= 3 %}
-          <div class="completed step">
-          {% else %}
-          <div class="step">
-              {% endif %}
-        <i class="home icon"></i>
-        <div class="content">
-          <div class="title"> Address Information</div>
-        </div>
-      </div>
-              {% if wizard.steps.step1 == 3 %}
-        <div class="step active">
-              {% elif wizard.steps.step1 >= 4 %}
-            <div class="completed step">
-                {% else %}
-                <div class="step">
-                    {% endif %}
-            <i class="treatment icon"></i>
-            <div class="content">
-                <div class="title">Referent information</div>
-            </div>
-        </div>
-                {% if wizard.steps.step1 == 4 %}
-        <div class="step active">
-            {% elif wizard.steps.step1 >= 5%}
-            <div class="completed step">
-                {% else %}
-                <div class="step">
-                    {% endif %}
-            <i class="dollar icon"></i>
-            <div class="content">
-                <div class="title">Payment information</div>
+<h1>{{ _('New Client') }}</h1>
+
+<div class="ui grid">
+    <div class="six wide column">
+        <div class="ui vertical steps">
+
+            {% include 'forms/step.html' with step=1 icon='male' name=_('Personal') description=_('First name, last name, ...') %}
+
+            {% include 'forms/step.html' with step=2 icon='home' name=_('Address') description=_('Street number, city, ...') %}
+
+            {% include 'forms/step.html' with step=3 icon='treatment' name=_('Referent') description=_('Referent contact information') %}
+
+            {% include 'forms/step.html' with step=4 icon='dollar' name=_('Payment') description=_('Payment method, card, ...') %}
+
+            {% include 'forms/step.html' with step=5 icon='food' name=_('Allergies') description=_('Restrictions, allergies, ...') %}
+
+            {% include 'forms/step.html' with step=6 icon='first aid' name=_('Emergency') description=_('Emergency contact information') %}
+
         </div>
     </div>
-      {% if wizard.steps.step1 == 5 %}
-      <div class="step active">
-        {% elif wizard.steps.step1 == 6 %}
-        <div class="completed step">
-          {% else %}
-          <div class="step">
-            {% endif %}
-            <i class="food icon"></i>
-              <div class="content">
-                <div class="title">Dietary information</div>
-              </div>
+
+    <div class="ten wide column">
+
+        <form action="" method="post" class="ui form error">{% csrf_token %}
+            {% if wizard.form.errors %}
+            <div class="ui error message">
+                <div class="header">{{ _('Required information missing')}}</div>
+                <p>{{ _('Please review the form to make sure that all required fields are filled.')}}</p>
+                {{ wizard.form.errors }}
             </div>
-            {% if wizard.steps.step1 == 6 %}
-            <div class="step active">
-              {% else %}
-              <div class="step">
+            {% endif %}
+            {{wizard.management_form}}
+
+            {% if wizard.form.forms %}
+
+                {{wizard.form.management_form}}
+
+                {% for form in wizard.form.forms}
+                    <div class="ui small icon input">
+                        sdfsfdsf
+                    </div>
+
+            {% else %}
+                {% if wizard.steps.current == 'basic_info' %}
+                    {% include 'forms/steps/basic_info.html' %}
+                {% elif wizard.steps.current == 'address_information' %}
+                    {% include 'forms/steps/address_information.html' %}
+                {% elif wizard.steps.current == 'referent_information' %}
+                    {% include 'forms/steps/referent_information.html' %}
+                {% elif wizard.steps.current == 'payment_information' %}
+                    {% include 'forms/steps/payment_information.html' %}
+                {% elif wizard.steps.current == 'dietary_restriction' %}
+                    {% include 'forms/steps/dietary_restriction.html' %}
+                {% elif wizard.steps.current == 'emergency_contact' %}
+                    {% include 'forms/steps/emergency_contact.html' %}
+                {% else %}
+
+                    {% for form in wizard.form %}
+
+                    <div class="field {% if form.errors %} error {% endif %}">
+                        <label>{{ form.label }} ({{form.name}})</label>
+                        {{ form }}
+                    </div>
+                {% endfor %}
+
                 {% endif %}
-                <i class="first aid icon"></i>
-                <div class="content">
-                  <div class="title">Emergency contact</div>
-                </div>
-              </div>
-          </div>
-        </div>
-      <div class="column">
-<form action="" method="post">{% csrf_token %}
-    <table class="ui compact table">
-        {{wizard.management_form}}
 
-        {% if wizard.form.forms %}
+            {% endif %}
 
-            {{wizard.form.management_form}}
+            {% if wizard.steps.prev %}
+            <button class="ui left floated button" name="wizard_goto_step" type="submit" value="{{wizard.steps.prev}}">
+                {% trans "Back"%}
+            </button>
+            {% endif %}
 
-            {% for form in wizard.form.forms}
+            {% if wizard.steps.step1 == 6 %}
+            <input class="big ui right floated teal button" type="submit" value="Save"/>
+            {% else %}
+            <button  class="big ui teal right floated button" name="wizard_goto_step" type="submit">Next</button>
+            {% endif %}
 
-
-                {{ form }}
-
-        {% else %}
-
-            {{wizard.form}}
-
-        {% endif %}
-    </table>
-    {% if wizard.steps.prev %}
-
-    <button class="ui secondary left labeled icon button" name="wizard_goto_step" type="submit" value="{{wizard.steps.first}}">
-        <i class="fast backward icon"></i>
-        {% trans "First Step" %}
-    </button>
-    <button class="ui secondary left labeled icon button" name="wizard_goto_step" type="submit" value="{{wizard.steps.prev}}">
-        <i class="left arrow icon"></i>
-        {% trans "Previous Step"%}
-    </button>
-
-    {% endif %}
-
-    {% if wizard.steps.step1 == 6 %}
-    <input class="ui primary button" type="submit"/>
-
-    {% else %}
-    <button  class="ui primary right labeled icon button" name="wizard_goto_step" type="submit"><i class="right arrow icon"></i>Next Step </button>
-
-    {% endif %}
-
-</form>
-  </div>
+        </form>
+    </div>
 </div>
-
-
 {% endblock %}
