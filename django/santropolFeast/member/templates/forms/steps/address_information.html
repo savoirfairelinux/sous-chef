@@ -1,0 +1,31 @@
+<div class="ui attached message">
+    <div class="header">
+    Address information
+    </div>
+    <p>Fill out the form below</p>
+</div>
+
+<h4 class="ui dividing header">{{ _('Address information') }}</h4>
+
+<div class="field">
+    <label>{{ _('Street') }}</label>
+    <div class="fields">
+      <div class="twelve wide field {% if wizard.form.street.errors %} error {% endif %}">
+        {{ wizard.form.street}}
+      </div>
+      <div class="four wide field">
+        {{ wizard.form.apartment }}
+      </div>
+    </div>
+</div>
+
+<div class="equal width fields">
+    <div class="field {% if wizard.form.city.errors %} error {% endif %}">
+      <label>{{ wizard.form.city.label }}</label>
+      {{ wizard.form.city }}
+    </div>
+    <div class="field {% if wizard.form.postal_code.errors %} error {% endif %}">
+        <label>{{ wizard.form.postal_code.label }}</label>
+        {{ wizard.form.postal_code }}
+    </div>
+</div>
