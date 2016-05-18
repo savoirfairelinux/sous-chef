@@ -45,7 +45,7 @@ class ClientWizard(NamedUrlSessionWizardView):
             street=address_information.cleaned_data.get('street'),
             apartment=address_information.cleaned_data.get(
                 'apartment'
-                ),
+            ),
             floor=address_information.cleaned_data.get('floor'),
             city=address_information.cleaned_data.get('city'),
             postal_code=address_information.cleaned_data.get('postal_code'),
@@ -67,12 +67,12 @@ class ClientWizard(NamedUrlSessionWizardView):
         emergency.save()
 
         client_emergency_contact = Contact.objects.create(
-             type=emergency_contact.cleaned_data.get("contact_type"),
-             value=emergency_contact.cleaned_data.get(
-                 "contact_value"
-                 ),
+            type=emergency_contact.cleaned_data.get("contact_type"),
+            value=emergency_contact.cleaned_data.get(
+                "contact_value"
+            ),
 
-             member=emergency,
+            member=emergency,
         )
         client_emergency_contact.save()
 
@@ -90,10 +90,10 @@ class ClientWizard(NamedUrlSessionWizardView):
         referent = Member.objects.create(
             firstname=referent_information.cleaned_data.get(
                 "firstname"
-                ),
+            ),
             lastname=referent_information.cleaned_data.get(
                 "lastname"
-                ),
+            ),
         )
         referent.save()
 

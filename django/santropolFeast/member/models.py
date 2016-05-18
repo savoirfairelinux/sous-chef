@@ -92,7 +92,9 @@ class Address(models.Model):
 
     # Member address information
     number = models.PositiveIntegerField(
-        verbose_name=_('street number')
+        verbose_name=_('street number'),
+        blank=True,
+        null=True,
     )
 
     street = models.CharField(
@@ -131,7 +133,7 @@ class Address(models.Model):
     )
 
     def __str__(self):
-        return "{} {}".format(self.number, self.street)
+        return self.street
 
 
 class Contact(models.Model):
