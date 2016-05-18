@@ -1,0 +1,34 @@
+<div class="ui attached message">
+    <div class="header">
+    Referral information
+    </div>
+    <p>Fill out the form below to create a new client</p>
+</div>
+
+<h4 class="ui dividing header">{{ _('Identity') }}</h4>
+
+<div class="field">
+    <label>{{ _('Name') }}</label>
+    <div class="two fields">
+      <div class="field {% if wizard.form.firstname.errors %} error {% endif %}">
+          {{wizard.form.firstname}}
+      </div>
+      <div class="field {% if wizard.form.lastname.errors %} error {% endif %}">
+          {{wizard.form.lastname}}
+      </div>
+    </div>
+</div>
+
+<h4 class="ui dividing header">{{ _('Referral reason') }}</h4>
+
+<div class="field {% if wizard.form.date.errors %} error {% endif %}">
+    <label>{{ wizard.form.date.label }}</label>
+    {{ wizard.form.date }}
+</div>
+
+<div class="field {% if wizard.form.referral_reason.errors %} error {% endif %}">
+    <div class="ui message attached">
+        <p>Please describe the referral reason(s)</p>
+    </div>
+    {{ wizard.form.referral_reason }}
+</div>

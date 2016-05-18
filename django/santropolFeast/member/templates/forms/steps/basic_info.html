@@ -1,0 +1,50 @@
+<div class="ui attached message">
+    <div class="header">
+    Welcome to the client creation form
+    </div>
+    <p>Fill out the form below to create a new client. No information will be saved until all the steps are completed.</p>
+</div>
+
+<h4 class="ui dividing header">{{ _('Identity') }}</h4>
+<div class="field">
+    <label>{{ _('Name') }}</label>
+    <div class="two fields">
+      <div class="field {% if wizard.form.firstname.errors %} error {% endif %}">
+          {{wizard.form.firstname}}
+      </div>
+      <div class="field {% if wizard.form.lastname.errors %} error {% endif %}">
+          {{wizard.form.lastname}}
+      </div>
+    </div>
+</div>
+<div class="field">
+    <label>{{ wizard.form.gender.label }}</label>
+    {{ wizard.form.gender }}
+</div>
+<div class="field {% if wizard.form.birthdate.errors %} error {% endif %}">
+    <label>{{ wizard.form.birthdate.label }}</label>
+    {{ wizard.form.birthdate }}
+</div>
+
+<h4 class="ui dividing header">{{ _('Contact information') }}</h4>
+<div class="inline fields">
+    <div class="field">
+        <label>{{ wizard.form.contact_type.label }}</label>
+        <div class="field">
+        {{ wizard.form.contact_type }}
+    </div>
+    </div>
+    <div class="field">
+        <label>{{ wizard.form.contact_value.label }}</label>
+        <div class="field {% if wizard.form.contact_value.errors %} error {% endif %}">
+            {{ wizard.form.contact_value }}
+        </div>
+    </div>
+</div>
+<h4 class="ui dividing header">{{ _('Alert') }}</h4>
+<div class="field {% if wizard.form.alert.errors %} error {% endif %}">
+    <div class="ui message attached">
+        <p>This message will be hightlighted on the client record.</p>
+    </div>
+    {{ wizard.form.alert }}
+</div>

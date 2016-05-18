@@ -1,5 +1,5 @@
 from django.test import TestCase
-from member.models import Member, Client
+from member.models import Member, Client, Note, User
 from datetime import date
 
 
@@ -20,3 +20,27 @@ class MemberTestCase(TestCase):
         """A member must be listed using his/her fullname"""
         member = Member.objects.get(firstname='Katrina')
         self.assertEqual(str(member), 'Katrina Heide')
+
+
+class NoteTestCase(TestCase):
+
+    def setUp(self):
+        Member.objects.create(firstname='Katrina',
+                              lastname='Heide', birthdate=date(1980, 4, 1))
+        User.objects.create(username="admin")
+
+    def test_attach_note_to_member(self):
+        """Create a note attached to a member"""
+        member = Member.objects.get(firstname='Katrina')
+        admin = User.objects.get(username='admin')
+        note = Note.objects.create(member=member, author=admin)
+        self.assertEqual(str(member), str(note.member))
+
+    def test_mark_as_read(self):
+        """Mark a note as read"""
+        member = Member.objects.get(firstname='Katrina')
+        admin = User.objects.get(username='admin')
+        note = Note.objects.create(member=member, author=admin)
+        self.assertFalse(note.is_read)
+        note.mark_as_read()
+        self.assertTrue(note.is_read)

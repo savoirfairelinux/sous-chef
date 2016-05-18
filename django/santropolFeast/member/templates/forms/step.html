@@ -1,0 +1,13 @@
+{% if wizard.steps.step1 == step  %}
+<div class="step active">
+{% elif wizard.steps.step1 > step %}
+<div class="completed step">
+{% else %}
+<div class="link step">
+{% endif %}
+    <i class="{{icon}} icon"></i>
+    <div class="content">
+        <div class="title">{{ name }}</div>
+        <div class="description">{{ description }}</div>
+    </div>
+</div>
