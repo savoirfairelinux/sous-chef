@@ -18,9 +18,11 @@ class ClientBasicInformation (forms.Form):
                                widget=forms.Select(
                                    attrs={'class': 'ui dropdown'}))
 
-    languages = forms.TypedMultipleChoiceField(choices=Client.LANGUAGES,
-                           widget=forms.SelectMultiple(
-                               attrs={'class': 'ui dropdown'}))
+    languages = forms.TypedMultipleChoiceField(
+        choices=Client.LANGUAGES,
+        widget=forms.SelectMultiple(
+            attrs={
+                'class': 'ui dropdown'}))
 
     birthdate = forms.DateField(label=_("Birthday"))
 
@@ -67,6 +69,12 @@ class ClientAddressInformation(forms.Form):
 
 
 class ClientRestrictionsInformation(forms.Form):
+
+    status = forms.BooleanField(
+        label=_('Active'),
+        help_text=_('By default, the client meal status is Pending.'),
+    )
+
     allergy = forms.TypedMultipleChoiceField(
         label=_("Allergy"),
         choices=ALLERGY_CHOICES,
@@ -92,9 +100,12 @@ class ClientReferentInformation(forms.Form):
                                widget=forms.TextInput(
         attrs={'placeholder': _('Last Name')}))
 
-    work_information = forms.CharField(max_length=200, label=_('Work information'),
-                                widget=forms.TextInput(
-         attrs={'placeholder': _('Hotel-Dieu, St-Anne Hospital, CLSC Villeray, ...')}))
+    work_information = forms.CharField(
+        max_length=200,
+        label=_('Work information'),
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('Hotel-Dieu, St-Anne Hospital, CLSC, ...')}))
 
     referral_reason = forms.CharField(label=_("Referral Reason"),
                                       widget=forms.Textarea(
@@ -112,8 +123,8 @@ class ClientPaymentInformation(forms.Form):
     )
 
     billing_payment_type = forms.ChoiceField(label=_("Payment Type"),
-                                    choices=PAYMENT_TYPE,
-                                    widget=forms.Select(
+                                             choices=PAYMENT_TYPE,
+                                             widget=forms.Select(
         attrs={'class': 'ui dropdown'})
     )
 
