@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from member.models import Client, Member, Address, Contact, Referencing, Note
 from formtools.wizard.views import *
 from django.shortcuts import *
+from django.core.urlresolvers import reverse_lazy
 
 
 class ClientWizard(NamedUrlSessionWizardView):
@@ -270,6 +271,12 @@ class ClientAllergiesView(generic.DetailView):
         context['myVariableOfContext'] = 0
 
         return context
+
+
+def show_information(request, id):
+        client = get_object_or_404(Client, pk=id)
+        return render(request, 'client/view/view_info.html',
+                      {'client': client})
 
 
 class ClientPreferencesView(generic.DetailView):
