@@ -12,9 +12,9 @@ WORK = 'Work phone'
 EMAIL = 'Email'
 
 GENDER_CHOICES = (
-    ('M', _('male')),
-    ('F', _('female')),
-    ('U', _('unknown')),
+    ('', _('Gender')),
+    ('F', _('Female')),
+    ('M', _('Male')),
 )
 
 CONTACT_TYPE_CHOICES = (
@@ -25,9 +25,18 @@ CONTACT_TYPE_CHOICES = (
 )
 
 FACTURATION_TYPE = (
-    ('default', _('default')),
-    ('low income', _('low_income')),
-    ('solidary', _('solidary')),
+    ('default', _('Default')),
+    ('low income', _('Low income')),
+    ('solidary', _('Solidary')),
+)
+
+PAYMENT_TYPE = (
+    ('', _('Payment type')),
+    ('check', _('Check')),
+    ('cash', _('Cash')),
+    ('debit', _('Debit card')),
+    ('credit', _('Credit card')),
+    ('eft', _('EFT')),
 )
 
 
@@ -159,6 +168,9 @@ class Contact(models.Model):
         related_name='member_contact'
     )
 
+    def __str__(self):
+        return "{} {}".format(self.member.firstname, self.member.lastname)
+
 
 class Client(models.Model):
 
@@ -180,10 +192,9 @@ class Client(models.Model):
         (DECEASED, _('Deceased')),
     )
 
-    FACTURATION_TYPE = (
-        ('default', _('Default')),
-        ('low income', _('Low income')),
-        ('solidary', _('Solidary')),
+    LANGUAGES = (
+        ('en', _('English')),
+        ('fr', _('French')),
     )
 
     class Meta:
@@ -192,6 +203,13 @@ class Client(models.Model):
     billing_address = models.ForeignKey(
         'member.Address',
         verbose_name=_('billing address')
+    )
+
+    billing_payment_type = models.CharField(
+        verbose_name=_('Payment Type'),
+        max_length=10,
+        null=True,
+        choices=PAYMENT_TYPE,
     )
 
     facturation = models.CharField(
@@ -231,9 +249,16 @@ class Client(models.Model):
         blank=True
     )
 
+    language = models.CharField(
+        max_length=2,
+        choices=LANGUAGES,
+        default='fr'
+    )
+
     alert = models.TextField(
         verbose_name=_('alert client'),
-        blank=True
+        blank=True,
+        null=True,
     )
 
     def __str__(self):
@@ -253,6 +278,12 @@ class Referencing (models.Model):
 
     referral_reason = models.TextField(
         verbose_name=_("Referral reason")
+    )
+
+    work_information = models.TextField(
+        verbose_name=_('Work information'),
+        blank=True,
+        null=True,
     )
 
     date = models.DateField(verbose_name=_("Referral date"),

@@ -18,6 +18,10 @@ class ClientBasicInformation (forms.Form):
                                widget=forms.Select(
                                    attrs={'class': 'ui dropdown'}))
 
+    languages = forms.TypedMultipleChoiceField(choices=Client.LANGUAGES,
+                           widget=forms.SelectMultiple(
+                               attrs={'class': 'ui dropdown'}))
+
     birthdate = forms.DateField(label=_("Birthday"))
 
     contact_type = forms.ChoiceField(choices=CONTACT_TYPE_CHOICES,
@@ -28,6 +32,7 @@ class ClientBasicInformation (forms.Form):
     contact_value = forms.CharField(label=_("Contact information"))
 
     alert = forms.CharField(label=_("Alert"),
+                            required=False,
                             widget=forms.Textarea(
         attrs={'rows': 2, 'placeholder': _('Your message here ...')}
     ))
@@ -87,6 +92,10 @@ class ClientReferentInformation(forms.Form):
                                widget=forms.TextInput(
         attrs={'placeholder': _('Last Name')}))
 
+    work_information = forms.CharField(max_length=200, label=_('Work information'),
+                                widget=forms.TextInput(
+         attrs={'placeholder': _('Hotel-Dieu, St-Anne Hospital, CLSC Villeray, ...')}))
+
     referral_reason = forms.CharField(label=_("Referral Reason"),
                                       widget=forms.Textarea(
         attrs={'rows': 4}
@@ -98,6 +107,12 @@ class ClientPaymentInformation(forms.Form):
 
     facturation = forms.ChoiceField(label=_("Billing Type"),
                                     choices=FACTURATION_TYPE,
+                                    widget=forms.Select(
+        attrs={'class': 'ui dropdown'})
+    )
+
+    billing_payment_type = forms.ChoiceField(label=_("Payment Type"),
+                                    choices=PAYMENT_TYPE,
                                     widget=forms.Select(
         attrs={'class': 'ui dropdown'})
     )
