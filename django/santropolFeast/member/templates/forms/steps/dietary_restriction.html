@@ -1,3 +1,17 @@
+<h4 class="ui dividing header">{{ _('Meal status') }}</h4>
+
+<div class="field">
+    <div class="ui ten wide toggle checkbox">
+        {{ wizard.form.status }}
+        <label>{{ wizard.form.status.label }}
+            <i class="help-text question teal icon link" data-content="{{ wizard.form.status.help_text }}"></i>
+        </label>
+    </div>
+</div>
+
+<h4 class="ui dividing header">{{ _('Meals default') }}</h4>
+
+
 <h4 class="ui dividing header">{{ _('Allergies and restrictions') }}</h4>
 
 <div class="field">

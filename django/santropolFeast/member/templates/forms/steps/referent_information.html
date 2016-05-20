@@ -19,6 +19,11 @@
     </div>
 </div>
 
+<div class="field {% if wizard.form.work_information.errors %} error {% endif %}">
+    <label>{{ wizard.form.work_information.label }}</label>
+    {{ wizard.form.work_information }}
+</div>
+
 <h4 class="ui dividing header">{{ _('Referral reason') }}</h4>
 
 <div class="field {% if wizard.form.date.errors %} error {% endif %}">

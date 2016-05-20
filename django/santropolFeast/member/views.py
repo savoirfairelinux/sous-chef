@@ -103,6 +103,9 @@ class ClientWizard(NamedUrlSessionWizardView):
             referral_reason=referent_information.cleaned_data.get(
                 "referral_reason"
             ),
+            work_information=referent_information.cleaned_data.get(
+                'work_information'
+            ),
             date='2012-12-12'
         )
         referencing.save()
