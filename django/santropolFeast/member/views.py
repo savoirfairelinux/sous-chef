@@ -2,8 +2,11 @@
 
 from django.views import generic
 from django.utils.decorators import method_decorator
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse_lazy
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-from member.models import Client, Member, Address, Contact, Referencing
+from member.models import Client, Member, Address, Contact, Referencing, Note
 from formtools.wizard.views import *
 from django.shortcuts import *
 
@@ -402,3 +405,16 @@ class ClientPreferencesUpdate(generic.UpdateView):
         context['myVariableOfContext'] = 0
 
         return context
+
+
+class NoteList(generic.ListView):
+    # Display the list of clients
+    model = Note
+    template_name = 'notes/list.html'
+    context_object_name = 'notes'
+
+
+def mark_as_read(request, id):
+    note = get_object_or_404(Note, pk=id)
+    note.mark_as_read()
+    return HttpResponseRedirect(reverse_lazy("member:notes"))

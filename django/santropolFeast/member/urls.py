@@ -3,7 +3,6 @@ from django.utils.translation import ugettext_lazy as _
 from member.views import *
 from member.forms import *
 
-
 create_member_forms = (
     ('basic_info', ClientBasicInformation),
     ('address_information', ClientAddressInformation),
@@ -21,4 +20,7 @@ urlpatterns = patterns('',
                        url(r'^create/(?P<step>.+)/$', member_wizard,
                            name='member_step'),
                        url(_(r'^list/$'), ClientList.as_view(), name='list'),
+                       url(_(r'^notes/$'), NoteList.as_view(), name='notes'),
+                       url(_(r'^note/read/(?P<id>[0-9]{1})/$'),
+                           mark_as_read, name='read'),
                        )

@@ -9,11 +9,13 @@ from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from member.models import Note
 
 
 @login_required
 def home(request):
-    return render(request, 'pages/home.html')
+    notes = list(Note.objects.all())
+    return render(request, 'pages/home.html', {'notes': notes})
 
 
 def custom_login(request):
