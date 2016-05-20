@@ -1,6 +1,6 @@
 @startuml
 scale 1.0
-title santropol-feast : Data Model (file= current_data_model.uml version= 0.1 2016-05-12)\n
+title santropol-feast Data Model (current_data_model.uml, up to commit 0762f6a, 2016-05-20)\n
 hide methods
 'hide fields
 skinparam shadowing false
@@ -82,10 +82,12 @@ class Allergy_ingredient << (M,yellow) >> {
 class Client {
     id
     billing_address_id
+    billing_payment_type
     facturation
     member_id
     emergency_contact_member_id
     status
+    language
     alert
 }
 
@@ -171,6 +173,7 @@ class Referencing {
     referent_member_id
     client_id
     referral_reason
+    work_information
     date
 }
 
