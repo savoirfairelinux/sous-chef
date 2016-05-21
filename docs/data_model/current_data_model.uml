@@ -1,6 +1,8 @@
+'Diagram in plantuml language : see http://plantuml.com/
+'To generate image : see http://www.plantuml.com/plantuml
 @startuml
 scale 1.0
-title santropol-feast Data Model (current_data_model.uml, up to commit 0762f6a, 2016-05-20)\n
+title santropol-feast Data Model (current_data_model.uml, up to commit 4739d94, 2016-05-20)\n
 hide methods
 'hide fields
 skinparam shadowing false
@@ -140,9 +142,11 @@ class Note {
     id
     note
     author_user_id
-    creation_date
+    date
     is_read
     member_id
+    priority
+      'choices: normal, urgent
 }
 
 class Notification {
