@@ -290,6 +290,12 @@ class Referencing (models.Model):
                             auto_now=False, auto_now_add=False,
                             default=datetime.date.today())
 
+    def __str__(self):
+        return "{} {} referred {} {} on {}".format(
+            self.referent.firstname, self.referent.lastname,
+            self.client.member.firstname, self.client.member.lastname,
+            str(self.date))
+
 
 class Note (models.Model):
 

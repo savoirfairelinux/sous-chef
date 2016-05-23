@@ -111,7 +111,9 @@ class ClientWizard(NamedUrlSessionWizardView):
             work_information=referent_information.cleaned_data.get(
                 'work_information'
             ),
-            date='2012-12-12'
+            date=referent_information.cleaned_data.get(
+                'date'
+            ),
         )
         referencing.save()
 
