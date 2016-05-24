@@ -81,6 +81,8 @@ class ClientWizard(NamedUrlSessionWizardView):
 
         client = Client.objects.create(
             facturation=payment_information.cleaned_data.get("facturation"),
+            billing_payment_type=payment_information.cleaned_data.get(
+                "billing_payment_type"),
             member=member,
             billing_address=address,
             emergency_contact=emergency,
@@ -109,7 +111,9 @@ class ClientWizard(NamedUrlSessionWizardView):
             work_information=referent_information.cleaned_data.get(
                 'work_information'
             ),
-            date='2012-12-12'
+            date=referent_information.cleaned_data.get(
+                'date'
+            ),
         )
         referencing.save()
 
