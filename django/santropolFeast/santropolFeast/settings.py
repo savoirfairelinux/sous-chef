@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'notification',
     'page',
     'formtools',
+    'django_filters',
 ]
 
 MIDDLEWARE_CLASSES = [

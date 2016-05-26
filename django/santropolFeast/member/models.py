@@ -3,6 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import User
 import datetime
+import django_filters
+
 
 import math
 
@@ -264,6 +266,13 @@ class Client(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.member.firstname, self.member.lastname)
+
+
+class ClientFilter(django_filters.FilterSet):
+    member__lastname = django_filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Client
 
 
 class Referencing (models.Model):

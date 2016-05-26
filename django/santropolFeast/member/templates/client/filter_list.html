@@ -8,7 +8,16 @@
 
 <h1>Search client</h1>
 
-<table class="ui very basic table" style="margin-bottom:40px"> <!--TODO: Replace margin-bottom with real styling-->
+<form action="" method="get">
+    <div class="ui large action left icon input">
+        <i class="users icon"></i>
+        {{ filter.form.member__lastname }}
+        <button class="ui teal button" type="submit">Search
+        </button>
+    </div>
+</form>
+
+<table class="ui very basic table">
   <thead>
     <tr>
       <th class="sorted descending">{% trans 'Name' %}</th>
@@ -18,12 +27,12 @@
     </tr>
   </thead>
   <tbody>
-    {% for client in clients %}
+    {% for obj in filter %}
         <tr>
-            <td>{{ client.member }}</td>
-            <td>{{ client.member.get_home_phone.value }}</td>
-            <td>{{ client.member.gender }}</td>
-            <td>{{ _('Active') }}</td>
+            <td>{{ obj.member }}</td>
+            <td>{{ obj.member.get_home_phone.value }}</td>
+            <td>{{ obj.member.gender }}</td>
+            <td>{{ obj.status  }}</td>
         </tr>
     {% endfor %}
     </tbody>

@@ -6,7 +6,8 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-from member.models import Client, Member, Address, Contact, Referencing, Note
+from member.models import Client, Member, Address, Contact
+from member.models import Referencing, ClientFilter, Note
 from formtools.wizard.views import *
 from django.shortcuts import *
 from django.core.urlresolvers import reverse_lazy
@@ -117,6 +118,11 @@ class ClientWizard(NamedUrlSessionWizardView):
             ),
         )
         referencing.save()
+
+
+def client_list(request):
+    f = ClientFilter(request.GET, queryset=Client.objects.all())
+    return render(request, 'client/filter_list.html', {'filter': f})
 
 
 class ClientList(generic.ListView):
@@ -274,9 +280,9 @@ class ClientAllergiesView(generic.DetailView):
 
 
 def show_information(request, id):
-        client = get_object_or_404(Client, pk=id)
-        return render(request, 'client/view/view_info.html',
-                      {'client': client})
+    client = get_object_or_404(Client, pk=id)
+    return render(request, 'client/view/view_info.html',
+                  {'client': client})
 
 
 class ClientPreferencesView(generic.DetailView):
