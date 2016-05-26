@@ -13,6 +13,7 @@ If you haven't already, please join us on IRC: `#feastproject` on Freenode.
 * [CI server (Travis)](https://travis-ci.org/savoirfairelinux/santropol-feast)
 * [Waffle Dashboard](https://waffle.io/savoirfairelinux/santropol-feast)
 * [Coveralls](https://coveralls.io/github/savoirfairelinux/santropol-feast?branch=dev)
+* [Semantic UI](http://semantic-ui.com/)
 * [Interactive wireframes](https://marvelapp.com/2187ig4)
 * [Creating a Pull Request on GitHub](https://help.github.com/articles/creating-a-pull-request/)
 * [IRC](http://webchat.freenode.net): channel **#feastproject**
