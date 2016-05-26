@@ -8,6 +8,12 @@
 
 {% endblock %}
 
+{% block breadcrumb %}
+{{ block.super }}
+<i class="right arrow icon divider"></i>
+<div class="active section">{{ client }}</div>
+{% endblock breadcrumb %}
+
 {% block content %}
 
   <div class="ui grid">
