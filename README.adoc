@@ -24,6 +24,7 @@ Some useful resources:
 * https://travis-ci.org/savoirfairelinux/santropol-feast[CI server (Travis)]
 * https://waffle.io/savoirfairelinux/santropol-feast[Waffle Dashboard]
 * https://coveralls.io/github/savoirfairelinux/santropol-feast?branch=dev[Coveralls]
+* https://marvelapp.com/2187ig4[Interactive wireframes]
 * https://help.github.com/articles/creating-a-pull-request/[Creating a Pull Request on GitHub]
 
 ## Communication
