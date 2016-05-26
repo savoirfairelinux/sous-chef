@@ -31,6 +31,8 @@ Numerous issues are created and waiting for your love on the [issue board](https
 
 You may also use [Waffle](https://waffle.io/savoirfairelinux/santropol-feast) as a more *Agile-like* dashboard.
 
+Please refer to the issues labels and topics for more information on how categorizing the issues.
+
 #### Pull Requests
 
 Contributions will be accepted through the creation of Pull Requests. Here is the workflow:
@@ -99,3 +101,30 @@ $ find . -name "*.po"
 Follow the workflow described in the Code section to contribute your translations.
 
 An other way to contribute there is to review the code and make sure all strings are translatable.
+
+## Additional notes
+
+### Issue labels
+
+| Label name | Description |
+| --- | --- |
+| `enhancement` | Feature requests. |
+| `bug` | Confirmed bugs or reports that are very likely to be bugs. |
+| `question` | Questions more than bug reports or feature requests (e.g. how do I do X). |
+| `help-wanted` | The Sous-Chef core team would appreciate help from the community in resolving these issues. |
+| `beginner` | Less complex issues which would be good first issues to work on for users who want to contribute to Sous-Chef. |
+| `duplicate` | Issues which are duplicates of other issues, i.e. they have been reported before. |
+| `wontfix` | The core team has decided not to fix these issues for now, either because they're working as intended or for some other reason. |
+| `invalid` | Issues which aren't valid (e.g. user errors). |
+
+### Issue topics
+
+| Label name | Description |
+| --- | --- |
+| `client` | Related to client management. |
+| `documentation` | Related to any kind of documentation. |
+| `frontend` | Related to Semantic UI integration, or Javascript problems. |
+| `i18n` | Related to any kind of internationalization problem. |
+| `python` | Related to python programming. |
+| `tests` | Related to unit tests, functional tests or manual testing. |
+| `ux/ui` | Related to user experience, user interface, design. |
