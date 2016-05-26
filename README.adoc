@@ -1,4 +1,4 @@
-= Feast Project
+= Sous-Chef
 
 :keywords: Django
 :page-layout: base
@@ -12,6 +12,8 @@
 :doc-asciidoctor: http://asciidoctor.org/docs/asciidoc-recommended-practices/
 :meetup-pyladies: http://www.meetup.com/fr-FR/PyLadiesMTL/events/230221872/
 
+Sous-Chef is a Django application to **help** organizations to **plan** and **deliver** meals, and to manage customers records.
+
 image::https://travis-ci.org/savoirfairelinux/santropol-feast.svg?branch=dev[alt="Build Status", link="https://travis-ci.org/savoirfairelinux/santropol-feast"]
 image::https://coveralls.io/repos/github/savoirfairelinux/santropol-feast/badge.svg?branch=dev[alt="Coverage Status", link="https://coveralls.io/github/savoirfairelinux/santropol-feast?branch=dev"]
 image::https://badge.waffle.io/savoirfairelinux/santropol-feast.png?label=ready&title=Ready[alt="Stories in Ready", link="https://waffle.io/savoirfairelinux/santropol-feast"]
@@ -24,6 +26,7 @@ Some useful resources:
 * https://travis-ci.org/savoirfairelinux/santropol-feast[CI server (Travis)]
 * https://waffle.io/savoirfairelinux/santropol-feast[Waffle Dashboard]
 * https://coveralls.io/github/savoirfairelinux/santropol-feast?branch=dev[Coveralls]
+* http://semantic-ui.com[Semantic UI]
 * https://marvelapp.com/2187ig4[Interactive wireframes]
 * https://help.github.com/articles/creating-a-pull-request/[Creating a Pull Request on GitHub]
 
@@ -37,99 +40,7 @@ Please refer to the https://github.com/savoirfairelinux/santropol-feast/blob/dev
 
 ## How to contribute
 
-Contributions to an open-source project can take multiple forms:
-
-* Code
-* Documentation
-* Tests and bug reporting
-* Translations
-
-### Code
-
-A pre-requisite is to have Feast installed on your machine.
-The installation procedure is based on Docker and is described https://github.com/savoirfairelinux/santropol-feast/blob/dev/INSTALL.md[on GitHub].
-
-#### Issues
-
-Numerous issues are created and waiting for your love on the https://github.com/savoirfairelinux/santropol-feast/issues[issue board].
-
-You may also use https://waffle.io/savoirfairelinux/santropol-feast[Waffle] as a more *Agile-like* dashboard.
-
-##### Issue trackers
-
-Issues are categorized with the following labels:
-
-* feature
-* bug
-* i18n (internationalization)
-* docs (documentation)
-* ux/ui
-* tests
-
-##### Issue categories
-
-Besides than those tracker, issues are identified regarding the field of expertise:
-
-* python
-* frontend
-* database
-
-CAUTION: Feast project is now using http://semantic-ui.com/[Semantic UI] as a frontend framework.
-
-#### Workflow
-
-* Fork the repository and work from there
-* Commit and push your changes into your fork
-* When you are done, create a https://github.com/savoirfairelinux/santropol-feast/compare[Pull Request] in Feast repository
-
-[IMPORTANT]
-====
-For your PR to be merged, it should respect the following:
-
-    * Tests must pass
-    * PEP-8 coding style must be respected
-    * Code coverage must be complete
-    * The branch can be merged automatically
-====
-
-https://travis-ci.org/[TravisCI] is configured to run those checks on every Pull-Request. It is recommanded you configure your fork to do the same.
-
-### Documentation
-
-Documentation is important and can always be improved:
-
-* Installation instructions
-* Test procedures
-* How to help translating the project
-* Updating the https://github.com/savoirfairelinux/santropol-feast/wiki/TODO[Roadmap]
-
-The prefered syntax is {doc-asciidoctor}[Asciidoc]. Markdown is also accepted.
-
-The https://github.com/savoirfairelinux/santropol-feast/wiki/[project wiki] on GitHub could also be used.
-
-
-### Tests and bug reporting
-
-It could be manual testing and reporting. The GitHub issues can be used for this.
-
-It could also be functional and unit tests implementation. Each Django module has a *tests.py* file.
-
-### Translations
-
-FOW is a bilingual application and needs your talent of translators !
-
-FOW uses Django multilingual framework, based on Gettext and po files.
-
-Each module has its own set of translation files. To list them all:
-
- $ find . -name "*.po"
-
-https://poedit.net/[Poedit] can be used to translate those files.
-Follow the workflow described in the Code section to contribute your translations.
-
-NOTE: An alternative way to contribute could be to send the po files through emails.
-
-An other way to contribute there is to review the code and make sure all strings are translatable.
+Please refer to the https://github.com/savoirfairelinux/santropol-feast/blob/dev/CONTRIBUTING.md[contribution guidelines].
 
 ## About the Santropol Roulant
 
