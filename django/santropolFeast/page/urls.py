@@ -15,7 +15,7 @@ urlpatterns = [
     ),
     url(
         r'^logout$',
-        'django.contrib.auth.views.logout',
+        auth_views.logout,
         {'next_page': '/'},
         name='logout'
     ),
