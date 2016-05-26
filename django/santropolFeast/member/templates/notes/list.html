@@ -1,8 +1,14 @@
-{% extends "base.html" %}
+{% extends "base_member.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
 
 {% block title %}Staff notes{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<i class="right arrow icon divider"></i>
+<div class="active section">{% trans "Staff notes" %}</div>
+{% endblock breadcrumb %}
 
 {% block content %}
 

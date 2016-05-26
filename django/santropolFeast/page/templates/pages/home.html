@@ -6,6 +6,14 @@
 
 {% block title %}Homepage{% endblock %}
 
+{% block breadcrumb %}
+{{ block.super }}
+<i class="right chevron icon divider"></i>
+<a href="#" class="section">{% trans "Dashboard" %}</a>
+<i class="right arrow icon divider"></i>
+<div class="active section">Overview</div>
+{% endblock breadcrumb %}
+
 {% block content %}
 
 {% include "dashboard/statistics.html" %}
@@ -55,7 +63,7 @@
 </div>
 <div class="two column stackable ui grid padded">
     <div class="column">
-        {% include "notes/latest.html" %}   
+        {% include "notes/latest.html" %}
     </div>
 </div>
 {% endblock %}

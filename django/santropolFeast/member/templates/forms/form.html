@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_member.html" %}
 
 {% load i18n %}
 
@@ -7,6 +7,12 @@
 {% endblock %}
 
 {% block title %}Create a new client{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<i class="right arrow icon divider"></i>
+<div class="active section">{% trans "Add new client" %}</div>
+{% endblock breadcrumb %}
 
 {% block content %}
 

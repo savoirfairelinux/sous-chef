@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load staticfiles %}
+{% load staticfiles i18n %}
 <html>
 
 <head>
@@ -65,7 +65,12 @@
 
     <div class="ui container">
 
-        {% include "breadcrumb.html" %}
+        <div class="ui breadcrumb">
+            {% block breadcrumb %}
+            <a href="/" class="section">{% trans "Home" %}</a>
+            {% endblock breadcrumb %}
+        </div>
+        <div class="ui divider"></div>
 
         <div class="ui message">
             <i class="close icon"></i>
