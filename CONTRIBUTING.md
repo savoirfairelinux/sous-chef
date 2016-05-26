@@ -123,8 +123,10 @@ An other way to contribute there is to review the code and make sure all strings
 | Label name | Description |
 | --- | --- |
 | `client` | Related to client management. |
+| `order` | Related to the orders and order items management. |
 | `documentation` | Related to any kind of documentation. |
 | `frontend` | Related to Semantic UI integration, or Javascript problems. |
+| `migration` | Related to the data migration from the old application. |
 | `i18n` | Related to any kind of internationalization problem. |
 | `python` | Related to python programming. |
 | `tests` | Related to unit tests, functional tests or manual testing. |
