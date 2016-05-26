@@ -1,7 +1,16 @@
 from django.conf.urls import patterns, url
 from django.utils.translation import ugettext_lazy as _
-from member.views import *
-from member.forms import *
+
+from member.views import (
+    ClientWizard, NoteList, client_list, mark_as_read,
+    show_information
+)
+
+from member.forms import (
+    ClientBasicInformation, ClientAddressInformation,
+    ClientReferentInformation, ClientPaymentInformation,
+    ClientRestrictionsInformation, ClientEmergencyContactInformation
+)
 
 create_member_forms = (
     ('basic_info', ClientBasicInformation),
