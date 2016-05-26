@@ -23,4 +23,7 @@ urlpatterns = patterns('',
                        url(_(r'^notes/$'), NoteList.as_view(), name='notes'),
                        url(_(r'^note/read/(?P<id>[0-9]{1})/$'),
                            mark_as_read, name='read'),
+                       url(_(r'^view_info/(?P<id>\d+)/$'),
+                           show_information,
+                           name='view_info'),
                        )

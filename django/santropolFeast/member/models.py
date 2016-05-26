@@ -138,7 +138,8 @@ class Address(models.Model):
 
     member = models.ForeignKey(
         'member.Member',
-        verbose_name=_('member')
+        verbose_name=_('member'),
+        related_name=('member_address')
     )
 
     def __str__(self):
@@ -165,7 +166,7 @@ class Contact(models.Model):
     member = models.ForeignKey(
         'member.Member',
         verbose_name=_('member'),
-        related_name='member_contact'
+        related_name='member_contact',
     )
 
     def __str__(self):
@@ -274,7 +275,8 @@ class Referencing (models.Model):
                                  verbose_name=_('referent'))
 
     client = models.ForeignKey('member.Client',
-                               verbose_name=_('client'))
+                               verbose_name=_('client'),
+                               related_name='client_referent')
 
     referral_reason = models.TextField(
         verbose_name=_("Referral reason")
