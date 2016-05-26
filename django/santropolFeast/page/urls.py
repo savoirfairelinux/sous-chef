@@ -1,9 +1,8 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from page import views
 from django.contrib.auth import views as auth_views
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(
         r'^home$',
         views.home,
@@ -20,5 +19,4 @@ urlpatterns = patterns(
         {'next_page': '/'},
         name='logout'
     ),
-
-)
+]
