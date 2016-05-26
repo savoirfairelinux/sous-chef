@@ -1,7 +1,10 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from member.models import *
-from meal.models import *
+from member.models import (
+    Client, FACTURATION_TYPE, CONTACT_TYPE_CHOICES,
+    GENDER_CHOICES, PAYMENT_TYPE
+)
+from meal.models import ALLERGY_CHOICES
 
 
 class ClientBasicInformation (forms.Form):

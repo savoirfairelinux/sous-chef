@@ -8,8 +8,8 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from member.models import Client, Member, Address, Contact
 from member.models import Referencing, ClientFilter, Note
-from formtools.wizard.views import *
-from django.shortcuts import *
+from formtools.wizard.views import NamedUrlSessionWizardView
+from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
 
 
