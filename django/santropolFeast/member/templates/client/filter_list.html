@@ -29,7 +29,7 @@
   <tbody>
     {% for obj in filter %}
         <tr>
-            <td>{{ obj.member }}</td>
+            <td><a href="{% url 'member:view_info' id=obj.id %}">{{ obj.member }}</a></td>
             <td>{{ obj.member.get_home_phone.value }}</td>
             <td>{{ obj.member.gender }}</td>
             <td>{{ obj.status  }}</td>
