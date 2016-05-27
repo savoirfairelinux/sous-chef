@@ -14,14 +14,24 @@
 
 <h1>Search client</h1>
 
-<form action="" method="get">
-    <div class="ui large action left icon input">
-        <i class="users icon"></i>
-        {{ filter.form.member__lastname }}
-        <button class="ui teal button" type="submit">Search
-        </button>
-    </div>
-</form>
+<div class="ui mobile reversed equal width grid">
+  <div class="column">
+
+    <form action="" method="get">
+        <div class="ui large action left icon input">
+            <i class="users icon"></i>
+            {{ filter.form.member__lastname }}
+            <button class="ui teal button" type="submit">Search
+            </button>
+        </div>
+    </form>
+
+  </div>
+  <div class="column">
+    <a class="large ui button" href="{% url 'member:member_step' %}">Add new client</a>
+  </div>
+</div>
+
 
 <table class="ui very basic table">
   <thead>
