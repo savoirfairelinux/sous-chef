@@ -76,6 +76,7 @@ class ClientRestrictionsInformation(forms.Form):
     status = forms.BooleanField(
         label=_('Active'),
         help_text=_('By default, the client meal status is Pending.'),
+        required=False,
     )
 
     allergy = forms.TypedMultipleChoiceField(
