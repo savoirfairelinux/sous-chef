@@ -6,7 +6,8 @@ from datetime import date
 
 class MemberTestCase(TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
         member = Member.objects.create(
             firstname='Katrina', lastname='Heide', birthdate=date(1980, 4, 19))
         Contact.objects.create(
@@ -32,7 +33,8 @@ class MemberTestCase(TestCase):
 
 class NoteTestCase(TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
         Member.objects.create(firstname='Katrina',
                               lastname='Heide', birthdate=date(1980, 4, 1))
         User.objects.create(username="admin")
@@ -63,7 +65,8 @@ class NoteTestCase(TestCase):
 
 class ReferencingTestCase(TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
         professional_member = Member.objects.create(firstname='Dr. John',
                                                     lastname='Taylor')
         beneficiary_member = Member.objects.create(firstname='Angela',
@@ -89,7 +92,8 @@ class ReferencingTestCase(TestCase):
 
 class ContactTestCase(TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
         member = Member.objects.create(
             firstname='Katrina', lastname='Heide', birthdate=date(1980, 4, 19))
         Contact.objects.create(
@@ -105,7 +109,8 @@ class ContactTestCase(TestCase):
 
 class AddressTestCase(TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
         member = Member.objects.create(
             firstname='Katrina', lastname='Heide', birthdate=date(1980, 4, 19))
         Address.objects.create(
@@ -121,7 +126,8 @@ class AddressTestCase(TestCase):
 
 class ClientTestCase(TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
         member = Member.objects.create(firstname='Angela',
                                        lastname='Desousa')
         billing_address = Address.objects.create(
