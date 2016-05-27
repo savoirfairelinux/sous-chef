@@ -33,7 +33,13 @@
             <div class="ui blue ribbon label">
               <i class="male icon"></i>
             </div>
-            <span><h3>{% trans 'Basic Information' %}</h3></span>
+            <span>
+              <h3>{% trans 'Basic Information' %}
+                <a class="ui right floated icon button" href="/admin/member/client/{{client.id}}/change">
+                  <i class="write icon"></i>
+                </a>
+              </h3>
+            </span>
             <div class="ui clearing divider"></div>
             <div>
               {% trans 'First Name' %}: {{client.member.firstname}}
@@ -66,7 +72,13 @@
             <div class="ui grey ribbon label">
               <i class=" home icon"></i>
             </div>
-              <span><h3> {% trans 'Address' %} </h3></span>
+              <span>
+                <h3> {% trans 'Address' %}
+                  <a class="ui right floated icon button" href="/admin/member/address/{{client.member.member_address.first.id}}/change">
+                    <i class="write icon"></i>
+                  </a>
+                </h3>
+            </span>
               <div class="ui clearing divider"></div>
               {% for address in client.member.member_address.all %}
               <div>
@@ -89,7 +101,13 @@
             <div class="ui teal ribbon label">
             <i class="food icon"></i>
           </div>
-          <span><h3>{% trans 'Meal Information' %}</h3></span>
+          <span>
+            <h3>{% trans 'Meal Information' %}
+              <a class="ui right floated icon button" href="/admin/member/client/{{client.id}}/change">
+                <i class="write icon"></i>
+              </a>
+            </h3>
+          </span>
           <div class="ui clearing divider"></div>
           {% for allergy in client.allergies.all %}
           <div>
@@ -116,7 +134,13 @@
             <div class="ui purple ribbon label">
               <i class="book icon"></i>
             </div>
-              <span><h3>{% trans 'Notes' %}</h3></span>
+              <span>
+                <h3>{% trans 'Notes' %}
+                  <a class="ui right floated icon button" href="/admin/member/note/{{client.member.notes.first.id}}/change">
+                    <i class="write icon"></i>
+                  </a>
+                </h3>
+              </span>
               <div class="ui clearing divider"></div>
               {% for note in client.member.notes%}
               <div>
@@ -140,7 +164,13 @@
             <div class="ui black ribbon label">
               <i class="first aid icon"></i>
             </div>
-              <span><h3> {% trans 'Emergency Contact' %}</h3></span>
+              <span>
+                <h3> {% trans 'Emergency Contact' %}
+                  <a class="ui right floated icon button" href="/admin/member/member/{{client.emergency_contact.id}}/change">
+                    <i class="write icon"></i>
+                  </a>
+                </h3>
+              </span>
               <div class="ui clearing divider"></div>
               <div>
                 {% trans 'First Name' %}: {{client.emergency_contact.firstname}}
@@ -164,7 +194,14 @@
             <div class="ui green ribbon label">
               <i class="treatment icon"></i>
             </div>
-              <span><h3>{% trans 'Referent' %}</h3></span>
+              <span>
+                <h3>
+                  {% trans 'Referent' %}
+                  <a class="ui right floated icon button" href="/admin/member/referencing/{{client.client_referent.first.id}}/">
+                    <i class="write icon"></i>
+                  </a>
+                </h3>
+              </span>
               <div class="ui clearing divider"></div>
               {% for referent in client.client_referent.all %}
               <div>
@@ -196,7 +233,13 @@
           <div class="ui red ribbon label">
             <i class="dollar icon"></i>
           </div>
-            <span><h3> {% trans 'Payment' %}</h3></span>
+            <span>
+              <h3> {% trans 'Payment' %}
+                <a class="ui right floated icon button" href="/admin/member/client/{{client.id}}/change">
+                  <i class="write icon"></i>
+                </a>
+              </h3>
+            </span>
             <div class="ui clearing divider"></div>
             <div>
               {% trans 'First Name' %}: {{client.billing_firstname}}
