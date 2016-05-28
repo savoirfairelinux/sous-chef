@@ -2,9 +2,9 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django_filters import FilterSet, MethodFilter
 import datetime
-import django_filters
-
+import re
 
 import math
 
@@ -279,11 +279,47 @@ class Client(models.Model):
         return "{} {}".format(self.member.firstname, self.member.lastname)
 
 
-class ClientFilter(django_filters.FilterSet):
-    member__lastname = django_filters.CharFilter(lookup_expr='icontains')
+class ClientFilter(FilterSet):
+
+    name = MethodFilter(
+        action='filter_search',
+        label=_('Search by name')
+    )
 
     class Meta:
         model = Client
+
+    def filter_search(self, queryset, value):
+        if value:
+            query = []
+
+            value = re.sub('[^\w]', '', value).split()
+
+            for word in value:
+
+                firstname = list(
+                    queryset.filter(
+                        member__firstname__icontains=word
+                    ).all()
+                )
+
+                lastname = list(
+                    queryset.filter(
+                        member__lastname__icontains=word
+                    ).all()
+                )
+                for user in firstname:
+                    if user not in query:
+                        query.append(user)
+
+                for user in lastname:
+                    if user not in query:
+                        query.append(user)
+
+                return query
+
+        else:
+            return queryset
 
 
 class Referencing (models.Model):

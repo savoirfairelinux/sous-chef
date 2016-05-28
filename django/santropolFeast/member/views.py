@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from member.models import Client, Member, Address, Contact
-from member.models import Referencing, ClientFilter, Note
+from member.models import Referencing, ClientFilter, Note, ClientFilter
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
@@ -121,11 +121,6 @@ class ClientWizard(NamedUrlSessionWizardView):
         referencing.save()
 
 
-def client_list(request):
-    f = ClientFilter(request.GET, queryset=Client.objects.all())
-    return render(request, 'client/filter_list.html', {'filter': f})
-
-
 class ClientList(generic.ListView):
     # Display the list of clients
     model = Client
@@ -136,11 +131,30 @@ class ClientList(generic.ListView):
     def dispatch(self, *args, **kwargs):
         return super(ClientList, self).dispatch(*args, **kwargs)
 
+    def get_queryset(self):
+        uf = ClientFilter(self.request.GET)
+        return uf.qs
+
     def get_context_data(self, **kwargs):
+        uf = ClientFilter(self.request.GET, queryset=self.get_queryset())
+
         context = super(ClientList, self).get_context_data(**kwargs)
 
         # Here you add some variable of context to display on template
         context['myVariableOfContext'] = 0
+        context['filter'] = uf
+
+        text = ''
+        count = 0
+        for getVariable in self.request.GET:
+            for getValue in self.request.GET.getlist(getVariable):
+                if count == 0:
+                    text += "?" + getVariable + "=" + getValue
+                else:
+                    text += "&" + getVariable + "=" + getValue
+                count += 1
+
+        context['get'] = text
 
         return context
 
