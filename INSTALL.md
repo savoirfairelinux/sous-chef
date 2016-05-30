@@ -1,11 +1,42 @@
 # Installation
 
-## Required dependencies
+
+## Linux
+
+### Required dependencies
 
 As a first step, you must install the following dependencies:
 
 1. **docker-engine**: https://docs.docker.com/engine/installation/
 2. **docker-compose**: https://docs.docker.com/compose/install/
+
+Continue to the docker initialization step.
+
+## OS X
+
+### Required dependencies
+
+As a first step, you must install the following dependencies:
+
+1. **Docker Toolbox**: https://www.docker.com/toolbox
+
+You must do the next set of command from the docker quickstart terminal.
+
+Continue to the docker initialization step.
+
+## Windows
+
+### Required dependencies
+
+As a first step, you must install the following dependencies:
+
+1. **Docker Toolbox** https://www.docker.com/toolbox
+
+**Notice**: Virtualisation must be enable on your computer
+
+You must do the next set of command from the docker quickstart terminal.
+
+Continue to the docker initialization step.
 
 ## Docker initialization
 
@@ -29,7 +60,12 @@ python3 django/santropolFeast/manage.py createsuperuser
 
 ## Connection to application
 
-You should now be ready to run the Django application by pointing your browser to **http://localhost:8000**.
+
+You should now be ready to run the Django application by pointing your browser to the container address.
+
+On linux it is localhost:8000.
+
+On Windows and OS X its the container ip address.
 
 ## Troubleshooting
 
