@@ -39,6 +39,7 @@
       <th class="sorted descending">{% trans 'Name' %}</th>
       <th class="">{% trans 'Phone Number' %}</th>
       <th class="">{% trans 'Gender' %}</th>
+      <th class="">{% trans 'Language'%}</th>
       <th class="">{% trans 'Meal Status' %}</th>
     </tr>
   </thead>
@@ -48,6 +49,7 @@
             <td><a href="{% url 'member:view_info' id=obj.id %}">{{ obj.member }}</a></td>
             <td>{{ obj.member.get_home_phone.value }}</td>
             <td>{{ obj.member.gender }}</td>
+            <td>{{ obj.language }}
             <td>{{ obj.status  }}</td>
         </tr>
     {% endfor %}
