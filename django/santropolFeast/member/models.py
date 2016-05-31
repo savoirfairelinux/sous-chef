@@ -26,7 +26,7 @@ CONTACT_TYPE_CHOICES = (
     (EMAIL, EMAIL),
 )
 
-FACTURATION_TYPE = (
+RATE_TYPE = (
     ('default', _('Default')),
     ('low income', _('Low income')),
     ('solidary', _('Solidary')),
@@ -58,20 +58,9 @@ class Member(models.Model):
         verbose_name=_('lastname')
     )
 
-    gender = models.CharField(
-        max_length=1,
-        default='U',
-        blank="True",
-        null="True",
-        choices=GENDER_CHOICES,
-    )
-
-    birthdate = models.DateField(
-        auto_now=False,
-        auto_now_add=False,
-        default=timezone.now,
-        blank="True",
-        null="True"
+    address = models.ForeignKey(
+        'member.Address',
+        verbose_name=_('address')
     )
 
     def __str__(self):
@@ -138,12 +127,6 @@ class Address(models.Model):
         verbose_name=_('postal code')
     )
 
-    member = models.ForeignKey(
-        'member.Member',
-        verbose_name=_('member'),
-        related_name=('member_address')
-    )
-
     def __str__(self):
         return self.street
 
@@ -203,9 +186,9 @@ class Client(models.Model):
     class Meta:
         verbose_name_plural = _('clients')
 
-    billing_address = models.ForeignKey(
-        'member.Address',
-        verbose_name=_('billing address')
+    billing_member = models.ForeignKey(
+        'member.Member',
+        verbose_name=_('billing member')
     )
 
     billing_payment_type = models.CharField(
@@ -215,10 +198,10 @@ class Client(models.Model):
         choices=PAYMENT_TYPE,
     )
 
-    facturation = models.CharField(
-        verbose_name=_('facturation type'),
+    rate_type = models.CharField(
+        verbose_name=_('rate type'),
         max_length=10,
-        choices=FACTURATION_TYPE,
+        choices=RATE_TYPE,
         default='default'
     )
 
@@ -231,6 +214,13 @@ class Client(models.Model):
         'member.Member',
         verbose_name=_('emergency contact'),
         related_name='emergency_contact',
+        null=True,
+    )
+
+    emergency_contact_relationship = models.CharField(
+        max_length=100,
+        verbose_name=_('emergency contact relationship'),
+        blank=True,
         null=True,
     )
 
@@ -264,15 +254,31 @@ class Client(models.Model):
         null=True,
     )
 
+    gender = models.CharField(
+        max_length=1,
+        default='U',
+        blank="True",
+        null="True",
+        choices=GENDER_CHOICES,
+    )
+
+    birthdate = models.DateField(
+        auto_now=False,
+        auto_now_add=False,
+        default=timezone.now,
+        blank="True",
+        null="True"
+    )
+
     def __str__(self):
         return "{} {}".format(self.member.firstname, self.member.lastname)
 
 
-class ClientFilter(django_filters.FilterSet):
-    member__lastname = django_filters.CharFilter(lookup_expr='icontains')
+# class ClientFilter(django_filters.FilterSet):
+#     member__lastname = django_filters.CharFilter(lookup_expr='icontains')
 
-    class Meta:
-        model = Client
+#     class Meta:
+#         model = Client
 
 
 class Referencing (models.Model):
