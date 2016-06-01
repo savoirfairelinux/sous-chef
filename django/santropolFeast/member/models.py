@@ -245,6 +245,12 @@ class Client(models.Model):
         default=PENDING
     )
 
+    delivery_days = models.ManyToManyField(
+        'member.WeekDay',
+        related_name='ongoing_member_delivery_days',
+        blank=True
+    )
+
     restrictions = models.ManyToManyField(
         'meal.Ingredient',
         related_name='restricted_clients',
@@ -284,6 +290,15 @@ class ClientFilter(django_filters.FilterSet):
 
     class Meta:
         model = Client
+
+
+class WeekDay(models.Model):
+    class Meta:
+        verbose_name_plural = _('weekdays')
+
+    name = models.CharField(
+        max_length=50,
+    )
 
 
 class Referencing (models.Model):
