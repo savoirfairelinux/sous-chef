@@ -2,7 +2,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from member.models import (
     Client, FACTURATION_TYPE, CONTACT_TYPE_CHOICES,
-    GENDER_CHOICES, PAYMENT_TYPE
+    GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE
 )
 from meal.models import ALLERGY_CHOICES
 
@@ -77,6 +77,15 @@ class ClientRestrictionsInformation(forms.Form):
         label=_('Active'),
         help_text=_('By default, the client meal status is Pending.'),
         required=False,
+    )
+
+    delivery_type = forms.ChoiceField(
+        label=_('Delivery Type'),
+        choices=DELIVERY_TYPE,
+        required=True,
+        widget=forms.Select(
+            attrs={'class': 'ui dropdown'}
+        )
     )
 
     allergy = forms.TypedMultipleChoiceField(

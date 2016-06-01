@@ -41,6 +41,11 @@ PAYMENT_TYPE = (
     ('eft', _('EFT')),
 )
 
+DELIVERY_TYPE = (
+    ('O', _('Ongoing')),
+    ('E', _('Episodic')),
+)
+
 
 class Member(models.Model):
 
@@ -262,6 +267,12 @@ class Client(models.Model):
         verbose_name=_('alert client'),
         blank=True,
         null=True,
+    )
+
+    delivery_type = models.CharField(
+        max_length=1,
+        choices=DELIVERY_TYPE,
+        default='O'
     )
 
     def __str__(self):
