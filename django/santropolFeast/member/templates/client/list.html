@@ -14,24 +14,53 @@
 
 <h1>Search client</h1>
 
-<table class="ui very basic table" style="margin-bottom:40px"> <!--TODO: Replace margin-bottom with real styling-->
+<div class="ui mobile reversed equal width grid">
+  <div class="column">
+
+    <form action="" method="get">
+        <div class="ui large action left icon input">
+            <i class="users icon"></i>
+            {{ filter.form.name }}
+            <button class="ui teal button" type="submit">Search
+            </button>
+        </div>
+    </form>
+
+  </div>
+  <div class="column">
+    <a class="large ui button" href="{% url 'member:member_step' %}">Add new client</a>
+  </div>
+</div>
+
+
+<table class="ui very basic table">
   <thead>
     <tr>
       <th class="sorted descending">{% trans 'Name' %}</th>
       <th class="">{% trans 'Phone Number' %}</th>
       <th class="">{% trans 'Gender' %}</th>
+      <th class="">{% trans 'Language'%}</th>
       <th class="">{% trans 'Meal Status' %}</th>
     </tr>
   </thead>
   <tbody>
-    {% for client in clients %}
+    {% if clients %}
+    {% for obj in clients %}
         <tr>
-            <td>{{ client.member }}</td>
-            <td>{{ client.member.get_home_phone.value }}</td>
-            <td>{{ client.member.gender }}</td>
-            <td>{{ _('Active') }}</td>
+            <td><a href="{% url 'member:view' id=obj.id %}">{{ obj.member }}</a></td>
+            <td>{{ obj.member.get_home_phone.value }}</td>
+            <td>{{ obj.member.gender }}</td>
+            <td>{{ obj.language }}</td>
+            <td>{{ obj.status  }}</td>
         </tr>
     {% endfor %}
+
+    {% else %}
+    <tr>
+      <td colspan="4"> {% trans 'There is no client by that name' %}
+      </td>
+    </tr>
+      {% endif %}
     </tbody>
 </table>
 
