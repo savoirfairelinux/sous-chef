@@ -282,7 +282,7 @@ class ClientAllergiesView(generic.DetailView):
 
 def show_information(request, id):
     client = get_object_or_404(Client, pk=id)
-    return render(request, 'client/view/view_info.html',
+    return render(request, 'client/view/view.html',
                   {'client': client})
 
 

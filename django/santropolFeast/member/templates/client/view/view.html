@@ -16,90 +16,63 @@
 
 {% block content %}
 
-  <div class="ui grid">
+<div class="ui grid">
     <div class="sixteen wide column">
-      <h1 class="ui header">{{client}}</h1>
+        <h1 class="ui header">{{client}}</h1>
     </div>
     <div class="sixteen wide column">
-      <div class="ui warning message">
-        <div class="header">
-          {% trans 'Alert' %}
-      </div>
-      {{ client.alert }}
-    </div>
-      <div class="ui two column grid">
-        <div class="column">
-          <div class="ui raised segment">
-            <div class="ui blue ribbon label">
-              <i class="male icon"></i>
+        <div class="ui warning message">
+            <div class="header">
+                {% trans 'Important information' %}
             </div>
-            <span>
-              <h3>{% trans 'Basic Information' %}
+            {{ client.alert }}
+        </div>
+    </div>
+    <div class="eight wide column">
+        <div class="ui vertical segment">
+            <h3>{% trans 'Basic Information' %}
                 <a class="ui right floated icon button" href="/admin/member/client/{{client.id}}/change">
                   <i class="write icon"></i>
                 </a>
-              </h3>
-            </span>
-            <div class="ui clearing divider"></div>
-            <div>
-              {% trans 'First Name' %}: {{client.member.firstname}}
+            </h3>
+            <div class="ui list">
+                <div class="item"><div class="header">{% trans 'First Name' %}</div>{{client.member.firstname}}</div>
+                <div class="item"><div class="header">{% trans 'Last Name' %}</div>{{client.member.lastname}}</div>
+                <div class="item"><div class="header">{% trans 'Gender' %}</div>{{client.member.gender}}</div>
+                <div class="item"><div class="header">{% trans 'Language' %}</div>{{client.language}}</div>
+                <div class="item"><div class="header">{% trans 'Status' %}</div>{{client.status}}</div>
+                <div class="item"><div class="header">{% trans 'Delivery Type' %}</div>{{client.delivery_type}}</div>
+                <div class="item"><div class="header">{% trans 'Birthday' %}</div>{{client.member.birthdate}}</div>
+                {% for contact in client.member.member_contact.all %}
+                    <div class="item"><div class="header">{{contact.type}}</div>{{contact.value}}</div>
+                {% endfor %}
             </div>
-            <div>
-              {% trans 'Last Name' %}: {{client.member.lastname}}
-            </div>
-            <div>
-              {% trans 'Gender' %}: {{client.member.gender}}
-            </div>
-            <div>
-              {% trans 'Language' %}: {{client.language}}
-            </div>
-            <div>
-              {% trans 'Status' %}: {{client.status}}
-            </div>
-            <div>
-              {% trans 'Delivery Type' %}: {{client.delivery_type}}
-            </div>
-            <div>
-              {% trans 'Birthday' %}: {{client.member.birthdate}}
-            </div>
-            {% for contact in client.member.member_contact.all %}
-            <div>
-              {% trans 'Contact Type' %}: {{contact.type}}
-            </div>
-            <div>
-              {% trans 'Contact Information' %}: {{contact.value}}
-            </div>
-            {% endfor %}
-          </div>
-          <div class="ui raised segment">
+        </div>
+
+        <div class="ui segment">
             <div class="ui grey ribbon label">
-              <i class=" home icon"></i>
+                <i class=" home icon"></i>
             </div>
-              <span>
+            <span>
                 <h3> {% trans 'Address' %}
                   <a class="ui right floated icon button" href="/admin/member/address/{{client.member.member_address.first.id}}/change">
                     <i class="write icon"></i>
                   </a>
                 </h3>
             </span>
-              <div class="ui clearing divider"></div>
-              {% for address in client.member.member_address.all %}
-              <div>
-                {% trans 'Street' %}: {{address.street}}
-              </div>
-              {% if client.billing_address.appartment != None %}}
-              <div>
-                {% trans 'Appartment' %}: {{address.appartment}}
-              </div>
-              {% endif %}
-              <div>
-                {% trans 'City' %}: {{address.city}}
-              </div>
-              <div>
-                {% trans 'Postal Code' %}: {{address.postal_code}}
-              </div>
-              {% endfor %}
+            <div class="ui list">
+                {% for address in client.member.member_address.all %}
+                    <div class="item"><div class="header">{% trans 'Street' %}</div>{{address.street}}</div>
+                    {% if client.billing_address.appartment != None %}}
+                        <div class="item"><div class="header">{% trans 'Appartment' %}</div>{{address.appartment}}</div>
+                    {% endif %}
+                    <div class="item"><div class="header">{% trans 'City' %}</div>{{address.city}}</div>
+                    <div class="item"><div class="header">{% trans 'Postal Code' %}</div>{{address.postal_code}}</div>
+                {% endfor %}
             </div>
+        </div>
+
+
           <div class="ui raised segment">
             <div class="ui teal ribbon label">
             <i class="food icon"></i>
