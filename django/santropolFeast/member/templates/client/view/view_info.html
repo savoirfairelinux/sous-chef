@@ -57,6 +57,9 @@
               {% trans 'Status' %}: {{client.status}}
             </div>
             <div>
+              {% trans 'Delivery Type' %}: {{client.delivery_type}}
+            </div>
+            <div>
               {% trans 'Birthday' %}: {{client.member.birthdate}}
             </div>
             {% for contact in client.member.member_contact.all %}

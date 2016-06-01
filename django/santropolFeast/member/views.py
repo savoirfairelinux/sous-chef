@@ -89,8 +89,9 @@ class ClientWizard(NamedUrlSessionWizardView):
             billing_address=address,
             emergency_contact=emergency,
             # The default status is always PENDING
-            status="PENDING",
+            status=dietary_restriction.cleaned_data.get('status'),
             alert=basic_info.cleaned_data.get("alert"),
+            delivery_type=dietary_restriction.cleaned_data.get("delivery_type")
         )
         client.save()
 
