@@ -8,8 +8,8 @@
 
 ### Status
 
-- [] READY
-- [] HOLD
+- [ ] READY
+- [ ] HOLD
 - [X] WIP (Work-In-Progress)
 
 ### Deployment notes and migration
