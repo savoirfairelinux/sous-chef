@@ -14,7 +14,7 @@
 
 ### Deployment notes and migration
 
-- [] Migration needed
+- [ ] Migration needed
 
 Fill me in ...
 
