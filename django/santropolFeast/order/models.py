@@ -2,16 +2,29 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 ORDER_STATUS_CHOICES = (
-    (_('Ordered'), 1),
-    (_('Delivered'), 2),
-    (_('No charge'), 3),
-    (_('Paid'), 4),
+    ('', _('Order status')),
+    ('O', _('Ordered')),
+    ('D', _('Delivered')),
+    ('B', _('Billed')),
+    ('P', _('Paid')),
 )
 
-ORDERITEM_TYPE_CHOICES = (
-    (_('Half'), 1),
-    (_('Regular'), 2),
-    (_('Double'), 3),
+SIZE_CHOICES = (
+    ('', _('Serving size')),
+    ('R', _('Regular')),
+    ('L', _('Large')),
+)
+
+ORDER_ITEM_TYPE_CHOICES = (
+    ('', _('Order item type')),
+    ('B component',
+     _('BILLABLE meal component (main dish, vegetable, side dish, seasonal)')),
+    ('B delivery',
+     _('BILLABLE delivery (general store item, ...)')),
+    ('N delivery',
+     _('NON BILLABLE delivery (ex. invitation card, ...)')),
+    ('N pickup',
+     _('NON BILLABLE pickup (payment)')),
 )
 
 
@@ -22,18 +35,17 @@ class Order(models.Model):
 
     # Order information
     creation_date = models.DateField(
-        verbose_name=_('date')
+        verbose_name=_('creation date')
     )
 
-    type = models.CharField(
-        max_length=100,
+    delivery_date = models.DateField(
+        verbose_name=_('delivery date')
+    )
+
+    status = models.CharField(
+        max_length=1,
         choices=ORDER_STATUS_CHOICES,
         verbose_name=_('order status')
-    )
-
-    value = models.CharField(
-        max_length=20,
-        verbose_name=_('value')
     )
 
     client = models.ForeignKey(
@@ -41,25 +53,47 @@ class Order(models.Model):
         verbose_name=_('client')
     )
 
-    order_items = models.ManyToManyField(
-        'order.OrderItem',
-        related_name='order_items'
-    )
 
-
-class OrderItem(models.Model):
+class Order_item(models.Model):
 
     class Meta:
         verbose_name_plural = _('order items')
 
-    # Foreign Key to meal to get information
-    meal = models.ForeignKey(
-        'meal.Meal',
-        verbose_name=_('meal')
+    order = models.ForeignKey(
+        'order.Order',
+        verbose_name=_('order'),
+    )
+
+    component = models.ForeignKey(
+        'meal.Component',
+        verbose_name=_('component'),
+        null=True,
     )
 
     price = models.DecimalField(
         max_digits=6,
         decimal_places=2,
         verbose_name=_('price')
+    )
+
+    billable_flag = models.BooleanField(
+        verbose_name=_('billable flag'),
+    )
+
+    size = models.CharField(
+        verbose_name=_('size'),
+        max_length=1,
+        null=True,
+        choices=SIZE_CHOICES,
+    )
+
+    order_item_type = models.CharField(
+        verbose_name=_('order item type'),
+        max_length=20,
+        choices=ORDER_ITEM_TYPE_CHOICES,
+    )
+
+    remark = models.CharField(
+        max_length=256,
+        verbose_name=_('remark')
     )
