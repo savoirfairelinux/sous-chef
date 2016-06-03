@@ -1,10 +1,10 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from member.models import (
-    Client, FACTURATION_TYPE, CONTACT_TYPE_CHOICES,
+    Client, RATE_TYPE, CONTACT_TYPE_CHOICES,
     GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE
 )
-from meal.models import ALLERGY_CHOICES
+# from meal.models import ALLERGY_CHOICES
 
 
 class ClientBasicInformation (forms.Form):
@@ -88,20 +88,20 @@ class ClientRestrictionsInformation(forms.Form):
         )
     )
 
-    allergy = forms.TypedMultipleChoiceField(
-        label=_("Allergy"),
-        choices=ALLERGY_CHOICES,
-        required=False,
-        widget=forms.SelectMultiple(
-            attrs={'class': 'ui dropdown'})
-    )
-    restrictions = forms.TypedMultipleChoiceField(
-        label=_("Dietary Restrictions"),
-        choices=ALLERGY_CHOICES,
-        required=False,
-        widget=forms.SelectMultiple(
-            attrs={'class': 'ui dropdown'})
-    )
+    # allergy = forms.TypedMultipleChoiceField(
+    #     label=_("Allergy"),
+    #     choices=ALLERGY_CHOICES,
+    #     required=False,
+    #     widget=forms.SelectMultiple(
+    #         attrs={'class': 'ui dropdown'})
+    # )
+    # restrictions = forms.TypedMultipleChoiceField(
+    #     label=_("Dietary Restrictions"),
+    #     choices=ALLERGY_CHOICES,
+    #     required=False,
+    #     widget=forms.SelectMultiple(
+    #         attrs={'class': 'ui dropdown'})
+    # )
 
 
 class ClientReferentInformation(forms.Form):
@@ -130,7 +130,7 @@ class ClientReferentInformation(forms.Form):
 class ClientPaymentInformation(forms.Form):
 
     facturation = forms.ChoiceField(label=_("Billing Type"),
-                                    choices=FACTURATION_TYPE,
+                                    choices=RATE_TYPE,
                                     widget=forms.Select(
         attrs={'class': 'ui dropdown'})
     )
