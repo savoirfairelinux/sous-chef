@@ -4,7 +4,6 @@
 
 {% load staticfiles %}
 
-
 {% block title %}Map{% endblock %}
 
 {% block extrahead %}
@@ -12,11 +11,20 @@
     {% leaflet_js %}
     {% leaflet_css %}
     <link href="{% static 'leaflet-routing/leaflet-routing-machine.css' %}" rel="stylesheet">
+    <link href="{% static 'leaflet-geocoder/Control.Geocoder.css' %}" rel="stylesheet">
+    <style>
+    .leaflet-container-default {
+        position: block;
+        width: 100%;
+        height: 600px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <script src="{% static 'leaflet-routing/leaflet-routing-machine.js' %}" type="application/javascript"></script>
-
+<script src="{% static 'leaflet-geocoder/Control.Geocoder.js' %}" type="application/javascript"></script>
+<script src="{% static 'leaflet-routing/mapbox/lrm-mapbox-1.0.4.js' %}" type="application/javascript"></script>
 <h1>Map</h1>
 <script type="text/javascript">
     function main_map_init (map, options) {
@@ -29,18 +37,37 @@
         map.addLayer(layer);
 
          map.setView(new L.LatLng(45.5017, -73.5673), 8);
-         L.marker([45.5017, -73.5673]).addTo(map);
 
+         L.marker([45.516564, -73.575145], {
+           draggable: true,
+           opacity: 0.7
+         }).addTo(map);
+
+         var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
+         bikerouter.options.profile = 'mapbox.cycling';
 
          L.Routing.control({
-              waypoints: [
-                L.latLng(45.5017, -73.5673),
-                L.latLng(45.5017, -73.5873)
-              ]
+              router: bikerouter ,
+              plan: L.Routing.plan([
+                              L.latLng(45.5165, -73.5751),
+                              L.latLng(45.5117, -73.6673),
+                              L.latLng(45.5127, -73.5873)], {
+                      geocoder: L.Control.Geocoder.nominatim({
+                          geocodingQueryParams: { countrycodes: 'ca'}
+                      })
+                  }),
+                 language: 'fr',
+              routeWhileDragging: true,
             }).addTo(map);
-    }
+  }
 </script>
+
+<br>
+<br>
 {% leaflet_map "main" callback="main_map_init" %}
 
-
+<br>
+<br>
+<br>
+<br>
 {% endblock %}
