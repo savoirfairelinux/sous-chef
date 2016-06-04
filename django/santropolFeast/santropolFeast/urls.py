@@ -40,6 +40,10 @@ urlpatterns = [
         include('order.urls', namespace="order")
     ),
     url(
+        r'^delivery/',
+        include('delivery.urls', namespace="delivery")
+    ),
+    url(
         r'^p/',
         include('page.urls', namespace="page")
     ),
