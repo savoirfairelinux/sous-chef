@@ -8,6 +8,20 @@ COMPONENT_GROUP_CHOICES = (
     ('seasonal', _('Seasonal')),
 )
 
+INGREDIENT_GROUP_CHOICES = (
+    ('meat', _('Meat')),
+    ('dairy', _('Dairy')),
+    ('fish', _('Fish')),
+    ('seafood', _('Seafood')),
+    ('veggies and fruits', _('Veggies and fruits')),
+    ('legumineuse', _('Legumineuse')),
+    ('grains', _('Grains')),
+    ('fresh herbs', _('Fresh herbs')),
+    ('spices', _('Spices')),
+    ('dry and canned goods', _('Dry and canned goods')),
+    ('oils and sauces', _('Oils and sauces')),
+)
+
 RESTRICTED_ITEM_GROUP_CHOICES = (
     ('meat', _('Meat')),
     ('vegetables', _('Vegetables')),
@@ -31,6 +45,12 @@ class Ingredient(models.Model):
         verbose_name=_('description'),
         blank=True,
         null=True,
+    )
+
+    ingredient_group = models.CharField(
+        max_length=100,
+        choices=INGREDIENT_GROUP_CHOICES,
+        verbose_name=_('ingredient group')
     )
 
     def __str__(self):
@@ -133,7 +153,7 @@ class Menu(models.Model):
     date = models.DateField(verbose_name=_('date'))
 
     def __str__(self):
-        return "Menu for {}".format(str(self.menu.date))
+        return "Menu for {}".format(str(self.date))
 
 
 class Menu_component(models.Model):

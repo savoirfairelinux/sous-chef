@@ -119,6 +119,7 @@ class Ingredient << (C,green) >>  {
     id
     name
     description
+    ingredient_group
 }
 
 class Member << (C,red) >> {

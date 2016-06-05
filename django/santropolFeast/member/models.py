@@ -457,8 +457,9 @@ class Client_option(models.Model):
         related_name='+')
 
     def __str__(self):
-        return "{} <has> {}".format(self.client.name,
-                                    self.option.name)
+        return "{} {} <has> {}".format(self.client.member.firstname,
+                                       self.client.member.lastname,
+                                       self.option.name)
 
 
 class Restriction(models.Model):
@@ -473,5 +474,6 @@ class Restriction(models.Model):
         related_name='+')
 
     def __str__(self):
-        return "{} <restricts> {}".format(self.client.name,
-                                          self.restricted_item.name)
+        return "{} {} <restricts> {}".format(self.client.member.firstname,
+                                             self.client.member.lastname,
+                                             self.restricted_item.name)
