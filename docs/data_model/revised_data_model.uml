@@ -1,0 +1,230 @@
+'Diagram in plantuml language : see http://plantuml.com/
+'To generate image : see http://www.plantuml.com/plantuml
+@startuml
+scale 1.0
+title santropol-feast Data Model (revised_data_model.uml, 2016-06-02 at 8:40)\n
+hide methods
+'hide fields
+skinparam shadowing false
+skinparam classArrowColor Black
+skinparam classBorderColor Black
+skinparam classBackgroundColor White
+'skinparam classArrowFontColor Green
+skinparam classArrowFontStyle bold
+
+'relationships are in alphabetical order on the "many side"
+'  and we place on the left the entity that :
+'    is the many-to-many connecting table
+'    is the child in a child-parent relationship
+'and the direction is almost always -u- meaning UP
+
+legend left
+  <u>LEGEND</u>
+  <b>App :<color:green> Meal=green</color> <color:red> Member=red</color> <color:blue> Order=blue</color> <color:yellow> Notification=yellow</color> <color:orange> Route=orange</color></b>
+  <b>(C)</b> : ORM class + DB table
+  <b>(M)</b> : Many-to-many DB table
+endlegend
+
+Incompatibility "*" -d- "1" Ingredient
+Incompatibility "*" -u- "1" Restricted_item
+Client "0..1" -u- "1" Member
+Client "*" -u- "1" Member : Bill
+Client "*" -u- "0..1" Member : Emer
+Client "*" -u- "1" Route
+Client_option "*" -d- "1" Client
+Client_option "*" -u- "1" Option
+Component_Ingredient "*" -u- "1" Ingredient
+Component_Ingredient "*" -l- "1" Component
+Contact "*" -r- "1" Member
+Member "*" -u- "0..1" Address
+Menu_component "*" -r- "1" Component
+Menu_component "*" -u- "1" Menu
+Note "*" -d- "1" Member
+Note "*" -d- "1" User
+Notification "*" -d- "1" Member
+Order "*" -u- "1" Client
+Order_item "*" -d- "0..1" Component
+Order_item "*" -u- "1" Order
+Referencing "*" -r- "1" Client
+Referencing "*" -u- "1" Member
+Restriction "*" -l- "1" Client
+Restriction "*" -d- "1" Restricted_item
+
+'---------------------------------------------------------------------
+'classes are in Alphabetical order
+
+class Address << (C,red) >> {
+    id
+    number
+    street
+    apartment
+    floor
+    city
+    postal_code
+}
+
+class Client << (C,red) >> {
+    id
+    billing_member_id
+    billing_payment_type
+    rate_type
+      'ex. low income, solidary, default
+    member_id
+    emergency_contact_member_id
+    emergency_contact_relationship
+      'ex. son, daughter, friend
+    status
+    language
+    alert
+    delivery_type
+    gender
+    birthdate
+    route_id
+}
+
+class Client_option << (C,red) >> {
+    id
+    client_id
+    option_id
+}
+
+class Component << (C,green) >> {
+    id
+    name
+    description
+    component_group
+      'main dish, vegetable, seasonal, side dish
+}
+
+class Component_Ingredient << (C,green) >> {
+    id
+    component_id
+    ingredient_id
+}
+
+class Contact << (C,red) >> {
+    id
+    type
+    value
+    member_id
+}
+
+class Incompatibility << (C,green) >> {
+    id
+    restricted_item_id
+    ingredient_id
+}
+
+class Ingredient << (C,green) >>  {
+    id
+    name
+    description
+}
+
+class Member << (C,red) >> {
+    id
+    firstname
+    lastname
+    address_id
+}
+
+class Menu << (C,green) >> {
+    id
+    date
+}
+
+class Menu_component << (C,green) >> {
+    id
+    menu_id
+    component_id
+}
+
+class Note << (C,red) >> {
+    id
+    note
+    author_user_id
+    date
+    is_read
+    member_id
+    priority
+      'choices: normal, urgent
+}
+
+class Notification << (C,yellow) >> {
+    id
+    description
+    member_id
+    date
+}
+
+class Option << (C,red) >> {
+    'Client can choose more that one per option group
+    id
+    name
+      '(side dish) dessert, diabetic dessert, fruit salad, green salad, pudding
+      '(preparation) puree all, puree side, cut meat
+    description
+    option_group
+      'side_dish, preparation
+}
+
+class Order << (C,blue) >> {
+    id
+    creation_date
+    delivery_date
+    status
+      'Ordered, Delivered, Billed, Paid
+    client_id
+}
+
+class Order_item << (C,blue) >> {
+    id
+    order_id
+    component_id
+    price
+    billable_flag
+    size
+      'regular, large
+    order_item_type
+      'billable meal component
+      'billable delivery (ex. general store item)
+      'non billable delivery (ex. invitation card to an event)
+      'non billable pickup (ex. payment check)
+    remark
+      'ex. name of general store item to deliver
+}
+
+class Referencing << (C,red) >> {
+    id
+    referent_member_id
+    client_id
+    referral_reason
+    work_information
+    date
+}
+
+class Restricted_item << (C,green) >> {
+    id
+    name
+    description
+      'ex. gluten
+    restricted_item_group
+      'dairy, meat, vegetables
+}
+
+class Restriction << (C,red) >> {
+    id
+    client_id
+    restricted_item__id
+}
+
+class Route << (C,orange) >> {
+    id
+    name
+}
+
+class User {
+    id
+}
+
+@enduml
