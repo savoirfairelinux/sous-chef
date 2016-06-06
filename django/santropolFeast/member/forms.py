@@ -4,7 +4,7 @@ from member.models import (
     Client, RATE_TYPE, CONTACT_TYPE_CHOICES,
     GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE
 )
-# from meal.models import ALLERGY_CHOICES
+from meal.models import Ingredient
 
 
 class ClientBasicInformation (forms.Form):
@@ -88,20 +88,13 @@ class ClientRestrictionsInformation(forms.Form):
         )
     )
 
-    # allergy = forms.TypedMultipleChoiceField(
-    #     label=_("Allergy"),
-    #     choices=ALLERGY_CHOICES,
-    #     required=False,
-    #     widget=forms.SelectMultiple(
-    #         attrs={'class': 'ui dropdown'})
-    # )
-    # restrictions = forms.TypedMultipleChoiceField(
-    #     label=_("Dietary Restrictions"),
-    #     choices=ALLERGY_CHOICES,
-    #     required=False,
-    #     widget=forms.SelectMultiple(
-    #         attrs={'class': 'ui dropdown'})
-    # )
+    restrictions = forms.ModelMultipleChoiceField(
+        label=_("Restrictions"),
+        queryset=Ingredient.objects.all(),
+        required=False,
+        widget=forms.SelectMultiple(
+            attrs={'class': 'ui dropdown'})
+    )
 
 
 class ClientReferentInformation(forms.Form):
