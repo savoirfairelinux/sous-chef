@@ -1,6 +1,6 @@
 from django.contrib import admin
-from meal.models import Meal, Allergy, Ingredient
+from meal.models import Component, Restricted_item, Ingredient
 
-admin.site.register(Meal)
-admin.site.register(Allergy)
+admin.site.register(Component)
+admin.site.register(Restricted_item)
 admin.site.register(Ingredient)
