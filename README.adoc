@@ -12,7 +12,7 @@
 :doc-asciidoctor: http://asciidoctor.org/docs/asciidoc-recommended-practices/
 :meetup-pyladies: http://www.meetup.com/fr-FR/PyLadiesMTL/events/230221872/
 
-Sous-Chef is a Django application to **help** organizations to **plan** and **deliver** meals, and to manage customers records.
+Sous-Chef is a Django application to **help** organizations to **plan** and **deliver** meals, and to manage clients files.
 
 image::https://travis-ci.org/savoirfairelinux/santropol-feast.svg?branch=dev[alt="Build Status", link="https://travis-ci.org/savoirfairelinux/santropol-feast"]
 image::https://coveralls.io/repos/github/savoirfairelinux/santropol-feast/badge.svg?branch=dev[alt="Coverage Status", link="https://coveralls.io/github/savoirfairelinux/santropol-feast?branch=dev"]
