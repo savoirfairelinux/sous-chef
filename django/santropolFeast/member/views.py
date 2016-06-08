@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-from member.models import Client, Member, Address, Contact
+from member.models import Client, Member, Address, Contact, Note
 from member.models import Referencing, ClientFilter, Note, ClientFilter
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.shortcuts import render
@@ -37,14 +37,6 @@ class ClientWizard(NamedUrlSessionWizardView):
         print(emergency_contact.cleaned_data.get('firstname'))
         print(referent_information.cleaned_data.get('firstname'))
 
-        member = Member.objects.create(
-            firstname=basic_info.cleaned_data.get('firstname'),
-            lastname=basic_info.cleaned_data.get('lastname'),
-            gender=basic_info.cleaned_data.get('gender'),
-            birthdate=basic_info.cleaned_data.get('birthdate'),
-        )
-        member.save()
-
         address = Address.objects.create(
             number=address_information.cleaned_data.get('number'),
             street=address_information.cleaned_data.get('street'),
@@ -54,9 +46,36 @@ class ClientWizard(NamedUrlSessionWizardView):
             floor=address_information.cleaned_data.get('floor'),
             city=address_information.cleaned_data.get('city'),
             postal_code=address_information.cleaned_data.get('postal_code'),
-            member=member,
         )
         address.save()
+
+        # Should be created only if third-party billing member
+        if True:
+            billing_address = Address.objects.create(
+                number=payment_information.cleaned_data.get('number'),
+                street=payment_information.cleaned_data.get('street'),
+                apartment=payment_information.cleaned_data.get('apartment'),
+                floor=payment_information.cleaned_data.get('floor'),
+                city=payment_information.cleaned_data.get('city'),
+                postal_code=payment_information.cleaned_data.get(
+                    'postal_code'
+                ),
+            )
+            billing_address.save()
+
+            billing_member = Member.objects.create(
+                firstname=payment_information.cleaned_data.get('firstname'),
+                lastname=payment_information.cleaned_data.get('lastname'),
+                address=address,
+            )
+            billing_member.save()
+
+        member = Member.objects.create(
+            firstname=basic_info.cleaned_data.get('firstname'),
+            lastname=basic_info.cleaned_data.get('lastname'),
+            address=address,
+        )
+        member.save()
 
         contact = Contact.objects.create(
             type=basic_info.cleaned_data.get('contact_type'),
@@ -82,14 +101,16 @@ class ClientWizard(NamedUrlSessionWizardView):
         client_emergency_contact.save()
 
         client = Client.objects.create(
-            facturation=payment_information.cleaned_data.get("facturation"),
+            rate_type=payment_information.cleaned_data.get("facturation"),
             billing_payment_type=payment_information.cleaned_data.get(
                 "billing_payment_type"),
             member=member,
-            billing_address=address,
+            billing_member=member,
             emergency_contact=emergency,
             # The default status is always PENDING
             status=dietary_restriction.cleaned_data.get('status'),
+            gender=basic_info.cleaned_data.get('gender'),
+            birthdate=basic_info.cleaned_data.get('birthdate'),
             alert=basic_info.cleaned_data.get("alert"),
             delivery_type=dietary_restriction.cleaned_data.get("delivery_type")
         )
@@ -296,8 +317,10 @@ class ClientAllergiesView(generic.DetailView):
 
 def show_information(request, id):
     client = get_object_or_404(Client, pk=id)
+    notes = list(Note.objects.all())
+
     return render(request, 'client/view/view.html',
-                  {'client': client})
+                  {'client': client, 'notes': notes})
 
 
 class ClientPreferencesView(generic.DetailView):

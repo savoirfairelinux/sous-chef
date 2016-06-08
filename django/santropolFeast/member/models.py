@@ -26,7 +26,7 @@ CONTACT_TYPE_CHOICES = (
     (EMAIL, EMAIL),
 )
 
-FACTURATION_TYPE = (
+RATE_TYPE = (
     ('default', _('Default')),
     ('low income', _('Low income')),
     ('solidary', _('Solidary')),
@@ -46,6 +46,12 @@ DELIVERY_TYPE = (
     ('E', _('Episodic')),
 )
 
+OPTION_GROUP_CHOICES = (
+    ('side dish', _('side dish')),
+    ('preparation', _('Preparation')),
+    ('week delivery schedule', _('Week delivery schedule')),
+)
+
 
 class Member(models.Model):
 
@@ -63,37 +69,14 @@ class Member(models.Model):
         verbose_name=_('lastname')
     )
 
-    gender = models.CharField(
-        max_length=1,
-        default='U',
-        blank="True",
-        null="True",
-        choices=GENDER_CHOICES,
-    )
-
-    birthdate = models.DateField(
-        auto_now=False,
-        auto_now_add=False,
-        default=timezone.now,
-        blank="True",
-        null="True"
+    address = models.ForeignKey(
+        'member.Address',
+        verbose_name=_('address'),
+        null=True,
     )
 
     def __str__(self):
         return "{} {}".format(self.firstname, self.lastname)
-
-    def age_on_date(self, date):
-        """
-        Returns integer specifying person's age in years on date given.
-
-        >>> from datetime import date
-        >>> p = Member(birthdate=date(1950, 4, 19)
-        >>> p.age_on_date(date(2016, 4, 19))
-        66
-        """
-        if date < self.birthdate:
-            return 0
-        return math.floor((date - self.birthdate).days / 365)
 
     def get_home_phone(self):
         for c in self.member_contact.all():
@@ -141,12 +124,6 @@ class Address(models.Model):
     postal_code = models.CharField(
         max_length=6,
         verbose_name=_('postal code')
-    )
-
-    member = models.ForeignKey(
-        'member.Member',
-        verbose_name=_('member'),
-        related_name=('member_address')
     )
 
     def __str__(self):
@@ -208,9 +185,10 @@ class Client(models.Model):
     class Meta:
         verbose_name_plural = _('clients')
 
-    billing_address = models.ForeignKey(
-        'member.Address',
-        verbose_name=_('billing address')
+    billing_member = models.ForeignKey(
+        'member.Member',
+        related_name='+',
+        verbose_name=_('billing member'),
     )
 
     billing_payment_type = models.CharField(
@@ -220,10 +198,10 @@ class Client(models.Model):
         choices=PAYMENT_TYPE,
     )
 
-    facturation = models.CharField(
-        verbose_name=_('facturation type'),
+    rate_type = models.CharField(
+        verbose_name=_('rate type'),
         max_length=10,
-        choices=FACTURATION_TYPE,
+        choices=RATE_TYPE,
         default='default'
     )
 
@@ -239,22 +217,17 @@ class Client(models.Model):
         null=True,
     )
 
+    emergency_contact_relationship = models.CharField(
+        max_length=100,
+        verbose_name=_('emergency contact relationship'),
+        blank=True,
+        null=True,
+    )
+
     status = models.CharField(
         max_length=1,
         choices=CLIENT_STATUS,
         default=PENDING
-    )
-
-    restrictions = models.ManyToManyField(
-        'meal.Ingredient',
-        related_name='restricted_clients',
-        blank=True
-    )
-
-    allergies = models.ManyToManyField(
-        'meal.Allergy',
-        related_name='allergic_clients',
-        blank=True
     )
 
     language = models.CharField(
@@ -275,8 +248,43 @@ class Client(models.Model):
         default='O'
     )
 
+    gender = models.CharField(
+        max_length=1,
+        default='U',
+        blank="True",
+        null="True",
+        choices=GENDER_CHOICES,
+    )
+
+    birthdate = models.DateField(
+        auto_now=False,
+        auto_now_add=False,
+        default=timezone.now,
+        blank="True",
+        null="True"
+    )
+
+    # FUTURE
+    # route = models.ForeignKey(
+    #     'route.Route',
+    #     verbose_name=_('route')
+    # )
+
     def __str__(self):
         return "{} {}".format(self.member.firstname, self.member.lastname)
+
+    def age_on_date(self, date):
+        """
+        Returns integer specifying person's age in years on date given.
+
+        >>> from datetime import date
+        >>> p = Client(birthdate=date(1950, 4, 19)
+        >>> p.age_on_date(date(2016, 4, 19))
+        66
+        """
+        if date < self.birthdate:
+            return 0
+        return math.floor((date - self.birthdate).days / 365)
 
 
 class ClientFilter(FilterSet):
@@ -408,3 +416,64 @@ class Note (models.Model):
         if not self.is_read:
             self.is_read = True
             self.save()
+
+
+class Option(models.Model):
+
+    class Meta:
+        verbose_name_plural = _('options')
+
+    # Information about options added to the meal
+    name = models.CharField(
+        max_length=50,
+        verbose_name=_('name')
+    )
+
+    description = models.TextField(
+        verbose_name=_('description'),
+        blank=True,
+        null=True,
+    )
+
+    option_group = models.CharField(
+        max_length=100,
+        choices=OPTION_GROUP_CHOICES,
+        verbose_name=_('option group')
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class Client_option(models.Model):
+    client = models.ForeignKey(
+        'member.Client',
+        verbose_name=_('client'),
+        related_name='+')
+
+    option = models.ForeignKey(
+        'member.option',
+        verbose_name=_('option'),
+        related_name='+')
+
+    def __str__(self):
+        return "{} {} <has> {}".format(self.client.member.firstname,
+                                       self.client.member.lastname,
+                                       self.option.name)
+
+
+class Restriction(models.Model):
+    client = models.ForeignKey(
+        'member.Client',
+        verbose_name=_('client'),
+        related_name='+')
+
+    restricted_item = models.ForeignKey(
+        'meal.Restricted_item',
+        verbose_name=_('restricted item'),
+        related_name='+')
+
+    def __str__(self):
+        return "{} {} <restricts> {}".format(self.client.member.firstname,
+                                             self.client.member.lastname,
+                                             self.restricted_item.name)

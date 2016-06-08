@@ -25,13 +25,43 @@
             </button>
         </div>
     </form>
-
-  </div>
-  <div class="column">
-    <a class="large ui button" href="{% url 'member:member_step' %}">Add new client</a>
+    <br/><br/>
   </div>
 </div>
 
+
+<div class="ui four doubling cards">
+{% if clients %}
+{% for obj in clients %}
+    <a class="ui card" href="{% url 'member:view' id=obj.id %}">
+      <div class="content">
+        <div class="header">{{ obj.member }}</div>
+        <div class="meta">
+            <span class="right floated time"><i class="man icon"></i></span>
+            <span class="category">87 years old</span>
+        </div>
+        <div class="description">
+            <p>{{ obj.member.firstname }} is an <strong>{{ obj.get_delivery_type_display }}</strong>
+                client on the <strong>Mile-end</strong> route.</p>
+            <p>This client is currently <strong>{{ obj.get_status_display }}</strong>.
+        </div>
+      </div>
+      <div class="extra content">
+          <i class="phone icon"></i>
+          {{ obj.member.get_home_phone.value }}
+        <div class="right floated author">
+            <span class="category">
+                {% if obj.alert %}
+                <i class="help-text warning circle orange icon link" data-content="{{ obj.alert }}"></i>
+                {% endif %}
+                <i class="help-text {{ obj.language }} flag link" data-content="Language: {{ obj.get_language_display }}"></i>
+            </span>
+        </div>
+      </div>
+    </a>
+{% endfor %}
+{% endif %}
+</div>
 
 <table class="ui very basic table">
   <thead>
@@ -39,7 +69,6 @@
       <th class="sorted descending">{% trans 'Name' %}</th>
       <th class="">{% trans 'Phone Number' %}</th>
       <th class="">{% trans 'Gender' %}</th>
-      <th class="">{% trans 'Language'%}</th>
       <th class="">{% trans 'Meal Status' %}</th>
     </tr>
   </thead>
@@ -47,11 +76,23 @@
     {% if clients %}
     {% for obj in clients %}
         <tr>
-            <td><a href="{% url 'member:view' id=obj.id %}">{{ obj.member }}</a></td>
+            <td>
+                <h4 class="ui header">
+                    <div class="content">
+                        <a href="{% url 'member:view' id=obj.id %}">{{ obj.member }}</a>
+                        <div class="subheader">
+                            {% if obj.alert %}
+                            <i class="help-text warning circle orange icon link" data-content="{{ obj.alert }}"></i>
+                            {% endif %}
+                            <i class="help-text {{ obj.language }} flag link" data-content="Language: {{ obj.get_language_display }}"></i>
+                        </div>
+                    </div>
+                </h4>
+            </td>
             <td>{{ obj.member.get_home_phone.value }}</td>
-            <td>{{ obj.member.gender }}</td>
-            <td>{{ obj.language }}</td>
-            <td>{{ obj.status  }}</td>
+            <td><i class="help-text woman icon link" data-content="Gender: {{ obj.get_gender_display }}"></i></td>
+            <td>{{ obj.get_status_display }}</td>
+
         </tr>
     {% endfor %}
 
@@ -62,6 +103,15 @@
     </tr>
       {% endif %}
     </tbody>
+    <tfoot class="full-width">
+    <tr>
+      <th colspan="5">
+        <a class="ui small labeled icon button"  href="{% url 'member:member_step' %}">
+          <i class="user icon"></i> Add New Client
+      </a>
+      </th>
+    </tr>
+  </tfoot>
 </table>
 
 <script type="text/javascript">

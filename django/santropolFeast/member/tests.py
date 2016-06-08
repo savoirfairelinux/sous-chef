@@ -1,6 +1,7 @@
 from django.test import TestCase
 from member.models import Member, Client, Note, User, Address, Referencing
-from member.models import Contact
+from member.models import Contact, Option, Client_option, Restriction
+from meal.models import Restricted_item
 from datetime import date
 
 
@@ -9,16 +10,9 @@ class MemberTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         member = Member.objects.create(
-            firstname='Katrina', lastname='Heide', birthdate=date(1980, 4, 19))
+            firstname='Katrina', lastname='Heide')
         Contact.objects.create(
             type='Home phone', value='514-456-7890', member=member)
-
-    def test_age_on_date(self):
-        """The age on given date is properly computed"""
-        katrina = Member.objects.get(firstname='Katrina')
-        self.assertEqual(katrina.age_on_date(date(2016, 4, 19)), 36)
-        self.assertEqual(katrina.age_on_date(date(1950, 4, 19)), 0)
-        self.assertEqual(katrina.age_on_date(katrina.birthdate), 0)
 
     def test_str_is_fullname(self):
         """A member must be listed using his/her fullname"""
@@ -36,7 +30,7 @@ class NoteTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         Member.objects.create(firstname='Katrina',
-                              lastname='Heide', birthdate=date(1980, 4, 1))
+                              lastname='Heide')
         User.objects.create(username="admin")
 
     def test_attach_note_to_member(self):
@@ -69,13 +63,14 @@ class ReferencingTestCase(TestCase):
     def setUpTestData(cls):
         professional_member = Member.objects.create(firstname='Dr. John',
                                                     lastname='Taylor')
-        beneficiary_member = Member.objects.create(firstname='Angela',
-                                                   lastname='Desousa')
         billing_address = Address.objects.create(
             number=123, street='De Bullion',
-            city='Montreal', postal_code='H3C4G5', member=beneficiary_member)
+            city='Montreal', postal_code='H3C4G5')
+        beneficiary_member = Member.objects.create(firstname='Angela',
+                                                   lastname='Desousa',
+                                                   address=billing_address)
         client = Client.objects.create(
-            member=beneficiary_member, billing_address=billing_address)
+            member=beneficiary_member, billing_member=beneficiary_member)
         Referencing.objects.create(referent=professional_member, client=client,
                                    date=date(2015, 3, 15))
 
@@ -95,7 +90,7 @@ class ContactTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         member = Member.objects.create(
-            firstname='Katrina', lastname='Heide', birthdate=date(1980, 4, 19))
+            firstname='Katrina', lastname='Heide')
         Contact.objects.create(
             type='Home phone', value='514-456-7890', member=member)
 
@@ -111,30 +106,33 @@ class AddressTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        member = Member.objects.create(
-            firstname='Katrina', lastname='Heide', birthdate=date(1980, 4, 19))
-        Address.objects.create(
+        address = Address.objects.create(
             number=123, street='De Bullion',
-            city='Montreal', postal_code='H3C4G5', member=member)
+            city='Montreal', postal_code='H3C4G5')
+        member = Member.objects.create(
+            firstname='Katrina', lastname='Heide',
+            address=address)
 
     def test_str_includes_street(self):
         """An address listing must include the street name"""
         member = Member.objects.get(firstname='Katrina')
-        address = Address.objects.get(member=member)
-        self.assertTrue('De Bullion' in str(address))
+        # address = Address.objects.get(member=member)
+        self.assertTrue('De Bullion' in str(member.address))
 
 
 class ClientTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        member = Member.objects.create(firstname='Angela',
-                                       lastname='Desousa')
-        billing_address = Address.objects.create(
+        address = Address.objects.create(
             number=123, street='De Bullion',
-            city='Montreal', postal_code='H3C4G5', member=member)
+            city='Montreal', postal_code='H3C4G5')
+        member = Member.objects.create(firstname='Angela',
+                                       lastname='Desousa',
+                                       address=address)
         client = Client.objects.create(
-            member=member, billing_address=billing_address)
+            member=member, billing_member=member,
+            birthdate=date(1980, 4, 19))
 
     def test_str_is_fullname(self):
         """A client must be listed using his/her fullname"""
@@ -142,3 +140,90 @@ class ClientTestCase(TestCase):
         client = Client.objects.get(member=member)
         self.assertTrue(member.firstname in str(client))
         self.assertTrue(member.lastname in str(client))
+
+    def test_age_on_date(self):
+        """The age on given date is properly computed"""
+        member = Member.objects.get(firstname='Angela')
+        angela = Client.objects.get(member=member)
+        self.assertEqual(angela.age_on_date(date(2016, 4, 19)), 36)
+        self.assertEqual(angela.age_on_date(date(1950, 4, 19)), 0)
+        self.assertEqual(angela.age_on_date(angela.birthdate), 0)
+
+
+class OptionTestCase(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        option = Option.objects.create(
+            name='PUREE ALL', option_group='preparation')
+
+    def test_str_is_fullname(self):
+        """Option's string representation is its name"""
+        name = 'PUREE ALL'
+        option = Option.objects.get(name=name)
+        self.assertEqual(name, str(option))
+
+
+class Client_optionTestCase(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        address = Address.objects.create(
+            number=123, street='De Bullion',
+            city='Montreal', postal_code='H3C4G5')
+        member = Member.objects.create(firstname='Angela',
+                                       lastname='Desousa',
+                                       address=address)
+        client = Client.objects.create(
+            member=member, billing_member=member,
+            birthdate=date(1980, 4, 19))
+        option = Option.objects.create(
+            name='PUREE ALL', option_group='preparation')
+        Client_option.objects.create(client=client, option=option)
+
+    def test_str_includes_all_names(self):
+        """A Client_option's string representation includes the name
+        of the client and the name of the option.
+        """
+        member = Member.objects.get(firstname='Angela')
+        client = Client.objects.get(member=member)
+        name = 'PUREE ALL'
+        option = Option.objects.get(name=name)
+        client_option = Client_option.objects.get(
+            client=client, option=option)
+        self.assertTrue(client.member.firstname in str(client_option))
+        self.assertTrue(client.member.lastname in str(client_option))
+        self.assertTrue(option.name in str(client_option))
+
+
+class RestrictionTestCase(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        address = Address.objects.create(
+            number=123, street='De Bullion',
+            city='Montreal', postal_code='H3C4G5')
+        member = Member.objects.create(firstname='Angela',
+                                       lastname='Desousa',
+                                       address=address)
+        client = Client.objects.create(
+            member=member, billing_member=member,
+            birthdate=date(1980, 4, 19))
+        restricted_item = Restricted_item.objects.create(
+            name='pork', restricted_item_group='meat')
+        Restriction.objects.create(client=client,
+                                   restricted_item=restricted_item)
+
+    def test_str_includes_all_names(self):
+        """A restriction's string representation includes the name
+        of the client and the name of the restricted_item.
+        """
+        member = Member.objects.get(firstname='Angela')
+        client = Client.objects.get(member=member)
+        name = 'pork'
+        restricted_item = Restricted_item.objects.get(name=name)
+        restriction = Restriction.objects.get(
+            client=client, restricted_item=restricted_item)
+        self.assertTrue(client.member.firstname in str(restriction))
+        self.assertTrue(client.member.lastname in str(restriction))
+        self.assertTrue(restricted_item.name in str(restriction))

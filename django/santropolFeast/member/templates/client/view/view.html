@@ -17,9 +17,7 @@
 {% block content %}
 
 <div class="ui grid">
-    <div class="sixteen wide column">
-        <h1 class="ui header">{{client}}</h1>
-    </div>
+
     <div class="sixteen wide column">
         <div class="ui warning message">
             <div class="header">
@@ -28,225 +26,167 @@
             {{ client.alert }}
         </div>
     </div>
-    <div class="eight wide column">
-        <div class="ui vertical segment">
-            <h3>{% trans 'Basic Information' %}
-                <a class="ui right floated icon button" href="/admin/member/client/{{client.id}}/change">
-                  <i class="write icon"></i>
-                </a>
-            </h3>
-            <div class="ui list">
-                <div class="item"><div class="header">{% trans 'First Name' %}</div>{{client.member.firstname}}</div>
-                <div class="item"><div class="header">{% trans 'Last Name' %}</div>{{client.member.lastname}}</div>
-                <div class="item"><div class="header">{% trans 'Gender' %}</div>{{client.member.gender}}</div>
-                <div class="item"><div class="header">{% trans 'Language' %}</div>{{client.language}}</div>
-                <div class="item"><div class="header">{% trans 'Status' %}</div>{{client.status}}</div>
-                <div class="item"><div class="header">{% trans 'Delivery Type' %}</div>{{client.delivery_type}}</div>
-                <div class="item"><div class="header">{% trans 'Birthday' %}</div>{{client.member.birthdate}}</div>
-                {% for contact in client.member.member_contact.all %}
-                    <div class="item"><div class="header">{{contact.type}}</div>{{contact.value}}</div>
-                {% endfor %}
-            </div>
-        </div>
 
-        <div class="ui segment">
-            <div class="ui grey ribbon label">
-                <i class=" home icon"></i>
+    <div class="twelve wide column">
+        <h1 class="ui header">{{client}}
+            <div class="sub header">
+                <i class="woman icon"></i>
+                <i class="{{ client.language }} large flag"></i>
             </div>
-            <span>
-                <h3> {% trans 'Address' %}
-                  <a class="ui right floated icon button" href="/admin/member/address/{{client.member.member_address.first.id}}/change">
-                    <i class="write icon"></i>
-                  </a>
-                </h3>
-            </span>
-            <div class="ui list">
-                {% for address in client.member.member_address.all %}
-                    <div class="item"><div class="header">{% trans 'Street' %}</div>{{address.street}}</div>
-                    {% if client.billing_address.appartment != None %}}
-                        <div class="item"><div class="header">{% trans 'Appartment' %}</div>{{address.appartment}}</div>
-                    {% endif %}
-                    <div class="item"><div class="header">{% trans 'City' %}</div>{{address.city}}</div>
-                    <div class="item"><div class="header">{% trans 'Postal Code' %}</div>{{address.postal_code}}</div>
-                {% endfor %}
-            </div>
-        </div>
-
-
-          <div class="ui raised segment">
-            <div class="ui teal ribbon label">
-            <i class="food icon"></i>
-          </div>
-          <span>
-            <h3>{% trans 'Meal Information' %}
-              <a class="ui right floated icon button" href="/admin/member/client/{{client.id}}/change">
-                <i class="write icon"></i>
-              </a>
-            </h3>
-          </span>
-          <div class="ui clearing divider"></div>
-          {% for allergy in client.allergies.all %}
-          <div>
-            {% trans 'Allergies' %}: {{allergy.name}}
-          </div>
-          {% endfor %}
-          {% for restriction in client.restrictions.all %}
-          <div>
-            {% trans 'Restrictions' %}: {{restriction.name}}
-          </div>
-          {% endfor %}
-          <div>
-            {% trans 'Default Meal' %}: {{client.default_meal}}
-          </div>
-          <div>
-            {% trans 'Start Date' %}: {{client.start_date}}
-          </div>
-          <div>
-            {% trans 'Meal delivery Schedule' %}: {{client.client_order.delivery}}
-          </div>
-          </div>
-          {% if client.notes != none %}
-          <div class="ui raised segment">
-            <div class="ui purple ribbon label">
-              <i class="book icon"></i>
-            </div>
-              <span>
-                <h3>{% trans 'Notes' %}
-                  <a class="ui right floated icon button" href="/admin/member/note/{{client.member.notes.first.id}}/change">
-                    <i class="write icon"></i>
-                  </a>
-                </h3>
-              </span>
-              <div class="ui clearing divider"></div>
-              {% for note in client.member.notes%}
-              <div>
-                {% trans 'Author' %}: {{note.author}}
-              </div>
-              <div>
-                {% trans 'Creation Date' %}: {{note.creation_date}}
-              </div>
-              <div>
-                {% trans 'Notes' %}: {{note.note}}
-              </div>
-              <div>
-                {% trans 'Priority' %}: {{note.priority}}
-              </div>
-              {% endfor %}
-          </div>
-          {% endif %}
-        </div>
-
-        <div class="eight wide column">
-          <div class="ui raised segment">
-            <div class="ui black ribbon label">
-              <i class="first aid icon"></i>
-            </div>
-              <span>
-                <h3> {% trans 'Emergency Contact' %}
-                  <a class="ui right floated icon button" href="/admin/member/member/{{client.emergency_contact.id}}/change">
-                    <i class="write icon"></i>
-                  </a>
-                </h3>
-              </span>
-              <div class="ui clearing divider"></div>
-              <div>
-                {% trans 'First Name' %}: {{client.emergency_contact.firstname}}
-              </div>
-              <div>
-                {% trans 'Last Name' %}: {{client.emergency_contact.lastname}}
-              </div>
-              {% for contact in client.emergency_contact.member_contact.all %}
-              <div>
-                {% trans 'Contact type' %}: {{contact.type}}
-              </div>
-              <div>
-                {% trans 'Contact value' %}: {{contact.value}}
-              </div>
-              {% endfor %}
-              <div>
-                {% trans 'Relationship' %}: {{client.emergency_contact.relationship}}
-              </div>
-          </div>
-          <div class="ui raised segment">
-            <div class="ui green ribbon label">
-              <i class="treatment icon"></i>
-            </div>
-              <span>
-                <h3>
-                  {% trans 'Referent' %}
-                  <a class="ui right floated icon button" href="/admin/member/referencing/{{client.client_referent.first.id}}/">
-                    <i class="write icon"></i>
-                  </a>
-                </h3>
-              </span>
-              <div class="ui clearing divider"></div>
-              {% for referent in client.client_referent.all %}
-              <div>
-                {% trans 'First Name' %}: {{ referent.referent.firstname }}
-              </div>
-              <div>
-                {% trans 'Last Name' %}: {{referent.referent.lastname}}
-              </div>
-              <div>
-                {% trans 'Workplace Information' %}: {{referent.work_information}}
-              </div>
-              {% for contact in referent.referent.member_contact.all %}
-              <div>
-                {% trans 'Contact type' %}: {{contact.type}}
-              </div>
-              <div>
-                {% trans 'Contact value' %}: {{contact.value}}
-              </div>
-              {% endfor %}
-              <div>
-                {% trans 'Referral Date' %}: {{referent.date}}
-              </div>
-              <div>
-                {% trans 'Referal Reason' %}: {{referent.referral_reason}}
-              </div>
-              {% endfor %}
-            </div>
-        <div class="ui raised segment">
-          <div class="ui red ribbon label">
-            <i class="dollar icon"></i>
-          </div>
-            <span>
-              <h3> {% trans 'Payment' %}
-                <a class="ui right floated icon button" href="/admin/member/client/{{client.id}}/change">
-                  <i class="write icon"></i>
-                </a>
-              </h3>
-            </span>
-            <div class="ui clearing divider"></div>
-            <div>
-              {% trans 'First Name' %}: {{client.billing_firstname}}
-            </div>
-            <div>
-              {% trans 'Last Name' %}: {{client.billing_lastname}}
-            </div>
-            <div>
-              {% trans 'Street' %}: {{client.billing_address.street}}
-            </div>
-            {% if client.billing_address.appartment != None %}}
-            <div>
-              {% trans 'Appartment' %}: {{client.billing_address.appartment}}
-            </div>
-            {% endif %}
-            <div>
-              {% trans 'City' %}: {{client.billing_address.city}}
-            </div>
-            <div>
-              {% trans 'Postal Code' %}: {{client.billing_address.postal_code}}
-            </div>
-            <div>
-              {% trans 'Payment Method' %}: {{client.billing_payment_type}}
-            </div>
-            <div>
-              {% trans 'Rate type' %}: {{client.facturation}}
-            </div>
-          </div>
-        </div>
-        </div>
-        </div>
+        </h1>
     </div>
+
+    <div class="four wide column">
+        <a class="ui large yellow label"><i class="shipping icon"></i>{{client.get_status_display}}</a>
+        <a class="ui large teal label"><i class="clock icon"></i>{{client.get_delivery_type_display}}</a>
+    </div>
+
+    <div class="sixteen wide column">
+
+        <div class="ui top attached tabular menu">
+              <a class="item active" data-tab="first"><i class="user icon"></i>Personal</a>
+              <a class="item" data-tab="second"><i class="food icon"></i>Preferences</a>
+              <a class="item" data-tab="third"><i class="treatment icon"></i>Referent</a>
+              <a class="item" data-tab="four"><i class="payment icon"></i>Billing</a>
+              <a class="item" data-tab="five"><i class="book icon"></i>{% trans 'Notes' %}</a>
+        </div>
+
+        <div class="ui bottom attached tab segment active" data-tab="first">
+            <h3 class="ui header">
+                Basic information
+                <a  href="/admin/member/client/{{client.id}}/change">
+                    <i class="write grey icon"></i>
+                </a>
+            </h3>
+            <div class="ui list">
+                <div class="item">{% trans 'First Name' %}: {{client.member.firstname}}</div>
+                <div class="item">{% trans 'Last Name' %}: {{client.member.lastname}}</div>
+                <div class="item">{% trans 'Gender' %}: {{client.get_gender_display}}</div>
+                <div class="item">{% trans 'Language' %}: {{client.get_language_display}}</div>
+                <div class="item">{% trans 'Status' %}: {{client.get_status_display}}</div>
+                <div class="item">{% trans 'Delivery Type' %}: {{client.get_delivery_type_display}}</div>
+                <div class="item">{% trans 'Birthday' %}: {{client.birthdate}}</div>
+                {% for contact in client.member.member_contact.all %}
+                    <div class="item">{{contact.type}}: {{contact.value}}</div>
+                {% endfor %}
+                <h4 class="item"><i class="icon home"></i>{{client.member.address.street}}, {{client.member.address.city}}, {{client.member.address.postal_code}}</h4>
+            </div>
+
+            <h3 class="ui header">
+                {% trans 'Emergency Contact' %}
+                <a  href="/admin/member/member/{{client.emergency_contact.id}}/change">
+                    <i class="write grey icon"></i>
+                </a>
+            </h3>
+            <div class="ui list">
+                <div class="item">{% trans 'First Name' %}: {{client.emergency_contact.firstname}}</div>
+                <div class="item">{% trans 'Last Name' %}: {{client.emergency_contact.lastname}}</div>
+                <div class="item">{% trans 'Relationship' %}: {{rclient.emergency_contact.relationship}}</div>
+                {% for contact in client.emergency_contact.member_contact.all %}
+                <div class="item">{{contact.type}}: {{contact.value}}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="ui bottom attached tab segment" data-tab="second">
+            <h3 class="ui header">
+                Meal status
+                <a  href="/admin/member/client/{{client.id}}/change">
+                    <i class="write grey icon"></i>
+                </a>
+            </h3>
+            <p>{{client.get_status_display}}</p>
+            <h3 class="ui header">
+                Restrictions
+                <a  href="/admin/member/client/{{client.id}}/change">
+                    <i class="write grey icon"></i>
+                </a>
+            </h3>
+            <div>
+                <div class="ui label">
+                    Tomato
+                </div>
+                <div class="ui label">
+                    Basil
+                </div>
+                {% for restriction in client.restrictions.all %}
+                <div class="ui label">
+                    Tomato
+                </div>
+                <div class="ui label">
+                    Basil
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="ui bottom attached tab segment" data-tab="third">
+            <h3 class="ui header">
+                Referent
+                <a  href="/admin/member/referencing/{{client.client_referent.first.id}}/">
+                    <i class="write grey icon"></i>
+                </a>
+            </h3>
+            <div class="ui list">
+            {% for referent in client.client_referent.all %}
+                <div class="item">{% trans 'First Name' %}: {{referent.referent.firstname}}</div>
+                <div class="item">{% trans 'Last Name' %}: {{referent.referent.lastname}}</div>
+                <div class="item">{% trans 'Workplace information' %}: {{referent.work_information}}</div>
+                <div class="item">{% trans 'Referral Date' %}: {{referent.date}}</div>
+                <div class="item">{% trans 'Referral Reason' %}: {{referent.referral_reason}}</div>
+                {% for contact in referent.referent.member_contact.all %}
+                <div class="item">{{contact.type}}: {{contact.value}}</div>
+                {% endfor %}
+            {% endfor %}
+            </div>
+        </div>
+
+        <div class="ui bottom attached tab segment" data-tab="four">
+            <h3 class="ui header">
+                Billing
+            </h3>
+            <div class="ui list">
+                <div class="item">{% trans 'First Name' %}: {{client.billing_member.firstname}}</div>
+                <div class="item">{% trans 'Last Name' %}: {{client.billing_member.lastname}}</div>
+                <div class="item">{% trans 'Payment method' %}: {{client.get_billing_payment_type_display}}</div>
+                <div class="item">{% trans 'Rate type' %}: {{client.get_rate_type_display}}</div>
+                <h4 class="item"><i class="icon home"></i>{{client.billing_member.address.street}}, {{client.billing_member.address.city}}, {{client.billing_member.address.postal_code}}</h4>
+
+            </div>
+        </div>
+
+        <div class="ui bottom attached tab segment" data-tab="five">
+            <h3 class="ui header">
+                Notes
+            </h3>
+            <div class="ui feed">
+                {% for note in notes %}
+                <div class="event">
+                    <div class="label">
+                        <i class="{% if note.priority == 'urgent' %} announcement red {% else %} green info {% endif %} icon"></i>
+                    </div>
+                    <div class="content">
+                        <div class="date">
+                            {{ note.date }}
+                        </div>
+                        <div class="summary">
+                            {{ note.note }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    document.addEventListener( 'DOMContentLoaded', function () {
+        $('.menu .item')
+          .tab()
+        ;
+    })
+</script>
+
 {% endblock %}
