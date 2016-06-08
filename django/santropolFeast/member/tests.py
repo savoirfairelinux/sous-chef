@@ -3,6 +3,8 @@ from member.models import Member, Client, Note, User, Address, Referencing
 from member.models import Contact, Option, Client_option, Restriction
 from meal.models import Restricted_item
 from datetime import date
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse, reverse_lazy
 
 
 class MemberTestCase(TestCase):
@@ -17,7 +19,8 @@ class MemberTestCase(TestCase):
     def test_str_is_fullname(self):
         """A member must be listed using his/her fullname"""
         member = Member.objects.get(firstname='Katrina')
-        self.assertEqual(str(member), 'Katrina Heide')
+        str_member = str(member)
+        self.assertEqual(str_member, 'Katrina Heide')
 
     def test_get_home_phone(self):
         """The home phone is properly stored"""
@@ -238,3 +241,33 @@ class RestrictionTestCase(TestCase):
         self.assertTrue(client.member.firstname in str(restriction))
         self.assertTrue(client.member.lastname in str(restriction))
         self.assertTrue(restricted_item.name in str(restriction))
+
+
+class FormTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.admin = User.objects.create_superuser(
+            username='admin@example.com',
+            email='admin@example.com',
+            password='test1234'
+        )
+
+    def test_acces_to_form(self):
+        """Test if the form is accesible from its url"""
+        self.client.login(
+            username=self.admin.username,
+            password='test1234'
+        )
+        result = self.client.get(
+            reverse_lazy(
+                'member:member_step'
+            ), follow=True
+        )
+        self.assertEqual(result.status_code, 200)
+
+    def test_form(self):
+        """Test if the form data is correct"""
+        pass
+
+    def tear_down(self):
+        self.client.logout()
