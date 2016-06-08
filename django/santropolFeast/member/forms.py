@@ -93,7 +93,7 @@ class ClientRestrictionsInformation(forms.Form):
         queryset=Ingredient.objects.all(),
         required=False,
         widget=forms.SelectMultiple(
-            attrs={'class': 'ui dropdown'})
+            attrs={'class': 'ui dropdown search'})
     )
 
 
