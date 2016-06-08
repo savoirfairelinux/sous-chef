@@ -13,6 +13,9 @@ before_script:
 
 script:
   - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test member
+  - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test meal
+  - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test order
+  - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test notification
   - pep8 --count --show-source --exclude=migrations django/santropolFeast/
 
 after_success:
