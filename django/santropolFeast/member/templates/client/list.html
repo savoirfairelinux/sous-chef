@@ -21,7 +21,7 @@
         <div class="ui large action left icon input">
             <i class="users icon"></i>
             {{ filter.form.name }}
-            <button class="ui teal button" type="submit">Search
+            <button class="ui yellow button" type="submit">Search
             </button>
         </div>
     </form>
@@ -37,7 +37,9 @@
       <div class="content">
         <div class="header">{{ obj.member }}</div>
         <div class="meta">
-            <span class="right floated time"><i class="man icon"></i></span>
+            <span class="right floated time">
+                <i class="help-text {{ obj.language }} flag link" data-content="Language: {{ obj.get_language_display }}"></i>
+            </span>
             <span class="category">87 years old</span>
         </div>
         <div class="description">
@@ -54,7 +56,7 @@
                 {% if obj.alert %}
                 <i class="help-text warning circle orange icon link" data-content="{{ obj.alert }}"></i>
                 {% endif %}
-                <i class="help-text {{ obj.language }} flag link" data-content="Language: {{ obj.get_language_display }}"></i>
+
             </span>
         </div>
       </div>

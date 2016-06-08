@@ -54,11 +54,12 @@
                         <img class="ui small image" src="{% static 'assets/logo-souschef-coul.png' %}" title="Logo Sous-Chef"/>
                 </a>
                 <div class="right item">
-                    <a class="ui open-menu" href="#"><i class="sidebar teal large icon"></i></a>
+                    <a class="ui open-menu" href="#"><i class="sidebar yellow large icon"></i></a>
                 </div>
         </div>
 
         <div class="ui main container">
+
             <div class="ui breadcrumb">
                 {% block breadcrumb %}
                 <a href="/" class="section">{% trans "Home" %}</a>
@@ -68,16 +69,16 @@
 
             {%block content%}{%endblock%}
         </div>
-
+        <br><br>
         <div class="ui inverted vertical footer segment">
             <div class="ui center aligned container">
                 <div class="ui stackable inverted divided grid">
                     <div class="eight wide column">
-                        <h4 class="ui inverted header">What do you want to do?</h4>
+                        <h4 class="ui inverted header"><i class="question yellow icon"></i>What do you want to do</h4>
                         <div class="ui inverted link list">
                             <a href="{%url 'member:list'%}" class="item">Search for a client</a>
-                            <a href="#" class="item">Do the Kitchen Count</a>
-                            <a href="#" class="item">Find a delivery route</a>
+                            <a href="{% url 'member:member_step' %}" class="item">Add a new client</a>
+                            <a href="#" class="item">View orders</a>
                             <a href="#" class="item">See other applications</a>
                         </div>
                     </div>
@@ -90,7 +91,7 @@
                 <div class="ui inverted section divider"></div>
                 <img src="{% static 'assets/logo-souschef-coul.png' %}" class="ui centered small image">
                 <div class="ui horizontal inverted small divided link list">
-                    <p><i class="code teal icon"></i> with &nbsp;<i class="heart teal icon"></i> in Montreal</p>
+                    <p><i class="code yellow icon"></i> with &nbsp;<i class="heart yellow icon"></i> in Montreal</p>
                 </div>
             </div>
         </div>

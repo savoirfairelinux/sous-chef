@@ -16,7 +16,7 @@
 
 {% block content %}
 
-<h1>{{ _('New Client') }}</h1>
+<h1>{{ _('Add New Client') }}</h1>
 
 <div class="ui grid">
     <div class="six wide column">
@@ -28,7 +28,7 @@
 
             {% include 'forms/step.html' with step=3 icon='treatment' name=_('Referent') description=_('Referent contact information') %}
 
-            {% include 'forms/step.html' with step=4 icon='dollar' name=_('Payment') description=_('Payment method, card, ...') %}
+            {% include 'forms/step.html' with step=4 icon='payment' name=_('Payment') description=_('Payment method, card, ...') %}
 
             {% include 'forms/step.html' with step=5 icon='food' name=_('Allergies') description=_('Restrictions, allergies, ...') %}
 
@@ -92,9 +92,9 @@
             {% endif %}
 
             {% if wizard.steps.step1 == 6 %}
-            <input class="big ui right floated teal button" type="submit" value="Save"/>
+            <input class="big ui right floated yellow button" type="submit" value="Save"/>
             {% else %}
-            <button  class="big ui teal right floated button" name="wizard_goto_step" type="submit">Next</button>
+            <button  class="big ui yellow right floated button" name="wizard_goto_step" type="submit">Next</button>
             {% endif %}
 
         </form>
