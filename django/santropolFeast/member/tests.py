@@ -141,13 +141,11 @@ class ClientTestCase(TestCase):
         self.assertTrue(member.firstname in str(client))
         self.assertTrue(member.lastname in str(client))
 
-    def test_age_on_date(self):
+    def test_age(self):
         """The age on given date is properly computed"""
         member = Member.objects.get(firstname='Angela')
         angela = Client.objects.get(member=member)
-        self.assertEqual(angela.age_on_date(date(2016, 4, 19)), 36)
-        self.assertEqual(angela.age_on_date(date(1950, 4, 19)), 0)
-        self.assertEqual(angela.age_on_date(angela.birthdate), 0)
+        self.assertEqual(angela.age(), 36)
 
 
 class OptionTestCase(TestCase):

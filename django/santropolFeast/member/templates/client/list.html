@@ -40,7 +40,7 @@
             <span class="right floated time">
                 <i class="help-text {{ obj.language }} flag link" data-content="Language: {{ obj.get_language_display }}"></i>
             </span>
-            <span class="category">87 years old</span>
+            <span class="category">{{ obj.age }} years old</span>
         </div>
         <div class="description">
             <p>{{ obj.member.firstname }} is an <strong>{{ obj.get_delivery_type_display }}</strong>
