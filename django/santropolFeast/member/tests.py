@@ -145,7 +145,20 @@ class ClientTestCase(TestCase):
         """The age on given date is properly computed"""
         member = Member.objects.get(firstname='Angela')
         angela = Client.objects.get(member=member)
-        self.assertEqual(angela.age(), 36)
+        self.assertEqual(angela.age, 36)
+
+    def test_default(self):
+        """Default values must be properly set on client creation"""
+        member = Member.objects.get(firstname='Angela')
+        angela = Client.objects.get(member=member)
+        # Language: French
+        self.assertEqual(angela.language, 'fr')
+        # Status: Pending
+        self.assertEqual(angela.status, 'D')
+        # Gender: empty
+        self.assertEqual(angela.gender, 'U')
+        # Delivery type: Ongoing
+        self.assertEqual(angela.delivery_type, 'O')
 
 
 class OptionTestCase(TestCase):

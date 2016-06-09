@@ -30,15 +30,10 @@
     <div class="twelve wide column">
         <h1 class="ui header">{{client}}
             <div class="sub header">
-                <i class="woman icon"></i>
-                <i class="{{ client.language }} large flag"></i>
+                <a class="ui large yellow label"><i class="shipping icon"></i>{{client.get_status_display}}</a>
+                <a class="ui large yellow label"><i class="clock icon"></i>{{client.get_delivery_type_display}}</a>
             </div>
         </h1>
-    </div>
-
-    <div class="four wide column">
-        <a class="ui large yellow label"><i class="shipping icon"></i>{{client.get_status_display}}</a>
-        <a class="ui large yellow label"><i class="clock icon"></i>{{client.get_delivery_type_display}}</a>
     </div>
 
     <div class="sixteen wide column">

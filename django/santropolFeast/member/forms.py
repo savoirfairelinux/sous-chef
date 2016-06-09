@@ -22,9 +22,10 @@ class ClientBasicInformation (forms.Form):
                                widget=forms.Select(
                                    attrs={'class': 'ui dropdown'}))
 
-    languages = forms.TypedMultipleChoiceField(
+    language = forms.ChoiceField(
         choices=Client.LANGUAGES,
-        widget=forms.SelectMultiple(
+        label=_("Preferred language"),
+        widget=forms.Select(
             attrs={
                 'class': 'ui dropdown'}))
 
