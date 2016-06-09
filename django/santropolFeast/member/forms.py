@@ -2,7 +2,8 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from member.models import (
     Client, RATE_TYPE, CONTACT_TYPE_CHOICES,
-    GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE
+    GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE,
+    DAYS_OF_WEEK
 )
 from meal.models import Ingredient
 
@@ -80,12 +81,22 @@ class ClientRestrictionsInformation(forms.Form):
     )
 
     delivery_type = forms.ChoiceField(
-        label=_('Delivery Type'),
+        label=_('Type'),
         choices=DELIVERY_TYPE,
         required=True,
         widget=forms.Select(
             attrs={'class': 'ui dropdown'}
         )
+    )
+
+    delivery_schedule = forms.MultipleChoiceField(
+        label=_('Schedule'),
+        initial='Select days of week',
+        choices=DAYS_OF_WEEK,
+        widget=forms.SelectMultiple(
+            attrs={'class': 'ui dropdown'}
+        ),
+        required=False,
     )
 
     restrictions = forms.ModelMultipleChoiceField(

@@ -52,6 +52,16 @@ OPTION_GROUP_CHOICES = (
     ('week delivery schedule', _('Week delivery schedule')),
 )
 
+DAYS_OF_WEEK = (
+    ('mon', _('Monday')),
+    ('tue', _('Tuesday')),
+    ('wed', _('Wednesday')),
+    ('thu', _('Thursday')),
+    ('fri', _('Friday')),
+    ('sat', _('Saturday')),
+    ('sun', _('Sunday')),
+)
+
 
 class Member(models.Model):
 

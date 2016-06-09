@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load staticfiles i18n %}
+
 <html>
 
 <head>
@@ -22,7 +23,7 @@
 
         <div class="item">
             <a class="item" href="{%url 'member:list'%}">Clients
-                <div class="ui label">297</div>
+                <div class="ui label">254</div>
             </a>
 
             <div class="item">
@@ -71,6 +72,7 @@
         </div>
         <br><br>
         <div class="ui inverted vertical footer segment">
+            <br>
             <div class="ui center aligned container">
                 <div class="ui stackable inverted divided grid">
                     <div class="eight wide column">
@@ -109,7 +111,16 @@
             });
         $('.ui.dropdown')
             .dropdown({
-                transition: 'drop'
+                transition: 'drop',
+                onChange: function(value, text, $selectedItem) {
+                    if($selectedItem.data('value') == 'E')
+                    {
+                        $('#form-delivery-schedule').hide();
+                    }
+                    else {
+                        $('#form-delivery-schedule').show();
+                    }
+                }
             });
 
         $('.help-text')
