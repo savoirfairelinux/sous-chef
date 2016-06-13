@@ -49,6 +49,13 @@ class ClientWizard(NamedUrlSessionWizardView):
         )
         address.save()
 
+        member = Member.objects.create(
+            firstname=basic_info.cleaned_data.get('firstname'),
+            lastname=basic_info.cleaned_data.get('lastname'),
+            address=address,
+        )
+        member.save()
+
         # Should be created only if third-party billing member
         if True:
             billing_address = Address.objects.create(
@@ -69,13 +76,8 @@ class ClientWizard(NamedUrlSessionWizardView):
                 address=address,
             )
             billing_member.save()
-
-        member = Member.objects.create(
-            firstname=basic_info.cleaned_data.get('firstname'),
-            lastname=basic_info.cleaned_data.get('lastname'),
-            address=address,
-        )
-        member.save()
+        else:
+            billing_member = member
 
         contact = Contact.objects.create(
             type=basic_info.cleaned_data.get('contact_type'),
@@ -105,15 +107,18 @@ class ClientWizard(NamedUrlSessionWizardView):
             billing_payment_type=payment_information.cleaned_data.get(
                 "billing_payment_type"),
             member=member,
-            billing_member=member,
+            billing_member=billing_member,
             emergency_contact=emergency,
-            # The default status is always PENDING
-            status=dietary_restriction.cleaned_data.get('status'),
+            language=basic_info.cleaned_data.get('language'),
             gender=basic_info.cleaned_data.get('gender'),
             birthdate=basic_info.cleaned_data.get('birthdate'),
             alert=basic_info.cleaned_data.get("alert"),
             delivery_type=dietary_restriction.cleaned_data.get("delivery_type")
         )
+
+        if dietary_restriction.cleaned_data.get('status'):
+            client.status = 'A'
+
         client.save()
 
         referent = Member.objects.create(

@@ -283,18 +283,22 @@ class Client(models.Model):
     def __str__(self):
         return "{} {}".format(self.member.firstname, self.member.lastname)
 
-    def age_on_date(self, date):
+    @property
+    def age(self):
         """
-        Returns integer specifying person's age in years on date given.
+        Returns integer specifying person's age in years on the current date.
 
         >>> from datetime import date
         >>> p = Client(birthdate=date(1950, 4, 19)
-        >>> p.age_on_date(date(2016, 4, 19))
+        >>> p.age()
         66
         """
-        if date < self.birthdate:
+        from datetime import date
+        current = date.today()
+
+        if current < self.birthdate:
             return 0
-        return math.floor((date - self.birthdate).days / 365)
+        return math.floor((current - self.birthdate).days / 365)
 
 
 class ClientFilter(FilterSet):
