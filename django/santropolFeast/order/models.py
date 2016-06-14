@@ -50,7 +50,8 @@ class Order(models.Model):
 
     client = models.ForeignKey(
         'member.Client',
-        verbose_name=_('client')
+        verbose_name=_('client'),
+        related_name='client_order',
     )
 
     @property

@@ -1,0 +1,38 @@
+{% extends "base_order.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+
+{% block title %}{{client.member}}{% endblock %}
+
+{% block breadcrumb %}
+{% endblock breadcrumb %}
+
+{% block content %}
+<H1> {{client.member}} </H1>
+
+<table class="ui sortable celled table">
+  <thead>
+    <tr>
+      <th class="sorted descending">{% trans 'Creation Date' %}</th>
+      <th class="">{% trans 'Delivery Date' %}</th>
+      <th class="">{% trans 'Status' %}</th>
+      <th class="">{% trans 'Price' %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in client.client_order.all %}
+      <tr>
+        <td>{{order.creation_date}}</td>
+        <td>{{order.delivery_date}}</td>
+        <td>{{order.status}}</td>
+        <td>{{order.total}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<script type="text/javascript">
+    document.addEventListener( 'DOMContentLoaded', function () {
+      $('table').tablesort();
+    })
+</script>
+{% endblock %}
