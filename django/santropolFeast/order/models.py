@@ -53,6 +53,19 @@ class Order(models.Model):
         verbose_name=_('client')
     )
 
+    @property
+    def total(self):
+
+        total = 0
+
+        for item in self.orders.all():
+
+            if item.billable_flag is True:
+
+                total = total + item.price
+
+        return total
+
 
 class Order_item(models.Model):
 
@@ -62,6 +75,7 @@ class Order_item(models.Model):
     order = models.ForeignKey(
         'order.Order',
         verbose_name=_('order'),
+        related_name='orders',
     )
 
     component = models.ForeignKey(
