@@ -2,12 +2,20 @@ from django.test import TestCase
 from member.models import Client, Address, Member
 from order.models import Order, Order_item
 from datetime import date
+from django.contrib.auth.models import User
 
 
 class OrderItemTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
+
+        cls.admin = User.objects.create_superuser(
+            username='admin@example.com',
+            email='admin@example.com',
+            password='test'
+        )
+
         address = Address.objects.create(
             number=123, street='De Bullion',
             city='Montreal', postal_code='H3C4G5')
@@ -82,3 +90,14 @@ class OrderItemTestCase(TestCase):
         order_item = order.orders.first()
 
         self.assertEqual(order_item.remark, 'testing')
+
+    def test_acces_to_list_view(self):
+
+        self.client.login(
+            username=self.admin.username,
+            password="test"
+        )
+
+        request = self.client.get("/order/view/1", follow=True)
+
+        self.assertEqual(request.status_code, 200)
