@@ -4,6 +4,7 @@ from member.models import Client
 from order.models import Order
 from meal.models import Ingredient
 
+
 def total(request):
     """ Passing entities total into RequestContext. """
 

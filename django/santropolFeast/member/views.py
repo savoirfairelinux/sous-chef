@@ -11,9 +11,7 @@ from member.models import Referencing, ClientFilter, Note, ClientFilter
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
-from django import template
 
-register = template.Library()
 
 class ClientWizard(NamedUrlSessionWizardView):
 
@@ -480,7 +478,3 @@ def mark_as_read(request, id):
     note = get_object_or_404(Note, pk=id)
     note.mark_as_read()
     return HttpResponseRedirect(reverse_lazy("member:notes"))
-
-@register.simple_tag
-def count_clients():
-    return Client.objects.all()
