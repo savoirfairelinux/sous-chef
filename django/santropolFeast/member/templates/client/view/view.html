@@ -32,6 +32,7 @@
             <div class="sub header">
                 <a class="ui large yellow label"><i class="shipping icon"></i>{{client.get_status_display}}</a>
                 <a class="ui large yellow label"><i class="clock icon"></i>{{client.get_delivery_type_display}}</a>
+                <a href="{% url 'order:view' id=client.id %}" class="ui large green label"><i class="food icon"></i>See all Order</a>
             </div>
         </h1>
     </div>
