@@ -10,7 +10,14 @@
 {% block content %}
 
 <H1>Order List</H1>
-
+<form action="" method="get">
+    <div class="ui large action left icon input">
+        <i class="users icon"></i>
+        {{ filter.form.name }}
+        <button class="ui yellow button" type="submit">Search
+        </button>
+    </div>
+</form>
 <table class="ui sortable celled table">
   <thead>
     <th class="sorted descending">{% trans 'Creation Date' %}</th>
@@ -24,7 +31,7 @@
       <tr>
         <td>{{obj.creation_date}}</td>
         <td>{{obj.delivery_date}}</td>
-        <td><a href="{% url 'member:view' id=obj.client.id %}">{{obj.client.member}}</a></td>
+        <td>{{obj.client.member}}</td>
         <td>{{obj.status}}</td>
         <td>{{obj.total}}<td>
       <tr>

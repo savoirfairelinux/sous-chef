@@ -1,5 +1,8 @@
 from django.db import models
+from member.models import Client, Member
 from django.utils.translation import ugettext_lazy as _
+from django_filters import FilterSet, MethodFilter
+import re
 
 ORDER_STATUS_CHOICES = (
     ('', _('Order status')),
@@ -55,7 +58,7 @@ class Order(models.Model):
     )
 
     @property
-    def total(self):
+    def price(self):
 
         total = 0
 
@@ -66,6 +69,48 @@ class Order(models.Model):
                 total = total + item.price
 
         return total
+
+
+class OrderFilter(FilterSet):
+
+    name = MethodFilter(
+        action='filter_search',
+        label=_('Search by name')
+    )
+
+    class Meta:
+        model = Order
+
+    def filter_search(self, queryset, value):
+        if value:
+            query = []
+
+            value = re.sub('[^\w]', '', value).split()
+
+            for word in value:
+
+                firstname = list(
+                    queryset.filter(
+                        client__member__firstname__icontains=word
+                    ).all()
+                )
+
+                lastname = list(
+                    queryset.filter(
+                        client__member__lastname__icontains=word
+                    ).all()
+                )
+                for user in firstname:
+                    if user not in query:
+                        query.append(user)
+
+                for user in lastname:
+                    if user not in query:
+                        query.append(user)
+
+                return query
+            else:
+                return queryset
 
 
 class Order_item(models.Model):

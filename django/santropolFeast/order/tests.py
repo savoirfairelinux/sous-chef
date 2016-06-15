@@ -76,13 +76,13 @@ class OrderItemTestCase(TestCase):
     def test_total_price(self):
 
         order = Order.objects.get(delivery_date=date(2016, 5, 10))
-        self.assertEqual(order.total, 6.50)
+        self.assertEqual(order.price, 6.50)
 
     def test_total_price_is_zero(self):
 
         order = Order.objects.get(delivery_date=date(2016, 10, 10))
 
-        self.assertEqual(order.total, 0)
+        self.assertEqual(order.price, 0)
 
     def test_order_item_remark(self):
 
@@ -90,14 +90,3 @@ class OrderItemTestCase(TestCase):
         order_item = order.orders.first()
 
         self.assertEqual(order_item.remark, 'testing')
-
-    def test_acces_to_list_view(self):
-
-        self.client.login(
-            username=self.admin.username,
-            password="test"
-        )
-
-        request = self.client.get("/order/view/1", follow=True)
-
-        self.assertEqual(request.status_code, 200)
