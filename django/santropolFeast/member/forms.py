@@ -100,6 +100,9 @@ class ClientRestrictionsInformation(forms.Form):
         required=False,
     )
 
+    meal_default = forms.IntegerField(label=_("Main dish"),
+                                   widget=forms.TextInput())
+
     restrictions = forms.ModelMultipleChoiceField(
         label=_("Restrictions"),
         queryset=Ingredient.objects.all(),
