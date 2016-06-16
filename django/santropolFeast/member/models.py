@@ -33,7 +33,6 @@ RATE_TYPE = (
 )
 
 PAYMENT_TYPE = (
-    ('', _('Payment type')),
     ('check', _('Check')),
     ('cash', _('Cash')),
     ('debit', _('Debit card')),
@@ -167,6 +166,27 @@ class Contact(models.Model):
         return "{} {}".format(self.member.firstname, self.member.lastname)
 
 
+class Route(models.Model):
+
+    class Meta:
+        verbose_name_plural = _('Routes')
+
+    # Information about options added to the meal
+    name = models.CharField(
+        max_length=50,
+        verbose_name=_('name')
+    )
+
+    description = models.TextField(
+        verbose_name=_('description'),
+        blank=True,
+        null=True,
+    )
+
+    def __str__(self):
+        return self.name
+
+
 class Client(models.Model):
 
     # Characters are used to keep a backward-compatibility
@@ -261,7 +281,7 @@ class Client(models.Model):
     gender = models.CharField(
         max_length=1,
         default='U',
-        blank="True",
+        blank=True,
         null="True",
         choices=GENDER_CHOICES,
     )
@@ -270,15 +290,16 @@ class Client(models.Model):
         auto_now=False,
         auto_now_add=False,
         default=timezone.now,
-        blank="True",
-        null="True"
+        blank=True,
+        null=True
     )
 
-    # FUTURE
-    # route = models.ForeignKey(
-    #     'route.Route',
-    #     verbose_name=_('route')
-    # )
+    route = models.ForeignKey(
+        'member.Route',
+        verbose_name=_('route'),
+        blank=True,
+
+    )
 
     def __str__(self):
         return "{} {}".format(self.member.firstname, self.member.lastname)
