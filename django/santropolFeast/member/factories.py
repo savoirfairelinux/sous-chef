@@ -4,6 +4,28 @@ import datetime
 import random
 from django.contrib.auth.models import User
 from member.models import Member, Address, Contact, Client, PAYMENT_TYPE
+from member.models import DELIVERY_TYPE, GENDER_CHOICES
+
+
+class AddressFactory (factory.DjangoModelFactory):
+
+    class Meta:
+        model = Address
+
+    street = factory.Faker('street_address')
+    city = 'Montreal'
+    postal_code = factory.Faker('postalcode')
+
+
+class ContactFactory (factory.DjangoModelFactory):
+
+    class Meta:
+        model = Contact
+
+    type = 'Home phone'
+    value = factory.Faker('phone_number')
+    #member = factory.SubFactory(MemberFactory)
+
 
 
 class MemberFactory (factory.DjangoModelFactory):
@@ -13,26 +35,7 @@ class MemberFactory (factory.DjangoModelFactory):
 
     firstname = factory.Faker('first_name')
     lastname = factory.Faker('last_name')
-
-
-class AddressFactory (factory.DjangoModelFactory):
-
-    class Meta:
-        model = Address
-
-    number = 5555
-    street = "rue de la montagne"
-    apartment = "234A"
-    floor = 22
-    city = "Montréal"
-    postal_code = "H3C2C2"
-
-    @classmethod
-    def __init__(self, **kwargs):
-        member = kwargs.pop("member", MemberFactory())
-        address = super(AddressFactory, self).__init__(self, **kwargs)
-
-        address.save()
+    address = factory.SubFactory(AddressFactory)
 
 
 class ClientFactory (factory.DjangoModelFactory):
@@ -40,14 +43,15 @@ class ClientFactory (factory.DjangoModelFactory):
     class Meta:
         model = Client
 
-    billing_member = factory.SubFactory(MemberFactory)
-    billing_payment_type = random.choice(PAYMENT_TYPE).key()
-    rate_type = "default"
     member = factory.SubFactory(MemberFactory)
+    billing_member = member
+    billing_payment_type = random.choice(PAYMENT_TYPE)[0]
+    rate_type = "default"
+    member = member
     emergency_contact = factory.SubFactory(MemberFactory)
-    status = random.choice(Client.CLIENT_STATUS).keys()
+    status = random.choice(Client.CLIENT_STATUS)[0]
     language = "en"
-    alert = "This is an alert"
-    delivery_type = "O"
-    gender = "M"
+    alert = factory.Faker('sentence')
+    delivery_type = random.choice(DELIVERY_TYPE)[0]
+    gender = random.choice(GENDER_CHOICES)[0]
     birthdate = factory.Faker('date')
