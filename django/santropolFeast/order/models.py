@@ -80,6 +80,7 @@ class OrderFilter(FilterSet):
 
     class Meta:
         model = Order
+        fields = ['status']
 
     def filter_search(self, queryset, value):
         if value:
@@ -100,6 +101,7 @@ class OrderFilter(FilterSet):
                         client__member__lastname__icontains=word
                     ).all()
                 )
+
                 for user in firstname:
                     if user not in query:
                         query.append(user)
