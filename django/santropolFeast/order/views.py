@@ -43,3 +43,9 @@ class OrderList(generic.ListView):
         context['get'] = text
 
         return context
+
+
+def show_information(request, id):
+    order = get_object_or_404(Order, pk=id)
+
+    return render(request, 'view_order.html', {'order': order})
