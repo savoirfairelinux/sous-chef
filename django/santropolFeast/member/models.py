@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django_filters import FilterSet, MethodFilter
+from django_filters import FilterSet, MethodFilter, CharFilter
 import datetime
 import re
 
@@ -331,6 +331,7 @@ class ClientFilter(FilterSet):
 
     class Meta:
         model = Client
+        fields = ['route', 'status', 'delivery_type']
 
     def filter_search(self, queryset, value):
         if value:
@@ -351,6 +352,7 @@ class ClientFilter(FilterSet):
                         member__lastname__icontains=word
                     ).all()
                 )
+
                 for user in firstname:
                     if user not in query:
                         query.append(user)

@@ -152,6 +152,7 @@ class ClientList(generic.ListView):
     model = Client
     template_name = 'client/list.html'
     context_object_name = 'clients'
+    paginate_by = 25
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

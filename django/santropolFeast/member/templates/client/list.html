@@ -17,12 +17,39 @@
 <div class="ui mobile reversed equal width grid">
   <div class="column">
 
-    <form action="" method="get">
-        <div class="ui large action left icon input">
-            <i class="users icon"></i>
-            {{ filter.form.name }}
-            <button class="ui yellow button" type="submit">Search
-            </button>
+    <form action="" method="get" class="ui form">
+
+        <div class="inline fields">
+            <div class="field">
+                <label>Name</label>
+                <div class="field">
+                    <div class="ui large left icon input">
+                        <i class="users icon"></i>
+                        {{ filter.form.name }}
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label>Route</label>
+                <div class="field">
+                    {{ filter.form.route }}
+                </div>
+            </div>
+            <div class="field">
+                <label>Status</label>
+                <div class="field">
+                    {{ filter.form.status }}
+                </div>
+            </div>
+            <div class="field">
+                <label>Delivery</label>
+                <div class="field">
+                    {{ filter.form.delivery_type }}
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <button class="ui yellow button" type="submit">Search</button>
         </div>
     </form>
     <br/><br/>
@@ -42,7 +69,7 @@
         </div>
         <div class="description">
             <p>{{ obj.member.firstname }} is an <strong>{{ obj.get_delivery_type_display }}</strong>
-                client on the <strong>Mile-end</strong> route.</p>
+                client on the <strong>{{ obj.route }}</strong> route.</p>
                 <p>This client is currently <strong>{{ obj.get_status_display }}</strong>.</p>
             </div>
         </div>
@@ -62,5 +89,24 @@
         <p>Sorry, no result found.</p>
     {% endfor %}
 </div>
+
+{% if is_paginated %}
+
+<div class="ui pagination menu" style="margin: 2em auto; width=100%;";>
+    {% if page_obj.has_previous %}
+    <a class="icon item" href="{% url 'member:list' %}?page={{ page_obj.previous_page_number }}">
+        <i class="left arrow icon"></i>
+    </a>
+    {% endif %}
+    <a class="active item">
+        {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </a>
+    {% if page_obj.has_next %}
+    <a class="icon item" href="{% url 'member:list' %}?page={{ page_obj.next_page_number }}">
+        <i class="right arrow icon"></i>
+    </a>
+    {% endif %}
+</div>
+{% endif %}
 
 {% endblock %}
