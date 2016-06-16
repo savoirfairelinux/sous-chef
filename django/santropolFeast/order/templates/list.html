@@ -1,0 +1,47 @@
+{% extends "base_order.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+
+{% block title %} {% trans 'Order' %} {% endblock %}
+
+{% block breadcrumb %}
+{% endblock breadcrumb %}
+
+{% block content %}
+
+<H1>Order List</H1>
+<form action="" method="get">
+    <div class="ui large action left icon input">
+        <i class="users icon"></i>
+        {{ filter.form.name }}
+        <button class="ui yellow button" type="submit">Search
+        </button>
+    </div>
+</form>
+<table class="ui sortable celled table">
+  <thead>
+    <th class="sorted descending">{% trans 'Creation Date' %}</th>
+    <th class="">{% trans 'Delivery Date' %}</th>
+    <th class="">{% trans 'Client Name' %}</th>
+    <th class="">{% trans 'Status' %}</th>
+    <th class="">{% trans 'Price' %}</th>
+  </thead>
+  <tbody>
+    {% for obj in order %}
+      <tr>
+        <td>{{obj.creation_date}}</td>
+        <td>{{obj.delivery_date}}</td>
+        <td>{{obj.client.member}}</td>
+        <td>{{obj.status}}</td>
+        <td>{{obj.total}}<td>
+      <tr>
+        {% endfor %}
+  </tbody>
+</table>
+<script type="text/javascript">
+    document.addEventListener( 'DOMContentLoaded', function () {
+      $('table').tablesort();
+    })
+</script>
+
+{% endblock %}

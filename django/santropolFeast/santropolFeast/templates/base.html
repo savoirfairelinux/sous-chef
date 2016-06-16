@@ -32,7 +32,7 @@
                     <i class="search icon"></i>
                 </div>
             </div>
-            <a class="item" href="/admin/order/order">Orders
+            <a class="item" href="{% url 'order:list' %}">Orders
                 <div class="ui label">{{ ORDERS_TOTAL }}</div>
             </a>
             <a class="item" href="/admin/meal/ingredient/">Ingredients
