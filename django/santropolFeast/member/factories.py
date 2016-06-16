@@ -24,8 +24,6 @@ class ContactFactory (factory.DjangoModelFactory):
 
     type = 'Home phone'
     value = factory.Faker('phone_number')
-    #member = factory.SubFactory(MemberFactory)
-
 
 
 class MemberFactory (factory.DjangoModelFactory):

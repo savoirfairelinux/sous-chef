@@ -27,13 +27,13 @@ class OrderItemTestCase(TestCase):
         client = Client.objects.create(
             member=member, billing_member=member,
             birthdate=date(1980, 4, 19)
-            )
+        )
 
         total_zero_order = Order.objects.create(
-                    creation_date=date(2016, 10, 5),
-                    delivery_date=date(2016, 10, 10),
-                    status='B', client=client,
-                    )
+            creation_date=date(2016, 10, 5),
+            delivery_date=date(2016, 10, 10),
+            status='B', client=client,
+        )
         zero_order_item = Order_item.objects.create(order=total_zero_order,
                                                     price=22.50,
                                                     billable_flag=False,
@@ -44,7 +44,7 @@ class OrderItemTestCase(TestCase):
             creation_date=date(2016, 5, 5),
             delivery_date=date(2016, 5, 10),
             status='B', client=client,
-            )
+        )
 
         billable_order_item = Order_item.objects.create(
             order=order, price=6.50, billable_flag=True, order_item_type="",
@@ -67,9 +67,9 @@ class OrderItemTestCase(TestCase):
 
         order = Order.objects.get(creation_date=date(2016, 5, 5))
         non_billable_order_item = Order_item.objects.get(
-                                                    order=order,
-                                                    price=12.50
-                                                    )
+            order=order,
+            price=12.50
+        )
 
         self.assertEqual(non_billable_order_item.billable_flag, False)
 
