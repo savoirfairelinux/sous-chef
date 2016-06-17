@@ -25,16 +25,18 @@
     <th class="">{% trans 'Client Name' %}</th>
     <th class="">{% trans 'Status' %}</th>
     <th class="">{% trans 'Price' %}</th>
+    <th class=""></th>
   </thead>
   <tbody>
     {% for obj in order %}
       <tr>
         <td>{{obj.creation_date}}</td>
         <td>{{obj.delivery_date}}</td>
-        <td>{{obj.client.member}}</td>
-        <td>{{obj.status}}</td>
-        <td>{{obj.total}}<td>
-      <tr>
+        <td><a href="{% url 'member:view' id=obj.client.id %}">{{obj.client.member}}</a></td>
+        <td>{{obj.get_status_display}}</td>
+        <td>{{obj.price}}</td>
+        <td><button class="ui green button"  onclick="location.href='{% url 'order:view' id=obj.id %}';" value="View Order" >View Order</button></td>
+      </tr>
         {% endfor %}
   </tbody>
 </table>
