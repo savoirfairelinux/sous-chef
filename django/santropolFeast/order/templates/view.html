@@ -1,0 +1,50 @@
+{% extends "base_order.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+
+{% block title %} {% trans 'View Order' %} {% endblock %}
+
+{% block breadcrumb %}
+{% endblock breadcrumb %}
+
+{% block content %}
+
+<H2>Order made on {{order.creation_date}}, delivered on {{order.delivery_date}} to {{order.client}}</H2>
+
+<div>
+  {% trans "order status" %}: {{order.get_status_display}}
+</div>
+
+<div>
+  {% trans "order creation date" %}: {{order.creation_date}}
+</div>
+
+<div>
+  {% trans "order delivery_date" %}: {{order.delivery_date}}
+</div>
+
+<div>
+  {% trans "order total price" %}: {{order.price}}
+</div>
+
+<H3>Item inside order</H3>
+<div class="ui four doubling cards">
+{% for item in order.orders.all %}
+
+  <div class="ui card">
+    <div class="content">
+      <div class="header">
+        {{item.component.name}}
+      </div>
+      <div class="description">
+        Description: {{item.component.description}}
+      </div>
+      <div class="extra content">
+        Price: {{item.price}}
+        Size: {{item.get_size_display}}
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+{% endblock %}
