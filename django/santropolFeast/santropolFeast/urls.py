@@ -43,5 +43,9 @@ urlpatterns = [
         r'^p/',
         include('page.urls', namespace="page")
     ),
-    url(r'^$', home, name='home')
+    url(r'^$', home, name='home'),
+    url(
+        r'^delivery/',
+        include('delivery.urls', namespace="delivery")
+    ),
 ]

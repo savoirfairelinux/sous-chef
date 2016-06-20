@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'order',
     'notification',
     'page',
+    'delivery',
     'formtools',
     'django_filters',
 ]
@@ -151,6 +152,7 @@ LOCALE_PATHS = (
     'notification/locale/',
     'order/locale/',
     'page/locale/',
+    'delivery/locale/',
 )
 
 
