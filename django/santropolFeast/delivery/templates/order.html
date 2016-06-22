@@ -1,0 +1,59 @@
+{% extends "base_delivery.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+
+{% block title %}{% trans 'View Order' %} {% endblock %}
+
+{% block breadcrumb %}
+{% endblock breadcrumb %}
+
+{% block content %}
+<div class="ui grid">
+  <div class="four wide column">
+    <div class="segment ui">
+      <h3>{% trans 'Alert for the selected day' %}</h3>
+      <table class="ui celled table">
+        <thead>
+          <th>{% trans "Name" %}</th>
+          <th>{% trans "Alert" %}</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>lorem ipsum </td>
+            <td>No Meat</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="twelve wide column">
+    <div class="segment ui">
+      <h3>{% trans 'Orders' %}</h3>
+        <table class="ui sortable celled table">
+          <thead>
+            <th class="sorted descending">{% trans 'First Name' %}</th>
+            <th class="">{% trans 'Last Name' %}</th>
+            <th class="">{% trans 'Status' %}</th>
+            <th class="">{% trans 'Route' %}</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>lorem</td>
+              <td>ipsum</td>
+              <td>Ordered</td>
+              <td>Mcgill</td>
+            </tr>
+          </tbody>
+        </table>
+        <script type="text/javascript">
+            document.addEventListener( 'DOMContentLoaded', function () {
+              $('table').tablesort();
+            })
+        </script>
+    </div>
+    <a class="ui button"href="{% url 'delivery:meal' %}">
+      Next
+    </a>
+  </div>
+</div>
+{% endblock content %}

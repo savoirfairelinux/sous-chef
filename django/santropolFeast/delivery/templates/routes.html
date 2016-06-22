@@ -1,0 +1,33 @@
+{% extends "base_delivery.html" %}
+<!-- Load Internationalization utils-->
+{% load i18n %}
+
+{% block title %}{% trans 'Routes Information' %} {% endblock %}
+
+{% block breadcrumb %}
+{% endblock breadcrumb %}
+
+{% block content %}
+<div class="ui grid">
+  <div class="eight wide column">
+    <table class="ui celled table">
+      <thead>
+        <th>{% trans "Delivery Order" %}</th>
+        <th>{% trans "Name" %}</th>
+        <th>{% trans "Address" %}</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>lorem ipsum</td>
+          <td>7275 rue st-urbain</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="eight wide column">
+    Need placeholder for map
+  </div>
+</div>
+
+{% endblock %}
