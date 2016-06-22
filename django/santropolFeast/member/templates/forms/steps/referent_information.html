@@ -28,7 +28,12 @@
 
 <div class="field {% if wizard.form.date.errors %} error {% endif %}">
     <label>{{ wizard.form.date.label }}</label>
-    {{ wizard.form.date }}
+    <div class="ui calendar" id="wizard_form_date">
+        <div class="ui input left icon">
+              <i class="calendar icon"></i>
+              {{ wizard.form.date }}
+        </div>
+    </div>
 </div>
 
 <div class="field {% if wizard.form.referral_reason.errors %} error {% endif %}">

@@ -1,9 +1,15 @@
 {% extends "base_member.html" %}
 
 {% load i18n %}
+{% load staticfiles %}
 
 {% block head %}
 {{ wizard.form.media}}
+{% endblock %}
+
+
+{% block extrahead %}
+    <link href="{% static 'css/calendar.min.css' %}" type="text/css" rel="stylesheet">
 {% endblock %}
 
 {% block title %}Create a new client{% endblock %}
@@ -100,4 +106,40 @@
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script src="{% static 'jquery/calendar.min.js' %}" type="application/javascript"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('#wizard_form_birthdate').calendar({
+                type: 'date',
+                formatter: {
+                    date: function (date, settings) {
+                      if (!date) return '';
+                      var day = date.getDate();
+                      var month = date.getMonth() + 1;
+                      var year = date.getFullYear();
+                      if (month < 10) month = '0' + month;
+                      if (day < 10) day = '0' + day;
+                      return year + '-' + month + '-' + day;
+                    }
+                }
+            });
+            $('#wizard_form_date').calendar({
+                type: 'date',
+                formatter: {
+                    date: function (date, settings) {
+                      if (!date) return '';
+                      var day = date.getDate();
+                      var month = date.getMonth() + 1;
+                      var year = date.getFullYear();
+                      if (month < 10) month = '0' + month;
+                      if (day < 10) day = '0' + day;
+                      return year + '-' + month + '-' + day;
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}

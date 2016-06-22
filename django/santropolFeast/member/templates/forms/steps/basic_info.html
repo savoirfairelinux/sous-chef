@@ -9,12 +9,12 @@
 <div class="field">
     <label>{{ _('Name') }}</label>
     <div class="two fields">
-      <div class="field {% if wizard.form.firstname.errors %} error {% endif %}">
-          {{wizard.form.firstname}}
-      </div>
-      <div class="field {% if wizard.form.lastname.errors %} error {% endif %}">
-          {{wizard.form.lastname}}
-      </div>
+        <div class="field {% if wizard.form.firstname.errors %} error {% endif %}">
+            {{wizard.form.firstname}}
+        </div>
+        <div class="field {% if wizard.form.lastname.errors %} error {% endif %}">
+            {{wizard.form.lastname}}
+        </div>
     </div>
 </div>
 
@@ -26,7 +26,12 @@
 
 <div class="field {% if wizard.form.birthdate.errors %} error {% endif %}">
     <label>{{ wizard.form.birthdate.label }}</label>
-    {{ wizard.form.birthdate }}
+    <div class="ui calendar" id="wizard_form_birthdate">
+        <div class="ui input left icon">
+              <i class="calendar icon"></i>
+              {{ wizard.form.birthdate }}
+        </div>
+    </div>
 </div>
 
 <h4 class="ui dividing header">{{ _('Contact information') }}</h4>
