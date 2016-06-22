@@ -5,7 +5,6 @@ from django_filters import FilterSet, MethodFilter
 import re
 
 ORDER_STATUS_CHOICES = (
-    ('', _('Order status')),
     ('O', _('Ordered')),
     ('D', _('Delivered')),
     ('B', _('Billed')),
