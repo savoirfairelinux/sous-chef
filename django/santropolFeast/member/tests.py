@@ -113,7 +113,7 @@ class AddressTestCase(TestCase):
         address = Address.objects.create(
             number=123, street='De Bullion',
             city='Montreal', postal_code='H3C4G5')
-        member = Member.objects.create(
+        Member.objects.create(
             firstname='Katrina', lastname='Heide',
             address=address)
 
@@ -134,7 +134,7 @@ class ClientTestCase(TestCase):
         member = Member.objects.create(firstname='Angela',
                                        lastname='Desousa',
                                        address=address)
-        client = Client.objects.create(
+        Client.objects.create(
             member=member, billing_member=member,
             birthdate=date(1980, 4, 19))
 
@@ -169,7 +169,7 @@ class OptionTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        option = Option.objects.create(
+        Option.objects.create(
             name='PUREE ALL', option_group='preparation')
 
     def test_str_is_fullname(self):
@@ -179,7 +179,7 @@ class OptionTestCase(TestCase):
         self.assertEqual(name, str(option))
 
 
-class Client_optionTestCase(TestCase):
+class ClientOptionTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
@@ -336,7 +336,10 @@ class FormTestCase(TestCase):
     def test_acces_to_form_by_url_basic_info(self):
 
         result = self.client.get(
-            reverse_lazy('member:member_step', kwargs={'step': 'basic_information'}),
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': 'basic_information'}
+            ),
             follow=True
         )
 
@@ -345,7 +348,10 @@ class FormTestCase(TestCase):
     def test_acces_to_form_by_url_adress_information(self):
 
         result = self.client.get(
-            reverse_lazy('member:member_step', kwargs={'step': 'address_information'}),
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': 'address_information'}
+            ),
             follow=True
         )
 
@@ -354,7 +360,10 @@ class FormTestCase(TestCase):
     def test_acces_to_form_by_url_referent_information(self):
 
         result = self.client.get(
-            reverse_lazy('member:member_step', kwargs={'step': 'referent_information'}),
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': 'referent_information'}
+            ),
             follow=True
         )
 
@@ -363,7 +372,10 @@ class FormTestCase(TestCase):
     def test_acces_to_form_by_url_payment_information(self):
 
         result = self.client.get(
-            reverse_lazy('member:member_step', kwargs={'step': 'payment_information'}),
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': 'payment_information'}
+            ),
             follow=True
         )
         self.assertEqual(result.status_code, 200)
@@ -371,7 +383,10 @@ class FormTestCase(TestCase):
     def test_acces_to_form_by_url_dietary_restriction(self):
 
         result = self.client.get(
-            reverse_lazy('member:member_step', kwargs={'step': 'dietary_restriction'}),
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': 'dietary_restriction'}
+            ),
             follow=True
         )
 
@@ -380,7 +395,10 @@ class FormTestCase(TestCase):
     def test_acces_to_form_by_url_emergency_contact(self):
 
         result = self.client.get(
-            reverse_lazy('member:member_step', kwargs={'step': 'emergency_contact'}),
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': 'emergency_contact'}
+            ),
             follow=True
         )
 
@@ -460,7 +478,11 @@ class FormTestCase(TestCase):
         ]
 
         for step, data in stepsdata:
-            self.client.post(reverse_lazy('member:member_step', kwargs={'step': step}), data, follow=True)
+            self.client.post(
+                reverse_lazy('member:member_step', kwargs={'step': step}),
+                data,
+                follow=True
+            )
 
         member = Member.objects.get(firstname="User")
 
@@ -498,18 +520,28 @@ class FormTestCase(TestCase):
         self.assertEqual(client.delivery_type, 'O')
 
         # test_referent_name:
-        self.assertTrue(client.client_referent.first().referent.firstname, "Referent")
-        self.assertTrue(client.client_referent.first().referent.lastname, "Testing")
+        self.assertTrue(
+            client.client_referent.first().referent.firstname,
+            "Referent"
+        )
+        self.assertTrue(
+            client.client_referent.first().referent.lastname,
+            "Testing"
+        )
 
         # test_referent_work_information:
-        self.assertTrue(client.client_referent.first().work_information, "CLSC")
+        self.assertTrue(
+            client.client_referent.first().work_information,
+            "CLSC"
+        )
 
         # test_referral_date(self):
         self.assertTrue(client.client_referent.first().date, "2012-12-12")
 
         # test_referral_reason:
         self.assertTrue(
-            client.client_referent.first().referral_reason, "Testing referral reason"
+            client.client_referent.first().referral_reason,
+            "Testing referral reason"
         )
 
         # test_billing_name:
@@ -532,7 +564,10 @@ class FormTestCase(TestCase):
         self.assertTrue(client.emergency_contact.lastname, "User")
 
         #  test_emergency_contact_value:
-        self.assertTrue(client.emergency_contact.get_home_phone, "555-444-5555")
+        self.assertTrue(
+            client.emergency_contact.get_home_phone,
+            "555-444-5555"
+        )
 
     def tear_down(self):
         self.client.logout()
