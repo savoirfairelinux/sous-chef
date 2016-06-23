@@ -89,8 +89,6 @@ class Member(models.Model):
         return "{} {}".format(self.firstname, self.lastname)
 
     def get_home_phone(self):
-        for c in self.member_contact.all():
-            print(c.type)
         return self.member_contact.filter(type=HOME).first() or ''
 
 

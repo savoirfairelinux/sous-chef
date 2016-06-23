@@ -26,7 +26,7 @@ class MemberTestCase(TestCase):
     def test_get_home_phone(self):
         """The home phone is properly stored"""
         katrina = Member.objects.get(firstname='Katrina')
-        self.assertTrue(katrina.get_home_phone().value.startswith('514'))
+        self.assertTrue(katrina.get_home_phone(), '514-456-7890')
 
 
 class NoteTestCase(TestCase):
@@ -335,14 +335,18 @@ class FormTestCase(TestCase):
 
     def test_acces_to_form_by_url_basic_info(self):
 
-        result = self.client.get('/member/create/basic_info', follow=True)
+        result = self.client.get(
+            reverse_lazy('member:member_step', kwargs={'step': 'basic_information'}),
+            follow=True
+        )
 
         self.assertEqual(result.status_code, 200)
 
     def test_acces_to_form_by_url_adress_information(self):
 
         result = self.client.get(
-            '/member/create/address_information', follow=True
+            reverse_lazy('member:member_step', kwargs={'step': 'address_information'}),
+            follow=True
         )
 
         self.assertEqual(result.status_code, 200)
@@ -350,7 +354,8 @@ class FormTestCase(TestCase):
     def test_acces_to_form_by_url_referent_information(self):
 
         result = self.client.get(
-            '/member/create/referent_information', follow=True
+            reverse_lazy('member:member_step', kwargs={'step': 'referent_information'}),
+            follow=True
         )
 
         self.assertEqual(result.status_code, 200)
@@ -358,14 +363,16 @@ class FormTestCase(TestCase):
     def test_acces_to_form_by_url_payment_information(self):
 
         result = self.client.get(
-            '/member/create/referent_infomation', follow=True
+            reverse_lazy('member:member_step', kwargs={'step': 'payment_information'}),
+            follow=True
         )
         self.assertEqual(result.status_code, 200)
 
     def test_acces_to_form_by_url_dietary_restriction(self):
 
         result = self.client.get(
-            '/member/create/dietary_restriction', follow=True
+            reverse_lazy('member:member_step', kwargs={'step': 'dietary_restriction'}),
+            follow=True
         )
 
         self.assertEqual(result.status_code, 200)
@@ -373,66 +380,69 @@ class FormTestCase(TestCase):
     def test_acces_to_form_by_url_emergency_contact(self):
 
         result = self.client.get(
-            '/member/create/emergency_contact', follow=True
+            reverse_lazy('member:member_step', kwargs={'step': 'emergency_contact'}),
+            follow=True
         )
 
         self.assertEqual(result.status_code, 200)
 
     def test_form_save_data(self):
 
-        basic_information_request = {
+        basic_information_data = {
             "client_wizard-current_step": "basic_info",
-            "basic_info-firstname": "Testing",
-            "basic_info-lastname": "User",
-            "basic_info-languages": "fr",
-            "basic_info-gender": "M",
-            "basic_info-birthdate": "12/12/1995",
-            "basic_info-contact_type": "Home phone",
-            "basic_info-contact_value": "555-555-5555",
-            "basic_info-alert": "Testing alert message",
+            "basic_information-firstname": "User",
+            "basic_information-lastname": "Testing",
+            "basic_information-language": "fr",
+            "basic_information-gender": "M",
+            "basic_information-birthdate": "1990-12-12",
+            "basic_information-contact_type": "Home phone",
+            "basic_information-contact_value": "555-555-5555",
+            "basic_information-alert": "Testing alert message",
             "wizard_goto_step": ""
-
         }
 
-        address_information_request = {
+        address_information_data = {
             "client_wizard-current_step": "address_information",
             "address_information-street": "555 rue clark",
-            "address_information-apartement": "222",
+            "address_information-apartment": "222",
             "address_information-city": "montreal",
             "address_information-postal_code": "H3C2C2",
             "wizard_goto_step": "",
         }
 
-        referent_information_request = {
+        referent_information_data = {
             "client_wizard-current_step": "referent_information",
             "referent_information-firstname": "Referent",
             "referent_information-lastname": "Testing",
             "referent_information-work_information": "CLSC",
-            "referent_information-date": "12/12/2012",
+            "referent_information-date": "2012-12-12",
             "referent_information-referral_reason": "Testing referral reason",
             "wizard_goto_step": "",
         }
 
-        billing_information_request = {
-            "client_wizard-current_step": "billing_information",
-            "billing_information-firstname": "Testing",
-            "billing_information-lastname": "Billing",
-            "billing_information-billing_payment_type": "check",
-            "billing_information-facturation": "default",
-            "billing_information-street": "111 rue clark",
-            "billing_information-apartement": "222",
-            "billing_information-city": "Montreal", "postal_code": "H2C3G4",
+        payment_information_data = {
+            "client_wizard-current_step": "payment_information",
+            "payment_information-firstname": "Billing",
+            "payment_information-lastname": "Testing",
+            "payment_information-billing_payment_type": "check",
+            "payment_information-facturation": "default",
+            "payment_information-street": "111 rue clark",
+            "payment_information-apartement": "222",
+            "payment_information-city": "Montreal",
+            "payment_information-postal_code": "H2C3G4",
             "wizard_goto_step": "",
         }
 
-        restriction_information_request = {
+        restriction_information_data = {
             "client_wizard-current_step": "dietary_restriction",
             "dietary_restriction-status": "on",
             "dietary_restriction-delivery_type": "O",
+            "dietary_restriction-delivery_schedule": "mon",
+            "dietary_restriction-meal_default": "1",
             "wizard_goto_step": ""
         }
 
-        emergency_contact_request = {
+        emergency_contact_data = {
             "client_wizard-current_step": "emergency_contact",
             "emergency_contact-firstname": "Emergency",
             "emergency_contact-lastname": "User",
@@ -440,158 +450,89 @@ class FormTestCase(TestCase):
             "emergency_contact-contact_value": "555-444-5555"
         }
 
-        self.client.post(
-            '/member/create/basic_information', basic_information_request
-        )
+        stepsdata = [
+            ('basic_information', basic_information_data),
+            ('address_information', address_information_data),
+            ('referent_information', referent_information_data),
+            ('payment_information', payment_information_data),
+            ('dietary_restriction', restriction_information_data),
+            ('emergency_contact', emergency_contact_data)
+        ]
 
-        self.client.post(
-            '/member/create/address_information', address_information_request,
-        )
+        for step, data in stepsdata:
+            self.client.post(reverse_lazy('member:member_step', kwargs={'step': step}), data, follow=True)
 
-        self.client.post(
-            '/member/create/referent_information',
-            referent_information_request
-        )
+        member = Member.objects.get(firstname="User")
 
-        self.client.post(
-            '/member/create/billing_information', billing_information_request,
-        )
+        # test_member_name:
+        self.assertTrue(member.firstname, "User")
+        self.assertTrue(member.lastname, "Testing")
 
-        self.client.post(
-            '/member/create/dietary_restriction',
-            restriction_information_request
-         )
-
-        self.client.post(
-            '/member/create/emergency_contact', emergency_contact_request,
-        )
-
-        print (Member.objects.all)
-        member = Member.objects.get(firstname="Testing")
-
-    def test_member_name(self):
-
-        member = Member.objets.get(firstname="Testing")
-        self.assertTrue(member.firstname, "Testing")
-        self.assertTrue(member.lastname, "User")
-
-    def test_home_phone_member(self):
-
-        member = Member.objects.get(firstname="Testing")
+        # test_home_phone_member:
         self.assertTrue(member.get_home_phone().value.startswith('555'))
 
-    def test_member_alert(self):
+        client = Client.objects.get(member=member)
 
-        member = Member.objects.get(firstname="Testing")
-        self.assertTrue(member.alert, "Testing alert message")
+        # test_client_alert:
+        self.assertTrue(client.alert, "Testing alert message")
 
-    def test_client_languages(self):
-
-        member = Member.objects.get(firstname="Testing")
-        client = Client.objects.get(Member=member)
+        # test_client_languages:
         self.assertTrue(client.language, "fr")
 
-    def test_client_birthdate(self):
+        # test_client_birthdate:
+        self.assertTrue(client.birthdate, "1990-12-12")
 
-        member = Member.objets.get(firstname="Testing")
-        client = Client.objects.get(Member=member)
-        self.assertTrue(client.birthdate, "12/12/1995")
-
-    def test_client_gender(self):
-
-        member = Member.objects.get(firstname="Testing")
-        client = Client.objects.get(Member=member)
+        # test_client_gender:
         self.assertTrue(client.gender, "M")
 
-    def test_client_contact_type(self):
+        # test_client_contact_type:
+        self.assertTrue(member.member_contact, "Home phone")
 
-        member = Member.objects.get(firstname="Testing")
-        client = Client.objects.get(Member=member)
-        self.assertTrue(member.contact.contact_type, "Home phone")
-
-    def test_client_address(self):
-
-        member = Member.objects.get(firstname="Testing")
+        # test_client_address:
         self.assertTrue(member.address.street, "555 rue clark")
         self.assertTrue(member.address.postal_code, "H3C2C2")
         self.assertTrue(member.address.apartment, "222")
         self.assertTrue(member.address.city, "montreal")
 
-    def test_referent_name(self):
+        # test client delivery type
+        self.assertEqual(client.delivery_type, 'O')
 
-        member = Member.objects.get(firstname="Testing")
-        client = Client.objects.get(Member=member)
+        # test_referent_name:
+        self.assertTrue(client.client_referent.first().referent.firstname, "Referent")
+        self.assertTrue(client.client_referent.first().referent.lastname, "Testing")
 
-        self.assertTrue(client.client_referent.referent.firstname, "Referent")
-        self.assertTrue(client.client_referent.referent.lastname, "Testing")
+        # test_referent_work_information:
+        self.assertTrue(client.client_referent.first().work_information, "CLSC")
 
-    def test_referent_work_information(self):
+        # test_referral_date(self):
+        self.assertTrue(client.client_referent.first().date, "2012-12-12")
 
-        member = Member.objects.get(firstname="Testing")
-        client = Client.objects.get(Member=member)
-
-        self.assertTrue(client.client_referent.work_information, "CLSC")
-
-    def test_referral_date(self):
-
-        member = Member.objects.get(firstname="Testing")
-        client = Client.objects.get(Member=member)
-
-        self.assertTrue(client.client_referent.date, "12/12/2012")
-
-    def test_referral_reason(self):
-
-        member = Member.objects.get(firstname="Testing")
-        client = Client.objects.get(Member=member)
-
+        # test_referral_reason:
         self.assertTrue(
-            client.client_referent.referral_reason, "Testing referral reason"
+            client.client_referent.first().referral_reason, "Testing referral reason"
         )
 
-    def test_billing_name(self):
-
-        member = Member.objects.get(firstname="Testing")
-        client = Client.objects.get(Member=member)
-
+        # test_billing_name:
         self.assertTrue(client.billing_member.firstname, "Testing")
         self.assertTrue(client.billing_member.lastname, "Billing")
 
-    def test_billing_type(self):
-
-        member = Member.objects.get(firstname="Testing")
-        client = Client.objects.get(Member=member)
-
+        #  test_billing_type:
         self.assertTrue(client.billing_payment_type, "check")
 
-    def test_billing_address(self):
-        # missing models for billing address
-        member = Member.objects.get(firstname="Testing")
-        client = Client.objects.get(Member=member)
+        #  test_billing_address:
+        self.assertTrue(client.billing_member.address.city, "Montreal")
+        self.assertTrue(client.billing_member.address.street, "111 rue clark")
+        self.assertTrue(client.billing_member.address.postal_code, "H2C3G4")
 
-    def test_billing_rate_type(self):
+        #  test_billing_rate_type:
+        self.assertTrue(client.rate_type, 'default')
 
-        member = Member.objects.get(firstname="Testing")
-        client = Client.objects.get(Member=member)
-
-        self.assertTrue(client.rate_type, "default")
-
-    def test_emergency_contact_name(self):
-
-        member = Member.objects.get(firstname="Testing")
-        client = Client.objects.get(Member=member)
-
+        #  test_emergency_contact_name:
         self.assertTrue(client.emergency_contact.firstname, "Emergency")
         self.assertTrue(client.emergency_contact.lastname, "User")
 
-    def test_emergency_contact_value(self):
-
-        member = Member.objects.get(firstname="Testing")
-        client = Client.objects.get(Member=member)
-
-        self.assertTrue
-        (
-            client.emergency_contact.get_home_phone, "555-444-5555"
-        )
+        #  test_emergency_contact_value:
+        self.assertTrue(client.emergency_contact.get_home_phone, "555-444-5555")
 
     def tear_down(self):
         self.client.logout()
