@@ -14,17 +14,21 @@
 
 {% block title %}Create a new client{% endblock %}
 
-{% block breadcrumb %}
-{{ block.super }}
-<i class="right arrow icon divider"></i>
-<div class="active section">{% trans "Add new client" %}</div>
-{% endblock breadcrumb %}
+{% block message %}
+<div class="ui message">
+    <div class="header">
+    Welcome to the client creation form
+    </div>
+    <p>Fill out the form below to create a new client. No information will be saved until all the steps are completed.</p>
+</div>
+{% endblock %}
 
 {% block content %}
 
-<h1>{{ _('Add New Client') }}</h1>
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">New Client</h2>
+</div>
 
-<div class="ui grid">
     <div class="six wide column">
         <div class="ui vertical steps">
 
@@ -43,7 +47,7 @@
         </div>
     </div>
 
-    <div class="ten wide column">
+    <div class="ten wide column form-steps">
 
         <form action="" method="post" class="ui form error">{% csrf_token %}
             {% if wizard.form.errors %}
@@ -104,7 +108,6 @@
             {% endif %}
 
         </form>
-    </div>
 </div>
 {% endblock %}
 
