@@ -48,12 +48,12 @@ class OrderItemTestCase(TestCase):
 
         billable_order_item = Order_item.objects.create(
             order=order, price=6.50, billable_flag=True, order_item_type="",
-            remark="testing", size="regular",
+            remark="testing", size="R",
         )
 
         non_billable_order_item = Order_item.objects.create(
             order=order, price=12.50, billable_flag=False, order_item_type="",
-            remark="testing", size="large",
+            remark="testing", size="L",
         )
 
     def test_billable_flag(self):
