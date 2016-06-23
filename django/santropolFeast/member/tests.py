@@ -1,7 +1,8 @@
 from django.test import TestCase
 from member.models import Member, Client, Note, User, Address, Referencing
 from member.models import Contact, Option, Client_option, Restriction
-from meal.models import Restricted_item
+from member.models import Client_avoid_ingredient, Client_avoid_component
+from meal.models import Restricted_item, Ingredient, Component
 from datetime import date
 
 
@@ -238,3 +239,70 @@ class RestrictionTestCase(TestCase):
         self.assertTrue(client.member.firstname in str(restriction))
         self.assertTrue(client.member.lastname in str(restriction))
         self.assertTrue(restricted_item.name in str(restriction))
+
+
+class ClientAvoidIngredientTestCase(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        address = Address.objects.create(
+            number=123, street='De Bullion',
+            city='Montreal', postal_code='H3C4G5')
+        member = Member.objects.create(firstname='Angela',
+                                       lastname='Desousa',
+                                       address=address)
+        client = Client.objects.create(
+            member=member, billing_member=member,
+            birthdate=date(1980, 4, 19))
+        ingredient = Ingredient.objects.create(
+            name='ground pork')
+        Client_avoid_ingredient.objects.create(client=client,
+                                               ingredient=ingredient)
+
+    def test_str_includes_all_names(self):
+        """A client_avoid_ingredient's string representation includes the name
+        of the client and the name of the ingredient.
+        """
+        member = Member.objects.get(firstname='Angela')
+        client = Client.objects.get(member=member)
+        name = 'ground pork'
+        ingredient = Ingredient.objects.get(name=name)
+        client_avoid_ingredient = Client_avoid_ingredient.objects.get(
+            client=client, ingredient=ingredient)
+        self.assertTrue(
+            client.member.firstname in str(client_avoid_ingredient))
+        self.assertTrue(client.member.lastname in str(client_avoid_ingredient))
+        self.assertTrue(ingredient.name in str(client_avoid_ingredient))
+
+
+class ClientAvoidComponentTestCase(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        address = Address.objects.create(
+            number=123, street='De Bullion',
+            city='Montreal', postal_code='H3C4G5')
+        member = Member.objects.create(firstname='Angela',
+                                       lastname='Desousa',
+                                       address=address)
+        client = Client.objects.create(
+            member=member, billing_member=member,
+            birthdate=date(1980, 4, 19))
+        component = Component.objects.create(
+            name='ginger pork', component_group='main dish')
+        Client_avoid_component.objects.create(client=client,
+                                              component=component)
+
+    def test_str_includes_all_names(self):
+        """A client_avoid_component's string representation includes the name
+        of the client and the name of the component.
+        """
+        member = Member.objects.get(firstname='Angela')
+        client = Client.objects.get(member=member)
+        name = 'ginger pork'
+        component = Component.objects.get(name=name)
+        client_avoid_component = Client_avoid_component.objects.get(
+            client=client, component=component)
+        self.assertTrue(client.member.firstname in str(client_avoid_component))
+        self.assertTrue(client.member.lastname in str(client_avoid_component))
+        self.assertTrue(component.name in str(client_avoid_component))
