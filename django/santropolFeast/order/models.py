@@ -158,3 +158,13 @@ class Order_item(models.Model):
         max_length=256,
         verbose_name=_('remark')
     )
+
+    total_quantity = models.IntegerField(
+        verbose_name=_('total quantity'),
+        null=True,
+    )
+
+    free_quantity = models.IntegerField(
+        verbose_name=_('free quantity'),
+        null=True,
+    )

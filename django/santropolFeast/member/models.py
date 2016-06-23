@@ -46,9 +46,10 @@ DELIVERY_TYPE = (
 )
 
 OPTION_GROUP_CHOICES = (
-    ('side dish', _('side dish')),
+    ('main dish size', _('Main dish size')),
+    ('dish', _('Dish')),
     ('preparation', _('Preparation')),
-    ('week delivery schedule', _('Week delivery schedule')),
+    ('other order item', _('Other order item')),
 )
 
 DAYS_OF_WEEK = (
@@ -298,7 +299,7 @@ class Client(models.Model):
         'member.Route',
         verbose_name=_('route'),
         blank=True,
-
+        null=True
     )
 
     def __str__(self):
@@ -493,6 +494,17 @@ class Client_option(models.Model):
         verbose_name=_('option'),
         related_name='+')
 
+    value = models.CharField(
+        max_length=100,
+        null=True,
+        verbose_name=_('value')
+    )
+    #  value contents depends on option_group of option occurence pointed to:
+    #    if option_group = main_dish_size : 'Regular' or 'Large'
+    #    if option_group = dish : qty Monday to Sunday ex. '1110120'
+    #    if option_group = preparation : Null
+    #    if option_group = other_order_item : No occurrence of Client_option
+
     def __str__(self):
         return "{} {} <has> {}".format(self.client.member.firstname,
                                        self.client.member.lastname,
@@ -514,3 +526,37 @@ class Restriction(models.Model):
         return "{} {} <restricts> {}".format(self.client.member.firstname,
                                              self.client.member.lastname,
                                              self.restricted_item.name)
+
+
+class Client_avoid_ingredient(models.Model):
+    client = models.ForeignKey(
+        'member.Client',
+        verbose_name=_('client'),
+        related_name='+')
+
+    ingredient = models.ForeignKey(
+        'meal.Ingredient',
+        verbose_name=_('ingredient'),
+        related_name='+')
+
+    def __str__(self):
+        return "{} {} <has> {}".format(self.client.member.firstname,
+                                       self.client.member.lastname,
+                                       self.ingredient.name)
+
+
+class Client_avoid_component(models.Model):
+    client = models.ForeignKey(
+        'member.Client',
+        verbose_name=_('client'),
+        related_name='+')
+
+    component = models.ForeignKey(
+        'meal.Component',
+        verbose_name=_('component'),
+        related_name='+')
+
+    def __str__(self):
+        return "{} {} <has> {}".format(self.client.member.firstname,
+                                       self.client.member.lastname,
+                                       self.component.name)
