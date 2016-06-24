@@ -310,6 +310,7 @@ class ClientAvoidComponentTestCase(TestCase):
         self.assertTrue(client.member.lastname in str(client_avoid_component))
         self.assertTrue(component.name in str(client_avoid_component))
 
+
 class FormTestCase(TestCase):
 
     @classmethod
