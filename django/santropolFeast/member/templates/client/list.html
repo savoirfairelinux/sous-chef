@@ -16,10 +16,12 @@
     <h2 class="ui header">Clients</h2>
 
     <div class="right menu">
-      <a class="ui active item" href="">
+      <a class="ui item {% if display == 'block' %} active {% endif %}"
+         href="{{ request.path }}{{ get }}display=block">
           <i class="block layout icon"></i>
       </a>
-      <a class="ui item" href="">
+      <a class="ui item {% if display == 'list' %} active {% endif %}"
+         href="{{ request.path }}{{ get }}display=list">
           <i class="list layout icon"></i>
       </a>
     </div>
@@ -58,9 +60,10 @@
                     {{ filter.form.delivery_type }}
                 </div>
             </div>
+            <input id="id_display" name="display" type="text" value="{{display}}" style="display:none">
         </div>
         <div class="field">
-            <a href="{% url 'member:list' %}" class="ui button">Reset</a>
+            <a href="{{ request.path }}?display={{ display }}" class="ui button">Reset</a>
             <button class="ui yellow button" type="submit">Search</button>
         </div>
     </form>
@@ -68,7 +71,9 @@
   </div>
 </div>
 
-<div class="ui four doubling cards">
+{% if display == 'block' %}
+
+<div class="ui cards">
     {% for obj in clients %}
     <a class="ui card" href="{% url 'member:view' id=obj.id %}">
       <div class="content">
@@ -102,11 +107,42 @@
     {% endfor %}
 </div>
 
+{% else %}
+
+<table class="ui very basic stripped celled table">
+    <thead>
+        <tr>
+            <th class="sorted descending">Name</th>
+            <th class="">Age</th>
+            <th class="">Status</th>
+            <th class="">Delivery</th>
+            <th class="">Route</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for obj in clients %}
+        <tr>
+            <td><a href="{% url 'member:view' id=obj.id %}">{{ obj.member }}</a></td>
+            <td><a href="{% url 'member:view' id=obj.id %}">{{ obj.age }} years old</a></td>
+            <td><a href="{% url 'member:view' id=obj.id %}">{{ obj.get_status_display }}</a></td>
+            <td><a href="{% url 'member:view' id=obj.id %}">{{ obj.get_delivery_type_display }}</a></td>
+            <td><a href="{% url 'member:view' id=obj.id %}">{{ obj.get_status_display }}</a></td>
+        </tr>
+
+        {% empty %}
+            <p>Sorry, no result found.</p>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endif %}
+
 {% if is_paginated %}
 
 <div class="ui pagination menu" style="margin: 2em auto; width=100%;";>
     {% if page_obj.has_previous %}
-    <a class="icon item" href="{% url 'member:list' %}?page={{ page_obj.previous_page_number }}">
+    <a class="icon item"
+       href="{{ request.path }}{{ get }}display={{ display }}&page={{ page_obj.previous_page_number }}">
         <i class="left arrow icon"></i>
     </a>
     {% endif %}
@@ -114,7 +150,8 @@
         {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
     </a>
     {% if page_obj.has_next %}
-    <a class="icon item" href="{% url 'member:list' %}?page={{ page_obj.next_page_number }}">
+    <a class="icon item"
+       href="{{ request.path }}{{ get }}display={{ display }}&page={{ page_obj.next_page_number }}">
         <i class="right arrow icon"></i>
     </a>
     {% endif %}
