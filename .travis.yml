@@ -8,14 +8,11 @@ install:
   - pip install coveralls
   - pip install pep8
 
-before_script:
-  - mv django/santropolFeast/santropolFeast/settings_test.py django/santropolFeast/santropolFeast/settings.py
-
 script:
-  - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test member
-  - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test meal
-  - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test order
-  - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test notification
+  - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test --settings=santropolFeast.settings_test member
+  - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test --settings=santropolFeast.settings_test meal
+  - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test --settings=santropolFeast.settings_test order
+  - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test --settings=santropolFeast.settings_test notification
   - pep8 --count --show-source --exclude=migrations django/santropolFeast/
 
 after_success:

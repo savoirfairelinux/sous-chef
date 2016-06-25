@@ -13,7 +13,7 @@ from member.forms import (
 )
 
 create_member_forms = (
-    ('basic_info', ClientBasicInformation),
+    ('basic_information', ClientBasicInformation),
     ('address_information', ClientAddressInformation),
     ('referent_information', ClientReferentInformation),
     ('payment_information', ClientPaymentInformation),

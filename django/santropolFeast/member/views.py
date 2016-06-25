@@ -21,21 +21,17 @@ class ClientWizard(NamedUrlSessionWizardView):
 
         self.form_dict = form_dict
         self.save()
-        return HttpResponseRedirect('/member/list')
+        return HttpResponseRedirect(reverse_lazy('member:list'))
 
     def save(self):
         """Save the client"""
 
-        basic_info = self.form_dict['basic_info']
+        basic_information = self.form_dict['basic_information']
         address_information = self.form_dict['address_information']
         referent_information = self.form_dict['referent_information']
         payment_information = self.form_dict['payment_information']
         dietary_restriction = self.form_dict['dietary_restriction']
         emergency_contact = self.form_dict['emergency_contact']
-
-        print(basic_info.cleaned_data.get('firstname'))
-        print(emergency_contact.cleaned_data.get('firstname'))
-        print(referent_information.cleaned_data.get('firstname'))
 
         address = Address.objects.create(
             number=address_information.cleaned_data.get('number'),
@@ -50,8 +46,8 @@ class ClientWizard(NamedUrlSessionWizardView):
         address.save()
 
         member = Member.objects.create(
-            firstname=basic_info.cleaned_data.get('firstname'),
-            lastname=basic_info.cleaned_data.get('lastname'),
+            firstname=basic_information.cleaned_data.get('firstname'),
+            lastname=basic_information.cleaned_data.get('lastname'),
             address=address,
         )
         member.save()
@@ -80,8 +76,8 @@ class ClientWizard(NamedUrlSessionWizardView):
             billing_member = member
 
         contact = Contact.objects.create(
-            type=basic_info.cleaned_data.get('contact_type'),
-            value=basic_info.cleaned_data.get("contact_value"),
+            type=basic_information.cleaned_data.get('contact_type'),
+            value=basic_information.cleaned_data.get("contact_value"),
             member=member,
         )
         contact.save()
@@ -109,10 +105,10 @@ class ClientWizard(NamedUrlSessionWizardView):
             member=member,
             billing_member=billing_member,
             emergency_contact=emergency,
-            language=basic_info.cleaned_data.get('language'),
-            gender=basic_info.cleaned_data.get('gender'),
-            birthdate=basic_info.cleaned_data.get('birthdate'),
-            alert=basic_info.cleaned_data.get("alert"),
+            language=basic_information.cleaned_data.get('language'),
+            gender=basic_information.cleaned_data.get('gender'),
+            birthdate=basic_information.cleaned_data.get('birthdate'),
+            alert=basic_information.cleaned_data.get("alert"),
             delivery_type=dietary_restriction.cleaned_data.get("delivery_type")
         )
 
@@ -152,7 +148,7 @@ class ClientList(generic.ListView):
     model = Client
     template_name = 'client/list.html'
     context_object_name = 'clients'
-    paginate_by = 25
+    paginate_by = 21
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -170,10 +166,12 @@ class ClientList(generic.ListView):
         # Here you add some variable of context to display on template
         context['myVariableOfContext'] = 0
         context['filter'] = uf
-
+        context['display'] = self.request.GET.get('display', 'block')
         text = ''
         count = 0
         for getVariable in self.request.GET:
+            if getVariable == "display" or getVariable == "page":
+                continue
             for getValue in self.request.GET.getlist(getVariable):
                 if count == 0:
                     text += "?" + getVariable + "=" + getValue
@@ -181,6 +179,7 @@ class ClientList(generic.ListView):
                     text += "&" + getVariable + "=" + getValue
                 count += 1
 
+        text = text + "?" if count == 0 else text + "&"
         context['get'] = text
 
         return context

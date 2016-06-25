@@ -69,8 +69,8 @@
                     </div>
 
             {% else %}
-                {% if wizard.steps.current == 'basic_info' %}
-                    {% include 'forms/steps/basic_info.html' %}
+                {% if wizard.steps.current == 'basic_information' %}
+                    {% include 'forms/steps/basic_information.html' %}
                 {% elif wizard.steps.current == 'address_information' %}
                     {% include 'forms/steps/address_information.html' %}
                 {% elif wizard.steps.current == 'referent_information' %}
