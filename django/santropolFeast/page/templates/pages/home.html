@@ -17,7 +17,7 @@
 {% block content %}
 
 <div class="ui secondary pointing fluid menu">
-    <h2 class="ui header">{% now "F j Y" %}</h2>
+    <h2 class="ui header">{% now "a F j Y" %}</h2>
 </div>
 
 <div class="ui three column row">
@@ -30,37 +30,19 @@
             <div class="ui secondary olive green inverted dashboard center aligned segment">
                 <div class="ui dashboard statistic">
                     <div class="value">
-                      {{ CLIENTS_TOTAL }}
+                      {{ active_clients }}
                     </div>
-                <div class="label">
-                    Clients
-                </div>
-
-                    <div class="ui two mini statistics">
-                      <div class="statistic">
-                        <div class="value">
-                          76
-                        </div>
-                        <div class="label">
-                          active
-                        </div>
-                      </div>
-                      <div class="statistic">
-                        <div class="value">
-                          52
-                        </div>
-                        <div class="label">
-                          paused
-                        </div>
-                      </div>
+                    <div class="label">
+                        Active clients
                     </div>
-                  </div>
                 </div>
-                <div class="ui segment">
-                  <p>Footer</p>
-                </div>
-              </div>
             </div>
+            <div class="ui segment">
+                <p><i class="warning icon"></i><strong>{{ pending_clients }}</strong> clients are <a href="{% url "member:list" %}?status=D">pending</a>.</p>
+            </div>
+        </div>
+    </div>
+
             <div class="dashboard-stat column">
               <div class="ui segments">
                 <div class="ui segment">
@@ -117,6 +99,28 @@
               </div>
             </div>
           </div>
+
+<div class="row">
+    <div class="top-table column">
+        <div class="ui segments">
+          <div class="ui segment">
+            <h3 class="ui blue header">Happy Birthday</h3>
+            </div>
+            <div class="ui segment">
+                <table class="ui very basic table">
+                    <tbody>
+                        {% for client in birthday %}
+                        <tr>
+                            <td><a href="{% url 'member:view' id=client.id %}">{{ client }}</a></td>
+                            <td>{{ client.age }}</td>
+                        </tr>
+                        {% endfor %}
+                  </tbody>
+                </table>
+          </div>
+      </div>
+</div>
+
 
 
 {% endblock %}

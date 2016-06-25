@@ -70,6 +70,14 @@
       </tr>
         {% endfor %}
   </tbody>
+  <tfoot>
+      <tr>
+          <th></th>
+          <th colspan="5">
+              {% include "system/_button_export.html" %}
+          </th>
+        </tr>
+  </tfoot>
 </table>
 <script type="text/javascript">
     document.addEventListener( 'DOMContentLoaded', function () {

@@ -4,47 +4,49 @@
 
 {% block title %} {% trans 'View Order' %} {% endblock %}
 
-{% block breadcrumb %}
-{% endblock breadcrumb %}
-
 {% block content %}
 
-<H2>Order made on {{order.creation_date}}, delivered on {{order.delivery_date}} to {{order.client}}</H2>
-
-<div>
-  {% trans "order status" %}: {{order.get_status_display}}
-</div>
-
-<div>
-  {% trans "order creation date" %}: {{order.creation_date}}
-</div>
-
-<div>
-  {% trans "order delivery_date" %}: {{order.delivery_date}}
-</div>
-
-<div>
-  {% trans "order total price" %}: {{order.price}}
-</div>
-
-<H3>Item inside order</H3>
-<div class="ui four doubling cards">
-{% for item in order.orders.all %}
-
-  <div class="ui card">
-    <div class="content">
-      <div class="header">
-        {{item.component.name}}
-      </div>
-      <div class="description">
-        Description: {{item.component.description}}
-      </div>
-      <div class="extra content">
-        Price: {{item.price}}
-        Size: {{item.get_size_display}}
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">Order #{{ order.id}}</h2>
+    <div class="right menu">
+      <div class="ui item">
+          <div class="ui large label">{{ order.get_status_display }}</div>
       </div>
     </div>
-  </div>
-{% endfor %}
 </div>
+
+<div class="ui row"></div>
+
+<div class="ui four wide">
+    {% include "_order_info.html" %}
+</div>
+
+<div class="ui twelve wide" style="margin: 0 auto;">
+    <h4>Order detail</h4>
+    <table class="ui very basic stripped celled table">
+      <thead>
+        <th>Item</th>
+        <th>Description</th>
+        <th class="">{% trans 'Quantity' %}</th>
+        <th class="">{% trans 'Price' %}</th>
+      </thead>
+      <tbody>
+          {% for item in order.orders.all %}
+          <tr>
+            <td><strong>{{item.component.name}}</strong></td>
+            <td>{{item.component.description}}</td>
+            <td>1</td>
+            <td>${{item.price}}</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+      <tfoot>
+          <tr>
+              <th colspan="3">Total</th>
+              <th>${{ order.price }}</th>
+          </tr>
+      </tfoot>
+  </table>
+</div>
+<div class="ui row"></div>
 {% endblock %}

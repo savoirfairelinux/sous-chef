@@ -8,34 +8,28 @@
 
 {% endblock %}
 
-{% block breadcrumb %}
-{{ block.super }}
-<i class="right arrow icon divider"></i>
-<div class="active section">{{ client }}</div>
-{% endblock breadcrumb %}
-
 {% block content %}
 
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">{{client}}</h2>
+    <div class="right menu">
+      <div class="ui item">
+          <div class="ui large label">{{ client.get_status_display }}</div>
+      </div>
+    </div>
+</div>
+
+<div class="ui icon small message">
+    <i class="warning icon"></i>
+    <div class="content">
+        <p>{{ client.alert }}</p>
+    </div>
+</div>
+
+<div class="ui four wide">
+    {% include "client/client_info.html" %}
+</div>
 <div class="ui grid">
-
-    <div class="sixteen wide column">
-        <div class="ui warning message">
-            <div class="header">
-                {% trans 'Important information' %}
-            </div>
-            {{ client.alert }}
-        </div>
-    </div>
-
-    <div class="twelve wide column">
-        <h1 class="ui header">{{client}}
-            <div class="sub header">
-                <a class="ui large yellow label"><i class="shipping icon"></i>{{client.get_status_display}}</a>
-                <a class="ui large yellow label"><i class="clock icon"></i>{{client.get_delivery_type_display}}</a>
-                <a href="/order/list/?name={{client.member.firstname}}" class="ui large green label"><i class="food icon"></i>See all Order</a>
-            </div>
-        </h1>
-    </div>
 
     <div class="sixteen wide column">
 
