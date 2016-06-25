@@ -1,0 +1,37 @@
+<div class="ui relaxed divided list">
+    <div class="item">
+        <i class="large home middle aligned icon"></i>
+        <div class="content">
+            <a class="header">Address</a>
+            <div class="description">{{client.member.address.street}}<br/> {{client.member.address.city}}, {{client.member.address.postal_code}}</div>
+        </div>
+    </div>
+    <div class="item">
+        <i class="large shipping middle aligned icon"></i>
+        <div class="content">
+            <a class="header">Delivery type</a>
+            <div class="description">{{ client.get_delivery_type_display}}</div>
+        </div>
+    </div>
+    <div class="item">
+        <i class="large comment middle aligned icon"></i>
+        <div class="content">
+            <a class="header">Language</a>
+            <div class="description">{{client.get_language_display}}</div>
+        </div>
+    </div>
+    <div class="item">
+        <i class="large heterosexual middle aligned icon"></i>
+        <div class="content">
+            <a class="header">Gender</a>
+            <div class="description">{{client.get_gender_display}}</div>
+        </div>
+    </div>
+    <div class="item">
+        <i class="large birthday middle aligned icon"></i>
+        <div class="content">
+            <a class="header">{{client.birthdate}}</a>
+            <div class="description">{{client.age}} years old</div>
+        </div>
+    </div>
+</div>
