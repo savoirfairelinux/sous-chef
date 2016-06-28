@@ -37,8 +37,13 @@ def print_rows(q, heading=""):
     #     print(row)
 
 
+<<<<<<< HEAD
 def insert_all():
     print("\nSTART dataload")
+=======
+def run():
+    print("START dataload")
+>>>>>>> Kitchen Count Report view proof of concept
     engine = ac.get_engine()
     Session = sessionmaker(bind=engine)
     db = Session()
@@ -73,6 +78,7 @@ def insert_all():
     Order.objects.all().delete()
     Order_item.objects.all().delete()
 
+<<<<<<< HEAD
     # -----------------------------------------------------------------------------
     ing_1 = Ingredient(
         name='Onion',

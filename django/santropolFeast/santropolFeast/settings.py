@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'django_filters',
     'aldjemy',
     'annoying',
-
 ]
 
 MIDDLEWARE_CLASSES = [
