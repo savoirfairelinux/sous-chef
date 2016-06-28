@@ -8,94 +8,47 @@
     <title>
         {% block title %}Sous-Chef{% endblock %}
     </title>
-
+    <link href="{% static 'css/admin.css' %}" type="text/css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css" rel="stylesheet">
     {% block extrahead %}{% endblock %}
 </head>
 
 <body>
-
-    <div class="ui right inverted vertical menu sidebar">
-
-        <div class="item">
-            <img class="ui large image item" src="{% static 'assets/logo-souschef-coul.png' %}" title="Logo Sous-Chef"/>
-        </div>
-
-        <div class="item">
-            <a class="item" href="{%url 'member:list'%}">Clients
-                <div class="ui label">{{ CLIENTS_TOTAL }}</div>
-            </a>
-
-            <div class="item">
-                <div class="ui icon transparent inverted input">
-                    <input type="text" placeholder="Search client...">
-                    <i class="search icon"></i>
-                </div>
-            </div>
-            <a class="item" href="{% url 'order:list' %}">Orders
-                <div class="ui label">{{ ORDERS_TOTAL }}</div>
-            </a>
-            <a class="item" href="/admin/meal/ingredient/">Ingredients
-                <div class="ui label">{{ INGREDIENTS_TOTAL }}</div>
-            </a>
-        </div>
-
-        <div class="item">
-                <a class="item" href="/"><i class="dashboard icon"></i>Dashboard</a>
-            <a class="item" href="{% url 'member:member_step' %}"><i class="add user icon"></i>Add a new client</a>
-            <a class="item" href="/admin"><i class="settings icon"></i>Settings</a>
-            <a href="{% url 'page:logout' %}" class="item"><i class="sign out icon"></i>Logout</a>
-        </div>
-
+    <!-- Responsive sidebar menu -->
+    <div class="ui inverted vertical menu sidebar">
+        {% include "system/menu.html" %}
     </div>
+    <!-- Main content grid -->
     <div class="pusher">
-        <!-- Site content !-->
-        <div class="ui inverted large menu">
-
-                <a class="ui item" href="{%url 'page:home'%}">
-                        <img class="ui small image" src="{% static 'assets/logo-souschef-coul.png' %}" title="Logo Sous-Chef"/>
-                </a>
-                <div class="right item">
-                    <a class="ui open-menu" href="#"><i class="sidebar yellow large icon"></i></a>
-                </div>
-        </div>
-
-        <div class="ui main container">
-
-            <div class="ui breadcrumb">
-                {% block breadcrumb %}
-                <a href="/" class="section">{% trans "Home" %}</a>
-                {% endblock breadcrumb %}
+        <div class="ui grid container">
+            <!-- Non responsive menu -->
+            <div class="ui left fixed vertical inverted menu">
+                {% include "system/menu.html" %}
             </div>
-            <div class="ui divider"></div>
+            <div class="ui main grid">
+                <!-- Responsive top menu -->
+                <div class="ui fixed inverted main menu">
+                    <div class="ui container">
+                        <a class="launch icon item sidebar-toggle">
+                            <i class="sidebar icon"></i>
+                        </a>
+                    </div>
+                </div>
 
-            {%block content%}{%endblock%}
+                {%block message%}{%endblock%}
+
+                {%block content%}{%endblock%}
+
+                <br><br>
+            </div>
         </div>
-        <br><br>
-        <div class="ui inverted vertical footer segment">
-            <br>
-            <div class="ui center aligned container">
-                <div class="ui stackable inverted divided grid">
-                    <div class="eight wide column">
-                        <h4 class="ui inverted header"><i class="question yellow icon"></i>What do you want to do</h4>
-                        <div class="ui inverted link list">
-                            <a href="{%url 'member:list'%}" class="item">Search for a client</a>
-                            <a href="{% url 'member:member_step' %}" class="item">Add a new client</a>
-                            <a href="#" class="item">View orders</a>
-                            <a href="#" class="item">See other applications</a>
-                        </div>
-                    </div>
-
-                    <div class="eight wide column">
-                        <h4 class="ui inverted header">About the Roulant</h4>
-                        <p>Santropol Roulant is an intergenerational community food hub where we grow, prepare and deliver food. In doing so, we create a continuum of engaging services that help build a stronger social fabric, and increase food security and social inclusion for Montrealers.</p>
-                    </div>
-                </div>
-                <div class="ui inverted section divider"></div>
-                <img src="{% static 'assets/logo-souschef-coul.png' %}" class="ui centered small image">
-                <div class="ui horizontal inverted small divided link list">
-                    <p><i class="code yellow icon"></i> with &nbsp;<i class="heart yellow icon"></i> in Montreal</p>
-                </div>
+    </div>
+    <div class="ui inverted vertical footer segment">
+        <br>
+        <div class="ui center aligned container">
+            <img src="{% static 'assets/logo-souschef-coul.png' %}" class="ui centered small image">
+            <div class="ui horizontal inverted small divided link list">
+                <p><i class="code yellow icon"></i> with &nbsp;<i class="heart yellow icon"></i> in Montreal</p>
             </div>
         </div>
     </div>

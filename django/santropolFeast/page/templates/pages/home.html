@@ -16,54 +16,110 @@
 
 {% block content %}
 
-{% include "dashboard/statistics.html" %}
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">{% now "F j Y" %}</h2>
+</div>
 
-<a class="huge ui button" href="{% url 'member:member_step' %}">Add new client</a>
+<div class="ui three column row">
 
-<div class="two column stackable ui grid padded">
-    <div class="column">
-            <div class="ui card">
-                <div class="content">
-                    <div class="header">Heartbeat</div>
-                </div>
-                <div class="content">
-                    <h4 class="ui sub header">Activity</h4>
-                    <div class="ui small feed">
-                        <div class="event">
-                            <div class="content">
-                                <div class="summary">
-                                    <a>Pier Line</a> added <a>Jenny Hess</a> to the project
-                                </div>
-                            </div>
-                        </div>
-                        <div class="event">
-                            <div class="content">
-                                <div class="summary">
-                                    <a>Katrina Astrid Heyde</a> was added as an <a>Administrator</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="event">
-                            <div class="content">
-                                <div class="summary">
-                                    <a>Helen Troy</a> added two clients
-                                </div>
-                            </div>
-                        </div>
+    <div class="dashboard-stat column">
+        <div class="ui segments">
+            <div class="ui segment">
+                <h3 class="ui blue header">Clients</h3>
+            </div>
+            <div class="ui secondary olive green inverted dashboard center aligned segment">
+                <div class="ui dashboard statistic">
+                    <div class="value">
+                      {{ active_clients }}
                     </div>
-                 </div>
-                 <div class="extra content">
-                     <button class="ui button">See all</button>
-                 </div>
+                    <div class="label">
+                        Active clients
+                    </div>
+                </div>
+            </div>
+            <div class="ui segment">
+                <p><i class="warning icon"></i><strong>{{ pending_clients }}</strong> clients are <a href="{% url "member:list" %}?status=D">pending</a>.</p>
+            </div>
         </div>
     </div>
-    <div class="column">
-        {% include "pages/card.html" %}
-    </div>
+           <div class="dashboard-stat column">
+              <div class="ui segments">
+                <div class="ui segment">
+                  <h3 class="ui blue header">Orders</h3>
+                </div>
+                <div class="ui teal inverted dashboard center aligned segment">
+                  <div class="ui dashboard statistic">
+                    <div class="value">
+                      {{ ORDERS_TOTAL}}
+                    </div>
+                    <div class="label">
+                      Orders
+                    </div>
+                  </div>
+
+                  <div class="ui center animated list">
+                    <a class="item">
+                      <i class="add circle icon"></i>
+                      <div class="content">
+                        <div class="description">95% delivered</div>
+                      </div>
+                    </a>
+                    <a class="item">
+                      <i class="minus circle icon"></i>
+                      <div class="content">
+                        <div class="description">5% not charged</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="ui segment">
+                  <p>Footer</p>
+                </div>
+              </div>
+            </div>
+            <div class="dashboard-stat column">
+              <div class="ui segments">
+                <div class="ui segment">
+                  <h3 class="ui blue header">Any Header</h3>
+                </div>
+                <div class="ui secondary blue inverted dashboard center aligned segment">
+                  <div class="ui dashboard statistic">
+                    <div class="value">
+                      5,550
+                    </div>
+                    <div class="label">
+                      Downloads
+                    </div>
+                  </div>
+                </div>
+                <div class="ui segment">
+                  <p>Footer</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+<div class="row">
+    <div class="top-table column">
+        <div class="ui segments">
+          <div class="ui segment">
+            <h3 class="ui blue header">Happy Birthday</h3>
+            </div>
+            <div class="ui segment">
+                <table class="ui very basic table">
+                    <tbody>
+                        {% for client in birthday %}
+                        <tr>
+                            <td><a href="{% url 'member:view' id=client.id %}">{{ client }}</a></td>
+                            <td>{{ client.age }}</td>
+                        </tr>
+                        {% endfor %}
+                  </tbody>
+                </table>
+          </div>
+      </div>
 </div>
-<div class="two column stackable ui grid padded">
-    <div class="column">
-        {% include "notes/latest.html" %}
-    </div>
-</div>
+
+
+
 {% endblock %}

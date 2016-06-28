@@ -9,13 +9,24 @@ from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from member.models import Note
+from member.models import Note, Client
+from datetime import datetime, timedelta
+from functools import reduce
+import operator
 
 
 @login_required
 def home(request):
     notes = list(Note.objects.all())
-    return render(request, 'pages/home.html', {'notes': notes})
+    active_clients = Client.objects.filter(status='A').count()
+    pending_clients = Client.objects.filter(status='D').count()
+    clients = Client.objects.all()
+    return render(request, 'pages/home.html', {
+        'notes': notes,
+        'active_clients': active_clients,
+        'pending_clients': pending_clients,
+        'birthday': clients,
+    })
 
 
 def custom_login(request):
