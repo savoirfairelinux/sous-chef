@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-16 00:55+0000\n"
+"POT-Creation-Date: 2016-06-29 19:59+0000\n"
 "PO-Revision-Date: 2016-04-21 20:13-0400\n"
 "Last-Translator: Julie Moussu <julie.moussu@savoirfairelinux.com>\n"
 "Language-Team: \n"
@@ -17,65 +17,204 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.4\n"
 
-#: django/santropolFeast/order/models.py:5
+#: order/models.py:8
 msgid "Ordered"
 msgstr "commandée"
 
-#: django/santropolFeast/order/models.py:6
+#: order/models.py:9
 msgid "Delivered"
 msgstr "livrée"
 
-#: django/santropolFeast/order/models.py:7
-msgid "No charge"
-msgstr "non facturée"
+#: order/models.py:10
+msgid "Billed"
+msgstr ""
 
-#: django/santropolFeast/order/models.py:8
+#: order/models.py:11
 msgid "Paid"
 msgstr ""
 
-#: django/santropolFeast/order/models.py:12
-msgid "Half"
+#: order/models.py:15
+msgid "Serving size"
 msgstr ""
 
-#: django/santropolFeast/order/models.py:13
+#: order/models.py:16
 msgid "Regular"
 msgstr "standard"
 
-#: django/santropolFeast/order/models.py:14
-msgid "Double"
-msgstr "double"
+#: order/models.py:17
+msgid "Large"
+msgstr ""
 
-#: django/santropolFeast/order/models.py:21
+#: order/models.py:21
+#, fuzzy
+#| msgid "order items"
+msgid "Order item type"
+msgstr "éléments de la commande"
+
+#: order/models.py:23
+msgid "BILLABLE meal component (main dish, vegetable, side dish, seasonal)"
+msgstr ""
+
+#: order/models.py:25
+msgid "BILLABLE delivery (general store item, ...)"
+msgstr ""
+
+#: order/models.py:27
+msgid "NON BILLABLE delivery (ex. invitation card, ...)"
+msgstr ""
+
+#: order/models.py:29
+msgid "NON BILLABLE pickup (payment)"
+msgstr ""
+
+#: order/models.py:36
 msgid "orders"
 msgstr "commandes"
 
-#: django/santropolFeast/order/models.py:25
-msgid "date"
-msgstr "date"
+#: order/models.py:40
+msgid "creation date"
+msgstr ""
 
-#: django/santropolFeast/order/models.py:31
+#: order/models.py:44
+#, fuzzy
+#| msgid "Delivered"
+msgid "delivery date"
+msgstr "livrée"
+
+#: order/models.py:50 order/templates/view_order.html:15
 msgid "order status"
 msgstr "statut de la commande"
 
-#: django/santropolFeast/order/models.py:36
-msgid "value"
-msgstr "valeur"
-
-#: django/santropolFeast/order/models.py:41
+#: order/models.py:55
 msgid "client"
 msgstr "client"
 
-#: django/santropolFeast/order/models.py:53
+#: order/models.py:77
+msgid "Search by name"
+msgstr ""
+
+#: order/models.py:120
 msgid "order items"
 msgstr "éléments de la commande"
 
-#: django/santropolFeast/order/models.py:58
-msgid "meal"
-msgstr "repas"
+#: order/models.py:124
+#, fuzzy
+#| msgid "orders"
+msgid "order"
+msgstr "commandes"
 
-#: django/santropolFeast/order/models.py:64
+#: order/models.py:130
+msgid "component"
+msgstr ""
+
+#: order/models.py:137
 msgid "price"
 msgstr "prix"
+
+#: order/models.py:141
+msgid "billable flag"
+msgstr ""
+
+#: order/models.py:145
+msgid "size"
+msgstr ""
+
+#: order/models.py:152
+#, fuzzy
+#| msgid "order items"
+msgid "order item type"
+msgstr "éléments de la commande"
+
+#: order/models.py:159
+msgid "remark"
+msgstr ""
+
+#: order/models.py:163
+msgid "total quantity"
+msgstr ""
+
+#: order/models.py:168
+msgid "free quantity"
+msgstr ""
+
+#: order/templates/list.html:5 order/templates/list.html:10
+#, fuzzy
+#| msgid "orders"
+msgid "Orders"
+msgstr "commandes"
+
+#: order/templates/list.html:55
+#, fuzzy
+#| msgid "client"
+msgid "Client"
+msgstr "client"
+
+#: order/templates/list.html:56
+#, fuzzy
+#| msgid "Delivered"
+msgid "Delivery Date"
+msgstr "livrée"
+
+#: order/templates/list.html:57
+msgid "Status"
+msgstr ""
+
+#: order/templates/list.html:58
+msgid "Amount"
+msgstr ""
+
+#: order/templates/view.html:5 order/templates/view_order.html:5
+msgid "View Order"
+msgstr ""
+
+#: order/templates/view.html:30
+msgid "Quantity"
+msgstr ""
+
+#: order/templates/view.html:31
+#, fuzzy
+#| msgid "price"
+msgid "Price"
+msgstr "prix"
+
+#: order/templates/view_order.html:19
+#, fuzzy
+#| msgid "order items"
+msgid "order creation date"
+msgstr "éléments de la commande"
+
+#: order/templates/view_order.html:23
+#, fuzzy
+#| msgid "order items"
+msgid "order delivery_date"
+msgstr "éléments de la commande"
+
+#: order/templates/view_order.html:27
+msgid "order total price"
+msgstr ""
+
+#: order/urls.py:7
+msgid "^list/$"
+msgstr ""
+
+#: order/urls.py:8
+msgid "^view/(?P<id>\\d+)/$"
+msgstr ""
+
+#~ msgid "No charge"
+#~ msgstr "non facturée"
+
+#~ msgid "Double"
+#~ msgstr "double"
+
+#~ msgid "date"
+#~ msgstr "date"
+
+#~ msgid "value"
+#~ msgstr "valeur"
+
+#~ msgid "meal"
+#~ msgstr "repas"
 
 #~ msgid "paid"
 #~ msgstr "payée"

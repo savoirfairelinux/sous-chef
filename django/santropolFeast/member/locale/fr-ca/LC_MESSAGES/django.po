@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-16 00:55+0000\n"
+"POT-Creation-Date: 2016-06-29 19:59+0000\n"
 "PO-Revision-Date: 2016-04-21 19:43-0400\n"
 "Last-Translator: Julie Moussu <julie.moussu@savoirfairelinux.com>\n"
 "Language-Team: \n"
@@ -17,195 +17,679 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.4\n"
 
-#: django/santropolFeast/member/models.py:25
-msgid "members"
-msgstr "membres"
-
-#: django/santropolFeast/member/models.py:30
-msgid "firstname"
+#: member/forms.py:13 member/forms.py:117 member/forms.py:119
+#: member/forms.py:152 member/forms.py:153 member/forms.py:178
+#: member/forms.py:179 member/templates/client/view/view.html:52
+#: member/templates/client/view/view.html:72
+#: member/templates/client/view/view.html:122
+#: member/templates/client/view/view.html:139
+msgid "First Name"
 msgstr "prénom"
 
-#: django/santropolFeast/member/models.py:35
-msgid "lastname"
+#: member/forms.py:15
+#, fuzzy
+#| msgid "First Name"
+msgid "First name"
+msgstr "prénom"
+
+#: member/forms.py:17 member/forms.py:120 member/forms.py:122
+#: member/forms.py:155 member/forms.py:156 member/forms.py:181
+#: member/forms.py:182 member/templates/client/view/view.html:53
+#: member/templates/client/view/view.html:73
+#: member/templates/client/view/view.html:123
+#: member/templates/client/view/view.html:140
+msgid "Last Name"
+msgstr ""
+
+#: member/forms.py:19
+#, fuzzy
+#| msgid "lastname"
+msgid "Last name"
 msgstr "nom"
 
-#: django/santropolFeast/member/models.py:41
-msgid "Male"
+#: member/forms.py:27
+msgid "Preferred language"
 msgstr ""
 
-#: django/santropolFeast/member/models.py:42
-msgid "Female"
+#: member/forms.py:32 member/templates/client/view/view.html:58
+msgid "Birthday"
 msgstr ""
 
-#: django/santropolFeast/member/models.py:43
-msgid "Unknown"
-msgstr ""
-
-#: django/santropolFeast/member/models.py:83
-msgid "addresses"
-msgstr "adresses"
-
-#: django/santropolFeast/member/models.py:87
-msgid "street number"
-msgstr "numéro de rue"
-
-#: django/santropolFeast/member/models.py:92
-msgid "street"
-msgstr "rue"
-
-#: django/santropolFeast/member/models.py:98
-msgid "apartment"
-msgstr "appartement"
-
-#: django/santropolFeast/member/models.py:104
-msgid "floor"
-msgstr "étage"
-
-#: django/santropolFeast/member/models.py:111
-msgid "city"
-msgstr "ville"
-
-#: django/santropolFeast/member/models.py:117
-msgid "postal code"
-msgstr "code postal"
-
-#: django/santropolFeast/member/models.py:122
-#: django/santropolFeast/member/models.py:148
-#: django/santropolFeast/member/models.py:196
-#: django/santropolFeast/member/models.py:278
-msgid "member"
-msgstr "membre"
-
-#: django/santropolFeast/member/models.py:132
-msgid "contacts"
-msgstr "contacts"
-
-#: django/santropolFeast/member/models.py:138
-msgid "contact type"
+#: member/forms.py:35 member/forms.py:184
+#, fuzzy
+#| msgid "contact type"
+msgid "Contact Type"
 msgstr "type de contact"
 
-#: django/santropolFeast/member/models.py:143
-msgid "value"
-msgstr "valeur"
+#: member/forms.py:39 member/templates/forms/steps/basic_information.html:30
+#: member/templates/forms/steps/emergency_contact.html:16
+msgid "Contact information"
+msgstr ""
 
-#: django/santropolFeast/member/models.py:165
-msgid "Pending"
-msgstr "en attente"
+#: member/forms.py:41 member/templates/forms/steps/basic_information.html:51
+msgid "Alert"
+msgstr ""
 
-#: django/santropolFeast/member/models.py:166
+#: member/forms.py:44
+msgid "Your message here ..."
+msgstr ""
+
+#: member/forms.py:50 member/forms.py:158
+#, fuzzy
+#| msgid "street number"
+msgid "Street Number"
+msgstr "numéro de rue"
+
+#: member/forms.py:52
+msgid "#"
+msgstr ""
+
+#: member/forms.py:55 member/forms.py:57 member/forms.py:161
+#: member/forms.py:163
+msgid "Apt #"
+msgstr ""
+
+#: member/forms.py:60 member/forms.py:166
+#, fuzzy
+#| msgid "floor"
+msgid "Floor"
+msgstr "étage"
+
+#: member/forms.py:63 member/forms.py:169
+#, fuzzy
+#| msgid "street number"
+msgid "Street Name"
+msgstr "numéro de rue"
+
+#: member/forms.py:65
+msgid "Street Address"
+msgstr ""
+
+#: member/forms.py:67
+msgid "City"
+msgstr ""
+
+#: member/forms.py:69
+msgid "Montreal"
+msgstr ""
+
+#: member/forms.py:71 member/forms.py:173
+#, fuzzy
+#| msgid "postal code"
+msgid "Postal Code"
+msgstr "code postal"
+
+#: member/forms.py:73
+msgid "H2R 2Y5"
+msgstr ""
+
+#: member/forms.py:79 member/models.py:202
 msgid "Active"
 msgstr "actif"
 
-#: django/santropolFeast/member/models.py:167
+#: member/forms.py:80
+msgid "By default, the client meal status is Pending."
+msgstr ""
+
+#: member/forms.py:85
+msgid "Type"
+msgstr ""
+
+#: member/forms.py:94
+msgid "Schedule"
+msgstr ""
+
+#: member/forms.py:103
+msgid "Main dish"
+msgstr ""
+
+#: member/forms.py:107
+msgid "Restrictions"
+msgstr ""
+
+#: member/forms.py:126 member/models.py:386
+msgid "Work information"
+msgstr ""
+
+#: member/forms.py:129
+msgid "Hotel-Dieu, St-Anne Hospital, CLSC, ..."
+msgstr ""
+
+#: member/forms.py:131 member/templates/client/view/view.html:126
+msgid "Referral Reason"
+msgstr ""
+
+#: member/forms.py:135 member/templates/client/view/view.html:125
+msgid "Referral Date"
+msgstr ""
+
+#: member/forms.py:140
+msgid "Billing Type"
+msgstr ""
+
+#: member/forms.py:146 member/models.py:224
+msgid "Payment Type"
+msgstr ""
+
+#: member/forms.py:171
+#, fuzzy
+#| msgid "First Name"
+msgid "City Name"
+msgstr "prénom"
+
+#: member/forms.py:189
+#, fuzzy
+#| msgid "contacts"
+msgid "Contact"
+msgstr "contacts"
+
+#: member/models.py:17 member/templates/client/view/view.html:54
+msgid "Gender"
+msgstr ""
+
+#: member/models.py:18
+msgid "Female"
+msgstr ""
+
+#: member/models.py:19
+msgid "Male"
+msgstr ""
+
+#: member/models.py:30
+msgid "Default"
+msgstr ""
+
+#: member/models.py:31
+msgid "Low income"
+msgstr ""
+
+#: member/models.py:32
+msgid "Solidary"
+msgstr ""
+
+#: member/models.py:36
+msgid "Check"
+msgstr ""
+
+#: member/models.py:37
+msgid "Cash"
+msgstr ""
+
+#: member/models.py:38
+msgid "Debit card"
+msgstr ""
+
+#: member/models.py:39
+msgid "Credit card"
+msgstr ""
+
+#: member/models.py:40
+msgid "EFT"
+msgstr ""
+
+#: member/models.py:44
+msgid "Ongoing"
+msgstr ""
+
+#: member/models.py:45
+msgid "Episodic"
+msgstr ""
+
+#: member/models.py:49
+msgid "Main dish size"
+msgstr ""
+
+#: member/models.py:50
+msgid "Dish"
+msgstr ""
+
+#: member/models.py:51
+msgid "Preparation"
+msgstr ""
+
+#: member/models.py:52
+msgid "Other order item"
+msgstr ""
+
+#: member/models.py:56
+msgid "Monday"
+msgstr ""
+
+#: member/models.py:57
+msgid "Tuesday"
+msgstr ""
+
+#: member/models.py:58
+msgid "Wednesday"
+msgstr ""
+
+#: member/models.py:59
+msgid "Thursday"
+msgstr ""
+
+#: member/models.py:60
+msgid "Friday"
+msgstr ""
+
+#: member/models.py:61
+msgid "Saturday"
+msgstr ""
+
+#: member/models.py:62
+msgid "Sunday"
+msgstr ""
+
+#: member/models.py:69
+msgid "members"
+msgstr "membres"
+
+#: member/models.py:74
+msgid "firstname"
+msgstr "prénom"
+
+#: member/models.py:79
+msgid "lastname"
+msgstr "nom"
+
+#: member/models.py:84
+#, fuzzy
+#| msgid "addresses"
+msgid "address"
+msgstr "adresses"
+
+#: member/models.py:98
+msgid "addresses"
+msgstr "adresses"
+
+#: member/models.py:102
+msgid "street number"
+msgstr "numéro de rue"
+
+#: member/models.py:109
+msgid "street"
+msgstr "rue"
+
+#: member/models.py:115
+msgid "apartment"
+msgstr "appartement"
+
+#: member/models.py:121
+msgid "floor"
+msgstr "étage"
+
+#: member/models.py:128
+msgid "city"
+msgstr "ville"
+
+#: member/models.py:134
+msgid "postal code"
+msgstr "code postal"
+
+#: member/models.py:144
+msgid "contacts"
+msgstr "contacts"
+
+#: member/models.py:150
+msgid "contact type"
+msgstr "type de contact"
+
+#: member/models.py:155 member/models.py:498
+msgid "value"
+msgstr "valeur"
+
+#: member/models.py:160 member/models.py:239
+msgid "member"
+msgstr "membre"
+
+#: member/models.py:171
+msgid "Routes"
+msgstr ""
+
+#: member/models.py:176 member/models.py:465
+#, fuzzy
+#| msgid "lastname"
+msgid "name"
+msgstr "nom"
+
+#: member/models.py:180 member/models.py:469
+msgid "description"
+msgstr ""
+
+#: member/models.py:201
+msgid "Pending"
+msgstr "en attente"
+
+#: member/models.py:203
 msgid "Paused"
 msgstr "en pause"
 
-#: django/santropolFeast/member/models.py:168
+#: member/models.py:204
 msgid "Stop: no contact"
 msgstr "arrêté - pas de contact"
 
-#: django/santropolFeast/member/models.py:169
+#: member/models.py:205
 #, fuzzy
 #| msgid "Stop contact"
 msgid "Stop: contact"
 msgstr "arrêté - en contact"
 
-#: django/santropolFeast/member/models.py:170
+#: member/models.py:206
 msgid "Deceased"
 msgstr "décédé"
 
-#: django/santropolFeast/member/models.py:174
-msgid "Default"
+#: member/models.py:210
+msgid "English"
 msgstr ""
 
-#: django/santropolFeast/member/models.py:175
-msgid "Low income"
+#: member/models.py:211
+msgid "French"
 msgstr ""
 
-#: django/santropolFeast/member/models.py:176
-msgid "Solidary"
-msgstr ""
-
-#: django/santropolFeast/member/models.py:180
+#: member/models.py:215
 msgid "clients"
 msgstr "clients"
 
-#: django/santropolFeast/member/models.py:184
-msgid "billing address"
+#: member/models.py:220
+#, fuzzy
+#| msgid "billing address"
+msgid "billing member"
 msgstr "adresse de facturation"
 
-#: django/santropolFeast/member/models.py:188
-msgid "facturation type"
-msgstr ""
+#: member/models.py:231
+#, fuzzy
+#| msgid "contact type"
+msgid "rate type"
+msgstr "type de contact"
 
-#: django/santropolFeast/member/models.py:201
+#: member/models.py:244
 msgid "emergency contact"
 msgstr ""
 
-#: django/santropolFeast/member/models.py:225
+#: member/models.py:251
+msgid "emergency contact relationship"
+msgstr ""
+
+#: member/models.py:269
 msgid "alert client"
 msgstr "clients"
 
-#: django/santropolFeast/member/models.py:236
+#: member/models.py:298
+msgid "route"
+msgstr ""
+
+#: member/models.py:328
+msgid "Search by name"
+msgstr ""
+
+#: member/models.py:372
 msgid "referents"
 msgstr ""
 
-#: django/santropolFeast/member/models.py:239
+#: member/models.py:375
 msgid "referent"
 msgstr ""
 
-#: django/santropolFeast/member/models.py:242
+#: member/models.py:378 member/models.py:487 member/models.py:515
+#: member/models.py:532 member/models.py:549
 msgid "client"
 msgstr "clients"
 
-#: django/santropolFeast/member/models.py:245
+#: member/models.py:382
+#: member/templates/forms/steps/referent_information.html:27
 msgid "Referral reason"
 msgstr ""
 
-#: django/santropolFeast/member/models.py:248
+#: member/models.py:391
 msgid "Referral date"
 msgstr ""
 
-#: django/santropolFeast/member/models.py:256
-msgid "notes"
+#: member/models.py:408
+msgid "Normal"
 msgstr ""
 
-#: django/santropolFeast/member/models.py:258
-msgid "text note"
+#: member/models.py:409
+msgid "Urgent"
 msgstr ""
 
-#: django/santropolFeast/member/models.py:262
-msgid "author"
+#: member/models.py:413 member/templates/client/view/view.html:41
+msgid "Notes"
 msgstr ""
 
-#: django/santropolFeast/member/models.py:267
-msgid "creation date"
+#: member/models.py:416
+msgid "Note"
 msgstr ""
 
-#: django/santropolFeast/member/models.py:272
-msgid "is read"
+#: member/models.py:421
+msgid "Author"
 msgstr ""
 
-#: django/santropolFeast/member/templates/client/list.html:10
-msgid "Gender"
+#: member/models.py:426
+msgid "Date"
 msgstr ""
 
-#: django/santropolFeast/member/templates/client/list.html:11
-msgid "First Name"
-msgstr "prénom"
-
-#: django/santropolFeast/member/templates/client/list.html:12
-msgid "Last Name"
+#: member/models.py:431
+msgid "Is read"
 msgstr ""
 
-#: django/santropolFeast/member/templates/client/list.html:13
-msgid "Phone Number"
+#: member/models.py:437
+#, fuzzy
+#| msgid "member"
+msgid "Member"
+msgstr "membre"
+
+#: member/models.py:460
+msgid "options"
 msgstr ""
 
-#: django/santropolFeast/member/templates/client/list.html:14
-msgid "Referant"
+#: member/models.py:477
+msgid "option group"
 msgstr ""
 
-#: django/santropolFeast/member/urls.py:8
-msgid "^list/$"
+#: member/models.py:492
+msgid "option"
+msgstr ""
+
+#: member/models.py:520
+msgid "restricted item"
+msgstr ""
+
+#: member/models.py:537
+msgid "ingredient"
+msgstr ""
+
+#: member/models.py:554
+msgid "component"
+msgstr ""
+
+#: member/templates/base_member.html:7
+#, fuzzy
+#| msgid "client"
+msgid "Client"
+msgstr "clients"
+
+#: member/templates/client/list.html:10
+#, fuzzy
+#| msgid "clients"
+msgid "Clients"
+msgstr "clients"
+
+#: member/templates/client/view/view.html:55
+msgid "Language"
+msgstr ""
+
+#: member/templates/client/view/view.html:56
+msgid "Status"
+msgstr ""
+
+#: member/templates/client/view/view.html:57
+msgid "Delivery Type"
+msgstr ""
+
+#: member/templates/client/view/view.html:66
+msgid "Emergency Contact"
+msgstr ""
+
+#: member/templates/client/view/view.html:74
+msgid "Relationship"
+msgstr ""
+
+#: member/templates/client/view/view.html:124
+msgid "Workplace information"
+msgstr ""
+
+#: member/templates/client/view/view.html:141
+msgid "Payment method"
+msgstr ""
+
+#: member/templates/client/view/view.html:142
+#, fuzzy
+#| msgid "contact type"
+msgid "Rate type"
+msgstr "type de contact"
+
+#: member/templates/forms/form.html:35
+msgid "Personal"
+msgstr ""
+
+#: member/templates/forms/form.html:35
+msgid "First name, last name, ..."
+msgstr ""
+
+#: member/templates/forms/form.html:37
+#, fuzzy
+#| msgid "addresses"
+msgid "Address"
+msgstr "adresses"
+
+#: member/templates/forms/form.html:37
+#, fuzzy
+#| msgid "street number"
+msgid "Street number, city, ..."
+msgstr "numéro de rue"
+
+#: member/templates/forms/form.html:39
+msgid "Referent"
+msgstr ""
+
+#: member/templates/forms/form.html:39
+msgid "Referent contact information"
+msgstr ""
+
+#: member/templates/forms/form.html:41
+#, fuzzy
+#| msgid "apartment"
+msgid "Payment"
+msgstr "appartement"
+
+#: member/templates/forms/form.html:41
+msgid "Payment method, card, ..."
+msgstr ""
+
+#: member/templates/forms/form.html:43
+msgid "Allergies"
+msgstr ""
+
+#: member/templates/forms/form.html:43
+msgid "Restrictions, allergies, ..."
+msgstr ""
+
+#: member/templates/forms/form.html:45
+msgid "Emergency"
+msgstr ""
+
+#: member/templates/forms/form.html:45
+msgid "Emergency contact information"
+msgstr ""
+
+#: member/templates/forms/form.html:55
+msgid "Required information missing"
+msgstr ""
+
+#: member/templates/forms/form.html:56
+msgid ""
+"Please review the form to make sure that all required fields are filled."
+msgstr ""
+
+#: member/templates/forms/form.html:100
+msgid "Back"
+msgstr ""
+
+#: member/templates/forms/steps/address_information.html:8
+msgid "Address information"
+msgstr ""
+
+#: member/templates/forms/steps/address_information.html:11
+#: member/templates/forms/steps/payment_information.html:26
+#, fuzzy
+#| msgid "street"
+msgid "Street"
+msgstr "rue"
+
+#: member/templates/forms/steps/basic_information.html:1
+#: member/templates/forms/steps/referent_information.html:8
+msgid "Identity"
+msgstr ""
+
+#: member/templates/forms/steps/basic_information.html:3
+#: member/templates/forms/steps/emergency_contact.html:4
+#: member/templates/forms/steps/payment_information.html:4
+#: member/templates/forms/steps/referent_information.html:11
+msgid "Name"
+msgstr ""
+
+#: member/templates/forms/steps/dietary_restriction.html:1
+msgid "Meal status"
+msgstr ""
+
+#: member/templates/forms/steps/dietary_restriction.html:12
+msgid "Delivery"
+msgstr ""
+
+#: member/templates/forms/steps/dietary_restriction.html:24
+msgid "Meals default"
+msgstr ""
+
+#: member/templates/forms/steps/dietary_restriction.html:31
+msgid "Food preferences"
+msgstr ""
+
+#: member/templates/forms/steps/emergency_contact.html:2
+msgid "Emergency contact"
+msgstr ""
+
+#: member/templates/forms/steps/payment_information.html:1
+msgid "Billing information"
+msgstr ""
+
+#: member/templates/notes/latest.html:5 member/templates/notes/list.html:15
+msgid "Staff Notes"
+msgstr ""
+
+#: member/templates/notes/latest.html:30
+msgid "See all"
+msgstr ""
+
+#: member/templates/notes/list.html:10
+msgid "Staff notes"
+msgstr ""
+
+#: member/templates/notes/list.html:36
+msgid "Unmark as read"
+msgstr ""
+
+#: member/templates/notes/list.html:38
+msgid "Mark as read"
+msgstr ""
+
+#: member/urls.py:32
+msgid "^notes/$"
+msgstr ""
+
+#: member/urls.py:33
+#, python-brace-format
+msgid "^note/read/(?P<id>[0-9]{1})/$"
+msgstr ""
+
+#: member/urls.py:35
+msgid "^view/(?P<id>\\d+)/$"
 msgstr ""

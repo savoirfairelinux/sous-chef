@@ -17,14 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: notification/models.py:9
-msgid "notifications"
-msgstr ""
-
-#: notification/models.py:12
-msgid "description"
-msgstr ""
-
-#: notification/models.py:17
-msgid "member"
+#: page/templates/pages/home.html:12
+msgid "Dashboard"
 msgstr ""

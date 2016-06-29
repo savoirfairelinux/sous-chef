@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-16 00:55+0000\n"
+"POT-Creation-Date: 2016-06-29 19:59+0000\n"
 "PO-Revision-Date: 2016-04-21 19:24-0400\n"
 "Last-Translator: Julie Moussu <julie.moussu@savoirfairelinux.com>\n"
 "Language-Team: \n"
@@ -17,45 +17,151 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.4\n"
 
-#: django/santropolFeast/meal/models.py:10
-msgid "Regular"
-msgstr "normal"
+#: meal/models.py:5
+msgid "main dish"
+msgstr ""
 
-#: django/santropolFeast/meal/models.py:11
-msgid "Large"
-msgstr "grand"
+#: meal/models.py:6
+msgid "Vegetable"
+msgstr ""
 
-#: django/santropolFeast/meal/models.py:15
+#: meal/models.py:7
+msgid "side dish"
+msgstr ""
+
+#: meal/models.py:8
+msgid "Seasonal"
+msgstr ""
+
+#: meal/models.py:12 meal/models.py:26
+msgid "Meat"
+msgstr ""
+
+#: meal/models.py:13
+msgid "Dairy"
+msgstr ""
+
+#: meal/models.py:14
+msgid "Fish"
+msgstr ""
+
+#: meal/models.py:15 meal/models.py:28
+msgid "Seafood"
+msgstr ""
+
+#: meal/models.py:16
+msgid "Veggies and fruits"
+msgstr ""
+
+#: meal/models.py:17
+msgid "Legumineuse"
+msgstr ""
+
+#: meal/models.py:18
+msgid "Grains"
+msgstr ""
+
+#: meal/models.py:19
+msgid "Fresh herbs"
+msgstr ""
+
+#: meal/models.py:20
+msgid "Spices"
+msgstr ""
+
+#: meal/models.py:21
+msgid "Dry and canned goods"
+msgstr ""
+
+#: meal/models.py:22
+msgid "Oils and sauces"
+msgstr ""
+
+#: meal/models.py:27
+msgid "Vegetables"
+msgstr ""
+
+#: meal/models.py:29
+msgid "Seeds and nuts"
+msgstr ""
+
+#: meal/models.py:30
+msgid "Other"
+msgstr ""
+
+#: meal/models.py:36
 msgid "meals"
 msgstr "repas"
 
-#: django/santropolFeast/meal/models.py:20
-#: django/santropolFeast/meal/models.py:45
-#: django/santropolFeast/meal/models.py:60
-#: django/santropolFeast/meal/models.py:80
+#: meal/models.py:41 meal/models.py:68 meal/models.py:112
 msgid "name"
 msgstr "nom"
 
-#: django/santropolFeast/meal/models.py:22
-#: django/santropolFeast/meal/models.py:62
+#: meal/models.py:45 meal/models.py:72 meal/models.py:116
 msgid "description"
 msgstr "description"
 
-#: django/santropolFeast/meal/models.py:40
-msgid "ingredients"
+#: meal/models.py:53
+#, fuzzy
+#| msgid "ingredients"
+msgid "ingredient group"
 msgstr "ingrédients"
 
-#: django/santropolFeast/meal/models.py:55
-msgid "allergies"
-msgstr "allergies"
+#: meal/models.py:63
+msgid "components"
+msgstr ""
 
-#: django/santropolFeast/meal/models.py:75
+#: meal/models.py:80
+msgid "component group"
+msgstr ""
+
+#: meal/models.py:90 meal/models.py:167
+msgid "component"
+msgstr ""
+
+#: meal/models.py:95 meal/models.py:139
+#, fuzzy
+#| msgid "ingredients"
+msgid "ingredient"
+msgstr "ingrédients"
+
+#: meal/models.py:106
+msgid "restricted items"
+msgstr ""
+
+#: meal/models.py:124
+msgid "restricted item group"
+msgstr ""
+
+#: meal/models.py:134
+msgid "restricted item"
+msgstr ""
+
+#: meal/models.py:150
 msgid "menus"
 msgstr ""
 
-#: django/santropolFeast/meal/models.py:83
+#: meal/models.py:153
 msgid "date"
 msgstr ""
+
+#: meal/models.py:162
+msgid "menu"
+msgstr ""
+
+#, fuzzy
+#~| msgid "meals"
+#~ msgid "^meal/$"
+#~ msgstr "repas"
+
+#~ msgid "Regular"
+#~ msgstr "normal"
+
+#~ msgid "Large"
+#~ msgstr "grand"
+
+#~ msgid "allergies"
+#~ msgstr "allergies"
 
 #~ msgid "French"
 #~ msgstr "Français"
