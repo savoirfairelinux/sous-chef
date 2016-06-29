@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from member.models import Client, Member
 from django.utils.translation import ugettext_lazy as _
 from django_filters import FilterSet, MethodFilter
@@ -82,36 +83,28 @@ class OrderFilter(FilterSet):
         fields = ['status']
 
     def filter_search(self, queryset, value):
-        if value:
-            query = []
+        if not value:
+            return queryset
 
-            value = re.sub('[^\w]', '', value).split()
+        names = value.split(' ')
 
-            for word in value:
+        name_contains = Q()
 
-                firstname = list(
-                    queryset.filter(
-                        client__member__firstname__icontains=word
-                    ).all()
-                )
+        for name in names:
+            firstname_contains = Q(
+                client__member__firstname__icontains=name
+            )
 
-                lastname = list(
-                    queryset.filter(
-                        client__member__lastname__icontains=word
-                    ).all()
-                )
+            name_contains |= firstname_contains
 
-                for user in firstname:
-                    if user not in query:
-                        query.append(user)
+            lastname_contains = Q(
+                client__member__lastname__icontains=name
+            )
+            name_contains |= lastname_contains
 
-                for user in lastname:
-                    if user not in query:
-                        query.append(user)
-
-                return query
-            else:
-                return queryset
+        return queryset.filter(
+            name_contains
+        )
 
 
 class Order_item(models.Model):
