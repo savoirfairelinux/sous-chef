@@ -17,6 +17,29 @@ class ClientWizard(NamedUrlSessionWizardView):
 
     template_name = 'forms/form.html'
 
+    def save_json(self, dictonary):
+        size = ['regular', 'large']
+
+        meals = ['main_dish', 'dessert', 'diabetic', 'fruit_salad',
+                 'green_salad', 'pudding', 'compote']
+
+        day_of_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday',
+                       'saturday', 'sunday']
+        json = {}
+
+        for days in day_of_week:
+            json['size_{}'.format(days)] = dictonary.cleaned_data.get(
+                'size_{}'.format(days)
+                )
+
+            for meal in meals:
+                json['{}_{}_quantity'.format(meal, days)] \
+                    = dictonary.cleaned_data.get(
+                    '{}_{}_quantity'.format(meal, days)
+                    )
+
+        return json
+
     def done(self, form_list, form_dict, **kwargs):
 
         self.form_dict = form_dict
@@ -111,198 +134,8 @@ class ClientWizard(NamedUrlSessionWizardView):
             alert=basic_information.cleaned_data.get("alert"),
             delivery_type=dietary_restriction.cleaned_data.get(
                 "delivery_type"
-                ),
-            meal_default_monday={'size_monday':
-                                 dietary_restriction.cleaned_data.get(
-                                    'size_monday'
-                                  ),
-                                 'main_dish_monday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'main_dish_monday_quantity'
-                                    ), 'dessert_monday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'dessert_monday_quantity'
-                                    ), 'diabetic_monday_quantity':
-                                        dietary_restriction.cleaned_data.get(
-                                    'diabetic_monday_quantity'
-                                    ), 'fruit_salad_monday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'fruit_salad_monday_quantity'
-                                    ), 'green_salad_monday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'green_salad_monday_quantity'
-                                    ), 'pudding_monday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'pudding_monday_quantity'
-                                    ), 'compote_monday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'compote_monday_quantity'
-                                    ),
-                                 },
-
-            meal_default_tuesday={'size_tuesday':
-                                  dietary_restriction.cleaned_data.get(
-                                    'size_tuesday'
-                                  ), 'main_dish_tuesday_quantity':
-                                  dietary_restriction.cleaned_data.get(
-                                    'main_dish_tuesday_quantity'
-                                  ), 'dessert_tuesday_quantity':
-                                  dietary_restriction.cleaned_data.get(
-                                    'dessert_tuesday_quantity'
-                                  ), 'diabetic_tuesday_quantity':
-                                  dietary_restriction.cleaned_data.get(
-                                    'diabetic_tuesday_quantity'
-                                  ), 'fruit_salad_tuesday_quantity':
-                                  dietary_restriction.cleaned_data.get(
-                                    'fruit_salad_tuesday_quantity'
-                                  ), 'green_salad_tuesday_quantity':
-                                  dietary_restriction.cleaned_data.get(
-                                    'green_salad_tuesday_quantity'
-                                  ), 'pudding_tuesday_quantity':
-                                  dietary_restriction.cleaned_data.get(
-                                    'pudding_tuesday_quantity'
-                                  ), 'compote_tuesday_quantity':
-                                  dietary_restriction.cleaned_data.get(
-                                    'compote_tuesday_quantity'
-                                  )
-                                  },
-
-            meal_default_wednesday={'size_wednesday':
-                                    dietary_restriction.cleaned_data.get(
-                                        'size_wednesday'
-                                    ), 'main_dish_wednesday_quantity':
-                                    dietary_restriction.cleaned_data.get(
-                                        'main_dish_wednesday_quantity'
-                                    ), 'dessert_wednesday_quantity':
-                                    dietary_restriction.cleaned_data.get(
-                                        'dessert_wednesday_quantity'
-                                    ), 'diabetic_wednesday_quantity':
-                                    dietary_restriction.cleaned_data.get(
-                                        'diabetic_wednesday_quantity'
-                                    ), 'fruit_salad_wednesday_quantity':
-                                    dietary_restriction.cleaned_data.get(
-                                        'fruit_salad_wednesday_quantity'
-                                    ), 'green_salad_wednesday_quantity':
-                                    dietary_restriction.cleaned_data.get(
-                                        'green_salad_wednesday_quantity'
-                                    ), 'pudding_wednesday_quantity':
-                                    dietary_restriction.cleaned_data.get(
-                                        'pudding_wednesday_quantity'
-                                    ), 'compote_wednesday_quantity':
-                                    dietary_restriction.cleaned_data.get(
-                                        'compote_wednesday_quantity'
-                                    )
-
-                                    },
-
-            meal_default_thursday={'size_thursday':
-                                   dietary_restriction.cleaned_data.get(
-                                    'size_thursday'
-                                   ), 'main_dish_thursday_quantity':
-                                   dietary_restriction.cleaned_data.get(
-                                    'main_dish_thursday_quantity'
-                                   ), 'dessert_thursday_quantity':
-                                   dietary_restriction.cleaned_data.get(
-                                    'dessert_thursday_quantity'
-                                   ), 'diabetic_thursday_quantity':
-                                   dietary_restriction.cleaned_data.get(
-                                    'diabetic_thursday_quantity'
-                                   ), 'fruit_salad_thursday_quantity':
-                                   dietary_restriction.cleaned_data.get(
-                                    'fruit_salad_thursday_quantity'
-                                   ), 'green_salad_thursday_quantity':
-                                   dietary_restriction.cleaned_data.get(
-                                    'green_salad_thursday_quantity'
-                                   ), 'pudding_thursday_quantity':
-                                   dietary_restriction.cleaned_data.get(
-                                    'pudding_thursday_quantity'
-                                   ), 'compote_thursday_quantity':
-                                   dietary_restriction.cleaned_data.get(
-                                    'compote_thursday_quantity'
-                                   )
-                                   },
-
-            meal_default_friday={'size_friday':
-                                 dietary_restriction.cleaned_data.get(
-                                    'size_friday'
-                                   ), 'main_dish_friday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'main_dish_friday_quantity'
-                                   ), 'dessert_friday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'dessert_friday_quantity'
-                                   ), 'diabetic_friday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'diabetic_friday_quantity'
-                                   ), 'fruit_salad_friday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'fruit_salad_friday_quantity'
-                                   ), 'green_salad_friday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'green_salad_friday_quantity'
-                                   ), 'pudding_friday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'pudding_friday_quantity'
-                                   ), 'compote_friday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'compote_friday_quantity'
-                                   )
-                                 },
-
-            meal_default_saturday={'size_saturday':
-                                   dietary_restriction.cleaned_data.get(
-                                    'size_saturday'
-                                   ), 'main_dish_saturday_quantity':
-                                   dietary_restriction.cleaned_data.get(
-                                    'main_dish_saturday_quantity'
-                                   ), 'dessert_saturday_quantity':
-                                   dietary_restriction.cleaned_data.get(
-                                    'dessert_saturday_quantity'
-                                   ), 'diabetic_saturday_quantity':
-                                   dietary_restriction.cleaned_data.get(
-                                    'diabetic_saturday_quantity'
-                                   ), 'fruit_salad_saturday_quantity':
-                                   dietary_restriction.cleaned_data.get(
-                                    'fruit_salad_saturday_quantity'
-                                   ), 'green_salad_saturday_quantity':
-                                   dietary_restriction.cleaned_data.get(
-                                    'green_salad_saturday_quantity'
-                                   ), 'pudding_saturday_quantity':
-                                   dietary_restriction.cleaned_data.get(
-                                    'pudding_saturday_quantity'
-                                   ), 'compote_saturday_quantity':
-                                   dietary_restriction.cleaned_data.get(
-                                    'compote_saturday_quantity'
-                                   )
-                                   },
-
-            meal_default_sunday={'size_sunday':
-                                 dietary_restriction.cleaned_data.get(
-                                    'size_sunday'
-                                   ), 'main_dish_sunday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'main_dish_sunday_quantity'
-                                   ), 'dessert_sunday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'dessert_sunday_quantity'
-                                   ), 'diabetic_sunday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'diabetic_sunday_quantity'
-                                   ), 'fruit_salad_sunday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'fruit_salad_sunday_quantity'
-                                   ), 'green_salad_sunday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'green_salad_sunday_quantity'
-                                   ), 'pudding_sunday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'pudding_sunday_quantity'
-                                   ), 'compote_sunday_quantity':
-                                 dietary_restriction.cleaned_data.get(
-                                    'compote_sunday_quantity'
-                                   )
-                                 }
-        )
+                ), meal_default_week=self.save_json(dietary_restriction)
+            )
 
         if dietary_restriction.cleaned_data.get('status'):
             client.status = 'A'

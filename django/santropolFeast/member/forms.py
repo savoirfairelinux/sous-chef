@@ -75,312 +75,41 @@ class ClientAddressInformation(forms.Form):
 
 
 class ClientRestrictionsInformation(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(ClientRestrictionsInformation, self).__init__(*args, **kwargs)
 
+        day_of_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday',
+                       'saturday', 'sunday']
+        meals_placeholders = (
+            ('main_dish', _('Main Dish')),
+            ('dessert', _('Dessert')),
+            ('diabetic', _('Diabetic Dessert')),
+            ('fruit_salad', _('Fruit Salad')),
+            ('green_salad', _('Green Salad')),
+            ('pudding', _('Pudding')),
+            ('compote', _('Compote')),
+            )
+
+        for day in day_of_week:
+
+            self.fields['size_{}'.format(day)] = forms.ChoiceField(
+                choices=SIZE_CHOICES,
+                widget=forms.Select(attrs={'class': 'ui dropdown'}),
+                required=False
+                )
+
+            for meal, placeholder in meals_placeholders:
+                self.fields[
+                    '{}_{}_quantity'.format(meal, day)
+                ] = forms.IntegerField(
+                    widget=forms.TextInput(attrs={'placeholder': placeholder}),
+                    required=False
+                    )
     status = forms.BooleanField(
         label=_('Active'),
         help_text=_('By default, the client meal status is Pending.'),
         required=False,
     )
-    size_monday = forms.ChoiceField(
-        choices=SIZE_CHOICES,
-        widget=forms.Select(
-            attrs={'class': 'ui dropdown'}
-        )
-    )
-    size_monday.required = False
-
-    main_dish_monday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Main Dish')}
-    ))
-    main_dish_monday_quantity.required = False
-
-    dessert_monday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Dessert')}
-    ))
-    dessert_monday_quantity.required = False
-
-    diabetic_monday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Diabetic Dessert')}
-    ))
-    diabetic_monday_quantity.required = False
-
-    fruit_salad_monday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Fruit Salad')}
-    ))
-    fruit_salad_monday_quantity.required = False
-
-    green_salad_monday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Green Salad')}
-    ))
-    green_salad_monday_quantity.required = False
-
-    pudding_monday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Pudding')}
-    ))
-    pudding_monday_quantity.required = False
-
-    compote_monday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Compote')}
-    ))
-    compote_monday_quantity.required = False
-
-    size_tuesday = forms.ChoiceField(
-        choices=SIZE_CHOICES,
-        widget=forms.Select(
-            attrs={'class': 'ui dropdown'}
-        )
-    )
-    size_tuesday.required = False
-
-    main_dish_tuesday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Main Dish')}
-    ))
-    main_dish_tuesday_quantity.required = False
-
-    dessert_tuesday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Dessert')}
-    ))
-    dessert_tuesday_quantity.required = False
-
-    diabetic_tuesday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Diabetic Dessert')}
-    ))
-    diabetic_tuesday_quantity.required = False
-
-    fruit_salad_tuesday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Fruit Salad')}
-    ))
-    fruit_salad_tuesday_quantity.required = False
-
-    green_salad_tuesday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Green Salad')}
-    ))
-    green_salad_tuesday_quantity.required = False
-
-    pudding_tuesday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Pudding')}
-    ))
-    pudding_tuesday_quantity.required = False
-
-    compote_tuesday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Compote')}
-    ))
-    compote_tuesday_quantity.required = False
-
-    size_wednesday = forms.ChoiceField(
-        choices=SIZE_CHOICES,
-        widget=forms.Select(
-            attrs={'class': 'ui dropdown'}
-        )
-    )
-    size_wednesday.required = False
-
-    main_dish_wednesday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Main Dish')}
-    ))
-    main_dish_wednesday_quantity.required = False
-
-    dessert_wednesday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Dessert')}
-    ))
-    dessert_wednesday_quantity.required = False
-
-    diabetic_wednesday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Diabetic Dessert')}
-    ))
-    diabetic_wednesday_quantity.required = False
-
-    fruit_salad_wednesday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Fruit Salad')}
-    ))
-    fruit_salad_wednesday_quantity.required = False
-
-    green_salad_wednesday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Green Salad')}
-    ))
-    green_salad_wednesday_quantity.required = False
-
-    pudding_wednesday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Diabetic Dessert')}
-    ))
-    pudding_wednesday_quantity.required = False
-
-    compote_wednesday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Compote')}
-    ))
-    compote_wednesday_quantity.required = False
-
-    size_thursday = forms.ChoiceField(
-        choices=SIZE_CHOICES,
-        widget=forms.Select(
-            attrs={'class': 'ui dropdown'}
-        )
-    )
-    size_thursday.required = False
-
-    main_dish_thursday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Main Dish')}
-    ))
-    main_dish_thursday_quantity.required = False
-
-    dessert_thursday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Dessert')}
-    ))
-    dessert_thursday_quantity.required = False
-
-    diabetic_thursday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Diabetic Dessert')}
-    ))
-    diabetic_thursday_quantity.required = False
-
-    fruit_salad_thursday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Fruit Salad')}
-    ))
-    fruit_salad_thursday_quantity.required = False
-
-    green_salad_thursday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Green Salad')}
-    ))
-    green_salad_thursday_quantity.required = False
-
-    pudding_thursday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Pudding')}
-    ))
-    pudding_thursday_quantity.required = False
-
-    compote_thursday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Compote')}
-    ))
-    compote_thursday_quantity.required = False
-
-    size_friday = forms.ChoiceField(
-        choices=SIZE_CHOICES,
-        widget=forms.Select(
-            attrs={'class': 'ui dropdown'}
-        )
-    )
-    size_friday.required = False
-
-    main_dish_friday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Main Dish')}
-    ))
-    main_dish_friday_quantity.required = False
-
-    dessert_friday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Dessert')}
-    ))
-    dessert_friday_quantity.required = False
-
-    diabetic_friday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Diabetic Dessert')}
-    ))
-    diabetic_friday_quantity.required = False
-
-    fruit_salad_friday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Fruit Salad')}
-    ))
-    fruit_salad_friday_quantity.required = False
-
-    green_salad_friday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Green Salad')}
-    ))
-    green_salad_friday_quantity.required = False
-
-    pudding_friday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Pudding')}
-    ))
-    pudding_friday_quantity.required = False
-
-    compote_friday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Compote')}
-    ))
-    compote_friday_quantity.required = False
-
-    size_saturday = forms.ChoiceField(
-        choices=SIZE_CHOICES,
-        widget=forms.Select(
-            attrs={'class': 'ui dropdown'}
-        )
-    )
-    size_saturday.required = False
-
-    main_dish_saturday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Main Dish')}
-    ))
-    main_dish_saturday_quantity.required = False
-
-    dessert_saturday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Dessert')}
-    ))
-    dessert_saturday_quantity.required = False
-
-    diabetic_saturday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Diabetic Dessert')}
-    ))
-    diabetic_saturday_quantity.required = False
-
-    fruit_salad_saturday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Fruit Salad')}
-    ))
-    fruit_salad_saturday_quantity.required = False
-
-    green_salad_saturday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Green Salad')}
-    ))
-    green_salad_saturday_quantity.required = False
-
-    pudding_saturday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Pudding')}
-    ))
-    pudding_saturday_quantity.required = False
-
-    compote_saturday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Compote')}
-    ))
-    compote_saturday_quantity.required = False
-
-    size_sunday = forms.ChoiceField(
-        choices=SIZE_CHOICES,
-        widget=forms.Select(
-            attrs={'class': 'ui dropdown'}
-        )
-    )
-    size_sunday.required = False
-
-    main_dish_sunday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Main Dish')}
-    ))
-    main_dish_sunday_quantity.required = False
-
-    dessert_sunday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Dessert')}
-    ))
-    dessert_sunday_quantity.required = False
-
-    diabetic_sunday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Diabetic Dessert')}
-    ))
-    diabetic_sunday_quantity.required = False
-
-    fruit_salad_sunday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Fruit Salad')}
-    ))
-    fruit_salad_sunday_quantity.required = False
-
-    green_salad_sunday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Green Salad')}
-    ))
-    green_salad_sunday_quantity.required = False
-
-    pudding_sunday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Pudding')}
-    ))
-    pudding_sunday_quantity.required = False
-
-    compote_sunday_quantity = forms.IntegerField(widget=forms.TextInput(
-        attrs={'placeholder': _('Compote')}
-    ))
-    compote_sunday_quantity.required = False
 
     delivery_type = forms.ChoiceField(
         label=_('Type'),

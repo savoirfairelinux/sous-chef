@@ -345,31 +345,7 @@ class Client(models.Model):
         null=True
     )
 
-    meal_default_monday = JSONField(
-        blank=True, null=True
-    )
-
-    meal_default_tuesday = JSONField(
-        blank=True, null=True
-    )
-
-    meal_default_wednesday = JSONField(
-        blank=True, null=True
-    )
-
-    meal_default_thursday = JSONField(
-        blank=True, null=True
-    )
-
-    meal_default_friday = JSONField(
-        blank=True, null=True
-    )
-
-    meal_default_saturday = JSONField(
-        blank=True, null=True
-    )
-
-    meal_default_sunday = JSONField(
+    meal_default_week = JSONField(
         blank=True, null=True
     )
 
