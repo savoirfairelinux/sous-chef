@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -333,37 +334,25 @@ class ClientFilter(FilterSet):
         fields = ['route', 'status', 'delivery_type']
 
     def filter_search(self, queryset, value):
-        if value:
-            query = []
-
-            value = re.sub('[^\w]', '', value).split()
-
-            for word in value:
-
-                firstname = list(
-                    queryset.filter(
-                        member__firstname__icontains=word
-                    ).all()
-                )
-
-                lastname = list(
-                    queryset.filter(
-                        member__lastname__icontains=word
-                    ).all()
-                )
-
-                for user in firstname:
-                    if user not in query:
-                        query.append(user)
-
-                for user in lastname:
-                    if user not in query:
-                        query.append(user)
-
-                return query
-
-        else:
+        if not value:
             return queryset
+
+        name_contains = Q()
+        names = value.split(' ')
+
+        for name in names:
+
+            firstname_contains = Q(
+                member__firstname__icontains=name
+            )
+
+            lastname_contains = Q(
+                member__lastname__icontains=name
+            )
+
+            name_contains |= firstname_contains | lastname_contains
+
+        return queryset.filter(name_contains)
 
 
 class Referencing (models.Model):
