@@ -1,33 +1,68 @@
 {% extends "base_delivery.html" %}
 <!-- Load Internationalization utils-->
 {% load i18n %}
+{% load static %}
 
 {% block title %}{% trans 'Routes Information' %} {% endblock %}
 
-{% block breadcrumb %}
-{% endblock breadcrumb %}
+{% block extrahead %}
+    {% load leaflet_tags %}
+    {% leaflet_js %}
+    {% leaflet_css %}
+    <link href="{% static 'leaflet-routing/leaflet-routing-machine.css' %}" rel="stylesheet">
+    <link href="{% static 'leaflet-geocoder/Control.Geocoder.css' %}" rel="stylesheet">
+    <style>
+    .leaflet-container-default {
+        position: block;
+        width: 100%;
+        height: 600px;
+    }
+    </style>
+    <script src="{% static 'leaflet-routing/leaflet-routing-machine.js' %}" type="application/javascript"></script>
+    <script src="{% static 'leaflet-geocoder/Control.Geocoder.js' %}" type="application/javascript"></script>
+    <script src="{% static 'leaflet-routing/mapbox/lrm-mapbox-1.0.4.js' %}" type="application/javascript"></script>
+{% endblock %}
 
 {% block content %}
-<div class="ui grid">
-  <div class="eight wide column">
-    <table class="ui celled table">
-      <thead>
-        <th>{% trans "Delivery Order" %}</th>
-        <th>{% trans "Name" %}</th>
-        <th>{% trans "Address" %}</th>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>lorem ipsum</td>
-          <td>7275 rue st-urbain</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="eight wide column">
-    Need placeholder for map
-  </div>
+
+<script type="text/javascript">
+    function main_map_init (map, options) {
+        // Use Leaflet API here
+        // create a new tile layer
+        var tileUrl = 'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png',
+        layer = new L.TileLayer(tileUrl, {maxZoom: 18});
+        // add the layer to the map
+        map.addLayer(layer);
+         map.setView(new L.LatLng(45.5017, -73.5673), 8);
+         L.marker([45.516564, -73.575145], {
+           draggable: true,
+           opacity: 0.7
+         }).addTo(map);
+         var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
+         bikerouter.options.profile = 'mapbox.cycling';
+         L.Routing.control({
+              router: bikerouter ,
+              plan: L.Routing.plan([
+                              L.latLng(45.5165, -73.5751),
+                              L.latLng(45.5117, -73.6673),
+                              L.latLng(45.5127, -73.5873)], {
+                      geocoder: L.Control.Geocoder.nominatim({
+                          geocodingQueryParams: { countrycodes: 'ca'}
+                      })
+                  }),
+                 language: 'fr',
+              routeWhileDragging: true,
+            }).addTo(map);
+  }
+</script>
+
+
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">Route</h2>
 </div>
+
+<div class="ui row"></div>
+
+    {% leaflet_map "main" callback="main_map_init" %}
 
 {% endblock %}
