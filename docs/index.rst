@@ -3,8 +3,13 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Santropol Roulant's documentation!
+Santropol Roulant's documentation!
 =============================================
+Welcome to the `Santropol Roulant`__ project!
+__ https://github.com/savoirfairelinux/santropol-feast
+
+:Release: |version|
+:Date: |today|
 
 Contents:
 
