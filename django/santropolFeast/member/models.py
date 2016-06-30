@@ -377,7 +377,7 @@ class ClientFilter(FilterSet):
         label=_('Search by name')
     )
 
-    status = MultipleChoiceFilter(
+    status = ChoiceFilter(
         choices=(('', ''),) + Client.CLIENT_STATUS
     )
 
