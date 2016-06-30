@@ -208,6 +208,27 @@ class ActiveClientManager(ClientManager):
         )
 
 
+class PendingClientManager(ClientManager):
+
+    def get_queryset(self):
+
+        return super(PendingClientManager, self).get_queryset().filter(
+            status=Client.PENDING
+        )
+
+
+class ContactClientManager(ClientManager):
+
+    def get_queryset(self):
+
+        return super(ContactClientManager, self).get_queryset().filter(
+            Q(status=Client.ACTIVE) |
+            Q(status=Client.STOPCONTACT) |
+            Q(status=Client.PAUSED) |
+            Q(status=Client.PENDING)
+        )
+
+
 class Client(models.Model):
 
     # Characters are used to keep a backward-compatibility
@@ -328,6 +349,8 @@ class Client(models.Model):
     objects = ClientManager()
 
     active = ActiveClientManager()
+    pending = PendingClientManager()
+    contact = ContactClientManager()
 
     @property
     def age(self):
@@ -354,7 +377,7 @@ class ClientFilter(FilterSet):
         label=_('Search by name')
     )
 
-    status = ChoiceFilter(
+    status = MultipleChoiceFilter(
         choices=(('', ''),) + Client.CLIENT_STATUS
     )
 
