@@ -9,10 +9,12 @@
     </a>
 
     <div class="item">
-        <div class="ui icon transparent inverted input">
-            <input type="text" placeholder="Search client...">
-            <i class="search icon"></i>
-        </div>
+        <form action="{% url 'member:list' %}" method="get">
+            <div class="ui icon transparent inverted input">
+                <input type="text" name="name" placeholder="Search client...">
+                <i class="search icon"></i>
+            </div>
+        </form>
     </div>
     <a class="item" href="{% url 'order:list' %}">Orders
         <div class="ui label">{{ ORDERS_TOTAL }}</div>
