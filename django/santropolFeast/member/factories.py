@@ -3,7 +3,7 @@ import factory
 import datetime
 import random
 from django.contrib.auth.models import User
-from member.models import Member, Address, Contact, Client, PAYMENT_TYPE
+from member.models import Member, Address, Contact, Client, PAYMENT_TYPE, Route
 from member.models import DELIVERY_TYPE, GENDER_CHOICES
 
 
@@ -53,3 +53,4 @@ class ClientFactory (factory.DjangoModelFactory):
     delivery_type = random.choice(DELIVERY_TYPE)[0]
     gender = random.choice(GENDER_CHOICES)[0]
     birthdate = factory.Faker('date')
+    route = random.choice(Route.objects.all())
