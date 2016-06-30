@@ -14,7 +14,7 @@
     <style>
     .leaflet-container-default {
         position: block;
-        width: 100%;
+        width: 80%;
         height: 600px;
     }
     </style>
@@ -31,28 +31,47 @@
         // create a new tile layer
         var tileUrl = 'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png',
         layer = new L.TileLayer(tileUrl, {maxZoom: 18});
-        // add the layer to the map
-        map.addLayer(layer);
-         map.setView(new L.LatLng(45.5017, -73.5673), 8);
-         L.marker([45.516564, -73.575145], {
-           draggable: true,
-           opacity: 0.7
-         }).addTo(map);
-         var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
-         bikerouter.options.profile = 'mapbox.cycling';
-         L.Routing.control({
-              router: bikerouter ,
-              plan: L.Routing.plan([
-                              L.latLng(45.5165, -73.5751),
-                              L.latLng(45.5117, -73.6673),
-                              L.latLng(45.5127, -73.5873)], {
-                      geocoder: L.Control.Geocoder.nominatim({
-                          geocodingQueryParams: { countrycodes: 'ca'}
-                      })
-                  }),
-                 language: 'fr',
-              routeWhileDragging: true,
-            }).addTo(map);
+
+        // get waypoints
+        var waypoints = [];
+        $.get( "../getDailyOrders/", function( data ) {
+            //alert( "Load was performed." + JSON.stringify(data) );
+
+            for(var i in data.waypoints)
+            {
+                 waypoints.push(L.latLng(data.waypoints[i].latitude, data.waypoints[i].longitude));
+            }
+//Extend the Default marker class
+//           var RedIcon = L.Icon.Default.extend({
+//              options: {
+//              	    iconUrl: 'leaf-green.png'
+//              }
+//           });
+//           var redIcon = new RedIcon();
+
+            // add the layer to the map
+            map.addLayer(layer);
+             map.setView(new L.LatLng(45.5017, -73.5673), 8);
+             L.marker([45.516564, -73.575145], {
+               draggable: true,
+               opacity: 0.7,
+//             icon: redIcon
+             }).addTo(map);
+
+             var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
+             bikerouter.options.profile = 'mapbox.cycling';
+
+             L.Routing.control({
+                  router: bikerouter ,
+                  plan: L.Routing.plan(waypoints,
+                          {geocoder: L.Control.Geocoder.nominatim({ geocodingQueryParams: { countrycodes: 'ca'}}),
+                          routeWhileDragging: true,
+                          reverseWaypoints: true
+                      }),
+                      language: 'fr',
+                }).addTo(map);
+          }
+        );
   }
 </script>
 
