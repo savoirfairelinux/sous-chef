@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from member.views import geolocateAddress
 from django.utils.translation import ugettext_lazy as _
 
 from member.views import (
@@ -35,4 +36,5 @@ urlpatterns = [
     url(_(r'^note/read/(?P<id>[0-9]{1})/$'),
         mark_as_read, name='read'),
     url(_(r'^view/(?P<pk>\d+)/$'), ClientDetail.as_view(), name='view'),
+    url(_(r'^geolocateAddress/$'), geolocateAddress, name='geolocateAddress'),
 ]

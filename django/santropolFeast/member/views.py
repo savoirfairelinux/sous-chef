@@ -15,6 +15,20 @@ from meal.models import COMPONENT_GROUP_CHOICES
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.core.urlresolvers import reverse_lazy
 import csv
+from django.template import RequestContext
+from django.http import JsonResponse
+
+size = ['regular', 'large']
+
+meals = ['main_dish', 'dessert', 'diabetic', 'fruit_salad',
+         'green_salad', 'pudding', 'compote']
+
+day_of_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday',
+               'saturday', 'sunday']
+
+meals_template = ['main_dish', 'dessert', 'diabetic', 'fruit_salad',
+                  'green_salad'
+                  ]
 
 
 class ClientWizard(NamedUrlSessionWizardView):
@@ -75,7 +89,11 @@ class ClientWizard(NamedUrlSessionWizardView):
             floor=address_information.cleaned_data.get('floor'),
             city=address_information.cleaned_data.get('city'),
             postal_code=address_information.cleaned_data.get('postal_code'),
+            # lat=address_information.cleaned_data.get('lat'),
+            # lon=address_information.cleaned_data.get('lon'),
+            # distance=address_information.cleaned_data.get('distance'),
         )
+
         address.save()
         return address
 
@@ -758,3 +776,13 @@ class SearchMembers(generic.View):
             data = {'success': False}
 
         return JsonResponse(data)
+
+
+def geolocateAddress(request):
+            # do something with the your data
+            if request.method == 'POST':
+                    lat = request.POST['lat']
+                    long = request.POST['long']
+
+            # just return a JsonResponse
+            return JsonResponse({'latitude': lat, 'longtitude': long})

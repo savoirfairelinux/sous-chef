@@ -9,7 +9,10 @@
 
 
 {% block extrahead %}
-  <link href="{% static 'css/calendar.min.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'css/calendar.min.css' %}" type="text/css" rel="stylesheet">
+    {% load leaflet_tags %}
+    {% leaflet_js %}
+    {% leaflet_css %}
 {% endblock %}
 
 {% block title %}Create a new client{% endblock %}
@@ -48,7 +51,6 @@
   </div>
 
     <div class="ten wide column form-steps">
-
       <form action="" method="post" class="ui form error">{% csrf_token %}
         {% if wizard.form.errors %}
         <div class="ui error message">
@@ -100,19 +102,18 @@
           {% trans "Back"%}
         </button>
         {% endif %}
-
         {% if wizard.steps.step1 == 6 %}
           <input class="big ui right floated yellow button" type="submit" value="Save"/>
         {% else %}
           <button  class="big ui yellow right floated button" name="wizard_goto_step" type="submit">Next</button>
         {% endif %}
-
       </form>
 </div>
 {% endblock %}
 
 {% block extrajs %}
   <script src="{% static 'jquery/calendar.min.js' %}" type="application/javascript"></script>
+  <script src="{% static 'leaflet-geocoder/Control.Geocoder.js' %}" type="application/javascript"></script>
   <script type="text/javascript">
     $(function() {
 
@@ -208,6 +209,80 @@
       });
       hideUiAccordionDays();
       showUiAccordionSelectedDays();
+
+        //:::  This routine calculates the distance between two points (given the     :::
+        //:::  latitude/longitude of those points).                                   :::
+        //:::  Passed to function:                                                    :::
+        //:::    lat1, lon1 = Latitude and Longitude of point 1 (in decimal degrees)  :::
+        //:::    lat2, lon2 = Latitude and Longitude of point 2 (in decimal degrees)  :::
+        //:::    unit = the unit you desire for results                               :::
+        //:::           where: 'M' is statute miles (default)                         :::
+        //:::                  'K' is kilometers                                      :::
+        //:::                  'N' is nautical miles                                  :::
+        function distance(lat1, lon1, lat2, lon2, unit) {
+        	var radlat1 = Math.PI * lat1/180
+        	var radlat2 = Math.PI * lat2/180
+        	var theta = lon1-lon2
+        	var radtheta = Math.PI * theta/180
+        	var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+        	dist = Math.acos(dist)
+        	dist = dist * 180/Math.PI
+        	dist = dist * 60 * 1.1515
+        	if (unit=="K") { dist = dist * 1.609344 }
+        	if (unit=="N") { dist = dist * 0.8684 }
+        	return dist
+        }
+
+        $('#geocodeBtn').click(function(e) {
+              var geocoder = new L.Control.Geocoder.nominatim({ geocodingQueryParams: { countrycodes: 'ca'}});
+              // var yourQuery = "4846 rue cartier, Montreal, Qc";
+              var apt='',street  ='' , city ='', zipcode ='';
+              // if ($('#id_address_information-apartment').val()) {
+              //   apt = "#" + $('#id_address_information-apartment').val() + " ";
+              // }
+              if ($('#id_address_information-street').val() ) {
+                street = $('#id_address_information-street').val()+ " ";
+              }
+              if ($('#id_address_information-city').val()) {
+                city = $('#id_address_information-city').val() ;
+              }
+              // if ($('#id_address_information-postal_code').val()) {
+              //   zipcode = $('#id_address_information-postal_code').val() ;
+              // }
+              var yourQuery = apt +  street + city +zipcode;
+
+              geocoder.geocode(yourQuery, function(results) {
+                    // latLng= new L.LatLng(results[0].center.lat, results[0].center.lng);
+                    if (results.length > 0 ) {
+                          //alert("lat" +results[0].center.lat + " long"+ results[0].center.lng);
+                          //alert(results[0].name);
+                          var data = { address: results[0].name,
+                                       lat: results[0].center.lat,
+                                       long: results[0].center.lng };
+
+//                              $('.modal').modal('show');
+                          var dist = distance(45.516564,-73.575145, results[0].center.lat, results[0].center.lng,"K")
+                          alert("Info reverse geocode lat:" + data.lat + " long:"+ data.long + " address:"+ data.address +" distance from santropol" + dist );
+
+                          // $.ajaxSetup({
+                          //     headers: { "X-CSRFToken": getCookie("csrftoken") }
+                          // });
+                          //
+                          // $.post("../../geolocateAddress/", data, function(result){
+                          //   alert("Post Successful " + result.latitude);
+                          // });
+
+                          $('#id_address_information-lat').val(data.lat);
+                          $('#id_address_information-lon').val(data.lon);
+                          $('#id_address_information-distance').val(dist);
+
+
+                    }
+                    else {
+                        alert("Address not Found !!");
+                    }
+              });
+        });
     });
 
     </script>

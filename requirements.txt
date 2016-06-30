@@ -6,3 +6,4 @@ django-filter==0.13.0
 aldjemy==0.6.0
 django-annoying==0.9.0
 reportlab==3.3.0
+django-leaflet==0.18.1
