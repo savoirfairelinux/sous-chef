@@ -14,15 +14,20 @@ __ https://github.com/savoirfairelinux/santropol-feast
 Contents:
 
 .. toctree::
+   :glob:
    :maxdepth: 2
 
-.. autosummary::
-   :toctree: _autosummary
+   source/*
 
-   member.views
 
-.. automodule:: member
-   :members:
+.. .. autosummary::
+..    :toctree: _autosummary
+..
+..    member.views
+..
+..
+.. .. automodule:: member
+..    :members:
 
 Indices and tables
 ==================
@@ -30,4 +35,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
