@@ -5,8 +5,7 @@
 
 Santropol Roulant's documentation!
 =============================================
-Welcome to the `Santropol Roulant`__ project!
-__ https://github.com/savoirfairelinux/santropol-feast
+Welcome to the `Santropol Roulant <https://github.com/savoirfairelinux/santropol-feast>`_ project!
 
 :Release: |version|
 :Date: |today|
@@ -15,7 +14,7 @@ Contents:
 
 .. toctree::
    :glob:
-   :maxdepth: 2
+   :maxdepth: 1
 
    source/*
 
