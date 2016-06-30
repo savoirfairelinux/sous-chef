@@ -199,6 +199,15 @@ class ClientManager(models.Manager):
         )
 
 
+class ActiveClientManager(ClientManager):
+
+    def get_queryset(self):
+
+        return super(ActiveClientManager, self).get_queryset().filter(
+            status=Client.ACTIVE
+        )
+
+
 class Client(models.Model):
 
     # Characters are used to keep a backward-compatibility
@@ -317,6 +326,8 @@ class Client(models.Model):
         return "{} {}".format(self.member.firstname, self.member.lastname)
 
     objects = ClientManager()
+
+    active = ActiveClientManager()
 
     @property
     def age(self):
