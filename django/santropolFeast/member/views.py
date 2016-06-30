@@ -12,19 +12,34 @@ from formtools.wizard.views import NamedUrlSessionWizardView
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
 
+size = ['regular', 'large']
+
+meals = ['main_dish', 'dessert', 'diabetic', 'fruit_salad',
+         'green_salad', 'pudding', 'compote']
+
+day_of_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday',
+               'saturday', 'sunday']
+
+meals_template = ['main_dish', 'dessert', 'diabetic', 'fruit_salad',
+                  'green_salad'
+                  ]
+
 
 class ClientWizard(NamedUrlSessionWizardView):
 
     template_name = 'forms/form.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(ClientWizard, self).get_context_data(**kwargs)
+
+        context["weekday"] = day_of_week
+        context["meals"] = meals_template
+        context["size"] = size
+
+        return context
+
     def save_json(self, dictonary):
-        size = ['regular', 'large']
 
-        meals = ['main_dish', 'dessert', 'diabetic', 'fruit_salad',
-                 'green_salad', 'pudding', 'compote']
-
-        day_of_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday',
-                       'saturday', 'sunday']
         json = {}
 
         for days in day_of_week:

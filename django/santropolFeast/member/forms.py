@@ -5,7 +5,7 @@ from member.models import (
     GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE,
     DAYS_OF_WEEK
 )
-from meal.models import Ingredient
+from meal.models import Ingredient, Component
 from order.models import SIZE_CHOICES
 
 
@@ -158,7 +158,7 @@ class ClientRestrictionsInformation(forms.Form):
 
     dish_to_avoid = forms.ModelMultipleChoiceField(
         label=_("Dish To Avoid"),
-        queryset=Ingredient.objects.all(),
+        queryset=Component.objects.all(),
         required=False,
         widget=forms.SelectMultiple(
             attrs={'class': 'ui dropdown search'}
