@@ -8,6 +8,8 @@ import re
 
 import math
 
+#from order.models import Order
+
 HOME = 'Home phone'
 CELL = 'Cell phone'
 WORK = 'Work phone'
@@ -319,6 +321,14 @@ class Client(models.Model):
         if current < self.birthdate:
             return 0
         return math.floor((current - self.birthdate).days / 365)
+
+    @property
+    def orders(self):
+        """
+        Returns orders associated to this client
+        """
+
+        return self.client_order.all()
 
 
 class ClientFilter(FilterSet):
