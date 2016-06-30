@@ -20,7 +20,7 @@ def home(request):
     notes = list(Note.objects.all())
     active_clients = Client.objects.filter(status='A').count()
     pending_clients = Client.objects.filter(status='D').count()
-    clients = Client.objects.all()
+    clients = Client.active.get_birthday_boys_and_girls()
     return render(request, 'pages/home.html', {
         'notes': notes,
         'active_clients': active_clients,

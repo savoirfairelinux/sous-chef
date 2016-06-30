@@ -187,6 +187,27 @@ class Route(models.Model):
         return self.name
 
 
+class ClientManager(models.Manager):
+
+    def get_birthday_boys_and_girls(self):
+
+        today = datetime.datetime.now()
+
+        return self.filter(
+            birthdate__month=today.month,
+            birthdate__day=today.day
+        )
+
+
+class ActiveClientManager(ClientManager):
+
+    def get_queryset(self):
+
+        return super(ActiveClientManager, self).get_queryset().filter(
+            status=Client.ACTIVE
+        )
+
+
 class Client(models.Model):
 
     # Characters are used to keep a backward-compatibility
@@ -303,6 +324,10 @@ class Client(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.member.firstname, self.member.lastname)
+
+    objects = ClientManager()
+
+    active = ActiveClientManager()
 
     @property
     def age(self):
