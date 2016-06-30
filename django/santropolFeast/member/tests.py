@@ -175,7 +175,7 @@ class ClientTestCase(TestCase):
         """Orders associated to a client must be available through client's property"""
         member = Member.objects.get(firstname='Angela')
         angela = Client.objects.get(member=member)
-        self.assertTrue(angela.orders.count(), 1)
+        self.assertEqual(angela.orders.count(), 1)
         self.assertEqual(angela.orders.first().creation_date, date(2016, 5, 5));
 
 
