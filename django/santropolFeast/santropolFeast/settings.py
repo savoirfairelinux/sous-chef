@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'delivery',
     'formtools',
     'django_filters',
+    'aldjemy',
+    'leaflet',
 ]
 
 MIDDLEWARE_CLASSES = [
