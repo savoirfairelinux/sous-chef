@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django_filters import FilterSet, MethodFilter, CharFilter
+from django_filters import FilterSet, MethodFilter, CharFilter, ChoiceFilter
 import datetime
 import re
 
@@ -326,6 +326,14 @@ class ClientFilter(FilterSet):
     name = MethodFilter(
         action='filter_search',
         label=_('Search by name')
+    )
+
+    status = ChoiceFilter(
+        choices=(('', ''),) + Client.CLIENT_STATUS
+    )
+
+    delivery_type = ChoiceFilter(
+        choices=(('', ''),) + DELIVERY_TYPE
     )
 
     class Meta:
