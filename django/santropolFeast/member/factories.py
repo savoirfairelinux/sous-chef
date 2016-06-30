@@ -43,14 +43,14 @@ class ClientFactory (factory.DjangoModelFactory):
 
     member = factory.SubFactory(MemberFactory)
     billing_member = member
-    billing_payment_type = random.choice(PAYMENT_TYPE)[0]
+    billing_payment_type = factory.LazyAttribute(lambda x: random.choice(PAYMENT_TYPE)[0])
     rate_type = "default"
     member = member
     emergency_contact = factory.SubFactory(MemberFactory)
-    status = random.choice(Client.CLIENT_STATUS)[0]
+    status = factory.LazyAttribute(lambda x: random.choice(Client.CLIENT_STATUS)[0])
     language = "en"
     alert = factory.Faker('sentence')
-    delivery_type = random.choice(DELIVERY_TYPE)[0]
-    gender = random.choice(GENDER_CHOICES)[0]
+    delivery_type = factory.LazyAttribute(lambda x: random.choice(DELIVERY_TYPE)[0])
+    gender = factory.LazyAttribute(lambda x: random.choice(GENDER_CHOICES)[0])
     birthdate = factory.Faker('date')
-    route = random.choice(Route.objects.all())
+    route = factory.LazyAttribute(lambda x: random.choice(Route.objects.all()))
