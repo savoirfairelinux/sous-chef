@@ -1,6 +1,7 @@
 # coding=utf-8
 import factory
-from santropolFeast.order.models import Order, OrderItem
+from member.factories import MemberFactory
+from order.models import Order, Order_item
 
 
 class OrderFactory(factory.DjangoModelFactory):
@@ -16,4 +17,4 @@ class OrderFactory(factory.DjangoModelFactory):
 
 class OrderItemFactory(factory.DjangoModelFactory):
     class Meta:
-        model = OrderItem
+        model = Order_item
