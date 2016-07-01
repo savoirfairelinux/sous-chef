@@ -49,8 +49,8 @@ help:
 
 .PHONY: sphinx-apidoc
 sphinx-apidoc:
-	sphinx-apidoc -f -o source ../django/SantropolFeast/ \
-		../django/SantropolFeast/*/migrations
+	sphinx-apidoc -f -o source ../django/santropolFeast/ \
+		../django/santropolFeast/*/migrations
 
 .PHONY: clean
 clean:
