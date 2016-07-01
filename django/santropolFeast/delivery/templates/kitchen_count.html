@@ -1,0 +1,35 @@
+{% extends "base_delivery.html" %}
+<!-- Load Internationalization utils-->
+{% load i18n %}
+
+{% block title %}{% trans 'Kitchen Count report' %} {% endblock %}
+
+{% block breadcrumb %}
+{% endblock breadcrumb %}
+
+{% block content %}
+    {{ kcrlist|linebreaks }}
+<table class="ui celled table">
+  <thead>
+    <th class="">{% trans 'Client' %}</th>
+    <th class="">{% trans 'Qty' %}</th>
+    <th class="">{% trans 'Size' %}</th>
+    <th class="">{% trans 'Section / Incompatibilities' %}</th>
+    <th class="">{% trans 'Other restrictions' %}</th>
+    <th class="">{% trans 'Preparation' %}</th>
+    <th class=""></th>
+  </thead>
+  <tbody>
+    {% for obj in lines %}
+      <tr>
+        <td><strong>{{obj.client}}</strong></td>
+        <td>{{obj.qty}}</td>
+        <td>{{obj.size}}</td>
+        <td>{{obj.incom}}</td>
+        <td>{{obj.restr}}</td>
+        <td>{{obj.prep}}</td>
+     </tr>
+        {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
