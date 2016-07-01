@@ -9,8 +9,6 @@ import re
 
 import math
 
-#from order.models import Order
-
 HOME = 'Home phone'
 CELL = 'Cell phone'
 WORK = 'Work phone'

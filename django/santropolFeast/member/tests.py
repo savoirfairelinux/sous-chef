@@ -172,11 +172,11 @@ class ClientTestCase(TestCase):
         self.assertEqual(angela.delivery_type, 'O')
 
     def test_orders(self):
-        """Orders associated to a client must be available through client's property"""
+        """Orders of a given client must be available as a model property"""
         member = Member.objects.get(firstname='Angela')
         angela = Client.objects.get(member=member)
         self.assertEqual(angela.orders.count(), 1)
-        self.assertEqual(angela.orders.first().creation_date, date(2016, 5, 5));
+        self.assertEqual(angela.orders.first().creation_date, date(2016, 5, 5))
 
 
 class OptionTestCase(TestCase):
