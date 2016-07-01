@@ -6,6 +6,7 @@ from meal.models import Restricted_item, Ingredient, Component
 from datetime import date
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse, reverse_lazy
+from order.models import Order
 
 
 class MemberTestCase(TestCase):
@@ -134,9 +135,15 @@ class ClientTestCase(TestCase):
         member = Member.objects.create(firstname='Angela',
                                        lastname='Desousa',
                                        address=address)
-        Client.objects.create(
+        client = Client.objects.create(
             member=member, billing_member=member,
             birthdate=date(1980, 4, 19))
+
+        Order.objects.create(
+            creation_date=date(2016, 5, 5),
+            delivery_date=date(2016, 5, 10),
+            status='B', client=client,
+        )
 
     def test_str_is_fullname(self):
         """A client must be listed using his/her fullname"""
@@ -163,6 +170,13 @@ class ClientTestCase(TestCase):
         self.assertEqual(angela.gender, 'U')
         # Delivery type: Ongoing
         self.assertEqual(angela.delivery_type, 'O')
+
+    def test_orders(self):
+        """Orders associated to a client must be available through client's property"""
+        member = Member.objects.get(firstname='Angela')
+        angela = Client.objects.get(member=member)
+        self.assertEqual(angela.orders.count(), 1)
+        self.assertEqual(angela.orders.first().creation_date, date(2016, 5, 5));
 
 
 class OptionTestCase(TestCase):
