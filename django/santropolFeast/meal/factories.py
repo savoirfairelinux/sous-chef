@@ -1,23 +1,7 @@
 # coding=utf-8
 
 import factory
-from meal.model import Meal, Ingredient, Allergy
-
-
-class MealFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = Meal
-
-    name = "Tomato Soupe"
-    description = "A Simple Tomato Soupe"
-    size = "R"
-
-    @classmethod
-    def __init__(self, **kwargs):
-        name = kwargs.pop("name", None)
-
-        meal = super(MealFactory, self).__init__(self, **kwargs)
-        meal.save()
+from meal.models import Ingredient, Allergy
 
 
 class IngredientFactory(factory.DjangoModelFactory):
