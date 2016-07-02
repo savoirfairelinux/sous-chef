@@ -1,6 +1,7 @@
 {% extends "client/base.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
+{% load admin_urls %}
 
 {% block title %}
 
@@ -44,7 +45,7 @@
         <div class="ui bottom attached tab segment active" data-tab="first">
             <h3 class="ui header">
                 Basic information
-                <a  href="/admin/member/client/{{client.id}}/change">
+                <a  href="{% url 'admin:member_client_change' client.id %}">
                     <i class="write grey icon"></i>
                 </a>
             </h3>
@@ -64,7 +65,7 @@
 
             <h3 class="ui header">
                 {% trans 'Emergency Contact' %}
-                <a  href="/admin/member/member/{{client.emergency_contact.id}}/change">
+                <a  href="{% url 'admin:member_member_change' client.emergency_contact.id %}">
                     <i class="write grey icon"></i>
                 </a>
             </h3>
@@ -81,14 +82,14 @@
         <div class="ui bottom attached tab segment" data-tab="second">
             <h3 class="ui header">
                 Meal status
-                <a  href="/admin/member/client/{{client.id}}/change">
+                <a  href="{% url 'admin:member_client_change' client.id %}">
                     <i class="write grey icon"></i>
                 </a>
             </h3>
             <p>{{client.get_status_display}}</p>
             <h3 class="ui header">
                 Restrictions
-                <a  href="/admin/member/client/{{client.id}}/change">
+                <a  href="{% url 'admin:member_client_change' client.id %}">
                     <i class="write grey icon"></i>
                 </a>
             </h3>
@@ -113,7 +114,7 @@
         <div class="ui bottom attached tab segment" data-tab="third">
             <h3 class="ui header">
                 Referent
-                <a  href="/admin/member/referencing/{{client.client_referent.first.id}}/">
+                <a  href="{% url 'admin:member_referencing_change' client.client_referent.first.id %}">
                     <i class="write grey icon"></i>
                 </a>
             </h3>

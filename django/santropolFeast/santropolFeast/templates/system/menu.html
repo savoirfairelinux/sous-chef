@@ -1,10 +1,11 @@
 {% load staticfiles i18n %}
+{% load admin_urls %}
 
 <div class="item">
     <img class="ui large image item" src="{% static 'assets/logo-souschef-coul.png' %}" title="Logo Sous-Chef"/>
 </div>
 <div class="item">
-    <a class="item" href="{%url 'member:list'%}">Clients
+    <a class="item" href="{% url 'member:list'%}">Clients
         <div class="ui label">{{ CLIENTS_TOTAL }}</div>
     </a>
 
@@ -25,8 +26,8 @@
 </div>
 
 <div class="item">
-        <a class="item" href="/"><i class="dashboard icon"></i>Dashboard</a>
+        <a class="item" href="{% url 'home' %}"><i class="dashboard icon"></i>Dashboard</a>
     <a class="item" href="{% url 'member:member_step' %}"><i class="add user icon"></i>Add a new client</a>
-    <a class="item" href="/admin"><i class="settings icon"></i>Settings</a>
+    <a class="item" href="{% url 'admin:index' %}"><i class="settings icon"></i>Settings</a>
     <a href="{% url 'page:logout' %}" class="item"><i class="sign out icon"></i>Logout</a>
 </div>
