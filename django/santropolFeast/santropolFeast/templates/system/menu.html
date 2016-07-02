@@ -5,7 +5,7 @@
     <img class="ui large image item" src="{% static 'assets/logo-souschef-coul.png' %}" title="Logo Sous-Chef"/>
 </div>
 <div class="item">
-    <a class="item" href="{% url 'member:list'%}">Clients
+    <a class="item" href="{% url 'member:list'%}">{% trans 'Clients' %}
         <div class="ui label">{{ CLIENTS_TOTAL }}</div>
     </a>
 
@@ -17,17 +17,17 @@
             </div>
         </form>
     </div>
-    <a class="item" href="{% url 'order:list' %}">Orders
+    <a class="item" href="{% url 'order:list' %}">{% trans 'Orders' %}
         <div class="ui label">{{ ORDERS_TOTAL }}</div>
     </a>
-    <a class="item" href="/admin/meal/ingredient/">Ingredients
+    <a class="item" href="/admin/meal/ingredient/">{% trans 'Ingredients' %}
         <div class="ui label">{{ INGREDIENTS_TOTAL }}</div>
     </a>
 </div>
 
 <div class="item">
-        <a class="item" href="{% url 'home' %}"><i class="dashboard icon"></i>Dashboard</a>
-    <a class="item" href="{% url 'member:member_step' %}"><i class="add user icon"></i>Add a new client</a>
-    <a class="item" href="{% url 'admin:index' %}"><i class="settings icon"></i>Settings</a>
-    <a href="{% url 'page:logout' %}" class="item"><i class="sign out icon"></i>Logout</a>
+        <a class="item" href="{% url 'home' %}"><i class="dashboard icon"></i>{% trans 'Dashboard' %}</a>
+    <a class="item" href="{% url 'member:member_step' %}"><i class="add user icon"></i>{% trans 'Add a new client' %}</a>
+    <a class="item" href="{% url 'admin:index' %}"><i class="settings icon"></i>{% trans 'Settings' %}</a>
+    <a href="{% url 'page:logout' %}" class="item"><i class="sign out icon"></i>{% trans 'Logout' %}</a>
 </div>

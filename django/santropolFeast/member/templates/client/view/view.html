@@ -35,16 +35,16 @@
     <div class="sixteen wide column">
 
         <div class="ui top attached tabular menu">
-              <a class="item active" data-tab="first"><i class="user icon"></i>Personal</a>
-              <a class="item" data-tab="second"><i class="food icon"></i>Preferences</a>
-              <a class="item" data-tab="third"><i class="treatment icon"></i>Referent</a>
-              <a class="item" data-tab="four"><i class="payment icon"></i>Billing</a>
+              <a class="item active" data-tab="first"><i class="user icon"></i>{% trans 'Personal' %}</a>
+              <a class="item" data-tab="second"><i class="food icon"></i>{% trans 'Preferences' %}</a>
+              <a class="item" data-tab="third"><i class="treatment icon"></i>{% trans 'Referent' %}</a>
+              <a class="item" data-tab="four"><i class="payment icon"></i>{% trans 'Billing' %}</a>
               <a class="item" data-tab="five"><i class="book icon"></i>{% trans 'Notes' %}</a>
         </div>
 
         <div class="ui bottom attached tab segment active" data-tab="first">
             <h3 class="ui header">
-                Basic information
+                {% trans 'Basic information' %}
                 <a  href="{% url 'admin:member_client_change' client.id %}">
                     <i class="write grey icon"></i>
                 </a>
@@ -81,31 +81,31 @@
 
         <div class="ui bottom attached tab segment" data-tab="second">
             <h3 class="ui header">
-                Meal status
+                {% trans 'Meal status' %}
                 <a  href="{% url 'admin:member_client_change' client.id %}">
                     <i class="write grey icon"></i>
                 </a>
             </h3>
             <p>{{client.get_status_display}}</p>
             <h3 class="ui header">
-                Restrictions
+                {% trans 'Restrictions' %}
                 <a  href="{% url 'admin:member_client_change' client.id %}">
                     <i class="write grey icon"></i>
                 </a>
             </h3>
             <div>
                 <div class="ui label">
-                    Tomato
+                    {% trans 'Tomato' %}
                 </div>
                 <div class="ui label">
-                    Basil
+                    {% trans 'Basil' %}
                 </div>
                 {% for restriction in client.restrictions.all %}
                 <div class="ui label">
-                    Tomato
+                    {% trans 'Tomato' %}
                 </div>
                 <div class="ui label">
-                    Basil
+                    {% trans 'Basil' %}
                 </div>
                 {% endfor %}
             </div>
@@ -113,7 +113,7 @@
 
         <div class="ui bottom attached tab segment" data-tab="third">
             <h3 class="ui header">
-                Referent
+                {% trans 'Referent' %}
                 <a  href="{% url 'admin:member_referencing_change' client.client_referent.first.id %}">
                     <i class="write grey icon"></i>
                 </a>
@@ -134,7 +134,7 @@
 
         <div class="ui bottom attached tab segment" data-tab="four">
             <h3 class="ui header">
-                Billing
+                {% trans 'Billing' %}
             </h3>
             <div class="ui list">
                 <div class="item">{% trans 'First Name' %}: {{client.billing_member.firstname}}</div>
@@ -148,7 +148,7 @@
 
         <div class="ui bottom attached tab segment" data-tab="five">
             <h3 class="ui header">
-                Notes
+                {% trans 'Notes' %}
             </h3>
             <div class="ui feed">
                 {% for note in notes %}
