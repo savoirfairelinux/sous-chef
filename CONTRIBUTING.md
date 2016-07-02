@@ -44,12 +44,24 @@ Contributions will be accepted through the creation of Pull Requests. Here is th
 
 A template is provided to create your Pull Request. Try to fill the information at the best of your knowledge.
 
-For your Pull Request to be merged, it should respect the following:
+#### Pull request checklist
 
-* Tests must pass
-* PEP-8 coding style must be respected
-* Code coverage must be complete
-* The branch can be merged automatically
+For your pull request to be merged, the answer to the following questions must be 'yes': 
+
+##### General
+
+* Can the branch be merged automatically?
+
+##### Testing
+
+* Do the unit tests pass?
+
+##### Adding new code
+
+* Is the code PEP8 compliant?
+* Is the code covered by tests?
+* Are the strings internationalised?
+* Is the url templatetag used when declaring urls? (are the templates exempt of hardcoded urls?)
 
 [TravisCI](https://travis-ci.org/) is configured to run those checks on every Pull-Request. It is recommanded you configure your fork to do the same.
 
