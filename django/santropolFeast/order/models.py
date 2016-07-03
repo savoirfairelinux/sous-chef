@@ -597,16 +597,9 @@ class Order_item(models.Model):
         null=True,
     )
 
-    component_group = models.CharField(
-        max_length=100,
-        choices=COMPONENT_GROUP_CHOICES,
-        verbose_name=_('component group'),
-        null=True,
-    )
-
     def __str__(self):
         return "<For delivery on:> {} <order_item_type:>" \
             " {} <component_group:> {}".\
             format(str(self.order.delivery_date),
                    self.order_item_type,
-                   self.component_group)
+                   self.component.component_group)

@@ -4,34 +4,10 @@
 
 {% block title %} {% trans 'View Order' %} {% endblock %}
 
-{% block extrajs %}
-
-    <script type="text/javascript">
-        $('.ui.dropdown.status').dropdown({
-            transition: 'drop',
-            onChange: function(value, text, $selectedItem) {
-                $(this).addClass('loading');
-                $.ajax({
-                    url: "/order/change_status/" + {{ order.id }} + '/',
-                    type: "POST",
-                    data: {
-                        'status': value,
-                        'csrfmiddlewaretoken': '{{ csrf_token }}',
-                    },
-                    success: function(response) {
-                        $('.ui.dropdown.status').removeClass('loading');
-                    }
-                })
-            }
-        });
-    </script>
-
-{% endblock %}
-
 {% block content %}
 
 <div class="ui secondary pointing fluid menu">
-    <h2 class="ui header">Order #{{ order.id}}</h2>
+    <h2 class="ui header">Order #{{ order.id }}</h2>
     <div class="right menu">
         <div class="ui item">
             <div class="ui dropdown status">
@@ -83,4 +59,28 @@
   </table>
 </div>
 <div class="ui row"></div>
+{% endblock %}
+
+{% block extrajs %}
+
+    <script type="text/javascript">
+        $('.ui.dropdown.status').dropdown({
+            transition: 'drop',
+            onChange: function(value, text, $selectedItem) {
+                $(this).addClass('loading');
+                $.ajax({
+                    url: {% url 'order:update' pk=order.id %},
+                    type: "POST",
+                    data: {
+                        'status': value,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    },
+                    success: function(response) {
+                        $('.ui.dropdown.status').removeClass('loading');
+                    }
+                })
+            }
+        });
+    </script>
+
 {% endblock %}

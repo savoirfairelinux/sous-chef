@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load static %}
+
+{% block title %} {% trans 'Orders' %} {% endblock %}
+
+{% block extrahead %}
+    <link href="{% static 'css/calendar.min.css' %}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">New Order</h2>
+</div>
+
+<div class="ten wide column form-steps">
+    <form action="" method="post" class="ui form error">{% csrf_token %}
+
+        <h4 class="ui dividing header">{{ _('Client') }}</h4>
+            <div class="field">
+                <label>{{ form.client.label }}</label>
+                {{ form.client }}
+            </div>
+
+            <div class="field {% if form.delivery_date.errors %} error {% endif %}">
+                <label>{{ form.delivery_date.label }}</label>
+                <div class="ui calendar" id="form_delivery_date">
+                    <div class="ui input left icon">
+                          <i class="calendar icon"></i>
+                          {{ form.delivery_date }}
+                    </div>
+                </div>
+            </div>
+
+            <button class="ui primary button" type="submit">Create</button>
+    </form>
+    <br/>
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+    <script src="{% static 'jquery/calendar.min.js' %}" type="application/javascript"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('#form_delivery_date').calendar({
+                type: 'date',
+                formatter: {
+                    date: function (date, settings) {
+                      if (!date) return '';
+                      var day = date.getDate();
+                      var month = date.getMonth() + 1;
+                      var year = date.getFullYear();
+                      if (month < 10) month = '0' + month;
+                      if (day < 10) day = '0' + day;
+                      return year + '-' + month + '-' + day;
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
