@@ -587,3 +587,10 @@ class Order_item(models.Model):
         verbose_name=_('free quantity'),
         null=True,
     )
+
+    def __str__(self):
+        return 'Order #{} - #{} - {}'.format(
+            self.order.id,
+            self.id,
+            self.component
+        )

@@ -1,17 +1,14 @@
 from django.http import HttpResponse
-from django.shortcuts import render, render_to_response
 from django.views import generic
-from django.utils.decorators import method_decorator
-from django.shortcuts import get_object_or_404
-from member.models import Client
 from order.models import Order, OrderFilter
+from member.models import Client
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django import forms
 import csv
 
 
 class OrderList(generic.ListView):
-    # Display the list of clients
     model = Order
     template_name = 'list.html'
     context_object_name = 'order'
@@ -58,6 +55,27 @@ class OrderList(generic.ListView):
         return super(OrderList, self).get(request, **kwargs)
 
 
+class OrderDetail(generic.DetailView):
+    model = Order
+    template_name = 'view.html'
+    context_object_name = 'order'
+
+
+class CreateOrder(generic.CreateView):
+    model = Order
+    template_name = 'create.html'
+    fields = ['client', 'delivery_date']
+
+    delivery_date = forms.DateField(label="Delivery Date")
+    client = forms.ModelChoiceField(
+        required=True,
+        widget=forms.Select(
+            attrs={'class': 'ui search dropdown'}
+        ),
+        queryset=Client.active.all()
+    )
+
+
 def ExportCSV(request, queryset):
     response = HttpResponse(content_type="text/csv")
     response['Content-Disposition'] =\
@@ -86,8 +104,3 @@ def ExportCSV(request, queryset):
         ])
 
     return response
-
-
-def show_information(request, id):
-    order = get_object_or_404(Order, pk=id)
-    return render(request, 'view.html', {'order': order})
