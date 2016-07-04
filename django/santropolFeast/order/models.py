@@ -31,6 +31,16 @@ ORDER_ITEM_TYPE_CHOICES = (
 )
 
 
+class OrderManager(models.Manager):
+
+    def get_orders_for_date(self, delivery_date=None):
+        """ Return the orders for the given date """
+
+        return self.get_queryset().filter(
+           delivery_date=delivery_date
+        )
+
+
 class Order(models.Model):
 
     class Meta:
@@ -56,6 +66,8 @@ class Order(models.Model):
         verbose_name=_('client'),
         related_name='client_order',
     )
+
+    objects = OrderManager()
 
     @property
     def price(self):
