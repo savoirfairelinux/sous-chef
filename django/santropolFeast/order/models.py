@@ -70,6 +70,12 @@ class Order(models.Model):
 
         return total
 
+    def __str__(self):
+        return "client={}, delivery_date={}".format(
+            self.client,
+            self.delivery_date
+        )
+
 
 class OrderFilter(FilterSet):
 
