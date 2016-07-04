@@ -33,7 +33,16 @@ class MemberFactory (factory.DjangoModelFactory):
 
     firstname = factory.Faker('first_name')
     lastname = factory.Faker('last_name')
+
     address = factory.SubFactory(AddressFactory)
+
+
+class RouteFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = Route
+
+    name = factory.Faker('name')
 
 
 class ClientFactory (factory.DjangoModelFactory):

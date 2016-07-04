@@ -1,18 +1,18 @@
 # coding=utf-8
 import factory
-from member.factories import MemberFactory
+from member.factories import MemberFactory, ClientFactory
 from order.models import Order, Order_item
+
+from datetime import datetime
 
 
 class OrderFactory(factory.DjangoModelFactory):
     class Meta:
         model = Order
 
-    order_date = '01/02/2016'
-    type = "paid"
-    value = "1223"
-    client = MemberFactory
-    order_items = "main"
+    creation_date = datetime.now()
+    delivery_date = datetime.now()
+    client = factory.SubFactory(ClientFactory)
 
 
 class OrderItemFactory(factory.DjangoModelFactory):

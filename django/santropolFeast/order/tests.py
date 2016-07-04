@@ -1,8 +1,29 @@
 from django.test import TestCase
 from member.models import Client, Address, Member
 from order.models import Order, Order_item
-from datetime import date
+from order.factories import OrderFactory
+from member.factories import RouteFactory
+from datetime import date, datetime
 from django.contrib.auth.models import User
+
+
+class OrderTestCase(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        RouteFactory.create_batch(10)
+
+    def test_get_orders_for_Date(self):
+
+        order = OrderFactory()
+
+        self.assertTrue(
+            len(
+                Order.objects.get_orders_for_date(
+                    delivery_date=date.today()
+                )
+            ) == 1
+        )
 
 
 class OrderItemTestCase(TestCase):
