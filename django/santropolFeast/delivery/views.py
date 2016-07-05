@@ -9,7 +9,7 @@ from .apps import DeliveryConfig
 from sqlalchemy import func, or_, and_
 
 import datetime
-
+from datetime import date
 from meal.models import Component, Restricted_item, Ingredient
 from meal.models import Component_ingredient, Incompatibility
 from meal.models import Menu, Menu_component
@@ -22,8 +22,18 @@ from order.models import Order, Order_item
 
 class Orderlist(generic.ListView):
     # Display all the order on a given day
-    model = Delivery
+    model = Order
     template_name = 'order.html'
+
+    def get_context_data(self, **kwargs):
+        of = Order.objects.get_orders_for_date(date.today())
+
+        context = super(Orderlist, self).get_context_data(**kwargs)
+
+        context['my VariableOfContext'] = 0
+        context['filter'] = of
+
+        return context
 
 
 class MealInformation(generic.ListView):

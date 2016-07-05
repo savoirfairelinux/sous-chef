@@ -31,18 +31,22 @@
       <h3>{% trans 'Orders' %}</h3>
         <table class="ui sortable celled table">
           <thead>
-            <th class="sorted descending">{% trans 'First Name' %}</th>
-            <th class="">{% trans 'Last Name' %}</th>
-            <th class="">{% trans 'Status' %}</th>
+            <th class="sorted descending">{% trans 'ID' %}</th>
+            <th class="">{% trans 'Client' %}</th>
+            <th class="">{% trans 'Price' %}</th>
             <th class="">{% trans 'Route' %}</th>
+            <th class="">{% trans 'Action' %}</th>
           </thead>
           <tbody>
+            {% for item in filter %}
             <tr>
-              <td>lorem</td>
-              <td>ipsum</td>
-              <td>Ordered</td>
-              <td>Mcgill</td>
+              <td>{{item.client.id}}</td>
+              <td>{{item.client.member.firstname}}{{item.client.member.lastname}}</td>
+              <td>{{item.price}}</td>
+              <td>{{item.client.route}}</td>
+              <td><a class="ui button" href="{% url 'order:view' id=item.id %}">{% trans 'View Order' %}</a></td>
             </tr>
+            {% endfor %}
           </tbody>
         </table>
         <script type="text/javascript">
