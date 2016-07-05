@@ -11,6 +11,8 @@
     {% leaflet_css %}
     <link href="{% static 'leaflet-routing/leaflet-routing-machine.css' %}" rel="stylesheet">
     <link href="{% static 'leaflet-geocoder/Control.Geocoder.css' %}" rel="stylesheet">
+    <link href="{% static 'leaflet-awesome-markers/leaflet.awesome-markers.css' %}" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet">
     <style>
     .leaflet-container-default {
         position: block;
@@ -20,6 +22,7 @@
     </style>
     <script src="{% static 'leaflet-routing/leaflet-routing-machine.js' %}" type="application/javascript"></script>
     <script src="{% static 'leaflet-geocoder/Control.Geocoder.js' %}" type="application/javascript"></script>
+    <script src="{% static 'leaflet-awesome-markers/leaflet.awesome-markers.js' %}" type="application/javascript"></script>
     <script src="{% static 'leaflet-routing/mapbox/lrm-mapbox-1.0.4.js' %}" type="application/javascript"></script>
 {% endblock %}
 
@@ -41,23 +44,19 @@
             {
                  waypoints.push(L.latLng(data.waypoints[i].latitude, data.waypoints[i].longitude));
             }
-//Extend the Default marker class
-//           var RedIcon = L.Icon.Default.extend({
-//              options: {
-//              	    iconUrl: 'leaf-green.png'
-//              }
-//           });
-//           var redIcon = new RedIcon();
 
             // add the layer to the map
             map.addLayer(layer);
+            // set map on montreal
              map.setView(new L.LatLng(45.5017, -73.5673), 8);
-             L.marker([45.516564, -73.575145], {
-               draggable: true,
-               opacity: 0.7,
-//             icon: redIcon
+           // add marker for santropol
+            L.marker([45.516564, -73.575145], {
+               draggable: false,
+               opacity: 1,
+               icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
              }).addTo(map);
 
+             // Create bike router using mapbox
              var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
              bikerouter.options.profile = 'mapbox.cycling';
 
