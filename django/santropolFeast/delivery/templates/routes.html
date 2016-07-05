@@ -48,7 +48,7 @@
             // add the layer to the map
             map.addLayer(layer);
             // set map on montreal
-             map.setView(new L.LatLng(45.5017, -73.5673), 8);
+            map.setView(new L.LatLng(45.5017, -73.5673), 8);
            // add marker for santropol
             L.marker([45.516564, -73.575145], {
                draggable: false,
@@ -60,15 +60,20 @@
              var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
              bikerouter.options.profile = 'mapbox.cycling';
 
-             L.Routing.control({
+             // Prepare leaflet geo control
+             var control = L.Routing.control({
                   router: bikerouter ,
                   plan: L.Routing.plan(waypoints,
-                          {geocoder: L.Control.Geocoder.nominatim({ geocodingQueryParams: { countrycodes: 'ca'}}),
+                          { geocoder: L.Control.Geocoder.nominatim({ geocodingQueryParams: { countrycodes: 'ca'}}),
                           routeWhileDragging: true,
-                          reverseWaypoints: true
+                          reverseWaypoints: true,
                       }),
                       language: 'fr',
-                }).addTo(map);
+                });
+
+            // Bind control outside of the map
+            var routeBlock = control.onAdd(map);
+            $(".controls").append(routeBlock);
           }
         );
   }
@@ -79,8 +84,15 @@
     <h2 class="ui header">Route</h2>
 </div>
 
-<div class="ui row"></div>
 
-    {% leaflet_map "main" callback="main_map_init" %}
+  <div class="row">
+    <div class="twelve wide column">
+      {% leaflet_map "main" callback="main_map_init" %}
+    </div>
+    <div class="four wide column">
+      <div class="controls"></div>
+    </div>
+  </div>
+
 
 {% endblock %}
