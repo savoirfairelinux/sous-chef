@@ -25,13 +25,20 @@ class Orderlist(generic.ListView):
     model = Order
     template_name = 'order.html'
 
+    def dispatch(self, *args, **kwargs):
+        return super(Orderlist, self).dispatch(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
-        of = Order.objects.get_orders_for_date(date.today())
+
+        of = self.request.GET.get('date')
+
+        if of is None:
+
+            of = Order.objects.get_orders_for_date(date.today())
 
         context = super(Orderlist, self).get_context_data(**kwargs)
 
-        context['my VariableOfContext'] = 0
-        context['filter'] = of
+        context['orders'] = of
 
         return context
 

@@ -38,7 +38,7 @@
             <th class="">{% trans 'Action' %}</th>
           </thead>
           <tbody>
-            {% for item in filter %}
+            {% for item in orders %}
             <tr>
               <td>{{item.client.id}}</td>
               <td>{{item.client.member.firstname}}{{item.client.member.lastname}}</td>
