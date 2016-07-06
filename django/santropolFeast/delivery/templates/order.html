@@ -8,6 +8,16 @@
 {% endblock breadcrumb %}
 
 {% block content %}
+
+<form action="" method="get">
+        <div class="ui large action left icon input">
+            {% csrf_token %}
+            {{ form }}
+            <button class="ui teal button" type="submit">Date
+            </button>
+        </div>
+</form>
+
 <div class="ui grid">
   <div class="four wide column">
     <div class="segment ui">
@@ -38,13 +48,13 @@
             <th class="">{% trans 'Action' %}</th>
           </thead>
           <tbody>
-            {% for item in filter %}
+            {% for item in orders %}
             <tr>
               <td>{{item.client.id}}</td>
               <td>{{item.client.member.firstname}}{{item.client.member.lastname}}</td>
               <td>{{item.price}}</td>
               <td>{{item.client.route}}</td>
-              <td><a class="ui button" href="{% url 'order:view' id=item.id %}">{% trans 'View Order' %}</a></td>
+              <td><a class="ui button" href="">{% trans 'View Order' %}</a></td>
             </tr>
             {% endfor %}
           </tbody>

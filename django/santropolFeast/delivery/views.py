@@ -8,6 +8,7 @@ from .apps import DeliveryConfig
 
 from sqlalchemy import func, or_, and_
 
+from django import forms
 import datetime
 from datetime import date
 from meal.models import Component, Restricted_item, Ingredient
@@ -18,21 +19,31 @@ from member.models import Route, Note, Option, Client_option, Restriction
 from member.models import Client_avoid_ingredient, Client_avoid_component
 from notification.models import Notification
 from order.models import Order, Order_item
+from delivery.forms import dateForm
 
 
 class Orderlist(generic.ListView):
     # Display all the order on a given day
     model = Order
     template_name = 'order.html'
+    form_class = dateForm
+
+    def dispatch(self, *args, **kwargs):
+        return super(Orderlist, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        of = Order.objects.get_orders_for_date(date.today())
+
+        of = self.request.GET.get('date')
+
+        if of is None:
+
+            of = Order.objects.get_orders_for_date(date.today())
 
         context = super(Orderlist, self).get_context_data(**kwargs)
 
-        context['my VariableOfContext'] = 0
-        context['filter'] = of
+        context['orders'] = of
 
+        context['form'] = dateForm()
         return context
 
 
