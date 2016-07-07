@@ -205,7 +205,7 @@
     background: #da8 none repeat scroll 0 0;
     border-radius: 50%;
     color: white;
-    cursor: pointer;
+    cursor: move;
     display: inline-block;
     font-size: 12px;
     font-weight: bold;
