@@ -58,8 +58,8 @@
             L.marker([45.516564, -73.575145], {
                draggable: false,
                opacity: 1,
-              //  icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
-               icon: L.icon.glyph({ icon: 'cutlery', prefix: 'fa' ,  glyphColor: 'red',}),
+               icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
+               //icon: L.icon.glyph({ icon: 'cutlery', prefix: 'fa' ,  glyphColor: 'red',}),
              }).addTo(map);
 
              // Create bike router using mapbox
@@ -92,18 +92,18 @@
                          },
                          waypoints: waypoints,
                          createMarker: function(i, wp) {
-                             return L.marker(wp.latLng, {
-                                 icon:L.AwesomeMarkers.icon({icon: 'briefcase', prefix: 'fa', markerColor: 'blue', iconColor: '#f28f82'}),
-                                 draggable: true
-                             });
-
                             //  return L.marker(wp.latLng, {
-                            //     icon: L.icon.glyph({
-                            //         prefix: '',
-                            //         glyph: String.fromCharCode(65 + i)
-                            //     }),
-                            //     draggable: true
-                            // });
+                            //      icon:L.AwesomeMarkers.icon({icon: 'briefcase', prefix: 'fa', markerColor: 'blue', iconColor: '#f28f82'}),
+                            //      draggable: true
+                            //  });
+
+                             return L.marker(wp.latLng, {
+                                icon: L.icon.glyph({
+                                    prefix: '',
+                                    glyph: String.fromCharCode(65 + i)
+                                }),
+                                draggable: true
+                            });
                          },
                          createGeocoder: L.bind(function(i) {
                              var geocoder = L.Routing.GeocoderElement.prototype.options.createGeocoder.call(this, i, this.getPlan().getWaypoints().length, this.getPlan().options),
@@ -130,33 +130,27 @@
            var routeBlock = control .onAdd(map);
            $(".controls").append(routeBlock);
 
+           // Add sortable on the route controler
+           Sortable.create(document.querySelector('.leaflet-routing-geocoders'), {
+                 handle: '.geocoder-handle',
+                 draggable: '.leaflet-routing-geocoder',
+                 onUpdate: function(e) {
+                     var oldI = e.oldIndex,
+                         newI = e.newIndex,
+                         wps = control.getWaypoints(),
+                         wp = wps[oldI];
 
-                   Sortable.create(document.querySelector('.leaflet-routing-geocoders'), {
-                         handle: '.geocoder-handle',
-                         draggable: '.leaflet-routing-geocoder',
-                         onUpdate: function(e) {
-                             var oldI = e.oldIndex,
-                                 newI = e.newIndex,
-                                 wps = control.getWaypoints(),
-                                 wp = wps[oldI];
+                     if (oldI === newI || newI === undefined) {
+                         return;
+                     }
 
-                             if (oldI === newI || newI === undefined) {
-                                 return;
-                             }
-
-                             wps.splice(oldI, 1);
-                             wps.splice(newI, 0, wp);
-                             control.setWaypoints(wps);
-                         }
-                   })
-
-
+                     wps.splice(oldI, 1);
+                     wps.splice(newI, 0, wp);
+                     control.setWaypoints(wps);
+                 }
+           });
           }
         );
-
-
-
-
 
   }
 </script>
