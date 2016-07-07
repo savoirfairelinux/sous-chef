@@ -23,23 +23,27 @@
     <script src="{% static 'leaflet-routing/leaflet-routing-machine.js' %}" type="application/javascript"></script>
     <script src="{% static 'leaflet-geocoder/Control.Geocoder.js' %}" type="application/javascript"></script>
     <script src="{% static 'leaflet-awesome-markers/leaflet.awesome-markers.js' %}" type="application/javascript"></script>
+    <script src="{% static 'leaflet-icon-glyph/Leaflet.Icon.Glyph.js' %}" type="application/javascript"></script>
+    <script src="{% static 'sortable/Sortable.js' %}" type="application/javascript"></script>
     <script src="{% static 'leaflet-routing/mapbox/lrm-mapbox-1.0.4.js' %}" type="application/javascript"></script>
 {% endblock %}
 
 {% block content %}
 
 <script type="text/javascript">
+
+
     function main_map_init (map, options) {
-        // Use Leaflet API here
-        // create a new tile layer
+
+        // create a new tile layer wiyh bike path (http://thunderforest.com/maps/opencyclemap/)
         var tileUrl = 'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png',
         layer = new L.TileLayer(tileUrl, {maxZoom: 18});
+
 
         // get waypoints
         var waypoints = [];
         $.get( "../getDailyOrders/", function( data ) {
-            //alert( "Load was performed." + JSON.stringify(data) );
-
+            // create an array of waypoint from ajax call
             for(var i in data.waypoints)
             {
                  waypoints.push(L.latLng(data.waypoints[i].latitude, data.waypoints[i].longitude));
@@ -47,35 +51,113 @@
 
             // add the layer to the map
             map.addLayer(layer);
-            // set map on montreal
+            // center on montreal
             map.setView(new L.LatLng(45.5017, -73.5673), 8);
-           // add marker for santropol
+
+           // add awesome marker for santropol
             L.marker([45.516564, -73.575145], {
                draggable: false,
                opacity: 1,
-               icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
+              //  icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
+               icon: L.icon.glyph({ icon: 'cutlery', prefix: 'fa' ,  glyphColor: 'red',}),
              }).addTo(map);
 
              // Create bike router using mapbox
              var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
              bikerouter.options.profile = 'mapbox.cycling';
 
-             // Prepare leaflet geo control
-             var control = L.Routing.control({
-                  router: bikerouter ,
-                  plan: L.Routing.plan(waypoints,
-                          { geocoder: L.Control.Geocoder.nominatim({ geocodingQueryParams: { countrycodes: 'ca'}}),
-                          routeWhileDragging: true,
-                          reverseWaypoints: true,
-                      }),
-                      language: 'fr',
-                });
+
+             var routingContol = L.Routing.Control.extend({
+                 initialize: function(map, initialWaypoints) {
+                     L.Routing.Control.prototype.initialize.call(this, {
+                         router: bikerouter,
+                         geocoder: L.Control.Geocoder.nominatim({ geocodingQueryParams: { countrycodes: 'ca'}}),
+                         routeWhileDragging: true,
+                         reverseWaypoints: true,
+                         language: 'fr',
+                         showAlternatives: true,
+                         lineOptions: {
+                             styles: [
+                                 {color: 'black', opacity: 0.3, weight: 11},
+                                 {color: 'white', opacity: 0.9, weight: 9},
+                                 {color: 'red', opacity: 1, weight: 3}
+                             ]
+                         },
+                         altLineOptions: {
+                             styles: [
+                                 {color: 'black', opacity: 0.1, weight: 11},
+                                 {color: 'white', opacity: 0.25, weight: 9},
+                                 {color: 'blue', opacity: 0.25, weight: 3}
+                             ]
+                         },
+                         waypoints: waypoints,
+                         createMarker: function(i, wp) {
+                             return L.marker(wp.latLng, {
+                                 icon:L.AwesomeMarkers.icon({icon: 'briefcase', prefix: 'fa', markerColor: 'blue', iconColor: '#f28f82'}),
+                                 draggable: true
+                             });
+
+                            //  return L.marker(wp.latLng, {
+                            //     icon: L.icon.glyph({
+                            //         prefix: '',
+                            //         glyph: String.fromCharCode(65 + i)
+                            //     }),
+                            //     draggable: true
+                            // });
+                         },
+                         createGeocoder: L.bind(function(i) {
+                             var geocoder = L.Routing.GeocoderElement.prototype.options.createGeocoder.call(this, i, this.getPlan().getWaypoints().length, this.getPlan().options),
+                                 handle = L.DomUtil.create('div', 'geocoder-handle'),
+                                 geolocateBtn = L.DomUtil.create('span', 'geocoder-geolocate-btn', geocoder.container);
+
+                             handle.innerHTML = String.fromCharCode(65 + i);
+                             geocoder.container.insertBefore(handle, geocoder.container.firstChild);
+
+                             L.DomEvent.on(handle, 'click', function() {
+                                 var wp = this.getWaypoints()[i];
+
+                             }, this);
+
+                             return geocoder;
+                         }, this)
+                     });
+                 },
+             });
+
 
             // Bind control outside of the map
-            var routeBlock = control.onAdd(map);
-            $(".controls").append(routeBlock);
+           var control = new routingContol()
+           var routeBlock = control .onAdd(map);
+           $(".controls").append(routeBlock);
+
+
+                   Sortable.create(document.querySelector('.leaflet-routing-geocoders'), {
+                         handle: '.geocoder-handle',
+                         draggable: '.leaflet-routing-geocoder',
+                         onUpdate: function(e) {
+                             var oldI = e.oldIndex,
+                                 newI = e.newIndex,
+                                 wps = control.getWaypoints(),
+                                 wp = wps[oldI];
+
+                             if (oldI === newI || newI === undefined) {
+                                 return;
+                             }
+
+                             wps.splice(oldI, 1);
+                             wps.splice(newI, 0, wp);
+                             control.setWaypoints(wps);
+                         }
+                   })
+
+
           }
         );
+
+
+
+
+
   }
 </script>
 
