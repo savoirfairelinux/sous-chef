@@ -9,7 +9,10 @@
 
 
 {% block extrahead %}
-  <link href="{% static 'css/calendar.min.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'css/calendar.min.css' %}" type="text/css" rel="stylesheet">
+    {% load leaflet_tags %}
+    {% leaflet_js %}
+    {% leaflet_css %}
 {% endblock %}
 
 {% block title %}Create a new client{% endblock %}
@@ -113,6 +116,7 @@
 
 {% block extrajs %}
   <script src="{% static 'jquery/calendar.min.js' %}" type="application/javascript"></script>
+  <script src="{% static 'leaflet-geocoder/Control.Geocoder.js' %}" type="application/javascript"></script>
   <script type="text/javascript">
     $(function() {
       $('#wizard_form_birthdate').calendar({
@@ -167,6 +171,37 @@
             url: '{% url 'member:search' %}?name={query}'
           },
           minCharacters : 3
+        });
+
+        $('#geocodeBtn').click(function(e) {
+              var geocoder = new L.Control.Geocoder.nominatim({ geocodingQueryParams: { countrycodes: 'ca'}});
+              // var yourQuery = "4846 rue cartier, Montreal, Qc";
+              var apt='',street  ='' , city ='', zipcode ='';
+              // if ($('#id_address_information-apartment').val()) {
+              //   apt = "#" + $('#id_address_information-apartment').val() + " ";
+              // }
+              if ($('#id_address_information-street').val() ) {
+                street = $('#id_address_information-street').val()+ " ";
+              }
+              if ($('#id_address_information-city').val()) {
+                city = $('#id_address_information-city').val() ;
+              }
+              // if ($('#id_address_information-postal_code').val()) {
+              //   zipcode = $('#id_address_information-postal_code').val() ;
+              // }
+              var yourQuery = apt +  street + city +zipcode;
+
+              geocoder.geocode(yourQuery, function(results) {
+                    // latLng= new L.LatLng(results[0].center.lat, results[0].center.lng);
+                    if (results.length > 0 ) {
+                        //alert("lat" +results[0].center.lat + " long"+ results[0].center.lng);
+                         alert(results[0].name);
+                    }
+                    else {
+                        alert("Address not Found !!");
+                    }
+
+                  });
         });
     });
 
