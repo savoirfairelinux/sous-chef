@@ -134,6 +134,20 @@ class Address(models.Model):
         verbose_name=_('postal code')
     )
 
+    long = models.DecimalField(
+            max_digits=9,
+            decimal_places=6,
+            blank=True,
+            null=True,
+    )
+
+    lat = models.DecimalField(
+            max_digits=9,
+            decimal_places=6,
+            blank=True,
+            null=True,
+    )
+
     def __str__(self):
         return self.street
 
