@@ -12,6 +12,7 @@ from member.models import Referencing, ClientFilter, Note, ClientFilter
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
+<<<<<<< HEAD
 
 size = ['regular', 'large']
 
@@ -25,6 +26,10 @@ meals_template = ['main_dish', 'dessert', 'diabetic', 'fruit_salad',
                   'green_salad'
                   ]
 
+=======
+from django.template import RequestContext
+from django.http import JsonResponse
+>>>>>>> (212) member add API endpoint geolocate post
 
 class ClientWizard(NamedUrlSessionWizardView):
 
@@ -644,7 +649,6 @@ def mark_as_read(request, id):
     note.mark_as_read()
     return HttpResponseRedirect(reverse_lazy("member:notes"))
 
-
 class SearchMembers(generic.View):
 
     def get(self, request):
@@ -671,3 +675,12 @@ class SearchMembers(generic.View):
             data = {'success': False}
 
         return JsonResponse(data)
+
+def geolocateAddress(request):
+            # do something with the your data
+            if request.method == 'POST':
+                  lat = request.POST['lat']
+                  long = request.POST['long']
+
+            # just return a JsonResponse
+            return JsonResponse({'latitude': lat, 'longtitude': long })
