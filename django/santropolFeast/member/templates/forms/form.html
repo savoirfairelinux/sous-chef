@@ -105,9 +105,9 @@
             {% endif %}
 
             {% if wizard.steps.step1 == 6 %}
-            <input class="big ui right floated yellow button" type="submit" value="Save"/>
+            <input class="ui right floated yellow button" type="submit" value="Save"/>
             {% else %}
-            <button  class="big ui yellow right floated button" name="wizard_goto_step" type="submit">Next</button>
+            <button  class="ui yellow right floated button" name="wizard_goto_step" type="submit">Next</button>
             {% endif %}
 
         </form>
@@ -117,7 +117,24 @@
 {% block extrajs %}
     <script src="{% static 'jquery/calendar.min.js' %}" type="application/javascript"></script>
     <script src="{% static 'leaflet-geocoder/Control.Geocoder.js' %}" type="application/javascript"></script>
+    <script src="{% static 'ui-modal/modal.min.js' %}" type="application/javascript"></script>
     <script type="text/javascript">
+    function getCookie(c_name)
+    {
+        if (document.cookie.length > 0)
+        {
+            c_start = document.cookie.indexOf(c_name + "=");
+            if (c_start != -1)
+            {
+                c_start = c_start + c_name.length + 1;
+                c_end = document.cookie.indexOf(";", c_start);
+                if (c_end == -1) c_end = document.cookie.length;
+                return unescape(document.cookie.substring(c_start,c_end));
+            }
+        }
+        return "";
+     }
+
         $(function() {
             $('#wizard_form_birthdate').calendar({
                 type: 'date',
@@ -164,26 +181,39 @@
                   // if ($('#id_address_information-postal_code').val()) {
                   //   zipcode = $('#id_address_information-postal_code').val() ;
                   // }
-                  var yourQuery = apt +  street + city +zipcode;
 
-
-
+                  var yourQuery = apt +  street + city + zipcode;
 
 
                   geocoder.geocode(yourQuery, function(results) {
                         // latLng= new L.LatLng(results[0].center.lat, results[0].center.lng);
                         if (results.length > 0 ) {
-                            //alert("lat" +results[0].center.lat + " long"+ results[0].center.lng);
-                             alert(results[0].name);
+                              //alert("lat" +results[0].center.lat + " long"+ results[0].center.lng);
+                              //alert(results[0].name);
+                              var data = { address: results[0].name,
+                                           lat: results[0].center.lat,
+                                           long: results[0].center.lng };
+
+//                              $('.modal').modal('show');
+                              alert("Info reverse geocode lat:" + data.lat + " long:"+ data.long + " address:"+ data.address);
+
+                              $.ajaxSetup({
+                                  headers: { "X-CSRFToken": getCookie("csrftoken") }
+                              });
+
+                              $.post("../../geolocateAddress/", data, function(result){
+                                alert("Post Successful " + result.latitude);
+
+
+
+                              });
                         }
                         else {
                             alert("Address not Found !!");
                         }
 
-                      });
-
-            });
-
+                  });
+              });
         });
     </script>
 {% endblock %}
