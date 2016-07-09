@@ -42,10 +42,14 @@
         // get waypoints
         var waypoints = [];
         $.get( "../getDailyOrders/", function( data ) {
+
+          var deliveryPoints = L.Routing.Waypoint.extend({ meal:"", member:"" });
             // create an array of waypoint from ajax call
             for(var i in data.waypoints)
             {
-                 waypoints.push(L.latLng(data.waypoints[i].latitude, data.waypoints[i].longitude));
+                 waypoints.push(new deliveryPoints(L.latLng(data.waypoints[i].latitude, data.waypoints[i].longitude)) );
+                 waypoints[i].options.meal = data.waypoints[i].meal;
+                 waypoints[i].options.member = data.waypoints[i].member;
             }
 
             // add the layer to the map
@@ -64,6 +68,10 @@
              // Create bike router using mapbox
              var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
              bikerouter.options.profile = 'mapbox.cycling';
+
+
+            //  var bikerouter = new L.Routing.OSRMv1({profile: 'bicycle'});
+            //  bikerouter.options.profile = 'mapbox.cycling';
 
 
              var routingContol = L.Routing.Control.extend({
@@ -91,18 +99,21 @@
                          },
                          waypoints: waypoints,
                          createMarker: function(i, wp) {
-                            //  return L.marker(wp.latLng, {
-                            //      icon:L.AwesomeMarkers.icon({icon: 'briefcase', prefix: 'fa', markerColor: 'blue', iconColor: '#f28f82'}),
-                            //      draggable: true
-                            //  });
+                              var  marker =  L.marker(wp.latLng, {
+                                  icon: L.icon.glyph({
+                                      prefix: '',
+                                      glyph: String.fromCharCode(65 + i)
+                                  }),
+                                  draggable: true
+                              });
 
-                             return L.marker(wp.latLng, {
-                                icon: L.icon.glyph({
-                                    prefix: '',
-                                    glyph: String.fromCharCode(65 + i)
-                                }),
-                                draggable: true
-                            });
+                              var info = "<dl><dt>Member</dt>"
+                                         + "<dd>" + wp.options.member + "</dd>"
+                                         + "<dt>Meal</dt>"
+                                         + "<dd>" + wp.options.meal + "</dd>"
+
+                              marker.bindPopup(info).openPopup();
+                              return marker;
                          },
                          createGeocoder: L.bind(function(i) {
                              var geocoder = L.Routing.GeocoderElement.prototype.options.createGeocoder.call(this, i, this.getPlan().getWaypoints().length, this.getPlan().options),

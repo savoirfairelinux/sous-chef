@@ -389,9 +389,9 @@ def kcr_view(request):
 def dailyOrders(request):
         # do something with the your data
         data = {"waypoints": [
-                    {"latitude":45.5165, "longitude":-73.5673},
-                    {"latitude":45.5263, "longitude":-73.5674},
-                    {"latitude":45.5162, "longitude":-73.5685} ]
+                    {"latitude":45.5165, "longitude":-73.5673, "member":"toto", "meal":"meat"},
+                    {"latitude":45.5263, "longitude":-73.5674, "member":"tata", "meal":"vegie"},
+                    {"latitude":45.5162, "longitude":-73.5685, "member":"titi", "meal":"meat"} ]
                     }
 
         # just return a JsonResponse
