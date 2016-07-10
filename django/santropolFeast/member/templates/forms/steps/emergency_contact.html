@@ -1,25 +1,52 @@
-
 <h4 class="ui dividing header">{{ _('Emergency contact') }}</h4>
-<div class="field">
-    <label>{{ _('Name') }}</label>
-    <div class="two fields">
-      <div class="field {% if wizard.form.firstname.errors %} error {% endif %}">
-          {{wizard.form.firstname}}
-      </div>
-      <div class="field {% if wizard.form.lastname.errors %} error {% endif %}">
-          {{wizard.form.lastname}}
-      </div>
+
+<div class="ui center aligned basic segment">
+  <div class="ui fluid category search">
+    <div class="ui icon input">
+      {{wizard.form.member}}
+      <i class="search icon"></i>
     </div>
+    <div class="results"></div>
+  </div>
+  <div class="ui horizontal divider">
+    {{ _('Or') }}
+  </div>
+  <div class="ui teal labeled icon button add emergency contact member">
+    Create new emergency contact
+    <i class="add icon"></i>
+  </div>
+
+  <div class="ui form add emergency contact member transition hidden">
+    <div class="content">
+      <div class="ui icon button cancel add emergency contact member right floated">
+        <i class="close icon"></i>
+      </div>
+
+      <div class="field">
+        <label>{{ _('Name') }}</label>
+        <div class="two fields">
+          <div class="field {% if wizard.form.firstname.errors %} error {% endif %}">
+            {{wizard.form.firstname}}
+          </div>
+          <div class="field {% if wizard.form.lastname.errors %} error {% endif %}">
+            {{wizard.form.lastname}}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <div class="field">
-    <label>{{ _('Contact information') }}</label>
-    <div class="two fields">
-      <div class="field">
-          {{wizard.form.contact_type}}
-      </div>
-      <div class="field {% if wizard.form.contact_value.errors %} error {% endif %}">
-          {{wizard.form.contact_value}}
-      </div>
+  <label>{{ _('Contact information') }}</label>
+  <div class="two fields">
+    <div class="field">
+      {{wizard.form.contact_type}}
     </div>
+    <div class="field {% if wizard.form.contact_value.errors %} error {% endif %}">
+      {{wizard.form.contact_value}}
+    </div>
+  </div>
 </div>
+

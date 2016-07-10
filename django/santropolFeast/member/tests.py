@@ -502,8 +502,8 @@ class FormTestCase(TestCase):
         member = Member.objects.get(firstname="User")
 
         # test_member_name:
-        self.assertTrue(member.firstname, "User")
-        self.assertTrue(member.lastname, "Testing")
+        self.assertEqual(member.firstname, "User")
+        self.assertEqual(member.lastname, "Testing")
 
         # test_home_phone_member:
         self.assertTrue(member.get_home_phone().value.startswith('555'))
@@ -511,76 +511,85 @@ class FormTestCase(TestCase):
         client = Client.objects.get(member=member)
 
         # test_client_alert:
-        self.assertTrue(client.alert, "Testing alert message")
+        self.assertEqual(client.alert, "Testing alert message")
 
         # test_client_languages:
-        self.assertTrue(client.language, "fr")
+        self.assertEqual(client.language, "fr")
 
         # test_client_birthdate:
-        self.assertTrue(client.birthdate, "1990-12-12")
+        self.assertEqual(client.birthdate, date(1990, 12, 12))
 
         # test_client_gender:
-        self.assertTrue(client.gender, "M")
+        self.assertEqual(client.gender, "M")
 
         # test_client_contact_type:
-        self.assertTrue(member.member_contact, "Home phone")
+        self.assertEqual(member.member_contact.first().type, "Home phone")
 
         # test_client_address:
-        self.assertTrue(member.address.street, "555 rue clark")
-        self.assertTrue(member.address.postal_code, "H3C2C2")
-        self.assertTrue(member.address.apartment, "222")
-        self.assertTrue(member.address.city, "montreal")
+        self.assertEqual(member.address.street, "555 rue clark")
+        self.assertEqual(member.address.postal_code, "H3C2C2")
+        self.assertEqual(member.address.apartment, "222")
+        self.assertEqual(member.address.city, "montreal")
 
         # test client delivery type
         self.assertEqual(client.delivery_type, 'O')
 
         # test_referent_name:
-        self.assertTrue(
+        self.assertEqual(
             client.client_referent.first().referent.firstname,
             "Referent"
         )
-        self.assertTrue(
+        self.assertEqual(
             client.client_referent.first().referent.lastname,
             "Testing"
         )
 
         # test_referent_work_information:
-        self.assertTrue(
+        self.assertEqual(
             client.client_referent.first().work_information,
             "CLSC"
         )
 
         # test_referral_date(self):
-        self.assertTrue(client.client_referent.first().date, "2012-12-12")
+        self.assertEqual(
+            client.client_referent.first().date,
+            date(2012, 12, 12)
+        )
 
         # test_referral_reason:
-        self.assertTrue(
+        self.assertEqual(
             client.client_referent.first().referral_reason,
             "Testing referral reason"
         )
 
         # test_billing_name:
-        self.assertTrue(client.billing_member.firstname, "Testing")
-        self.assertTrue(client.billing_member.lastname, "Billing")
+        self.assertEqual(client.billing_member.firstname, "Billing")
+        self.assertEqual(client.billing_member.lastname, "Testing")
 
         #  test_billing_type:
-        self.assertTrue(client.billing_payment_type, "check")
+        self.assertEqual(client.billing_payment_type, "check")
 
         #  test_billing_address:
-        self.assertTrue(client.billing_member.address.city, "Montreal")
-        self.assertTrue(client.billing_member.address.street, "111 rue clark")
-        self.assertTrue(client.billing_member.address.postal_code, "H2C3G4")
+        self.assertEqual(client.billing_member.address.city, "Montreal")
+        self.assertEqual(client.billing_member.address.street, "111 rue clark")
+        self.assertEqual(client.billing_member.address.postal_code, "H2C3G4")
 
         #  test_billing_rate_type:
-        self.assertTrue(client.rate_type, 'default')
+        self.assertEqual(client.rate_type, 'default')
 
         #  test_emergency_contact_name:
-        self.assertTrue(client.emergency_contact.firstname, "Emergency")
-        self.assertTrue(client.emergency_contact.lastname, "User")
+        self.assertEqual(client.emergency_contact.firstname, "Emergency")
+        self.assertEqual(client.emergency_contact.lastname, "User")
+
+        #  test_emergency_contact_type:
+        self.assertEqual(
+            client.emergency_contact.member_contact.first().type,
+            "Home phone"
+        )
 
         #  test_emergency_contact_value:
-        self.assertTrue(
-            client.emergency_contact.get_home_phone,
+        self.assertEqual(
+            client.emergency_contact.member_contact.first().value,
             "555-444-5555"
         )
 
