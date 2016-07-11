@@ -12,10 +12,48 @@ from formtools.wizard.views import NamedUrlSessionWizardView
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
 
+size = ['regular', 'large']
+
+meals = ['main_dish', 'dessert', 'diabetic', 'fruit_salad',
+         'green_salad', 'pudding', 'compote']
+
+day_of_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday',
+               'saturday', 'sunday']
+
+meals_template = ['main_dish', 'dessert', 'diabetic', 'fruit_salad',
+                  'green_salad'
+                  ]
+
 
 class ClientWizard(NamedUrlSessionWizardView):
 
     template_name = 'forms/form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ClientWizard, self).get_context_data(**kwargs)
+
+        context["weekday"] = day_of_week
+        context["meals"] = meals_template
+        context["size"] = size
+
+        return context
+
+    def save_json(self, dictonary):
+
+        json = {}
+
+        for days in day_of_week:
+            json['size_{}'.format(days)] = dictonary.cleaned_data.get(
+                'size_{}'.format(days)
+                )
+
+            for meal in meals:
+                json['{}_{}_quantity'.format(meal, days)] \
+                    = dictonary.cleaned_data.get(
+                    '{}_{}_quantity'.format(meal, days)
+                    )
+
+        return json
 
     def done(self, form_list, form_dict, **kwargs):
 
@@ -109,8 +147,10 @@ class ClientWizard(NamedUrlSessionWizardView):
             gender=basic_information.cleaned_data.get('gender'),
             birthdate=basic_information.cleaned_data.get('birthdate'),
             alert=basic_information.cleaned_data.get("alert"),
-            delivery_type=dietary_restriction.cleaned_data.get("delivery_type")
-        )
+            delivery_type=dietary_restriction.cleaned_data.get(
+                "delivery_type"
+                ), meal_default_week=self.save_json(dietary_restriction)
+            )
 
         if dietary_restriction.cleaned_data.get('status'):
             client.status = 'A'

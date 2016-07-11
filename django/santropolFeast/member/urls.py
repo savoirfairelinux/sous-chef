@@ -12,13 +12,14 @@ from member.forms import (
     ClientRestrictionsInformation, ClientEmergencyContactInformation
 )
 
+
 create_member_forms = (
     ('basic_information', ClientBasicInformation),
     ('address_information', ClientAddressInformation),
     ('referent_information', ClientReferentInformation),
     ('payment_information', ClientPaymentInformation),
     ('dietary_restriction', ClientRestrictionsInformation),
-    ('emergency_contact', ClientEmergencyContactInformation),
+    ('emergency_contact', ClientEmergencyContactInformation)
 )
 
 member_wizard = ClientWizard.as_view(create_member_forms,

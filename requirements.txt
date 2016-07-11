@@ -4,3 +4,4 @@ factory_boy==2.7.0
 django-formtools==1.0
 django-filter==0.13.0
 aldjemy==0.6.0
+django-annoying==0.9.0

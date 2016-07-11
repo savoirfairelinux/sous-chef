@@ -1,3 +1,4 @@
+{% load i18n %}
 <h4 class="ui dividing header">{{ _('Meal status') }}</h4>
 
 <div class="field">
@@ -28,9 +29,32 @@
     {{ wizard.form.meal_default }}
 </div>
 
+{% include 'forms/meal_defaults.html'%}
+
 <h4 class="ui dividing header">{{ _('Food preferences') }}</h4>
 
 <div class="field">
     <label>{{ wizard.form.restrictions.label }}</label>
     {{ wizard.form.restrictions }}
 </div>
+
+<div class="field">
+    <label>{{ wizard.form.food_preparation.label }}</label>
+    {{ wizard.form.food_preparation }}
+</div>
+
+<div class="field">
+    <label>{{ wizard.form.ingredient_to_avoid.label }}</label>
+      {{ wizard.form.ingredient_to_avoid }}
+</div>
+
+<div class="field">
+    <label>{{ wizard.form.dish_to_avoid.label }}</label>
+      {{ wizard.form.dish_to_avoid }}
+</div>
+
+<script language='javascript'>
+             $(document).ready(function(){
+                $('.ui.accordion').accordion();
+             });
+</script>

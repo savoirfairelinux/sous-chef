@@ -5,7 +5,8 @@ from member.models import (
     GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE,
     DAYS_OF_WEEK
 )
-from meal.models import Ingredient
+from meal.models import Ingredient, Component
+from order.models import SIZE_CHOICES
 
 
 class ClientBasicInformation (forms.Form):
@@ -74,7 +75,36 @@ class ClientAddressInformation(forms.Form):
 
 
 class ClientRestrictionsInformation(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(ClientRestrictionsInformation, self).__init__(*args, **kwargs)
 
+        day_of_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday',
+                       'saturday', 'sunday']
+        meals_placeholders = (
+            ('main_dish', _('Main Dish')),
+            ('dessert', _('Dessert')),
+            ('diabetic', _('Diabetic Dessert')),
+            ('fruit_salad', _('Fruit Salad')),
+            ('green_salad', _('Green Salad')),
+            ('pudding', _('Pudding')),
+            ('compote', _('Compote')),
+            )
+
+        for day in day_of_week:
+
+            self.fields['size_{}'.format(day)] = forms.ChoiceField(
+                choices=SIZE_CHOICES,
+                widget=forms.Select(attrs={'class': 'ui dropdown'}),
+                required=False
+                )
+
+            for meal, placeholder in meals_placeholders:
+                self.fields[
+                    '{}_{}_quantity'.format(meal, day)
+                ] = forms.IntegerField(
+                    widget=forms.TextInput(attrs={'placeholder': placeholder}),
+                    required=False
+                    )
     status = forms.BooleanField(
         label=_('Active'),
         help_text=_('By default, the client meal status is Pending.'),
@@ -100,15 +130,39 @@ class ClientRestrictionsInformation(forms.Form):
         required=False,
     )
 
-    meal_default = forms.IntegerField(label=_("Main dish"),
-                                      widget=forms.TextInput())
-
     restrictions = forms.ModelMultipleChoiceField(
         label=_("Restrictions"),
         queryset=Ingredient.objects.all(),
         required=False,
         widget=forms.SelectMultiple(
             attrs={'class': 'ui dropdown search'})
+    )
+
+    food_preparation = forms.ModelMultipleChoiceField(
+        label=_("Preparation"),
+        queryset=Ingredient.objects.all(),
+        required=False,
+        widget=forms.SelectMultiple(
+            attrs={'class': 'ui dropdown search'}
+        )
+    )
+
+    ingredient_to_avoid = forms.ModelMultipleChoiceField(
+        label=_("Ingredient To Avoid"),
+        queryset=Ingredient.objects.all(),
+        required=False,
+        widget=forms.SelectMultiple(
+            attrs={'class': 'ui dropdown search'}
+        )
+    )
+
+    dish_to_avoid = forms.ModelMultipleChoiceField(
+        label=_("Dish To Avoid"),
+        queryset=Component.objects.all(),
+        required=False,
+        widget=forms.SelectMultiple(
+            attrs={'class': 'ui dropdown search'}
+        )
     )
 
 

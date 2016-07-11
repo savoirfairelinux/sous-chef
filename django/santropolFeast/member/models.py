@@ -4,6 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django_filters import FilterSet, MethodFilter, CharFilter, ChoiceFilter
+from annoying.fields import JSONField
+
 import datetime
 import re
 
@@ -341,6 +343,10 @@ class Client(models.Model):
         verbose_name=_('route'),
         blank=True,
         null=True
+    )
+
+    meal_default_week = JSONField(
+        blank=True, null=True
     )
 
     def __str__(self):

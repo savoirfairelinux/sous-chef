@@ -137,7 +137,10 @@ class ClientTestCase(TestCase):
                                        address=address)
         client = Client.objects.create(
             member=member, billing_member=member,
-            birthdate=date(1980, 4, 19))
+            birthdate=date(1980, 4, 19),
+            meal_default_week={'monday_size': 'L',
+                               'monday_main_dish_quantity': 1
+                               })
 
         Order.objects.create(
             creation_date=date(2016, 5, 5),
@@ -177,6 +180,18 @@ class ClientTestCase(TestCase):
         angela = Client.objects.get(member=member)
         self.assertEqual(angela.orders.count(), 1)
         self.assertEqual(angela.orders.first().creation_date, date(2016, 5, 5))
+
+    def test_meal_default(self):
+        member = Member.objects.get(firstname='Angela')
+        angela = Client.objects.get(member=member)
+
+        # monday_size = 'L'
+        self.assertEqual(angela.meal_default_week['monday_size'], 'L')
+
+        # monday_main_dish_quantity = 1
+        self.assertEqual(
+            angela.meal_default_week['monday_main_dish_quantity'], 1
+            )
 
 
 class OptionTestCase(TestCase):

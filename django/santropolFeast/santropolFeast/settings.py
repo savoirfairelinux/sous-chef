@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'formtools',
     'django_filters',
     'aldjemy',
+    'annoying',
+
 ]
 
 MIDDLEWARE_CLASSES = [
