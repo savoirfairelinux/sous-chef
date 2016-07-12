@@ -40,6 +40,7 @@
               <a class="item" data-tab="third"><i class="treatment icon"></i>{% trans 'Referent' %}</a>
               <a class="item" data-tab="four"><i class="payment icon"></i>{% trans 'Billing' %}</a>
               <a class="item" data-tab="five"><i class="book icon"></i>{% trans 'Notes' %}</a>
+              <a class="item" data-tab="six"><i class="food icon"></i>{% trans 'Order' %}</a>
         </div>
 
         <div class="ui bottom attached tab segment active" data-tab="first">
@@ -169,6 +170,28 @@
             </div>
         </div>
 
+        <div class="ui bottom attached tab segment" data-tab="six">
+          <h3 class="ui header">
+              {% trans 'Order' %}
+          </h3>
+          <div class="ui feed">
+            {% for order in client.client_order.all %}
+            <a class="event"  href="/order/view/{{order.id}}/">
+              <div class="content">
+                <div class="date">
+                  {{order.delivery_date}}
+                </div>
+                <div class="summary">
+                  status: {{order.get_status_display}}
+                </div>
+                <div class="summary">
+                  price: {{order.price}} $
+                </div>
+              </div>
+            </a>
+            {% endfor %}
+        </div>
+      </div>
     </div>
 </div>
 
