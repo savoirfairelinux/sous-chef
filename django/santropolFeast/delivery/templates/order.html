@@ -54,7 +54,7 @@
               <td>{{item.client.member.firstname}}{{item.client.member.lastname}}</td>
               <td>{{item.price}}</td>
               <td>{{item.client.route}}</td>
-              <td><a class="ui button" href="">{% trans 'View Order' %}</a></td>
+              <td><a class="ui button" href="{% url 'order:view' id=item.id %}">{% trans 'View Order' %}</a></td>
             </tr>
             {% endfor %}
           </tbody>
