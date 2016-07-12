@@ -48,6 +48,9 @@ class ClientWizard(NamedUrlSessionWizardView):
                 'size_{}'.format(days)
                 )
 
+            if json['size_{}'.format(days)] is "":
+                json['size_{}'.format(days)] = None
+
             for meal in meals:
                 json['{}_{}_quantity'.format(meal, days)] \
                     = dictonary.cleaned_data.get(
@@ -461,6 +464,17 @@ class ClientAllergiesView(generic.DetailView):
         return context
 
 
+def parse_json(meals):
+    meal_default = []
+
+    for meal in meals:
+        if meals[meal] is not None:
+            meal_default.append(meal + ": " + str(meals[meal]))
+
+    return meal_default
+
+
+
 class ClientDetail(generic.DetailView):
     # Display detail of one client
     model = Client
@@ -473,7 +487,12 @@ class ClientDetail(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(ClientDetail, self).get_context_data(**kwargs)
         context['notes'] = list(Note.objects.all())
+        if self.object.meal_default_week:
+            context['meal_default'] = parse_json(self.object.meal_default_week)
+        else:
+            context['meal_default'] = []
         return context
+
 
 
 class ClientPreferencesView(generic.DetailView):

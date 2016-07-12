@@ -110,6 +110,18 @@
                 </div>
                 {% endfor %}
             </div>
+            <h3 class="ui header">
+              {% trans "Meal Default" %}
+              <a href="{% url 'admin:member_client_change' client.id %}">
+                <i class="write grey icon"></i>
+              </a>
+            </h3>
+            {% for default in meal_default %}
+
+            <div>
+              {{default}}
+            </div>
+            {% endfor %}
         </div>
 
         {% if client.client_referent.exists %}
@@ -194,7 +206,6 @@
             {% endfor %}
         </div>
       </div>
-    </div>
 </div>
 
 <script type="text/javascript">
