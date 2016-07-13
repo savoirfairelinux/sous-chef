@@ -217,14 +217,13 @@ class ClientPaymentInformation(MemberForm):
         required=False
     )
 
-    floor = forms.IntegerField(label=_("Floor"))
-    floor.required = False
+    floor = forms.IntegerField(label=_("Floor"), required=False)
 
-    street = forms.CharField(label=_("Street Name"))
+    street = forms.CharField(label=_("Street Name"), required=False)
 
-    city = forms.CharField(label=_("City Name"))
+    city = forms.CharField(label=_("City Name"), required=False)
 
-    postal_code = forms.CharField(label=_("Postal Code"))
+    postal_code = forms.CharField(label=_("Postal Code"), required=False)
 
     def clean(self):
         cleaned_data = super(ClientPaymentInformation, self).clean()
@@ -237,6 +236,15 @@ class ClientPaymentInformation(MemberForm):
                         'please add a valid address to this member, so it can '
                         'be used for the billing.')
                 self.add_error('member', msg)
+        else:
+            msg = _("This field is required")
+            fields = ['street', 'city', 'postal_code']
+            for field in fields:
+                field_data = cleaned_data.get(field)
+                if not field_data:
+                    self.add_error(field, msg)
+
+
         return cleaned_data
 
 
