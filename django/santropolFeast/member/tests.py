@@ -637,21 +637,21 @@ class FormTestCase(TestCase):
         }
 
         # Send the data to the form.
-        basic_information_error_response = self.client.post(
-            reverse_lazy('member:member_step', kwargs={'step': "basic_information"}),
+        error_response = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "basic_information"}
+            ),
             basic_information_data_with_error,
             follow=True
         )
 
-        # Validate that the response is the same form with the errors messages.
-        self.assertTrue(
-            b'Please review the form to make sure that all required fields are filled.'
-            in basic_information_error_response.content
-        )
-        self.assertTrue(b'lastname' in basic_information_error_response.content)
-        self.assertTrue(b'birthdate' in basic_information_error_response.content)
-        self.assertTrue(b'contact_value' in basic_information_error_response.content)
-        self.assertTrue(b'This field is required' in basic_information_error_response.content)
+        # The response is the same form with the errors messages.
+        self.assertTrue(b'Required information' in error_response.content)
+        self.assertTrue(b'lastname' in error_response.content)
+        self.assertTrue(b'birthdate' in error_response.content)
+        self.assertTrue(b'contact_value' in error_response.content)
+        self.assertTrue(b'This field is required' in error_response.content)
 
     def _test_basic_information_without_errors(self):
         # Data for the basic_information step without errors.
@@ -669,22 +669,22 @@ class FormTestCase(TestCase):
         }
 
         # Send the data to the form.
-        basic_information_response = self.client.post(
-            reverse_lazy('member:member_step', kwargs={'step': "basic_information"}),
+        response = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "basic_information"}
+            ),
             basic_information_data,
             follow=True
         )
 
-        # Validate that the response is the next step of the form with no errors messages.
-        self.assertTrue(
-            b'Please review the form to make sure that all required fields are filled.'
-            not in basic_information_response.content
-        )
-        self.assertTrue(b'gender' not in basic_information_response.content)
-        self.assertTrue(b'contact_value' not in basic_information_response.content)
-        self.assertTrue(b'This field is required' not in basic_information_response.content)
+        # The response is the next step of the form with no errors messages.
+        self.assertTrue(b'Required information' not in response.content)
+        self.assertTrue(b'gender' not in response.content)
+        self.assertTrue(b'contact_value' not in response.content)
+        self.assertTrue(b'This field is required' not in response.content)
         # HTML from the next step
-        self.assertTrue(b'street' in basic_information_response.content)
+        self.assertTrue(b'street' in response.content)
 
     def _test_address_information_with_errors(self):
         # Data for the address_information step with errors.
@@ -698,21 +698,21 @@ class FormTestCase(TestCase):
         }
 
         # Send the data to the form.
-        address_information_response_error = self.client.post(
-            reverse_lazy('member:member_step', kwargs={'step': "address_information"}),
+        response_error = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "address_information"}
+            ),
             address_information_data_with_error,
             follow=True
         )
 
-        # Validate that the response is the same form with the errors messages.
-        self.assertTrue(
-            b'Please review the form to make sure that all required fields are filled.'
-            in address_information_response_error.content
-        )
-        self.assertTrue(b'street' in address_information_response_error.content)
-        self.assertTrue(b'apartment' in address_information_response_error.content)
-        self.assertTrue(b'city' in address_information_response_error.content)
-        self.assertTrue(b'This field is required' in address_information_response_error.content)
+        # The response is the same form with the errors messages.
+        self.assertTrue(b'Required information' in response_error.content)
+        self.assertTrue(b'street' in response_error.content)
+        self.assertTrue(b'apartment' in response_error.content)
+        self.assertTrue(b'city' in response_error.content)
+        self.assertTrue(b'This field is required' in response_error.content)
 
     def _test_address_information_without_errors(self):
         # Data for the address_information step without errors.
@@ -726,28 +726,27 @@ class FormTestCase(TestCase):
         }
 
         # Send the data to the form.
-        address_information_response = self.client.post(
-            reverse_lazy('member:member_step', kwargs={'step': "address_information"}),
+        response = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "address_information"}),
             address_information_data,
             follow=True
         )
 
-        # Validate that the response is the next step of the form with no errors messages.
-        self.assertTrue(
-            b'Please review the form to make sure that all required fields are filled.'
-            not in address_information_response.content
-        )
-        self.assertTrue(b'street' not in address_information_response.content)
-        self.assertTrue(b'apartment' not in address_information_response.content)
-        self.assertTrue(b'This field is required' not in address_information_response.content)
+        # The response is the next step of the form with no errors messages.
+        self.assertTrue(b'Required information' not in response.content)
+        self.assertTrue(b'street' not in response.content)
+        self.assertTrue(b'apartment' not in response.content)
+        self.assertTrue(b'This field is required' not in response.content)
         # HTML from the next step
-        self.assertTrue(b'work_information' in address_information_response.content)
+        self.assertTrue(b'work_information' in response.content)
 
     def _test_referent_information_with_errors(self):
         # Data for the address_information step with errors.
         referent_information_data_with_error = {
             "client_wizard-current_step": "referent_information",
-            "id_referent_information-member" : "",
+            "referent_information-member": "",
             "referent_information-firstname": "",
             "referent_information-lastname": "",
             "referent_information-work_information": "",
@@ -757,20 +756,20 @@ class FormTestCase(TestCase):
         }
 
         # Send the data to the form.
-        referent_information_response_error = self.client.post(
-            reverse_lazy('member:member_step', kwargs={'step': "referent_information"}),
+        response_error = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "referent_information"}
+            ),
             referent_information_data_with_error,
             follow=True
         )
 
         # Validate that the response is the same form with the errors messages.
-        self.assertTrue(
-            b'Please review the form to make sure that all required fields are filled.'
-            in referent_information_response_error.content
-        )
-        self.assertTrue(b'member' in referent_information_response_error.content)
-        self.assertTrue(b'work_information' in referent_information_response_error.content)
-        self.assertTrue(b'This field is required' in referent_information_response_error.content)
+        self.assertTrue(b'Required information' in response_error.content)
+        self.assertTrue(b'member' in response_error.content)
+        self.assertTrue(b'work_information' in response_error.content)
+        self.assertTrue(b'This field is required' in response_error.content)
 
     def _test_referent_information_without_errors(self):
         referent_information_data = {
@@ -785,21 +784,21 @@ class FormTestCase(TestCase):
         }
 
         # Send the data to the form.
-        referent_information_response = self.client.post(
-            reverse_lazy('member:member_step', kwargs={'step': "referent_information"}),
+        response = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "referent_information"}
+            ),
             referent_information_data,
             follow=True
         )
 
-        # Validate that the response is the next step of the form with no errors messages.
-        self.assertTrue(
-            b'Please review the form to make sure that all required fields are filled.'
-            not in referent_information_response.content
-        )
-        self.assertTrue(b'work_information' not in referent_information_response.content)
-        self.assertTrue(b'This field is required' not in referent_information_response.content)
+        # The response is the next step of the form with no errors messages.
+        self.assertTrue(b'Required information' not in response.content)
+        self.assertTrue(b'work_information' not in response.content)
+        self.assertTrue(b'This field is required' not in response.content)
         # HTML from the next step
-        self.assertTrue(b'billing_payment_type' in referent_information_response.content)
+        self.assertTrue(b'billing_payment_type' in response.content)
 
     def _test_payment_information_with_errors(self):
         # Data for the address_information step with errors.
@@ -818,22 +817,22 @@ class FormTestCase(TestCase):
         }
 
         # Send the data to the form.
-        payment_information_response_error = self.client.post(
-            reverse_lazy('member:member_step', kwargs={'step': "payment_information"}),
+        response_error = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "payment_information"}
+            ),
             payment_information_data_with_error,
             follow=True
         )
 
         # Validate that the response is the same form with the errors messages.
-        self.assertTrue(
-            b'Please review the form to make sure that all required fields are filled.'
-            in payment_information_response_error.content
-        )
-        self.assertTrue(b'billing_payment_type' in payment_information_response_error.content)
-        self.assertTrue(b'facturation' in payment_information_response_error.content)
+        self.assertTrue(b'Required information' in response_error.content)
+        self.assertTrue(b'billing_payment_type' in response_error.content)
+        self.assertTrue(b'facturation' in response_error.content)
         self.assertTrue(
             b'member has not a valid address'
-            in payment_information_response_error.content
+            in response_error.content
         )
 
     def _test_payment_information_without_errors(self):
@@ -853,25 +852,24 @@ class FormTestCase(TestCase):
         }
 
         # Send the data to the form.
-        payment_information_response = self.client.post(
-            reverse_lazy('member:member_step', kwargs={'step': "payment_information"}),
+        response = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "payment_information"}
+            ),
             payment_information_data,
             follow=True
         )
 
-        # Validate that the response is the next step of the form with no errors messages.
+        # The response is the next step of the form with no errors messages.
+        self.assertTrue(b'Required information' not in response.content)
+        self.assertTrue(b'billing_payment_type' not in response.content)
+        self.assertTrue(b'facturation' not in response.content)
         self.assertTrue(
-            b'Please review the form to make sure that all required fields are filled.'
-            not in payment_information_response.content
-        )
-        self.assertTrue(b'billing_payment_type' not in payment_information_response.content)
-        self.assertTrue(b'facturation' not in payment_information_response.content)
-        self.assertTrue(
-            b'member has not a valid address'
-            not in payment_information_response.content
+            b'member has not a valid address' not in response.content
         )
         # HTML from the next step
-        self.assertTrue(b'status' in payment_information_response.content)
+        self.assertTrue(b'status' in response.content)
 
     def _test_step_dietary_restriction_with_errors(self):
         # Data for the address_information step with errors.
@@ -885,20 +883,20 @@ class FormTestCase(TestCase):
         }
 
         # Send the data to the form.
-        dietary_restriction_response_error = self.client.post(
-            reverse_lazy('member:member_step', kwargs={'step': "dietary_restriction"}),
+        response_error = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "dietary_restriction"}
+            ),
             restriction_information_data_with_error,
             follow=True
         )
 
         # Validate that the response is the same form with the errors messages.
-        self.assertTrue(
-            b'Please review the form to make sure that all required fields are filled.'
-            in dietary_restriction_response_error.content
-        )
-        self.assertTrue(b'status' in dietary_restriction_response_error.content)
-        self.assertTrue(b'delivery_type' in dietary_restriction_response_error.content)
-        self.assertTrue(b'delivery_schedule' in dietary_restriction_response_error.content)
+        self.assertTrue(b'Required information' in response_error.content)
+        self.assertTrue(b'status' in response_error.content)
+        self.assertTrue(b'delivery_type' in response_error.content)
+        self.assertTrue(b'delivery_schedule' in response_error.content)
 
     def _test_step_dietary_restriction_without_errors(self):
         # Data for the address_information step without errors.
@@ -912,22 +910,22 @@ class FormTestCase(TestCase):
         }
 
         # Send the data to the form.
-        dietary_restriction_data = self.client.post(
-            reverse_lazy('member:member_step', kwargs={'step': "dietary_restriction"}),
+        response = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "dietary_restriction"}
+            ),
             restriction_information_data,
             follow=True
         )
 
-        # Validate that the response is the next step of the form with no errors messages.
-        self.assertTrue(
-            b'Please review the form to make sure that all required fields are filled.'
-            not in dietary_restriction_data.content
-        )
-        self.assertTrue(b'status' not in dietary_restriction_data.content)
-        self.assertTrue(b'delivery_type' not in dietary_restriction_data.content)
-        self.assertTrue(b'delivery_schedule' not in dietary_restriction_data.content)
+        # The response is the next step of the form with no errors messages.
+        self.assertTrue(b'Required information' not in response.content)
+        self.assertTrue(b'status' not in response.content)
+        self.assertTrue(b'delivery_type' not in response.content)
+        self.assertTrue(b'delivery_schedule' not in response.content)
         # HTML from the next step
-        self.assertTrue(b'contact_type' in dietary_restriction_data.content)
+        self.assertTrue(b'contact_type' in response.content)
 
     def _test_step_emergency_contact_with_errors(self):
         # Data for the address_information step with errors.
@@ -940,19 +938,19 @@ class FormTestCase(TestCase):
         }
 
         # Send the data to the form.
-        emergency_contact_response_error = self.client.post(
-            reverse_lazy('member:member_step', kwargs={'step': "emergency_contact"}),
+        response_error = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "emergency_contact"}
+            ),
             emergency_contact_data_with_error,
             follow=True
         )
 
-        # Validate that the response is the next step of the form with no errors messages.
-        self.assertTrue(
-            b'Please review the form to make sure that all required fields are filled.'
-            in emergency_contact_response_error.content
-        )
-        self.assertTrue(b'contact_type' in emergency_contact_response_error.content)
-        self.assertTrue(b'contact_value' in emergency_contact_response_error.content)
+        # The response is the next step of the form with no errors messages.
+        self.assertTrue(b'Required information' in response_error.content)
+        self.assertTrue(b'contact_type' in response_error.content)
+        self.assertTrue(b'contact_value' in response_error.content)
 
     def _test_step_emergency_contact_without_errors(self):
         # Data for the address_information step without errors.
@@ -965,21 +963,20 @@ class FormTestCase(TestCase):
         }
 
         # Send the data to the form.
-        emergency_contact_response = self.client.post(
-            reverse_lazy('member:member_step', kwargs={'step': "emergency_contact"}),
+        response = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "emergency_contact"}
+            ),
             emergency_contact_data,
             follow=True
         )
 
-        # Validate that the response is the next step of the form with no errors messages.
-        self.assertTrue(
-            b'Please review the form to make sure that all required fields are filled.'
-            not in emergency_contact_response.content
-        )
-        self.assertTrue(b'status' not in emergency_contact_response.content)
-        self.assertTrue(b'delivery_type' not in emergency_contact_response.content)
-        self.assertTrue(b'delivery_schedule' not in emergency_contact_response.content)
-
+        # The response is the next step of the form with no errors messages.
+        self.assertTrue(b'Required information' not in response.content)
+        self.assertTrue(b'status' not in response.content)
+        self.assertTrue(b'delivery_type' not in response.content)
+        self.assertTrue(b'delivery_schedule' not in response.content)
 
     def tear_down(self):
         self.client.logout()

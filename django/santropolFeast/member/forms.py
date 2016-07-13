@@ -243,8 +243,6 @@ class ClientPaymentInformation(MemberForm):
                 field_data = cleaned_data.get(field)
                 if not field_data:
                     self.add_error(field, msg)
-
-
         return cleaned_data
 
 
