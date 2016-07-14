@@ -90,3 +90,6 @@ ENV/
 
 # IDE project settings
 .idea
+
+# Ignore all emacs backup files
+*~

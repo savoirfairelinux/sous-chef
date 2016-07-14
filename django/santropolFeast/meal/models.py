@@ -2,11 +2,16 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 COMPONENT_GROUP_CHOICES = (
-    ('main dish', _('main dish')),
-    ('vegetable', _('Vegetable')),
-    ('side dish', _('side dish')),
-    ('seasonal', _('Seasonal')),
+    ('main dish', _('Main dish')),
+    ('dessert', _('Dessert')),
+    ('diabetic dessert', _('Diabetic dessert')),
+    ('fruit salad', _('Fruit salad')),
+    ('green salad', _('Green salad')),
+    ('pudding', _('Pudding')),
+    ('compote', _('Compote')),
 )
+
+COMPONENT_GROUP_CHOICES_MAIN_DISH = COMPONENT_GROUP_CHOICES[0][0]
 
 INGREDIENT_GROUP_CHOICES = (
     ('meat', _('Meat')),
@@ -33,7 +38,7 @@ RESTRICTED_ITEM_GROUP_CHOICES = (
 
 class Ingredient(models.Model):
     class Meta:
-        verbose_name_plural = _('meals')
+        verbose_name_plural = _('ingredients')
 
     # Information about the ingredient (in the recipe of a component)
     name = models.CharField(
@@ -168,5 +173,5 @@ class Menu_component(models.Model):
         related_name='+')
 
     def __str__(self):
-        return "On {} <, menu includes> {}".format(str(self.menu.date),
-                                                   self.component.name)
+        return "On {} <menu includes> {}".format(str(self.menu.date),
+                                                 self.component.name)

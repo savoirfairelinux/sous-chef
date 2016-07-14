@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django_filters import FilterSet, MethodFilter, CharFilter, ChoiceFilter
 from annoying.fields import JSONField
+from meal.models import COMPONENT_GROUP_CHOICES_MAIN_DISH
 
 import datetime
 import re
@@ -34,6 +35,9 @@ RATE_TYPE = (
     ('low income', _('Low income')),
     ('solidary', _('Solidary')),
 )
+
+RATE_TYPE_LOW_INCOME = RATE_TYPE[1][0]
+RATE_TYPE_SOLIDARY = RATE_TYPE[2][0]
 
 PAYMENT_TYPE = (
     ('check', _('Check')),
@@ -382,6 +386,86 @@ class Client(models.Model):
         """
 
         return self.client_order.all()
+
+    def get_meal_defaults(client, component_group, day):
+        """Get the meal defaults quantity and size for a day.
+
+        # TODO fix keys in wizard code to use Component_group constants
+
+        Static method called only on class object.
+
+        Parameters:
+          client : client object
+          component_group : as in meal.models.COMPONENT_GROUP_CHOICES
+          day : day of week where 0 is monday, 6 is sunday
+
+        Returns:
+          (quantity, size)
+
+        Prerequisite:
+          client.meal_default_week is a dictionary like
+            {
+              "compote_friday_quantity": null,
+              ...
+              "compote_wednesday_quantity": null,
+              "dessert_friday_quantity": 2,
+              ...
+              "dessert_wednesday_quantity": null,
+              "diabetic_friday_quantity": null,
+              ...
+              "fruit_salad_friday_quantity": null,
+              "green_salad_friday_quantity": 2,
+              "main_dish_friday_quantity": 2,
+              "main_dish_wednesday_quantity": 1,
+              "pudding_friday_quantity": null,
+              "pudding_wednesday_quantity": null,
+              "size_friday": "R",
+              ...
+              "size_saturday": "",
+            }
+        """
+
+        # TODO use the same constant everywhere for weekday names
+        days = ('monday', 'tuesday', 'wednesday', 'thursday', 'friday',
+                'saturday', 'sunday')
+        meals_default = client.meal_default_week
+        if meals_default:
+            quantity = meals_default.get(
+                component_group+'_'+days[day]+'_quantity') or 0
+            size = meals_default.get('size_'+days[day]) or ''
+        else:
+            quantity = 0
+            size = ''
+        # DEBUG
+        # print("client, compgroup, day, qty",
+        #       client, component_group, days[day], quantity)
+        return (quantity, size)
+
+    def set_meal_defaults(self, component_group, day, quantity=0, size=''):
+        """Set the meal defaults quantity and size for a day.
+
+        Static method called only on class object.
+
+        Parameters:
+          component_group : as in meal.models.COMPONENT_GROUP_CHOICES
+          day : day of week where 0 is monday, 6 is sunday
+          quantity : number of servings of this component_group
+          size : size of the serving of this component_group
+        """
+
+        # TODO use the same constant everywhere for weekday names
+        days = ('monday', 'tuesday', 'wednesday', 'thursday', 'friday',
+                'saturday', 'sunday')
+        if not self.meal_default_week:
+            self.meal_default_week = {}
+        self.meal_default_week[
+            component_group+'_'+days[day]+'_quantity'] = quantity
+        if component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH:
+            self.meal_default_week['size_'+days[day]] = size
+        # DEBUG
+        # print("SET client, compgroup, day, qty, size, dict",
+        #       self, component_group, days[day], quantity, size,
+        #       self.meal_default_week)
 
 
 class ClientFilter(FilterSet):
