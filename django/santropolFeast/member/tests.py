@@ -349,6 +349,19 @@ class FormTestCase(TestCase):
             email='admin@example.com',
             password='test1234'
         )
+        address = Address.objects.create(
+            number=123, street='De Bullion',
+            city='Montreal', postal_code='H3C4G5'
+        )
+        Member.objects.create(
+            firstname='First',
+            lastname='Member',
+            address=address
+        )
+        Member.objects.create(
+            firstname='Second',
+            lastname='Member'
+        )
 
     def test_acces_to_form(self):
         """Test if the form is accesible from its url"""
@@ -437,7 +450,7 @@ class FormTestCase(TestCase):
     def test_form_save_data(self):
 
         basic_information_data = {
-            "client_wizard-current_step": "basic_info",
+            "client_wizard-current_step": "basic_information",
             "basic_information-firstname": "User",
             "basic_information-lastname": "Testing",
             "basic_information-language": "fr",
@@ -517,8 +530,8 @@ class FormTestCase(TestCase):
         member = Member.objects.get(firstname="User")
 
         # test_member_name:
-        self.assertTrue(member.firstname, "User")
-        self.assertTrue(member.lastname, "Testing")
+        self.assertEqual(member.firstname, "User")
+        self.assertEqual(member.lastname, "Testing")
 
         # test_home_phone_member:
         self.assertTrue(member.get_home_phone().value.startswith('555'))
@@ -526,78 +539,493 @@ class FormTestCase(TestCase):
         client = Client.objects.get(member=member)
 
         # test_client_alert:
-        self.assertTrue(client.alert, "Testing alert message")
+        self.assertEqual(client.alert, "Testing alert message")
 
         # test_client_languages:
-        self.assertTrue(client.language, "fr")
+        self.assertEqual(client.language, "fr")
 
         # test_client_birthdate:
-        self.assertTrue(client.birthdate, "1990-12-12")
+        self.assertEqual(client.birthdate, date(1990, 12, 12))
 
         # test_client_gender:
-        self.assertTrue(client.gender, "M")
+        self.assertEqual(client.gender, "M")
 
         # test_client_contact_type:
-        self.assertTrue(member.member_contact, "Home phone")
+        self.assertEqual(member.member_contact.first().type, "Home phone")
 
         # test_client_address:
-        self.assertTrue(member.address.street, "555 rue clark")
-        self.assertTrue(member.address.postal_code, "H3C2C2")
-        self.assertTrue(member.address.apartment, "222")
-        self.assertTrue(member.address.city, "montreal")
+        self.assertEqual(member.address.street, "555 rue clark")
+        self.assertEqual(member.address.postal_code, "H3C2C2")
+        self.assertEqual(member.address.apartment, "222")
+        self.assertEqual(member.address.city, "montreal")
 
         # test client delivery type
         self.assertEqual(client.delivery_type, 'O')
 
         # test_referent_name:
-        self.assertTrue(
+        self.assertEqual(
             client.client_referent.first().referent.firstname,
             "Referent"
         )
-        self.assertTrue(
+        self.assertEqual(
             client.client_referent.first().referent.lastname,
             "Testing"
         )
 
         # test_referent_work_information:
-        self.assertTrue(
+        self.assertEqual(
             client.client_referent.first().work_information,
             "CLSC"
         )
 
         # test_referral_date(self):
-        self.assertTrue(client.client_referent.first().date, "2012-12-12")
+        self.assertEqual(
+            client.client_referent.first().date,
+            date(2012, 12, 12)
+        )
 
         # test_referral_reason:
-        self.assertTrue(
+        self.assertEqual(
             client.client_referent.first().referral_reason,
             "Testing referral reason"
         )
 
         # test_billing_name:
-        self.assertTrue(client.billing_member.firstname, "Testing")
-        self.assertTrue(client.billing_member.lastname, "Billing")
+        self.assertEqual(client.billing_member.firstname, "Billing")
+        self.assertEqual(client.billing_member.lastname, "Testing")
 
         #  test_billing_type:
-        self.assertTrue(client.billing_payment_type, "check")
+        self.assertEqual(client.billing_payment_type, "check")
 
         #  test_billing_address:
-        self.assertTrue(client.billing_member.address.city, "Montreal")
-        self.assertTrue(client.billing_member.address.street, "111 rue clark")
-        self.assertTrue(client.billing_member.address.postal_code, "H2C3G4")
+        self.assertEqual(client.billing_member.address.city, "Montreal")
+        self.assertEqual(client.billing_member.address.street, "111 rue clark")
+        self.assertEqual(client.billing_member.address.postal_code, "H2C3G4")
 
         #  test_billing_rate_type:
-        self.assertTrue(client.rate_type, 'default')
+        self.assertEqual(client.rate_type, 'default')
 
         #  test_emergency_contact_name:
-        self.assertTrue(client.emergency_contact.firstname, "Emergency")
-        self.assertTrue(client.emergency_contact.lastname, "User")
+        self.assertEqual(client.emergency_contact.firstname, "Emergency")
+        self.assertEqual(client.emergency_contact.lastname, "User")
+
+        #  test_emergency_contact_type:
+        self.assertEqual(
+            client.emergency_contact.member_contact.first().type,
+            "Home phone"
+        )
 
         #  test_emergency_contact_value:
-        self.assertTrue(
-            client.emergency_contact.get_home_phone,
+        self.assertEqual(
+            client.emergency_contact.member_contact.first().value,
             "555-444-5555"
         )
 
+    def test_form_validate_data(self):
+        """Test all the step of the form with and without wrong data"""
+        self._test_basic_information_with_errors()
+        self._test_basic_information_without_errors()
+        self._test_address_information_with_errors()
+        self._test_address_information_without_errors()
+        self._test_referent_information_with_errors()
+        self._test_referent_information_without_errors()
+        self._test_payment_information_with_errors()
+        self._test_payment_information_without_errors()
+        self._test_step_dietary_restriction_with_errors()
+        self._test_step_dietary_restriction_without_errors()
+        self._test_step_emergency_contact_with_errors()
+        self._test_step_emergency_contact_without_errors()
+
+    def _test_basic_information_with_errors(self):
+        # Data for the basic_information step with errors.
+        basic_information_data_with_error = {
+            "client_wizard-current_step": "basic_information",
+            "basic_information-firstname": "User",
+            "basic_information-lastname": "",
+            "basic_information-language": "fr",
+            "basic_information-gender": "M",
+            "basic_information-birthdate": "",
+            "basic_information-contact_type": "Home phone",
+            "basic_information-contact_value": "",
+            "basic_information-alert": "",
+            "wizard_goto_step": ""
+        }
+
+        # Send the data to the form.
+        error_response = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "basic_information"}
+            ),
+            basic_information_data_with_error,
+            follow=True
+        )
+
+        # The response is the same form with the errors messages.
+        self.assertTrue(b'Required information' in error_response.content)
+        self.assertTrue(b'lastname' in error_response.content)
+        self.assertTrue(b'birthdate' in error_response.content)
+        self.assertTrue(b'contact_value' in error_response.content)
+        self.assertTrue(b'This field is required' in error_response.content)
+
+    def _test_basic_information_without_errors(self):
+        # Data for the basic_information step without errors.
+        basic_information_data = {
+            "client_wizard-current_step": "basic_info",
+            "basic_information-firstname": "User",
+            "basic_information-lastname": "Testing",
+            "basic_information-language": "fr",
+            "basic_information-gender": "M",
+            "basic_information-birthdate": "1990-12-12",
+            "basic_information-contact_type": "Home phone",
+            "basic_information-contact_value": "555-555-5555",
+            "basic_information-alert": "Testing alert message",
+            "wizard_goto_step": ""
+        }
+
+        # Send the data to the form.
+        response = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "basic_information"}
+            ),
+            basic_information_data,
+            follow=True
+        )
+
+        # The response is the next step of the form with no errors messages.
+        self.assertTrue(b'Required information' not in response.content)
+        self.assertTrue(b'gender' not in response.content)
+        self.assertTrue(b'contact_value' not in response.content)
+        self.assertTrue(b'This field is required' not in response.content)
+        # HTML from the next step
+        self.assertTrue(b'street' in response.content)
+
+    def _test_address_information_with_errors(self):
+        # Data for the address_information step with errors.
+        address_information_data_with_error = {
+            "client_wizard-current_step": "address_information",
+            "address_information-street": "",
+            "address_information-apartment": "",
+            "address_information-city": "",
+            "address_information-postal_code": "",
+            "wizard_goto_step": "",
+        }
+
+        # Send the data to the form.
+        response_error = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "address_information"}
+            ),
+            address_information_data_with_error,
+            follow=True
+        )
+
+        # The response is the same form with the errors messages.
+        self.assertTrue(b'Required information' in response_error.content)
+        self.assertTrue(b'street' in response_error.content)
+        self.assertTrue(b'apartment' in response_error.content)
+        self.assertTrue(b'city' in response_error.content)
+        self.assertTrue(b'This field is required' in response_error.content)
+
+    def _test_address_information_without_errors(self):
+        # Data for the address_information step without errors.
+        address_information_data = {
+            "client_wizard-current_step": "address_information",
+            "address_information-street": "555 rue clark",
+            "address_information-apartment": "222",
+            "address_information-city": "montreal",
+            "address_information-postal_code": "H3C2C2",
+            "wizard_goto_step": "",
+        }
+
+        # Send the data to the form.
+        response = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "address_information"}),
+            address_information_data,
+            follow=True
+        )
+
+        # The response is the next step of the form with no errors messages.
+        self.assertTrue(b'Required information' not in response.content)
+        self.assertTrue(b'street' not in response.content)
+        self.assertTrue(b'apartment' not in response.content)
+        self.assertTrue(b'This field is required' not in response.content)
+        # HTML from the next step
+        self.assertTrue(b'work_information' in response.content)
+
+    def _test_referent_information_with_errors(self):
+        # Data for the address_information step with errors.
+        referent_information_data_with_error = {
+            "client_wizard-current_step": "referent_information",
+            "referent_information-member": "",
+            "referent_information-firstname": "",
+            "referent_information-lastname": "",
+            "referent_information-work_information": "",
+            "referent_information-date": "",
+            "referent_information-referral_reason": "",
+            "wizard_goto_step": "",
+        }
+
+        # Send the data to the form.
+        response_error = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "referent_information"}
+            ),
+            referent_information_data_with_error,
+            follow=True
+        )
+
+        # Validate that the response is the same form with the errors messages.
+        self.assertTrue(b'Required information' in response_error.content)
+        self.assertTrue(b'member' in response_error.content)
+        self.assertTrue(b'work_information' in response_error.content)
+        self.assertTrue(b'This field is required' in response_error.content)
+
+    def _test_referent_information_without_errors(self):
+        referent_information_data = {
+            "client_wizard-current_step": "referent_information",
+            "referent_information-member": "[1] First Member",
+            "referent_information-firstname": "",
+            "referent_information-lastname": "",
+            "referent_information-work_information": "CLSC",
+            "referent_information-date": "2012-12-12",
+            "referent_information-referral_reason": "Testing referral reason",
+            "wizard_goto_step": "",
+        }
+
+        # Send the data to the form.
+        response = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "referent_information"}
+            ),
+            referent_information_data,
+            follow=True
+        )
+
+        # The response is the next step of the form with no errors messages.
+        self.assertTrue(b'Required information' not in response.content)
+        self.assertTrue(b'work_information' not in response.content)
+        self.assertTrue(b'This field is required' not in response.content)
+        # HTML from the next step
+        self.assertTrue(b'billing_payment_type' in response.content)
+
+    def _test_payment_information_with_errors(self):
+        # Data for the address_information step with errors.
+        payment_information_data_with_error = {
+            "client_wizard-current_step": "payment_information",
+            "payment_information-member": "[2] Second Member",
+            "payment_information-firstname": "",
+            "payment_information-lastname": "",
+            "payment_information-billing_payment_type": "check",
+            "payment_information-facturation": "default",
+            "payment_information-street": "",
+            "payment_information-apartement": "",
+            "payment_information-city": "",
+            "payment_information-postal_code": "",
+            "wizard_goto_step": "",
+        }
+
+        # Send the data to the form.
+        response_error = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "payment_information"}
+            ),
+            payment_information_data_with_error,
+            follow=True
+        )
+
+        # Validate that the response is the same form with the errors messages.
+        self.assertTrue(b'Required information' in response_error.content)
+        self.assertTrue(b'billing_payment_type' in response_error.content)
+        self.assertTrue(b'facturation' in response_error.content)
+        self.assertTrue(
+            b'member has not a valid address'
+            in response_error.content
+        )
+
+    def _test_payment_information_without_errors(self):
+        # Data for the address_information step without errors.
+        payment_information_data = {
+            "client_wizard-current_step": "payment_information",
+            "payment_information-member": "[1] First Member",
+            "payment_information-firstname": "",
+            "payment_information-lastname": "",
+            "payment_information-billing_payment_type": "check",
+            "payment_information-facturation": "default",
+            "payment_information-street": "",
+            "payment_information-apartement": "",
+            "payment_information-city": "",
+            "payment_information-postal_code": "",
+            "wizard_goto_step": "",
+        }
+
+        # Send the data to the form.
+        response = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "payment_information"}
+            ),
+            payment_information_data,
+            follow=True
+        )
+
+        # The response is the next step of the form with no errors messages.
+        self.assertTrue(b'Required information' not in response.content)
+        self.assertTrue(b'billing_payment_type' not in response.content)
+        self.assertTrue(b'facturation' not in response.content)
+        self.assertTrue(
+            b'member has not a valid address' not in response.content
+        )
+        # HTML from the next step
+        self.assertTrue(b'status' in response.content)
+
+    def _test_step_dietary_restriction_with_errors(self):
+        # Data for the address_information step with errors.
+        restriction_information_data_with_error = {
+            "client_wizard-current_step": "dietary_restriction",
+            "dietary_restriction-status": "",
+            "dietary_restriction-delivery_type": "",
+            "dietary_restriction-delivery_schedule": "",
+            "dietary_restriction-meal_default": "",
+            "wizard_goto_step": ""
+        }
+
+        # Send the data to the form.
+        response_error = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "dietary_restriction"}
+            ),
+            restriction_information_data_with_error,
+            follow=True
+        )
+
+        # Validate that the response is the same form with the errors messages.
+        self.assertTrue(b'Required information' in response_error.content)
+        self.assertTrue(b'status' in response_error.content)
+        self.assertTrue(b'delivery_type' in response_error.content)
+        self.assertTrue(b'delivery_schedule' in response_error.content)
+
+    def _test_step_dietary_restriction_without_errors(self):
+        # Data for the address_information step without errors.
+        restriction_information_data = {
+            "client_wizard-current_step": "dietary_restriction",
+            "dietary_restriction-status": "on",
+            "dietary_restriction-delivery_type": "O",
+            "dietary_restriction-delivery_schedule": "mon",
+            "dietary_restriction-meal_default": "1",
+            "wizard_goto_step": ""
+        }
+
+        # Send the data to the form.
+        response = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "dietary_restriction"}
+            ),
+            restriction_information_data,
+            follow=True
+        )
+
+        # The response is the next step of the form with no errors messages.
+        self.assertTrue(b'Required information' not in response.content)
+        self.assertTrue(b'status' not in response.content)
+        self.assertTrue(b'delivery_type' not in response.content)
+        self.assertTrue(b'delivery_schedule' not in response.content)
+        # HTML from the next step
+        self.assertTrue(b'contact_type' in response.content)
+
+    def _test_step_emergency_contact_with_errors(self):
+        # Data for the address_information step with errors.
+        emergency_contact_data_with_error = {
+            "client_wizard-current_step": "emergency_contact",
+            "emergency_contact-firstname": "",
+            "emergency_contact-lastname": "",
+            "emergency_contact-contact_type": "Home phone",
+            "emergency_contact-contact_value": ""
+        }
+
+        # Send the data to the form.
+        response_error = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "emergency_contact"}
+            ),
+            emergency_contact_data_with_error,
+            follow=True
+        )
+
+        # The response is the next step of the form with no errors messages.
+        self.assertTrue(b'Required information' in response_error.content)
+        self.assertTrue(b'contact_type' in response_error.content)
+        self.assertTrue(b'contact_value' in response_error.content)
+
+    def _test_step_emergency_contact_without_errors(self):
+        # Data for the address_information step without errors.
+        emergency_contact_data = {
+            "client_wizard-current_step": "emergency_contact",
+            "emergency_contact-firstname": "Emergency",
+            "emergency_contact-lastname": "User",
+            "emergency_contact-contact_type": "Home phone",
+            "emergency_contact-contact_value": "555-444-5555"
+        }
+
+        # Send the data to the form.
+        response = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "emergency_contact"}
+            ),
+            emergency_contact_data,
+            follow=True
+        )
+
+        # The response is the next step of the form with no errors messages.
+        self.assertTrue(b'Required information' not in response.content)
+        self.assertTrue(b'status' not in response.content)
+        self.assertTrue(b'delivery_type' not in response.content)
+        self.assertTrue(b'delivery_schedule' not in response.content)
+
     def tear_down(self):
         self.client.logout()
+
+
+class MemberSearchTestCase(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        member = Member.objects.create(
+            firstname='Katrina', lastname='Heide')
+        Contact.objects.create(
+            type='Home phone', value='514-456-7890', member=member)
+
+    def test_search_member_by_firstname(self):
+        """
+        A member must be find if the search use
+        at least 3 characters of his first name
+        """
+        result = self.client.get(
+            reverse_lazy('member:search') + '?name=Heid',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+            follow=True
+        )
+        self.assertTrue(b'Katrina Heide' in result.content)
+
+    def test_search_member_by_lastname(self):
+        """
+        A member must be find if the search use
+        at least 3 characters of his last name
+        """
+        result = self.client.get(
+            reverse_lazy('member:search') + '?name=Katri',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+            follow=True
+        )
+        self.assertTrue(b'Katrina Heide' in result.content)

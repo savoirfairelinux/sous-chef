@@ -9,140 +9,166 @@
 
 
 {% block extrahead %}
-    <link href="{% static 'css/calendar.min.css' %}" type="text/css" rel="stylesheet">
+  <link href="{% static 'css/calendar.min.css' %}" type="text/css" rel="stylesheet">
 {% endblock %}
 
 {% block title %}Create a new client{% endblock %}
 
 {% block message %}
 <div class="ui message">
-    <div class="header">
-    Welcome to the client creation form
-    </div>
-    <p>Fill out the form below to create a new client. No information will be saved until all the steps are completed.</p>
+  <div class="header">
+  Welcome to the client creation form
+  </div>
+  <p>Fill out the form below to create a new client. No information will be saved until all the steps are completed.</p>
 </div>
 {% endblock %}
 
 {% block content %}
 
 <div class="ui secondary pointing fluid menu">
-    <h2 class="ui header">New Client</h2>
+  <h2 class="ui header">New Client</h2>
 </div>
 
-    <div class="six wide column">
-        <div class="ui vertical steps">
+  <div class="six wide column">
+    <div class="ui vertical steps">
 
-            {% include 'forms/step.html' with step=1 icon='male' name=_('Personal') description=_('First name, last name, ...') %}
+      {% include 'forms/step.html' with step=1 icon='male' name=_('Personal') description=_('First name, last name, ...') %}
 
-            {% include 'forms/step.html' with step=2 icon='home' name=_('Address') description=_('Street number, city, ...') %}
+      {% include 'forms/step.html' with step=2 icon='home' name=_('Address') description=_('Street number, city, ...') %}
 
-            {% include 'forms/step.html' with step=3 icon='treatment' name=_('Referent') description=_('Referent contact information') %}
+      {% include 'forms/step.html' with step=3 icon='treatment' name=_('Referent') description=_('Referent contact information') %}
 
-            {% include 'forms/step.html' with step=4 icon='payment' name=_('Payment') description=_('Payment method, card, ...') %}
+      {% include 'forms/step.html' with step=4 icon='payment' name=_('Payment') description=_('Payment method, card, ...') %}
 
-            {% include 'forms/step.html' with step=5 icon='food' name=_('Allergies') description=_('Restrictions, allergies, ...') %}
+      {% include 'forms/step.html' with step=5 icon='food' name=_('Allergies') description=_('Restrictions, allergies, ...') %}
 
-            {% include 'forms/step.html' with step=6 icon='first aid' name=_('Emergency') description=_('Emergency contact information') %}
+      {% include 'forms/step.html' with step=6 icon='first aid' name=_('Emergency') description=_('Emergency contact information') %}
 
-        </div>
     </div>
+  </div>
 
     <div class="ten wide column form-steps">
 
-        <form action="" method="post" class="ui form error">{% csrf_token %}
-            {% if wizard.form.errors %}
-            <div class="ui error message">
-                <div class="header">{{ _('Required information missing')}}</div>
-                <p>{{ _('Please review the form to make sure that all required fields are filled.')}}</p>
-                {{ wizard.form.errors }}
+      <form action="" method="post" class="ui form error">{% csrf_token %}
+        {% if wizard.form.errors %}
+        <div class="ui error message">
+          <div class="header">{{ _('Required information missing')}}</div>
+          <p>{{ _('Please review the form to make sure that all required fields are filled.')}}</p>
+          {{ wizard.form.errors }}
+        </div>
+        {% endif %}
+        {{wizard.management_form}}
+
+        {% if wizard.form.forms %}
+
+          {{wizard.form.management_form}}
+
+          {% for form in wizard.form.forms}
+            <div class="ui small icon input">
+              sdfsfdsf
             </div>
-            {% endif %}
-            {{wizard.management_form}}
 
-            {% if wizard.form.forms %}
+        {% else %}
+          {% if wizard.steps.current == 'basic_information' %}
+            {% include 'forms/steps/basic_information.html' %}
+          {% elif wizard.steps.current == 'address_information' %}
+            {% include 'forms/steps/address_information.html' %}
+          {% elif wizard.steps.current == 'referent_information' %}
+            {% include 'forms/steps/referent_information.html' %}
+          {% elif wizard.steps.current == 'payment_information' %}
+            {% include 'forms/steps/payment_information.html' %}
+          {% elif wizard.steps.current == 'dietary_restriction' %}
+            {% include 'forms/steps/dietary_restriction.html' %}
+          {% elif wizard.steps.current == 'emergency_contact' %}
+            {% include 'forms/steps/emergency_contact.html' %}
+          {% else %}
 
-                {{wizard.form.management_form}}
+            {% for form in wizard.form %}
 
-                {% for form in wizard.form.forms}
-                    <div class="ui small icon input">
-                        sdfsfdsf
-                    </div>
+            <div class="field {% if form.errors %} error {% endif %}">
+              <label>{{ form.label }} ({{form.name}})</label>
+              {{ form }}
+            </div>
+          {% endfor %}
 
-            {% else %}
-                {% if wizard.steps.current == 'basic_information' %}
-                    {% include 'forms/steps/basic_information.html' %}
-                {% elif wizard.steps.current == 'address_information' %}
-                    {% include 'forms/steps/address_information.html' %}
-                {% elif wizard.steps.current == 'referent_information' %}
-                    {% include 'forms/steps/referent_information.html' %}
-                {% elif wizard.steps.current == 'payment_information' %}
-                    {% include 'forms/steps/payment_information.html' %}
-                {% elif wizard.steps.current == 'dietary_restriction' %}
-                    {% include 'forms/steps/dietary_restriction.html' %}
-                {% elif wizard.steps.current == 'emergency_contact' %}
-                    {% include 'forms/steps/emergency_contact.html' %}
-                {% else %}
+          {% endif %}
 
-                    {% for form in wizard.form %}
+        {% endif %}
 
-                    <div class="field {% if form.errors %} error {% endif %}">
-                        <label>{{ form.label }} ({{form.name}})</label>
-                        {{ form }}
-                    </div>
-                {% endfor %}
+        {% if wizard.steps.prev %}
+        <button class="ui left floated button" name="wizard_goto_step" type="submit" value="{{wizard.steps.prev}}">
+          {% trans "Back"%}
+        </button>
+        {% endif %}
 
-                {% endif %}
+        {% if wizard.steps.step1 == 6 %}
+          <input class="big ui right floated yellow button" type="submit" value="Save"/>
+        {% else %}
+          <button  class="big ui yellow right floated button" name="wizard_goto_step" type="submit">Next</button>
+        {% endif %}
 
-            {% endif %}
-
-            {% if wizard.steps.prev %}
-            <button class="ui left floated button" name="wizard_goto_step" type="submit" value="{{wizard.steps.prev}}">
-                {% trans "Back"%}
-            </button>
-            {% endif %}
-
-            {% if wizard.steps.step1 == 6 %}
-            <input class="big ui right floated yellow button" type="submit" value="Save"/>
-            {% else %}
-            <button  class="big ui yellow right floated button" name="wizard_goto_step" type="submit">Next</button>
-            {% endif %}
-
-        </form>
+      </form>
 </div>
 {% endblock %}
 
 {% block extrajs %}
-    <script src="{% static 'jquery/calendar.min.js' %}" type="application/javascript"></script>
-    <script type="text/javascript">
-        $(function() {
-            $('#wizard_form_birthdate').calendar({
-                type: 'date',
-                formatter: {
-                    date: function (date, settings) {
-                      if (!date) return '';
-                      var day = date.getDate();
-                      var month = date.getMonth() + 1;
-                      var year = date.getFullYear();
-                      if (month < 10) month = '0' + month;
-                      if (day < 10) day = '0' + day;
-                      return year + '-' + month + '-' + day;
-                    }
-                }
-            });
-            $('#wizard_form_date').calendar({
-                type: 'date',
-                formatter: {
-                    date: function (date, settings) {
-                      if (!date) return '';
-                      var day = date.getDate();
-                      var month = date.getMonth() + 1;
-                      var year = date.getFullYear();
-                      if (month < 10) month = '0' + month;
-                      if (day < 10) day = '0' + day;
-                      return year + '-' + month + '-' + day;
-                    }
-                }
-            });
+  <script src="{% static 'jquery/calendar.min.js' %}" type="application/javascript"></script>
+  <script type="text/javascript">
+    $(function() {
+      $('#wizard_form_birthdate').calendar({
+        type: 'date',
+        formatter: {
+          date: function (date, settings) {
+            if (!date) return '';
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            if (month < 10) month = '0' + month;
+            if (day < 10) day = '0' + day;
+            return year + '-' + month + '-' + day;
+          }
+        }
+      });
+      $('#wizard_form_date').calendar({
+        type: 'date',
+        formatter: {
+          date: function (date, settings) {
+            if (!date) return '';
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            if (month < 10) month = '0' + month;
+            if (day < 10) day = '0' + day;
+            return year + '-' + month + '-' + day;
+          }
+        }
+      });
+
+      $('.ui.button.add.member').on('click', function() {
+        $('.existing--member').val('').attr('disabled', 'disabled');
+        $(this).transition('scale');
+        $('.ui.add.form.member').transition('scale');
+      });
+      $('.ui.button.cancel.add.member').on('click', function() {
+        $('.ui.button.add.member').transition('scale');
+        $('.existing--member').removeAttr('disabled');
+      });
+      if( $('.firstname').val() !== '' || $('.lastname').val() !== ''
+          &&
+          $('.existing--member').val() === '' ) {
+        $('.ui.button.add.member').transition('scale');
+        $('.existing--member').attr('disabled', 'disabled');
+        $('.ui.add.form.member').transition('scale');
+      }
+      $('.ui.search')
+        .search({
+          apiSettings: {
+            cache : 'local',
+            url: '{% url 'member:search' %}?name={query}'
+          },
+          minCharacters : 3
         });
+    });
+
     </script>
 {% endblock %}

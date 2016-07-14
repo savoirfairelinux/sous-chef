@@ -7,17 +7,43 @@
 
 <h4 class="ui dividing header">{{ _('Identity') }}</h4>
 
-<div class="field">
-    <label>{{ _('Name') }}</label>
-    <div class="two fields">
-      <div class="field {% if wizard.form.firstname.errors %} error {% endif %}">
-          {{wizard.form.firstname}}
+
+<div class="ui center aligned basic segment">
+  <div class="ui fluid category search">
+    <div class="ui icon input">
+      {{wizard.form.member}}
+      <i class="search icon"></i>
+    </div>
+    <div class="results"></div>
+  </div>
+  <div class="ui horizontal divider">
+    {{ _('Or') }}
+  </div>
+  <div class="ui teal labeled icon button add referent member">
+    Create new referent member
+    <i class="add icon"></i>
+  </div>
+
+  <div class="ui form add referent member transition hidden">
+    <div class="content">
+      <div class="ui icon button cancel add referent member right floated">
+        <i class="close icon"></i>
       </div>
-      <div class="field {% if wizard.form.lastname.errors %} error {% endif %}">
-          {{wizard.form.lastname}}
+      <div class="field">
+        <label>{{ _('Name') }}</label>
+        <div class="two fields">
+          <div class="field {% if wizard.form.firstname.errors %} error {% endif %}">
+              {{wizard.form.firstname}}
+          </div>
+          <div class="field {% if wizard.form.lastname.errors %} error {% endif %}">
+              {{wizard.form.lastname}}
+          </div>
+        </div>
       </div>
     </div>
+  </div>
 </div>
+
 
 <div class="field {% if wizard.form.work_information.errors %} error {% endif %}">
     <label>{{ wizard.form.work_information.label }}</label>

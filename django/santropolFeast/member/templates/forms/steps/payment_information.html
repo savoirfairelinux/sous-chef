@@ -1,15 +1,64 @@
 <h4 class="ui dividing header">{{ _('Billing information') }}</h4>
 
-<div class="field">
-    <label>{{ _('Name') }}</label>
-    <div class="two fields">
-      <div class="field {% if wizard.form.firstname.errors %} error {% endif %}">
-          {{wizard.form.firstname}}
-      </div>
-      <div class="field {% if wizard.form.lastname.errors %} error {% endif %}">
-          {{wizard.form.lastname}}
-      </div>
+<div class="ui center aligned basic segment">
+  <div class="ui fluid category search">
+    <div class="ui icon input">
+      {{wizard.form.member}}
+      <i class="search icon"></i>
     </div>
+    <div class="results"></div>
+  </div>
+  <div class="ui horizontal divider">
+    {{ _('Or') }}
+  </div>
+  <div class="ui teal labeled icon button add payment member">
+    Create new payment member
+    <i class="add icon"></i>
+  </div>
+
+  <div class="ui form add payment member transition hidden">
+    <div class="content">
+      <div class="ui icon button cancel add payment member right floated">
+        <i class="close icon"></i>
+      </div>
+
+      <div class="field">
+        <label>{{ _('Name') }}</label>
+        <div class="two fields">
+          <div class="field {% if wizard.form.firstname.errors %} error {% endif %}">
+              {{wizard.form.firstname}}
+          </div>
+          <div class="field {% if wizard.form.lastname.errors %} error {% endif %}">
+              {{wizard.form.lastname}}
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>{{ _('Street') }}</label>
+        <div class="fields">
+          <div class="twelve wide field {% if wizard.form.street.errors %} error {% endif %}">
+            {{ wizard.form.street}}
+          </div>
+          <div class="four wide field">
+            {{ wizard.form.apartment }}
+          </div>
+        </div>
+      </div>
+
+      <div class="equal width fields">
+        <div class="field {% if wizard.form.city.errors %} error {% endif %}">
+          <label>{{ wizard.form.city.label }}</label>
+          {{ wizard.form.city }}
+        </div>
+        <div class="field {% if wizard.form.postal_code.errors %} error {% endif %}">
+            <label>{{ wizard.form.postal_code.label }}</label>
+            {{ wizard.form.postal_code }}
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <div class="field">
@@ -20,27 +69,4 @@
 <div class="field">
     <label>{{ wizard.form.facturation.label }}</label>
     {{ wizard.form.facturation }}
-</div>
-
-<div class="field">
-    <label>{{ _('Street') }}</label>
-    <div class="fields">
-      <div class="twelve wide field {% if wizard.form.street.errors %} error {% endif %}">
-        {{ wizard.form.street}}
-      </div>
-      <div class="four wide field">
-        {{ wizard.form.apartment }}
-      </div>
-    </div>
-</div>
-
-<div class="equal width fields">
-    <div class="field {% if wizard.form.city.errors %} error {% endif %}">
-      <label>{{ wizard.form.city.label }}</label>
-      {{ wizard.form.city }}
-    </div>
-    <div class="field {% if wizard.form.postal_code.errors %} error {% endif %}">
-        <label>{{ wizard.form.postal_code.label }}</label>
-        {{ wizard.form.postal_code }}
-    </div>
 </div>

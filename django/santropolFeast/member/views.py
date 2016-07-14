@@ -2,10 +2,11 @@
 
 from django.views import generic
 from django.utils.decorators import method_decorator
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from member.models import Client, Member, Address, Contact, Note
 from member.models import Referencing, ClientFilter, Note, ClientFilter
 from formtools.wizard.views import NamedUrlSessionWizardView
@@ -64,13 +65,15 @@ class ClientWizard(NamedUrlSessionWizardView):
     def save(self):
         """Save the client"""
 
-        basic_information = self.form_dict['basic_information']
-        address_information = self.form_dict['address_information']
-        referent_information = self.form_dict['referent_information']
-        payment_information = self.form_dict['payment_information']
-        dietary_restriction = self.form_dict['dietary_restriction']
-        emergency_contact = self.form_dict['emergency_contact']
+        address = self.save_address()
+        member = self.save_member(address)
+        billing_member = self.save_billing_member(member)
+        emergency = self.save_emergency_contact(billing_member)
+        client = self.save_client(member, billing_member, emergency)
+        self.save_referent_information(client, billing_member, emergency)
 
+    def save_address(self):
+        address_information = self.form_dict['address_information']
         address = Address.objects.create(
             number=address_information.cleaned_data.get('number'),
             street=address_information.cleaned_data.get('street'),
@@ -82,6 +85,10 @@ class ClientWizard(NamedUrlSessionWizardView):
             postal_code=address_information.cleaned_data.get('postal_code'),
         )
         address.save()
+        return address
+
+    def save_member(self, address):
+        basic_information = self.form_dict['basic_information']
 
         member = Member.objects.create(
             firstname=basic_information.cleaned_data.get('firstname'),
@@ -90,8 +97,25 @@ class ClientWizard(NamedUrlSessionWizardView):
         )
         member.save()
 
-        # Should be created only if third-party billing member
-        if True:
+        contact = Contact.objects.create(
+            type=basic_information.cleaned_data.get('contact_type'),
+            value=basic_information.cleaned_data.get("contact_value"),
+            member=member,
+        )
+        contact.save()
+
+        return member
+
+    def save_billing_member(self, member):
+        payment_information = self.form_dict['payment_information']
+        e_b_member = payment_information.cleaned_data.get('member')
+        if self.billing_member_is_member():
+            billing_member = member
+        elif e_b_member:
+            e_b_member_id = e_b_member.split(' ')[0].\
+                replace('[', '').replace(']', '')
+            billing_member = Member.objects.get(pk=e_b_member_id)
+        else:
             billing_address = Address.objects.create(
                 number=payment_information.cleaned_data.get('number'),
                 street=payment_information.cleaned_data.get('street'),
@@ -107,24 +131,28 @@ class ClientWizard(NamedUrlSessionWizardView):
             billing_member = Member.objects.create(
                 firstname=payment_information.cleaned_data.get('firstname'),
                 lastname=payment_information.cleaned_data.get('lastname'),
-                address=address,
+                address=billing_address,
             )
             billing_member.save()
+
+        return billing_member
+
+    def save_emergency_contact(self, billing_member):
+        emergency_contact = self.form_dict['emergency_contact']
+        e_emergency_member = emergency_contact.cleaned_data.get('member')
+        if self.payment_is_emergency_contact():
+            emergency = billing_member
+        elif e_emergency_member:
+            e_emergency_member_id = e_emergency_member.split(' ')[0]\
+                .replace('[', '')\
+                .replace(']', '')
+            emergency = Member.objects.get(pk=e_emergency_member_id)
         else:
-            billing_member = member
-
-        contact = Contact.objects.create(
-            type=basic_information.cleaned_data.get('contact_type'),
-            value=basic_information.cleaned_data.get("contact_value"),
-            member=member,
-        )
-        contact.save()
-
-        emergency = Member.objects.create(
-            firstname=emergency_contact.cleaned_data.get("firstname"),
-            lastname=emergency_contact.cleaned_data.get('lastname'),
-        )
-        emergency.save()
+            emergency = Member.objects.create(
+                firstname=emergency_contact.cleaned_data.get("firstname"),
+                lastname=emergency_contact.cleaned_data.get('lastname'),
+            )
+            emergency.save()
 
         client_emergency_contact = Contact.objects.create(
             type=emergency_contact.cleaned_data.get("contact_type"),
@@ -135,7 +163,13 @@ class ClientWizard(NamedUrlSessionWizardView):
             member=emergency,
         )
         client_emergency_contact.save()
+        return emergency
 
+    def save_client(self, member, billing_member, emergency):
+        dietary_restriction = self.form_dict['dietary_restriction']
+        payment_information = self.form_dict['payment_information']
+        basic_information = self.form_dict['basic_information']
+        # Client SAVE
         client = Client.objects.create(
             rate_type=payment_information.cleaned_data.get("facturation"),
             billing_payment_type=payment_information.cleaned_data.get(
@@ -156,16 +190,26 @@ class ClientWizard(NamedUrlSessionWizardView):
             client.status = 'A'
 
         client.save()
+        return client
 
-        referent = Member.objects.create(
-            firstname=referent_information.cleaned_data.get(
-                "firstname"
-            ),
-            lastname=referent_information.cleaned_data.get(
-                "lastname"
-            ),
-        )
-        referent.save()
+    def save_referent_information(self, client, billing_member, emergency):
+        referent_information = self.form_dict['referent_information']
+        e_referent = referent_information.cleaned_data.get('member')
+        if self.referent_is_billing_member():
+            referent = billing_member
+        elif self.referent_is_emergency_contact():
+            referent = emergency
+        elif e_referent:
+            e_referent_id = e_referent.split(' ')[0]\
+                .replace('[', '')\
+                .replace(']', '')
+            referent = Member.objects.get(pk=e_referent_id)
+        else:
+            referent = Member.objects.create(
+                firstname=referent_information.cleaned_data.get("firstname"),
+                lastname=referent_information.cleaned_data.get("lastname"),
+            )
+            referent.save()
 
         referencing = Referencing.objects.create(
             referent=referent,
@@ -181,6 +225,63 @@ class ClientWizard(NamedUrlSessionWizardView):
             ),
         )
         referencing.save()
+        return referencing
+
+    def billing_member_is_member(self):
+        basic_information = self.form_dict['basic_information']
+        payment_information = self.form_dict['payment_information']
+
+        b_firstname = basic_information.cleaned_data.get('firstname')
+        b_lastname = basic_information.cleaned_data.get('lastname')
+
+        p_firstname = payment_information.cleaned_data.get('firstname')
+        p_lastname = payment_information.cleaned_data.get('lastname')
+
+        if b_firstname == p_firstname and b_lastname == p_lastname:
+            return True
+        return False
+
+    def payment_is_emergency_contact(self):
+        emergency_contact = self.form_dict['emergency_contact']
+        payment_information = self.form_dict['payment_information']
+
+        e_firstname = emergency_contact.cleaned_data.get('firstname')
+        e_lastname = emergency_contact.cleaned_data.get('lastname')
+
+        p_firstname = payment_information.cleaned_data.get('firstname')
+        p_lastname = payment_information.cleaned_data.get('lastname')
+
+        if e_firstname == p_firstname and e_lastname == p_lastname:
+            return True
+        return False
+
+    def referent_is_emergency_contact(self):
+        emergency_contact = self.form_dict['emergency_contact']
+        referent_information = self.form_dict['referent_information']
+
+        e_firstname = emergency_contact.cleaned_data.get('firstname')
+        e_lastname = emergency_contact.cleaned_data.get('lastname')
+
+        r_firstname = referent_information.cleaned_data.get("firstname")
+        r_lastname = referent_information.cleaned_data.get("lastname")
+
+        if e_firstname == r_firstname and e_lastname == r_lastname:
+            return True
+        return False
+
+    def referent_is_billing_member(self):
+        referent_information = self.form_dict['referent_information']
+        payment_information = self.form_dict['payment_information']
+
+        r_firstname = referent_information.cleaned_data.get("firstname")
+        r_lastname = referent_information.cleaned_data.get("lastname")
+
+        p_firstname = payment_information.cleaned_data.get('firstname')
+        p_lastname = payment_information.cleaned_data.get('lastname')
+
+        if r_firstname == p_firstname and r_lastname == p_lastname:
+            return True
+        return False
 
 
 class ClientList(generic.ListView):
@@ -518,3 +619,31 @@ def mark_as_read(request, id):
     note = get_object_or_404(Note, pk=id)
     note.mark_as_read()
     return HttpResponseRedirect(reverse_lazy("member:notes"))
+
+
+class SearchMembers(generic.View):
+
+    def get(self, request):
+        if request.is_ajax():
+            q = self.request.GET.get('name', '')
+            name_contains = Q()
+            firstname_contains = Q(
+                firstname__icontains=q
+            )
+            lastname_contains = Q(
+                lastname__icontains=q
+            )
+            name_contains |= firstname_contains | lastname_contains
+            members = Member.objects.filter(name_contains)[:20]
+            results = []
+            for m in members:
+                name = '[' + str(m.id) + '] ' + m.firstname + ' ' + m.lastname
+                results.append({'title': name})
+            data = {
+                'success': True,
+                'results': results
+            }
+        else:
+            data = {'success': False}
+
+        return JsonResponse(data)
