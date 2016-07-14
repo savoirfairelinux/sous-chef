@@ -1,4 +1,5 @@
 from django.test import TestCase
+from dataload import insert_all
 
 
 class KitchenCountReportTestCase(TestCase):
@@ -6,7 +7,7 @@ class KitchenCountReportTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         # This data set includes 'Ground porc' clashing ingredient
-        import dataload
+        insert_all()  # load fresh data into DB
 
     def test_clashing_ingredient(self):
         """An ingredient we know will clash must be in the page"""

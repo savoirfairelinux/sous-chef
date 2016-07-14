@@ -11,5 +11,7 @@ def run():
     os.environ['DJANGO_SETTINGS_MODULE'] = settings
     import django
     django.setup()
-    import dataload
+    from dataload import insert_all
+    insert_all()
+
 run()

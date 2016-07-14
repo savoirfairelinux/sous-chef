@@ -5,6 +5,8 @@ from order.factories import OrderFactory
 from member.factories import RouteFactory
 from datetime import date, datetime
 from django.contrib.auth.models import User
+from dataload import insert_all
+import datetime
 
 
 class OrderTestCase(TestCase):
@@ -111,3 +113,51 @@ class OrderItemTestCase(TestCase):
         order_item = order.orders.first()
 
         self.assertEqual(order_item.remark, 'testing')
+
+
+class OrderCreateOnDefaultsTestCase(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        # TODO improve by using factory
+        insert_all()  # load fresh data into DB
+
+    def test_create_all_orders_fixed_date(self):
+        """All orders will be created"""
+        creation_date = datetime.date(2016, 7, 8)
+        delivery_date = datetime.date(2016, 7, 15)
+        clients = Client.objects.all()
+        num = Order.create_orders_on_defaults(
+            creation_date, delivery_date, clients)
+        new = Order.objects.filter(delivery_date=delivery_date)
+        self.assertEqual(len(new), len(clients))
+
+    def test_create_only_new_orders_fixed_date(self):
+        """Only new orders for delivery date will be created"""
+        creation_date = datetime.date(2016, 7, 9)
+        delivery_date = datetime.date(2016, 7, 15)
+        clients = Client.objects.all()
+        # create 2 old orders
+        Order.create_orders_on_defaults(
+            datetime.date(2016, 7, 5), delivery_date, clients[0:2])
+        old = Order.objects.filter(delivery_date=delivery_date)
+        numold = len(old)  # because query is lazy and old will change below
+        # create new orders
+        num = Order.create_orders_on_defaults(
+            creation_date, delivery_date, clients)
+        new = Order.objects.filter(
+            creation_date=creation_date, delivery_date=delivery_date)
+        # TODO improve using join on old clients
+        # check that old orders not overridden
+        self.assertEqual(len(new), len(clients)-numold)
+
+    def test_create_orders_date_no_menu(self):
+        """No menu for delivery date, error will be raised"""
+        creation_date = datetime.date(2016, 7, 9)
+        delivery_date = datetime.date(2016, 7, 20)
+        clients = Client.objects.all()
+        with self.assertRaises(Exception) as cm:
+            num = Order.create_orders_on_defaults(
+                creation_date, delivery_date, clients)
+            the_exception = cm.exception
+            self.assertEqual(the_exception.error_code, 3)

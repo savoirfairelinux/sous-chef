@@ -37,8 +37,8 @@ def print_rows(q, heading=""):
     #     print(row)
 
 
-def run():
-    print("START dataload")
+def insert_all():
+    print("\nSTART dataload")
     engine = ac.get_engine()
     Session = sessionmaker(bind=engine)
     db = Session()
@@ -73,8 +73,7 @@ def run():
     Order.objects.all().delete()
     Order_item.objects.all().delete()
 
-    # --------------------------------------------------------------------------
-
+    # -----------------------------------------------------------------------------
     ing_1 = Ingredient(
         name='Onion',
         ingredient_group='veggies and fruits')
@@ -178,6 +177,7 @@ def run():
     #
     print_all_cols(db.query(Ingredient.sa))
     print_rows(Ingredient.objects)
+
     # -----------------------------------------------------------------------------
     com_1 = Component(
         name='Coq au vin',
@@ -224,12 +224,46 @@ def run():
         component_group='green salad')
     com_11.save()
     com_12 = Component(
-        name='Pudding',
+        name='Lemon Pudding',
         component_group='pudding')
     com_12.save()
     #
     print_all_cols(db.query(Component.sa))
     print_rows(Component.objects)
+
+    # -----------------------------------------------------------------------------
+    men_1 = Menu(
+        date=datetime.date(2016, 7, 15))
+    men_1.save()
+    men_2 = Menu(
+        date=datetime.date(2016, 7, 16))
+    men_2.save()
+    #
+    print_all_cols(db.query(Menu.sa))
+    print_rows(Menu.objects)
+
+    # -----------------------------------------------------------------------------
+    men_com_1 = Menu_component(
+        menu=men_1, component=com_6)
+    men_com_1.save()
+    men_com_2 = Menu_component(
+        menu=men_1, component=com_10)
+    men_com_2.save()
+    men_com_3 = Menu_component(
+        menu=men_1, component=com_11)
+    men_com_3.save()
+    men_com_3 = Menu_component(
+        menu=men_1, component=com_12)
+    men_com_3.save()
+    men_com_4 = Menu_component(
+        menu=men_1, component=com_8)
+    men_com_4.save()
+    men_com_5 = Menu_component(
+        menu=men_1, component=com_9)
+    men_com_5.save()
+    #
+    print_all_cols(db.query(Menu_component.sa))
+    print_rows(Menu_component.objects)
 
     # -----------------------------------------------------------------------------
     com_ing_1 = Component_ingredient(
@@ -441,6 +475,14 @@ def run():
         gender='M',
         birthdate=datetime.date(1940, 2, 23))
     cli_1.save()
+    cli_1.set_meal_defaults('main dish', 4, 2, 'L')
+    cli_1.set_meal_defaults('dessert', 4, 1, '')
+    cli_1.set_meal_defaults('diabetic dessert', 4, 0, '')
+    cli_1.set_meal_defaults('fruit salad', 4, 0, '')
+    cli_1.set_meal_defaults('green salad', 4, 1, '')
+    cli_1.set_meal_defaults('pudding', 4, 1, '')
+    cli_1.set_meal_defaults('compote', 4, 0, '')
+    cli_1.save()
     cli_2 = Client(
         member=mem_4,
         billing_member=mem_4,
@@ -453,6 +495,14 @@ def run():
         delivery_type='O',
         gender='M',
         birthdate=datetime.date(1945, 12, 13))
+    cli_2.save()
+    cli_2.set_meal_defaults('main dish', 4, 1, 'R')
+    cli_2.set_meal_defaults('dessert', 4, 1, '')
+    cli_2.set_meal_defaults('diabetic dessert', 4, 0, '')
+    cli_2.set_meal_defaults('fruit salad', 4, 0, '')
+    cli_2.set_meal_defaults('green salad', 4, 0, '')
+    cli_2.set_meal_defaults('pudding', 4, 0, '')
+    cli_2.set_meal_defaults('compote', 4, 0, '')
     cli_2.save()
     cli_3 = Client(
         member=mem_2,
@@ -467,6 +517,14 @@ def run():
         gender='M',
         birthdate=datetime.date(1943, 12, 13))
     cli_3.save()
+    cli_3.set_meal_defaults('main dish', 4, 2, 'R')
+    cli_3.set_meal_defaults('dessert', 4, 0, '')
+    cli_3.set_meal_defaults('diabetic dessert', 4, 0, '')
+    cli_3.set_meal_defaults('fruit salad', 4, 0, '')
+    cli_3.set_meal_defaults('green salad', 4, 2, '')
+    cli_3.set_meal_defaults('pudding', 4, 0, '')
+    cli_3.set_meal_defaults('compote', 4, 0, '')
+    cli_3.save()
     cli_4 = Client(
         member=mem_3,
         billing_member=mem_3,
@@ -479,6 +537,14 @@ def run():
         delivery_type='O',
         gender='M',
         birthdate=datetime.date(1943, 12, 13))
+    cli_4.save()
+    cli_4.set_meal_defaults('main dish', 4, 1, 'L')
+    cli_4.set_meal_defaults('dessert', 4, 0, '')
+    cli_4.set_meal_defaults('diabetic dessert', 4, 0, '')
+    cli_4.set_meal_defaults('fruit salad', 4, 0, '')
+    cli_4.set_meal_defaults('green salad', 4, 0, '')
+    cli_4.set_meal_defaults('pudding', 4, 0, '')
+    cli_4.set_meal_defaults('compote', 4, 1, '')
     cli_4.save()
     #
     print_all_cols(db.query(Client.sa))
@@ -748,5 +814,5 @@ def run():
     print_all_cols(db.query(Order_item.sa))
     print_rows(Order_item.objects)
 
-run()
-print("END dataload")
+    # =====================================================
+    print("END dataload")

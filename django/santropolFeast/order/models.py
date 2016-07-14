@@ -1,9 +1,14 @@
 from django.db import models
 from django.db.models import Q
 from member.models import Client, Member
+from member.models import RATE_TYPE_LOW_INCOME, RATE_TYPE_SOLIDARY
+from meal.models import Menu, Menu_component, Component
+from meal.models import COMPONENT_GROUP_CHOICES_MAIN_DISH
 from django.utils.translation import ugettext_lazy as _
 from django_filters import FilterSet, MethodFilter
+from member.apps import MemberConfig
 import re
+import datetime
 
 ORDER_STATUS_CHOICES = (
     ('O', _('Ordered')),
@@ -11,6 +16,8 @@ ORDER_STATUS_CHOICES = (
     ('B', _('Billed')),
     ('P', _('Paid')),
 )
+
+ORDER_STATUS_CHOICES_ORDERED = ORDER_STATUS_CHOICES[0][0]
 
 SIZE_CHOICES = (
     ('', _('Serving size')),
@@ -29,6 +36,15 @@ ORDER_ITEM_TYPE_CHOICES = (
     ('N pickup',
      _('NON BILLABLE pickup (payment)')),
 )
+
+ORDER_ITEM_TYPE_CHOICES_COMPONENT = ORDER_ITEM_TYPE_CHOICES[1][0]
+
+MAIN_PRICE_DEFAULT = 8.00  # TODO use decimal ?
+SIDE_PRICE_DEFAULT = 1.00
+MAIN_PRICE_LOW_INCOME = 7.00
+SIDE_PRICE_LOW_INCOME = 0.75
+MAIN_PRICE_SOLIDARY = 6.00
+SIDE_PRICE_SOLIDARY = 0.50
 
 
 class OrderManager(models.Manager):
@@ -87,6 +103,100 @@ class Order(models.Model):
             self.client,
             self.delivery_date
         )
+
+    def create_orders_on_defaults(creation_date, delivery_date, clients):
+        """Create orders and order items for one or many clients.
+
+        Static method called only on class object.
+
+        Parameters:
+          creation_date : date on which orders are created
+          delivery_date : date on which orders are to be delivered
+          clients : a list of one or many client objects
+
+        Returns:
+          Number of orders created.
+
+        Raises :
+          Exception if no menu yet for delivery date.
+        """
+
+        # session for SQLAlchemy
+        session = MemberConfig.Session()
+        num_orders_created = 0
+        qcomp = session.query(Component.sa.id.label('compid')).\
+            select_from(Menu.sa).\
+            join(Menu_component.sa,
+                 Menu_component.sa.menu_id == Menu.sa.id).\
+            join(Component.sa,
+                 Component.sa.id == Menu_component.sa.component_id).\
+            filter(Menu.sa.date == delivery_date)
+        # print ("count=", qcomp.count())  # DEBUG
+        if not qcomp.count():
+            raise Exception(
+                "No menu for delivery date= "+str(delivery_date))
+        components = \
+            [Component.objects.get(pk=row.compid) for row in qcomp.all()]
+        # print("Menu on ", date, " : ", (components))  #DEBUG
+        day = delivery_date.weekday()  # Monday is 0, Sunday is 6
+        for client in clients:
+            # find quantity of free side dishes based on number of main dishes
+            free_side_dish_qty = Client.get_meal_defaults(
+                client,
+                COMPONENT_GROUP_CHOICES_MAIN_DISH, day)[0]
+            if free_side_dish_qty == 0:
+                continue  # No meal for client on this day
+            try:
+                order = Order.objects.get(
+                    client=client, delivery_date=delivery_date)
+                # order already created, skip order items creation
+                # (if want to replace, must be deleted first)
+                continue
+            except Order.DoesNotExist:
+                order = Order(client=client,
+                              creation_date=creation_date,
+                              delivery_date=delivery_date,
+                              status=ORDER_STATUS_CHOICES_ORDERED)
+                order.save()
+                num_orders_created = num_orders_created + 1
+            # TODO Use Parameters Model in member to store unit prices
+            if client.rate_type == RATE_TYPE_LOW_INCOME:
+                main_price = MAIN_PRICE_LOW_INCOME
+                side_price = SIDE_PRICE_LOW_INCOME
+            elif client.rate_type == RATE_TYPE_SOLIDARY:
+                main_price = MAIN_PRICE_SOLIDARY
+                side_price = SIDE_PRICE_SOLIDARY
+            else:
+                main_price = MAIN_PRICE_DEFAULT
+                side_price = SIDE_PRICE_DEFAULT
+            for component in components:
+                default_qty, default_size = \
+                    Client.get_meal_defaults(
+                        client, component.component_group, day)
+                if default_qty > 0:
+                    total_quantity = default_qty
+                    free_quantity = 0
+                    if (component.component_group ==
+                            COMPONENT_GROUP_CHOICES_MAIN_DISH):
+                        unit_price = main_price
+                    else:
+                        unit_price = side_price
+                        while free_side_dish_qty > 0 and default_qty > 0:
+                            free_side_dish_qty = free_side_dish_qty - 1
+                            default_qty = default_qty - 1
+                            free_quantity = free_quantity + 1
+                    oi = Order_item(
+                        order=order,
+                        component=component,
+                        price=(total_quantity - free_quantity) * unit_price,
+                        billable_flag=True,
+                        size=default_size,
+                        order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
+                        total_quantity=total_quantity,
+                        free_quantity=free_quantity)
+                    oi.save()
+        # print("Number of orders created = ", num_orders_created) #DEBUG
+        return num_orders_created
 
 
 class OrderFilter(FilterSet):
