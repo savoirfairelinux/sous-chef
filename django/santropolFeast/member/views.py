@@ -461,16 +461,23 @@ class ClientAllergiesView(generic.DetailView):
         return context
 
 
-def show_information(request, id):
-    client = get_object_or_404(Client, pk=id)
-    notes = list(Note.objects.all())
+class ClientDetail(generic.DetailView):
+    # Display detail of one client
+    model = Client
+    template_name = 'client/view/view.html'
 
-    return render(request, 'client/view/view.html',
-                  {'client': client, 'notes': notes})
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ClientDetail, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ClientDetail, self).get_context_data(**kwargs)
+        context['notes'] = list(Note.objects.all())
+        return context
 
 
 class ClientPreferencesView(generic.DetailView):
-    # Display detail of one client
+    # Display preferences of one client
     model = Client
     template_name = 'client/view/preferences.html'
 

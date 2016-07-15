@@ -112,6 +112,7 @@
             </div>
         </div>
 
+        {% if client.client_referent.exists %}
         <div class="ui bottom attached tab segment" data-tab="third">
             <h3 class="ui header">
                 {% trans 'Referent' %}
@@ -132,6 +133,7 @@
             {% endfor %}
             </div>
         </div>
+        {% endif %}
 
         <div class="ui bottom attached tab segment" data-tab="four">
             <h3 class="ui header">
