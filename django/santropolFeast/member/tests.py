@@ -363,6 +363,12 @@ class FormTestCase(TestCase):
             lastname='Member'
         )
 
+    def _login(self):
+        self.client.login(username='admin@example.com', password='test1234')
+
+    def _logout(self):
+        self.client.logout()
+
     def test_acces_to_form(self):
         """Test if the form is accesible from its url"""
         self.client.login(
@@ -447,7 +453,7 @@ class FormTestCase(TestCase):
 
         self.assertEqual(result.status_code, 200)
 
-    def test_form_save_data(self):
+    def test_form_save_data_all_different_members(self):
 
         basic_information_data = {
             "client_wizard-current_step": "basic_information",
@@ -528,16 +534,31 @@ class FormTestCase(TestCase):
             )
 
         member = Member.objects.get(firstname="User")
+        self._test_assert_member_info_all_different_members(member)
 
-        # test_member_name:
+        client = Client.objects.get(member=member)
+        self._test_assert_client_info_all_different_members(client)
+
+        self._test_client_detail_view_all_different_members(client)
+
+    def _test_assert_member_info_all_different_members(self, member):
+        # test firstname and lastname
         self.assertEqual(member.firstname, "User")
         self.assertEqual(member.lastname, "Testing")
 
         # test_home_phone_member:
         self.assertTrue(member.get_home_phone().value.startswith('555'))
 
-        client = Client.objects.get(member=member)
+        # test_client_contact_type:
+        self.assertEqual(member.member_contact.first().type, "Home phone")
 
+        # test_client_address:
+        self.assertEqual(member.address.street, "555 rue clark")
+        self.assertEqual(member.address.postal_code, "H3C2C2")
+        self.assertEqual(member.address.apartment, "222")
+        self.assertEqual(member.address.city, "montreal")
+
+    def _test_assert_client_info_all_different_members(self, client):
         # test_client_alert:
         self.assertEqual(client.alert, "Testing alert message")
 
@@ -549,15 +570,6 @@ class FormTestCase(TestCase):
 
         # test_client_gender:
         self.assertEqual(client.gender, "M")
-
-        # test_client_contact_type:
-        self.assertEqual(member.member_contact.first().type, "Home phone")
-
-        # test_client_address:
-        self.assertEqual(member.address.street, "555 rue clark")
-        self.assertEqual(member.address.postal_code, "H3C2C2")
-        self.assertEqual(member.address.apartment, "222")
-        self.assertEqual(member.address.city, "montreal")
 
         # test client delivery type
         self.assertEqual(client.delivery_type, 'O')
@@ -620,6 +632,245 @@ class FormTestCase(TestCase):
             client.emergency_contact.member_contact.first().value,
             "555-444-5555"
         )
+
+    def _test_client_detail_view_all_different_members(self, client):
+        self._login()
+        response = self.client.get(
+            reverse_lazy('member:view', kwargs={'pk': client.id})
+        )
+
+        self.assertTrue(b"User" in response.content)
+        self.assertTrue(b"Testing" in response.content)
+        self.assertTrue(b"Home phone" in response.content)
+        self.assertTrue(b"555 rue clark" in response.content)
+        self.assertTrue(b"H3C2C2" in response.content)
+        self.assertTrue(b"montreal" in response.content)
+        self.assertTrue(b"Testing alert message" in response.content)
+        self.assertTrue(b"Testing referral reason" in response.content)
+        self.assertTrue(b"555-444-5555" in response.content)
+        self._logout()
+
+    def test_form_save_data_same_members(self):
+
+        basic_information_data = {
+            "client_wizard-current_step": "basic_information",
+            "basic_information-firstname": "Same",
+            "basic_information-lastname": "User",
+            "basic_information-language": "fr",
+            "basic_information-gender": "M",
+            "basic_information-birthdate": "1986-06-06",
+            "basic_information-contact_type": "Home phone",
+            "basic_information-contact_value": "514-868-8686",
+            "basic_information-alert": "Testing alert message",
+            "wizard_goto_step": ""
+        }
+
+        address_information_data = {
+            "client_wizard-current_step": "address_information",
+            "address_information-street": "8686 rue clark",
+            "address_information-apartment": "86",
+            "address_information-city": "Montreal",
+            "address_information-postal_code": "H8C6C8",
+            "wizard_goto_step": "",
+        }
+
+        referent_information_data = {
+            "client_wizard-current_step": "referent_information",
+            "referent_information-firstname": "Same",
+            "referent_information-lastname": "User",
+            "referent_information-work_information": "CLSC",
+            "referent_information-date": "2012-06-06",
+            "referent_information-referral_reason": "Testing referral reason",
+            "wizard_goto_step": "",
+        }
+
+        payment_information_data = {
+            "client_wizard-current_step": "payment_information",
+            "payment_information-firstname": "Same",
+            "payment_information-lastname": "User",
+            "payment_information-billing_payment_type": "check",
+            "payment_information-facturation": "default",
+            "payment_information-street": "8686 rue clark",
+            "payment_information-apartement": "86",
+            "payment_information-city": "Montreal",
+            "payment_information-postal_code": "H8C6G8",
+            "wizard_goto_step": "",
+        }
+
+        restriction_information_data = {
+            "client_wizard-current_step": "dietary_restriction",
+            "dietary_restriction-status": "on",
+            "dietary_restriction-delivery_type": "O",
+            "dietary_restriction-delivery_schedule": "mon",
+            "dietary_restriction-meal_default": "1",
+            "wizard_goto_step": ""
+        }
+
+        emergency_contact_data = {
+            "client_wizard-current_step": "emergency_contact",
+            "emergency_contact-firstname": "Same",
+            "emergency_contact-lastname": "User",
+            "emergency_contact-contact_type": "Home phone",
+            "emergency_contact-contact_value": "514-868-8686"
+        }
+
+        stepsdata = [
+            ('basic_information', basic_information_data),
+            ('address_information', address_information_data),
+            ('referent_information', referent_information_data),
+            ('payment_information', payment_information_data),
+            ('dietary_restriction', restriction_information_data),
+            ('emergency_contact', emergency_contact_data)
+        ]
+
+        for step, data in stepsdata:
+            self.client.post(
+                reverse_lazy('member:member_step', kwargs={'step': step}),
+                data,
+                follow=True
+            )
+
+        member = Member.objects.get(firstname="Same")
+        self._test_assert_member_info_same_members(member)
+
+        client = Client.objects.get(member=member)
+        self._test_assert_client_info_same_members(client)
+
+        self._test_client_detail_view_same_members(client)
+        self._test_client_list_view_same_members()
+
+    def _test_assert_member_info_same_members(self, member):
+        # test firstname and lastname
+        self.assertEqual(member.firstname, "Same")
+        self.assertEqual(member.lastname, "User")
+
+        # test_home_phone_member:
+        self.assertTrue(member.get_home_phone().value.startswith('514'))
+
+        # test_client_contact_type:
+        self.assertEqual(member.member_contact.first().type, "Home phone")
+
+        # test_client_address:
+        self.assertEqual(member.address.street, "8686 rue clark")
+        self.assertEqual(member.address.postal_code, "H8C6C8")
+        self.assertEqual(member.address.apartment, "86")
+        self.assertEqual(member.address.city, "Montreal")
+
+    def _test_assert_client_info_same_members(self, client):
+        # test_client_alert:
+        self.assertEqual(client.alert, "Testing alert message")
+
+        # test_client_languages:
+        self.assertEqual(client.language, "fr")
+
+        # test_client_birthdate:
+        self.assertEqual(client.birthdate, date(1986, 6, 6))
+
+        # test_client_gender:
+        self.assertEqual(client.gender, "M")
+
+        # test client delivery type
+        self.assertEqual(client.delivery_type, 'O')
+
+        # test referent member is emergency member
+        self.assertEqual(
+            client.client_referent.first().id,
+            client.emergency_contact.member_contact.first().id
+        )
+
+        # test_referent_name:
+        self.assertEqual(
+            client.client_referent.first().referent.firstname,
+            "Same"
+        )
+        self.assertEqual(
+            client.client_referent.first().referent.lastname,
+            "User"
+        )
+
+        # test_referent_work_information:
+        self.assertEqual(
+            client.client_referent.first().work_information,
+            "CLSC"
+        )
+
+        # test_referral_date(self):
+        self.assertEqual(
+            client.client_referent.first().date,
+            date(2012, 6, 6)
+        )
+
+        # test_referral_reason:
+        self.assertEqual(
+            client.client_referent.first().referral_reason,
+            "Testing referral reason"
+        )
+
+        # test client member is billint member
+        self.assertEqual(client.member.id, client.billing_member.id)
+
+        # test_billing_name:
+        self.assertEqual(client.billing_member.firstname, "Same")
+        self.assertEqual(client.billing_member.lastname, "User")
+
+        #  test_billing_type:
+        self.assertEqual(client.billing_payment_type, "check")
+
+        #  test_billing_address:
+        self.assertEqual(client.billing_member.address.city, "Montreal")
+        self.assertEqual(
+            client.billing_member.address.street,
+            "8686 rue clark"
+        )
+        self.assertEqual(client.billing_member.address.postal_code, "H8C6C8")
+
+        #  test_billing_rate_type:
+        self.assertEqual(client.rate_type, 'default')
+
+        #  test_emergency_contact_name:
+        self.assertEqual(client.emergency_contact.firstname, "Same")
+        self.assertEqual(client.emergency_contact.lastname, "User")
+
+        #  test_emergency_contact_type:
+        self.assertEqual(
+            client.emergency_contact.member_contact.first().type,
+            "Home phone"
+        )
+
+        #  test_emergency_contact_value:
+        self.assertEqual(
+            client.emergency_contact.member_contact.first().value,
+            "514-868-8686"
+        )
+
+    def _test_client_detail_view_same_members(self, client):
+        self._login()
+        response = self.client.get(
+            reverse_lazy('member:view', kwargs={'pk': client.id})
+        )
+
+        self.assertTrue(b"User" in response.content)
+        self.assertTrue(b"Same" in response.content)
+        self.assertTrue(b"Home phone" in response.content)
+        self.assertTrue(b"8686 rue clark" in response.content)
+        self.assertTrue(b"H8C6C8" in response.content)
+        self.assertTrue(b"Montreal" in response.content)
+        self.assertTrue(b"Testing alert message" in response.content)
+        self.assertTrue(b"Testing referral reason" in response.content)
+        self.assertTrue(b"514-868-8686" in response.content)
+        self._logout()
+
+    def _test_client_list_view_same_members(self):
+        self._login()
+        response = self.client.get(reverse_lazy('member:list'))
+
+        self.assertTrue(b"User" in response.content)
+        self.assertTrue(b"Same" in response.content)
+        self.assertTrue(b"30 years old" in response.content)
+        self.assertTrue(b"Active" in response.content)
+        self.assertTrue(b"Ongoing" in response.content)
+        self.assertTrue(b"514-868-8686" in response.content)
+        self._logout()
 
     def test_form_validate_data(self):
         """Test all the step of the form with and without wrong data"""
@@ -786,6 +1037,33 @@ class FormTestCase(TestCase):
         self.assertTrue(b'work_information' in response_error.content)
         self.assertTrue(b'This field is required' in response_error.content)
 
+        referent_information_data_with_error = {
+            "client_wizard-current_step": "referent_information",
+            "referent_information-member": "[0] NotValid Member",
+            "referent_information-firstname": "",
+            "referent_information-lastname": "",
+            "referent_information-work_information": "CLSC",
+            "referent_information-date": "2012-12-12",
+            "referent_information-referral_reason": "Testing referral reason",
+            "wizard_goto_step": "",
+        }
+
+        # Send the data to the form.
+        response_error = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "referent_information"}
+            ),
+            referent_information_data_with_error,
+            follow=True
+        )
+
+        # Validate that the response is the same form with the errors messages.
+        self.assertTrue(b'Required information' in response_error.content)
+        self.assertTrue(b'member' in response_error.content)
+        self.assertTrue(b'work_information' in response_error.content)
+        self.assertTrue(b'Not a valid member' in response_error.content)
+
     def _test_referent_information_without_errors(self):
         referent_information_data = {
             "client_wizard-current_step": "referent_information",
@@ -849,6 +1127,38 @@ class FormTestCase(TestCase):
             b'member has not a valid address'
             in response_error.content
         )
+
+        # Data for the address_information step with errors.
+        payment_information_data_with_error = {
+            "client_wizard-current_step": "payment_information",
+            "payment_information-member": "",
+            "payment_information-firstname": "Third",
+            "payment_information-lastname": "Member",
+            "payment_information-billing_payment_type": "check",
+            "payment_information-facturation": "default",
+            "payment_information-street": "",
+            "payment_information-apartement": "",
+            "payment_information-city": "",
+            "payment_information-postal_code": "",
+            "wizard_goto_step": "",
+        }
+
+        # Send the data to the form.
+        response_error = self.client.post(
+            reverse_lazy(
+                'member:member_step',
+                kwargs={'step': "payment_information"}
+            ),
+            payment_information_data_with_error,
+            follow=True
+        )
+
+        # Validate that the response is the same form with the errors messages.
+        self.assertTrue(b'Required information' in response_error.content)
+        self.assertTrue(b'street' in response_error.content)
+        self.assertTrue(b'city' in response_error.content)
+        self.assertTrue(b'postal_code' in response_error.content)
+        self.assertTrue(b'This field is required' in response_error.content)
 
     def _test_payment_information_without_errors(self):
         # Data for the address_information step without errors.
@@ -971,6 +1281,7 @@ class FormTestCase(TestCase):
         # Data for the address_information step without errors.
         emergency_contact_data = {
             "client_wizard-current_step": "emergency_contact",
+            "emergency_contact-member": "[1] First Member",
             "emergency_contact-firstname": "Emergency",
             "emergency_contact-lastname": "User",
             "emergency_contact-contact_type": "Home phone",
@@ -992,9 +1303,6 @@ class FormTestCase(TestCase):
         self.assertTrue(b'status' not in response.content)
         self.assertTrue(b'delivery_type' not in response.content)
         self.assertTrue(b'delivery_schedule' not in response.content)
-
-    def tear_down(self):
-        self.client.logout()
 
 
 class MemberSearchTestCase(TestCase):

@@ -76,7 +76,7 @@
 
 <div class="ui cards">
     {% for obj in clients %}
-    <a class="ui card" href="{% url 'member:view' id=obj.id %}">
+    <a class="ui card" href="{% url 'member:view' pk=obj.id %}">
       <div class="content">
         <div class="header">{{ obj.member }}</div>
         <div class="meta">
