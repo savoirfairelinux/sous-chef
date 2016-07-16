@@ -21,6 +21,9 @@
     .leaflet-control{
         display: none;
     }
+    .leaflet-control-container .leaflet-routing-container-hide {
+    display: none;
+    }
     </style>
     <script src="{% static 'leaflet-routing/leaflet-routing-machine.js' %}" type="application/javascript"></script>
     <script src="{% static 'leaflet-geocoder/Control.Geocoder.js' %}" type="application/javascript"></script>
@@ -33,7 +36,7 @@
 {% block content %}
 
 <script type="text/javascript">
-
+  var route1, route2,route3;
 
     function main_map_init (map, options) {
 
@@ -71,6 +74,7 @@
              // Create bike router using mapbox
              var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
              bikerouter.options.profile = 'mapbox.cycling';
+
 
              var routingContol = L.Routing.Control.extend({
                  initialize: function(map, initialWaypoints) {
@@ -138,9 +142,7 @@
            var routeBlock = control.onAdd(map);
            $(".controls").append(routeBlock);
 
-
-
-            var route2 = L.Routing.control({
+            route2 = L.Routing.control({
             	waypoints: [
             	  L.latLng(45.5165, -73.567),
             	  L.latLng(45.428564, -73.586145),
@@ -156,8 +158,8 @@
             }).addTo(map);
 
 
-            var route3 = L.Routing.control({
-            	waypoints: [
+            route3 = L.Routing.control({
+              waypoints: [
             	  L.latLng(45.5165, -73.567),
                 L.latLng(45.548664, -73.681145),
             	  L.latLng(45.558664, -73.685945),
@@ -166,11 +168,12 @@
                   styles: [
                       {color: 'black', opacity: 0.3, weight: 11},
                       {color: 'white', opacity: 0.9, weight: 9},
-                      {color: 'BlueViolet', opacity: 1, weight: 3}
+                      {color: 'orange', opacity: 1, weight: 3}
                   ]
               },
               show:false,
             }).addTo(map);
+
 
 
            // Add sortable on the route controler
@@ -194,7 +197,31 @@
            });
           }
         );
+  }
 
+  function toggleRoute(elm)
+  {
+      if (route3.getWaypoints().length > 2 ) {
+        route3.setWaypoints();
+      }
+      else {
+
+        $.get( "../getDailyOrders/route3", function( data ) {
+
+              var dpoints = [];
+              var deliveryPoints = L.Routing.Waypoint.extend({ meal:"", member:"" });
+              // create an array of waypoint from ajax call
+              for(var i in data.waypoints)
+              {
+                   dpoints.push(new deliveryPoints(L.latLng(data.waypoints[i].latitude, data.waypoints[i].longitude)));
+                   dpoints[i].options.meal = data.waypoints[i].meal;
+                   dpoints[i].options.member = data.waypoints[i].member;
+              }
+
+              route3.setWaypoints(dpoints);
+        })
+
+      }
   }
 </script>
 
@@ -207,9 +234,13 @@
   <div class="row">
     <div class="twelve wide column">
       <div class="ui three buttons">
-        <button class="ui active button">Route 1</button>
-        <button class="ui button">Route 2</button>
-        <button class="ui button">Route 3</button>
+        <button class="ui button" onclick="toggleRoute(this)" >Route 1</button>
+        <button class="ui button" onclick="toggleRoute(this)">Route 2</button>
+        <button class="ui button" onclick="toggleRoute(this)" data-id="route3">Route 3</button>
+      </div>
+      <div class="ui checked checkbox">
+        <input type="checkbox" checked="">
+        <label>Active</label>
       </div>
       </div>
     <div class="twelve wide column">
