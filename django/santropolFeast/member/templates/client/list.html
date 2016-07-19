@@ -122,7 +122,7 @@
     <tbody>
         {% for obj in clients %}
         <tr>
-            <td><a href="{% url 'member:view' id=obj.id %}">{{ obj.member }}</a><br/>{{ obj.age }} years old</td>
+            <td><a href="{% url 'member:view' pk=obj.id %}">{{ obj.member }}</a><br/>{{ obj.age }} years old</td>
             <td>{{ obj.get_status_display }}</td>
             <td>{{ obj.get_delivery_type_display }}</td>
             <td>{{ obj.route }}</td>
