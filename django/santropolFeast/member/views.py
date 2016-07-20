@@ -11,7 +11,8 @@ from member.models import Referencing, ClientFilter, Note, ClientFilter
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
-
+from django.template import RequestContext
+from django.http import JsonResponse
 
 class ClientWizard(NamedUrlSessionWizardView):
 
@@ -478,3 +479,13 @@ def mark_as_read(request, id):
     note = get_object_or_404(Note, pk=id)
     note.mark_as_read()
     return HttpResponseRedirect(reverse_lazy("member:notes"))
+
+
+def geolocateAddress(request):
+            # do something with the your data
+            if request.method == 'POST':
+                  lat = request.POST['lat']
+                  long = request.POST['long']
+
+            # just return a JsonResponse
+            return JsonResponse({'latitude': lat, 'longtitude': long })

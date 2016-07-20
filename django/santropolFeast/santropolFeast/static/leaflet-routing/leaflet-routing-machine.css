@@ -34,7 +34,7 @@
     transition: all 0.2s ease;
 }
 
-.leaflet-control-container .leaflet-routing-container-hide .leaflet-routing-alt, 
+.leaflet-control-container .leaflet-routing-container-hide .leaflet-routing-alt,
 .leaflet-control-container .leaflet-routing-container-hide .leaflet-routing-geocoders {
     display: none;
 }
@@ -198,6 +198,57 @@
     margin-top: -16px;
     padding-right: 4px;
     line-height: 1;
+}
+
+
+.leaflet-routing-container .geocoder-handle {
+    background: #da8 none repeat scroll 0 0;
+    border-radius: 50%;
+    color: white;
+    cursor: move;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: bold;
+    height: 20px;
+    line-height: 20px;
+    padding: 0;
+    text-align: center;
+    width: 20px;
+}
+.leaflet-routing-geocoders input {
+    margin-left: 4px;
+    width: calc(100% - 28px);
+}
+.hide {
+    display: none;
+}
+.geocoder-geolocate-btn {
+    background-color: transparent;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+}
+.geocoder-geolocate-btn i {
+    background: white none repeat scroll 0 0;
+    bottom: 0;
+    color: #ccc;
+    cursor: pointer;
+    display: block;
+    font-weight: normal;
+    height: 0;
+    line-height: 0.5;
+    margin: -16px auto auto;
+    padding: 0 4px 16px 0;
+    position: absolute;
+    right: 17px;
+    text-align: center;
+    top: 10px;
+    width: 12px;
+    z-index: 1;
+}
+.geocoder-geolocate-btn i:hover {
+    color: black;
 }
 
 .leaflet-routing-remove-waypoint:hover {

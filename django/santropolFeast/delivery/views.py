@@ -3,6 +3,7 @@ from django.views import generic
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from delivery.models import Delivery
+from django.http import JsonResponse
 
 from .apps import DeliveryConfig
 
@@ -383,3 +384,29 @@ def kcr_view(request):
     lines.append(Line())
     lines.append(Line(incom='Parts 1,2 and 3 TOTAL = ' + str(total)))
     return render(request, 'kitchen_count.html', {'lines': lines})
+
+
+def dailyOrders(request):
+        # do something with the your data
+        data = {"waypoints": [
+                    {"latitude":45.5165, "longitude":-73.5673, "member":"toto", "meal":"meat"},
+                    {"latitude":45.6263, "longitude":-73.5774, "member":"tata", "meal":"vegie"},
+                    {"latitude":45.6462, "longitude":-73.5885, "member":"titi", "meal":"meat"} ]
+                    }
+
+        # just return a JsonResponse
+        return JsonResponse(data)
+
+
+
+def routeDailyOrders(request):
+        # do something with the your data
+
+        data = {"waypoints": [
+                    {"latitude":45.5165, "longitude": -73.567, "member":"toto", "meal":"meat"},
+                    {"latitude":45.548664, "longitude":-73.681145, "member":"tata", "meal":"vegie"},
+                    {"latitude":45.558664, "longitude":-73.685945, "member":"titi", "meal":"meat"} ]
+                    }
+
+        # just return a JsonResponse
+        return JsonResponse(data)
