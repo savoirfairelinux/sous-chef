@@ -32,7 +32,7 @@
         font-size: 18px;
     }
     .leaflet-routing-alt {
-      max-height:430px;
+      max-height:400px;
     }
     </style>
     <script src="{% static 'leaflet-routing/leaflet-routing-machine.js' %}" type="application/javascript"></script>
@@ -46,7 +46,35 @@
 {% block content %}
 
 <script type="text/javascript">
-  var route1, route2,route3;
+    function printMapAndItinerary() {
+        var body               = $('body');
+        var mapContainer       = $('#main');
+        var mapContainerParent = mapContainer.parent();
+        var printContainer     = $('<div>');
+        var itinerary = $(".leaflet-routing-alt table");
+
+        printContainer
+            .addClass('print-container')
+            .css('position', 'relative')
+            .height(mapContainer.height())
+            .append(mapContainer)
+            .append(itinerary)
+            .prependTo(body);
+
+        var content = body
+            .children()
+            .not('script')
+            .not(printContainer)
+            .detach();
+
+        window.print();
+
+        body.prepend(content);
+        mapContainerParent.prepend(mapContainer);
+
+        printContainer.remove();
+
+    }
 
     function main_map_init (map, options) {
 
@@ -59,7 +87,7 @@
         var waypoints = [];
         $.get( "../getDailyOrders/", function( data ) {
 
-            var deliveryPoints = L.Routing.Waypoint.extend({ meal:"", member:"" });
+            var deliveryPoints = L.Routing.Waypoint.extend({ member:"", meal:"", notes:"", allergies:"" });
             // create an array of waypoint from ajax call
             for(var i in data.waypoints)
             {
@@ -148,14 +176,11 @@
                  },
              });
 
-
             // Bind control outside of the map
-           var control = new routingContol()
+           var control = new routingContol();
 
            var routeBlock = control.onAdd(map);
            $(".controls").append(routeBlock);
-
-          control.hide();
 
            // Add sortable on the route controler
            Sortable.create(document.querySelector('.leaflet-routing-geocoders'), {
@@ -176,33 +201,12 @@
                      control.setWaypoints(wps);
                  }
            });
+
+          $("#btnprint").click(function(){
+              printMapAndItinerary();
+            });
           }
         );
-  }
-
-  function toggleRoute(elm)
-  {
-      if (route3.getWaypoints().length > 2 ) {
-        route3.setWaypoints();
-      }
-      else {
-
-        $.get( "../getDailyOrders/route3", function( data ) {
-
-              var dpoints = [];
-              var deliveryPoints = L.Routing.Waypoint.extend({ meal:"", member:"" });
-              // create an array of waypoint from ajax call
-              for(var i in data.waypoints)
-              {
-                   dpoints.push(new deliveryPoints(L.latLng(data.waypoints[i].latitude, data.waypoints[i].longitude)));
-                   dpoints[i].options.meal = data.waypoints[i].meal;
-                   dpoints[i].options.member = data.waypoints[i].member;
-              }
-
-              route3.setWaypoints(dpoints);
-        })
-
-      }
   }
 </script>
 
@@ -218,6 +222,14 @@
     </div>
     <div class="four wide column">
       <div class="controls"></div>
+      <button id='btnprint' class="ui fluid primary labeled icon button">
+          <i class="print icon"></i>
+          Print
+      </button>
+      <button id='btnsave' class="ui fluid  labeled icon button">
+          <i class="save icon"></i>
+          Save
+      </button>
     </div>
   </div>
 
