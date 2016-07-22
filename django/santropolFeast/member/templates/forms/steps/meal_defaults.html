@@ -1,10 +1,10 @@
 {% load i18n %}
 {% load member_extras %}
-{% for day in weekday %}
-<div class="ui styled fluid accordion">
+{% for day, Day in weekday %}
+<div class="ui styled fluid accordion meals {{ day }}">
   <div class="title">
     <i class="dropdown icon"></i>
-    {% trans day %}
+    {% trans Day %}
   </div>
   <div class="content">
     <table class="ui compact table">
@@ -16,14 +16,14 @@
         </tr>
       </thead>
       <tbody>
-        {% for meal in meals %}
+        {% for meal, Meal in meals %}
         <tr>
           {% if meal == "main_dish" %}
           <td>{% size day %}</td>
           {% else %}
           <td></td>
           {% endif %}
-          <td>{{ meal }}</td>
+          <td>{{ Meal }}</td>
           <td>{% cell meal day %}</td>
         </tr>
         {% endfor %}

@@ -115,6 +115,21 @@
   <script src="{% static 'jquery/calendar.min.js' %}" type="application/javascript"></script>
   <script type="text/javascript">
     $(function() {
+
+      $('.ui.dropdown').dropdown({transition: 'drop'});
+
+      $('#id_dietary_restriction-delivery_type').dropdown({
+        onChange: function(value, text, $selectedItem) {
+          if($selectedItem.data('value') == 'E')
+          {
+            $('#form-delivery-schedule').hide();
+          }
+          else {
+            $('#form-delivery-schedule').show();
+          }
+        }
+      });
+
       $('#wizard_form_birthdate').calendar({
         type: 'date',
         formatter: {
@@ -129,6 +144,7 @@
           }
         }
       });
+
       $('#wizard_form_date').calendar({
         type: 'date',
         formatter: {
@@ -149,10 +165,12 @@
         $(this).transition('scale');
         $('.ui.add.form.member').transition('scale');
       });
+
       $('.ui.button.cancel.add.member').on('click', function() {
         $('.ui.button.add.member').transition('scale');
         $('.existing--member').removeAttr('disabled');
       });
+
       if( $('.firstname').val() !== '' || $('.lastname').val() !== ''
           &&
           $('.existing--member').val() === '' ) {
@@ -160,14 +178,36 @@
         $('.existing--member').attr('disabled', 'disabled');
         $('.ui.add.form.member').transition('scale');
       }
-      $('.ui.search')
-        .search({
-          apiSettings: {
-            cache : 'local',
-            url: '{% url 'member:search' %}?name={query}'
-          },
-          minCharacters : 3
+
+      $('.ui.search').search({
+        apiSettings: {
+          cache : 'local',
+          url: '{% url 'member:search' %}?name={query}'
+        },
+        minCharacters : 3
+      });
+
+      function showOneAccordionElement(element, index, array) {
+        selector = '.ui.accordion.meals.' + element;
+        $(selector).show();
+      }
+      function showUiAccordionSelectedDays() {
+        var $selected = $('#id_dietary_restriction-delivery_schedule').val();
+        if ($selected) {
+          $selected.forEach(showOneAccordionElement);
+        }
+      }
+      function hideUiAccordionDays() {
+        $('.ui.accordion.meals').each(function () {
+          $(this).hide();
         });
+      }
+      $('#id_dietary_restriction-delivery_schedule').change(function () {
+        hideUiAccordionDays();
+        showUiAccordionSelectedDays();
+      });
+      hideUiAccordionDays();
+      showUiAccordionSelectedDays();
     });
 
     </script>
