@@ -504,7 +504,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "dietary_restriction",
             "dietary_restriction-status": "on",
             "dietary_restriction-delivery_type": "O",
-            "dietary_restriction-delivery_schedule": "mon",
+            "dietary_restriction-delivery_schedule": "monday",
             "dietary_restriction-meal_default": "1",
             "wizard_goto_step": ""
         }
@@ -701,7 +701,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "dietary_restriction",
             "dietary_restriction-status": "on",
             "dietary_restriction-delivery_type": "O",
-            "dietary_restriction-delivery_schedule": "mon",
+            "dietary_restriction-delivery_schedule": "monday",
             "dietary_restriction-meal_default": "1",
             "wizard_goto_step": ""
         }
@@ -1229,7 +1229,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "dietary_restriction",
             "dietary_restriction-status": "on",
             "dietary_restriction-delivery_type": "O",
-            "dietary_restriction-delivery_schedule": "mon",
+            "dietary_restriction-delivery_schedule": "monday",
             "dietary_restriction-meal_default": "1",
             "wizard_goto_step": ""
         }
@@ -1247,8 +1247,8 @@ class FormTestCase(TestCase):
         # The response is the next step of the form with no errors messages.
         self.assertTrue(b'Required information' not in response.content)
         self.assertTrue(b'status' not in response.content)
-        self.assertTrue(b'delivery_type' not in response.content)
-        self.assertTrue(b'delivery_schedule' not in response.content)
+        self.assertTrue(b'Delivery' not in response.content)
+        self.assertTrue(b'Food preference' not in response.content)
         # HTML from the next step
         self.assertTrue(b'contact_type' in response.content)
 

@@ -57,44 +57,18 @@
     <script src="{% static 'jquery/jquery.tablesort.min.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js" type="application/javascript"></script>
     <script type="text/javascript">
-    $('.ui.open-menu')
-        .on('click', function() {
-            $('.ui.sidebar')
-                .sidebar('toggle')
-                ;
-            });
-        $('.ui.dropdown')
-            .dropdown({
-                transition: 'drop',
-                onChange: function(value, text, $selectedItem) {
-                    if($selectedItem.data('value') == 'E')
-                    {
-                        $('#form-delivery-schedule').hide();
-                    }
-                    else {
-                        $('#form-delivery-schedule').show();
-                    }
-                }
-            });
+        $('.ui.open-menu').on('click', function() {
+            $('.ui.sidebar').sidebar('toggle');
+        });
 
-        $('.help-text')
-            .popup()
-            ;
+        $('.help-text').popup();
 
-        $('.message .close')
-            .on('click', function() {
-                $(this)
-                    .closest('.message')
-                    .transition('fade')
-                    ;
-                })
-            ;
+        $('.message .close').on('click', function() {
+            $(this).closest('.message').transition('fade');
+        });
+
+        $('.ui.accordion').accordion();
     </script>
-    <script language='javascript'>
-             $(document).ready(function(){
-                $('.ui.accordion').accordion();
-             });
-</script>
     <!-- WARNING :  Do not move this line before a manual import of script! -->
     {% block extrajs %}{% endblock %}
 </body>

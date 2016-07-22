@@ -60,13 +60,23 @@ OPTION_GROUP_CHOICES = (
 )
 
 DAYS_OF_WEEK = (
-    ('mon', _('Monday')),
-    ('tue', _('Tuesday')),
-    ('wed', _('Wednesday')),
-    ('thu', _('Thursday')),
-    ('fri', _('Friday')),
-    ('sat', _('Saturday')),
-    ('sun', _('Sunday')),
+    ('monday', _('Monday')),
+    ('tuesday', _('Tuesday')),
+    ('wednesday', _('Wednesday')),
+    ('thursday', _('Thursday')),
+    ('friday', _('Friday')),
+    ('saturday', _('Saturday')),
+    ('sunday', _('Sunday')),
+)
+
+MEALS = (
+    ('main_dish', _('Main Dish')),
+    ('dessert', _('Dessert')),
+    ('diabetic', _('Diabetic Dessert')),
+    ('fruit_salad', _('Fruit Salad')),
+    ('green_salad', _('Green Salad')),
+    ('pudding', _('Pudding')),
+    ('compote', _('Compote')),
 )
 
 
