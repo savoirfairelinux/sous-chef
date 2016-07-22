@@ -431,8 +431,8 @@ class Client(models.Model):
         meals_default = client.meal_default_week
         if meals_default:
             quantity = meals_default.get(
-                component_group+'_'+days[day]+'_quantity') or 0
-            size = meals_default.get('size_'+days[day]) or ''
+                component_group + '_' + days[day] + '_quantity') or 0
+            size = meals_default.get('size_' + days[day]) or ''
         else:
             quantity = 0
             size = ''
@@ -459,9 +459,9 @@ class Client(models.Model):
         if not self.meal_default_week:
             self.meal_default_week = {}
         self.meal_default_week[
-            component_group+'_'+days[day]+'_quantity'] = quantity
+            component_group + '_' + days[day] + '_quantity'] = quantity
         if component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH:
-            self.meal_default_week['size_'+days[day]] = size
+            self.meal_default_week['size_' + days[day]] = size
         # DEBUG
         # print("SET client, compgroup, day, qty, size, dict",
         #       self, component_group, days[day], quantity, size,

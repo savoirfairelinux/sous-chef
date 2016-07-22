@@ -5,7 +5,7 @@ from member.models import RATE_TYPE_LOW_INCOME, RATE_TYPE_SOLIDARY
 from meal.models import Menu, Menu_component, Component
 from meal.models import COMPONENT_GROUP_CHOICES_MAIN_DISH
 from django.utils.translation import ugettext_lazy as _
-from django_filters import FilterSet, MethodFilter
+from django_filters import FilterSet, MethodFilter, ChoiceFilter
 from member.apps import MemberConfig
 import re
 import datetime
@@ -53,7 +53,7 @@ class OrderManager(models.Manager):
         """ Return the orders for the given date """
 
         return self.get_queryset().filter(
-           delivery_date=delivery_date
+            delivery_date=delivery_date
         )
 
 
@@ -134,7 +134,7 @@ class Order(models.Model):
         # print ("count=", qcomp.count())  # DEBUG
         if not qcomp.count():
             raise Exception(
-                "No menu for delivery date= "+str(delivery_date))
+                "No menu for delivery date= " + str(delivery_date))
         components = \
             [Component.objects.get(pk=row.compid) for row in qcomp.all()]
         # print("Menu on ", date, " : ", (components))  #DEBUG
@@ -206,9 +206,13 @@ class OrderFilter(FilterSet):
         label=_('Search by name')
     )
 
+    status = ChoiceFilter(
+        choices=(('', ''),) + ORDER_STATUS_CHOICES
+    )
+
     class Meta:
         model = Order
-        fields = ['status']
+        fields = ['status', 'delivery_date']
 
     def filter_search(self, queryset, value):
         if not value:

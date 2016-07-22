@@ -46,7 +46,7 @@ class ClientWizard(NamedUrlSessionWizardView):
         for days in day_of_week:
             json['size_{}'.format(days)] = dictonary.cleaned_data.get(
                 'size_{}'.format(days)
-                )
+            )
 
             if json['size_{}'.format(days)] is "":
                 json['size_{}'.format(days)] = None
@@ -55,7 +55,7 @@ class ClientWizard(NamedUrlSessionWizardView):
                 json['{}_{}_quantity'.format(meal, days)] \
                     = dictonary.cleaned_data.get(
                     '{}_{}_quantity'.format(meal, days)
-                    )
+                )
 
         return json
 
@@ -186,8 +186,8 @@ class ClientWizard(NamedUrlSessionWizardView):
             alert=basic_information.cleaned_data.get("alert"),
             delivery_type=dietary_restriction.cleaned_data.get(
                 "delivery_type"
-                ), meal_default_week=self.save_json(dietary_restriction)
-            )
+            ), meal_default_week=self.save_json(dietary_restriction)
+        )
 
         if dietary_restriction.cleaned_data.get('status'):
             client.status = 'A'
@@ -474,7 +474,6 @@ def parse_json(meals):
     return meal_default
 
 
-
 class ClientDetail(generic.DetailView):
     # Display detail of one client
     model = Client
@@ -492,7 +491,6 @@ class ClientDetail(generic.DetailView):
         else:
             context['meal_default'] = []
         return context
-
 
 
 class ClientPreferencesView(generic.DetailView):

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
+{% load static %}
 
 {% block title %} {% trans 'Orders' %} {% endblock %}
 
@@ -36,6 +37,17 @@
                 <label>Status</label>
                 <div class="field">
                     {{ filter.form.status }}
+                </div>
+            </div>
+            <div class="field">
+                <label>Delivery date</label>
+                <div class="field">
+                    <div class="ui calendar" id="order_delivery_date">
+                        <div class="ui input left icon">
+                              <i class="calendar icon"></i>
+                              {{ filter.form.delivery_date }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,4 +97,66 @@
     })
 </script>
 
+{% endblock %}
+
+{% block extrajs %}
+  <script src="{% static 'jquery/calendar.min.js' %}" type="application/javascript"></script>
+  <script type="text/javascript">
+    $(function() {
+      $('#order_delivery_date').calendar({
+        type: 'date',
+        formatter: {
+          date: function (date, settings) {
+            if (!date) return '';
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            if (month < 10) month = '0' + month;
+            if (day < 10) day = '0' + day;
+            return year + '-' + month + '-' + day;
+          }
+        }
+      });
+      $('#wizard_form_date').calendar({
+        type: 'date',
+        formatter: {
+          date: function (date, settings) {
+            if (!date) return '';
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            if (month < 10) month = '0' + month;
+            if (day < 10) day = '0' + day;
+            return year + '-' + month + '-' + day;
+          }
+        }
+      });
+
+      $('.ui.button.add.member').on('click', function() {
+        $('.existing--member').val('').attr('disabled', 'disabled');
+        $(this).transition('scale');
+        $('.ui.add.form.member').transition('scale');
+      });
+      $('.ui.button.cancel.add.member').on('click', function() {
+        $('.ui.button.add.member').transition('scale');
+        $('.existing--member').removeAttr('disabled');
+      });
+      if( $('.firstname').val() !== '' || $('.lastname').val() !== ''
+          &&
+          $('.existing--member').val() === '' ) {
+        $('.ui.button.add.member').transition('scale');
+        $('.existing--member').attr('disabled', 'disabled');
+        $('.ui.add.form.member').transition('scale');
+      }
+      $('.ui.search')
+        .search({
+          apiSettings: {
+            cache : 'local',
+            url: '{% url 'member:search' %}?name={query}'
+          },
+          minCharacters : 3
+        });
+    });
+
+    </script>
 {% endblock %}
