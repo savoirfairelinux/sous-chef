@@ -396,9 +396,7 @@ def dailyOrders(request):
 
         # just return a JsonResponse
         return JsonResponse(data)
-
-
-
+        
 def routeDailyOrders(request):
         # do something with the your data
 

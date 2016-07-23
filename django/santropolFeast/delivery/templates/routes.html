@@ -18,21 +18,8 @@
         position: block;
         height: 600px;
     }
-    .leaflet-routing-alternatives-container h2 {
-      display: none;
-    }
-    .leaflet-routing-container-hide .leaflet-routing-collapse-btn{
-      display: none;
-    }
-    .leaflet-routing-container h3 {
-      font-size: 22px;
-      font-weight: bold;
-    }
-    .leaflet-popup-content{
-        font-size: 18px;
-    }
-    .leaflet-routing-alt {
-      max-height:400px;
+    .leaflet-control{
+        display: none;
     }
     </style>
     <script src="{% static 'leaflet-routing/leaflet-routing-machine.js' %}" type="application/javascript"></script>
@@ -46,35 +33,7 @@
 {% block content %}
 
 <script type="text/javascript">
-    function printMapAndItinerary() {
-        var body               = $('body');
-        var mapContainer       = $('#main');
-        var mapContainerParent = mapContainer.parent();
-        var printContainer     = $('<div>');
-        var itinerary = $(".leaflet-routing-alt table");
 
-        printContainer
-            .addClass('print-container')
-            .css('position', 'relative')
-            .height(mapContainer.height())
-            .append(mapContainer)
-            .append(itinerary)
-            .prependTo(body);
-
-        var content = body
-            .children()
-            .not('script')
-            .not(printContainer)
-            .detach();
-
-        window.print();
-
-        body.prepend(content);
-        mapContainerParent.prepend(mapContainer);
-
-        printContainer.remove();
-
-    }
 
     function main_map_init (map, options) {
 
@@ -87,34 +46,32 @@
         var waypoints = [];
         $.get( "../getDailyOrders/", function( data ) {
 
-            var deliveryPoints = L.Routing.Waypoint.extend({ member:"", meal:"", notes:"", allergies:"" });
+            var deliveryPoints = L.Routing.Waypoint.extend({ meal:"", member:"" });
             // create an array of waypoint from ajax call
             for(var i in data.waypoints)
             {
                  waypoints.push(new deliveryPoints(L.latLng(data.waypoints[i].latitude, data.waypoints[i].longitude)) );
                  waypoints[i].options.meal = data.waypoints[i].meal;
                  waypoints[i].options.member = data.waypoints[i].member;
-                 waypoints[i].name = data.waypoints[i].member ;
             }
 
             // add the layer to the map
             map.addLayer(layer);
-
             // center on montreal
-            map.setView(new L.LatLng(45.5017, -73.5673), 6);
+            map.setView(new L.LatLng(45.5017, -73.5673), 8);
 
            // add awesome marker for santropol
             L.marker([45.516564, -73.575145], {
                draggable: false,
                opacity: 1,
                icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
+               //icon: L.icon.glyph({ icon: 'cutlery', prefix: 'fa' ,  glyphColor: 'red',}),
              }).addTo(map);
 
              // Create bike router using mapbox
              var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
              bikerouter.options.profile = 'mapbox.cycling';
 
-             // Extend Routing Control to build  sortable geocoder
              var routingContol = L.Routing.Control.extend({
                  initialize: function(map, initialWaypoints) {
                      L.Routing.Control.prototype.initialize.call(this, {
@@ -148,11 +105,10 @@
                                   draggable: true
                               });
 
-                              var info = "<div class='ui list'>"
-                                             +"<div class='item'><i class='user icon'></i>" + wp.options.member + "</div>"
-                                             +"<div class='item'><i class='food icon'></i>" + wp.options.meal + "</div>"
-                                             +"<div class='item'><i class='warning circle icon'></i>" + wp.options.meal + "</div>"
-                                             +"</div>"
+                              var info = "<dl><dt>Member</dt>"
+                                         + "<dd>" + wp.options.member + "</dd>"
+                                         + "<dt>Meal</dt>"
+                                         + "<dd>" + wp.options.meal + "</dd>"
 
                               marker.bindPopup(info).openPopup();
                               return marker;
@@ -176,11 +132,46 @@
                  },
              });
 
-            // Bind control outside of the map
-           var control = new routingContol();
 
+            // Bind control outside of the map
+           var control = new routingContol()
            var routeBlock = control.onAdd(map);
            $(".controls").append(routeBlock);
+
+
+
+            var route2 = L.Routing.control({
+            	waypoints: [
+            	  L.latLng(45.5165, -73.567),
+            	  L.latLng(45.428564, -73.586145),
+              ],
+              lineOptions: {
+                  styles: [
+                      {color: 'black', opacity: 0.3, weight: 11},
+                      {color: 'white', opacity: 0.9, weight: 9},
+                      {color: 'DarkGreen', opacity: 1, weight: 3}
+                  ]
+              },
+              show:false,
+            }).addTo(map);
+
+
+            var route3 = L.Routing.control({
+            	waypoints: [
+            	  L.latLng(45.5165, -73.567),
+                L.latLng(45.548664, -73.681145),
+            	  L.latLng(45.558664, -73.685945),
+              ],
+              lineOptions: {
+                  styles: [
+                      {color: 'black', opacity: 0.3, weight: 11},
+                      {color: 'white', opacity: 0.9, weight: 9},
+                      {color: 'BlueViolet', opacity: 1, weight: 3}
+                  ]
+              },
+              show:false,
+            }).addTo(map);
+
 
            // Add sortable on the route controler
            Sortable.create(document.querySelector('.leaflet-routing-geocoders'), {
@@ -201,12 +192,9 @@
                      control.setWaypoints(wps);
                  }
            });
-
-          $("#btnprint").click(function(){
-              printMapAndItinerary();
-            });
           }
         );
+
   }
 </script>
 
@@ -218,18 +206,17 @@
 
   <div class="row">
     <div class="twelve wide column">
+      <div class="ui three buttons">
+        <button class="ui active button">Route 1</button>
+        <button class="ui button">Route 2</button>
+        <button class="ui button">Route 3</button>
+      </div>
+      </div>
+    <div class="twelve wide column">
       {% leaflet_map "main" callback="main_map_init" %}
     </div>
     <div class="four wide column">
       <div class="controls"></div>
-      <button id='btnprint' class="ui fluid primary labeled icon button">
-          <i class="print icon"></i>
-          Print
-      </button>
-      <button id='btnsave' class="ui fluid  labeled icon button">
-          <i class="save icon"></i>
-          Save
-      </button>
     </div>
   </div>
 

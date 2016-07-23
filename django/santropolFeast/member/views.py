@@ -12,7 +12,8 @@ from member.models import Referencing, ClientFilter, Note, ClientFilter
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
-<<<<<<< HEAD
+from django.template import RequestContext
+from django.http import JsonResponse
 
 size = ['regular', 'large']
 
@@ -25,11 +26,6 @@ day_of_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday',
 meals_template = ['main_dish', 'dessert', 'diabetic', 'fruit_salad',
                   'green_salad'
                   ]
-
-=======
-from django.template import RequestContext
-from django.http import JsonResponse
->>>>>>> (212) member add API endpoint geolocate post
 
 class ClientWizard(NamedUrlSessionWizardView):
 
