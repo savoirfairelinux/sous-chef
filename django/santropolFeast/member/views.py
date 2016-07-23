@@ -3,27 +3,16 @@
 from django.views import generic
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect, JsonResponse
-from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from member.models import Client, Member, Address, Contact, Note
-from member.models import Referencing, ClientFilter, Note, ClientFilter
+from member.models import (
+    Client, Member, Address, Contact, Note, Referencing,
+    ClientFilter, Note, ClientFilter, DAYS_OF_WEEK
+)
+from meal.models import COMPONENT_GROUP_CHOICES
 from formtools.wizard.views import NamedUrlSessionWizardView
-from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
-
-size = ['regular', 'large']
-
-meals = ['main_dish', 'dessert', 'diabetic', 'fruit_salad',
-         'green_salad', 'pudding', 'compote']
-
-day_of_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday',
-               'saturday', 'sunday']
-
-meals_template = ['main_dish', 'dessert', 'diabetic', 'fruit_salad',
-                  'green_salad'
-                  ]
 
 
 class ClientWizard(NamedUrlSessionWizardView):
@@ -33,17 +22,15 @@ class ClientWizard(NamedUrlSessionWizardView):
     def get_context_data(self, **kwargs):
         context = super(ClientWizard, self).get_context_data(**kwargs)
 
-        context["weekday"] = day_of_week
-        context["meals"] = meals_template
-        context["size"] = size
+        context["weekday"] = DAYS_OF_WEEK
+        context["meals"] = COMPONENT_GROUP_CHOICES
 
         return context
 
     def save_json(self, dictonary):
-
         json = {}
 
-        for days in day_of_week:
+        for days, Days in DAYS_OF_WEEK:
             json['size_{}'.format(days)] = dictonary.cleaned_data.get(
                 'size_{}'.format(days)
             )
@@ -51,7 +38,7 @@ class ClientWizard(NamedUrlSessionWizardView):
             if json['size_{}'.format(days)] is "":
                 json['size_{}'.format(days)] = None
 
-            for meal in meals:
+            for meal, Meals in COMPONENT_GROUP_CHOICES:
                 json['{}_{}_quantity'.format(meal, days)] \
                     = dictonary.cleaned_data.get(
                     '{}_{}_quantity'.format(meal, days)
