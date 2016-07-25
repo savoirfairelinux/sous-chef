@@ -136,13 +136,14 @@ class Order(models.Model):
                 "No menu for delivery date= " + str(delivery_date))
         components = \
             [Component.objects.get(pk=row.compid) for row in qcomp.all()]
-        # print("Menu on ", date, " : ", (components))  #DEBUG
+        # print("Menu on ", delivery_date, " : ", (components))  #DEBUG
         day = delivery_date.weekday()  # Monday is 0, Sunday is 6
         for client in clients:
             # find quantity of free side dishes based on number of main dishes
             free_side_dish_qty = Client.get_meal_defaults(
                 client,
                 COMPONENT_GROUP_CHOICES_MAIN_DISH, day)[0]
+            # print ("Side dish", free_side_dish_qty)
             if free_side_dish_qty == 0:
                 continue  # No meal for client on this day
             try:
