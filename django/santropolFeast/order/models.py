@@ -180,7 +180,7 @@ class Order(models.Model):
                     else:
                         unit_price = side_price
                         while free_side_dish_qty > 0 and default_qty > 0:
-                            free_side_dish_qty -= - 1
+                            free_side_dish_qty -= 1
                             default_qty -= 1
                             free_quantity += 1
                     oi = Order_item(

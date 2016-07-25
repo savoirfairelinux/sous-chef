@@ -18,7 +18,7 @@ INGREDIENT_GROUP_CHOICES = (
     ('dairy', _('Dairy')),
     ('fish', _('Fish')),
     ('seafood', _('Seafood')),
-    ('veggies and fruits', _('Veggies and fruits')),
+    ('veggies_and_fruits', _('Veggies and fruits')),
     ('legumineuse', _('Legumineuse')),
     ('grains', _('Grains')),
     ('fresh_herbs', _('Fresh herbs')),
