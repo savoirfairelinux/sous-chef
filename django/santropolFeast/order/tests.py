@@ -1,12 +1,12 @@
+import random
 from django.test import TestCase
 from member.models import Client, Address, Member
 from order.models import Order, Order_item
 from order.factories import OrderFactory
-from member.factories import RouteFactory
-from datetime import date, datetime
+from member.factories import RouteFactory, ClientFactory
+from meal.factories import MenuFactory
+from datetime import date
 from django.contrib.auth.models import User
-from dataload import insert_all
-import datetime
 
 
 class OrderTestCase(TestCase):
@@ -17,7 +17,7 @@ class OrderTestCase(TestCase):
 
     def test_get_orders_for_Date(self):
 
-        order = OrderFactory()
+        order = OrderFactory(delivery_date=date.today())
 
         self.assertTrue(
             len(
@@ -57,11 +57,14 @@ class OrderItemTestCase(TestCase):
             delivery_date=date(2016, 10, 10),
             status='B', client=client,
         )
-        zero_order_item = Order_item.objects.create(order=total_zero_order,
-                                                    price=22.50,
-                                                    billable_flag=False,
-                                                    order_item_type="",
-                                                    remark="12")
+
+        Order_item.objects.create(
+            order=total_zero_order,
+            price=22.50,
+            billable_flag=False,
+            order_item_type="",
+            remark="12"
+        )
 
         order = Order.objects.create(
             creation_date=date(2016, 5, 5),
@@ -69,12 +72,12 @@ class OrderItemTestCase(TestCase):
             status='B', client=client,
         )
 
-        billable_order_item = Order_item.objects.create(
+        Order_item.objects.create(
             order=order, price=6.50, billable_flag=True, order_item_type="",
             remark="testing", size="R",
         )
 
-        non_billable_order_item = Order_item.objects.create(
+        Order_item.objects.create(
             order=order, price=12.50, billable_flag=False, order_item_type="",
             remark="testing", size="L",
         )
@@ -119,31 +122,58 @@ class OrderCreateOnDefaultsTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        # TODO improve by using factory
-        insert_all()  # load fresh data into DB
+        clients = ClientFactory.create_batch(4)
+        for client in clients:
+            client.set_meal_defaults(
+                'main_dish',
+                4,
+                random.choice([1, 2]),
+                random.choice(['R', 'L'])
+            )
+            client.set_meal_defaults(
+                'dessert', 4, random.choice([0, 1, 2]), ''
+            )
+            client.set_meal_defaults(
+                'diabetic dessert', 4, random.choice([0, 1, 2]), ''
+            )
+            client.set_meal_defaults(
+                'fruit_salad', 4, random.choice([0, 1, 2]), ''
+            )
+            client.set_meal_defaults(
+                'green_salad', 4, random.choice([0, 1, 2]), ''
+            )
+            client.set_meal_defaults(
+                'pudding', 4, random.choice([0, 1, 2]), ''
+            )
+            client.set_meal_defaults(
+                'compote', 4, random.choice([0, 1, 2]), ''
+            )
+            client.save()
+        delivery_date = date(2016, 7, 15)
+        MenuFactory.create(date=delivery_date)
 
     def test_create_all_orders_fixed_date(self):
         """All orders will be created"""
-        creation_date = datetime.date(2016, 7, 8)
-        delivery_date = datetime.date(2016, 7, 15)
+        creation_date = date(2016, 7, 8)
+        delivery_date = date(2016, 7, 15)
         clients = Client.objects.all()
-        num = Order.create_orders_on_defaults(
+        Order.create_orders_on_defaults(
             creation_date, delivery_date, clients)
         new = Order.objects.filter(delivery_date=delivery_date)
         self.assertEqual(len(new), len(clients))
 
     def test_create_only_new_orders_fixed_date(self):
         """Only new orders for delivery date will be created"""
-        creation_date = datetime.date(2016, 7, 9)
-        delivery_date = datetime.date(2016, 7, 15)
+        creation_date = date(2016, 7, 9)
+        delivery_date = date(2016, 7, 15)
         clients = Client.objects.all()
         # create 2 old orders
         Order.create_orders_on_defaults(
-            datetime.date(2016, 7, 5), delivery_date, clients[0:2])
+            date(2016, 7, 5), delivery_date, clients[0:2])
         old = Order.objects.filter(delivery_date=delivery_date)
         numold = len(old)  # because query is lazy and old will change below
         # create new orders
-        num = Order.create_orders_on_defaults(
+        Order.create_orders_on_defaults(
             creation_date, delivery_date, clients)
         new = Order.objects.filter(
             creation_date=creation_date, delivery_date=delivery_date)
@@ -153,11 +183,11 @@ class OrderCreateOnDefaultsTestCase(TestCase):
 
     def test_create_orders_date_no_menu(self):
         """No menu for delivery date, error will be raised"""
-        creation_date = datetime.date(2016, 7, 9)
-        delivery_date = datetime.date(2016, 7, 20)
+        creation_date = date(2016, 7, 9)
+        delivery_date = date(2016, 7, 20)
         clients = Client.objects.all()
         with self.assertRaises(Exception) as cm:
-            num = Order.create_orders_on_defaults(
+            Order.create_orders_on_defaults(
                 creation_date, delivery_date, clients)
             the_exception = cm.exception
             self.assertEqual(the_exception.error_code, 3)

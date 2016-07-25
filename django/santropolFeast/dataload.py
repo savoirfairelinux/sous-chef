@@ -181,31 +181,31 @@ def insert_all():
     # -----------------------------------------------------------------------------
     com_1 = Component(
         name='Coq au vin',
-        component_group='main dish')
+        component_group='main_dish')
     com_1.save()
     com_2 = Component(
         name='Meat pie',
-        component_group='main dish')
+        component_group='main_dish')
     com_2.save()
     com_3 = Component(
         name='Vegetable fried rice',
-        component_group='main dish')
+        component_group='main_dish')
     com_3.save()
     com_4 = Component(
         name='Sausage cassoulet',
-        component_group='main dish')
+        component_group='main_dish')
     com_4.save()
     com_5 = Component(
         name='Fish chowder',
-        component_group='main dish')
+        component_group='main_dish')
     com_5.save()
     com_6 = Component(
         name='Ginger pork',
-        component_group='main dish')
+        component_group='main_dish')
     com_6.save()
     com_7 = Component(
         name='Beef Meatloaf',
-        component_group='main dish')
+        component_group='main_dish')
     com_7.save()
     com_8 = Component(
         name='Day s Dessert',
@@ -217,11 +217,11 @@ def insert_all():
     com_9.save()
     com_10 = Component(
         name='Fruit Salad',
-        component_group='fruit salad')
+        component_group='fruit_salad')
     com_10.save()
     com_11 = Component(
         name='Green Salad',
-        component_group='green salad')
+        component_group='green_salad')
     com_11.save()
     com_12 = Component(
         name='Lemon Pudding',
@@ -475,11 +475,11 @@ def insert_all():
         gender='M',
         birthdate=datetime.date(1940, 2, 23))
     cli_1.save()
-    cli_1.set_meal_defaults('main dish', 4, 2, 'L')
+    cli_1.set_meal_defaults('main_dish', 4, 2, 'L')
     cli_1.set_meal_defaults('dessert', 4, 1, '')
     cli_1.set_meal_defaults('diabetic dessert', 4, 0, '')
-    cli_1.set_meal_defaults('fruit salad', 4, 0, '')
-    cli_1.set_meal_defaults('green salad', 4, 1, '')
+    cli_1.set_meal_defaults('fruit_salad', 4, 0, '')
+    cli_1.set_meal_defaults('green_salad', 4, 1, '')
     cli_1.set_meal_defaults('pudding', 4, 1, '')
     cli_1.set_meal_defaults('compote', 4, 0, '')
     cli_1.save()
@@ -496,11 +496,11 @@ def insert_all():
         gender='M',
         birthdate=datetime.date(1945, 12, 13))
     cli_2.save()
-    cli_2.set_meal_defaults('main dish', 4, 1, 'R')
+    cli_2.set_meal_defaults('main_dish', 4, 1, 'R')
     cli_2.set_meal_defaults('dessert', 4, 1, '')
     cli_2.set_meal_defaults('diabetic dessert', 4, 0, '')
-    cli_2.set_meal_defaults('fruit salad', 4, 0, '')
-    cli_2.set_meal_defaults('green salad', 4, 0, '')
+    cli_2.set_meal_defaults('fruit_salad', 4, 0, '')
+    cli_2.set_meal_defaults('green_salad', 4, 0, '')
     cli_2.set_meal_defaults('pudding', 4, 0, '')
     cli_2.set_meal_defaults('compote', 4, 0, '')
     cli_2.save()
@@ -517,11 +517,11 @@ def insert_all():
         gender='M',
         birthdate=datetime.date(1943, 12, 13))
     cli_3.save()
-    cli_3.set_meal_defaults('main dish', 4, 2, 'R')
+    cli_3.set_meal_defaults('main_dish', 4, 2, 'R')
     cli_3.set_meal_defaults('dessert', 4, 0, '')
     cli_3.set_meal_defaults('diabetic dessert', 4, 0, '')
-    cli_3.set_meal_defaults('fruit salad', 4, 0, '')
-    cli_3.set_meal_defaults('green salad', 4, 2, '')
+    cli_3.set_meal_defaults('fruit_salad', 4, 0, '')
+    cli_3.set_meal_defaults('green_salad', 4, 2, '')
     cli_3.set_meal_defaults('pudding', 4, 0, '')
     cli_3.set_meal_defaults('compote', 4, 0, '')
     cli_3.save()
@@ -538,11 +538,11 @@ def insert_all():
         gender='M',
         birthdate=datetime.date(1943, 12, 13))
     cli_4.save()
-    cli_4.set_meal_defaults('main dish', 4, 1, 'L')
+    cli_4.set_meal_defaults('main_dish', 4, 1, 'L')
     cli_4.set_meal_defaults('dessert', 4, 0, '')
     cli_4.set_meal_defaults('diabetic dessert', 4, 0, '')
-    cli_4.set_meal_defaults('fruit salad', 4, 0, '')
-    cli_4.set_meal_defaults('green salad', 4, 0, '')
+    cli_4.set_meal_defaults('fruit_salad', 4, 0, '')
+    cli_4.set_meal_defaults('green_salad', 4, 0, '')
     cli_4.set_meal_defaults('pudding', 4, 0, '')
     cli_4.set_meal_defaults('compote', 4, 1, '')
     cli_4.save()

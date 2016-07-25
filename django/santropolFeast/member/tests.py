@@ -504,7 +504,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "dietary_restriction",
             "dietary_restriction-status": "on",
             "dietary_restriction-delivery_type": "O",
-            "dietary_restriction-delivery_schedule": "mon",
+            "dietary_restriction-delivery_schedule": "monday",
             "dietary_restriction-meal_default": "1",
             "wizard_goto_step": ""
         }
@@ -701,7 +701,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "dietary_restriction",
             "dietary_restriction-status": "on",
             "dietary_restriction-delivery_type": "O",
-            "dietary_restriction-delivery_schedule": "mon",
+            "dietary_restriction-delivery_schedule": "monday",
             "dietary_restriction-meal_default": "1",
             "wizard_goto_step": ""
         }
@@ -1229,7 +1229,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "dietary_restriction",
             "dietary_restriction-status": "on",
             "dietary_restriction-delivery_type": "O",
-            "dietary_restriction-delivery_schedule": "mon",
+            "dietary_restriction-delivery_schedule": "monday",
             "dietary_restriction-meal_default": "1",
             "wizard_goto_step": ""
         }

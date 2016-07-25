@@ -7,8 +7,6 @@ from meal.models import COMPONENT_GROUP_CHOICES_MAIN_DISH
 from django.utils.translation import ugettext_lazy as _
 from django_filters import FilterSet, MethodFilter, ChoiceFilter
 from member.apps import MemberConfig
-import re
-import datetime
 
 ORDER_STATUS_CHOICES = (
     ('O', _('Ordered')),
@@ -104,6 +102,7 @@ class Order(models.Model):
             self.delivery_date
         )
 
+    @staticmethod
     def create_orders_on_defaults(creation_date, delivery_date, clients):
         """Create orders and order items for one or many clients.
 
@@ -147,8 +146,7 @@ class Order(models.Model):
             if free_side_dish_qty == 0:
                 continue  # No meal for client on this day
             try:
-                order = Order.objects.get(
-                    client=client, delivery_date=delivery_date)
+                Order.objects.get(client=client, delivery_date=delivery_date)
                 # order already created, skip order items creation
                 # (if want to replace, must be deleted first)
                 continue
@@ -158,7 +156,7 @@ class Order(models.Model):
                               delivery_date=delivery_date,
                               status=ORDER_STATUS_CHOICES_ORDERED)
                 order.save()
-                num_orders_created = num_orders_created + 1
+                num_orders_created += 1
             # TODO Use Parameters Model in member to store unit prices
             if client.rate_type == RATE_TYPE_LOW_INCOME:
                 main_price = MAIN_PRICE_LOW_INCOME
@@ -182,9 +180,9 @@ class Order(models.Model):
                     else:
                         unit_price = side_price
                         while free_side_dish_qty > 0 and default_qty > 0:
-                            free_side_dish_qty = free_side_dish_qty - 1
-                            default_qty = default_qty - 1
-                            free_quantity = free_quantity + 1
+                            free_side_dish_qty -= 1
+                            default_qty -= 1
+                            free_quantity += 1
                     oi = Order_item(
                         order=order,
                         component=component,
@@ -214,7 +212,8 @@ class OrderFilter(FilterSet):
         model = Order
         fields = ['status', 'delivery_date']
 
-    def filter_search(self, queryset, value):
+    @staticmethod
+    def filter_search(queryset, value):
         if not value:
             return queryset
 
@@ -234,9 +233,7 @@ class OrderFilter(FilterSet):
             )
             name_contains |= lastname_contains
 
-        return queryset.filter(
-            name_contains
-        )
+        return queryset.filter(name_contains)
 
 
 class Order_item(models.Model):

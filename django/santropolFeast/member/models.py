@@ -1,3 +1,5 @@
+import datetime
+import math
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -7,10 +9,6 @@ from django_filters import FilterSet, MethodFilter, CharFilter, ChoiceFilter
 from annoying.fields import JSONField
 from meal.models import COMPONENT_GROUP_CHOICES_MAIN_DISH
 
-import datetime
-import re
-
-import math
 
 HOME = 'Home phone'
 CELL = 'Cell phone'
@@ -60,13 +58,13 @@ OPTION_GROUP_CHOICES = (
 )
 
 DAYS_OF_WEEK = (
-    ('mon', _('Monday')),
-    ('tue', _('Tuesday')),
-    ('wed', _('Wednesday')),
-    ('thu', _('Thursday')),
-    ('fri', _('Friday')),
-    ('sat', _('Saturday')),
-    ('sun', _('Sunday')),
+    ('monday', _('Monday')),
+    ('tuesday', _('Tuesday')),
+    ('wednesday', _('Wednesday')),
+    ('thursday', _('Thursday')),
+    ('friday', _('Friday')),
+    ('saturday', _('Saturday')),
+    ('sunday', _('Sunday')),
 )
 
 
@@ -387,6 +385,7 @@ class Client(models.Model):
 
         return self.client_order.all()
 
+    @staticmethod
     def get_meal_defaults(client, component_group, day):
         """Get the meal defaults quantity and size for a day.
 
@@ -425,21 +424,19 @@ class Client(models.Model):
             }
         """
 
-        # TODO use the same constant everywhere for weekday names
-        days = ('monday', 'tuesday', 'wednesday', 'thursday', 'friday',
-                'saturday', 'sunday')
         meals_default = client.meal_default_week
         if meals_default:
             quantity = meals_default.get(
-                component_group + '_' + days[day] + '_quantity') or 0
-            size = meals_default.get('size_' + days[day]) or ''
+                component_group + '_' + DAYS_OF_WEEK[day][0] + '_quantity'
+            ) or 0
+            size = meals_default.get('size_' + DAYS_OF_WEEK[day][0]) or ''
         else:
             quantity = 0
             size = ''
         # DEBUG
         # print("client, compgroup, day, qty",
         #       client, component_group, days[day], quantity)
-        return (quantity, size)
+        return quantity, size
 
     def set_meal_defaults(self, component_group, day, quantity=0, size=''):
         """Set the meal defaults quantity and size for a day.
@@ -453,15 +450,13 @@ class Client(models.Model):
           size : size of the serving of this component_group
         """
 
-        # TODO use the same constant everywhere for weekday names
-        days = ('monday', 'tuesday', 'wednesday', 'thursday', 'friday',
-                'saturday', 'sunday')
         if not self.meal_default_week:
             self.meal_default_week = {}
         self.meal_default_week[
-            component_group + '_' + days[day] + '_quantity'] = quantity
+            component_group + '_' + DAYS_OF_WEEK[day][0] + '_quantity'
+        ] = quantity
         if component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH:
-            self.meal_default_week['size_' + days[day]] = size
+            self.meal_default_week['size_' + DAYS_OF_WEEK[day][0]] = size
         # DEBUG
         # print("SET client, compgroup, day, qty, size, dict",
         #       self, component_group, days[day], quantity, size,
@@ -487,7 +482,8 @@ class ClientFilter(FilterSet):
         model = Client
         fields = ['route', 'status', 'delivery_type']
 
-    def filter_search(self, queryset, value):
+    @staticmethod
+    def filter_search(queryset, value):
         if not value:
             return queryset
 

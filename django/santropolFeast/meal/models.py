@@ -2,11 +2,11 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 COMPONENT_GROUP_CHOICES = (
-    ('main dish', _('Main dish')),
+    ('main_dish', _('Main Dish')),
     ('dessert', _('Dessert')),
-    ('diabetic dessert', _('Diabetic dessert')),
-    ('fruit salad', _('Fruit salad')),
-    ('green salad', _('Green salad')),
+    ('diabetic', _('Diabetic Dessert')),
+    ('fruit_salad', _('Fruit Salad')),
+    ('green_salad', _('Green Salad')),
     ('pudding', _('Pudding')),
     ('compote', _('Compote')),
 )
@@ -18,13 +18,13 @@ INGREDIENT_GROUP_CHOICES = (
     ('dairy', _('Dairy')),
     ('fish', _('Fish')),
     ('seafood', _('Seafood')),
-    ('veggies and fruits', _('Veggies and fruits')),
+    ('veggies_and_fruits', _('Veggies and fruits')),
     ('legumineuse', _('Legumineuse')),
     ('grains', _('Grains')),
-    ('fresh herbs', _('Fresh herbs')),
+    ('fresh_herbs', _('Fresh herbs')),
     ('spices', _('Spices')),
-    ('dry and canned goods', _('Dry and canned goods')),
-    ('oils and sauces', _('Oils and sauces')),
+    ('dry_and_canned_goods', _('Dry and canned goods')),
+    ('oils_and_sauces', _('Oils and sauces')),
 )
 
 RESTRICTED_ITEM_GROUP_CHOICES = (

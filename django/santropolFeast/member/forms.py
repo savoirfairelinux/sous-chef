@@ -1,13 +1,13 @@
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _
+from meal.models import Ingredient, Component, COMPONENT_GROUP_CHOICES
+from order.models import SIZE_CHOICES
 from member.models import (
     Member, Client, RATE_TYPE, CONTACT_TYPE_CHOICES,
     GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE,
     DAYS_OF_WEEK
 )
-from meal.models import Ingredient, Component
-from order.models import SIZE_CHOICES
 
 
 class ClientBasicInformation (forms.Form):
@@ -94,33 +94,22 @@ class ClientRestrictionsInformation(forms.Form):
     def __init__(self, *args, **kwargs):
         super(ClientRestrictionsInformation, self).__init__(*args, **kwargs)
 
-        day_of_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday',
-                       'saturday', 'sunday']
-        meals_placeholders = (
-            ('main_dish', _('Main Dish')),
-            ('dessert', _('Dessert')),
-            ('diabetic', _('Diabetic Dessert')),
-            ('fruit_salad', _('Fruit Salad')),
-            ('green_salad', _('Green Salad')),
-            ('pudding', _('Pudding')),
-            ('compote', _('Compote')),
-            )
-
-        for day in day_of_week:
-
+        for day in DAYS_OF_WEEK:
             self.fields['size_{}'.format(day)] = forms.ChoiceField(
                 choices=SIZE_CHOICES,
                 widget=forms.Select(attrs={'class': 'ui dropdown'}),
                 required=False
                 )
 
-            for meal, placeholder in meals_placeholders:
-                self.fields[
-                    '{}_{}_quantity'.format(meal, day)
-                ] = forms.IntegerField(
-                    widget=forms.TextInput(attrs={'placeholder': placeholder}),
-                    required=False
+            for meal, placeholder in COMPONENT_GROUP_CHOICES:
+                self.fields['{}_{}_quantity'.format(meal, day)] = \
+                    forms.IntegerField(
+                        widget=forms.TextInput(
+                            attrs={'placeholder': placeholder}
+                        ),
+                        required=False
                     )
+
     status = forms.BooleanField(
         label=_('Active'),
         help_text=_('By default, the client meal status is Pending.'),
