@@ -34,6 +34,8 @@ Some useful resources:
 
 Please join `#feastproject` on *irc.freenode.net*. 
 
+A public mailing list is also available. Feel free to https://lists.savoirfairelinux.net/mailman/listinfo/sous-chef[subscribe].
+
 ## Installation
 
 Please refer to the https://github.com/savoirfairelinux/santropol-feast/blob/dev/INSTALL.md[installation procedure].
