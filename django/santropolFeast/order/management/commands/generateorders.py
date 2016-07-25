@@ -29,6 +29,6 @@ class Command(BaseCommand):
         delivery_date = datetime.strptime(
             options['delivery_date'], '%Y-%m-%d'
         )
-        clients = Client.objects.all()
+        clients = Client.active.all()
         MenuFactory.create(date=delivery_date)
         Order.create_orders_on_defaults(creation_date, delivery_date, clients)
