@@ -76,7 +76,7 @@ def insert_all():
     # -----------------------------------------------------------------------------
     ing_1 = Ingredient(
         name='Onion',
-        ingredient_group='veggies and fruits')
+        ingredient_group='veggies_and_fruits')
     ing_1.save()
     ing_2 = Ingredient(
         name='Pepper',
@@ -164,16 +164,20 @@ def insert_all():
     ing_22.save()
     ing_23 = Ingredient(
         name='soy sauce',
-        ingredient_group='oils and sauces')
+        ingredient_group='oils_and_sauces')
     ing_23.save()
     ing_24 = Ingredient(
         name='green peppers',
-        ingredient_group='veggies and fruits')
+        ingredient_group='veggies_and_fruits')
     ing_24.save()
     ing_25 = Ingredient(
         name='sesame seeds',
-        ingredient_group='dry and canned goods')
+        ingredient_group='dry_and_canned_goods')
     ing_25.save()
+    ing_26 = Ingredient(
+        name='celery',
+        ingredient_group='veggies_and_fruits')
+    ing_26.save()
     #
     print_all_cols(db.query(Ingredient.sa))
     print_rows(Ingredient.objects)
@@ -212,8 +216,8 @@ def insert_all():
         component_group='dessert')
     com_8.save()
     com_9 = Component(
-        name='Day s Diabetic Dessert',
-        component_group='diabetic dessert')
+        name='Day s Diabetic dessert',
+        component_group='diabetic_dessert')
     com_9.save()
     com_10 = Component(
         name='Fruit Salad',
@@ -267,20 +271,50 @@ def insert_all():
 
     # -----------------------------------------------------------------------------
     com_ing_1 = Component_ingredient(
-        component=com_6, ingredient=ing_3)
+        component=com_6,
+        ingredient=ing_3)
     com_ing_1.save()
     com_ing_2 = Component_ingredient(
-        component=com_6, ingredient=ing_23)
+        component=com_6,
+        ingredient=ing_23)
     com_ing_2.save()
     com_ing_3 = Component_ingredient(
-        component=com_6, ingredient=ing_24)
+        component=com_6,
+        ingredient=ing_24)
     com_ing_3.save()
     com_ing_4 = Component_ingredient(
-        component=com_6, ingredient=ing_25)
+        component=com_6,
+        ingredient=ing_25)
     com_ing_4.save()
     com_ing_5 = Component_ingredient(
-        component=com_6, ingredient=ing_1)
+        component=com_6,
+        ingredient=ing_1)
     com_ing_5.save()
+    com_ing_6 = Component_ingredient(
+        component=com_6,
+        ingredient=ing_3,
+        date=datetime.date(2016, 5, 21))
+    com_ing_6.save()
+    com_ing_7 = Component_ingredient(
+        component=com_6,
+        ingredient=ing_23,
+        date=datetime.date(2016, 5, 21))
+    com_ing_7.save()
+    com_ing_8 = Component_ingredient(
+        component=com_6,
+        ingredient=ing_26,
+        date=datetime.date(2016, 5, 21))
+    com_ing_8.save()
+    com_ing_9 = Component_ingredient(
+        component=com_6,
+        ingredient=ing_25,
+        date=datetime.date(2016, 5, 21))
+    com_ing_9.save()
+    com_ing_10 = Component_ingredient(
+        component=com_6,
+        ingredient=ing_1,
+        date=datetime.date(2016, 5, 21))
+    com_ing_10.save()
     #
     print_all_cols(db.query(Component_ingredient.sa))
     print_rows(Component_ingredient.objects)
@@ -436,6 +470,21 @@ def insert_all():
         firstname='Dr. Mary',
         lastname='Johnson')
     mem_6.save()
+    mem_7 = Member(
+        firstname='Bob',
+        lastname='Brown',
+        address=add_3)
+    mem_7.save()
+    mem_8 = Member(
+        firstname='Kevin',
+        lastname='Tracy',
+        address=add_4)
+    mem_8.save()
+    mem_9 = Member(
+        firstname='Roger',
+        lastname='Blondin',
+        address=add_2)
+    mem_9.save()
     #
     print_all_cols(db.query(Member.sa))
     print_rows(Member.objects)
@@ -477,7 +526,7 @@ def insert_all():
     cli_1.save()
     cli_1.set_meal_defaults('main_dish', 4, 2, 'L')
     cli_1.set_meal_defaults('dessert', 4, 1, '')
-    cli_1.set_meal_defaults('diabetic dessert', 4, 0, '')
+    cli_1.set_meal_defaults('diabetic_dessert', 4, 0, '')
     cli_1.set_meal_defaults('fruit_salad', 4, 0, '')
     cli_1.set_meal_defaults('green_salad', 4, 1, '')
     cli_1.set_meal_defaults('pudding', 4, 1, '')
@@ -498,7 +547,7 @@ def insert_all():
     cli_2.save()
     cli_2.set_meal_defaults('main_dish', 4, 1, 'R')
     cli_2.set_meal_defaults('dessert', 4, 1, '')
-    cli_2.set_meal_defaults('diabetic dessert', 4, 0, '')
+    cli_2.set_meal_defaults('diabetic_dessert', 4, 0, '')
     cli_2.set_meal_defaults('fruit_salad', 4, 0, '')
     cli_2.set_meal_defaults('green_salad', 4, 0, '')
     cli_2.set_meal_defaults('pudding', 4, 0, '')
@@ -519,7 +568,7 @@ def insert_all():
     cli_3.save()
     cli_3.set_meal_defaults('main_dish', 4, 2, 'R')
     cli_3.set_meal_defaults('dessert', 4, 0, '')
-    cli_3.set_meal_defaults('diabetic dessert', 4, 0, '')
+    cli_3.set_meal_defaults('diabetic_dessert', 4, 0, '')
     cli_3.set_meal_defaults('fruit_salad', 4, 0, '')
     cli_3.set_meal_defaults('green_salad', 4, 2, '')
     cli_3.set_meal_defaults('pudding', 4, 0, '')
@@ -540,12 +589,75 @@ def insert_all():
     cli_4.save()
     cli_4.set_meal_defaults('main_dish', 4, 1, 'L')
     cli_4.set_meal_defaults('dessert', 4, 0, '')
-    cli_4.set_meal_defaults('diabetic dessert', 4, 0, '')
+    cli_4.set_meal_defaults('diabetic_dessert', 4, 0, '')
     cli_4.set_meal_defaults('fruit_salad', 4, 0, '')
     cli_4.set_meal_defaults('green_salad', 4, 0, '')
     cli_4.set_meal_defaults('pudding', 4, 0, '')
     cli_4.set_meal_defaults('compote', 4, 1, '')
     cli_4.save()
+    cli_5 = Client(
+        member=mem_7,
+        billing_member=mem_7,
+        billing_payment_type='check',
+        rate_type='Low income',
+        emergency_contact_relationship='',
+        status='A',
+        language='en',
+        alert='',
+        delivery_type='O',
+        gender='M',
+        birthdate=datetime.date(1943, 12, 13))
+    cli_5.save()
+    cli_5.set_meal_defaults('main_dish', 4, 1, 'L')
+    cli_5.set_meal_defaults('dessert', 4, 0, '')
+    cli_5.set_meal_defaults('diabetic_dessert', 4, 0, '')
+    cli_5.set_meal_defaults('fruit_salad', 4, 0, '')
+    cli_5.set_meal_defaults('green_salad', 4, 0, '')
+    cli_5.set_meal_defaults('pudding', 4, 0, '')
+    cli_5.set_meal_defaults('compote', 4, 1, '')
+    cli_5.save()
+    cli_6 = Client(
+        member=mem_8,
+        billing_member=mem_8,
+        billing_payment_type='check',
+        rate_type='Low income',
+        emergency_contact_relationship='',
+        status='A',
+        language='en',
+        alert='',
+        delivery_type='O',
+        gender='M',
+        birthdate=datetime.date(1943, 12, 13))
+    cli_6.save()
+    cli_6.set_meal_defaults('main_dish', 4, 1, 'R')
+    cli_6.set_meal_defaults('dessert', 4, 0, '')
+    cli_6.set_meal_defaults('diabetic_dessert', 4, 0, '')
+    cli_6.set_meal_defaults('fruit_salad', 4, 0, '')
+    cli_6.set_meal_defaults('green_salad', 4, 0, '')
+    cli_6.set_meal_defaults('pudding', 4, 0, '')
+    cli_6.set_meal_defaults('compote', 4, 1, '')
+    cli_6.save()
+    cli_7 = Client(
+        member=mem_9,
+        billing_member=mem_9,
+        billing_payment_type='check',
+        rate_type='Low income',
+        emergency_contact_relationship='',
+        status='A',
+        language='en',
+        alert='',
+        delivery_type='O',
+        gender='M',
+        birthdate=datetime.date(1943, 12, 13))
+    cli_7.save()
+    cli_7.set_meal_defaults('main_dish', 4, 1, 'R')
+    cli_7.set_meal_defaults('dessert', 4, 0, '')
+    cli_7.set_meal_defaults('diabetic_dessert', 4, 0, '')
+    cli_7.set_meal_defaults('fruit_salad', 4, 0, '')
+    cli_7.set_meal_defaults('green_salad', 4, 0, '')
+    cli_7.set_meal_defaults('pudding', 4, 0, '')
+    cli_7.set_meal_defaults('compote', 4, 1, '')
+    cli_7.save()
     #
     print_all_cols(db.query(Client.sa))
     print_rows(Client.objects)
@@ -643,6 +755,10 @@ def insert_all():
         client=cli_1,
         restricted_item=ri_8)
     res_3.save()
+    res_4 = Restriction(
+        client=cli_6,
+        restricted_item=ri_7)
+    res_4.save()
     #
     print_all_cols(db.query(Restriction.sa))
     print_rows(Restriction.objects)
@@ -660,6 +776,14 @@ def insert_all():
         client=cli_4,
         ingredient=ing_3)
     cai_3.save()
+    cai_4 = Client_avoid_ingredient(
+        client=cli_7,
+        ingredient=ing_3)
+    cai_4.save()
+    cai_5 = Client_avoid_ingredient(
+        client=cli_7,
+        ingredient=ing_1)
+    cai_5.save()
     #
     print_all_cols(db.query(Client_avoid_ingredient.sa))
     print_rows(Client_avoid_ingredient.objects)
@@ -677,6 +801,10 @@ def insert_all():
         client=cli_4,
         component=com_3)
     cac_3.save()
+    cac_4 = Client_avoid_component(
+        client=cli_5,
+        component=com_6)
+    cac_4.save()
     #
     print_all_cols(db.query(Client_avoid_component.sa))
     print_rows(Client_avoid_component.objects)
@@ -706,6 +834,24 @@ def insert_all():
         delivery_date=datetime.date(2016, 5, 21),
         status='O')
     ord_4.save()
+    ord_5 = Order(
+        client=cli_5,
+        creation_date=datetime.date(2016, 5, 20),
+        delivery_date=datetime.date(2016, 5, 21),
+        status='O')
+    ord_5.save()
+    ord_6 = Order(
+        client=cli_6,
+        creation_date=datetime.date(2016, 5, 20),
+        delivery_date=datetime.date(2016, 5, 21),
+        status='O')
+    ord_6.save()
+    ord_7 = Order(
+        client=cli_7,
+        creation_date=datetime.date(2016, 5, 20),
+        delivery_date=datetime.date(2016, 5, 21),
+        status='O')
+    ord_7.save()
     #
     print_all_cols(db.query(Order.sa))
     print_rows(Order.objects)
@@ -718,6 +864,7 @@ def insert_all():
         billable_flag=True,
         size='R',
         order_item_type='B component',
+        total_quantity=1,
         remark='Chat with him !')
     oi_1.save()
     oi_2 = Order_item(
@@ -727,6 +874,7 @@ def insert_all():
         billable_flag=True,
         size='L',
         order_item_type='B component',
+        total_quantity=1,
         remark='')
     oi_2.save()
     oi_3 = Order_item(
@@ -736,80 +884,129 @@ def insert_all():
         billable_flag=True,
         size='L',
         order_item_type='B component',
+        total_quantity=2,
         remark='')
     oi_3.save()
     oi_4 = Order_item(
         order=ord_2,
-        component=com_6,
+        component=com_8,
         price=7,
         billable_flag=True,
         size='L',
         order_item_type='B component',
+        total_quantity=2,
         remark='')
     oi_4.save()
     oi_5 = Order_item(
-        order=ord_2,
-        component=com_8,
-        price=7,
-        billable_flag=True,
-        size='L',
-        order_item_type='B component',
-        remark='')
-    oi_5.save()
-    oi_6 = Order_item(
-        order=ord_2,
-        component=com_8,
-        price=7,
-        billable_flag=True,
-        size='L',
-        order_item_type='B component',
-        remark='')
-    oi_6.save()
-    oi_7 = Order_item(
         order=ord_1,
         component=com_11,
         price=7,
         billable_flag=True,
         size='L',
         order_item_type='B component',
+        total_quantity=1,
         remark='')
-    oi_7.save()
-    oi_8 = Order_item(
+    oi_5.save()
+    oi_6 = Order_item(
         order=ord_3,
         component=com_6,
         price=7,
         billable_flag=True,
         size='L',
         order_item_type='B component',
+        total_quantity=1,
         remark='')
-    oi_8.save()
-    oi_9 = Order_item(
+    oi_6.save()
+    oi_7 = Order_item(
         order=ord_3,
         component=com_10,
         price=7,
         billable_flag=True,
         size='L',
         order_item_type='B component',
+        total_quantity=1,
         remark='')
-    oi_9.save()
-    oi_10 = Order_item(
+    oi_7.save()
+    oi_8 = Order_item(
         order=ord_4,
         component=com_6,
         price=7,
         billable_flag=True,
         size='L',
         order_item_type='B component',
+        total_quantity=1,
         remark='')
-    oi_10.save()
-    oi_11 = Order_item(
+    oi_8.save()
+    oi_9 = Order_item(
         order=ord_4,
         component=com_9,
         price=7,
         billable_flag=True,
         size='L',
         order_item_type='B component',
+        total_quantity=1,
+        remark='Check out his garden')
+    oi_9.save()
+    oi_10 = Order_item(
+        order=ord_5,
+        component=com_6,
+        price=7,
+        billable_flag=True,
+        size='L',
+        order_item_type='B component',
+        total_quantity=1,
         remark='')
+    oi_10.save()
+    oi_11 = Order_item(
+        order=ord_5,
+        component=com_10,
+        price=7,
+        billable_flag=True,
+        size='L',
+        order_item_type='B component',
+        total_quantity=1,
+        remark='Check out his garden')
     oi_11.save()
+    oi_12 = Order_item(
+        order=ord_6,
+        component=com_6,
+        price=7,
+        billable_flag=True,
+        size='R',
+        order_item_type='B component',
+        total_quantity=1,
+        remark='')
+    oi_12.save()
+    oi_13 = Order_item(
+        order=ord_6,
+        component=com_10,
+        price=7,
+        billable_flag=True,
+        size='L',
+        order_item_type='B component',
+        total_quantity=1,
+        remark='Check out his garden')
+    oi_13.save()
+    oi_14 = Order_item(
+        order=ord_7,
+        component=com_6,
+        price=7,
+        billable_flag=True,
+        size='R',
+        order_item_type='B component',
+        total_quantity=1,
+        remark='')
+    oi_14.save()
+    oi_15 = Order_item(
+        order=ord_7,
+        component=com_10,
+        price=7,
+        billable_flag=True,
+        size='L',
+        order_item_type='B component',
+        total_quantity=1,
+        remark='Check out his garden')
+    oi_15.save()
     #
     print_all_cols(db.query(Order_item.sa))
     print_rows(Order_item.objects)
