@@ -474,6 +474,9 @@ class FormTestCase(TestCase):
             "address_information-apartment": "222",
             "address_information-city": "montreal",
             "address_information-postal_code": "H3C2C2",
+            "address_information-lat": "10",
+            "address_information-lon": "-11",
+            "address_information-distance": "12",
             "wizard_goto_step": "",
         }
 

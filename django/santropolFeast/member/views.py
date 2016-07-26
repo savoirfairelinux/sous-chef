@@ -87,7 +87,17 @@ class ClientWizard(NamedUrlSessionWizardView):
             floor=address_information.cleaned_data.get('floor'),
             city=address_information.cleaned_data.get('city'),
             postal_code=address_information.cleaned_data.get('postal_code'),
+            lat=address_information.cleaned_data.get('lat'),
+            lon=address_information.cleaned_data.get('lon'),
+            distance=address_information.cleaned_data.get('distance'),
         )
+
+        print("test");
+        print(address_information);        
+        print(address);
+        print(address_information.cleaned_data.get('lat'));
+
+
         address.save()
         return address
 
@@ -254,6 +264,7 @@ class ClientWizard(NamedUrlSessionWizardView):
 
         p_firstname = payment_information.cleaned_data.get('firstname')
         p_lastname = payment_information.cleaned_data.get('lastname')
+
 
         if e_firstname == p_firstname and e_lastname == p_lastname:
             return True
