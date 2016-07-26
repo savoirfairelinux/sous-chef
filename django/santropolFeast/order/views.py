@@ -59,10 +59,10 @@ class OrderList(generic.ListView):
 
 
 def ExportCSV(request, queryset):
-    reponse = HttpResponse(content_type="text/csv")
-    reponse['Content-Disposition'] =\
+    response = HttpResponse(content_type="text/csv")
+    response['Content-Disposition'] =\
         'attachment; filename=order_export.csv'
-    writer = csv.writer(reponse, csv.excel)
+    writer = csv.writer(response, csv.excel)
 
     writer.writerow([
         "ID",
@@ -85,7 +85,7 @@ def ExportCSV(request, queryset):
             obj.price,
         ])
 
-    return reponse
+    return response
 
 
 def show_information(request, id):

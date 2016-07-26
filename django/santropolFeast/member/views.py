@@ -332,11 +332,10 @@ class ClientList(generic.ListView):
 
 
 def ExportCSV(self, queryset):
-    reponse = HttpResponse(content_type="text/csv")
-    reponse['Content-Disposition'] =\
+    response = HttpResponse(content_type="text/csv")
+    response['Content-Disposition'] =\
         'attachment; filename=client_export.csv'
-    writer = csv.writer(reponse, csv.excel)
-
+    writer = csv.writer(response, csv.excel)
     writer.writerow([
         "ID",
         "Client Firstname",
@@ -373,6 +372,12 @@ def ExportCSV(self, queryset):
     ])
 
     for obj in queryset:
+        if obj.route is None:
+            route = ""
+
+        else:
+            route = obj.route.name
+
         writer.writerow([
             obj.id,
             obj.member.firstname,
@@ -390,7 +395,7 @@ def ExportCSV(self, queryset):
             obj.member.address.apartment,
             obj.member.address.city,
             obj.member.address.postal_code,
-            obj.route.name,
+            route,
             obj.billing_payment_type,
             obj.billing_member.firstname,
             obj.billing_member.lastname,
@@ -407,7 +412,8 @@ def ExportCSV(self, queryset):
             obj.emergency_contact_relationship,
             obj.meal_default_week,
         ])
-        return reponse
+
+    return response
 
 
 class ClientInfoView(generic.DetailView):
