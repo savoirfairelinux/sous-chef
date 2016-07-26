@@ -390,13 +390,15 @@ def dailyOrders(request):
         # do something with the your data
         data = {"waypoints": [
                     {"latitude":45.5165, "longitude":-73.5673, "member":"toto", "meal":"meat"},
+                    {"latitude":45.6462, "longitude":-73.5885, "member":"titi", "meal":"meat"},
                     {"latitude":45.6263, "longitude":-73.5774, "member":"tata", "meal":"vegie"},
-                    {"latitude":45.6462, "longitude":-73.5885, "member":"titi", "meal":"meat"} ]
-                    }
+                    {"latitude":45.6363, "longitude":-73.5774, "member":"tata", "meal":"vegie"},
+                    {"latitude":45.6163, "longitude":-73.5774, "member":"tata", "meal":"vegie"},
+                    ] }
 
         # just return a JsonResponse
         return JsonResponse(data)
-        
+
 def routeDailyOrders(request):
         # do something with the your data
 
