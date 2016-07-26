@@ -1,12 +1,22 @@
+import collections
+
 from django.db import models
 from django.db.models import Q
-from member.models import Client, Member
-from member.models import RATE_TYPE_LOW_INCOME, RATE_TYPE_SOLIDARY
-from meal.models import Menu, Menu_component, Component
-from meal.models import COMPONENT_GROUP_CHOICES_MAIN_DISH
 from django.utils.translation import ugettext_lazy as _
 from django_filters import FilterSet, MethodFilter, ChoiceFilter
-from member.apps import MemberConfig
+
+from sqlalchemy import and_
+
+from member.apps import db_session
+from member.models import (Client, Member,
+                           RATE_TYPE_LOW_INCOME, RATE_TYPE_SOLIDARY,
+                           Address, Option, Client_option, Restriction,
+                           Client_avoid_ingredient, Client_avoid_component)
+from meal.models import (Menu, Menu_component, Component,
+                         Restricted_item, Ingredient,
+                         Component_ingredient, Incompatibility,
+                         COMPONENT_GROUP_CHOICES_MAIN_DISH)
+
 
 ORDER_STATUS_CHOICES = (
     ('O', _('Ordered')),
@@ -106,8 +116,6 @@ class Order(models.Model):
     def create_orders_on_defaults(creation_date, delivery_date, clients):
         """Create orders and order items for one or many clients.
 
-        Static method called only on class object.
-
         Parameters:
           creation_date : date on which orders are created
           delivery_date : date on which orders are to be delivered
@@ -120,10 +128,8 @@ class Order(models.Model):
           Exception if no menu yet for delivery date.
         """
 
-        # session for SQLAlchemy
-        session = MemberConfig.Session()
         num_orders_created = 0
-        qcomp = session.query(Component.sa.id.label('compid')).\
+        qcomp = db_session.query(Component.sa.id.label('compid')).\
             select_from(Menu.sa).\
             join(Menu_component.sa,
                  Menu_component.sa.menu_id == Menu.sa.id).\
@@ -194,8 +200,293 @@ class Order(models.Model):
                         total_quantity=total_quantity,
                         free_quantity=free_quantity)
                     oi.save()
+
         # print("Number of orders created = ", num_orders_created) #DEBUG
         return num_orders_created
+
+    @staticmethod
+    def get_kitchen_items(delivery_date):
+        # get all client meal order specifics for delivery date
+
+        cli = Client.sa
+        mem = Member.sa
+        add = Address.sa
+        order = Order.sa
+        oi = Order_item.sa
+        comp = Component.sa
+        opt = Option.sa
+        co = Client_option.sa
+        rest = Restriction.sa
+        ri = Restricted_item.sa
+        ing = Ingredient.sa
+        inc = Incompatibility.sa
+        ci = Component_ingredient.sa
+        cai = Client_avoid_ingredient.sa
+        cac = Client_avoid_component.sa
+
+        # Day's avoid ingredients clashes
+        q_day_avo_ing = db_session.query(
+            cli.id.label('cid'),
+            mem.firstname, mem.lastname,
+            order.id, order.delivery_date,
+            ing.name.label('ingredient'), comp.name,
+            oi.id, oi.order_id.label('oiorderid')).\
+            select_from(mem).\
+            join(cli, cli.member_id == mem.id).\
+            join(order, order.client_id == cli.id).\
+            join(cai, cai.client_id == cli.id).\
+            join(ing, ing.id == cai.ingredient_id).\
+            outerjoin(ci, and_(ci.ingredient_id == ing.id,
+                               ci.date == delivery_date)).\
+            outerjoin(comp, comp.id == ci.component_id).\
+            outerjoin(oi, and_(oi.component_id == comp.id,
+                               oi.order_id == order.id)).\
+            filter(order.delivery_date == delivery_date).\
+            order_by(cli.id)
+        print_rows(
+            q_day_avo_ing,
+            "\n***** Day's avoid ingredients clashes ****\nCLIENT_ID,"
+            "FIRSTNAME, LASTNAME, "
+            "ORDER_ID, ORDER_DELIV_DATE, "
+            "INGREDIENT_NAME, COMP_NAME, "
+            "ORDER_ITEM_ID, ORDER_ITEM_ORDER_ID")
+
+        # Day's avoid component clashes
+        q_day_avo_com = db_session.query(
+            cli.id.label('cid'),
+            mem.firstname, mem.lastname,
+            order.id, order.delivery_date,
+            comp.name.label('component'),
+            oi.id, oi.order_id.label('oiorderid')).\
+            select_from(mem).\
+            join(cli, cli.member_id == mem.id).\
+            join(order, order.client_id == cli.id).\
+            join(cac, cac.client_id == cli.id).\
+            join(comp, comp.id == cac.component_id).\
+            outerjoin(oi, and_(oi.component_id == comp.id,
+                               oi.order_id == order.id)).\
+            filter(order.delivery_date == delivery_date).\
+            order_by(cli.id)
+        print_rows(q_day_avo_com,
+                   "\n***** Day's avoid component clashes ****\nCLIENT_ID,"
+                   "FIRSTNAME, LASTNAME, "
+                   "ORDER_ID, ORDER_DELIV_DATE, "
+                   "COMP_NAME, "
+                   "ORDER_ITEM_ID, ORDER_ITEM_ORDER_ID")
+
+        # Day's restrictions
+        q_day_res = db_session.query(
+            cli.id.label('cid'),
+            mem.firstname, mem.lastname,
+            order.id, order.delivery_date,
+            ri.name.label('restricted_item'),
+            ing.name.label('ingredient'), comp.name,
+            oi.id, oi.order_id.label('oiorderid')).\
+            select_from(mem).\
+            join(cli, cli.member_id == mem.id).\
+            join(order, order.client_id == cli.id).\
+            join(rest, rest.client_id == cli.id).\
+            join(ri, ri.id == rest.restricted_item_id).\
+            outerjoin(inc, inc.restricted_item_id == rest.restricted_item_id).\
+            outerjoin(ing, inc.ingredient_id == ing.id).\
+            outerjoin(ci, and_(ci.ingredient_id == ing.id,
+                               ci.date == delivery_date)).\
+            outerjoin(comp, ci.component_id == comp.id).\
+            outerjoin(oi, and_(oi.component_id == comp.id,
+                               oi.order_id == order.id)).\
+            filter(order.delivery_date == delivery_date).\
+            order_by(cli.id)
+        print_rows(q_day_res,
+                   "\n***** Day's restrictions ****\nCLIENT_ID,"
+                   "FIRSTNAME, LASTNAME, "
+                   "ORDER_ID, ORDER_DELIV_DATE, "
+                   "RESTRICTED_ITEM, INGREDIENT_NAME, COMP_NAME, "
+                   "ORDER_ITEM_ID, ORDER_ITEM_ORDER_ID")
+
+        # Day's preparations
+        q_day_pre = db_session.query(
+            cli.id.label('cid'),
+            mem.firstname, mem.lastname,
+            opt.name.label('food_prep'),
+            order.id, order.delivery_date).\
+            select_from(mem).\
+            join(cli, cli.member_id == mem.id).\
+            join(co, co.client_id == cli.id).\
+            join(opt, opt.id == co.option_id).\
+            join(order, order.client_id == cli.id).\
+            filter(order.delivery_date == delivery_date,
+                   opt.option_group == 'preparation').\
+            order_by(mem.lastname, mem.firstname)
+        print_rows(q_day_pre,
+                   "\n***** Day's preparations ****\nCLIENT_ID,"
+                   "FIRSTNAME, LASTNAME, "
+                   "FOOD_PREP, "
+                   "ORDER_ID, ORDER_DELIV_DATE")
+
+        # Day's Delivery List
+        # TODO add route filter, full address, order by postal code
+        q_day_del_lis = db_session.query(
+            cli.id.label('cid'), mem.firstname, mem.lastname,
+            add.street, add.postal_code,
+            oi.total_quantity, oi.size,
+            comp.id.label('component_id'),
+            comp.component_group,
+            comp.name.label('component_name')).\
+            select_from(mem).\
+            join(cli, cli.member_id == mem.id).\
+            join(add, add.id == mem.address_id).\
+            join(order, order.client_id == cli.id).\
+            join(oi, oi.order_id == order.id).\
+            join(comp, comp.id == oi.component_id).\
+            filter(order.delivery_date == delivery_date).\
+            order_by(add.postal_code, mem.lastname, mem.firstname)
+        print_rows(q_day_del_lis,
+                   "\n***** Delivery List ******\n CLIENT_ID,"
+                   " FIRSTNAME, LASTNAME, "
+                   "STREET, POSTAL_CODE, "
+                   "OI_TOTAL_QUANTITY, OI_SIZE, "
+                   "COMPONENT_ID, COMPONENT_GROUP, COMPONENT_NAME")
+
+        kitchen_list = {}
+        for row in q_day_avo_ing.all():
+            check_for_new_client(kitchen_list, row)
+            if row.oiorderid:
+                # found avoid ingredient clash
+                # should be a sorted set (or ordered dict ?)
+                kitchen_list[row.cid].incompatible_ingredients.append(
+                    row.ingredient)
+            # we Know that it is not incommpatible
+            elif (row.ingredient not in
+                  kitchen_list[row.cid].incompatible_ingredients):
+                # found new other avoid ingredient that does not clash today
+                # should be a set
+                kitchen_list[row.cid].other_ingredients.append(
+                    row.ingredient)
+        # END FOR
+
+        for row in q_day_avo_com.all():
+            check_for_new_client(kitchen_list, row)
+            if row.oiorderid:
+                # found avoid component clash
+                # should be a set
+                kitchen_list[row.cid].incompatible_components.append(
+                    row.component)
+            # we Know that it is not incommpatible
+            elif (row.component not in
+                  kitchen_list[row.cid].incompatible_components):
+                # found new other avoid component that does not clash today
+                # should be a set
+                kitchen_list[row.cid].other_components.append(
+                    row.component)
+        # END FOR
+
+        for row in q_day_res.all():
+            check_for_new_client(kitchen_list, row)
+            if row.oiorderid:
+                # found restriction clash
+                # should be a sorted set
+                kitchen_list[row.cid].incompatible_ingredients.append(
+                    row.ingredient)
+            elif (row.ingredient and row.ingredient not in
+                  kitchen_list[row.cid].incompatible_ingredients):
+                # found new other restriction that does not clash today
+                # should be a set
+                kitchen_list[row.cid].other_ingredients.append(
+                    row.ingredient)
+            kitchen_list[row.cid].restricted_items.append(
+                row.restricted_item)
+        # END FOR
+
+        for row in q_day_pre.all():
+            check_for_new_client(kitchen_list, row)
+            # should be a sorted set
+            # found client with food preparation
+            kitchen_list[row.cid].preparation.append(row.food_prep)
+        # END FOR
+
+        # Components summary for the day
+        for row in q_day_del_lis.all():
+            check_for_new_client(kitchen_list, row)
+            if row.component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH:
+                kitchen_list[row.cid].meal_qty = \
+                    kitchen_list[row.cid].meal_qty + row.total_quantity
+                kitchen_list[row.cid].meal_size = row.size
+            kitchen_list[row.cid].meal_components[row.component_group] = \
+                MealComponent(id=row.component_id,
+                              name=row.component_name,
+                              qty=row.total_quantity)
+        # END FOR
+
+        # sort requirements list in each value
+        for value in kitchen_list.values():
+            value.incompatible_ingredients.sort()
+            value.incompatible_components.sort()
+            value.other_ingredients.sort()
+            value.other_components.sort()
+            value.restricted_items.sort()
+            value.preparation.sort()
+
+        return kitchen_list
+
+# get_kitchen_items helper classes and functions
+
+MealComponent = \
+    collections.namedtuple('MealComponent', ['id', 'name', 'qty'])
+
+
+class KitchenItem(object):
+    # meal specifics for an order
+
+    def __init__(self):
+        self.lastname = None
+        self.firstname = None
+        self.meal_qty = 0
+        self.meal_size = ''
+        self.incompatible_ingredients = []
+        self.incompatible_components = []
+        self.other_ingredients = []
+        self.other_components = []
+        self.restricted_items = []
+        self.preparation = []
+        self.meal_components = {}
+        #  key is a component_group,
+        #  value is a MealComponent named tuple
+
+    def __str__(self):
+        return("[" +
+               'lastname=' + self.lastname + ', ' +
+               'firstname=' + self.firstname + ', ' +
+               'meal_qty=' + str(self.meal_qty) + ', ' +
+               'meal_size=' + str(self.meal_size) + ', ' +
+               'clash_ingre=' +
+               repr(self.incompatible_ingredients) + ', ' +
+               'clash_compo=' +
+               repr(self.incompatible_components) + ', ' +
+               'avoid_ingre=' + repr(self.other_ingredients) + ', ' +
+               'avoid_compo=' + repr(self.other_components) + ', ' +
+               'restr_items=' + repr(self.restricted_items) + ', ' +
+               'meal_components=' + repr(self.meal_components) + ', ' +
+               'preparation=' + repr(self.preparation) + ']')
+
+
+def print_rows(q, heading=""):  # DEBUG
+    # print("\n-----------------------------------------------------\n",
+    #       # q, "\n",
+    #       heading)
+    # for row in q.all():
+    #     print(row)
+    pass
+
+
+def check_for_new_client(kitchen_list, row):
+    # add client in list when first found
+    if not kitchen_list.get(row.cid):
+        # found new client
+        kitchen_list[row.cid] = KitchenItem()
+        kitchen_list[row.cid].lastname = row.lastname
+        kitchen_list[row.cid].firstname = row.firstname
+
+# End kitchen items helpers
 
 
 class OrderFilter(FilterSet):
@@ -234,7 +525,9 @@ class OrderFilter(FilterSet):
             )
             name_contains |= lastname_contains
 
-        return queryset.filter(name_contains)
+        return queryset.filter(
+            name_contains
+        )
 
 
 class Order_item(models.Model):

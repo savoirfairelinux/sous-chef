@@ -8,28 +8,65 @@
 {% endblock breadcrumb %}
 
 {% block content %}
-    {{ kcrlist|linebreaks }}
-<table class="ui celled table">
+<div class="ui big label">
+  KITCHEN COUNT REPORT
+</div>
+<div class="ui basic big label">
+  Delivery Date :
+</div>
+<form class="ui input" action="{% url 'delivery:kitchen_count' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input class="ui button" type="submit" value="Change" />
+</form>
+<table class="ui very compact table">
   <thead>
-    <th class="">{% trans 'Client' %}</th>
-    <th class="">{% trans 'Qty' %}</th>
-    <th class="">{% trans 'Size' %}</th>
-    <th class="">{% trans 'Section / Incompatibilities' %}</th>
-    <th class="">{% trans 'Other restrictions' %}</th>
-    <th class="">{% trans 'Preparation' %}</th>
-    <th class=""></th>
+   <tr class="top aligned">
+    <th class="">{% trans 'Component' %}</th>
+    <th class="">TOTAL<br>{% trans 'Regular' %}</th>
+    <th class="">TOTAL<br>{% trans 'Large' %}</th>
+    <th class="">{% trans 'Dish today' %}</th>
+    <th class="">{% trans 'Ingredients today' %}</th>
+   </tr>
   </thead>
   <tbody>
-    {% for obj in lines %}
+    {% for obj in component_lines %}
       <tr>
+        <td><strong>{{obj.component_group}}</strong></td>
+        <td>{{obj.rqty}}</td>
+        <td>{{obj.lqty}}</td>
+        <td>{{obj.name}}</td>
+        <td>{{obj.ingredients}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<table class="ui very compact table">
+  <thead>
+   <tr class="top aligned">
+    <th class="">{% trans 'Client' %}</th>
+    <th class="">{% trans 'Qty' %}<br>{% trans 'Reg' %}</th>
+    <th class="">{% trans 'Qty' %}<br>{% trans 'Lge' %}</th>
+    <th class="">{% trans 'Clashing' %}<br>{% trans 'Component' %}</th>
+    <th class="">{% trans 'Clashing' %}<br>{% trans 'Ingredients' %}</th>
+    <th class="">{% trans 'Preparation' %}</th>
+    <th class="">{% trans 'Restrictions' %}</th>
+   </tr>
+  </thead>
+  <tbody>
+    {% for obj in meal_lines %}
+      <tr{% if obj.client == "SUBTOTAL" or obj.client == "TOTAL SPECIALS" %} class="active"{% endif %}>
         <td><strong>{{obj.client}}</strong></td>
-        <td>{{obj.qty}}</td>
-        <td>{{obj.size}}</td>
-        <td>{{obj.incom}}</td>
-        <td>{{obj.restr}}</td>
-        <td>{{obj.prep}}</td>
-     </tr>
-        {% endfor %}
+        <td>{{obj.rqty}}</td>
+        <td>{{obj.lqty}}</td>
+        <td>{{obj.comp_clash}}</td>
+        <td>{{obj.ingr_clash}}</td>
+        <td>{{obj.preparation}}</td>
+        <td>{% if obj.rest_comp %} {{obj.rest_comp}}; {% endif %}
+            {% if obj.rest_ingr %} {{obj.rest_ingr}}; {% endif %}
+            {{obj.rest_item}}</td>
+      </tr>
+    {% endfor %}
   </tbody>
 </table>
 {% endblock %}

@@ -88,6 +88,15 @@ class Component(models.Model):
     def __str__(self):
         return self.name
 
+    @staticmethod
+    def get_day_ingredients(component_id, delivery_date):
+        """Returns a list of the actual ingredients
+        of a component for the delivery date."""
+        q = Component_ingredient.objects.\
+            filter(component__id=component_id, date=delivery_date)
+        # print("query=", q.query)  # DEBUG
+        return [ci.ingredient for ci in q]
+
 
 class Component_ingredient(models.Model):
     component = models.ForeignKey(
@@ -100,9 +109,22 @@ class Component_ingredient(models.Model):
         verbose_name=_('ingredient'),
         related_name='+')
 
+    date = models.DateField(
+        verbose_name=_('date'),
+        blank=True,
+        null=True,
+    )
+
     def __str__(self):
-        return "{} <includes> {}".format(self.component.name,
-                                         self.ingredient.name)
+        if self.date:
+            return "<{}> includes <{}> on <{}>". \
+                format(self.component.name,
+                       self.ingredient.name,
+                       self.date)
+        else:
+            return "<{}> contains <{}>". \
+                format(self.component.name,
+                       self.ingredient.name)
 
 
 class Restricted_item(models.Model):
