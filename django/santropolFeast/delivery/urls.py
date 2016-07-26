@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from delivery.views import Orderlist, MealInformation, RoutesInformation
 from delivery.views import kcr_view
 from delivery.views import dailyOrders
+from delivery.views import routeDailyOrders
 
 urlpatterns = [
     url(_(r'^order/$'), Orderlist.as_view(), name='order'),
