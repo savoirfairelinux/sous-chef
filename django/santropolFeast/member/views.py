@@ -2,7 +2,8 @@
 
 from django.views import generic
 from django.utils.decorators import method_decorator
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
+from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -13,6 +14,7 @@ from member.models import (
 from meal.models import COMPONENT_GROUP_CHOICES
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.core.urlresolvers import reverse_lazy
+import csv
 
 
 class ClientWizard(NamedUrlSessionWizardView):
@@ -289,6 +291,8 @@ class ClientList(generic.ListView):
         uf = ClientFilter(self.request.GET)
         return uf.qs
 
+        # The queryset must be client
+
     def get_context_data(self, **kwargs):
         uf = ClientFilter(self.request.GET, queryset=self.get_queryset())
 
@@ -314,6 +318,96 @@ class ClientList(generic.ListView):
         context['get'] = text
 
         return context
+
+    def get(self, request, **kwargs):
+
+        self.format = request.GET.get('format', False)
+
+        if self.format == 'csv':
+            return ExportCSV(
+                self, self.get_queryset()
+            )
+
+        return super(ClientList, self).get(request, **kwargs)
+
+
+def ExportCSV(self, queryset):
+    reponse = HttpResponse(content_type="text/csv")
+    reponse['Content-Disposition'] =\
+        'attachment; filename=client_export.csv'
+    writer = csv.writer(reponse, csv.excel)
+
+    writer.writerow([
+        "ID",
+        "Client Firstname",
+        "Client Lastname",
+        "Client Status",
+        "Client Alert",
+        "Client Gender",
+        "Client Birthdate",
+        "Client Delivery",
+        "Client Home Phone",
+        "Client Cell Phone",
+        "Client Work Phone",
+        "Client Email",
+        "Client Street",
+        "Client Apartment",
+        "Client City",
+        "Client Postal Code",
+        "Client Route",
+        "Client Billing Type",
+        "Billing Firstname",
+        "Billing Lastname",
+        "Billing Street",
+        "Billing Apartment",
+        "Billing City",
+        "Billing Postal Code",
+        "Emergency Contact Firstname",
+        "Emergency Contact Lastname",
+        "Emergency Contact Home Phone",
+        "Emergency Contact Cell Phone",
+        "Emergency Contact Work Phone",
+        "Emergency Contact Email",
+        "Emergency Contact Relationship",
+        "Meal Default",
+    ])
+
+    for obj in queryset:
+        writer.writerow([
+            obj.id,
+            obj.member.firstname,
+            obj.member.lastname,
+            obj.status,
+            obj.alert,
+            obj.gender,
+            obj.birthdate,
+            obj.delivery_type,
+            obj.member.home_phone,
+            obj.member.cell_phone,
+            obj.member.work_phone,
+            obj.member.email,
+            obj.member.address.street,
+            obj.member.address.apartment,
+            obj.member.address.city,
+            obj.member.address.postal_code,
+            obj.route.name,
+            obj.billing_payment_type,
+            obj.billing_member.firstname,
+            obj.billing_member.lastname,
+            obj.billing_member.address.street,
+            obj.billing_member.address.apartment,
+            obj.billing_member.address.city,
+            obj.billing_member.address.postal_code,
+            obj.emergency_contact.firstname,
+            obj.emergency_contact.lastname,
+            obj.emergency_contact.home_phone,
+            obj.emergency_contact.cell_phone,
+            obj.emergency_contact.work_phone,
+            obj.emergency_contact.email,
+            obj.emergency_contact_relationship,
+            obj.meal_default_week,
+        ])
+        return reponse
 
 
 class ClientInfoView(generic.DetailView):
