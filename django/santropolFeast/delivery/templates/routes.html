@@ -108,13 +108,6 @@
             // center on montreal
             map.setView(new L.LatLng(45.5017, -73.5673), 8);
 
-          //  // add awesome marker for santropol
-          //   L.marker([45.516564, -73.575145], {
-          //      draggable: false,
-          //      opacity: 1,
-          //      icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
-          //    }).addTo(map);
-
              // Create bike router using mapbox
              var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
              bikerouter.options.profile = 'mapbox.cycling';
@@ -204,7 +197,7 @@
              });
 
 
-            // Bind control outside of the map
+           // Bind control outside of the map
            var control = new routingContol()
            var routeBlock = control.onAdd(map);
            $(".controls").append(routeBlock);
@@ -235,7 +228,6 @@
             });
           }
         );
-
   }
 </script>
 
