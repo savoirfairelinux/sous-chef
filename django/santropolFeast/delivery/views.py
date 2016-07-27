@@ -261,6 +261,7 @@ def dailyOrders(request):
             'longitude': order.member.address.longitude,
             'distance': order.member.address.distance,
             'member': "{} {}".format(order.member.firstname, order.member.lastname),
+            'address': order.member.address.street,
             'meal': 'meat'
         }
         data.append(waypoint)
