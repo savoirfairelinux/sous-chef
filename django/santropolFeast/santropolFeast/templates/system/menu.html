@@ -4,6 +4,17 @@
 <div class="item">
     <img class="ui large image item" src="{% static 'assets/logo-souschef-coul.png' %}" title="Logo Sous-Chef"/>
 </div>
+{% if request.user %}
+<div class="item loggedin-user">
+    <img class="ui tiny left floated circular image" src="{% static 'assets/joe.jpg' %}">
+    <h4 class="ui header name">
+        {{ request.user.first_name }} <span class="sub-name">({{ request.user.username }})</span>
+    </h4>
+    <p class="ui roles">{% for group in request.user.groups.all %}
+        <span class="ui label role">{{ group }}</span>
+    {% endfor %}</p>
+</div>
+{% endif %}
 <div class="item">
     <a class="item" href="{% url 'member:list'%}">{% trans 'Clients' %}
         <div class="ui label">{{ CLIENTS_TOTAL }}</div>
@@ -26,7 +37,7 @@
 </div>
 
 <div class="item">
-        <a class="item" href="{% url 'home' %}"><i class="dashboard icon"></i>{% trans 'Dashboard' %}</a>
+    <a class="item" href="{% url 'home' %}"><i class="dashboard icon"></i>{% trans 'Dashboard' %}</a>
     <a class="item" href="{% url 'member:member_step' %}"><i class="add user icon"></i>{% trans 'Add a new client' %}</a>
     <a class="item" href="{% url 'admin:index' %}"><i class="settings icon"></i>{% trans 'Settings' %}</a>
     <a href="{% url 'page:logout' %}" class="item"><i class="sign out icon"></i>{% trans 'Logout' %}</a>
