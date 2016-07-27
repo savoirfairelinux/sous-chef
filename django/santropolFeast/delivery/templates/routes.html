@@ -97,17 +97,23 @@
                  waypoints[i].name = data.waypoints[i].member ;
             }
 
+            //add fisrt waypoint for santropol
+            var santro = new deliveryPoints(L.latLng(45.516564,  -73.575145));
+            santro.name = "santropol";
+            waypoints.splice(0, 0, santro);
+
             // add the layer to the map
             map.addLayer(layer);
+
             // center on montreal
             map.setView(new L.LatLng(45.5017, -73.5673), 8);
 
-           // add awesome marker for santropol
-            L.marker([45.516564, -73.575145], {
-               draggable: false,
-               opacity: 1,
-               icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
-             }).addTo(map);
+          //  // add awesome marker for santropol
+          //   L.marker([45.516564, -73.575145], {
+          //      draggable: false,
+          //      opacity: 1,
+          //      icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
+          //    }).addTo(map);
 
              // Create bike router using mapbox
              var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
@@ -139,22 +145,44 @@
                          },
                          waypoints: waypoints,
                          createMarker: function(i, wp) {
-                              var  marker =  L.marker(wp.latLng, {
-                                  icon: L.icon.glyph({
-                                      prefix: '',
-                                      glyph: String.fromCharCode(65 + i)
-                                  }),
-                                  draggable: true
-                              });
+                              var  marker;
 
-                              var info = "<div class='ui list'>"
-                                             +"<div class='item'><i class='user icon'></i>" + wp.options.member + "</div>"
-                                             +"<div class='item'><i class='food icon'></i>" + wp.options.meal + "</div>"
-                                             +"<div class='item'><i class='warning circle icon'></i>" + wp.options.meal + "</div>"
-                                             +"</div>"
+                              // adjust marker according waypoints
+                              if (wp.name == "santropol") {
+                                // add awesome marker for santropol
+                                marker =  L.marker([45.516564, -73.575145], {
+                                    draggable: false,
+                                    opacity: 1,
+                                    icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
+                                  });
 
-                              marker.bindPopup(info).openPopup();
-                              return marker;
+                                  var info = "<div class='ui list'>"
+                                                 +"<div class='item'><i class='user icon'></i> Santro </div>"
+                                                 +"</div>"
+
+                                  marker.bindPopup(info).openPopup();
+
+                                  return marker;
+                              }
+                              else {
+                                marker =  L.marker(wp.latLng, {
+                                    icon: L.icon.glyph({
+                                        prefix: '',
+                                        glyph: String.fromCharCode(65 + i)
+                                    }),
+                                    draggable: true
+                                });
+
+                                var info = "<div class='ui list'>"
+                                               +"<div class='item'><i class='user icon'></i>" + wp.options.member + "</div>"
+                                               +"<div class='item'><i class='food icon'></i>" + wp.options.meal + "</div>"
+                                               +"<div class='item'><i class='warning circle icon'></i>" + wp.options.meal + "</div>"
+                                               +"</div>"
+
+                                marker.bindPopup(info).openPopup();
+                                return marker;
+                              }
+
                          },
                          createGeocoder: L.bind(function(i) {
                              var geocoder = L.Routing.GeocoderElement.prototype.options.createGeocoder.call(this, i, this.getPlan().getWaypoints().length, this.getPlan().options),
