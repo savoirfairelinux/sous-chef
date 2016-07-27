@@ -94,7 +94,7 @@ class ClientRestrictionsInformation(forms.Form):
     def __init__(self, *args, **kwargs):
         super(ClientRestrictionsInformation, self).__init__(*args, **kwargs)
 
-        for day in DAYS_OF_WEEK:
+        for day, ignored in DAYS_OF_WEEK:
             self.fields['size_{}'.format(day)] = forms.ChoiceField(
                 choices=SIZE_CHOICES,
                 widget=forms.Select(attrs={'class': 'ui dropdown'}),

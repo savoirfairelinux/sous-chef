@@ -22,8 +22,8 @@ class ClientWizard(NamedUrlSessionWizardView):
     def get_context_data(self, **kwargs):
         context = super(ClientWizard, self).get_context_data(**kwargs)
 
-        context["weekday"] = DAYS_OF_WEEK
-        context["meals"] = COMPONENT_GROUP_CHOICES
+        context["weekday"] = [left for left, right in DAYS_OF_WEEK]
+        context["meals"] = [left for left, right in COMPONENT_GROUP_CHOICES]
 
         return context
 
