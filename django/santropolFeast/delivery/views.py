@@ -1,6 +1,5 @@
 import datetime
 import types
-
 from django.shortcuts import render
 from django.views import generic
 from django.http import HttpResponseRedirect
@@ -18,6 +17,7 @@ from .forms import DateForm
 from order.models import Order
 from meal.models import COMPONENT_GROUP_CHOICES_MAIN_DISH, Component
 from member.apps import db_session
+from member.models import Client
 
 
 class Orderlist(generic.ListView):
@@ -249,23 +249,23 @@ def kcr_make_lines(kitchen_list, date):
 
 
 def dailyOrders(request):
-        # do something with the your data
-    data = {'waypoints': [
-        {'latitude': 45.5165, 'longitude': -73.5673,
-            'member': 'toto', 'meal': 'meat'},
-        {'latitude': 45.6462, 'longitude': -73.5885,
-            'member': 'titi', 'meal': 'meat'},
-        {'latitude': 45.6263, 'longitude': -73.5774,
-            'member': 'tata', 'meal': 'vegie'},
-        {'latitude': 45.6363, 'longitude': -73.5774,
-            'member': 'tata', 'meal': 'vegie'},
-        {'latitude': 45.6163, 'longitude': -73.5774,
-            'member': 'tata', 'meal': 'vegie'},
-    ]
-    }
 
-    # just return a JsonResponse
-    return JsonResponse(data)
+    orders = Client.active.all() #.order(address__distance)
+
+    data = []
+
+    for order in orders:
+        waypoint = {
+            'id': order.member.id,
+            'latitude': order.member.address.latitude ,
+            'longitude': order.member.address.longitude,
+            'distance': order.member.address.distance,
+            'member': "{} {}".format(order.member.firstname, order.member.lastname),
+            'meal': 'meat'
+        }
+        data.append(waypoint)
+    waypoints = {'waypoints': data}
+    return JsonResponse(waypoints, safe=False)
 
 
 def routeDailyOrders(request):
