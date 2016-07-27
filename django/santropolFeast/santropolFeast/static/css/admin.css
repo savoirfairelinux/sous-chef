@@ -67,6 +67,16 @@ p.signup, p.dashboard {
   text-align: center;
 }
 
+.ui.inverted.menu div.loggedin-user .name {
+    color: rgba(255, 255, 255, 0.9);
+}
+.ui.inverted.menu div.loggedin-user .name .sub-name {
+    color: rgba(125, 125, 125, 0.9);
+}
+.ui.inverted.menu div.loggedin-user .roles {
+    clear: both;
+}
+
 /* PRODUCTS STYLES */
 .ui.striped.table {
   padding-left: 0;
