@@ -262,7 +262,7 @@
 
 //                              $('.modal').modal('show');
                           var dist = distance(45.516564,-73.575145, results[0].center.lat, results[0].center.lng,"K")
-                          alert("Info reverse geocode lat:" + data.lat + " long:"+ data.long + " address:"+ data.address +" distance from santropol" + dist );
+                          console.log("Info reverse geocode lat:" + data.lat + " long:"+ data.long + " address:"+ data.address +" distance from santropol" + dist );
 
                           // $.ajaxSetup({
                           //     headers: { "X-CSRFToken": getCookie("csrftoken") }
@@ -272,8 +272,8 @@
                           //   alert("Post Successful " + result.latitude);
                           // });
 
-                          $('#id_address_information-lat').val(data.lat);
-                          $('#id_address_information-lon').val(data.lon);
+                          $('#id_address_information-latitude').val(data.lat);
+                          $('#id_address_information-longitude').val(data.long);
                           $('#id_address_information-distance').val(dist);
 
 

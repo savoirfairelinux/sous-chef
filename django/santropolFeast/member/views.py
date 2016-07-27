@@ -89,9 +89,9 @@ class ClientWizard(NamedUrlSessionWizardView):
             floor=address_information.cleaned_data.get('floor'),
             city=address_information.cleaned_data.get('city'),
             postal_code=address_information.cleaned_data.get('postal_code'),
-            # lat=address_information.cleaned_data.get('lat'),
-            # lon=address_information.cleaned_data.get('lon'),
-            # distance=address_information.cleaned_data.get('distance'),
+            latitude=address_information.cleaned_data.get('latitude'),
+            longitude=address_information.cleaned_data.get('longitude'),
+            distance=address_information.cleaned_data.get('distance'),
         )
 
         address.save()

@@ -164,14 +164,14 @@ class Address(models.Model):
         verbose_name=_('postal code')
     )
 
-    lon = models.DecimalField(
+    longitude = models.DecimalField(
             max_digits=9,
             decimal_places=6,
             blank=True,
             null=True,
     )
 
-    lat = models.DecimalField(
+    latitude = models.DecimalField(
             max_digits=9,
             decimal_places=6,
             blank=True,

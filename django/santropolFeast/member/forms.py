@@ -89,6 +89,21 @@ class ClientAddressInformation(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': _('H2R 2Y5')})
     )
 
+    latitude = forms.CharField(
+        label=_('Latitude'),
+        widget=forms.TextInput()
+    )
+
+    longitude = forms.CharField(
+        label=_('Longitude'),
+        widget=forms.TextInput()
+    )
+
+    distance = forms.CharField(
+        label=_('Distance'),
+        widget=forms.TextInput()
+    )
+
 
 class ClientRestrictionsInformation(forms.Form):
     def __init__(self, *args, **kwargs):
