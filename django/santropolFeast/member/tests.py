@@ -1247,8 +1247,8 @@ class FormTestCase(TestCase):
         # The response is the next step of the form with no errors messages.
         self.assertTrue(b'Required information' not in response.content)
         self.assertTrue(b'status' not in response.content)
-        self.assertTrue(b'delivery_type' not in response.content)
-        self.assertTrue(b'delivery_schedule' not in response.content)
+        self.assertTrue(b'Delivery' not in response.content)
+        self.assertTrue(b'Food preference' not in response.content)
         # HTML from the next step
         self.assertTrue(b'contact_type' in response.content)
 
