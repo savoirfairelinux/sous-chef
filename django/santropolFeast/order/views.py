@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import render, render_to_response
 from django.views import generic
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
@@ -6,6 +7,7 @@ from member.models import Client
 from order.models import Order, OrderFilter
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+import csv
 
 
 class OrderList(generic.ListView):
@@ -43,6 +45,47 @@ class OrderList(generic.ListView):
         context['get'] = text
 
         return context
+
+    def get(self, request, **kwargs):
+
+        self.format = request.GET.get('format', False)
+
+        if self.format == 'csv':
+            return ExportCSV(
+                self, self.get_queryset()
+                )
+
+        return super(OrderList, self).get(request, **kwargs)
+
+
+def ExportCSV(request, queryset):
+    response = HttpResponse(content_type="text/csv")
+    response['Content-Disposition'] =\
+        'attachment; filename=order_export.csv'
+    writer = csv.writer(response, csv.excel)
+
+    writer.writerow([
+        "ID",
+        "Client Firstname",
+        "Client Lastname",
+        "Order Status",
+        "Creation Date",
+        "Delivery Date",
+        "price",
+    ])
+
+    for obj in queryset:
+        writer.writerow([
+            obj.id,
+            obj.client.member.firstname,
+            obj.client.member.lastname,
+            obj.get_status_display(),
+            obj.creation_date,
+            obj.delivery_date,
+            obj.price,
+        ])
+
+    return response
 
 
 def show_information(request, id):

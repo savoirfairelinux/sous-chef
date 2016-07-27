@@ -93,8 +93,33 @@ class Member(models.Model):
     def __str__(self):
         return "{} {}".format(self.firstname, self.lastname)
 
-    def get_home_phone(self):
-        return self.member_contact.filter(type=HOME).first() or ''
+    @property
+    def home_phone(self):
+        try:
+            return self.member_contact.filter(type=HOME).first().value
+        except:
+            return ""
+
+    @property
+    def cell_phone(self):
+        try:
+            return self.member_contact.all().filter(type=CELL).first().value
+        except:
+            return ""
+
+    @property
+    def work_phone(self):
+        try:
+            return self.member_contact.all().filter(type=WORK).first().value
+        except:
+            return ""
+
+    @property
+    def email(self):
+        try:
+            return self.member_contact.all().filter(type=EMAIL).first().value
+        except:
+            return ""
 
 
 class Address(models.Model):
