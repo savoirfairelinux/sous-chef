@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django_filters',
     'aldjemy',
     'annoying',
+    'leaflet',
 
 ]
 

@@ -4,6 +4,14 @@ import types
 from django.shortcuts import render
 from django.views import generic
 from django.http import HttpResponseRedirect
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from delivery.models import Delivery
+from django.http import JsonResponse
+
+from .apps import DeliveryConfig
+
+from sqlalchemy import func, or_, and_
 
 from .models import Delivery
 from .forms import DateForm
@@ -60,7 +68,8 @@ class KitchenCount(generic.View):
             date = form.cleaned_data['date']
             fmtdate = \
                 '{:04}/{:02}/{:02}'.format(date.year, date.month, date.day)
-            return HttpResponseRedirect('/delivery/kitchen_count/'+fmtdate+'/')
+            return HttpResponseRedirect
+            ('/delivery/kitchen_count/' + fmtdate + '/')
         else:
             return render(request, 'kitchen_count.html',
                           {'component_lines': [],
@@ -70,6 +79,7 @@ class KitchenCount(generic.View):
 
 class Component_line(types.SimpleNamespace):
     # line to display component count summary
+
     def __init__(self,
                  component_group='', rqty=0, lqty=0,
                  name='', ingredients=''):
@@ -79,6 +89,7 @@ class Component_line(types.SimpleNamespace):
 
 class Meal_line(types.SimpleNamespace):
     # line to display client meal specifics
+
     def __init__(self,
                  client='', rqty='', lqty='', comp_clash='',
                  ingr_clash='', preparation='', rest_comp='',
@@ -235,3 +246,40 @@ def kcr_make_lines(kitchen_list, date):
     kcr_total_line(meal_lines, 'SUBTOTAL', rsubtotal, lsubtotal)
 
     return (component_lines_sorted, meal_lines)
+
+
+def dailyOrders(request):
+        # do something with the your data
+    data = {'waypoints': [
+        {'latitude': 45.5165, 'longitude': -73.5673,
+            'member': 'toto', 'meal': 'meat'},
+        {'latitude': 45.6462, 'longitude': -73.5885,
+            'member': 'titi', 'meal': 'meat'},
+        {'latitude': 45.6263, 'longitude': -73.5774,
+            'member': 'tata', 'meal': 'vegie'},
+        {'latitude': 45.6363, 'longitude': -73.5774,
+            'member': 'tata', 'meal': 'vegie'},
+        {'latitude': 45.6163, 'longitude': -73.5774,
+            'member': 'tata', 'meal': 'vegie'},
+    ]
+    }
+
+    # just return a JsonResponse
+    return JsonResponse(data)
+
+
+def routeDailyOrders(request):
+    # do something with the your data
+
+    data = {'waypoints': [
+        {'latitude': 45.5165, 'longitude': -73.567,
+            'member': 'toto', 'meal': 'meat'},
+        {'latitude': 45.548664, 'longitude': -73.681145,
+            'member': 'tata', 'meal': 'vegie'},
+        {'latitude': 45.558664, 'longitude': -
+            73.685945, 'member': 'titi', 'meal': 'meat'}
+    ]
+    }
+
+    # just return a JsonResponse
+    return JsonResponse(data)

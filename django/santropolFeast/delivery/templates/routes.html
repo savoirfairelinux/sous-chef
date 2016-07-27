@@ -1,33 +1,259 @@
 {% extends "base_delivery.html" %}
 <!-- Load Internationalization utils-->
 {% load i18n %}
+{% load static %}
 
 {% block title %}{% trans 'Routes Information' %} {% endblock %}
 
-{% block breadcrumb %}
-{% endblock breadcrumb %}
+{% block extrahead %}
+    {% load leaflet_tags %}
+    {% leaflet_js %}
+    {% leaflet_css %}
+
+    <link href="{% static 'leaflet-routing/leaflet-routing-machine.css' %}" rel="stylesheet">
+    <link href="{% static 'leaflet-geocoder/Control.Geocoder.css' %}" rel="stylesheet">
+    <link href="{% static 'leaflet-awesome-markers/leaflet.awesome-markers.css' %}" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet">
+    <style>
+    .leaflet-container-default {
+        position: block;
+        height: 600px;
+    }
+    .leaflet-routing-alternatives-container h2 {
+      display: none;
+    }
+    .leaflet-routing-container-hide .leaflet-routing-collapse-btn{
+      display: none;
+    }
+    .leaflet-routing-container h3 {
+      font-size: 22px;
+      font-weight: bold;
+    }
+    .leaflet-popup-content{
+        font-size: 18px;
+    }
+    .leaflet-routing-alt {
+      max-height:400px;
+    }
+    </style>
+    <script src="{% static 'leaflet-routing/leaflet-routing-machine.js' %}" type="application/javascript"></script>
+    <script src="{% static 'leaflet-geocoder/Control.Geocoder.js' %}" type="application/javascript"></script>
+    <script src="{% static 'leaflet-awesome-markers/leaflet.awesome-markers.js' %}" type="application/javascript"></script>
+    <script src="{% static 'leaflet-icon-glyph/Leaflet.Icon.Glyph.js' %}" type="application/javascript"></script>
+    <script src="{% static 'sortable/Sortable.js' %}" type="application/javascript"></script>
+    <script src="{% static 'leaflet-routing/mapbox/lrm-mapbox-1.0.4.js' %}" type="application/javascript"></script>
+{% endblock %}
 
 {% block content %}
-<div class="ui grid">
-  <div class="eight wide column">
-    <table class="ui celled table">
-      <thead>
-        <th>{% trans "Delivery Order" %}</th>
-        <th>{% trans "Name" %}</th>
-        <th>{% trans "Address" %}</th>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>lorem ipsum</td>
-          <td>7275 rue st-urbain</td>
-        </tr>
-      </tbody>
-    </table>
+
+<script type="text/javascript">
+    function printMapAndItinerary() {
+        var body               = $('body');
+        var mapContainer       = $('#main');
+        var mapContainerParent = mapContainer.parent();
+        var printContainer     = $('<div>');
+        var itinerary = $(".leaflet-routing-alt table");
+
+        printContainer
+            .addClass('print-container')
+            .css('position', 'relative')
+            .height(mapContainer.height())
+            .append(mapContainer)
+            .append(itinerary)
+            .prependTo(body);
+
+        var content = body
+            .children()
+            .not('script')
+            .not(printContainer)
+            .detach();
+
+        window.print();
+
+        body.prepend(content);
+        mapContainerParent.prepend(mapContainer);
+
+        printContainer.remove();
+
+    }
+
+    function main_map_init (map, options) {
+
+        // create a new tile layer wiyh bike path (http://thunderforest.com/maps/opencyclemap/)
+        var tileUrl = 'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png',
+        layer = new L.TileLayer(tileUrl, {maxZoom: 18});
+
+
+        // get waypoints
+        var waypoints = [];
+        $.get( "../getDailyOrders/", function( data ) {
+
+            var deliveryPoints = L.Routing.Waypoint.extend({ member:"", meal:"", notes:"", allergies:"" });
+            // create an array of waypoint from ajax call
+            for(var i in data.waypoints)
+            {
+                 waypoints.push(new deliveryPoints(L.latLng(data.waypoints[i].latitude, data.waypoints[i].longitude)) );
+                 waypoints[i].options.meal = data.waypoints[i].meal;
+                 waypoints[i].options.member = data.waypoints[i].member;
+                 waypoints[i].name = data.waypoints[i].member ;
+            }
+
+            //add fisrt waypoint for santropol
+            var santro = new deliveryPoints(L.latLng(45.516564,  -73.575145));
+            santro.name = "santropol";
+            waypoints.splice(0, 0, santro);
+
+            // add the layer to the map
+            map.addLayer(layer);
+
+            // center on montreal
+            map.setView(new L.LatLng(45.5017, -73.5673), 8);
+
+             // Create bike router using mapbox
+             var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
+             bikerouter.options.profile = 'mapbox.cycling';
+
+             // Extend Routing Control to build  sortable geocoder
+             var routingContol = L.Routing.Control.extend({
+                 initialize: function(map, initialWaypoints) {
+                     L.Routing.Control.prototype.initialize.call(this, {
+                         router: bikerouter,
+                         geocoder: L.Control.Geocoder.nominatim({ geocodingQueryParams: { countrycodes: 'ca'}}),
+                         routeWhileDragging: true,
+                         reverseWaypoints: true,
+                         language: 'fr',
+                         showAlternatives: true,
+                         lineOptions: {
+                             styles: [
+                                 {color: 'black', opacity: 0.3, weight: 11},
+                                 {color: 'white', opacity: 0.9, weight: 9},
+                                 {color: 'red', opacity: 1, weight: 3}
+                             ]
+                         },
+                         altLineOptions: {
+                             styles: [
+                                 {color: 'black', opacity: 0.1, weight: 11},
+                                 {color: 'white', opacity: 0.25, weight: 9},
+                                 {color: 'blue', opacity: 0.25, weight: 3}
+                             ]
+                         },
+                         waypoints: waypoints,
+                         createMarker: function(i, wp) {
+                              var  marker;
+
+                              // adjust marker according waypoints
+                              if (wp.name == "santropol") {
+                                // add awesome marker for santropol
+                                marker =  L.marker([45.516564, -73.575145], {
+                                    draggable: false,
+                                    opacity: 1,
+                                    icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
+                                  });
+
+                                  var info = "<div class='ui list'>"
+                                                 +"<div class='item'><i class='user icon'></i> Santro </div>"
+                                                 +"</div>"
+
+                                  marker.bindPopup(info).openPopup();
+
+                                  return marker;
+                              }
+                              else {
+                                marker =  L.marker(wp.latLng, {
+                                    icon: L.icon.glyph({
+                                        prefix: '',
+                                        glyph: String.fromCharCode(65 + i)
+                                    }),
+                                    draggable: true
+                                });
+
+                                var info = "<div class='ui list'>"
+                                               +"<div class='item'><i class='user icon'></i>" + wp.options.member + "</div>"
+                                               +"<div class='item'><i class='food icon'></i>" + wp.options.meal + "</div>"
+                                               +"<div class='item'><i class='warning circle icon'></i>" + wp.options.meal + "</div>"
+                                               +"</div>"
+
+                                marker.bindPopup(info).openPopup();
+                                return marker;
+                              }
+
+                         },
+                         createGeocoder: L.bind(function(i) {
+                             var geocoder = L.Routing.GeocoderElement.prototype.options.createGeocoder.call(this, i, this.getPlan().getWaypoints().length, this.getPlan().options),
+                                 handle = L.DomUtil.create('div', 'geocoder-handle'),
+                                 geolocateBtn = L.DomUtil.create('span', 'geocoder-geolocate-btn', geocoder.container);
+
+                             handle.innerHTML = String.fromCharCode(65 + i);
+                             geocoder.container.insertBefore(handle, geocoder.container.firstChild);
+
+                             L.DomEvent.on(handle, 'click', function() {
+                                 var wp = this.getWaypoints()[i];
+
+                             }, this);
+
+                             return geocoder;
+                         }, this)
+                     });
+                 },
+             });
+
+
+           // Bind control outside of the map
+           var control = new routingContol()
+           var routeBlock = control.onAdd(map);
+           $(".controls").append(routeBlock);
+
+           // Add sortable on the route controler
+           Sortable.create(document.querySelector('.leaflet-routing-geocoders'), {
+                 handle: '.geocoder-handle',
+                 draggable: '.leaflet-routing-geocoder',
+                 onUpdate: function(e) {
+                     var oldI = e.oldIndex,
+                         newI = e.newIndex,
+                         wps = control.getWaypoints(),
+                         wp = wps[oldI];
+
+                     if (oldI === newI || newI === undefined) {
+                         return;
+                     }
+
+                     wps.splice(oldI, 1);
+                     wps.splice(newI, 0, wp);
+                     control.setWaypoints(wps);
+                 }
+           });
+
+
+           $("#btnprint").click(function(){
+              printMapAndItinerary();
+            });
+          }
+        );
+  }
+</script>
+
+
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">Route</h2>
+</div>
+
+
+<div class="row">
+  <div class="twelve wide column">
+    {% leaflet_map "main" callback="main_map_init" %}
   </div>
-  <div class="eight wide column">
-    Need placeholder for map
+  <div class="four wide column">
+    <div class="controls"></div>
+    <button id='btnprint' class="ui fluid primary labeled icon button">
+        <i class="print icon"></i>
+        Print
+    </button>
+    <button id='btnsave' class="ui fluid  labeled icon button">
+        <i class="save icon"></i>
+        Save
+    </button>
   </div>
 </div>
+
 
 {% endblock %}
