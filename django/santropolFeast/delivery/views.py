@@ -38,7 +38,7 @@ class Orderlist(generic.ListView):
 class MealInformation(generic.ListView):
     # Display all the meal and alert for a given day
     model = Delivery
-    template_name = 'information.html'
+    template_name = 'ingredients.html'
 
 
 class RoutesInformation(generic.ListView):
