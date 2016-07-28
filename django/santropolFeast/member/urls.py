@@ -4,7 +4,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from member.views import (
     ClientWizard, NoteList, mark_as_read,
-    ClientDetail, ClientList, SearchMembers
+    ClientDetail, ClientList, SearchMembers,
+    ClientOrderList, ClientInfoView, ClientReferentView, ClientPaymentView,
+    ClientAllergiesView
 )
 
 from member.forms import (
@@ -36,5 +38,10 @@ urlpatterns = [
     url(_(r'^note/read/(?P<id>[0-9]{1})/$'),
         mark_as_read, name='read'),
     url(_(r'^view/(?P<pk>\d+)/$'), ClientDetail.as_view(), name='view'),
+    url(_(r'^view/(?P<pk>\d+)/orders$'), ClientOrderList.as_view(), name='list_orders'),
+    url(_(r'^view/(?P<pk>\d+)/information$'), ClientInfoView.as_view(), name='client_information'),
+    url(_(r'^view/(?P<pk>\d+)/referent$'), ClientReferentView.as_view(), name='client_referent'),
+    url(_(r'^view/(?P<pk>\d+)/billing$'), ClientPaymentView.as_view(), name='client_payment'),
+    url(_(r'^view/(?P<pk>\d+)/preferences$'), ClientAllergiesView.as_view(), name='client_allergies'),
     url(_(r'^geolocateAddress/$'), geolocateAddress, name='geolocateAddress'),
 ]

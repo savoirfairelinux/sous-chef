@@ -1,10 +1,48 @@
-{% extends "base_member.html" %}
+{% extends "base.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
 
 {% block title %}Client{% endblock %}
 
 {% block content %}
+
+<div class="ui secondary pointing fluid menu">
+
+    <h2 class="ui header">
+        <div class="content">
+        {{client}}
+            <div class="sub header">Client since {{ client.member.created_at|date:"Y/m/d"}}</div>
+        </div>
+    </h2>
+    <div class="right menu">
+        <div class="ui item">
+            <div class="ui teal large label">{{ client.get_delivery_type_display }}</div>
+        </div>
+      <div class="ui item">
+          <div class="ui orange large label">{{ client.get_status_display }}</div>
+      </div>
+    </div>
+</div>
+
+{% if client.alert %}
+<div class="ui row"><div class="sixteen wide column">
+<div class="ui warning message">
+    <div class="header">
+        Important notice
+    </div>
+    <p>{{ client.alert }}</p>
+</div>
+</div></div>
+
+{% endif %}
+
+<div class="ui row">
+
+    <div class="four wide column">
+        {% include 'client/menu.html' %}
+    </div>
+
+    <div class="twelve wide column">
 
 <!--
     1 - We need an "Alert" window on the top of the page
@@ -23,4 +61,7 @@
   {% block subcontent %}
     <!-- A block used by all children to include content here-->
   {% endblock %}
+
+</div>
+</div>
 {% endblock %}

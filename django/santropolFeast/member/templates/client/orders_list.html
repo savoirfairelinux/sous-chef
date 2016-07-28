@@ -1,0 +1,54 @@
+{% extends "client/base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load admin_urls %}
+
+{% block title %}
+
+  {{client}} - Orders list
+
+{% endblock %}
+
+{% block subcontent %}
+
+<div class="ui segment">
+
+<h3 class="ui header">Orders</h3>
+
+<table class="ui very basic stripped celled table">
+  <thead>
+    <th class="sorted descending">Order</th>
+    <th class="">{% trans 'Delivery Date' %}</th>
+    <th class="">{% trans 'Status' %}</th>
+    <th class="">{% trans 'Amount' %}</th>
+    <th class=""></th>
+  </thead>
+  <tbody>
+    {% for order in orders %}
+      <tr>
+        <td><strong>{{order.id}}</strong></td>
+        <td>{{order.delivery_date}}</td>
+        <td>{{order.get_status_display}}</td>
+        <td>${{order.price}}</td>
+        <td><button class="ui button"  onclick="location.href='{% url 'order:view' id=order.id %}';" value="View Order" >View Order</button></td>
+      </tr>
+        {% endfor %}
+  </tbody>
+  <tfoot>
+      <tr>
+          <th></th>
+          <th colspan="4">
+              {% include "system/_button_export.html" %}
+          </th>
+        </tr>
+  </tfoot>
+</table>
+<script type="text/javascript">
+    document.addEventListener( 'DOMContentLoaded', function () {
+      $('table').tablesort();
+    })
+</script>
+
+
+
+{% endblock %}

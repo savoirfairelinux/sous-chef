@@ -11,6 +11,7 @@ from member.models import (
     Client, Member, Address, Contact, Note, Referencing,
     ClientFilter, Note, ClientFilter, DAYS_OF_WEEK
 )
+from order.models import Order
 from meal.models import COMPONENT_GROUP_CHOICES
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.core.urlresolvers import reverse_lazy
@@ -446,7 +447,7 @@ class ClientInfoView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ClientInfoView, self).get_context_data(**kwargs)
-
+        context['active_tab'] = 'information'
         """
         Here we need to add some variable of context to send to template :
          1 - A string active_tab who can be:
@@ -473,7 +474,7 @@ class ClientReferentView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ClientReferentView, self).get_context_data(**kwargs)
-
+        context['active_tab'] = 'referent'
         """
         Here we need to add some variable of context to send to template :
          1 - A string active_tab who can be:
@@ -527,7 +528,7 @@ class ClientPaymentView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ClientPaymentView, self).get_context_data(**kwargs)
-
+        context['active_tab'] = 'billing'
         """
         Here we need to add some variable of context to send to template :
          1 - A string active_tab who can be:
@@ -554,6 +555,7 @@ class ClientAllergiesView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ClientAllergiesView, self).get_context_data(**kwargs)
+        context['active_tab'] = 'prefs'
 
         """
         Here we need to add some variable of context to send to template :
@@ -583,7 +585,7 @@ def parse_json(meals):
 class ClientDetail(generic.DetailView):
     # Display detail of one client
     model = Client
-    template_name = 'client/view/view.html'
+    template_name = 'client/view.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -596,6 +598,19 @@ class ClientDetail(generic.DetailView):
             context['meal_default'] = parse_json(self.object.meal_default_week)
         else:
             context['meal_default'] = []
+        return context
+
+
+class ClientOrderList(generic.DetailView):
+    # Display the list of clients
+    model = Client
+    template_name = 'client/orders_list.html'
+
+    def get_context_data(self, **kwargs):
+
+        context = super(ClientOrderList, self).get_context_data(**kwargs)
+        context['orders'] = Order.objects.filter(client=self.object.id)
+        context['active_tab'] = 'orders'
         return context
 
 

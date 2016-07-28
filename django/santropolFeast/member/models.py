@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django_filters import FilterSet, MethodFilter, CharFilter, ChoiceFilter
+from django_filters import FilterSet, MethodFilter, CharFilter, ChoiceFilter, widgets
 from annoying.fields import JSONField
 from meal.models import COMPONENT_GROUP_CHOICES_MAIN_DISH
 
@@ -525,7 +525,7 @@ class ClientFilter(FilterSet):
     )
 
     status = ChoiceFilter(
-        choices=(('', ''),) + Client.CLIENT_STATUS
+        choices=(('', ''),) + Client.CLIENT_STATUS,
     )
 
     delivery_type = ChoiceFilter(

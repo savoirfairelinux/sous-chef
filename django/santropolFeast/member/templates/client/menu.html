@@ -1,0 +1,21 @@
+<div class="ui vertical menu">
+  <div class="item">
+    Information
+    <div class="menu">
+      <a class="{% if active_tab == 'information' %}active{% endif %} item" href="{% url 'member:client_information' pk=client.id %}"><i class="user icon"></i>Personal</a>
+      <a class="{% if active_tab == 'referent' %}active{% endif %} item" href="{% url 'member:client_referent' pk=client.id %}"><i class="treatment icon"></i>Referent</a>
+      <a class="{% if active_tab == 'billing' %}active{% endif %} item" href="{% url 'member:client_payment' pk=client.id %}"><i class="payment icon"></i>Billing</a>
+    </div>
+  </div>
+  <a class="{% if active_tab == 'prefs' %}active{% endif %} item" href="{% url 'member:client_allergies' pk=client.id %}">
+    <i class="food icon"></i>Preferences
+  </a>
+  <a class="{% if active_tab == 'notes' %}active{% endif %} item">
+    Messages
+  </a>
+  <a class="{% if active_tab == 'orders' %}active{% endif %} item" href="{% url 'member:list_orders' pk=client.id %}">
+      <div class="ui teal label">{{ orders.count }}</div>
+    Orders
+  </a>
+
+</div>
