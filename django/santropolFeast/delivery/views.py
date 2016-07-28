@@ -23,6 +23,7 @@ from member.apps import db_session
 from member.models import Client, Route
 from datetime import date
 
+
 class Orderlist(generic.ListView):
     # Display all the order on a given day
     model = Delivery
@@ -265,20 +266,22 @@ def kcr_make_lines(kitchen_list, date):
 
 def dailyOrders(request):
 
-    orders = Client.active.all() #.order(address__distance)
+    # Load all orders for the day
+    orders = Order.objects.get_orders_for_date()
 
     data = []
 
     for order in orders:
         waypoint = {
-            'id': order.member.id,
-            'latitude': order.member.address.latitude ,
-            'longitude': order.member.address.longitude,
-            'distance': order.member.address.distance,
-            'member': "{} {}".format(order.member.firstname, order.member.lastname),
-            'address': order.member.address.street,
-            'meal': 'meat'
-        }
+            'id': order.client.member.id,
+            'latitude': order.client.member.address.latitude,
+            'longitude': order.client.member.address.longitude,
+            'distance': order.client.member.address.distance,
+            'member': "{} {}".format(
+                order.client.member.firstname,
+                order.client.member.lastname),
+            'address': order.client.member.address.street,
+            'meal': 'meat'}
         data.append(waypoint)
     waypoints = {'waypoints': data}
     return JsonResponse(waypoints, safe=False)
@@ -299,6 +302,7 @@ def routeDailyOrders(request):
 
     # just return a JsonResponse
     return JsonResponse(data)
+
 
 def refreshOrders(request):
     creation_date = date.today()

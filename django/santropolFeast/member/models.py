@@ -165,24 +165,24 @@ class Address(models.Model):
     )
 
     longitude = models.DecimalField(
-            max_digits=9,
-            decimal_places=6,
-            blank=True,
-            null=True,
+        max_digits=9,
+        decimal_places=6,
+        blank=True,
+        null=True,
     )
 
     latitude = models.DecimalField(
-            max_digits=9,
-            decimal_places=6,
-            blank=True,
-            null=True,
+        max_digits=9,
+        decimal_places=6,
+        blank=True,
+        null=True,
     )
 
     distance = models.DecimalField(
-            max_digits=9,
-            decimal_places=6,
-            blank=True,
-            null=True,
+        max_digits=9,
+        decimal_places=6,
+        blank=True,
+        null=True,
     )
 
     def __str__(self):

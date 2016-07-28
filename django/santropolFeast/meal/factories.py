@@ -81,10 +81,10 @@ class MenuFactory(factory.DjangoModelFactory):
         model = Menu
 
     date = factory.LazyAttribute(lambda x: fake.date_time_between(
-            start_date="-1y",
-            end_date="+1y",
-            tzinfo=None
-        )
+        start_date="-1y",
+        end_date="+1y",
+        tzinfo=None
+    )
     )
 
     menu_component = factory.RelatedFactory(
