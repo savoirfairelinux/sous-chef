@@ -4,13 +4,17 @@
 
 {% block title %}{% trans 'Kitchen Count report' %} {% endblock %}
 
-{% block breadcrumb %}
-{% endblock breadcrumb %}
-
 {% block content %}
-<div class="ui big label">
-  KITCHEN COUNT REPORT
+
+{% include 'kitchen_count_steps.html' with step='kitchen_count' %}
+
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">Print the kitchen count</h2>
+    <div class="right menu">
+      <div class="ui item"><h3><i class="ui calendar icon"></i>{% now "j F Y" %}</h3></div>
+    </div>
 </div>
+
 <div class="ui basic big label">
   Delivery Date :
 </div>
@@ -69,4 +73,7 @@
     {% endfor %}
   </tbody>
 </table>
+
+<a class="big ui right floated button" href="{% url 'delivery:meal' %}">Back</a>
+<a class="big ui yellow right floated button" href="{% url 'delivery:route' %}">Next: Organize Routes</a>
 {% endblock %}

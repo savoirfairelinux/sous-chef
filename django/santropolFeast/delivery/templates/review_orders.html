@@ -7,32 +7,7 @@
 
 {% block content %}
 
-<div class="ui ordered steps">
-  <div class="active step">
-    <div class="content">
-      <div class="title">Review Orders</div>
-      <div class="description">Review the orders for the day.</div>
-    </div>
-  </div>
-  <div class="step">
-    <div class="content">
-      <div class="title">Ingredients</div>
-      <div class="description">Select the ingredients of the day.</div>
-    </div>
-  </div>
-  <div class="step">
-    <div class="content">
-      <div class="title">Kitchen Count</div>
-      <div class="description">Print the kitchen count.</div>
-    </div>
-  </div>
-  <div class="step">
-    <div class="content">
-      <div class="title">Routes</div>
-      <div class="description">Organize the delivery routes.</div>
-    </div>
-  </div>
-</div>
+{% include 'kitchen_count_steps.html' with step='orders' %}
 
 <div class="ui secondary pointing fluid menu">
     <h2 class="ui header">Review Orders</h2>
@@ -41,8 +16,8 @@
     </div>
 </div>
 
-<div class="ui row"><p><i class="ui history icon"></i>Orders have been generated on 27 July 2016, at 03:00 am.</p></div>
-<div class="ui row"><a class="ui primary button"><i class="ui refresh icon"></i>Refresh orders</a></div>
+<div class="ui row"><i class="ui history icon"></i>Orders have been generated on 27 July 2016, at 03:00 am.</div>
+<div class="ui row"><a class="ui button" href="{% url 'delivery:refresh_orders' %}"><i class="ui refresh icon"></i>Refresh orders</a></div>
 
 <table class="ui very basic stripped celled table">
   <thead>
@@ -69,15 +44,14 @@
       <tr>
           <th></th>
           <th colspan="5">
-              {{orders.count}} orders today
+              <em>{{orders.count}} orders today</em>
           </th>
         </tr>
   </tfoot>
 </table>
 
-<a class="ui button"href="{% url 'delivery:meal' %}">
-  Next
-</a>
+<a class="big ui yellow right floated button" href="{% url 'delivery:meal' %}">OK, I'm ready</a>
+
 <script type="text/javascript">
     document.addEventListener( 'DOMContentLoaded', function () {
       $('table').tablesort();

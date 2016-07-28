@@ -7,6 +7,9 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from delivery.models import Delivery
 from django.http import JsonResponse
+from meal.factories import MenuFactory
+from django.core.urlresolvers import reverse_lazy
+
 
 from .apps import DeliveryConfig
 
@@ -17,7 +20,7 @@ from .forms import DateForm
 from order.models import Order
 from meal.models import COMPONENT_GROUP_CHOICES_MAIN_DISH, Component
 from member.apps import db_session
-from member.models import Client
+from member.models import Client, Route
 from datetime import date
 
 class Orderlist(generic.ListView):
@@ -41,6 +44,13 @@ class RoutesInformation(generic.ListView):
     # Display all the route information for a given day
     model = Delivery
     template_name = "routes.html"
+
+    def get_context_data(self, **kwargs):
+
+        context = super(RoutesInformation, self).get_context_data(**kwargs)
+        context['routes'] = Route.objects.all()
+
+        return context
 
 
 # kitchen count report view and helper class and functions
@@ -289,3 +299,11 @@ def routeDailyOrders(request):
 
     # just return a JsonResponse
     return JsonResponse(data)
+
+def refreshOrders(request):
+    creation_date = date.today()
+    delivery_date = date.today()
+    clients = Client.active.all()
+    MenuFactory.create(date=delivery_date)
+    Order.create_orders_on_defaults(creation_date, delivery_date, clients)
+    return HttpResponseRedirect(reverse_lazy("delivery:order"))

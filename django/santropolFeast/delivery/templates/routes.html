@@ -44,9 +44,17 @@
     <script src="{% static 'leaflet-routing/mapbox/lrm-mapbox-1.0.4.js' %}" type="application/javascript"></script>
 {% endblock %}
 
+{% block extrajs %}
+<script type="text/javascript">
+    $('.ui.dropdown').dropdown({transition: 'drop'});
+</script>
+{% endblock %}
+
+
 {% block content %}
 
 <script type="text/javascript">
+
     function printMapAndItinerary() {
         var body               = $('body');
         var mapContainer       = $('#main');
@@ -234,11 +242,29 @@
   }
 </script>
 
+{% include 'kitchen_count_steps.html' with step='routes' %}
 
 <div class="ui secondary pointing fluid menu">
-    <h2 class="ui header">Route</h2>
+    <h2 class="ui header">Organize Routes</h2>
+    <div class="right menu">
+      <div class="ui item"><h3><i class="ui calendar icon"></i>{% now "j F Y" %}</h3></div>
+    </div>
 </div>
 
+<select class="ui dropdown">
+    {% for route in routes %}
+    <option value="{{ route.id }}">{{ route.name }}</option>
+    {% endfor %}
+</select>
+
+<button id='btnprint' class="ui primary labeled icon right floated  button">
+    <i class="print icon"></i>
+    Print
+</button>
+<button id='btnsave' class="ui  labeled icon right floated button">
+    <i class="save icon"></i>
+    Save
+</button>
 
 <div class="row">
   <div class="twelve wide column">
@@ -246,16 +272,9 @@
   </div>
   <div class="four wide column">
     <div class="controls"></div>
-    <button id='btnprint' class="ui fluid primary labeled icon button">
-        <i class="print icon"></i>
-        Print
-    </button>
-    <button id='btnsave' class="ui fluid  labeled icon button">
-        <i class="save icon"></i>
-        Save
-    </button>
   </div>
 </div>
 
+<a class="big ui right floated button" href="{% url 'delivery:kitchen_count' %}">Back</a>
 
 {% endblock %}
