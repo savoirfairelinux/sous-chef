@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load static %}
+
+{% block title %} {% trans 'Orders' %} {% endblock %}
+
+{% block content %}
+
+<div class="ui ordered steps">
+  <div class="active step">
+    <div class="content">
+      <div class="title">Review Orders</div>
+      <div class="description">Review the orders for the day.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="content">
+      <div class="title">Ingredients</div>
+      <div class="description">Select the ingredients of the day.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="content">
+      <div class="title">Kitchen Count</div>
+      <div class="description">Print the kitchen count.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="content">
+      <div class="title">Routes</div>
+      <div class="description">Organize the delivery routes.</div>
+    </div>
+  </div>
+</div>
+
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">Review Orders</h2>
+    <div class="right menu">
+      <div class="ui item"><h3><i class="ui calendar icon"></i>{% now "j F Y" %}</h3></div>
+    </div>
+</div>
+
+<div class="ui row"><p><i class="ui history icon"></i>Orders have been generated on 27 July 2016, at 03:00 am.</p></div>
+<div class="ui row"><a class="ui primary button"><i class="ui refresh icon"></i>Refresh orders</a></div>
+
+<table class="ui very basic stripped celled table">
+  <thead>
+    <th class="sorted descending">Order</th>
+    <th class="">{% trans 'Client' %}</th>
+    <th class="">{% trans 'Delivery Date' %}</th>
+    <th class="">{% trans 'Status' %}</th>
+    <th class="">{% trans 'Amount' %}</th>
+    <th class=""></th>
+  </thead>
+  <tbody>
+    {% for order in orders %}
+      <tr>
+        <td><strong>{{order.id}}</strong></td>
+        <td><a href="{% url 'member:view' pk=order.client.id %}">{{order.client.member}}</a></td>
+        <td>{{order.delivery_date}}</td>
+        <td>{{order.get_status_display}}</td>
+        <td>${{order.price}}</td>
+        <td><button class="ui button"  onclick="location.href='{% url 'order:view' id=order.id %}';" value="View Order" >View Order</button></td>
+      </tr>
+        {% endfor %}
+  </tbody>
+  <tfoot>
+      <tr>
+          <th></th>
+          <th colspan="5">
+              {{orders.count}} orders today
+          </th>
+        </tr>
+  </tfoot>
+</table>
+
+<a class="ui button"href="{% url 'delivery:meal' %}">
+  Next
+</a>
+<script type="text/javascript">
+    document.addEventListener( 'DOMContentLoaded', function () {
+      $('table').tablesort();
+    })
+</script>
+
+{% endblock %}

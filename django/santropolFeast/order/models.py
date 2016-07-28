@@ -4,7 +4,7 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django_filters import FilterSet, MethodFilter, ChoiceFilter
-
+from datetime import date
 from sqlalchemy import and_
 
 from member.apps import db_session
@@ -59,6 +59,9 @@ class OrderManager(models.Manager):
 
     def get_orders_for_date(self, delivery_date=None):
         """ Return the orders for the given date """
+
+        if delivery_date is None:
+            delivery_date = date.today()
 
         return self.get_queryset().filter(
             delivery_date=delivery_date

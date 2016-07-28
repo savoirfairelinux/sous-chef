@@ -18,12 +18,17 @@ from order.models import Order
 from meal.models import COMPONENT_GROUP_CHOICES_MAIN_DISH, Component
 from member.apps import db_session
 from member.models import Client
-
+from datetime import date
 
 class Orderlist(generic.ListView):
     # Display all the order on a given day
     model = Delivery
-    template_name = 'order.html'
+    template_name = 'review_orders.html'
+    context_object_name = 'orders'
+
+    def get_queryset(self):
+        queryset = Order.objects.get_orders_for_date()
+        return queryset
 
 
 class MealInformation(generic.ListView):
