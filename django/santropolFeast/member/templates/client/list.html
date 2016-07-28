@@ -117,6 +117,7 @@
             <th class="">Status</th>
             <th class="">Delivery</th>
             <th class="">Route</th>
+            <th class="">Last update</th>
         </tr>
     </thead>
     <tbody>
@@ -126,6 +127,7 @@
             <td>{{ obj.get_status_display }}</td>
             <td>{{ obj.get_delivery_type_display }}</td>
             <td>{{ obj.route }}</td>
+            <td>{{ obj.member.updated_at|date:"Y/m/d H:h:m"  }}</td>
         </tr>
 
         {% empty %}
