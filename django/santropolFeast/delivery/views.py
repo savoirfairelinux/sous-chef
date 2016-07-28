@@ -40,6 +40,13 @@ class MealInformation(generic.ListView):
     model = Delivery
     template_name = 'ingredients.html'
 
+    def get_context_data(self, **kwargs):
+
+        context = super(MealInformation, self).get_context_data(**kwargs)
+        context['meals'] = Component.objects.all()
+
+        return context
+
 
 class RoutesInformation(generic.ListView):
     # Display all the route information for a given day

@@ -26,9 +26,9 @@
   <i class="dropdown icon"></i>
   <div class="default text">What should we eat today ?</div>
   <div class="menu">
-    <div class="item" data-value="1">Parmesan Chicken</div>
-    <div class="item" data-value="0">Spaghetti</div>
-    <div class="item" data-value="0">Ginger Pork</div>
+      {% for meal in meals %}
+      <div class="item" data-value="{{ meal.id }}">{{ meal.name }}</div>
+      {% endfor %}
   </div>
 </div>
 
