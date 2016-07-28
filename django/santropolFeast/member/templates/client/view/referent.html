@@ -11,12 +11,16 @@
 
 {% block subcontent %}
 <div class="ui segment">
-<h3 class="ui header">
-    {% trans 'Referent' %}
-    <a  href="{% url 'admin:member_referencing_change' client.client_referent.first.id %}">
-        <i class="write grey icon"></i>
-    </a>
-</h3>
+    <h2 class="ui header">
+        <div class="content">
+            {% trans 'Referent' %}
+            <div class="sub header">Contact information of the referent person.<a  href="{% url 'admin:member_referencing_change' client.client_referent.first.id %}">
+                <i class="write grey icon"></i>
+            </a></div>
+        </div>
+    </h2>
+    <div class="ui divider"></div>
+
 <div class="ui list">
 {% for referent in client.client_referent.all %}
     <div class="item"><div class="header">{% trans 'First Name' %}</div>{{referent.referent.firstname}}</div>

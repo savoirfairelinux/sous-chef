@@ -68,7 +68,7 @@
     {% for obj in order %}
       <tr>
         <td><strong>{{obj.id}}</strong></td>
-        <td><a href="{% url 'member:view' pk=obj.client.id %}">{{obj.client.member}}</a></td>
+        <td><a href="{% url 'member:client_information' pk=obj.client.id %}">{{obj.client.member}}</a></td>
         <td>{{obj.delivery_date}}</td>
         <td>{{obj.get_status_display}}</td>
         <td>${{obj.price}}</td>

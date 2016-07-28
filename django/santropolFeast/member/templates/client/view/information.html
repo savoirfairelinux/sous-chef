@@ -12,12 +12,15 @@
 {% block subcontent %}
 
 <div class="ui segment">
-<h3 class="ui header">
-    {% trans 'Basic information' %}
-    <a  href="{% url 'admin:member_client_change' client.id %}">
-        <i class="write grey icon"></i>
-    </a>
-</h3>
+    <h2 class="ui header">
+        <div class="content">
+            {% trans 'Basic information' %}
+            <div class="sub header">Contact information of the referent person.<a  href="{% url 'admin:member_client_change' client.id %}">
+                <i class="write grey icon"></i>
+            </a></div>
+        </div>
+    </h2>
+    <div class="ui divider"></div>
 
 <div class="ui list">
     <div class="item"><div class="header">{% trans 'First Name' %}</div>{{client.member.firstname}}</div>
@@ -36,12 +39,16 @@
 <div class="ui segment">
 {% if client.emergency_contact %}
 
-<h3 class="ui header">
-    {% trans 'Emergency Contact' %}
-    <a  href="{% url 'admin:member_member_change' client.emergency_contact.id %}">
-        <i class="write grey icon"></i>
-    </a>
-</h3>
+<h2 class="ui header">
+    <div class="content">
+        {% trans 'Emergency Contact' %}
+        <div class="sub header">Information of the person to contact in case of an emergency.<a  href="{% url 'admin:member_member_change' client.emergency_contact.id %}">
+            <i class="write grey icon"></i>
+        </a></div>
+    </div>
+</h2>
+<div class="ui divider"></div>
+
 <div class="ui list">
     <div class="item"><div class="header">{% trans 'First Name' %}</div>{{client.emergency_contact.firstname}}</div>
     <div class="item"><div class="header">{% trans 'Last Name' %}</div>{{client.emergency_contact.lastname}}</div>

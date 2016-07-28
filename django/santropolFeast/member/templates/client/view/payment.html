@@ -12,9 +12,13 @@
 {% block subcontent %}
 
 <div class="ui segment">
-<h3 class="ui header">
-    {% trans 'Billing' %}
-</h3>
+    <h2 class="ui header">
+        <div class="content">
+            {% trans 'Billing' %}
+            <div class="sub header">Billing and payment information.</div>
+        </div>
+    </h2>
+    <div class="ui divider"></div>
 <div class="ui list">
     <div class="item"><div class="header">{% trans 'First Name' %}</div>{{client.billing_member.firstname}}</div>
     <div class="item"><div class="header">{% trans 'Last Name' %}</div>{{client.billing_member.lastname}}</div>

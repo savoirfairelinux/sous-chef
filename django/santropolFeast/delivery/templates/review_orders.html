@@ -32,7 +32,7 @@
     {% for order in orders %}
       <tr>
         <td><strong>{{order.id}}</strong></td>
-        <td><a href="{% url 'member:view' pk=order.client.id %}">{{order.client.member}}</a></td>
+        <td><a href="{% url 'member:client_information' pk=order.client.id %}">{{order.client.member}}</a></td>
         <td>{{order.delivery_date}}</td>
         <td>{{order.get_status_display}}</td>
         <td>${{order.price}}</td>

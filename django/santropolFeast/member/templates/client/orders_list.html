@@ -13,7 +13,13 @@
 
 <div class="ui segment">
 
-<h3 class="ui header">Orders</h3>
+    <h2 class="ui header">
+        <div class="content">
+            {% trans 'Orders' %}
+            <div class="sub header">List of all orders from {{client}}.</div>
+        </div>
+    </h2>
+    <div class="ui divider"></div>
 
 <table class="ui very basic stripped celled table">
   <thead>
