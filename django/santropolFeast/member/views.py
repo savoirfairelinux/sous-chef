@@ -80,6 +80,7 @@ class ClientWizard(NamedUrlSessionWizardView):
 
     def save_address(self):
         address_information = self.form_dict['address_information']
+
         address = Address.objects.create(
             number=address_information.cleaned_data.get('number'),
             street=address_information.cleaned_data.get('street'),

@@ -91,16 +91,22 @@ class ClientAddressInformation(forms.Form):
 
     latitude = forms.CharField(
         label=_('Latitude'),
+        required=False,
+        initial=0,
         widget=forms.TextInput()
     )
 
     longitude = forms.CharField(
         label=_('Longitude'),
+        required=False,
+        initial=0,
         widget=forms.TextInput()
     )
 
     distance = forms.CharField(
         label=_('Distance'),
+        required=False,
+        initial=0,
         widget=forms.TextInput()
     )
 

@@ -524,6 +524,9 @@ class FormTestCase(TestCase):
             "address_information-apartment": "222",
             "address_information-city": "montreal",
             "address_information-postal_code": "H3C2C2",
+            "address_information-latitude": 45.5343077,
+            "address_information-longitude": -73.620735,
+            "address_information-distance": 4.062611162244175,
             "wizard_goto_step": "",
         }
 
@@ -721,6 +724,9 @@ class FormTestCase(TestCase):
             "address_information-apartment": "86",
             "address_information-city": "Montreal",
             "address_information-postal_code": "H8C6C8",
+            "address_information-latitude": 45.5343077,
+            "address_information-longitude": -73.620735,
+            "address_information-distance": 4.062611162244175,
             "wizard_goto_step": "",
         }
 
@@ -744,6 +750,9 @@ class FormTestCase(TestCase):
             "payment_information-apartement": "86",
             "payment_information-city": "Montreal",
             "payment_information-postal_code": "H8C6G8",
+            "address_information-latitude": 0.0,
+            "address_information-longitude": 0.0,
+            "address_information-distance": 0.0,
             "wizard_goto_step": "",
         }
 
@@ -1038,6 +1047,9 @@ class FormTestCase(TestCase):
             "address_information-apartment": "222",
             "address_information-city": "montreal",
             "address_information-postal_code": "H3C2C2",
+            "address_information-latitude": 45.5343077,
+            "address_information-longitude": -73.620735,
+            "address_information-distance": 4.062611162244175,
             "wizard_goto_step": "",
         }
 
