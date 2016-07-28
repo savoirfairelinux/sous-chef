@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+<!-- Load Internationalization utils-->
+{% load i18n %}
+
+{% block title %}{% trans 'Kitchen Count report' %} {% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    $('.ui.dropdown').dropdown({transition: 'drop'});
+</script>
+{% endblock %}
+
+{% block content %}
+
+{% include 'kitchen_count_steps.html' with step='ingredients' %}
+
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">Pick ingredients</h2>
+    <div class="right menu">
+      <div class="ui item"><h3><i class="ui calendar icon"></i>{% now "j F Y" %}</h3></div>
+    </div>
+</div>
+
+<div class="ui search selection dropdown">
+  <input type="hidden" name="ingredients">
+  <i class="dropdown icon"></i>
+  <div class="default text">What should we eat today ?</div>
+  <div class="menu">
+      {% for meal in meals %}
+      <div class="item" data-value="{{ meal.id }}">{{ meal.name }}</div>
+      {% endfor %}
+  </div>
+</div>
+
+ <div class="ui row">
+     <a class="big ui right floated button" href="{% url 'delivery:order' %}">Back</a>
+     <a class="big ui yellow right floated button" href="{% url 'delivery:kitchen_count' %}">Next: Print Kitchen Count</a>
+</div>
+{% endblock content %}
