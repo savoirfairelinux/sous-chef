@@ -216,8 +216,8 @@ def insert_all():
         component_group='dessert')
     com_8.save()
     com_9 = Component(
-        name='Day s Diabetic dessert',
-        component_group='diabetic_dessert')
+        name='Day s Diabetic Dessert',
+        component_group='diabetic')
     com_9.save()
     com_10 = Component(
         name='Fruit Salad',
@@ -228,9 +228,13 @@ def insert_all():
         component_group='green_salad')
     com_11.save()
     com_12 = Component(
-        name='Lemon Pudding',
+        name='Day s Pudding',
         component_group='pudding')
     com_12.save()
+    com_13 = Component(
+        name='Day s Compote',
+        component_group='compote')
+    com_13.save()
     #
     print_all_cols(db.query(Component.sa))
     print_rows(Component.objects)
@@ -242,6 +246,12 @@ def insert_all():
     men_2 = Menu(
         date=datetime.date(2016, 7, 16))
     men_2.save()
+    men_3 = Menu(
+        date=datetime.date(2016, 5, 21))
+    men_3.save()
+    men_4 = Menu(
+        date=datetime.date(2016, 5, 28))
+    men_4.save()
     #
     print_all_cols(db.query(Menu.sa))
     print_rows(Menu.objects)
@@ -265,9 +275,49 @@ def insert_all():
     men_com_5 = Menu_component(
         menu=men_1, component=com_9)
     men_com_5.save()
+    men_com_6 = Menu_component(
+        menu=men_3, component=com_6)
+    men_com_6.save()
+    men_com_7 = Menu_component(
+        menu=men_4, component=com_7)
+    men_com_7.save()
     #
     print_all_cols(db.query(Menu_component.sa))
     print_rows(Menu_component.objects)
+
+    # -----------------------------------------------------------------------------
+    side_dishes = \
+        ['Green Salad', 'Fruit Salad', 'Day s Dessert',
+         'Day s Diabetic Dessert', 'Day s Pudding', 'Day s Compote']
+    Menu.create_menu_and_components(
+        datetime.date(2016, 8, 1), ['Ginger pork'] + side_dishes)
+    Menu.create_menu_and_components(
+        datetime.date(2016, 8, 2), ['Beef Meatloaf'] + side_dishes)
+    Menu.create_menu_and_components(
+        datetime.date(2016, 8, 3), ['Coq au vin'] + side_dishes)
+    Menu.create_menu_and_components(
+        datetime.date(2016, 8, 4), ['Meat pie'] + side_dishes)
+    Menu.create_menu_and_components(
+        datetime.date(2016, 8, 5), ['Vegetable fried rice'] + side_dishes)
+    Menu.create_menu_and_components(
+        datetime.date(2016, 8, 6), ['Sausage cassoulet'] + side_dishes)
+    Menu.create_menu_and_components(
+        datetime.date(2016, 8, 7), ['Fish chowder'] + side_dishes)
+    Menu.create_menu_and_components(
+        datetime.date(2016, 8, 8), ['Ginger pork'] + side_dishes)
+    Menu.create_menu_and_components(
+        datetime.date(2016, 8, 9), ['Beef Meatloaf'] + side_dishes)
+    Menu.create_menu_and_components(
+        datetime.date(2016, 8, 10), ['Coq au vin'] + side_dishes)
+    Menu.create_menu_and_components(
+        datetime.date(2016, 8, 11), ['Meat pie'] + side_dishes)
+    Menu.create_menu_and_components(
+        datetime.date(2016, 8, 12), ['Vegetable fried rice'] + side_dishes)
+    Menu.create_menu_and_components(
+        datetime.date(2016, 8, 13), ['Sausage cassoulet'] + side_dishes)
+    Menu.create_menu_and_components(
+        datetime.date(2016, 8, 14), ['Fish chowder'] + side_dishes)
+    #
 
     # -----------------------------------------------------------------------------
     com_ing_1 = Component_ingredient(
@@ -386,26 +436,6 @@ def insert_all():
     #
     print_all_cols(db.query(Incompatibility.sa))
     print_rows(Incompatibility.objects)
-    # -----------------------------------------------------------------------------
-    men_1 = Menu(
-        date=datetime.date(2016, 5, 21))
-    men_1.save()
-    men_2 = Menu(
-        date=datetime.date(2016, 5, 28))
-    men_2.save()
-    #
-    print_all_cols(db.query(Menu.sa))
-    print_rows(Menu.objects)
-    # -----------------------------------------------------------------------------
-    men_com_1 = Menu_component(
-        component=com_6, menu=men_1)
-    men_com_1.save()
-    men_com_1 = Menu_component(
-        component=com_7, menu=men_2)
-    men_com_1.save()
-    #
-    print_all_cols(db.query(Menu_component.sa))
-    print_rows(Menu_component.objects)
 
     # -----------------------------------------------------------------------------
     add_1 = Address(
@@ -535,9 +565,10 @@ def insert_all():
     cli_2 = Client(
         member=mem_4,
         billing_member=mem_4,
+        emergency_contact=mem_1,
         billing_payment_type='check',
         rate_type='Low income',
-        emergency_contact_relationship='',
+        emergency_contact_relationship='Friend',
         status='A',
         language='en',
         alert='',
@@ -556,9 +587,10 @@ def insert_all():
     cli_3 = Client(
         member=mem_2,
         billing_member=mem_2,
+        emergency_contact=mem_4,
         billing_payment_type='check',
         rate_type='Low income',
-        emergency_contact_relationship='',
+        emergency_contact_relationship='Friend',
         status='A',
         language='en',
         alert='',
@@ -577,9 +609,10 @@ def insert_all():
     cli_4 = Client(
         member=mem_3,
         billing_member=mem_3,
+        emergency_contact=mem_2,
         billing_payment_type='check',
         rate_type='Low income',
-        emergency_contact_relationship='',
+        emergency_contact_relationship='Friend',
         status='A',
         language='en',
         alert='',
@@ -598,9 +631,10 @@ def insert_all():
     cli_5 = Client(
         member=mem_7,
         billing_member=mem_7,
+        emergency_contact=mem_8,
         billing_payment_type='check',
         rate_type='Low income',
-        emergency_contact_relationship='',
+        emergency_contact_relationship='Friend',
         status='A',
         language='en',
         alert='',
@@ -619,9 +653,10 @@ def insert_all():
     cli_6 = Client(
         member=mem_8,
         billing_member=mem_8,
+        emergency_contact=mem_7,
         billing_payment_type='check',
         rate_type='Low income',
-        emergency_contact_relationship='',
+        emergency_contact_relationship='Friend',
         status='A',
         language='en',
         alert='',
@@ -640,9 +675,10 @@ def insert_all():
     cli_7 = Client(
         member=mem_9,
         billing_member=mem_9,
+        emergency_contact=mem_8,
         billing_payment_type='check',
         rate_type='Low income',
-        emergency_contact_relationship='',
+        emergency_contact_relationship='Friend',
         status='A',
         language='en',
         alert='',

@@ -19,16 +19,18 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        print(options['creation_date'])
         if options['creation_date']:
             creation_date = datetime.strptime(
                 options['creation_date'], '%Y-%m-%d'
-            )
+            ).date()
         else:
-            creation_date = datetime.now()
+            creation_date = datetime.now().date()
         delivery_date = datetime.strptime(
             options['delivery_date'], '%Y-%m-%d'
-        )
+        ).date()
         clients = Client.active.all()
-        MenuFactory.create(date=delivery_date)
-        Order.create_orders_on_defaults(creation_date, delivery_date, clients)
+        numorders = Order.create_orders_on_defaults(
+            creation_date, delivery_date, clients)
+        print("On", creation_date,
+              "created", numorders,
+              "orders to be delivered on", delivery_date, ".")

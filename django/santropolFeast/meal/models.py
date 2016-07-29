@@ -70,7 +70,8 @@ class Component(models.Model):
     # Meal component (ex. main dish, vegetable, seasonal) information
     name = models.CharField(
         max_length=50,
-        verbose_name=_('name')
+        verbose_name=_('name'),
+        unique=True,
     )
 
     description = models.TextField(
@@ -181,6 +182,58 @@ class Menu(models.Model):
 
     def __str__(self):
         return "Menu for {}".format(str(self.date))
+
+    @staticmethod
+    def create_menu_and_components(menu_date, dish_names):
+        """Create the menu and its components for the date.
+
+        Parameters:
+          menu_date : date on which menu will apply
+          dish_names : a list of names of dishes included in the menu
+
+        Behavior:
+          - if Menu already exists for the date, all its menu components
+            are replaced by the new ones
+
+        Raises :
+          - Exception if dish does not exist
+          - Exception if more that one dish per component_group
+          - Exception if no dish for COMPONENT_GROUP_CHOICES_MAIN_DISH
+
+        Returns:
+          Number of menu components created.
+        """
+
+        num_menu_comp_created = 0
+        component_groups = {}
+        try:
+            menu = Menu.objects.get(date=menu_date)
+        except Menu.DoesNotExist:
+            menu = Menu(date=menu_date)
+            menu.save()
+        else:
+            # menu existed, must flush its menu_components
+            Menu_component.objects.filter(menu=menu).delete()
+        for dish_name in dish_names:
+            components = Component.objects.filter(name=dish_name)
+            if not components:
+                raise Exception(
+                    "Component ", dish_name, " does not exist")
+            component = components[0]
+            if component_groups.get(component.component_group):
+                raise Exception(
+                    "Menu can only have one dish for component group " +
+                    component.component_group)
+            component_groups[component.component_group] = dish_name
+            menu_component = Menu_component(menu=menu, component=component)
+            menu_component.save()
+            num_menu_comp_created += 1
+        # END FOR
+        if not component_groups.get(COMPONENT_GROUP_CHOICES_MAIN_DISH):
+            raise Exception(
+                "Menu must include one dish for component group " +
+                COMPONENT_GROUP_CHOICES_MAIN_DISH)
+        return num_menu_comp_created
 
 
 class Menu_component(models.Model):
