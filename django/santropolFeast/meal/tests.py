@@ -1,8 +1,11 @@
+import datetime
+
 from django.test import TestCase
+
 from meal.models import Component, Component_ingredient
 from meal.models import Ingredient, Incompatibility
 from meal.models import Menu, Menu_component, Restricted_item
-import datetime
+from dataload import insert_all
 
 
 class ComponentTestCase(TestCase):
@@ -112,6 +115,71 @@ class Menu_componentTestCase(TestCase):
             menu=menu, component=component)
         self.assertTrue(str(date) in str(menu_component))
         self.assertTrue(component.name in str(menu_component))
+
+
+class CreateMenuAndComponentsTestCase(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        insert_all()  # load fresh data into DB
+        # clear menu and menu_components if any for chosen date
+        try:
+            menu = Menu.objects.filter(date=datetime.date(2016, 7, 15))
+        except Menu.DoesNotExist:
+            pass
+        else:
+            Menu_component.objects.filter(menu=menu).delete()
+            menu.delete()
+
+    def test_menu_new(self):
+        number = Menu.create_menu_and_components(
+            datetime.date(2016, 7, 15),
+            ['Ginger pork',
+             'Green Salad', 'Fruit Salad', 'Day s Dessert',
+             'Day s Diabetic Dessert', 'Day s Pudding', 'Day s Compote'])
+        self.assertEqual(number, 7)
+
+    def test_menu_existed(self):
+        Menu.create_menu_and_components(
+            datetime.date(2016, 7, 15),
+            ['Ginger pork',
+             'Green Salad', 'Fruit Salad', 'Day s Dessert',
+             'Day s Diabetic Dessert', 'Day s Pudding', 'Day s Compote'])
+        number = Menu.create_menu_and_components(
+            datetime.date(2016, 7, 15),
+            ['Coq au vin',
+             'Green Salad', 'Fruit Salad', 'Day s Dessert',
+             'Day s Diabetic Dessert', 'Day s Pudding'])
+        self.assertEqual(number, 6)
+
+    def test_dish_does_not_exist_exception(self):
+        with self.assertRaises(Exception) as cm:
+            Menu.create_menu_and_components(
+                datetime.date(2016, 7, 15),
+                ['Chateaubriand Steak',
+                 'Green Salad', 'Fruit Salad', 'Day s Dessert',
+                 'Day s Diabetic Dessert', 'Day s Pudding', 'Day s Compote'])
+            the_exception = cm.exception
+            self.assertEqual(the_exception.error_code, 3)
+
+    def test_many_dishes_per_component_group_exception(self):
+        with self.assertRaises(Exception) as cm:
+            Menu.create_menu_and_components(
+                datetime.date(2016, 7, 15),
+                ['Ginger pork', 'Coq au vin',
+                 'Green Salad', 'Fruit Salad', 'Day s Dessert',
+                 'Day s Diabetic Dessert', 'Day s Pudding', 'Day s Compote'])
+            the_exception = cm.exception
+            self.assertEqual(the_exception.error_code, 3)
+
+    def test_no_main_dish_exception(self):
+        with self.assertRaises(Exception) as cm:
+            Menu.create_menu_and_components(
+                datetime.date(2016, 7, 15),
+                ['Green Salad', 'Fruit Salad', 'Day s Dessert',
+                 'Day s Diabetic Dessert', 'Day s Pudding', 'Day s Compote'])
+            the_exception = cm.exception
+            self.assertEqual(the_exception.error_code, 3)
 
 
 class Restricted_itemTestCase(TestCase):
