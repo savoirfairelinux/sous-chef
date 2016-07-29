@@ -1,11 +1,32 @@
-{% extends "client/view/base.html" %}
+{% extends "client/base.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
+{% load admin_urls %}
 
-{% block information %}
+{% block title %}
 
-<!-- 
-        1 - We need all payment information about client
---->
+  {{client}} - Referent information
 
+{% endblock %}
+
+{% block subcontent %}
+
+<div class="ui segment">
+    <h2 class="ui header">
+        <div class="content">
+            {% trans 'Billing' %}
+            <div class="sub header">Billing and payment information.</div>
+        </div>
+    </h2>
+    <div class="ui divider"></div>
+<div class="ui list">
+    <div class="item"><div class="header">{% trans 'First Name' %}</div>{{client.billing_member.firstname}}</div>
+    <div class="item"><div class="header">{% trans 'Last Name' %}</div>{{client.billing_member.lastname}}</div>
+    <div class="item"><div class="header">{% trans 'Payment method' %}</div>{{client.get_billing_payment_type_display}}</div>
+    <div class="item"><div class="header">{% trans 'Rate type' %}</div>{{client.get_rate_type_display}}</div>
+    <div class="item"><div class="header"><i class="icon home"></i>Address</div>{{client.billing_member.address.street}}, {{client.billing_member.address.city}}, {{client.billing_member.address.postal_code}}</d>
+
+</div>
+
+</div>
 {% endblock %}

@@ -525,7 +525,7 @@ class ClientFilter(FilterSet):
     )
 
     status = ChoiceFilter(
-        choices=(('', ''),) + Client.CLIENT_STATUS
+        choices=(('', ''),) + Client.CLIENT_STATUS,
     )
 
     delivery_type = ChoiceFilter(

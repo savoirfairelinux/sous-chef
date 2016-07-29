@@ -76,7 +76,7 @@
 
 <div class="ui cards">
     {% for obj in clients %}
-    <a class="ui card" href="{% url 'member:view' pk=obj.id %}">
+    <a class="ui card" href="{% url 'member:client_information' pk=obj.id %}">
       <div class="content">
         <div class="header">{{ obj.member }}</div>
         <div class="meta">
@@ -123,7 +123,7 @@
     <tbody>
         {% for obj in clients %}
         <tr>
-            <td><a href="{% url 'member:view' pk=obj.id %}">{{ obj.member }}</a><br/>{{ obj.age }} years old</td>
+            <td><a href="{% url 'member:client_information' pk=obj.id %}">{{ obj.member }}</a><br/>{{ obj.age }} years old</td>
             <td>{{ obj.get_status_display }}</td>
             <td>{{ obj.get_delivery_type_display }}</td>
             <td>{{ obj.route }}</td>
@@ -134,6 +134,14 @@
             <p>Sorry, no result found.</p>
         {% endfor %}
     </tbody>
+    <tfoot>
+        <tr>
+            <th></th>
+            <th colspan="5">
+                {% include "system/_button_export.html" %}
+            </th>
+          </tr>
+    </tfoot>
 </table>
 
 {% endif %}
@@ -158,12 +166,5 @@
     {% endif %}
 </div>
 {% endif %}
-<tfoot>
-    <tr>
-        <th></th>
-        <th colspan="5">
-            {% include "system/_button_export.html" %}
-        </th>
-      </tr>
-</tfoot>
+
 {% endblock %}

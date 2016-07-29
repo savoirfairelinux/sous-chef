@@ -1,11 +1,38 @@
-{% extends "client/view/base.html" %}
+{% extends "client/base.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
+{% load admin_urls %}
 
-{% block information %}
+{% block title %}
 
-<!-- 
-        1 - We need all general information about the referent of the client
---->
+  {{client}} - Referent information
+
+{% endblock %}
+
+{% block subcontent %}
+<div class="ui segment">
+    <h2 class="ui header">
+        <div class="content">
+            {% trans 'Referent' %}
+            <div class="sub header">Contact information of the referent person.<a  href="{% url 'admin:member_referencing_change' client.client_referent.first.id %}">
+                <i class="write grey icon"></i>
+            </a></div>
+        </div>
+    </h2>
+    <div class="ui divider"></div>
+
+<div class="ui list">
+{% for referent in client.client_referent.all %}
+    <div class="item"><div class="header">{% trans 'First Name' %}</div>{{referent.referent.firstname}}</div>
+    <div class="item"><div class="header">{% trans 'Last Name' %}</div>{{referent.referent.lastname}}</div>
+    <div class="item"><div class="header">{% trans 'Workplace information' %}</div>{{referent.work_information}}</div>
+    <div class="item"><div class="header">{% trans 'Referral Date' %}</div>{{referent.date}}</div>
+    <div class="item"><div class="header">{% trans 'Referral Reason' %}</div>{{referent.referral_reason}}</div>
+    {% for contact in referent.referent.member_contact.all %}
+    <div class="item"><div class="header">{{contact.type}}</div>{{contact.value}}</div>
+    {% endfor %}
+{% endfor %}
+</div>
+</div>
 
 {% endblock %}
