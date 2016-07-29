@@ -439,6 +439,40 @@ class Client(models.Model):
 
         return self.client_order.all()
 
+    @property
+    def meals_schedule(self):
+        """
+        Returns a hierarchical dict representing the meals schedule.
+        """
+
+        prefs = {}
+        for day, str in DAYS_OF_WEEK:
+            current = {}
+            for component in [
+                    'main_dish',
+                    'compote',
+                    'dessert',
+                    'fruit_salad',
+                    'green_salad',
+                    'pudding']:
+
+                item = self.meal_default_week.get(
+                    component + '_' + day + '_quantity'
+                ) or 0
+                current[component] = item
+
+            size = self.meal_default_week.get(
+                'size_' + day
+            ) or ''
+            current['size'] = size
+
+            if current['main_dish'] == 0:
+                prefs[day] = None
+            else:
+                prefs[day] = current
+
+        return prefs
+
     @staticmethod
     def get_meal_defaults(client, component_group, day):
         """Get the meal defaults quantity and size for a day.

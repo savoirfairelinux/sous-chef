@@ -556,6 +556,10 @@ class ClientAllergiesView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(ClientAllergiesView, self).get_context_data(**kwargs)
         context['active_tab'] = 'prefs'
+        if self.object.meal_default_week:
+            context['meal_default'] = parse_json(self.object.meal_default_week)
+        else:
+            context['meal_default'] = []
 
         """
         Here we need to add some variable of context to send to template :
@@ -609,7 +613,7 @@ class ClientOrderList(generic.DetailView):
     def get_context_data(self, **kwargs):
 
         context = super(ClientOrderList, self).get_context_data(**kwargs)
-        context['orders'] = Order.objects.filter(client=self.object.id)
+        context['orders'] = self.object.orders
         context['active_tab'] = 'orders'
         return context
 
@@ -625,6 +629,7 @@ class ClientPreferencesView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ClientPreferencesView, self).get_context_data(**kwargs)
+        context['meal_default'] = self.object.meal_default_week
 
         """
         Here we need to add some variable of context to send to template :
@@ -796,9 +801,9 @@ class SearchMembers(generic.View):
 
 def geolocateAddress(request):
             # do something with the your data
-            if request.method == 'POST':
-                    lat = request.POST['lat']
-                    long = request.POST['long']
+    if request.method == 'POST':
+        lat = request.POST['lat']
+        long = request.POST['long']
 
-            # just return a JsonResponse
-            return JsonResponse({'latitude': lat, 'longtitude': long})
+    # just return a JsonResponse
+    return JsonResponse({'latitude': lat, 'longtitude': long})

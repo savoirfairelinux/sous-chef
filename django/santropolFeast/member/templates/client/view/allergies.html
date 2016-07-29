@@ -2,6 +2,7 @@
 <!-- Load internationalisation utils-->
 {% load i18n %}
 {% load admin_urls %}
+{% load static %}
 
 {% block title %}
 
@@ -19,7 +20,7 @@
         <i class="write grey icon"></i>
     </a>
 </h3>
-<p>{{client.get_status_display}}</p>
+<div class="ui orange label">{{client.get_status_display}}</div>
 <h3 class="ui header">
     {% trans 'Restrictions' %}
     <a  href="{% url 'admin:member_client_change' client.id %}">
@@ -42,17 +43,19 @@
     </div>
     {% endfor %}
 </div>
-<h3 class="ui header">
-  {% trans "Meal Default" %}
-  <a href="{% url 'admin:member_client_change' client.id %}">
-    <i class="write grey icon"></i>
-  </a>
-</h3>
-{% for default in meal_default %}
-
-<div>
-  {{default}}
 </div>
-{% endfor %}
+
+
+<div class="ui segment">
+
+    <h3 class="ui header">
+      {% trans "Meal Default" %}
+      <a href="{% url 'admin:member_client_change' client.id %}">
+        <i class="write grey icon"></i>
+      </a>
+    </h3>
+
+    {% include 'client/prefs.html' %}
+
 </div>
 {% endblock %}
