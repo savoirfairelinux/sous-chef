@@ -833,8 +833,8 @@ class FormTestCase(TestCase):
 
         # test referent member is emergency member
         self.assertEqual(
-            client.client_referent.first().id,
-            client.emergency_contact.member_contact.first().id
+            client.client_referent.first().referent.id,
+            client.emergency_contact.id
         )
 
         # test_referent_name:
@@ -1127,9 +1127,10 @@ class FormTestCase(TestCase):
         self.assertTrue(b'Not a valid member' in response_error.content)
 
     def _test_referent_information_without_errors(self):
+        id = Member.objects.get(firstname="First").id
         referent_information_data = {
             "client_wizard-current_step": "referent_information",
-            "referent_information-member": "[1] First Member",
+            "referent_information-member": "[{}] First Member".format(id),
             "referent_information-firstname": "",
             "referent_information-lastname": "",
             "referent_information-work_information": "CLSC",
@@ -1157,9 +1158,10 @@ class FormTestCase(TestCase):
 
     def _test_payment_information_with_errors(self):
         # Data for the address_information step with errors.
+        id = Member.objects.get(firstname="Second").id
         payment_information_data_with_error = {
             "client_wizard-current_step": "payment_information",
-            "payment_information-member": "[2] Second Member",
+            "payment_information-member": "[{}] Second Member".format(id),
             "payment_information-firstname": "",
             "payment_information-lastname": "",
             "payment_information-billing_payment_type": "check",
@@ -1224,9 +1226,10 @@ class FormTestCase(TestCase):
 
     def _test_payment_information_without_errors(self):
         # Data for the address_information step without errors.
+        id = Member.objects.get(firstname="First").id
         payment_information_data = {
             "client_wizard-current_step": "payment_information",
-            "payment_information-member": "[1] First Member",
+            "payment_information-member": "[{}] First Member".format(id),
             "payment_information-firstname": "",
             "payment_information-lastname": "",
             "payment_information-billing_payment_type": "check",
@@ -1341,9 +1344,10 @@ class FormTestCase(TestCase):
 
     def _test_step_emergency_contact_without_errors(self):
         # Data for the address_information step without errors.
+        id = Member.objects.get(firstname="First").id
         emergency_contact_data = {
             "client_wizard-current_step": "emergency_contact",
-            "emergency_contact-member": "[1] First Member",
+            "emergency_contact-member": "[{}] First Member".format(id),
             "emergency_contact-firstname": "Emergency",
             "emergency_contact-lastname": "User",
             "emergency_contact-contact_type": "Home phone",

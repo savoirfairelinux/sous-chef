@@ -151,7 +151,7 @@ class ClientWizard(NamedUrlSessionWizardView):
     def save_emergency_contact(self, billing_member):
         emergency_contact = self.form_dict['emergency_contact']
         e_emergency_member = emergency_contact.cleaned_data.get('member')
-        if self.payment_is_emergency_contact():
+        if self.billing_member_is_emergency_contact():
             emergency = billing_member
         elif e_emergency_member:
             e_emergency_member_id = e_emergency_member.split(' ')[0]\
@@ -252,7 +252,7 @@ class ClientWizard(NamedUrlSessionWizardView):
             return True
         return False
 
-    def payment_is_emergency_contact(self):
+    def billing_member_is_emergency_contact(self):
         emergency_contact = self.form_dict['emergency_contact']
         payment_information = self.form_dict['payment_information']
 
