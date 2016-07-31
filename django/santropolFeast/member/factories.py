@@ -19,15 +19,6 @@ class AddressFactory (factory.DjangoModelFactory):
     postal_code = factory.Faker('postalcode')
 
 
-class ContactFactory (factory.DjangoModelFactory):
-
-    class Meta:
-        model = Contact
-
-    type = 'Home phone'
-    value = factory.Faker('phone_number')
-
-
 class MemberFactory (factory.DjangoModelFactory):
 
     class Meta:
@@ -37,6 +28,10 @@ class MemberFactory (factory.DjangoModelFactory):
     lastname = factory.Faker('last_name')
 
     address = factory.SubFactory(AddressFactory)
+    contact = factory.RelatedFactory(
+        'member.factories.ContactFactory',
+        'member'
+    )
 
 
 class RouteFactory(factory.DjangoModelFactory):
@@ -59,7 +54,6 @@ class ClientFactory (factory.DjangoModelFactory):
 
     class Meta:
         model = Client
-
     member = factory.SubFactory(MemberFactory)
     billing_member = member
     billing_payment_type = factory.LazyAttribute(
@@ -113,3 +107,13 @@ class ReferencingFactory(factory.DjangoModelFactory):
     work_information = factory.Faker('company')
 
     date = factory.Faker('date')
+
+
+class ContactFactory (factory.DjangoModelFactory):
+
+    class Meta:
+        model = Contact
+
+    type = 'Home phone'
+    value = factory.Faker('phone_number')
+    member = factory.SubFactory(MemberFactory)
