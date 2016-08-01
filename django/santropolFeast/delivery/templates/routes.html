@@ -54,6 +54,7 @@
 {% block content %}
 
 <script type="text/javascript">
+    var control;
 
     function printMapAndItinerary() {
         var body               = $('body');
@@ -85,16 +86,13 @@
 
     }
 
-    function main_map_init (map, options) {
-
-        // create a new tile layer wiyh bike path (http://thunderforest.com/maps/opencyclemap/)
-        var tileUrl = 'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png',
-        layer = new L.TileLayer(tileUrl, {maxZoom: 18});
-
-
-        // get waypoints
+    function getWaypoints(routeId) {
         var waypoints = [];
-        $.get( "../getDailyOrders/", function( data ) {
+        // Reset current waypoints
+        control.setWaypoints(waypoints);
+
+        // Ajax call to get waypoint according route
+        $.get( "../getDailyOrders/?route="+routeId, function(data ) {
 
             var deliveryPoints = L.Routing.Waypoint.extend({ member:"", address:"", meal:"", notes:"", allergies:"" });
             // create an array of waypoint from ajax call
@@ -112,134 +110,161 @@
             santro.name = "santropol";
             waypoints.splice(0, 0, santro);
 
-            // add the layer to the map
-            map.addLayer(layer);
-
-            // center on montreal
-            map.setView(new L.LatLng(45.5017, -73.5673), 8);
-
-             // Create bike router using mapbox
-             var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
-             bikerouter.options.profile = 'mapbox.cycling';
-
-             // Extend Routing Control to build  sortable geocoder
-             var routingContol = L.Routing.Control.extend({
-                 initialize: function(map, initialWaypoints) {
-                     L.Routing.Control.prototype.initialize.call(this, {
-                         router: bikerouter,
-                         geocoder: L.Control.Geocoder.nominatim({ geocodingQueryParams: { countrycodes: 'ca'}}),
-                         routeWhileDragging: true,
-                         reverseWaypoints: true,
-                         language: 'fr',
-                         showAlternatives: true,
-                         lineOptions: {
-                             styles: [
-                                 {color: 'black', opacity: 0.3, weight: 11},
-                                 {color: 'white', opacity: 0.9, weight: 9},
-                                 {color: 'red', opacity: 1, weight: 3}
-                             ]
-                         },
-                         altLineOptions: {
-                             styles: [
-                                 {color: 'black', opacity: 0.1, weight: 11},
-                                 {color: 'white', opacity: 0.25, weight: 9},
-                                 {color: 'blue', opacity: 0.25, weight: 3}
-                             ]
-                         },
-                         waypoints: waypoints,
-                         createMarker: function(i, wp) {
-                              var  marker;
-
-                              // adjust marker according waypoints
-                              if (wp.name == "santropol") {
-                                // add awesome marker for santropol
-                                marker =  L.marker([45.516564, -73.575145], {
-                                    draggable: false,
-                                    opacity: 1,
-                                    icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
-                                  });
-
-                                  var info = "<div class='ui list'>"
-                                                 +"<div class='item'><i class='user icon'></i> Santro </div>"
-                                                 +"</div>"
-
-                                  marker.bindPopup(info).openPopup();
-
-                                  return marker;
-                              }
-                              else {
-                                marker =  L.marker(wp.latLng, {
-                                    icon: L.icon.glyph({
-                                        prefix: '',
-                                        glyph: String.fromCharCode(65 + i)
-                                    }),
-                                    draggable: true
-                                });
-
-                                var info = "<div class='ui list'>"
-                                               +"<div class='item'><i class='user icon'></i>" + wp.options.member + "</div>"
-                                               +"<div class='item'><i class='home icon'></i>" + wp.options.address + "</div>"
-                                               +"<div class='item'><i class='food icon'></i>" + wp.options.meal + "</div>"
-                                               +"<div class='item'><i class='warning circle icon'></i>" + wp.options.meal + "</div>"
-                                               +"</div>"
-
-                                marker.bindPopup(info).openPopup();
-                                return marker;
-                              }
-
-                         },
-                         createGeocoder: L.bind(function(i) {
-                             var geocoder = L.Routing.GeocoderElement.prototype.options.createGeocoder.call(this, i, this.getPlan().getWaypoints().length, this.getPlan().options),
-                                 handle = L.DomUtil.create('div', 'geocoder-handle'),
-                                 geolocateBtn = L.DomUtil.create('span', 'geocoder-geolocate-btn', geocoder.container);
-
-                             handle.innerHTML = String.fromCharCode(65 + i);
-                             geocoder.container.insertBefore(handle, geocoder.container.firstChild);
-
-                             L.DomEvent.on(handle, 'click', function() {
-                                 var wp = this.getWaypoints()[i];
-
-                             }, this);
-
-                             return geocoder;
-                         }, this)
-                     });
-                 },
-             });
-
-
-           // Bind control outside of the map
-           var control = new routingContol()
-           var routeBlock = control.onAdd(map);
-           $(".controls").append(routeBlock);
-
-           // Add sortable on the route controler
-           Sortable.create(document.querySelector('.leaflet-routing-geocoders'), {
-                 handle: '.geocoder-handle',
-                 draggable: '.leaflet-routing-geocoder',
-                 onUpdate: function(e) {
-                     var oldI = e.oldIndex,
-                         newI = e.newIndex,
-                         wps = control.getWaypoints(),
-                         wp = wps[oldI];
-
-                     if (oldI === newI || newI === undefined) {
-                         return;
-                     }
-
-                     wps.splice(oldI, 1);
-                     wps.splice(newI, 0, wp);
-                     control.setWaypoints(wps);
-                 }
-           });
-
-
-           $("#btnprint").click(function(){
-              printMapAndItinerary();
-            });
+            // Set waypoints on the map
+            control.setWaypoints(waypoints);
           }
         );
+    }
+
+    function main_map_init (map, options) {
+
+        // create a new tile layer wiyh bike path (http://thunderforest.com/maps/opencyclemap/)
+        var tileUrl = 'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png',
+        layer = new L.TileLayer(tileUrl, {maxZoom: 18});
+
+        // add the layer to the map
+        map.addLayer(layer);
+
+        // center on montreal
+        map.setView(new L.LatLng(45.5017, -73.5673), 8);
+
+        // Create bike router using mapbox
+        var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
+        bikerouter.options.profile = 'mapbox.cycling';
+
+
+        // Extend Routing Control to build  sortable geocoder
+        var routingContol = L.Routing.Control.extend({
+            initialize: function(map, initialWaypoints) {
+                L.Routing.Control.prototype.initialize.call(this, {
+                    router: bikerouter,
+                    geocoder: L.Control.Geocoder.nominatim({ geocodingQueryParams: { countrycodes: 'ca'}}),
+                    routeWhileDragging: true,
+                    reverseWaypoints: true,
+                    language: 'fr',
+                    showAlternatives: true,
+                    lineOptions: {
+                        styles: [
+                            {color: 'black', opacity: 0.3, weight: 11},
+                            {color: 'white', opacity: 0.9, weight: 9},
+                            {color: 'red', opacity: 1, weight: 3}
+                        ]
+                    },
+                    altLineOptions: {
+                        styles: [
+                            {color: 'black', opacity: 0.1, weight: 11},
+                            {color: 'white', opacity: 0.25, weight: 9},
+                            {color: 'blue', opacity: 0.25, weight: 3}
+                        ]
+                    },
+                    // waypoints: waypoints,
+                    createMarker: function(i, wp) {
+                         var  marker;
+
+                         // adjust marker according waypoints
+                         if (wp.name == "santropol") {
+                           // add awesome marker for santropol
+                           marker =  L.marker([45.516564, -73.575145], {
+                               draggable: false,
+                               opacity: 1,
+                               icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
+                             });
+
+                             var info = "<div class='ui list'>"
+                                            +"<div class='item'><i class='user icon'></i> Santro </div>"
+                                            +"</div>"
+
+                             marker.bindPopup(info).openPopup();
+
+                             return marker;
+                         }
+                         else {
+                           marker =  L.marker(wp.latLng, {
+                               icon: L.icon.glyph({
+                                   prefix: '',
+                                   glyph: String.fromCharCode(65 + i)
+                               }),
+                               draggable: true
+                           });
+
+                           var info = "<div class='ui list'>"
+                                          +"<div class='item'><i class='user icon'></i>" + wp.options.member + "</div>"
+                                          +"<div class='item'><i class='home icon'></i>" + wp.options.address + "</div>"
+                                          +"<div class='item'><i class='food icon'></i>" + wp.options.meal + "</div>"
+                                          +"<div class='item'><i class='warning circle icon'></i>" + wp.options.meal + "</div>"
+                                          +"</div>"
+
+                           marker.bindPopup(info).openPopup();
+                           return marker;
+                         }
+
+                    },
+                    createGeocoder: L.bind(function(i) {
+                        var geocoder = L.Routing.GeocoderElement.prototype.options.createGeocoder.call(this, i, this.getPlan().getWaypoints().length, this.getPlan().options),
+                            handle = L.DomUtil.create('div', 'geocoder-handle'),
+                            geolocateBtn = L.DomUtil.create('span', 'geocoder-geolocate-btn', geocoder.container);
+
+                        handle.innerHTML = String.fromCharCode(65 + i);
+                        geocoder.container.insertBefore(handle, geocoder.container.firstChild);
+
+                        L.DomEvent.on(handle, 'click', function() {
+                            var wp = this.getWaypoints()[i];
+
+                        }, this);
+
+                        return geocoder;
+                    }, this)
+                });
+            },
+        });
+
+        // Bind control outside of the map
+        control = new routingContol()
+        var routeBlock = control.onAdd(map);
+        $(".controls").append(routeBlock);
+
+
+        $("#btnprint").click(function(){
+           printMapAndItinerary();
+         });
+
+         $("#btnsave").click(function(){
+
+          });
+
+           // during init
+         $('.ui.dropdown').dropdown({
+             onChange: function(routeId) {
+               getWaypoints(routeId);
+             }
+         });
+
+
+         // Add sortable on the route controler
+         Sortable.create(document.querySelector('.leaflet-routing-geocoders'), {
+               handle: '.geocoder-handle',
+               draggable: '.leaflet-routing-geocoder',
+               onUpdate: function(e) {
+                   var oldI = e.oldIndex,
+                       newI = e.newIndex,
+                       wps = control.getWaypoints(),
+                       wp = wps[oldI];
+
+                   if (oldI === newI || newI === undefined) {
+                       return;
+                   }
+
+                   wps.splice(oldI, 1);
+                   wps.splice(newI, 0, wp);
+                   control.setWaypoints(wps);
+               }
+         });
+
+         getWaypoints(1);
+
   }
+
+
 </script>
 
 {% include 'kitchen_count_steps.html' with step='routes' %}

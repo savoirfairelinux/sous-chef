@@ -272,43 +272,30 @@ def kcr_make_lines(kitchen_list, date):
 
 
 def dailyOrders(request):
+    data = []
+    route_id = request.GET.get('route')
 
     # Load all orders for the day
     orders = Order.objects.get_orders_for_date()
 
-    data = []
-
     for order in orders:
-        waypoint = {
-            'id': order.client.member.id,
-            'latitude': order.client.member.address.latitude,
-            'longitude': order.client.member.address.longitude,
-            'distance': order.client.member.address.distance,
-            'member': "{} {}".format(
-                order.client.member.firstname,
-                order.client.member.lastname),
-            'address': order.client.member.address.street,
-            'meal': 'meat'}
-        data.append(waypoint)
+        if order.client.route is not None:
+            if order.client.route.id == int(route_id):
+                waypoint = {
+                    'id': order.client.member.id,
+                    'latitude': order.client.member.address.latitude,
+                    'longitude': order.client.member.address.longitude,
+                    'distance': order.client.member.address.distance,
+                    'member': "{} {}".format(
+                        order.client.member.firstname,
+                        order.client.member.lastname),
+                    'address': order.client.member.address.street,
+                    'meal': 'meat'}
+                data.append(waypoint)
+
     waypoints = {'waypoints': data}
+
     return JsonResponse(waypoints, safe=False)
-
-
-def routeDailyOrders(request):
-    # do something with the your data
-
-    data = {'waypoints': [
-        {'latitude': 45.5165, 'longitude': -73.567,
-            'member': 'toto', 'meal': 'meat'},
-        {'latitude': 45.548664, 'longitude': -73.681145,
-            'member': 'tata', 'meal': 'vegie'},
-        {'latitude': 45.558664, 'longitude': -
-            73.685945, 'member': 'titi', 'meal': 'meat'}
-    ]
-    }
-
-    # just return a JsonResponse
-    return JsonResponse(data)
 
 
 def refreshOrders(request):

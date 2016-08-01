@@ -64,7 +64,7 @@ class OrderManager(models.Manager):
             delivery_date = date.today()
 
         return self.get_queryset().filter(
-            delivery_date=delivery_date
+            delivery_date=delivery_date,
         )
 
 
