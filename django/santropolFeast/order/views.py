@@ -1,6 +1,9 @@
 from django.http import HttpResponse
 from django.views import generic
-from order.models import Order, OrderFilter
+from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
+from extra_views.generic import GenericInlineFormSet
+
+from order.models import Order, Order_item, OrderFilter
 from member.models import Client
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -60,21 +63,34 @@ class OrderDetail(generic.DetailView):
     template_name = 'view.html'
     context_object_name = 'order'
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(OrderDetail, self).dispatch(*args, **kwargs)
 
-class CreateOrder(generic.CreateView):
+
+class CreateComponent(GenericInlineFormSet):
+    model = 'meal.Component'
+    fields = '__all__'
+
+
+class CreateOrderItem(InlineFormSet):
+    model = Order_item
+    extra = 1
+    fields = '__all__'
+
+
+class CreateOrder(CreateWithInlinesView):
     model = Order
+    fields = '__all__'
+    inlines = [CreateOrderItem]
     template_name = 'create.html'
-    fields = ['client', 'delivery_date']
 
-    delivery_date = forms.DateField(label="Delivery Date")
-    client = forms.ModelChoiceField(
-        required=True,
-        widget=forms.Select(
-            attrs={'class': 'ui search dropdown'}
-        ),
-        queryset=Client.active.all()
-    )
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CreateOrder, self).dispatch(*args, **kwargs)
 
+    def get_success_url(self):
+        return self.object.get_absolute_url()
 
 def ExportCSV(request, queryset):
     response = HttpResponse(content_type="text/csv")
