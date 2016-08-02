@@ -1,17 +1,17 @@
+import csv
+
 from django.http import HttpResponse
-from django.shortcuts import render, render_to_response
 from django.views import generic
 from django.utils.decorators import method_decorator
-from django.shortcuts import get_object_or_404
-from member.models import Client
-from order.models import Order, OrderFilter
-from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-import csv
+
+from extra_views import CreateWithInlinesView
+
+from order.models import Order, Order_item, OrderFilter
+from order.forms import CreateOrderItem
 
 
 class OrderList(generic.ListView):
-    # Display the list of clients
     model = Order
     template_name = 'list.html'
     context_object_name = 'order'
@@ -58,6 +58,30 @@ class OrderList(generic.ListView):
         return super(OrderList, self).get(request, **kwargs)
 
 
+class OrderDetail(generic.DetailView):
+    model = Order
+    template_name = 'view.html'
+    context_object_name = 'order'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(OrderDetail, self).dispatch(*args, **kwargs)
+
+
+class CreateOrder(CreateWithInlinesView):
+    model = Order
+    fields = '__all__'
+    inlines = [CreateOrderItem]
+    template_name = 'create.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CreateOrder, self).dispatch(*args, **kwargs)
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
+
 def ExportCSV(request, queryset):
     response = HttpResponse(content_type="text/csv")
     response['Content-Disposition'] =\
@@ -86,8 +110,3 @@ def ExportCSV(request, queryset):
         ])
 
     return response
-
-
-def show_information(request, id):
-    order = get_object_or_404(Order, pk=id)
-    return render(request, 'view.html', {'order': order})

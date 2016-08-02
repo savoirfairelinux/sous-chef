@@ -30,6 +30,7 @@ class Command(BaseCommand):
             options['delivery_date'], '%Y-%m-%d'
         ).date()
         clients = Client.active.all()
+        MenuFactory.create(date=delivery_date)
         numorders = Order.create_orders_on_defaults(
             creation_date, delivery_date, clients)
         LogEntry.objects.log_action(
