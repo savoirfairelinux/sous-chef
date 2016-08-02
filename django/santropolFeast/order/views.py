@@ -1,14 +1,14 @@
+import csv
+
 from django.http import HttpResponse
 from django.views import generic
-from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
-from extra_views.generic import GenericInlineFormSet
-
-from order.models import Order, Order_item, OrderFilter
-from member.models import Client
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django import forms
-import csv
+
+from extra_views import CreateWithInlinesView
+
+from order.models import Order, Order_item, OrderFilter
+from order.forms import CreateOrderItem
 
 
 class OrderList(generic.ListView):
@@ -68,17 +68,6 @@ class OrderDetail(generic.DetailView):
         return super(OrderDetail, self).dispatch(*args, **kwargs)
 
 
-class CreateComponent(GenericInlineFormSet):
-    model = 'meal.Component'
-    fields = '__all__'
-
-
-class CreateOrderItem(InlineFormSet):
-    model = Order_item
-    extra = 1
-    fields = '__all__'
-
-
 class CreateOrder(CreateWithInlinesView):
     model = Order
     fields = '__all__'
@@ -91,6 +80,7 @@ class CreateOrder(CreateWithInlinesView):
 
     def get_success_url(self):
         return self.object.get_absolute_url()
+
 
 def ExportCSV(request, queryset):
     response = HttpResponse(content_type="text/csv")
