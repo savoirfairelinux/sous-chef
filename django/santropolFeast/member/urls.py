@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from member.views import geolocateAddress,change_status
+from member.views import geolocateAddress, change_status
 from django.utils.translation import ugettext_lazy as _
 
 from member.views import (

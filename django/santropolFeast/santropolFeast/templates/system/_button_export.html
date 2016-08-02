@@ -2,14 +2,10 @@
     <div class="ui button">Export</div>
     <div class="ui floating dropdown icon button" tabindex="0">
         <i class="dropdown icon"></i>
-        <div class="menu transition hidden" tabindex="-1">
-            <div class="item">
-                <i class="dropdown icon"></i>
-                <span class="text">Export</span>
                 <div class="menu transition hidden">
                     <div class="header">Format</div>
-                    <div class="item"><a href="?format=csv">CSV</a></div>
-                    <div class="item"><a href="?format=pdf">PDF</a></div>
+                    <div class="item"><a href="{{request.get_full_path}}&format=csv">CSV</a></div>
+                    <div class="item"><a href="{{request.get_full_path}}&format=pdf">PDF</a></div>
                 </div>
             </div>
         </div>
