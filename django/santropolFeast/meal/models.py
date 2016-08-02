@@ -43,7 +43,8 @@ class Ingredient(models.Model):
     # Information about the ingredient (in the recipe of a component)
     name = models.CharField(
         max_length=50,
-        verbose_name=_('name')
+        verbose_name=_('name'),
+        unique=True,
     )
 
     description = models.TextField(
@@ -95,7 +96,13 @@ class Component(models.Model):
         of a component for the delivery date."""
         q = Component_ingredient.objects.\
             filter(component__id=component_id, date=delivery_date)
-        # print("query=", q.query)  # DEBUG
+        return [ci.ingredient for ci in q]
+
+    @staticmethod
+    def get_recipe_ingredients(component_id):
+        """Returns a list of the ingredients in the recipe of a component."""
+        q = Component_ingredient.objects.\
+            filter(component__id=component_id, date=None)
         return [ci.ingredient for ci in q]
 
 
