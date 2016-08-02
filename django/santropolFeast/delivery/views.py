@@ -9,7 +9,8 @@ from delivery.models import Delivery
 from django.http import JsonResponse
 from meal.factories import MenuFactory
 from django.core.urlresolvers import reverse_lazy
-
+from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
+from django.contrib.contenttypes.models import ContentType
 
 from .apps import DeliveryConfig
 
@@ -33,6 +34,14 @@ class Orderlist(generic.ListView):
     def get_queryset(self):
         queryset = Order.objects.get_orders_for_date()
         return queryset
+
+    def get_context_data(self, **kwargs):
+        log = LogEntry.objects.latest('action_time')
+        print(log.action_time)
+        context = super(Orderlist, self).get_context_data(**kwargs)
+        context['refresh'] = log
+
+        return context
 
 
 class MealInformation(generic.ListView):
@@ -314,7 +323,14 @@ def routeDailyOrders(request):
 def refreshOrders(request):
     creation_date = date.today()
     delivery_date = date.today()
+    last_refresh_date = datetime.datetime.now()
     clients = Client.active.all()
     MenuFactory.create(date=delivery_date)
     Order.create_orders_on_defaults(creation_date, delivery_date, clients)
+    LogEntry.objects.log_action(
+        user_id=1, content_type_id=1,
+        object_id="", object_repr="Generation of order for "+str(
+            datetime.datetime.now().strftime('%Y-%m-%d %H:%M')),
+        action_flag=ADDITION,
+    )
     return HttpResponseRedirect(reverse_lazy("delivery:order"))
