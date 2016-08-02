@@ -4,6 +4,8 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django_filters import FilterSet, MethodFilter, ChoiceFilter
+from django.core.urlresolvers import reverse
+
 from datetime import date
 from sqlalchemy import and_
 
@@ -98,15 +100,14 @@ class Order(models.Model):
 
     objects = OrderManager()
 
+    def get_absolute_url(self):
+        return reverse('order:view', kwargs={'pk': self.pk})
+
     @property
     def price(self):
-
         total = 0
-
         for item in self.orders.all():
-
             if item.billable_flag is True:
-
                 total = total + item.price
 
         return total
@@ -594,6 +595,13 @@ class Order_item(models.Model):
 
     free_quantity = models.IntegerField(
         verbose_name=_('free quantity'),
+        null=True,
+    )
+
+    component_group = models.CharField(
+        max_length=100,
+        choices=COMPONENT_GROUP_CHOICES,
+        verbose_name=_('component group'),
         null=True,
     )
 

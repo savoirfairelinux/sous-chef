@@ -1,12 +1,14 @@
+import csv
 from django.http import HttpResponse
 from django.views import generic
-from order.models import Order, OrderFilter, ORDER_STATUS
-from order.mixin import AjaxableResponseMixin
-from member.models import Client
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django import forms
-import csv
+
+from extra_views import CreateWithInlinesView
+
+from order.models import Order, Order_item, OrderFilter, ORDER_STATUS
+from order.mixins import AjaxableResponseMixin
+from order.forms import CreateOrderItem
 
 
 class OrderList(generic.ListView):
@@ -61,30 +63,45 @@ class OrderDetail(generic.DetailView):
     template_name = 'view.html'
     context_object_name = 'order'
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(OrderDetail, self).dispatch(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(OrderDetail, self).get_context_data(**kwargs)
         context['status'] = ORDER_STATUS
         return context
 
 
-class CreateOrder(AjaxableResponseMixin, generic.CreateView):
+class CreateOrder(AjaxableResponseMixin, CreateWithInlinesView):
     model = Order
+    fields = '__all__'
+    inlines = [CreateOrderItem]
     template_name = 'create.html'
-    fields = ['client', 'delivery_date']
 
-    delivery_date = forms.DateField(label="Delivery Date")
-    client = forms.ModelChoiceField(
-        required=True,
-        widget=forms.Select(
-            attrs={'class': 'ui search dropdown'}
-        ),
-        queryset=Client.active.all()
-    )
+    # TODO: Change the validation of the form,
+    # If component is present, then component_group is not required
+    # and vice versa
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CreateOrder, self).dispatch(*args, **kwargs)
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
 
 
 class UpdateOrder(AjaxableResponseMixin, generic.UpdateView):
     model = Order
     fields = '__all__'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(UpdateOrder, self).dispatch(*args, **kwargs)
+
+
+class UpdateOrderStatus(UpdateOrder):
+    fields = ['status']
 
 
 def ExportCSV(request, queryset):

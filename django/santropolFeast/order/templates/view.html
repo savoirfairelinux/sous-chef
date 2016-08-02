@@ -69,7 +69,7 @@
             onChange: function(value, text, $selectedItem) {
                 $(this).addClass('loading');
                 $.ajax({
-                    url: {% url 'order:update' pk=order.id %},
+                    url: "{% url 'order:update_status' pk=order.id %}",
                     type: "POST",
                     data: {
                         'status': value,

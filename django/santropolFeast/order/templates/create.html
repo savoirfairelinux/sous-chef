@@ -16,12 +16,23 @@
 </div>
 
 <div class="ten wide column form-steps">
-    <form action="" method="post" class="ui form error">{% csrf_token %}
+    <form action="" method="post" class="ui form error">
+        {% csrf_token %}
 
-        <h4 class="ui dividing header">{{ _('Client') }}</h4>
-            <div class="field">
+        <div class="order">
+            <div class="field {% if form.client.errors %} error {% endif %}">
                 <label>{{ form.client.label }}</label>
                 {{ form.client }}
+            </div>
+
+            <div class="field {% if form.creation_date.errors %} error {% endif %}">
+                <label>{{ form.creation_date.label }}</label>
+                <div class="ui calendar" id="form_creation_date">
+                    <div class="ui input left icon">
+                          <i class="calendar icon"></i>
+                          {{ form.creation_date }}
+                    </div>
+                </div>
             </div>
 
             <div class="field {% if form.delivery_date.errors %} error {% endif %}">
@@ -34,18 +45,80 @@
                 </div>
             </div>
 
-            <button class="ui primary button" type="submit">Create</button>
+            <div class="field {% if form.status.errors %} error {% endif %}">
+                <label>{{ form.status.label }}</label>
+                {{ form.status }}
+            </div>
+
+            <div class="field {% if form.orders.errors %} error {% endif %}">
+                <label>{{ form.orders.label }}</label>
+                {{ form.orders }}
+            </div>
+        </div>
+
+        <div class="ui styled fluid accordion order items">
+            {% for formset in inlines %}
+                {{ formset.management_form }}
+                <div id="{{ formset.prefix }}">
+
+                    {% for subform in formset.forms %}
+                        <div class="title active">
+                            <i class="dropdown icon"></i> Order item
+                        </div>
+                        <div class="content active">
+                            <div class="field {% if subform.component.errors %} error {% endif %}">
+                                <label> {{ subform.component.label }} </label>
+                                {{ subform.component }}
+                            </div>
+                            <div class="field {% if subform.component_group.errors %} error {% endif %}">
+                                <label> {{ subform.component_group.label }} </label>
+                                {{ subform.component_group }}
+                            </div>
+                            <div class="field {% if subform.price.errors %} error {% endif %}">
+                                <label> {{ subform.price.label }} </label>
+                                {{ subform.price }}
+                            </div>
+                            <div class="field {% if subform.billable_flag.errors %} error {% endif %}">
+                                <label> {{ subform.billable_flag.label }} </label>
+                                {{ subform.billable_flag }}
+                            </div>
+                            <div class="field {% if subform.size.errors %} error {% endif %}">
+                                <label> {{ subform.size.label }} </label>
+                                {{ subform.size }}
+                            </div>
+                            <div class="field {% if subform.order_item_type.errors %} error {% endif %}">
+                                <label> {{ subform.order_item_type.label }} </label>
+                                {{ subform.order_item_type }}
+                            </div>
+                            <div class="field {% if subform.remark.errors %} error {% endif %}">
+                                <label> {{ subform.remark.label }} </label>
+                                {{ subform.remark }}
+                            </div>
+                            <div class="field {% if subform.total_quantity.errors %} error {% endif %}">
+                                <label> {{ subform.total_quantity.label }} </label>
+                                {{ subform.total_quantity }}
+                            </div>
+                            <div class="field {% if subform.free_quantity.errors %} error {% endif %}">
+                                <label> {{ subform.free_quantity.label }} </label>
+                                {{ subform.free_quantity }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        <button class="ui primary button" type="submit">Create</button>
     </form>
-    <br/>
 </div>
 
 {% endblock %}
 
 {% block extrajs %}
     <script src="{% static 'jquery/calendar.min.js' %}" type="application/javascript"></script>
+    <script src="{% static 'jquery/jquery.formset.js' %}" type="application/javascript"></script>
     <script type="text/javascript">
         $(function() {
-            $('#form_delivery_date').calendar({
+            $('#form_creation_date').calendar({
                 type: 'date',
                 formatter: {
                     date: function (date, settings) {
@@ -59,6 +132,36 @@
                     }
                 }
             });
+            $('#form_delivery_date').calendar({
+                type: 'date',
+                startCalendar: $('#form_creation_date'),
+                formatter: {
+                    date: function (date, settings) {
+                      if (!date) return '';
+                      var day = date.getDate();
+                      var month = date.getMonth() + 1;
+                      var year = date.getFullYear();
+                      if (month < 10) month = '0' + month;
+                      if (day < 10) day = '0' + day;
+                      return year + '-' + month + '-' + day;
+                    }
+                }
+            });
         });
+
+
+       $(function() {
+           {% for formset in inlines %}
+           $('div#{{ formset.prefix }}').formset({
+               prefix: '{{ formset.prefix }}',
+               formCssClass: 'dynamic-formset{{ forloop.counter }}',
+               addText: '<i class="ui add icon item"></i> Add order item',
+               deleteText: '<i class="ui remove icon order item"></i> Remove order item',
+               addCssClass: 'positive ui button right floated',
+               deleteCssClass: 'negative ui button'
+           });
+           {% endfor %}
+       })
+
     </script>
 {% endblock %}
