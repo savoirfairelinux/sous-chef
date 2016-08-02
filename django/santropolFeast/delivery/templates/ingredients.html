@@ -5,35 +5,45 @@
 {% block title %}{% trans 'Kitchen Count report' %} {% endblock %}
 
 {% block extrajs %}
-<script type="text/javascript">
-    $('.ui.dropdown').dropdown({transition: 'drop'});
-</script>
+    <script type="text/javascript">
+     $('.ui.dropdown').dropdown({transition: 'drop'});
+    </script>
 {% endblock %}
 
 {% block content %}
 
-{% include 'kitchen_count_steps.html' with step='ingredients' %}
+    {% include 'kitchen_count_steps.html' with step='ingredients' %}
 
-<div class="ui secondary pointing fluid menu">
-    <h2 class="ui header">Pick ingredients</h2>
-    <div class="right menu">
-      <div class="ui item"><h3><i class="ui calendar icon"></i>{% now "j F Y" %}</h3></div>
+    <div class="ui secondary pointing fluid menu">
+        <h2 class="ui header">Pick ingredients</h2>
+        <div class="right menu">
+            <div class="ui item"><h3><i class="ui calendar icon"></i>{{ date }}</h3></div>
+        </div>
     </div>
-</div>
 
-<div class="ui search selection dropdown">
-  <input type="hidden" name="ingredients">
-  <i class="dropdown icon"></i>
-  <div class="default text">What should we eat today ?</div>
-  <div class="menu">
-      {% for meal in meals %}
-      <div class="item" data-value="{{ meal.id }}">{{ meal.name }}</div>
-      {% endfor %}
-  </div>
-</div>
+    <div class="ui basic big label">
+        Delivery Date :
+    </div>
+    <form class="ui input" action="{% url 'delivery:meal' %}" method="post">
+        {% csrf_token %}
+        {{ date_form }}
+        <input class="ui button" type="submit" value="Change" name="_change" />
+    </form>
+    <div class="ui basic big label">
+        Main dish : {{ main_dish_name }}
+    </div>
 
- <div class="ui row">
-     <a class="big ui right floated button" href="{% url 'delivery:order' %}">Back</a>
-     <a class="big ui yellow right floated button" href="{% url 'delivery:kitchen_count' %}">Next: Print Kitchen Count</a>
+<div>
+    <script type="text/javascript" src="/static/admin/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+    {{ ing_form.media }}
+    <form class="ui input" action="{% url 'delivery:meal' %}" method="post">
+        {% csrf_token %}
+        {{ ing_form.ingredients }}
+        {{ ing_form.date }}
+        {{ ing_form.dish }}
+        <input class="ui right floated button" type="submit" value="Back" name="_back" </>
+        <input class="ui yellow right floated button" type="submit" value="Next: Print Kitchen Count" name="_next" </>
+    </form>
 </div>
 {% endblock content %}

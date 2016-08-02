@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from delivery.models import Delivery
 from django.http import JsonResponse
@@ -19,9 +20,11 @@ from .apps import DeliveryConfig
 from sqlalchemy import func, or_, and_
 
 from .models import Delivery
-from .forms import DateForm
+from .forms import DateForm, DayIngredientsForm
 from order.models import Order
-from meal.models import COMPONENT_GROUP_CHOICES_MAIN_DISH, Component
+from meal.models import (
+    COMPONENT_GROUP_CHOICES_MAIN_DISH, Component, Ingredient, Menu_component,
+    Component_ingredient)
 from member.apps import db_session
 from member.models import Client, Route
 from datetime import date
@@ -46,17 +49,104 @@ class Orderlist(generic.ListView):
         return context
 
 
-class MealInformation(generic.ListView):
-    # Display all the meal and alert for a given day
-    model = Delivery
-    template_name = 'ingredients.html'
+class MealInformation(generic.View):
 
-    def get_context_data(self, **kwargs):
+    def get(self, request, **kwargs):
+        # Choose ingredients for given delivery date
+        #   or for today by default
+        if 'year' in kwargs and 'month' in kwargs and 'day' in kwargs:
+            date = datetime.date(
+                int(kwargs['year']), int(kwargs['month']), int(kwargs['day']))
+        else:
+            date = datetime.date.today()
+        date_form = DateForm(initial={'date': date})
+        # TODO use managers
+        main_dishes = Menu_component.objects.filter(
+            menu__date=date,
+            component__component_group=COMPONENT_GROUP_CHOICES_MAIN_DISH)
+        if main_dishes:
+            main_dish_name = main_dishes[0].component.name
+            # get existing ingredients for the date + dish, if any
+            dish_ingredients = Component.get_day_ingredients(
+                    main_dishes[0].component.id, date)
+            if not dish_ingredients:
+                # get recipe ingredients for the dish
+                dish_ingredients = Component.get_recipe_ingredients(
+                    main_dishes[0].component.id)
+            all_ingredients = \
+                [ingredient.name for ingredient in Ingredient.objects.all()]
+            ing_form = DayIngredientsForm(
+                choices=[(a, a) for a in all_ingredients],
+                initial={'ingredients': dish_ingredients,
+                         'date': date,
+                         'dish': main_dish_name})
+        else:
+            main_dish_name = 'None for chosen date'
+            ing_form = DayIngredientsForm(choices=[])
+        return render(
+            request,
+            'ingredients.html',
+            {'date_form': date_form,
+             'date': str(date),
+             'main_dish_name': main_dish_name,
+             'ing_form': ing_form})
 
-        context = super(MealInformation, self).get_context_data(**kwargs)
-        context['meals'] = Component.objects.all()
-
-        return context
+    def post(self, request):
+        date_form = None
+        ing_form = None
+        main_dish_name = ''
+        # print("post request", request.POST)  # debug
+        if '_change' in request.POST:
+            # change date for day's ingredients
+            date_form = DateForm(request.POST)
+            if date_form.is_valid():
+                date = date_form.cleaned_data['date']
+                fmtdate = \
+                    '{:04}/{:02}/{:02}'.format(date.year, date.month, date.day)
+                return HttpResponseRedirect('/delivery/meal/' + fmtdate + '/')
+        elif '_back' in request.POST:
+            # back to order step
+            return HttpResponseRedirect('/delivery/order/')
+        elif '_next' in request.POST:
+            # forward to kitchen count
+            all_ingredients = \
+                [ingredient.name for ingredient in Ingredient.objects.all()]
+            ing_form = DayIngredientsForm(
+                request.POST, choices=[(a, a) for a in all_ingredients])
+            if ing_form.is_valid():
+                ingredients = ing_form.cleaned_data['ingredients']
+                date = ing_form.cleaned_data['date']
+                main_dish_name = ing_form.cleaned_data['dish']
+                component = Component.objects.get(name=main_dish_name)
+                # delete existing ingredients for the date + dish
+                Component_ingredient.objects.filter(
+                    component=component, date=date).delete()
+                # add revised ingredients for the date + dish
+                for ing in Ingredient.objects.filter(name__in=ingredients):
+                    ci = Component_ingredient(
+                        component=component,
+                        ingredient=ing,
+                        date=date)
+                    ci.save()
+                    # print("ci=", ci)  # DEBUG
+                fmtdate = \
+                    '{:04}/{:02}/{:02}'.format(date.year, date.month, date.day)
+                return HttpResponseRedirect(
+                    '/delivery/kitchen_count/' + fmtdate + '/')
+                # END FOR
+            # END IF
+        # END IF
+        if not date_form:
+            date_form = DateForm(request.POST)
+        if not ing_form:
+            ing_form = DayIngredientsForm(choices=[])
+        return render(
+            request,
+            'ingredients.html',
+            {'date_form': date_form,
+             'date': '',
+             'main_dish_name': main_dish_name,
+             'ing_form': ing_form})
 
 
 class RoutesInformation(generic.ListView):
@@ -79,7 +169,7 @@ class KitchenCount(generic.View):
     def get(self, request, **kwargs):
         # Display kitchen count report for given delivery date
         #   or for today by default
-        if 'year' in kwargs:
+        if 'year' in kwargs and 'month' in kwargs and 'day' in kwargs:
             date = datetime.date(
                 int(kwargs['year']), int(kwargs['month']), int(kwargs['day']))
         else:
@@ -102,8 +192,8 @@ class KitchenCount(generic.View):
             date = form.cleaned_data['date']
             fmtdate = \
                 '{:04}/{:02}/{:02}'.format(date.year, date.month, date.day)
-            return HttpResponseRedirect
-            ('/delivery/kitchen_count/' + fmtdate + '/')
+            return HttpResponseRedirect(
+                '/delivery/kitchen_count/' + fmtdate + '/')
         else:
             return render(request, 'kitchen_count.html',
                           {'component_lines': [],
