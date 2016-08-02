@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'aldjemy',
     'annoying',
     'leaflet',
+    'note',
 
 ]
 

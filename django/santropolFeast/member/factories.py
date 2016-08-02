@@ -7,6 +7,7 @@ from member.models import (
     DELIVERY_TYPE, DAYS_OF_WEEK, RATE_TYPE
 )
 from meal.models import COMPONENT_GROUP_CHOICES
+from django.contrib.auth.models import User
 
 
 class AddressFactory (factory.DjangoModelFactory):

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+
+{% block title %}Staff Notes{% endblock %}
+
+{% block content %}
+
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">Staff Notes</h2>
+
+    <div class="right menu">
+
+    </div>
+</div>
+
+<div class="ui row">
+<form action="" method="get" class="ui form">
+
+    <div class="inline fields">
+        <div class="field">
+            <label>Name</label>
+            <div class="field">
+                <div class="ui large left icon input">
+                    <i class="users icon"></i>
+                    {{ filter.form.name }}
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label>Priority</label>
+            <div class="field">
+                {{ filter.form.priority }}
+            </div>
+        </div>
+        <div class="field">
+            <label>Is read</label>
+            <div class="field">
+                {{ filter.form.is_read }}
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <a href="{{ request.path }}?display={{ display }}" class="ui button">Reset</a>
+        <button class="ui yellow button" type="submit">Search</button>
+    </div>
+</form>
+</div>
+
+
+<div class="ui relaxed divided list">
+    {% for note in filter %}
+    <div class="item">
+        <div class="right floated content">
+            {% if note.is_read %}
+            <a class="ui tiny  button " href="{% url 'note:unread' note.id %}">
+            {{ _('Mark as unread') }}</a>
+            {% else %}
+            <a class="ui tiny  button" href="{% url 'note:read' note.id %}">
+            {{ _('Mark as read') }}
+            {% endif %}
+            </a>
+        </div>
+        <i class="{% if note.priority == 'urgent' %} warning sign {% else %} info {% endif %} middle aligned icon"></i>
+        <div class="content">
+            <a class="header" href="{% url 'member:view' pk=note.client.id %}">{{note.client}}</a>
+            <div class="description">
+                {{ note.note }}
+            </div>
+            <div class="description">
+                <div class="date">
+                    <em>{{note.date}}</em>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,8 +1,15 @@
 {% extends "base.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
+{% load static %}
 
 {% block title %}Client{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    $('.ui.dropdown').dropdown({transition: 'drop'});
+</script>
+{% endblock %}
 
 {% block content %}
 

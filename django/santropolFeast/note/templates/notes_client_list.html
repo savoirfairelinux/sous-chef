@@ -1,0 +1,78 @@
+{% extends "client/base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load admin_urls %}
+
+{% block title %}
+
+  {{client}} - Information
+
+{% endblock %}
+
+{% block subcontent %}
+
+<div class="ui segment">
+    <h2 class="ui header">
+        <div class="content">
+            {% trans 'Staff Notes' %}
+            <div class="sub header">
+                Notes added to {{client}}'s file.
+            </div>
+        </div>
+    </h2>
+    <div class="ui divider"></div>
+
+
+    <form action="" method="get" class="ui form">
+
+        <div class="inline fields">
+
+            <div class="field">
+                <label>Priority</label>
+                <div class="field">
+                    {{ filter.form.priority }}
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Is read</label>
+                <div class="field">
+                    {{ filter.form.is_read }}
+                </div>
+            </div>
+
+            <input id="id_display" name="display" type="text" value="{{display}}" style="display:none">
+        </div>
+        <div class="field">
+            <a href="{{ request.path }}?display={{ display }}" class="ui button">Reset</a>
+            <button class="ui yellow button" type="submit">Search</button>
+        </div>
+    </form>
+
+    <div class="ui relaxed divided list">
+        {% for note in notes %}
+        <div class="item">
+            <div class="right floated content">
+                {% if note.is_read %}
+                <a class="ui tiny  button " href="{% url 'note:unread' note.id %}">
+                {{ _('Mark as unread') }}</a>
+                {% else %}
+                <a class="ui tiny  button" href="{% url 'note:read' note.id %}">
+                {{ _('Mark as read') }}
+                {% endif %}
+                </a>
+            </div>
+            <i class="{% if note.priority == 'urgent' %} warning sign {% else %} info {% endif %} middle aligned icon"></i>
+            <div class="content">
+                <a class="header">{{note.date}}</a>
+                <div class="description">
+                    {{ note.note }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

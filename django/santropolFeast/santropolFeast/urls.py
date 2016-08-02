@@ -53,4 +53,8 @@ urlpatterns = [
         r'^delivery/',
         include('delivery.urls', namespace="delivery")
     ),
+    url(
+        r'^note/',
+        include('note.urls', namespace="note")
+    ),
 ]
