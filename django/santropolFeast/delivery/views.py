@@ -1,5 +1,7 @@
 import datetime
 import types
+import json
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.views import generic
 from django.http import HttpResponseRedirect
@@ -294,6 +296,15 @@ def dailyOrders(request):
                 data.append(waypoint)
 
     waypoints = {'waypoints': data}
+
+    return JsonResponse(waypoints, safe=False)
+
+
+@csrf_exempt
+def saveRoute(request):
+    members = json.loads(request.body.decode('utf-8'))
+
+    # To do print roadmap according the list of members received
 
     return JsonResponse(waypoints, safe=False)
 

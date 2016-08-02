@@ -102,6 +102,7 @@
                  waypoints[i].options.meal = data.waypoints[i].meal;
                  waypoints[i].options.address = data.waypoints[i].address;
                  waypoints[i].options.member = data.waypoints[i].member;
+                 waypoints[i].options.id = data.waypoints[i].id;
                  waypoints[i].name = data.waypoints[i].member ;
             }
 
@@ -131,7 +132,6 @@
         // Create bike router using mapbox
         var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
         bikerouter.options.profile = 'mapbox.cycling';
-
 
         // Extend Routing Control to build  sortable geocoder
         var routingContol = L.Routing.Control.extend({
@@ -229,7 +229,30 @@
          });
 
          $("#btnsave").click(function(){
+            var wp = control.getWaypoints();
+            var data ={ members: [] };
 
+            // simplify waypoint into a list of member id in the map order
+            $.each(wp, function(key,value) {
+              console.log(value);
+              console.log(value.options);
+              if (typeof value.options.id !== "undefined") {
+                data.members.push({
+                    "id" : value.options.id
+                });
+              }
+            });
+
+            // Post simple list of members to server
+            $.ajax("../saveRoute/", {
+                  data : JSON.stringify(data),
+                  contentType : 'application/json; charset=utf-8',
+                  type : 'POST',
+                  dataType: "json",
+                  success: function(result) {
+                      alert("Route Saved");
+                  }
+                });
           });
 
            // during init
