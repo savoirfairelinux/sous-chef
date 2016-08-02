@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from member.models import (
     Client, Member, Address, Contact, Referencing,
-    ClientFilter, ClientFilter, DAYS_OF_WEEK
+    ClientFilter, ClientFilter, DAYS_OF_WEEK, Route
 )
 from note.models import Note
 from order.models import Order
@@ -182,6 +182,7 @@ class ClientWizard(NamedUrlSessionWizardView):
         dietary_restriction = self.form_dict['dietary_restriction']
         payment_information = self.form_dict['payment_information']
         basic_information = self.form_dict['basic_information']
+        address_information = self.form_dict['address_information']
         # Client SAVE
         client = Client.objects.create(
             rate_type=payment_information.cleaned_data.get("facturation"),
@@ -196,9 +197,10 @@ class ClientWizard(NamedUrlSessionWizardView):
             alert=basic_information.cleaned_data.get("alert"),
             delivery_type=dietary_restriction.cleaned_data.get(
                 "delivery_type"
-            ), meal_default_week=self.save_json(dietary_restriction)
+            ), meal_default_week=self.save_json(dietary_restriction),
+            route=Route.objects.get(
+                name=address_information.cleaned_data.get('route'))
         )
-
         if dietary_restriction.cleaned_data.get('status'):
             client.status = 'A'
 
