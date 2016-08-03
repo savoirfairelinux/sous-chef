@@ -1,0 +1,85 @@
+{% extends "client/base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load admin_urls %}
+
+{% block title %}
+
+  {{client}} - Information
+
+{% endblock %}
+
+{% block subcontent %}
+
+<div class="ui segment">
+    <h2 class="ui header">
+        <div class="content">
+            {% trans 'Staff Notes' %}
+            <div class="sub header">
+                Notes added to {{client}}'s file.
+            </div>
+        </div>
+    </h2>
+    <div class="ui divider"></div>
+
+
+    <form action="" method="get" class="ui form">
+
+        <div class="inline fields">
+
+            <div class="field">
+                <label>Priority</label>
+                <div class="field">
+                    {{ filter.form.priority }}
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Is read</label>
+                <div class="field">
+                    {{ filter.form.is_read }}
+                </div>
+            </div>
+
+            <input id="id_display" name="display" type="text" value="{{display}}" style="display:none">
+        </div>
+        <div class="field">
+            <a href="{{ request.path }}?display={{ display }}" class="ui button">Reset</a>
+            <button class="ui yellow button" type="submit">Search</button>
+        </div>
+    </form>
+
+<div class="ui feed">
+    
+    {% for note in notes %}
+    <div class="event">
+        <div class="label">
+            <i class="{% if note.priority == 'urgent' %} warning sign {% else %} info {% endif %} icon"></i>
+        </div>
+        <div class="content">
+            <div class="date">
+                {{ note.date }}
+            </div>
+            <div class="summary">
+                {{ note.note }}
+                <div class="date">
+                    {% if note.is_read %}
+                    <a class="ui tiny like label " href="{% url 'member:unread' note.id %}">
+                    {{ _('Done/Read') }}</a>
+                    {% else %}
+                    <a class="ui tiny label like" href="{% url 'member:read' note.id %}">
+                    {{ _('New') }}
+                    {% endif %}
+                    </a>
+                </div>
+            </div>
+            <div class="meta">
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</div>
+
+{% endblock %}

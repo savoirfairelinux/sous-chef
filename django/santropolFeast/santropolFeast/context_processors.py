@@ -2,7 +2,7 @@
 
 from member.models import Client
 from order.models import Order
-from meal.models import Ingredient
+from note.models import Note
 
 
 def total(request):
@@ -10,12 +10,13 @@ def total(request):
 
     clients = Client.objects.count()
     orders = Order.objects.count()
-    ingredients = Ingredient.objects.count()
+    # Only unread messages
+    notes = Note.unread.count()
 
     COMMON_CONTEXT = {
         'CLIENTS_TOTAL': clients,
         'ORDERS_TOTAL': orders,
-        'INGREDIENTS_TOTAL': ingredients,
+        'NOTES_TOTAL': notes,
     }
 
     return COMMON_CONTEXT

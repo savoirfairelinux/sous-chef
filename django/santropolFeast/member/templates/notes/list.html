@@ -1,18 +1,26 @@
-{% extends "base_member.html" %}
+{% extends "client/base.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
+{% load admin_urls %}
 
-{% block title %}Staff notes{% endblock %}
+{% block title %}
 
-{% block breadcrumb %}
-{{ block.super }}
-<i class="right arrow icon divider"></i>
-<div class="active section">{% trans "Staff notes" %}</div>
-{% endblock breadcrumb %}
+  {{client}} - Information
 
-{% block content %}
+{% endblock %}
 
-<h1>{{ _('Staff Notes') }}</h1>
+{% block subcontent %}
+
+<div class="ui segment">
+    <h2 class="ui header">
+        <div class="content">
+            {% trans 'Basic information' %}
+            <div class="sub header">Contact information of the referent person.<a  href="{% url 'admin:member_client_change' client.id %}">
+                <i class="write grey icon"></i>
+            </a></div>
+        </div>
+    </h2>
+    <div class="ui divider"></div>
 
 <div class="ui feed">
     {% for note in notes %}
@@ -43,4 +51,6 @@
     </div>
     {% endfor %}
 </div>
+</div>
+
 {% endblock %}

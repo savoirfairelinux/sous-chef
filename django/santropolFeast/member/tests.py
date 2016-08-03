@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from member.models import Member, Client, Note, User, Address, Referencing
+from member.models import Member, Client, User, Address, Referencing
 from member.models import Contact, Option, Client_option, Restriction
 from member.models import Client_avoid_ingredient, Client_avoid_component
 from meal.models import Restricted_item, Ingredient, Component
@@ -10,6 +10,7 @@ from order.models import Order
 
 
 class MemberEmptyContact(TestCase):
+
     @classmethod
     def setUpTestData(cls):
         member = Member.objects.create(
@@ -78,38 +79,6 @@ class MemberTestCase(TestCase):
         """Test that the email property is valid"""
         member = Member.objects.get(firstname="Katrina")
         self.assertEqual(member.email, "test@test.com")
-
-
-class NoteTestCase(TestCase):
-
-    @classmethod
-    def setUpTestData(cls):
-        Member.objects.create(firstname='Katrina',
-                              lastname='Heide')
-        User.objects.create(username="admin")
-
-    def test_attach_note_to_member(self):
-        """Create a note attached to a member"""
-        member = Member.objects.get(firstname='Katrina')
-        admin = User.objects.get(username='admin')
-        note = Note.objects.create(member=member, author=admin)
-        self.assertEqual(str(member), str(note.member))
-
-    def test_mark_as_read(self):
-        """Mark a note as read"""
-        member = Member.objects.get(firstname='Katrina')
-        admin = User.objects.get(username='admin')
-        note = Note.objects.create(member=member, author=admin)
-        self.assertFalse(note.is_read)
-        note.mark_as_read()
-        self.assertTrue(note.is_read)
-
-    def test_str_includes_note(self):
-        """An note listing must include the note text"""
-        member = Member.objects.get(firstname='Katrina')
-        admin = User.objects.get(username='admin')
-        note = Note.objects.create(member=member, author=admin, note='x123y')
-        self.assertTrue('x123y' in str(note))
 
 
 class ReferencingTestCase(TestCase):
@@ -241,7 +210,7 @@ class ClientTestCase(TestCase):
         # monday_main_dish_quantity = 1
         self.assertEqual(
             angela.meal_default_week['monday_main_dish_quantity'], 1
-            )
+        )
 
 
 class OptionTestCase(TestCase):

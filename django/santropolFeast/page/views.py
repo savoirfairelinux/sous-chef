@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from member.models import Note, Client
+from member.models import Client
 from datetime import datetime, timedelta
 from functools import reduce
 import operator
@@ -17,12 +17,10 @@ import operator
 
 @login_required
 def home(request):
-    notes = list(Note.objects.all())
     active_clients = Client.active.all().count()
     pending_clients = Client.pending.all().count()
     clients = Client.contact.get_birthday_boys_and_girls()
     return render(request, 'pages/home.html', {
-        'notes': notes,
         'active_clients': active_clients,
         'pending_clients': pending_clients,
         'birthday': clients,

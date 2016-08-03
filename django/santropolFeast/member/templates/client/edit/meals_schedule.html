@@ -1,0 +1,95 @@
+{% extends "client/base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load admin_urls %}
+{% load static %}
+{% load member_extras %}
+
+{% block title %}
+
+  {{client}} - Food preferences
+
+{% endblock %}
+
+{% block subcontent %}
+
+<div class="ui segment">
+
+<h3 class="ui header">
+    {% trans 'Meal status' %}
+    <a  href="{% url 'admin:member_client_change' client.id %}">
+        <i class="write grey icon"></i>
+    </a>
+</h3>
+<div class="ui orange label">{{client.get_status_display}}</div>
+
+<h3 class="ui header">
+    {% trans 'Meal schedule' %}
+</h3>
+
+<form class="ui form">
+
+    <div class="ui form">
+      <div class="field">
+          <label>Serving Size</label>
+          <div class="ui selection dropdown">
+              <input type="hidden" name="gender">
+              <i class="dropdown icon"></i>
+              <div class="default text">Serving Size</div>
+              <div class="menu">
+                  <div class="item" data-value="R">Regular</div>
+                  <div class="item" data-value="L">Large</div>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    {% for key, meal in components %}
+    <div class="field">
+      <label>{{meal}}</label>
+      <input type="text" name="{{key}}" placeholder="{{meal}}">
+    </div>
+    {% endfor %}
+
+  <button class="ui button" type="submit">Submit</button>
+</form>
+
+
+<table class="ui compact table">
+  <thead>
+    <tr>
+      <th>{% trans 'Size' %}</th>
+      <th>{% trans 'Component' %}</th>
+      <th>{% trans 'Quantity' %}</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for meal, Meal in components %}
+    <tr>
+      {% if meal == "main_dish" %}
+      <td>
+          <div class="ui dropdown selection" tabindex="0">
+              <select id="id_dietary_restriction-size_monday" name="dietary_restriction-size_monday">
+                  <option value="" selected="selected">Serving size</option>
+                  <option value="R">Regular</option>
+                  <option value="L">Large</option>
+              </select>
+              <i class="dropdown icon"></i>
+      </td>
+      {% else %}
+      <td></td>
+      {% endif %}
+      <td>{{ Meal }}</td>
+      <td>
+          <input id="id_dietary_restriction-main_dish_monday_quantity" name="dietary_restriction-main_dish_monday_quantity" placeholder="Main Dish" type="text">
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="ui row">
+    <a class="ui primary button" href="#">Save</a>
+</div>
+
+{% endblock %}

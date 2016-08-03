@@ -4,13 +4,14 @@ from django.views import generic
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.core.urlresolvers import reverse_lazy
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from member.models import (
-    Client, Member, Address, Contact, Note, Referencing,
-    ClientFilter, Note, ClientFilter, DAYS_OF_WEEK
+    Client, Member, Address, Contact, Referencing,
+    ClientFilter, ClientFilter, DAYS_OF_WEEK
 )
+from note.models import Note
 from order.models import Order
 from meal.models import COMPONENT_GROUP_CHOICES
 from formtools.wizard.views import NamedUrlSessionWizardView
@@ -576,6 +577,41 @@ class ClientAllergiesView(generic.DetailView):
         return context
 
 
+class ClientNotesView(generic.DetailView):
+    # Display detail of one client
+    model = Client
+    template_name = 'client/view/notes.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ClientNotesView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ClientNotesView, self).get_context_data(**kwargs)
+        context['active_tab'] = 'notes'
+        context['notes'] = NoteClientFilter(
+            self.request.GET, queryset=self.object.notes).qs
+
+        uf = NoteClientFilter(self.request.GET, queryset=self.object.notes)
+        context['filter'] = uf
+
+        return context
+
+
+def note_add(request):
+    if request.method == "POST":
+        form = NoteForm(request.POST)
+        if form.is_valid():
+            model_instance = form.save(commit=False)
+            model_instance.author = request.user
+            model_instance.save()
+            return render(request, 'notes/add.html', {'form': form})
+    else:
+        form = NoteForm()
+
+    return render(request, 'notes/add.html', {'form': form})
+
+
 def parse_json(meals):
     meal_default = []
 
@@ -756,19 +792,6 @@ class ClientPreferencesUpdate(generic.UpdateView):
         context['myVariableOfContext'] = 0
 
         return context
-
-
-class NoteList(generic.ListView):
-    # Display the list of clients
-    model = Note
-    template_name = 'notes/list.html'
-    context_object_name = 'notes'
-
-
-def mark_as_read(request, id):
-    note = get_object_or_404(Note, pk=id)
-    note.mark_as_read()
-    return HttpResponseRedirect(reverse_lazy("member:notes"))
 
 
 class SearchMembers(generic.View):

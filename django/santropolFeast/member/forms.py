@@ -112,6 +112,7 @@ class ClientAddressInformation(forms.Form):
 
 
 class ClientRestrictionsInformation(forms.Form):
+
     def __init__(self, *args, **kwargs):
         super(ClientRestrictionsInformation, self).__init__(*args, **kwargs)
 
@@ -129,7 +130,7 @@ class ClientRestrictionsInformation(forms.Form):
                             attrs={'placeholder': placeholder}
                         ),
                         required=False
-                    )
+                )
 
     status = forms.BooleanField(
         label=_('Active'),

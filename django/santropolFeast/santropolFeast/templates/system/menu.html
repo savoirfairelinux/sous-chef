@@ -2,7 +2,9 @@
 {% load admin_urls %}
 
 <div class="item">
-    <img class="ui large image item" src="{% static 'assets/logo-souschef-coul.png' %}" title="Logo Sous-Chef"/>
+    <a href={% url 'home' %}>
+        <img class="ui large image item" src="{% static 'assets/logo-souschef-coul.png' %}" title="Logo Sous-Chef"/>
+    </a>
 </div>
 {% if request.user %}
 <div class="item loggedin-user">
@@ -31,12 +33,15 @@
     <a class="item" href="{% url 'order:list' %}">{% trans 'Orders' %}
         <div class="ui label">{{ ORDERS_TOTAL }}</div>
     </a>
+    <a class="item" href="{% url 'note:note_list' %}">{% trans 'Staff Notes' %}
+        <div class="ui label">{{ NOTES_TOTAL }}</div>
+    </a>
+
 </div>
 
 <div class="item">
-    <a class="item" href="{% url 'home' %}"><i class="dashboard icon"></i>{% trans 'Dashboard' %}</a>
     <a class="item" href="{% url 'member:member_step' %}"><i class="add user icon"></i>{% trans 'Add a new client' %}</a>
     <a class="item" href="{% url 'delivery:order' %}"><i class="food icon"></i>{% trans 'Kitchen Count' %}</a>
-    <a class="item" href="{% url 'admin:index' %}"><i class="settings icon"></i>{% trans 'Settings' %}</a>
+    <a class="item" href="{% url 'admin:index' %}"><i class="settings icon"></i>{% trans 'Admin' %}</a>
     <a href="{% url 'page:logout' %}" class="item"><i class="sign out icon"></i>{% trans 'Logout' %}</a>
 </div>

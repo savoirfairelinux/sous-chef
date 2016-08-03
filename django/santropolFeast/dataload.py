@@ -10,11 +10,12 @@ import sys
 from meal.models import Component, Restricted_item, Ingredient
 from meal.models import Component_ingredient, Incompatibility
 from meal.models import Menu, Menu_component
-from member.models import Member, Client, Contact, Address, Note, Referencing
-from member.models import Route, Note, Option, Client_option, Restriction
+from member.models import Member, Client, Contact, Address, Referencing
+from member.models import Route, Option, Client_option, Restriction
 from member.models import Client_avoid_ingredient, Client_avoid_component
 from notification.models import Notification
 from order.models import Order, Order_item
+from note.models import Note
 
 
 def print_all_cols(q):

@@ -5,7 +5,8 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django_filters import FilterSet, MethodFilter, CharFilter, ChoiceFilter
+from django_filters import FilterSet, MethodFilter, CharFilter, ChoiceFilter, \
+    BooleanFilter
 from annoying.fields import JSONField
 from meal.models import COMPONENT_GROUP_CHOICES_MAIN_DISH
 
@@ -440,6 +441,14 @@ class Client(models.Model):
         return self.client_order.all()
 
     @property
+    def notes(self):
+        """
+        Returns orders associated to this client
+        """
+
+        return self.client_notes.all()
+
+    @property
     def meals_schedule(self):
         """
         Returns a hierarchical dict representing the meals schedule.
@@ -624,61 +633,6 @@ class Referencing (models.Model):
             self.referent.firstname, self.referent.lastname,
             self.client.member.firstname, self.client.member.lastname,
             str(self.date))
-
-
-class Note (models.Model):
-
-    PRIORITY_LEVEL_NORMAL = 'normal'
-    PRIORITY_LEVEL_URGENT = 'urgent'
-
-    PRIORITY_LEVEL = (
-        (PRIORITY_LEVEL_NORMAL, _('Normal')),
-        (PRIORITY_LEVEL_URGENT, _('Urgent')),
-    )
-
-    class Meta:
-        verbose_name_plural = _('Notes')
-
-    note = models.TextField(
-        verbose_name=_('Note')
-    )
-
-    author = models.ForeignKey(
-        User,
-        verbose_name=_('Author'),
-        related_name='Notes'
-    )
-
-    date = models.DateField(
-        verbose_name=_('Date'),
-        default=timezone.now,
-    )
-
-    is_read = models.BooleanField(
-        verbose_name=_('Is read'),
-        default=False
-    )
-
-    member = models.ForeignKey(
-        'member.Member',
-        verbose_name=_('Member'),
-        related_name='Notes'
-    )
-
-    priority = models.CharField(
-        max_length=15,
-        choices=PRIORITY_LEVEL,
-        default=PRIORITY_LEVEL_NORMAL
-    )
-
-    def __str__(self):
-        return self.note
-
-    def mark_as_read(self):
-        """Mark a note as read."""
-        if not self.is_read:
-            self.is_read = True
-            self.save()
 
 
 class Option(models.Model):

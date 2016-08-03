@@ -3,10 +3,10 @@ from member.views import geolocateAddress
 from django.utils.translation import ugettext_lazy as _
 
 from member.views import (
-    ClientWizard, NoteList, mark_as_read,
+    ClientWizard,
     ClientDetail, ClientList, SearchMembers,
     ClientOrderList, ClientInfoView, ClientReferentView, ClientPaymentView,
-    ClientAllergiesView
+    ClientAllergiesView,
 )
 
 from member.forms import (
@@ -15,6 +15,7 @@ from member.forms import (
     ClientRestrictionsInformation, ClientEmergencyContactInformation
 )
 
+from note.views import ClientNoteList
 
 create_member_forms = (
     ('basic_information', ClientBasicInformation),
@@ -34,9 +35,6 @@ urlpatterns = [
         name='member_step'),
     url(r'^list/$', ClientList.as_view(), name='list'),
     url(r'^search/$', SearchMembers.as_view(), name='search'),
-    url(_(r'^notes/$'), NoteList.as_view(), name='notes'),
-    url(_(r'^note/read/(?P<id>[0-9]{1})/$'),
-        mark_as_read, name='read'),
     url(_(r'^view/(?P<pk>\d+)/$'), ClientDetail.as_view(), name='view'),
     url(_(r'^view/(?P<pk>\d+)/orders$'),
         ClientOrderList.as_view(), name='list_orders'),
@@ -48,5 +46,7 @@ urlpatterns = [
         ClientPaymentView.as_view(), name='client_payment'),
     url(_(r'^view/(?P<pk>\d+)/preferences$'),
         ClientAllergiesView.as_view(), name='client_allergies'),
+    url(_(r'^view/(?P<pk>\d+)/notes$'),
+        ClientNoteList.as_view(), name='client_notes'),
     url(_(r'^geolocateAddress/$'), geolocateAddress, name='geolocateAddress'),
 ]
