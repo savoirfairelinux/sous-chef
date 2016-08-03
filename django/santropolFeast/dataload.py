@@ -290,6 +290,8 @@ def insert_all():
         ['Green Salad', 'Fruit Salad', 'Day s Dessert',
          'Day s Diabetic Dessert', 'Day s Pudding', 'Day s Compote']
     Menu.create_menu_and_components(
+        datetime.date(2016, 5, 21), ['Ginger pork'] + side_dishes)
+    Menu.create_menu_and_components(
         datetime.date(2016, 8, 1), ['Ginger pork'] + side_dishes)
     Menu.create_menu_and_components(
         datetime.date(2016, 8, 2), ['Beef Meatloaf'] + side_dishes)
@@ -901,7 +903,8 @@ def insert_all():
         size='R',
         order_item_type='B component',
         total_quantity=1,
-        remark='Chat with him !')
+        remark='Chat with him !',
+        component_group='main_dish')
     oi_1.save()
     oi_2 = Order_item(
         order=ord_1,
@@ -911,7 +914,8 @@ def insert_all():
         size='L',
         order_item_type='B component',
         total_quantity=1,
-        remark='')
+        remark='',
+        component_group='pudding')
     oi_2.save()
     oi_3 = Order_item(
         order=ord_2,
@@ -921,7 +925,8 @@ def insert_all():
         size='L',
         order_item_type='B component',
         total_quantity=2,
-        remark='')
+        remark='',
+        component_group='main_dish')
     oi_3.save()
     oi_4 = Order_item(
         order=ord_2,
@@ -931,7 +936,8 @@ def insert_all():
         size='L',
         order_item_type='B component',
         total_quantity=2,
-        remark='')
+        remark='',
+        component_group='dessert')
     oi_4.save()
     oi_5 = Order_item(
         order=ord_1,
@@ -941,7 +947,8 @@ def insert_all():
         size='L',
         order_item_type='B component',
         total_quantity=1,
-        remark='')
+        remark='',
+        component_group='green_salad')
     oi_5.save()
     oi_6 = Order_item(
         order=ord_3,
@@ -951,7 +958,8 @@ def insert_all():
         size='L',
         order_item_type='B component',
         total_quantity=1,
-        remark='')
+        remark='',
+        component_group='main_dish')
     oi_6.save()
     oi_7 = Order_item(
         order=ord_3,
@@ -961,7 +969,8 @@ def insert_all():
         size='L',
         order_item_type='B component',
         total_quantity=1,
-        remark='')
+        remark='',
+        component_group='fruit_salad')
     oi_7.save()
     oi_8 = Order_item(
         order=ord_4,
@@ -971,7 +980,8 @@ def insert_all():
         size='L',
         order_item_type='B component',
         total_quantity=1,
-        remark='')
+        remark='',
+        component_group='main_dish')
     oi_8.save()
     oi_9 = Order_item(
         order=ord_4,
@@ -981,7 +991,8 @@ def insert_all():
         size='L',
         order_item_type='B component',
         total_quantity=1,
-        remark='Check out his garden')
+        remark='Check out his garden',
+        component_group='diabetic')
     oi_9.save()
     oi_10 = Order_item(
         order=ord_5,
@@ -991,7 +1002,8 @@ def insert_all():
         size='L',
         order_item_type='B component',
         total_quantity=1,
-        remark='')
+        remark='',
+        component_group='main_dish')
     oi_10.save()
     oi_11 = Order_item(
         order=ord_5,
@@ -1001,7 +1013,8 @@ def insert_all():
         size='L',
         order_item_type='B component',
         total_quantity=1,
-        remark='Check out his garden')
+        remark='Check out his garden',
+        component_group='fruit_salad')
     oi_11.save()
     oi_12 = Order_item(
         order=ord_6,
@@ -1011,7 +1024,8 @@ def insert_all():
         size='R',
         order_item_type='B component',
         total_quantity=1,
-        remark='')
+        remark='',
+        component_group='main_dish')
     oi_12.save()
     oi_13 = Order_item(
         order=ord_6,
@@ -1021,7 +1035,8 @@ def insert_all():
         size='L',
         order_item_type='B component',
         total_quantity=1,
-        remark='Check out his garden')
+        remark='Check out his garden',
+        component_group='fruit_salad')
     oi_13.save()
     oi_14 = Order_item(
         order=ord_7,
@@ -1031,7 +1046,8 @@ def insert_all():
         size='R',
         order_item_type='B component',
         total_quantity=1,
-        remark='')
+        remark='',
+        component_group='main_dish')
     oi_14.save()
     oi_15 = Order_item(
         order=ord_7,
@@ -1041,7 +1057,8 @@ def insert_all():
         size='L',
         order_item_type='B component',
         total_quantity=1,
-        remark='Check out his garden')
+        remark='Check out his garden',
+        component_group='fruit_salad')
     oi_15.save()
     #
     print_all_cols(db.query(Order_item.sa))
