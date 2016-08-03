@@ -1,0 +1,40 @@
+<div id="modal_edit" class="ui modal">
+  <i class="close icon"></i>
+  <div class="header">Edit Item</div>
+  <div class="ten wide column form-steps">
+    <form action="/order/view/{{order.id}}/edit/{{item_id}/" method="post" class="ui form error">{% csrf_token %}
+      <div class="field">
+        <label>{{form.component.label}}</label>
+        {{form.component}}
+      </div>
+      <div class="field">
+        <label>{{form.quantity.label}}</label>
+        {{form.quantity}}
+      </div>
+      <div class="field">
+        <label>{{form.free_quantity.label}}</label>
+        {{form.free_quantity}}
+      </div>
+      <div class="field">
+        <label>{{form.order_item_type.label}}</label>
+        {{form.order_item_type}}
+      <div class="field">
+        <label>{{form.price.label}}</label>
+        {{form.price}}
+      </div>
+      <div class="field">
+        <label>{{form.billable_flag.label}}</label>
+        {{form.billable_flag}}
+      </div>
+      <div class="field">
+        <label>{{form.size.label}}</label>
+        {{form.size}}
+      </div>
+      <div class="field">
+        <label>{{form.remark.label}}</label>
+        {{form.remark}}
+      </div>
+      <button class="ui primary button" type="submit">Save</button>
+    </form>
+  </div>
+</div>

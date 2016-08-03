@@ -1,10 +1,10 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.views import generic
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
 from member.models import Client
-from order.models import Order, OrderFilter
+from order.models import Order, OrderFilter, Order_item, CreateOrderItem
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 import csv
@@ -90,4 +90,40 @@ def ExportCSV(request, queryset):
 
 def show_information(request, id):
     order = get_object_or_404(Order, pk=id)
-    return render(request, 'view.html', {'order': order})
+
+    if request.method == "POST":
+        form_add_order_item = CreateOrderItem(request.POST)
+        print(form_add_order_item)
+        if form_add_order_item.is_valid():
+            print("valid")
+            model_instance = form_add_order_item.save(commit=False)
+            model_instance.order_id = id
+            model_instance.save()
+
+    if request.method == "GET":
+        form_add_order_item = CreateOrderItem()
+
+    return render(request, 'view.html', {'order': order,
+                                         'form': form_add_order_item})
+
+
+def edit_order_information(request, id, item_id):
+    item = get_object_or_404(Order_item, pk=item_id)
+
+    if request.method == "POST":
+        form_edit_order_item = CreateOrderItem(request.POST)
+        if form_edit_order_item.is_valid():
+            print("valid")
+            item = form_add_order_item.save(commit=False)
+            item.order_id = id
+            item.save()
+
+    return HttpResponseRedirect('/order/view/' + str(item.order.id))
+
+
+def delete_order_item(request, id):
+    item = get_object_or_404(Order_item, pk=id)
+    order = item.order
+    item.delete()
+
+    return HttpResponseRedirect('/order/view/' + str(order.id))

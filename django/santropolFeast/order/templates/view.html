@@ -29,6 +29,8 @@
         <th>Description</th>
         <th class="">{% trans 'Quantity' %}</th>
         <th class="">{% trans 'Price' %}</th>
+        <th class="">{% trans 'Edit' %}</th>
+        <th class="">{% trans 'Delete' %}</th>
       </thead>
       <tbody>
           {% for item in order.orders.all %}
@@ -37,6 +39,8 @@
             <td>{{item.component.description}}</td>
             <td>{{item.total_quantity}}</td>
             <td>${{item.price}}</td>
+            <td><a id="edit" class="ui secondary button">Edit</a></td>
+            <td><a class="ui red button" href="/order/view/delete/{{item.id}}">Delete</a></td>
           </tr>
           {% endfor %}
       </tbody>
@@ -47,6 +51,14 @@
           </tr>
       </tfoot>
   </table>
+<a id="add" class="ui secondary button">
+  Add item
+</a>
 </div>
 <div class="ui row"></div>
+{% include "createitem.html" %}
+{% include "edititem.html" %}
+
+
+</div>
 {% endblock %}

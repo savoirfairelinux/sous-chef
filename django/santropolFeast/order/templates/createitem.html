@@ -1,0 +1,43 @@
+<div id="modaldiv" class="ui modal">
+  <i class="close icon"></i>
+  <div class="header">Add Item</div>
+  <div class="ten wide column form-steps">
+    <form action="" method="post" class="ui form error">{% csrf_token %}
+      {% if form.errors %}
+      <div class="ui error message">
+        <div class="header">{{ _('Required information missing')}}</div>
+        <p>{{ _('Please review the form to make sure that all required fields are filled.')}}</p>
+        {{ form.errors }}
+      </div>
+      {% endif %}
+      <div class="field">
+        <label>{{ form.component.label}}</label>
+        {{form.component}}
+      </div>
+      <div class="field">
+        <label>{{form.total_quantity.label}}</label>
+        {{form.total_quantity}}
+      </div>
+      <div class="field">
+        <label>{{form.free_quantity.label}}</label>
+        {{form.free_quantity}}
+      </div>
+      <div class="field">
+        <label>{{form.price.label}}</label>
+        {{form.price}}
+      </div>
+      <div class="field">
+        <label>{{form.billable_flag.label}}</label>
+        {{form.billable_flag}}
+      <div class="field">
+        <label>{{form.size.label}}</label>
+        {{form.size}}
+      </div>
+      <div class="field">
+        <label>{{form.remark.label}}</label>
+        {{form.remark}}
+      </div>
+      <button class="ui primary button" type="submit">Create</button>
+    </form>
+  </div>
+</div>

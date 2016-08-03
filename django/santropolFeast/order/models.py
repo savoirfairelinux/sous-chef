@@ -6,8 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django_filters import FilterSet, MethodFilter, ChoiceFilter
 from datetime import date
 from sqlalchemy import and_
-
-from member.apps import db_session
+from member.apps import db_session, MemberConfig
 from member.models import (Client, Member,
                            RATE_TYPE_LOW_INCOME, RATE_TYPE_SOLIDARY,
                            Address, Option, Client_option, Restriction,
@@ -17,6 +16,7 @@ from meal.models import (Menu, Menu_component, Component,
                          Component_ingredient, Incompatibility,
                          COMPONENT_GROUP_CHOICES_MAIN_DISH)
 
+from django.forms import ModelForm
 
 ORDER_STATUS_CHOICES = (
     ('O', _('Ordered')),
@@ -81,7 +81,12 @@ class Order(models.Model):
     delivery_date = models.DateField(
         verbose_name=_('delivery date')
     )
-
+    """ The status choice are:
+        * Ordered = O
+        * Delivered = D
+        * Billed = B
+        * Paid = P
+    """
     status = models.CharField(
         max_length=1,
         choices=ORDER_STATUS_CHOICES,
@@ -543,7 +548,7 @@ class Order_item(models.Model):
         verbose_name=_('order'),
         related_name='orders',
     )
-
+    # The component contains the name of the order item and also a description
     component = models.ForeignKey(
         'meal.Component',
         verbose_name=_('component'),
@@ -587,3 +592,20 @@ class Order_item(models.Model):
         verbose_name=_('free quantity'),
         null=True,
     )
+
+    @property
+    def name(self):
+        return self.component.name
+
+    @property
+    def description(self):
+        return self.component.description
+
+
+class CreateOrderItem(ModelForm):
+    class Meta:
+        model = Order_item
+        fields = [
+            'component', 'total_quantity', 'free_quantity', 'price',
+            'billable_flag', 'size', 'remark'
+            ]

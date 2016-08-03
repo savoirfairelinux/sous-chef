@@ -68,7 +68,46 @@
         });
 
         $('.ui.accordion').accordion();
+
+        $('.message .close')
+            .on('click', function() {
+                $(this)
+                    .closest('.message')
+                    .transition('fade')
+                    ;
+                })
+            ;
+
+            $(document).ready(function(){
+                 $('#add').click(function(){
+                    $('#modaldiv').modal('show');
+                 });
+            });
+
+            $(document).ready(function(){
+              $('#edit').click(function(){
+                  $('#modal_edit').modal('show');
+              });
+            });
     </script>
+
+    <script language='javascript'>
+             $(document).ready(function(){
+                $('.ui.accordion').accordion();
+             });
+</script>
+
+{% if form.errors %}
+<script type="text/javascript">
+
+
+    $(document).ready(function(){
+            $('#modaldiv').modal('show');
+    });
+
+</script>
+  {% endif %}
+
     <!-- WARNING :  Do not move this line before a manual import of script! -->
     {% block extrajs %}{% endblock %}
 </body>
