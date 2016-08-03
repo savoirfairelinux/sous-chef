@@ -1,10 +1,10 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, render_to_response
 from django.views import generic
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
 from member.models import Client
-from order.models import Order, OrderFilter
+from order.models import Order, OrderFilter, ORDER_STATUS_CHOICES
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 import csv
@@ -90,4 +90,16 @@ def ExportCSV(request, queryset):
 
 def show_information(request, id):
     order = get_object_or_404(Order, pk=id)
-    return render(request, 'view.html', {'order': order})
+    status = ORDER_STATUS_CHOICES
+    return render(request, 'view.html', {'order': order, 'status': status})
+
+
+def change_status(request, id):
+    if request.method == "POST":
+        order = get_object_or_404(Order, pk=id)
+        status = request.POST.get('status')
+        order.status = status
+        order.save()
+
+        # just return a JsonResponse
+        return JsonResponse({'status': 200})
