@@ -68,7 +68,7 @@ class MealInformation(generic.View):
             main_dish_name = main_dishes[0].component.name
             # get existing ingredients for the date + dish, if any
             dish_ingredients = Component.get_day_ingredients(
-                    main_dishes[0].component.id, date)
+                main_dishes[0].component.id, date)
             if not dish_ingredients:
                 # get recipe ingredients for the dish
                 dish_ingredients = Component.get_recipe_ingredients(
@@ -417,7 +417,7 @@ def refreshOrders(request):
     Order.create_orders_on_defaults(creation_date, delivery_date, clients)
     LogEntry.objects.log_action(
         user_id=1, content_type_id=1,
-        object_id="", object_repr="Generation of order for "+str(
+        object_id="", object_repr="Generation of order for " + str(
             datetime.datetime.now().strftime('%Y-%m-%d %H:%M')),
         action_flag=ADDITION,
     )
