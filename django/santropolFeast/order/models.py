@@ -19,14 +19,15 @@ from meal.models import (Menu, Menu_component, Component,
                          COMPONENT_GROUP_CHOICES_MAIN_DISH)
 
 
-ORDER_STATUS_CHOICES = (
+ORDER_STATUS = (
     ('O', _('Ordered')),
     ('D', _('Delivered')),
+    ('N', _('No Charge')),
     ('B', _('Billed')),
     ('P', _('Paid')),
 )
 
-ORDER_STATUS_CHOICES_ORDERED = ORDER_STATUS_CHOICES[0][0]
+ORDER_STATUS_ORDERED = ORDER_STATUS[0][0]
 
 SIZE_CHOICES = (
     ('', _('Serving size')),
@@ -85,7 +86,7 @@ class Order(models.Model):
 
     status = models.CharField(
         max_length=1,
-        choices=ORDER_STATUS_CHOICES,
+        choices=ORDER_STATUS,
         verbose_name=_('order status')
     )
 
@@ -148,7 +149,7 @@ class Order(models.Model):
                 order = Order(client=client,
                               creation_date=creation_date,
                               delivery_date=delivery_date,
-                              status=ORDER_STATUS_CHOICES_ORDERED)
+                              status=ORDER_STATUS_ORDERED)
                 order.save()
                 num_orders_created += 1
             # TODO Use Parameters Model in member to store unit prices
@@ -508,7 +509,7 @@ class OrderFilter(FilterSet):
     )
 
     status = ChoiceFilter(
-        choices=(('', ''),) + ORDER_STATUS_CHOICES
+        choices=(('', ''),) + ORDER_STATUS
     )
 
     class Meta:

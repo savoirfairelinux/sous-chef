@@ -4,7 +4,7 @@ import random
 from faker import Factory as FakerFactory
 from member.factories import MemberFactory, ClientFactory
 from order.models import (
-    Order, Order_item, ORDER_STATUS_CHOICES, ORDER_ITEM_TYPE_CHOICES
+    Order, Order_item, ORDER_STATUS, ORDER_ITEM_TYPE_CHOICES
 )
 from meal.factories import ComponentFactory
 from order.models import SIZE_CHOICES
@@ -34,7 +34,7 @@ class OrderFactory(factory.DjangoModelFactory):
     )
 
     status = factory.LazyAttribute(
-        lambda x: random.choice(ORDER_STATUS_CHOICES)[0]
+        lambda x: random.choice(ORDER_STATUS)[0]
     )
 
     client = factory.SubFactory(ClientFactory)
