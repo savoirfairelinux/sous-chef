@@ -15,6 +15,7 @@ from member.models import (Client, Member,
 from meal.models import (Menu, Menu_component, Component,
                          Restricted_item, Ingredient,
                          Component_ingredient, Incompatibility,
+                         COMPONENT_GROUP_CHOICES,
                          COMPONENT_GROUP_CHOICES_MAIN_DISH)
 
 
@@ -126,26 +127,9 @@ class Order(models.Model):
 
         Returns:
           Number of orders created.
-
-        Raises :
-          Exception if no menu yet for delivery date.
         """
 
         num_orders_created = 0
-        qcomp = db_session.query(Component.sa.id.label('compid')).\
-            select_from(Menu.sa).\
-            join(Menu_component.sa,
-                 Menu_component.sa.menu_id == Menu.sa.id).\
-            join(Component.sa,
-                 Component.sa.id == Menu_component.sa.component_id).\
-            filter(Menu.sa.date == delivery_date)
-        # print ("count=", qcomp.count())  # DEBUG
-        if not qcomp.count():
-            raise Exception(
-                "No menu for delivery date= " + str(delivery_date))
-        components = \
-            [Component.objects.get(pk=row.compid) for row in qcomp.all()]
-        # print("Menu on ", delivery_date, " : ", (components))  #DEBUG
         day = delivery_date.weekday()  # Monday is 0, Sunday is 6
         for client in clients:
             # find quantity of free side dishes based on number of main dishes
@@ -177,15 +161,14 @@ class Order(models.Model):
             else:
                 main_price = MAIN_PRICE_DEFAULT
                 side_price = SIDE_PRICE_DEFAULT
-            for component in components:
+            for component_group, trans in COMPONENT_GROUP_CHOICES:
                 default_qty, default_size = \
                     Client.get_meal_defaults(
-                        client, component.component_group, day)
+                        client, component_group, day)
                 if default_qty > 0:
                     total_quantity = default_qty
                     free_quantity = 0
-                    if (component.component_group ==
-                            COMPONENT_GROUP_CHOICES_MAIN_DISH):
+                    if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH):
                         unit_price = main_price
                     else:
                         unit_price = side_price
@@ -195,7 +178,7 @@ class Order(models.Model):
                             free_quantity += 1
                     oi = Order_item(
                         order=order,
-                        component=component,
+                        component_group=component_group,
                         price=(total_quantity - free_quantity) * unit_price,
                         billable_flag=True,
                         size=default_size,
@@ -217,6 +200,8 @@ class Order(models.Model):
         order = Order.sa
         oi = Order_item.sa
         comp = Component.sa
+        menu = Menu.sa
+        menucomp = Menu_component.sa
         opt = Option.sa
         co = Client_option.sa
         rest = Restriction.sa
@@ -232,18 +217,22 @@ class Order(models.Model):
             cli.id.label('cid'),
             mem.firstname, mem.lastname,
             order.id, order.delivery_date,
+            menu.id, menucomp.id.label('menucompid'),
             ing.name.label('ingredient'), comp.name,
             oi.id, oi.order_id.label('oiorderid')).\
             select_from(mem).\
             join(cli, cli.member_id == mem.id).\
             join(order, order.client_id == cli.id).\
+            join(menu, menu.date == delivery_date).\
             join(cai, cai.client_id == cli.id).\
             join(ing, ing.id == cai.ingredient_id).\
             outerjoin(ci, and_(ci.ingredient_id == ing.id,
                                ci.date == delivery_date)).\
             outerjoin(comp, comp.id == ci.component_id).\
-            outerjoin(oi, and_(oi.component_id == comp.id,
+            outerjoin(oi, and_(oi.component_group == comp.component_group,
                                oi.order_id == order.id)).\
+            outerjoin(menucomp, and_(menucomp.component_id == comp.id,
+                                     menucomp.menu_id == menu.id)).\
             filter(order.delivery_date == delivery_date).\
             order_by(cli.id)
         print_rows(
@@ -251,6 +240,7 @@ class Order(models.Model):
             "\n***** Day's avoid ingredients clashes ****\nCLIENT_ID,"
             "FIRSTNAME, LASTNAME, "
             "ORDER_ID, ORDER_DELIV_DATE, "
+            "MENU_ID, MENU_COMPONENT_ID, "
             "INGREDIENT_NAME, COMP_NAME, "
             "ORDER_ITEM_ID, ORDER_ITEM_ORDER_ID")
 
@@ -259,21 +249,27 @@ class Order(models.Model):
             cli.id.label('cid'),
             mem.firstname, mem.lastname,
             order.id, order.delivery_date,
+            menu.id, menucomp.id.label('menucompid'),
             comp.name.label('component'),
             oi.id, oi.order_id.label('oiorderid')).\
             select_from(mem).\
             join(cli, cli.member_id == mem.id).\
-            join(order, order.client_id == cli.id).\
+            join(order, and_(order.client_id == cli.id,
+                             order.delivery_date == delivery_date)).\
+            join(menu, menu.date == delivery_date).\
             join(cac, cac.client_id == cli.id).\
             join(comp, comp.id == cac.component_id).\
-            outerjoin(oi, and_(oi.component_id == comp.id,
+            outerjoin(oi, and_(oi.component_group == comp.component_group,
                                oi.order_id == order.id)).\
+            outerjoin(menucomp, and_(menucomp.component_id == comp.id,
+                                     menucomp.menu_id == menu.id)).\
             filter(order.delivery_date == delivery_date).\
             order_by(cli.id)
         print_rows(q_day_avo_com,
                    "\n***** Day's avoid component clashes ****\nCLIENT_ID,"
                    "FIRSTNAME, LASTNAME, "
                    "ORDER_ID, ORDER_DELIV_DATE, "
+                   "MENU_ID, MENU_COMPONENT_ID, "
                    "COMP_NAME, "
                    "ORDER_ITEM_ID, ORDER_ITEM_ORDER_ID")
 
@@ -282,12 +278,14 @@ class Order(models.Model):
             cli.id.label('cid'),
             mem.firstname, mem.lastname,
             order.id, order.delivery_date,
+            menu.id, menucomp.id.label('menucompid'),
             ri.name.label('restricted_item'),
             ing.name.label('ingredient'), comp.name,
             oi.id, oi.order_id.label('oiorderid')).\
             select_from(mem).\
             join(cli, cli.member_id == mem.id).\
             join(order, order.client_id == cli.id).\
+            join(menu, menu.date == delivery_date).\
             join(rest, rest.client_id == cli.id).\
             join(ri, ri.id == rest.restricted_item_id).\
             outerjoin(inc, inc.restricted_item_id == rest.restricted_item_id).\
@@ -295,14 +293,17 @@ class Order(models.Model):
             outerjoin(ci, and_(ci.ingredient_id == ing.id,
                                ci.date == delivery_date)).\
             outerjoin(comp, ci.component_id == comp.id).\
-            outerjoin(oi, and_(oi.component_id == comp.id,
+            outerjoin(oi, and_(oi.component_group == comp.component_group,
                                oi.order_id == order.id)).\
+            outerjoin(menucomp, and_(menucomp.component_id == comp.id,
+                                     menucomp.menu_id == menu.id)).\
             filter(order.delivery_date == delivery_date).\
             order_by(cli.id)
         print_rows(q_day_res,
                    "\n***** Day's restrictions ****\nCLIENT_ID,"
                    "FIRSTNAME, LASTNAME, "
                    "ORDER_ID, ORDER_DELIV_DATE, "
+                   "MENU_ID, MENU_COMPONENT_ID, "
                    "RESTRICTED_ITEM, INGREDIENT_NAME, COMP_NAME, "
                    "ORDER_ITEM_ID, ORDER_ITEM_ORDER_ID")
 
@@ -332,15 +333,19 @@ class Order(models.Model):
             cli.id.label('cid'), mem.firstname, mem.lastname,
             add.street, add.postal_code,
             oi.total_quantity, oi.size,
+            menu.id, menucomp.id,
             comp.id.label('component_id'),
             comp.component_group,
             comp.name.label('component_name')).\
             select_from(mem).\
             join(cli, cli.member_id == mem.id).\
             join(add, add.id == mem.address_id).\
+            join(menu, menu.date == delivery_date).\
             join(order, order.client_id == cli.id).\
             join(oi, oi.order_id == order.id).\
-            join(comp, comp.id == oi.component_id).\
+            join(menucomp, menucomp.menu_id == menu.id).\
+            join(comp, and_(comp.id == menucomp.component_id,
+                            comp.component_group == oi.component_group)).\
             filter(order.delivery_date == delivery_date).\
             order_by(add.postal_code, mem.lastname, mem.firstname)
         print_rows(q_day_del_lis,
@@ -348,12 +353,13 @@ class Order(models.Model):
                    " FIRSTNAME, LASTNAME, "
                    "STREET, POSTAL_CODE, "
                    "OI_TOTAL_QUANTITY, OI_SIZE, "
+                   "MENU_ID, MENU_COMPONENT_ID, "
                    "COMPONENT_ID, COMPONENT_GROUP, COMPONENT_NAME")
 
         kitchen_list = {}
         for row in q_day_avo_ing.all():
             check_for_new_client(kitchen_list, row)
-            if row.oiorderid:
+            if row.oiorderid and row.menucompid:
                 # found avoid ingredient clash
                 # should be a sorted set (or ordered dict ?)
                 kitchen_list[row.cid].incompatible_ingredients.append(
@@ -369,7 +375,7 @@ class Order(models.Model):
 
         for row in q_day_avo_com.all():
             check_for_new_client(kitchen_list, row)
-            if row.oiorderid:
+            if row.oiorderid and row.menucompid:
                 # found avoid component clash
                 # should be a set
                 kitchen_list[row.cid].incompatible_components.append(
@@ -385,7 +391,7 @@ class Order(models.Model):
 
         for row in q_day_res.all():
             check_for_new_client(kitchen_list, row)
-            if row.oiorderid:
+            if row.oiorderid and row.menucompid:
                 # found restriction clash
                 # should be a sorted set
                 kitchen_list[row.cid].incompatible_ingredients.append(
@@ -441,6 +447,7 @@ class KitchenItem(object):
     # meal specifics for an order
 
     def __init__(self):
+
         self.lastname = None
         self.firstname = None
         self.meal_qty = 0
@@ -468,7 +475,8 @@ class KitchenItem(object):
                'avoid_ingre=' + repr(self.other_ingredients) + ', ' +
                'avoid_compo=' + repr(self.other_components) + ', ' +
                'restr_items=' + repr(self.restricted_items) + ', ' +
-               'meal_components=' + repr(self.meal_components) + ', ' +
+               'meal_components=' + repr(
+                   sorted(self.meal_components.items())) + ', ' +
                'preparation=' + repr(self.preparation) + ']')
 
 
@@ -587,3 +595,17 @@ class Order_item(models.Model):
         verbose_name=_('free quantity'),
         null=True,
     )
+
+    component_group = models.CharField(
+        max_length=100,
+        choices=COMPONENT_GROUP_CHOICES,
+        verbose_name=_('component group'),
+        null=True,
+    )
+
+    def __str__(self):
+        return "<For delivery on:> {} <order_item_type:>" \
+            " {} <component_group:> {}".\
+            format(str(self.order.delivery_date),
+                   self.order_item_type,
+                   self.component_group)

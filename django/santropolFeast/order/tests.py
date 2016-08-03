@@ -150,7 +150,6 @@ class OrderCreateOnDefaultsTestCase(TestCase):
             )
             client.save()
         delivery_date = date(2016, 7, 15)
-        MenuFactory.create(date=delivery_date)
 
     def test_create_all_orders_fixed_date(self):
         """All orders will be created"""
@@ -180,14 +179,3 @@ class OrderCreateOnDefaultsTestCase(TestCase):
         # TODO improve using join on old clients
         # check that old orders not overridden
         self.assertEqual(len(new), len(clients)-numold)
-
-    def test_create_orders_date_no_menu(self):
-        """No menu for delivery date, error will be raised"""
-        creation_date = date(2016, 7, 9)
-        delivery_date = date(2016, 7, 20)
-        clients = Client.objects.all()
-        with self.assertRaises(Exception) as cm:
-            Order.create_orders_on_defaults(
-                creation_date, delivery_date, clients)
-            the_exception = cm.exception
-            self.assertEqual(the_exception.error_code, 3)
