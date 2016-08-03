@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from member.views import geolocateAddress
+from member.views import geolocateAddress,change_status
 from django.utils.translation import ugettext_lazy as _
 
 from member.views import (
@@ -49,4 +49,6 @@ urlpatterns = [
     url(_(r'^view/(?P<pk>\d+)/notes$'),
         ClientNoteList.as_view(), name='client_notes'),
     url(_(r'^geolocateAddress/$'), geolocateAddress, name='geolocateAddress'),
+    url(_(r'^change_status/(?P<id>\d+)/$'),
+        change_status, name='change_status'),
 ]

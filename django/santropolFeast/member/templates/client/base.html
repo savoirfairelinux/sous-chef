@@ -8,6 +8,24 @@
 {% block extrajs %}
 <script type="text/javascript">
     $('.ui.dropdown').dropdown({transition: 'drop'});
+
+    $('.ui.dropdown.status').dropdown({
+        transition: 'drop',
+        onChange: function(value, text, $selectedItem) {
+            $(this).addClass('loading');
+            $.ajax({
+                url: "/member/change_status/" + {{ client.id }} + '/',
+                type: "POST",
+                data: {
+                    'status': value,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                },
+                success: function(response) {
+                    $('.ui.dropdown.status').removeClass('loading');
+                }
+            })
+        }
+    });
 </script>
 {% endblock %}
 
@@ -26,7 +44,17 @@
             <div class="ui teal large label">{{ client.get_delivery_type_display }}</div>
         </div>
       <div class="ui item">
-          <div class="ui orange large label">{{ client.get_status_display }}</div>
+          <div class="ui dropdown status">
+              <div class="ui large yellow label text">{{ client.get_status_display }}</div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                  {% for k,s in client_status %}
+                      <div class="item" data-value={{k}}>
+                           {{s}}
+                      </div>
+                  {% endfor %}
+              </div>
+          </div>
       </div>
     </div>
 </div>

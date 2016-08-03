@@ -46,6 +46,7 @@ class ClientNoteList(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(ClientNoteList, self).get_context_data(**kwargs)
         context['active_tab'] = 'notes'
+        context['client_status'] = Client.CLIENT_STATUS
         context['client'] = get_object_or_404(Client, id=self.kwargs['pk'])
         context['filter'] = NoteFilter(
             self.request.GET, queryset=Note.objects.filter(

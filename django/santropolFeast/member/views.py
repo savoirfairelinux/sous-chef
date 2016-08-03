@@ -449,6 +449,7 @@ class ClientInfoView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(ClientInfoView, self).get_context_data(**kwargs)
         context['active_tab'] = 'information'
+        context['client_status'] = Client.CLIENT_STATUS
         """
         Here we need to add some variable of context to send to template :
          1 - A string active_tab who can be:
@@ -476,6 +477,7 @@ class ClientReferentView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(ClientReferentView, self).get_context_data(**kwargs)
         context['active_tab'] = 'referent'
+        context['client_status'] = Client.CLIENT_STATUS
         """
         Here we need to add some variable of context to send to template :
          1 - A string active_tab who can be:
@@ -530,6 +532,7 @@ class ClientPaymentView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(ClientPaymentView, self).get_context_data(**kwargs)
         context['active_tab'] = 'billing'
+        context['client_status'] = Client.CLIENT_STATUS
         """
         Here we need to add some variable of context to send to template :
          1 - A string active_tab who can be:
@@ -557,6 +560,7 @@ class ClientAllergiesView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(ClientAllergiesView, self).get_context_data(**kwargs)
         context['active_tab'] = 'prefs'
+        context['client_status'] = Client.CLIENT_STATUS
         if self.object.meal_default_week:
             context['meal_default'] = parse_json(self.object.meal_default_week)
         else:
@@ -650,6 +654,7 @@ class ClientOrderList(generic.DetailView):
 
         context = super(ClientOrderList, self).get_context_data(**kwargs)
         context['orders'] = self.object.orders
+        context['client_status'] = Client.CLIENT_STATUS
         context['active_tab'] = 'orders'
         return context
 
@@ -830,3 +835,14 @@ def geolocateAddress(request):
 
     # just return a JsonResponse
     return JsonResponse({'latitude': lat, 'longtitude': long})
+
+
+def change_status(request, id):
+    if request.method == "POST":
+        client = get_object_or_404(Client, pk=id)
+        status = request.POST.get('status')
+        client.status = status
+        client.save()
+
+        # just return a JsonResponse
+        return JsonResponse({'status': 200})
