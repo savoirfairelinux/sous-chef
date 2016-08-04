@@ -7,3 +7,7 @@ class CreateOrderItem(InlineFormSet):
     model = Order_item
     extra = 1
     fields = '__all__'
+
+
+class UpdateOrderItem(CreateOrderItem):
+    extra = 0

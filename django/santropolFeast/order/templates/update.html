@@ -12,17 +12,17 @@
 {% block content %}
 
 <div class="ui secondary pointing fluid menu">
-    <h2 class="ui header">New Order</h2>
+    <h2 class="ui header">Update Order</h2>
 </div>
 
 <div class="ten wide column form-steps">
     <form action="" method="post" class="ui form error">
         {% csrf_token %}
         {% include "_form.html" %}
-        <button class="ui primary button" type="submit">Create</button>
+        <a class="ui default button" href="{{ request.META.HTTP_REFERER }}">Cancel</a>
+        <button class="ui primary button" type="submit">Update</button>
     </form>
 </div>
-
 
 {% endblock %}
 
