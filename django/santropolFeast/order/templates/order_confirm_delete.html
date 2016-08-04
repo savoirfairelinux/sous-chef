@@ -1,0 +1,21 @@
+<div class="ui basic modal">
+  <div class="ui icon header">
+      <i class="trash icon"></i>
+      Delete Order #{{order.id}}
+    </div>
+  <div class="content" style="text-align:center;">
+      <p>Your inbox is getting full, would you like us to enable automatic archiving of old messages?</p>
+  </div>
+  <div class="actions">
+    <form action="{% url 'order:delete' pk=order.id %}" method="POST" id="order-delete-form">{% csrf_token %}
+       <div class="ui red basic cancel inverted button">
+         <i class="remove icon"></i>
+         No
+       </div>
+       <div class="ui green ok inverted button">
+         <i class="checkmark icon"></i>
+         Yes
+       </div>
+   </form>
+     </div>
+ </div>

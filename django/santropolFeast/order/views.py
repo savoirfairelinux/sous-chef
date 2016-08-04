@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.views import generic
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-
+from django.core.urlresolvers import reverse_lazy
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView
 
 from order.models import Order, Order_item, OrderFilter, ORDER_STATUS
@@ -112,6 +112,13 @@ class UpdateOrderStatus(AjaxableResponseMixin, generic.UpdateView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(UpdateOrderStatus, self).dispatch(*args, **kwargs)
+
+
+class DeleteOrder(generic.DeleteView):
+    model=Order
+    template_name = 'order_confirm_delete.html'
+    success_url = reverse_lazy('order:list')
+
 
 
 def ExportCSV(request, queryset):

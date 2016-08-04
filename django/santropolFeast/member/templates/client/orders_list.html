@@ -36,24 +36,13 @@
         <td>{{order.delivery_date}}</td>
         <td>{{order.get_status_display}}</td>
         <td>${{order.price}}</td>
-        <td><button class="ui button"  onclick="location.href='{% url 'order:view' pk=order.id %}';" value="View Order" >View Order</button></td>
+        <td><button class="ui button"  onclick="location.href='{% url 'order:view' pk=order.id %}';" value="View Order" >View</button></td>
       </tr>
         {% endfor %}
   </tbody>
-  <tfoot>
-      <tr>
-          <th></th>
-          <th colspan="4">
-              {% include "system/_button_export.html" %}
-          </th>
-        </tr>
-  </tfoot>
+
 </table>
-<script type="text/javascript">
-    document.addEventListener( 'DOMContentLoaded', function () {
-      $('table').tablesort();
-    })
-</script>
+
 
 
 

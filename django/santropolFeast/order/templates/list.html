@@ -73,8 +73,8 @@
         <td>{{obj.get_status_display}}</td>
         <td>${{obj.price}}</td>
         <td>
-          <button class="ui button"  onclick="location.href='{% url 'order:view' pk=obj.id %}';" value="View Order" >View Order</button>
-          <button class="ui button"  onclick="location.href='{% url 'order:update' pk=obj.id %}';" value="Update Order" >Update Order</button>
+          <button class="ui basic button"  onclick="location.href='{% url 'order:view' pk=obj.id %}';" value="View Order" >View</button>
+          <button class="ui basic button"  onclick="location.href='{% url 'order:update' pk=obj.id %}';" value="Update Order" >Update</button>
         </td>
       </tr>
         {% endfor %}

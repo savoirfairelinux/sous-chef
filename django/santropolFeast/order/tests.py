@@ -7,6 +7,7 @@ from member.factories import RouteFactory, ClientFactory
 from meal.factories import MenuFactory
 from datetime import date
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 
 class OrderTestCase(TestCase):
@@ -26,6 +27,34 @@ class OrderTestCase(TestCase):
                 )
             ) == 1
         )
+
+
+class DeleteOrderTestCase(TestCase):
+
+    def setUp(self):
+        self.order = OrderFactory.create()
+        self.admin = User.objects.create_superuser(
+            username='admin@example.com',
+            email='admin@example.com',
+            password='test'
+        )
+        """Only logged-in users can delete orders"""
+        self.client.login(
+            username=self.admin.username,
+            password="test"
+        )
+
+
+    def test_confirm_delete_order(self):
+        response = self.client.get(reverse('order:delete', args=(self.order.id,)), follow=True)
+        self.assertContains(response, 'Delete Order #{}'.format(self.order.id))
+
+    def test_delete_order(self):
+        response = self.client.post(reverse('order:delete', args=(self.order.id,)), follow=True)
+        self.assertRedirects(response, reverse('order:list'), status_code=302)
+
+    def tearDown(self):
+        self.client.logout()
 
 
 class OrderItemTestCase(TestCase):
