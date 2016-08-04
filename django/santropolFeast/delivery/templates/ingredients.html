@@ -1,49 +1,115 @@
 {% extends "base.html" %}
 <!-- Load Internationalization utils-->
 {% load i18n %}
+{% load static %}
 
 {% block title %}{% trans 'Kitchen Count report' %} {% endblock %}
 
 {% block extrajs %}
+<script src="{% static 'jquery/calendar.min.js' %}" type="application/javascript"></script>
     <script type="text/javascript">
-     $('.ui.dropdown').dropdown({transition: 'drop'});
+        $('.dish.selection .ui.dropdown').dropdown({
+            onChange: function(value, text, $selectedItem) {
+                $('.ingredients.selection .ui.dropdown')
+                    .dropdown('clear');
+                $.ajax({
+                    url: "/delivery/api/component_ingredients/" + value,
+                    type: "get",
+                    success: function(response) {
+                        $('.ingredients.selection .ui.dropdown')
+                            .dropdown('set selected', response.results);
+                    }
+                })
+
+            }
+        });
+        $('.ingredients.selection .ui.dropdown')
+            .dropdown('set selected', ['Onion',]);
+        $('.meal.form .button').on('click', function() {
+            $('.ingredients.selection .ui.dropdown').dropdown('restore defaults');
+        });
+        $('#form_date').calendar({
+          type: 'date',
+          formatter: {
+            date: function (date, settings) {
+              if (!date) return '';
+              var day = date.getDate();
+              var month = date.getMonth() + 1;
+              var year = date.getFullYear();
+              if (month < 10) month = '0' + month;
+              if (day < 10) day = '0' + day;
+              return year + '-' + month + '-' + day;
+            }
+          }
+        });
+
     </script>
+{% endblock %}
+
+{% block extrahead %}
+    <link href="{% static 'css/calendar.min.css' %}" type="text/css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
 
-    {% include 'kitchen_count_steps.html' with step='ingredients' %}
+{% include 'kitchen_count_steps.html' with step='ingredients' %}
 
-    <div class="ui secondary pointing fluid menu">
-        <h2 class="ui header">Pick ingredients</h2>
-        <div class="right menu">
-            <div class="ui item"><h3><i class="ui calendar icon"></i>{{ date }}</h3></div>
-        </div>
-    </div>
+<div class="ui row"></div>
 
-    <div class="ui basic big label">
-        Delivery Date :
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">Pick ingredients</h1>
+    <div class="right menu">
+        <div class="ui item"><h3><i class="ui calendar icon"></i>{{ date }}</h3></div>
     </div>
-    <form class="ui input" action="{% url 'delivery:meal' %}" method="post">
-        {% csrf_token %}
-        {{ date_form }}
-        <input class="ui button" type="submit" value="Change" name="_change" />
-    </form>
-    <div class="ui basic big label">
-        Main dish : {{ main_dish_name }}
-    </div>
-
-<div>
-    <script type="text/javascript" src="/static/admin/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
-    {{ ing_form.media }}
-    <form class="ui input" action="{% url 'delivery:meal' %}" method="post">
-        {% csrf_token %}
-        {{ ing_form.ingredients }}
-        {{ ing_form.date }}
-        {{ ing_form.dish }}
-        <input class="ui right floated button" type="submit" value="Back" name="_back" </>
-        <input class="ui yellow right floated button" type="submit" value="Next: Print Kitchen Count" name="_next" </>
-    </form>
 </div>
+
+
+        <form class="ui form" action="{% url 'delivery:meal' %}" method="post">
+            {% csrf_token %}
+            <div class="field">
+                <label>Delivery date</label>
+                <div class="ui calendar" id="form_date">
+                    <div class="ui input left icon">
+                          <i class="calendar icon"></i>
+                          {{date_form }}
+                    </div>
+                </div>
+            </div>
+
+            <input class="ui button" type="submit" value="Change" name="_change"/>
+        </form>
+
+<form class="ui form meal" action="{% url 'delivery:meal' %}" method="post">
+
+<div class="ui container">
+    <div class="ui segment">
+<h2 class="ui header">Main Dish</h2>
+
+{{ing_form.errors}}
+    <div class="ui row">
+
+        {% csrf_token %}
+
+        {{ ing_form.date }}
+        <div class="field dish selection">
+            <label>{{ing_form.dish_semantic.label}}</label>
+            {{ ing_form.dish_semantic }}
+        </div>
+        <div class="field ingredients selection">
+            <label>Select ingredients:</label>
+            {{ ing_form.ingredients_semantic }}
+        </div>
+        <div class="ui button">
+          Restore
+      </div>
+    </div>
+
+</div>
+</div>
+<div class="ui row">
+    <input class="ui big button" type="submit" value="Back" name="_back" </>
+    <input class="ui big yellow button" type="submit" value="Next: Print Kitchen Count" name="_next" </>
+</div>
+</form>
+
 {% endblock content %}

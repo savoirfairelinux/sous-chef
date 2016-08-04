@@ -78,18 +78,22 @@ class MealInformation(generic.View):
             ing_form = DayIngredientsForm(
                 choices=[(a, a) for a in all_ingredients],
                 initial={'ingredients': dish_ingredients,
+                         'ingredients_semantic': dish_ingredients,
                          'date': date,
-                         'dish': main_dish_name})
+                         'dish': main_dish_name,
+                         'dish_semantic': main_dishes[0].component.id})
         else:
             main_dish_name = 'None for chosen date'
             ing_form = DayIngredientsForm(choices=[])
         return render(
             request,
-            'ingredients.html',
-            {'date_form': date_form,
-             'date': str(date),
-             'main_dish_name': main_dish_name,
-             'ing_form': ing_form})
+            'ingredients.html',{
+                'date_form': date_form,
+                'date': str(date),
+                'main_dish_name': main_dish_name,
+                'ing_form': ing_form
+            }
+        )
 
     def post(self, request):
         date_form = None
@@ -114,15 +118,15 @@ class MealInformation(generic.View):
             ing_form = DayIngredientsForm(
                 request.POST, choices=[(a, a) for a in all_ingredients])
             if ing_form.is_valid():
-                ingredients = ing_form.cleaned_data['ingredients']
+                ingredients = ing_form.cleaned_data['ingredients_semantic']
                 date = ing_form.cleaned_data['date']
-                main_dish_name = ing_form.cleaned_data['dish']
-                component = Component.objects.get(name=main_dish_name)
+                main_dish = ing_form.cleaned_data['dish_semantic']
+                component = Component.objects.get(id=main_dish.id)
                 # delete existing ingredients for the date + dish
                 Component_ingredient.objects.filter(
                     component=component, date=date).delete()
                 # add revised ingredients for the date + dish
-                for ing in Ingredient.objects.filter(name__in=ingredients):
+                for ing in Ingredient.objects.filter(id__in=ingredients):
                     ci = Component_ingredient(
                         component=component,
                         ingredient=ing,
@@ -199,6 +203,20 @@ class KitchenCount(generic.View):
                           {'component_lines': [],
                            'meal_lines': [],
                            'form': form})
+
+
+def componentIngredients(request, component):
+
+        ingredients = Component.get_recipe_ingredients(component)
+        results = []
+        for i in ingredients:
+            results.append(i.name)
+        data = {
+            'success': True,
+            'results': results
+        }
+
+        return JsonResponse(data)
 
 
 class Component_line(types.SimpleNamespace):
