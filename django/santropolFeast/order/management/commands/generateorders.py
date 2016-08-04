@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand
 from order.models import Order
 from member.models import Client
-from meal.factories import MenuFactory
 from datetime import datetime
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
 

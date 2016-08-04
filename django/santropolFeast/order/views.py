@@ -1,17 +1,17 @@
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, render_to_response
+import csv
+from django.http import HttpResponse
 from django.views import generic
 from django.utils.decorators import method_decorator
-from django.shortcuts import get_object_or_404
-from member.models import Client
-from order.models import Order, OrderFilter, ORDER_STATUS
-from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-import csv
+
+from extra_views import CreateWithInlinesView
+
+from order.models import Order, Order_item, OrderFilter, ORDER_STATUS
+from order.mixins import AjaxableResponseMixin
+from order.forms import CreateOrderItem
 
 
 class OrderList(generic.ListView):
-    # Display the list of clients
     model = Order
     template_name = 'list.html'
     context_object_name = 'order'
@@ -58,6 +58,52 @@ class OrderList(generic.ListView):
         return super(OrderList, self).get(request, **kwargs)
 
 
+class OrderDetail(generic.DetailView):
+    model = Order
+    template_name = 'view.html'
+    context_object_name = 'order'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(OrderDetail, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(OrderDetail, self).get_context_data(**kwargs)
+        context['status'] = ORDER_STATUS
+        return context
+
+
+class CreateOrder(AjaxableResponseMixin, CreateWithInlinesView):
+    model = Order
+    fields = '__all__'
+    inlines = [CreateOrderItem]
+    template_name = 'create.html'
+
+    # TODO: Change the validation of the form,
+    # If component is present, then component_group is not required
+    # and vice versa
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CreateOrder, self).dispatch(*args, **kwargs)
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
+
+class UpdateOrder(AjaxableResponseMixin, generic.UpdateView):
+    model = Order
+    fields = '__all__'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(UpdateOrder, self).dispatch(*args, **kwargs)
+
+
+class UpdateOrderStatus(UpdateOrder):
+    fields = ['status']
+
+
 def ExportCSV(request, queryset):
     response = HttpResponse(content_type="text/csv")
     response['Content-Disposition'] =\
@@ -86,20 +132,3 @@ def ExportCSV(request, queryset):
         ])
 
     return response
-
-
-def show_information(request, id):
-    order = get_object_or_404(Order, pk=id)
-    status = ORDER_STATUS
-    return render(request, 'view.html', {'order': order, 'status': status})
-
-
-def change_status(request, id):
-    if request.method == "POST":
-        order = get_object_or_404(Order, pk=id)
-        status = request.POST.get('status')
-        order.status = status
-        order.save()
-
-        # just return a JsonResponse
-        return JsonResponse({'status': 200})
