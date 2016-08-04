@@ -6,7 +6,7 @@ from order.models import SIZE_CHOICES
 from member.models import (
     Member, Client, RATE_TYPE, CONTACT_TYPE_CHOICES,
     GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE,
-    DAYS_OF_WEEK
+    DAYS_OF_WEEK, Route,
 )
 
 
@@ -108,6 +108,13 @@ class ClientAddressInformation(forms.Form):
         required=False,
         initial=0,
         widget=forms.TextInput()
+    )
+
+    route = forms.ModelChoiceField(
+        label=_('Route'),
+        required=True,
+        widget=forms.Select(attrs={'class': 'ui search dropdown'}),
+        queryset=Route.objects.all(),
     )
 
 

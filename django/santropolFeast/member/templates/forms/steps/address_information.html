@@ -29,7 +29,12 @@
         {{ wizard.form.postal_code }}
     </div>
 </div>
-
+<div class="equal width fields">
+  <div class="field {% if wizard.form.route.errors %} error {% endif %}">
+    <label>{{wizard.form.route.label}}</label>
+    {{wizard.form.route}}
+  </div> 
+</div>
 <div class="equal width fields">
     <div class="field {% if wizard.form.latitude.errors %} error {% endif %}">
       <label>{{ wizard.form.latitude.label }}</label>

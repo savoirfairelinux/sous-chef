@@ -1,12 +1,13 @@
 from django.test import TestCase, Client
 from member.models import Member, Client, User, Address, Referencing
-from member.models import Contact, Option, Client_option, Restriction
+from member.models import Contact, Option, Client_option, Restriction, Route
 from member.models import Client_avoid_ingredient, Client_avoid_component
 from meal.models import Restricted_item, Ingredient, Component
 from datetime import date
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse, reverse_lazy
 from order.models import Order
+from member.factories import RouteFactory
 
 
 class MemberEmptyContact(TestCase):
@@ -381,6 +382,7 @@ class FormTestCase(TestCase):
             firstname='Second',
             lastname='Member'
         )
+        cls.route = RouteFactory()
 
     def _login(self):
         self.client.login(username='admin@example.com', password='test1234')
@@ -493,6 +495,7 @@ class FormTestCase(TestCase):
             "address_information-apartment": "222",
             "address_information-city": "montreal",
             "address_information-postal_code": "H3C2C2",
+            "address_information-route": self.route.id,
             "address_information-latitude": 45.5343077,
             "address_information-longitude": -73.620735,
             "address_information-distance": 4.062611162244175,
@@ -693,6 +696,7 @@ class FormTestCase(TestCase):
             "address_information-apartment": "86",
             "address_information-city": "Montreal",
             "address_information-postal_code": "H8C6C8",
+            "address_information-route": self.route.id,
             "address_information-latitude": 45.5343077,
             "address_information-longitude": -73.620735,
             "address_information-distance": 4.062611162244175,
@@ -1016,6 +1020,7 @@ class FormTestCase(TestCase):
             "address_information-apartment": "222",
             "address_information-city": "montreal",
             "address_information-postal_code": "H3C2C2",
+            "address_information-route": self.route.id,
             "address_information-latitude": 45.5343077,
             "address_information-longitude": -73.620735,
             "address_information-distance": 4.062611162244175,
