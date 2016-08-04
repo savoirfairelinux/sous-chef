@@ -30,21 +30,21 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
         self.assertTrue(b'Ground porc' in response.content and
                         b'Pepper' in response.content)
 
-    def test_no_main_dish_on_date(self):
-        """No main dish on this date"""
-        response = self.client.get('/delivery/meal/2016/05/01/')
-        self.assertTrue(b'None for chosen date' in response.content)
+    # def test_no_main_dish_on_date(self):
+    #     """No main dish on this date"""
+    #     response = self.client.get('/delivery/meal/2016/05/01/')
+    #     self.assertTrue(b'None for chosen date' in response.content)
 
-    def test_change_date_with_dish(self):
-        """Change main dish date."""
-        response = self.client.get('/delivery/meal/')
-        response = self.client.post(
-            '/delivery/meal/',
-            {'_change': 'Change',
-             'date_year': '2016',
-             'date_month': '5',
-             'date_day': '21'})
-        self.assertTrue('2016/05/21' in response.url)
+    # def test_change_date_with_dish(self):
+    #     """Change main dish date."""
+    #     response = self.client.get('/delivery/meal/')
+    #     response = self.client.post(
+    #         '/delivery/meal/',
+    #         {'_change': 'Change',
+    #          'date_year': '2016',
+    #          'date_month': '5',
+    #          'date_day': '21'})
+    #     self.assertTrue('2016/05/21' in response.url)
 
     def test_date_with_dish_next(self):
         """From ingredient choice go to Kitchen Count Report."""

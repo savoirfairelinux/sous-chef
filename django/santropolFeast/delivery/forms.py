@@ -8,6 +8,19 @@ class DateForm(forms.Form):
         label=' ', widget=forms.SelectDateWidget)
 
 
+class DishForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        try:
+            self.choices = kwargs.pop('choices')
+        except KeyError:
+            raise KeyError("DishForm missing kwarg : choices")
+        super().__init__(*args, **kwargs)
+        self.fields['maindish'].choices = self.choices
+
+    maindish = forms.ChoiceField(
+        label=' ', widget=forms.Select)
+
+
 class DayIngredientsForm(forms.Form):
     def __init__(self, *args, **kwargs):
         try:

@@ -20,10 +20,11 @@ from .apps import DeliveryConfig
 from sqlalchemy import func, or_, and_
 
 from .models import Delivery
-from .forms import DateForm, DayIngredientsForm
+from .forms import DateForm, DishForm, DayIngredientsForm
 from order.models import Order
 from meal.models import (
-    COMPONENT_GROUP_CHOICES_MAIN_DISH, Component, Ingredient, Menu_component,
+    COMPONENT_GROUP_CHOICES_MAIN_DISH, Component, Ingredient,
+    Menu, Menu_component,
     Component_ingredient)
 from member.apps import db_session
 from member.models import Client, Route
@@ -60,19 +61,26 @@ class MealInformation(generic.View):
         else:
             date = datetime.date.today()
         date_form = DateForm(initial={'date': date})
-        # TODO use managers
-        main_dishes = Menu_component.objects.filter(
-            menu__date=date,
-            component__component_group=COMPONENT_GROUP_CHOICES_MAIN_DISH)
+
+        main_dishes = Component.objects.filter(
+            component_group=COMPONENT_GROUP_CHOICES_MAIN_DISH)
+        if 'id' in kwargs:
+            main_dish = Component.objects.get(id=int(kwargs['id']))
+        else:
+            main_dish = main_dishes[0]
+        dish_form = DishForm(
+            choices=[(item.id, item.name) for item in main_dishes],
+            initial={'maindish': main_dish.id})
+
         if main_dishes:
-            main_dish_name = main_dishes[0].component.name
-            # get existing ingredients for the date + dish, if any
+            main_dish_name = main_dish.name
+            # get existing ingredients for the dish
             dish_ingredients = Component.get_day_ingredients(
-                main_dishes[0].component.id, date)
+                main_dish.id, date)
             if not dish_ingredients:
                 # get recipe ingredients for the dish
                 dish_ingredients = Component.get_recipe_ingredients(
-                    main_dishes[0].component.id)
+                    main_dish.id)
             all_ingredients = \
                 [ingredient.name for ingredient in Ingredient.objects.all()]
             ing_form = DayIngredientsForm(
@@ -87,6 +95,7 @@ class MealInformation(generic.View):
             request,
             'ingredients.html',
             {'date_form': date_form,
+             'dish_form': dish_form,
              'date': str(date),
              'main_dish_name': main_dish_name,
              'ing_form': ing_form})
@@ -97,13 +106,16 @@ class MealInformation(generic.View):
         main_dish_name = ''
         # print("post request", request.POST)  # debug
         if '_change' in request.POST:
-            # change date for day's ingredients
-            date_form = DateForm(request.POST)
-            if date_form.is_valid():
-                date = date_form.cleaned_data['date']
-                fmtdate = \
-                    '{:04}/{:02}/{:02}'.format(date.year, date.month, date.day)
-                return HttpResponseRedirect('/delivery/meal/' + fmtdate + '/')
+            # change main dish
+            main_dishes = Component.objects.filter(
+                component_group=COMPONENT_GROUP_CHOICES_MAIN_DISH)
+            dish_form = DishForm(
+                request.POST,
+                choices=[(item.id, item.name) for item in main_dishes])
+            if dish_form.is_valid():
+                id = dish_form.cleaned_data['maindish']
+                # print("got id=", id)
+                return HttpResponseRedirect('/delivery/meal/' + str(id) + '/')
         elif '_back' in request.POST:
             # back to order step
             return HttpResponseRedirect('/delivery/order/')
@@ -131,6 +143,13 @@ class MealInformation(generic.View):
                     # print("ci=", ci)  # DEBUG
                 fmtdate = \
                     '{:04}/{:02}/{:02}'.format(date.year, date.month, date.day)
+                Menu.create_menu_and_components(
+                    date,
+                    [main_dish_name,
+                     'Green Salad', 'Fruit Salad',
+                     'Day s Dessert', 'Day s Diabetic Dessert',
+                     'Day s Pudding', 'Day s Compote'])
+
                 return HttpResponseRedirect(
                     '/delivery/kitchen_count/' + fmtdate + '/')
                 # END FOR

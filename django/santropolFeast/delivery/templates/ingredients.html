@@ -22,28 +22,29 @@
     </div>
 
     <div class="ui basic big label">
-        Delivery Date :
+        Choose Day's Main Dish :
     </div>
     <form class="ui input" action="{% url 'delivery:meal' %}" method="post">
         {% csrf_token %}
-        {{ date_form }}
+        {{ dish_form }}
         <input class="ui button" type="submit" value="Change" name="_change" />
     </form>
-    <div class="ui basic big label">
-        Main dish : {{ main_dish_name }}
-    </div>
 
 <div>
     <script type="text/javascript" src="/static/admin/js/jquery.min.js"></script>
     <script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
     {{ ing_form.media }}
-    <form class="ui input" action="{% url 'delivery:meal' %}" method="post">
+    <form class="ui form" action="{% url 'delivery:meal' %}" method="post">
         {% csrf_token %}
-        {{ ing_form.ingredients }}
+        <div class="field">
+            {{ ing_form.ingredients }}
+        </div>
         {{ ing_form.date }}
         {{ ing_form.dish }}
-        <input class="ui right floated button" type="submit" value="Back" name="_back" </>
-        <input class="ui yellow right floated button" type="submit" value="Next: Print Kitchen Count" name="_next" </>
+        <div class="field">
+            <input class="ui yellow right floated button" type="submit" value="Next: Print Kitchen Count" name="_next" </>
+            <input class="ui right floated button" type="submit" value="Back" name="_back" </>
+        </div>
     </form>
 </div>
 {% endblock content %}
