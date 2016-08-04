@@ -10,7 +10,7 @@ body {
 }
 
 .ui.main.grid {
-  left: 10.75%;
+  left: 16.75%;
   position: relative;
   width: 87.25%;
 }
@@ -224,9 +224,9 @@ ul.doughnut-legend {
 }
 
 /* TABLET */
-@media only screen and (min-width: 768px) and (max-width: 991px) {
-  .ui.header.datetime {
-    margin: 3rem 0 1rem;
+@media only screen and (min-width: 768px) and (max-width: 1199px) {
+  .ui.header {
+    margin: 3rem 0 1rem !important;
   }
 
   .ui.left.fixed.vertical.inverted.menu {
@@ -245,7 +245,7 @@ ul.doughnut-legend {
   }
 }
 
-@media only screen and (min-width: 992px) {
+@media only screen and (min-width: 1200px) {
   .ui.fixed.inverted.main.menu {
     display: none;
   }
