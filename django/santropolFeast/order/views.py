@@ -105,8 +105,13 @@ class UpdateOrder(AjaxableResponseMixin, UpdateWithInlinesView):
         return self.object.get_absolute_url()
 
 
-class UpdateOrderStatus(UpdateOrder):
+class UpdateOrderStatus(AjaxableResponseMixin, generic.UpdateView):
+    model = Order
     fields = ['status']
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(UpdateOrderStatus, self).dispatch(*args, **kwargs)
 
 
 def ExportCSV(request, queryset):
