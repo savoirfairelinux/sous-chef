@@ -4,11 +4,11 @@ from django.views import generic
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
-from extra_views import CreateWithInlinesView
+from extra_views import CreateWithInlinesView, UpdateWithInlinesView
 
 from order.models import Order, Order_item, OrderFilter, ORDER_STATUS
 from order.mixins import AjaxableResponseMixin
-from order.forms import CreateOrderItem
+from order.forms import CreateOrderItem, UpdateOrderItem
 
 
 class OrderList(generic.ListView):
@@ -91,13 +91,18 @@ class CreateOrder(AjaxableResponseMixin, CreateWithInlinesView):
         return self.object.get_absolute_url()
 
 
-class UpdateOrder(AjaxableResponseMixin, generic.UpdateView):
+class UpdateOrder(AjaxableResponseMixin, UpdateWithInlinesView):
     model = Order
     fields = '__all__'
+    inlines = [UpdateOrderItem]
+    template_name = 'update.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(UpdateOrder, self).dispatch(*args, **kwargs)
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
 
 
 class UpdateOrderStatus(UpdateOrder):
