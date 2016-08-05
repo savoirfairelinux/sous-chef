@@ -7,6 +7,7 @@ class AjaxableResponseMixin(object):
     Must be used with an object-based FormView (e.g. CreateView)
     https://docs.djangoproject.com/ja/1.9/topics/class-based-views/generic-editing/#ajax-example
     """
+
     def form_invalid(self, form):
         response = super(AjaxableResponseMixin, self).form_invalid(form)
         if self.request.is_ajax():

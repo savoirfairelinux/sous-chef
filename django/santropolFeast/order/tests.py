@@ -44,13 +44,24 @@ class DeleteOrderTestCase(TestCase):
             password="test"
         )
 
-
     def test_confirm_delete_order(self):
-        response = self.client.get(reverse('order:delete', args=(self.order.id,)), follow=True)
+        response = self.client.get(
+            reverse(
+                'order:delete',
+                args=(
+                    self.order.id,
+                )),
+            follow=True)
         self.assertContains(response, 'Delete Order #{}'.format(self.order.id))
 
     def test_delete_order(self):
-        response = self.client.post(reverse('order:delete', args=(self.order.id,)), follow=True)
+        response = self.client.post(
+            reverse(
+                'order:delete',
+                args=(
+                    self.order.id,
+                )),
+            follow=True)
         self.assertRedirects(response, reverse('order:list'), status_code=302)
 
     def tearDown(self):
@@ -207,4 +218,4 @@ class OrderCreateOnDefaultsTestCase(TestCase):
             creation_date=creation_date, delivery_date=delivery_date)
         # TODO improve using join on old clients
         # check that old orders not overridden
-        self.assertEqual(len(new), len(clients)-numold)
+        self.assertEqual(len(new), len(clients) - numold)

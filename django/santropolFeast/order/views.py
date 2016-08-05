@@ -53,7 +53,7 @@ class OrderList(generic.ListView):
         if self.format == 'csv':
             return ExportCSV(
                 self, self.get_queryset()
-                )
+            )
 
         return super(OrderList, self).get(request, **kwargs)
 
@@ -115,10 +115,9 @@ class UpdateOrderStatus(AjaxableResponseMixin, generic.UpdateView):
 
 
 class DeleteOrder(generic.DeleteView):
-    model=Order
+    model = Order
     template_name = 'order_confirm_delete.html'
     success_url = reverse_lazy('order:list')
-
 
 
 def ExportCSV(request, queryset):

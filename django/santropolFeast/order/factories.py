@@ -14,6 +14,7 @@ fake = FakerFactory.create()
 
 
 class OrderFactory(factory.DjangoModelFactory):
+
     class Meta:
         model = Order
 
@@ -46,6 +47,7 @@ class OrderFactory(factory.DjangoModelFactory):
 
 
 class OrderItemFactory(factory.DjangoModelFactory):
+
     class Meta:
         model = Order_item
 
