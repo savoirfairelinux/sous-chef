@@ -18,10 +18,8 @@ class OrderTestCase(TestCase):
     def setUpTestData(cls):
         RouteFactory.create_batch(10)
 
-    def test_get_orders_for_Date(self):
-
+    def test_get_orders_for_date(self):
         OrderFactory(delivery_date=date.today())
-
         self.assertTrue(
             len(
                 Order.objects.get_orders_for_date(
@@ -29,37 +27,6 @@ class OrderTestCase(TestCase):
                 )
             ) == 1
         )
-
-
-class DeleteOrderTestCase(TestCase):
-
-    fixtures = ['routes.json']
-
-    def setUp(self):
-        self.order = OrderFactory.create()
-        self.admin = User.objects.create_superuser(
-            username='admin@example.com',
-            email='admin@example.com',
-            password='test'
-        )
-        self.client.login(
-            username=self.admin.username,
-            password="test"
-        )
-
-    def test_confirm_delete_order(self):
-        response = self.client.get(
-            reverse('order:delete', args=(self.order.id,)),
-            follow=True
-        )
-        self.assertContains(response, 'Delete Order #{}'.format(self.order.id))
-
-    def test_delete_order(self):
-        response = self.client.post(
-            reverse('order:delete', args=(self.order.id,)),
-            follow=True
-        )
-        self.assertRedirects(response, reverse('order:list'), status_code=302)
 
 
 class OrderItemTestCase(TestCase):
@@ -72,7 +39,6 @@ class OrderItemTestCase(TestCase):
             email='admin@example.com',
             password='test'
         )
-
         address = Address.objects.create(
             number=123, street='De Bullion',
             city='Montreal', postal_code='H3C4G5')
@@ -80,18 +46,15 @@ class OrderItemTestCase(TestCase):
                                        lastname='Desousa',
                                        address=address
                                        )
-
         client = Client.objects.create(
             member=member, billing_member=member,
             birthdate=date(1980, 4, 19)
         )
-
         total_zero_order = Order.objects.create(
             creation_date=date(2016, 10, 5),
             delivery_date=date(2016, 10, 10),
             status='B', client=client,
         )
-
         Order_item.objects.create(
             order=total_zero_order,
             price=22.50,
@@ -99,56 +62,44 @@ class OrderItemTestCase(TestCase):
             order_item_type='',
             remark="12"
         )
-
         order = Order.objects.create(
             creation_date=date(2016, 5, 5),
             delivery_date=date(2016, 5, 10),
             status='B', client=client,
         )
-
         Order_item.objects.create(
             order=order, price=6.50, billable_flag=True, order_item_type='',
             remark="testing", size="R",
         )
-
         Order_item.objects.create(
             order=order, price=12.50, billable_flag=False, order_item_type='',
             remark="testing", size="L",
         )
 
     def test_billable_flag(self):
-
         order = Order.objects.get(creation_date=date(2016, 5, 5))
         billable_order_item = Order_item.objects.get(order=order, price=6.50)
-
         self.assertEqual(billable_order_item.billable_flag, True)
 
     def test_non_billable_flag(self):
-
         order = Order.objects.get(creation_date=date(2016, 5, 5))
         non_billable_order_item = Order_item.objects.get(
             order=order,
             price=12.50
         )
-
         self.assertEqual(non_billable_order_item.billable_flag, False)
 
     def test_total_price(self):
-
         order = Order.objects.get(delivery_date=date(2016, 5, 10))
         self.assertEqual(order.price, 6.50)
 
     def test_total_price_is_zero(self):
-
         order = Order.objects.get(delivery_date=date(2016, 10, 10))
-
         self.assertEqual(order.price, 0)
 
     def test_order_item_remark(self):
-
         order = Order.objects.get(delivery_date=date(2016, 5, 10))
         order_item = order.orders.first()
-
         self.assertEqual(order_item.remark, 'testing')
 
 
@@ -220,14 +171,20 @@ class OrderFormTestCase(TestCase):
 
     fixtures = ['routes.json']
 
-    def setUp(self):
-        self.order = OrderFactory.create()
-        self.admin = User.objects.create_superuser(
+    @classmethod
+    def setUpTestData(cls):
+        cls.order = OrderFactory.create()
+        cls.admin = User.objects.create_superuser(
             username='admin@example.com',
             email='admin@example.com',
             password='test1234'
         )
-        self.client.login(username='admin@example.com', password='test1234')
+
+    def setUp(self):
+        self.client.login(username=self.admin.username, password='test1234')
+
+    def tearDown(self):
+        self.client.logout()
 
     def _test_order_with_errors(self, route):
         data = {
@@ -339,10 +296,6 @@ class OrderCreateFormTestCase(OrderFormTestCase):
 
     def test_access_to_create_form(self):
         """Test if the form is accessible from its url"""
-        self.client.login(
-            username=self.admin.username,
-            password=self.admin.password
-        )
         response = self.client.get(
             reverse_lazy(
                 'order:create'
@@ -408,10 +361,6 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
 
     def test_access_to_update_form(self):
         """Test if the form is accessible from its url"""
-        self.client.login(
-            username=self.admin.username,
-            password=self.admin.password
-        )
         response = self.client.get(
             reverse_lazy(
                 'order:update',
@@ -451,7 +400,7 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
             'delivery_date': '2016-12-22',
             'status': 'O',
             'orders-0-id': self.order.orders.first().id,
-            'orders-0-component': self.order.orders.first().id,
+            'orders-0-component': self.order.orders.first().component.id,
             'orders-0-component_group': 'main_dish',
             'orders-0-price': '5',
             'orders-0-billable_flag': True,
@@ -473,12 +422,29 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
         self.assertEqual(order.orders.latest('id').billable_flag, True)
         self.assertEqual(order.orders.latest('id').size, 'R')
         self.assertEqual(
-            self.order.orders.latest('id').order_item_type,
+            order.orders.latest('id').order_item_type,
             'B component'
         )
         self.assertEqual(
-            self.order.orders.latest('id').remark,
+            order.orders.latest('id').remark,
             'Order item without errors'
         )
-        self.assertEqual(self.order.orders.latest('id').total_quantity, 5)
-        self.assertEqual(self.order.orders.latest('id').free_quantity, 3)
+        self.assertEqual(order.orders.latest('id').total_quantity, 5)
+        self.assertEqual(order.orders.latest('id').free_quantity, 3)
+
+
+class DeleteOrderTestCase(OrderFormTestCase):
+
+    def test_confirm_delete_order(self):
+        response = self.client.get(
+            reverse('order:delete', args=(self.order.id,)),
+            follow=True
+        )
+        self.assertContains(response, 'Delete Order #{}'.format(self.order.id))
+
+    def test_delete_order(self):
+        response = self.client.post(
+            reverse('order:delete', args=(self.order.id,)),
+            follow=True
+        )
+        self.assertRedirects(response, reverse('order:list'), status_code=302)
