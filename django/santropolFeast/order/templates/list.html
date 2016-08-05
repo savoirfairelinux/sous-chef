@@ -62,22 +62,24 @@
     <th class="">{% trans 'Delivery Date' %}</th>
     <th class="">{% trans 'Status' %}</th>
     <th class="">{% trans 'Amount' %}</th>
-    <th class=""></th>
+    <th class="">{% trans 'Actions' %}</th>
   </thead>
   <tbody>
-    {% for obj in order %}
+    {% for order in orders %}
       <tr>
-        <td><strong>{{obj.id}}</strong></td>
-        <td><a href="{% url 'member:client_information' pk=obj.client.id %}">{{obj.client.member}}</a></td>
-        <td>{{obj.delivery_date}}</td>
-        <td>{{obj.get_status_display}}</td>
-        <td>${{obj.price}}</td>
+        <td><strong>{{order.id}}</strong></td>
+        <td><a href="{% url 'member:client_information' pk=order.client.id %}">{{order.client.member}}</a></td>
+        <td>{{order.delivery_date}}</td>
+        <td>{{order.get_status_display}}</td>
+        <td>${{order.price}}</td>
         <td>
-          <button class="ui basic button"  onclick="location.href='{% url 'order:view' pk=obj.id %}';" value="View Order" >View</button>
-          <button class="ui basic button"  onclick="location.href='{% url 'order:update' pk=obj.id %}';" value="Update Order" >Update</button>
+          <a class="ui blue icon button"  href="{% url 'order:view' pk=order.id %}"><i class="icon unhide"></i></a>
+          <a class="ui green icon button"  href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i></a>
+          <a class="ui red icon button order-delete" href="#" data-order-id="{{order.id}}"><i class="icon trash"></i></a>
         </td>
       </tr>
-        {% endfor %}
+      {% include "order_confirm_delete.html" %}
+    {% endfor %}
   </tbody>
   <tfoot>
       <tr>
@@ -88,17 +90,24 @@
         </tr>
   </tfoot>
 </table>
-<script type="text/javascript">
-    document.addEventListener( 'DOMContentLoaded', function () {
-      $('table').tablesort();
-    })
-</script>
+
+
 
 {% endblock %}
 
 {% block extrajs %}
   <script src="{% static 'jquery/calendar.min.js' %}" type="application/javascript"></script>
   <script type="text/javascript">
+    document.addEventListener( 'DOMContentLoaded', function () {
+      $('table').tablesort();
+    })
+
+    $('.order-delete').click(function(){
+        var order_id = $(this).attr('data-order-id');
+        var selector = '.ui.basic.modal.order-' + order_id;
+        $(selector).modal('show');
+    });
+
     $(function() {
       $('#order_delivery_date').calendar({
         type: 'date',

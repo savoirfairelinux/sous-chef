@@ -1,21 +1,17 @@
-<div class="ui basic modal">
+{% load i18n %}
+
+<div class="ui basic modal order-{{order.id}}">
   <div class="ui icon header">
       <i class="trash icon"></i>
       Delete Order #{{order.id}}
     </div>
   <div class="content" style="text-align:center;">
-      <p>Your inbox is getting full, would you like us to enable automatic archiving of old messages?</p>
+      <p>{% trans 'This order will be deleted and all the info will be lost, are you sure?' %}</p>
   </div>
   <div class="actions">
-    <form action="{% url 'order:delete' pk=order.id %}" method="POST" id="order-delete-form">{% csrf_token %}
-       <div class="ui red basic cancel inverted button">
-         <i class="remove icon"></i>
-         No
-       </div>
-       <div class="ui green ok inverted button">
-         <i class="checkmark icon"></i>
-         Yes
-       </div>
+    <form action="{% url 'order:delete' pk=order.id %}" method="POST" id="order-{{order.id}}-delete-form">{% csrf_token %}
+       <div class="ui red cancel button"> <i class="remove icon"></i> No </div>
+       <button class="ui green button" type="submit"> <i class="checkmark icon"></i> Yes </button>
    </form>
      </div>
  </div>
