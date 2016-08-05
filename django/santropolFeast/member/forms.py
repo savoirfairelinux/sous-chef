@@ -117,6 +117,15 @@ class ClientAddressInformation(forms.Form):
         queryset=Route.objects.all(),
     )
 
+    delivery_note = forms.CharField(
+        label=_("Delivery Note"),
+        required=False,
+        widget=forms.Textarea(attrs={
+            'rows': 2,
+            'placeholder': _('Delivery Note here ...')
+        })
+        )
+
 
 class ClientRestrictionsInformation(forms.Form):
 
