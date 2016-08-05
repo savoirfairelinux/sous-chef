@@ -21,29 +21,45 @@
     </h2>
     <div class="ui divider"></div>
 
-<table class="ui very basic stripped celled table">
-  <thead>
-    <th class="sorted descending">Order</th>
-    <th class="">{% trans 'Delivery Date' %}</th>
-    <th class="">{% trans 'Status' %}</th>
-    <th class="">{% trans 'Amount' %}</th>
-    <th class=""></th>
-  </thead>
-  <tbody>
-    {% for order in orders %}
-      <tr>
-        <td><strong>{{order.id}}</strong></td>
-        <td>{{order.delivery_date}}</td>
-        <td>{{order.get_status_display}}</td>
-        <td>${{order.price}}</td>
-        <td><button class="ui button"  onclick="location.href='{% url 'order:view' pk=order.id %}';" value="View Order" >View</button></td>
-      </tr>
-        {% endfor %}
-  </tbody>
+    <table class="ui very basic stripped celled table">
+        <thead>
+            <th class="sorted descending">Order</th>
+            <th class="">{% trans 'Delivery Date' %}</th>
+            <th class="">{% trans 'Status' %}</th>
+            <th class="">{% trans 'Amount' %}</th>
+            <th class="">{% trans 'Actions' %}</th>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td><strong>{{order.id}}</strong></td>
+                    <td>{{order.delivery_date}}</td>
+                    <td>{{order.get_status_display}}</td>
+                    <td>${{order.price}}</td>
+                    <td>
+                        <a class="ui blue icon button"  href="{% url 'order:view' pk=order.id %}"><i class="icon unhide"></i></a>
+                        <a class="ui green icon button"  href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i></a>
+                        <a class="ui red icon button order-delete" href="#" data-order-id="{{order.id}}"><i class="icon trash"></i></a>
+                    </td>
+                </tr>
+                {% include "order_confirm_delete.html" %}
+            {% endfor %}
+        </tbody>
 
-</table>
+    </table>
+ </div>
+{% endblock %}
 
+{% block extrajs %}
+<script type="text/javascript">
+  document.addEventListener( 'DOMContentLoaded', function () {
+      $('table').tablesort();
+  })
 
-
-
+  $('.order-delete').click(function(){
+      var order_id = $(this).attr('data-order-id');
+      var selector = '.ui.basic.modal.order-' + order_id;
+      $(selector).modal('show');
+  });
+</script>
 {% endblock %}

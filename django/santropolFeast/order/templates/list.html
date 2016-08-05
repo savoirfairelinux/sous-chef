@@ -54,7 +54,7 @@
   </div>
 </div>
 
-{% if order %}
+{% if orders %}
 <table class="ui very basic stripped celled table">
   <thead>
     <th class="sorted descending">Order</th>
@@ -90,19 +90,10 @@
         </tr>
   </tfoot>
 </table>
-<<<<<<< 624d3955fddeaf057141dc575e2c316d0d782e59
 
-
-=======
 {% else %}
     <div class="ui row"><p>Sorry, no result found.</p></div>
-  {% endif %}
-<script type="text/javascript">
-    document.addEventListener( 'DOMContentLoaded', function () {
-      $('table').tablesort();
-    })
-</script>
->>>>>>> Fix formating with the order list when empty
+{% endif %}
 
 {% endblock %}
 
