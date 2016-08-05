@@ -392,19 +392,17 @@ class FormTestCase(TestCase):
 
     def test_acces_to_form(self):
         """Test if the form is accesible from its url"""
-        self.client.login(
-            username=self.admin.username,
-            password=self.admin.password
-        )
+        self._login()
         result = self.client.get(
             reverse_lazy(
                 'member:member_step'
             ), follow=True
         )
         self.assertEqual(result.status_code, 200)
+        self._logout()
 
     def test_acces_to_form_by_url_basic_info(self):
-
+        self._login()
         result = self.client.get(
             reverse_lazy(
                 'member:member_step',
@@ -412,11 +410,11 @@ class FormTestCase(TestCase):
             ),
             follow=True
         )
-
         self.assertEqual(result.status_code, 200)
+        self._logout()
 
     def test_acces_to_form_by_url_adress_information(self):
-
+        self._login()
         result = self.client.get(
             reverse_lazy(
                 'member:member_step',
@@ -424,11 +422,11 @@ class FormTestCase(TestCase):
             ),
             follow=True
         )
-
         self.assertEqual(result.status_code, 200)
+        self._logout()
 
     def test_acces_to_form_by_url_referent_information(self):
-
+        self._login()
         result = self.client.get(
             reverse_lazy(
                 'member:member_step',
@@ -436,11 +434,11 @@ class FormTestCase(TestCase):
             ),
             follow=True
         )
-
         self.assertEqual(result.status_code, 200)
+        self._logout()
 
     def test_acces_to_form_by_url_payment_information(self):
-
+        self._login()
         result = self.client.get(
             reverse_lazy(
                 'member:member_step',
@@ -449,9 +447,10 @@ class FormTestCase(TestCase):
             follow=True
         )
         self.assertEqual(result.status_code, 200)
+        self._logout()
 
     def test_acces_to_form_by_url_dietary_restriction(self):
-
+        self._login()
         result = self.client.get(
             reverse_lazy(
                 'member:member_step',
@@ -459,11 +458,11 @@ class FormTestCase(TestCase):
             ),
             follow=True
         )
-
         self.assertEqual(result.status_code, 200)
+        self._logout()
 
     def test_acces_to_form_by_url_emergency_contact(self):
-
+        self._login()
         result = self.client.get(
             reverse_lazy(
                 'member:member_step',
@@ -471,11 +470,11 @@ class FormTestCase(TestCase):
             ),
             follow=True
         )
-
         self.assertEqual(result.status_code, 200)
+        self._logout()
 
     def test_form_save_data_all_different_members(self):
-
+        self._login()
         basic_information_data = {
             "client_wizard-current_step": "basic_information",
             "basic_information-firstname": "User",
@@ -565,6 +564,7 @@ class FormTestCase(TestCase):
         self._test_assert_client_info_all_different_members(client)
 
         self._test_client_detail_view_all_different_members(client)
+        self._logout()
 
     def _test_assert_member_info_all_different_members(self, member):
         # test firstname and lastname
@@ -676,7 +676,7 @@ class FormTestCase(TestCase):
         self._logout()
 
     def test_form_save_data_same_members(self):
-
+        self._login()
         basic_information_data = {
             "client_wizard-current_step": "basic_information",
             "basic_information-firstname": "Same",
@@ -770,6 +770,7 @@ class FormTestCase(TestCase):
 
         self._test_client_detail_view_same_members(client)
         self._test_client_list_view_same_members()
+        self._logout()
 
     def _test_assert_member_info_same_members(self, member):
         # test firstname and lastname
@@ -905,6 +906,7 @@ class FormTestCase(TestCase):
         self._logout()
 
     def test_form_validate_data(self):
+        self._login()
         """Test all the step of the form with and without wrong data"""
         self._test_basic_information_with_errors()
         self._test_basic_information_without_errors()
@@ -918,6 +920,7 @@ class FormTestCase(TestCase):
         self._test_step_dietary_restriction_without_errors()
         self._test_step_emergency_contact_with_errors()
         self._test_step_emergency_contact_without_errors()
+        self._logout()
 
     def _test_basic_information_with_errors(self):
         # Data for the basic_information step with errors.
@@ -1318,10 +1321,10 @@ class FormTestCase(TestCase):
 
     def _test_step_emergency_contact_without_errors(self):
         # Data for the address_information step without errors.
-        id = Member.objects.get(firstname="First").id
+        pk = Member.objects.get(firstname="First").id
         emergency_contact_data = {
             "client_wizard-current_step": "emergency_contact",
-            "emergency_contact-member": "[{}] First Member".format(id),
+            "emergency_contact-member": "[{}] First Member".format(pk),
             "emergency_contact-firstname": "Emergency",
             "emergency_contact-lastname": "User",
             "emergency_contact-contact_type": "Home phone",
@@ -1340,9 +1343,10 @@ class FormTestCase(TestCase):
 
         # The response is the next step of the form with no errors messages.
         self.assertTrue(b'Required information' not in response.content)
-        self.assertTrue(b'status' not in response.content)
-        self.assertTrue(b'delivery_type' not in response.content)
-        self.assertTrue(b'delivery_schedule' not in response.content)
+        self.assertTrue(b'contact_type' not in response.content)
+        self.assertTrue(b'contact_value' not in response.content)
+        self.assertTrue(b'Clients' in response.content)
+        self.assertRedirects(response, reverse('member:list'))
 
 
 class MemberSearchTestCase(TestCase):

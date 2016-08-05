@@ -17,6 +17,12 @@
 
 <div class="ten wide column form-steps">
     <form action="" method="post" class="ui form error">
+        {% if form.errors or formset.errors %}
+            <div class="ui error message">
+              <div class="header">{{ _('Required information missing')}}</div>
+              <p>{{ _('Please review the form to make sure that all required fields are filled.')}}</p>
+            </div>
+        {% endif %}
         {% csrf_token %}
         {% include "_form.html" %}
         <a class="ui default button" href="{{ request.META.HTTP_REFERER }}">Cancel</a>

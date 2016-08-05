@@ -14,7 +14,7 @@ from order.forms import CreateOrderItem, UpdateOrderItem
 class OrderList(generic.ListView):
     model = Order
     template_name = 'list.html'
-    context_object_name = 'order'
+    context_object_name = 'orders'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
