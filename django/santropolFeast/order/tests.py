@@ -31,6 +31,8 @@ class OrderTestCase(TestCase):
 
 class DeleteOrderTestCase(TestCase):
 
+    fixtures = ['routes.json']
+
     def setUp(self):
         self.order = OrderFactory.create()
         self.admin = User.objects.create_superuser(
@@ -159,6 +161,8 @@ class OrderItemTestCase(TestCase):
 
 
 class OrderCreateOnDefaultsTestCase(TestCase):
+
+    fixtures = ['routes.json']
 
     @classmethod
     def setUpTestData(cls):

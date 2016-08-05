@@ -55,6 +55,7 @@ class ClientFactory (factory.DjangoModelFactory):
 
     class Meta:
         model = Client
+
     member = factory.SubFactory(MemberFactory)
     billing_member = member
     billing_payment_type = factory.LazyAttribute(
@@ -84,7 +85,9 @@ class ClientFactory (factory.DjangoModelFactory):
         lambda x: random.choice(GENDER_CHOICES)[0]
     )
     birthdate = factory.Faker('date')
-    route = factory.SubFactory(RouteFactory)
+    route = factory.LazyAttribute(
+            lambda x: random.choice(Route.objects.all())
+        )
 
     meal_default_week = factory.LazyAttribute(lambda x: generate_json())
 

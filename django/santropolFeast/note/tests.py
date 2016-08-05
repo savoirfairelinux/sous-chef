@@ -10,6 +10,8 @@ from member.factories import ClientFactory
 
 class NoteTestCase(TestCase):
 
+    fixtures = ['routes.json']
+
     def setUp(self):
         self.client = ClientFactory()
         self.admin = User.objects.create(username="admin")
