@@ -199,8 +199,8 @@ class Menu(models.Model):
           dish_names : a list of names of dishes included in the menu
 
         Behavior:
-          - if Menu already exists for the date, all its menu components
-            are replaced by the new ones
+          - if Menu(s) already exists for the date, only one is kept and
+            all its menu components are replaced by the new ones
 
         Raises :
           - Exception if dish does not exist
@@ -213,14 +213,18 @@ class Menu(models.Model):
 
         num_menu_comp_created = 0
         component_groups = {}
-        try:
-            menu = Menu.objects.get(date=menu_date)
-        except Menu.DoesNotExist:
+        menus = Menu.objects.filter(date=menu_date)
+        if not menus:
             menu = Menu(date=menu_date)
             menu.save()
         else:
-            # menu existed, must flush its menu_components
-            Menu_component.objects.filter(menu=menu).delete()
+            # menu(s) existed, must flush their menu_components
+            Menu_component.objects.filter(menu__in=menus).delete()
+            # flush extra menus
+            for menu in menus[1:]:
+                Menu.objects.filter(menu=menu).delete()
+            # reuse the first one
+            menu = menus[0]
         for dish_name in dish_names:
             components = Component.objects.filter(name=dish_name)
             if not components:

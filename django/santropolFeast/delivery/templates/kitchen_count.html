@@ -74,6 +74,6 @@
   </tbody>
 </table>
 
-<a class="big ui right floated button" href="{{request.META.HTTP_REFERER}}">Back</a>
+<a class="big ui right floated button" href="{% url 'delivery:meal' %}">Back</a>
 <a class="big ui yellow right floated button" href="{% url 'delivery:route' %}">Next: Organize Routes</a>
 {% endblock %}
