@@ -35,41 +35,31 @@ class DeleteOrderTestCase(TestCase):
 
     fixtures = ['routes.json']
 
-    @classmethod
-    def setUpTestData(cls):
-        cls.order = OrderFactory.create()
-        cls.admin = User.objects.create_superuser(
+    def setUp(self):
+        self.order = OrderFactory.create()
+        self.admin = User.objects.create_superuser(
             username='admin@example.com',
             email='admin@example.com',
             password='test'
         )
-
-    def _login(self):
         self.client.login(
             username=self.admin.username,
             password="test"
         )
 
-    def _logout(self):
-        self.client.logout()
-
     def test_confirm_delete_order(self):
-        self._login()
         response = self.client.get(
             reverse('order:delete', args=(self.order.id,)),
             follow=True
         )
         self.assertContains(response, 'Delete Order #{}'.format(self.order.id))
-        self._logout()
 
     def test_delete_order(self):
-        self._login()
         response = self.client.post(
             reverse('order:delete', args=(self.order.id,)),
             follow=True
         )
         self.assertRedirects(response, reverse('order:list'), status_code=302)
-        self._logout()
 
 
 class OrderItemTestCase(TestCase):
@@ -230,20 +220,14 @@ class OrderFormTestCase(TestCase):
 
     fixtures = ['routes.json']
 
-    @classmethod
-    def setUpTestData(cls):
-        cls.order = OrderFactory.create()
-        cls.admin = User.objects.create_superuser(
+    def setUp(self):
+        self.order = OrderFactory.create()
+        self.admin = User.objects.create_superuser(
             username='admin@example.com',
             email='admin@example.com',
             password='test1234'
         )
-
-    def _login(self):
         self.client.login(username='admin@example.com', password='test1234')
-
-    def _logout(self):
-        self.client.logout()
 
     def _test_order_with_errors(self, route):
         data = {
@@ -354,7 +338,6 @@ class OrderFormTestCase(TestCase):
 class OrderCreateFormTestCase(OrderFormTestCase):
 
     def test_access_to_create_form(self):
-        self._login()
         """Test if the form is accessible from its url"""
         self.client.login(
             username=self.admin.username,
@@ -366,10 +349,8 @@ class OrderCreateFormTestCase(OrderFormTestCase):
             ), follow=True
         )
         self.assertEqual(response.status_code, 200)
-        self._logout()
 
     def test_create_form_validate_data(self):
-        self._login()
         """Test all the step of the form with and without wrong data"""
         client = ClientFactory()
         component = ComponentFactory(name="Component create validate test")
@@ -378,10 +359,8 @@ class OrderCreateFormTestCase(OrderFormTestCase):
         self._test_order_without_errors(route, client)
         self._test_order_item_with_errors(route, client)
         self._test_order_item_without_errors(route, client, component)
-        self._logout()
 
     def test_create_form_save_data(self):
-        self._login()
         client = ClientFactory()
         component = ComponentFactory(name="Component create save test")
         data = {
@@ -409,7 +388,6 @@ class OrderCreateFormTestCase(OrderFormTestCase):
             follow=True
         )
         order = Order.objects.latest('id')
-
         self.assertEqual(order.client.id, client.id)
         self.assertEqual(order.orders.first().component.id, component.id)
         self.assertEqual(order.creation_date, date(2016, 12, 12))
@@ -424,13 +402,11 @@ class OrderCreateFormTestCase(OrderFormTestCase):
         )
         self.assertEqual(order.orders.first().total_quantity, 5)
         self.assertEqual(order.orders.first().free_quantity, 3)
-        self._logout()
 
 
 class OrderUpdateFormTestCase(OrderFormTestCase):
 
     def test_access_to_update_form(self):
-        self._login()
         """Test if the form is accessible from its url"""
         self.client.login(
             username=self.admin.username,
@@ -443,10 +419,8 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
             ), follow=True
         )
         self.assertEqual(response.status_code, 200)
-        self._logout()
 
     def test_update_form_validate_data(self):
-        self._login()
         """Test all the step of the form with and without wrong data"""
         client = ClientFactory()
         component = ComponentFactory(name="Component update validate test")
@@ -455,10 +429,8 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
         self._test_order_without_errors(route, client)
         self._test_order_item_with_errors(route, client)
         self._test_order_item_without_errors(route, client, component)
-        self._logout()
 
     def test_update_status_ajax(self):
-        self._login()
         data = {'status': 'D'}  # Delivery
         response = self.client.post(
             reverse('order:update_status', kwargs={'pk': self.order.id}),
@@ -467,10 +439,8 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
         )
         self.assertTrue(response.status_code, 200)
         self.assertTrue(b'"pk":' in response.content)
-        self._logout()
 
     def test_update_form_save_data(self):
-        self._login()
         data = {
             'orders-TOTAL_FORMS': 1,
             'orders-INITIAL_FORMS': 0,
@@ -491,12 +461,11 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
             'orders-0-total_quantity': '5',
             'orders-0-free_quantity': '3',
         }
-        response = self.client.post(
+        self.client.post(
             reverse_lazy('order:update', kwargs={'pk': self.order.id}),
             data,
             follow=True
         )
-
         order = Order.objects.get(id=self.order.id)
         self.assertEqual(order.creation_date, date(2016, 12, 12))
         self.assertEqual(order.delivery_date, date(2016, 12, 22))
@@ -513,4 +482,3 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
         )
         self.assertEqual(self.order.orders.latest('id').total_quantity, 5)
         self.assertEqual(self.order.orders.latest('id').free_quantity, 3)
-        self._logout()
