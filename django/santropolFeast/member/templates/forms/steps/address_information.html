@@ -33,7 +33,13 @@
   <div class="field {% if wizard.form.route.errors %} error {% endif %}">
     <label>{{wizard.form.route.label}}</label>
     {{wizard.form.route}}
-  </div> 
+  </div>
+</div>
+<div class="equal width fields">
+  <div class="field {% if wizard.form.delivery_note.errors %} error {% endif %}">
+    <label>{{ wizard.form.delivery_note.label }}</label>
+  {{ wizard.form.delivery_note }}
+</div>
 </div>
 <div class="equal width fields">
     <div class="field {% if wizard.form.latitude.errors %} error {% endif %}">

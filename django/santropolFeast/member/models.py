@@ -406,6 +406,12 @@ class Client(models.Model):
         blank=True, null=True
     )
 
+    delivery_note = models.TextField(
+        verbose_name=_('Delivery Note'),
+        blank=True,
+        null=True
+    )
+
     def __str__(self):
         return "{} {}".format(self.member.firstname, self.member.lastname)
 
