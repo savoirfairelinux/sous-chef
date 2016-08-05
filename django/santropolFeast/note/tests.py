@@ -1,26 +1,24 @@
 from django.test import TestCase
-from member.models import Member, Client
 from note.models import Note
 from note.factories import NoteFactory
 from django.contrib.auth.models import User
 from member.factories import ClientFactory
-
-# Create your tests here.
 
 
 class NoteTestCase(TestCase):
 
     fixtures = ['routes.json']
 
-    def setUp(self):
-        self.client = ClientFactory()
-        self.admin = User.objects.create(username="admin")
-        self.note = NoteFactory.create(client=self.client, author=self.admin)
+    @classmethod
+    def setUpTestData(cls):
+        cls.clients = ClientFactory()
+        cls.admin = User.objects.create(username="admin")
+        cls.note = NoteFactory.create(client=cls.clients, author=cls.admin)
 
     def test_attach_note_to_member(self):
         """Create a note attached to a member"""
         note = self.note
-        self.assertEqual(self.client, note.client)
+        self.assertEqual(self.clients, note.client)
         self.assertEqual(self.admin, note.author)
 
     def test_mark_as_read(self):
@@ -41,7 +39,7 @@ class NoteTestCase(TestCase):
     def test_str_includes_note(self):
         """An note listing must include the note text"""
         note = Note.objects.create(
-            client=self.client,
+            client=self.clients,
             author=self.admin,
             note='x123y'
         )

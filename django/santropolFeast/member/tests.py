@@ -362,8 +362,9 @@ class ClientAvoidComponentTestCase(TestCase):
 
 class FormTestCase(TestCase):
 
-    def setUp(self):
-        self.admin = User.objects.create_superuser(
+    @classmethod
+    def setUpTestData(cls):
+        cls.admin = User.objects.create_superuser(
             username='admin@example.com',
             email='admin@example.com',
             password='test1234'
@@ -381,8 +382,13 @@ class FormTestCase(TestCase):
             firstname='Second',
             lastname='Member'
         )
-        self.route = RouteFactory()
-        self.client.login(username='admin@example.com', password='test1234')
+        cls.route = RouteFactory()
+
+    def setUp(self):
+        self.client.login(username=self.admin.username, password='test1234')
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_acces_to_form(self):
         """Test if the form is accesible from its url"""
