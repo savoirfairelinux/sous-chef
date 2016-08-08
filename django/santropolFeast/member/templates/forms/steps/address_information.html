@@ -39,7 +39,7 @@
   <div class="field {% if wizard.form.delivery_note.errors %} error {% endif %}">
     <label>{{ wizard.form.delivery_note.label }}</label>
   {{ wizard.form.delivery_note }}
-</div>
+  </div>
 </div>
 <div class="equal width fields">
     <div class="field {% if wizard.form.latitude.errors %} error {% endif %}">
@@ -55,10 +55,14 @@
         {{ wizard.form.distance }}
     </div>
 </div>
-
 <div class="">
     <div class="">
       <button id="geocodeBtn" type="button" class="ui green button">
         <i class="world icon"></i>Geolocate</button>
     </div>
 </div>
+<br>
+<div class="map_address">
+    <div id="mapid"></div>
+</div>
+<br>

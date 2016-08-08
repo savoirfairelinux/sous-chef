@@ -10,6 +10,7 @@
 
 {% block extrahead %}
     <link href="{% static 'css/calendar.min.css' %}" type="text/css" rel="stylesheet">
+    <style> #mapid {height: 250px;}</style>
     {% load leaflet_tags %}
     {% leaflet_js %}
     {% leaflet_css %}
@@ -233,50 +234,63 @@
         	return dist
         }
 
+        // Add map
+        if ($('#mapid').length > 0) {
+          var mymap = new L.map('mapid').setView([45.516564,-73.575145], 18);
+          var tileUrl = 'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png',
+          layer = new L.TileLayer(tileUrl, {maxZoom: 18});
+          mymap.addLayer(layer);
+          // Add marker for the address
+          var marker;
+        }
+
         $('#geocodeBtn').click(function(e) {
               var geocoder = new L.Control.Geocoder.nominatim({ geocodingQueryParams: { countrycodes: 'ca'}});
               // var yourQuery = "4846 rue cartier, Montreal, Qc";
               var apt='',street  ='' , city ='', zipcode ='';
-              // if ($('#id_address_information-apartment').val()) {
-              //   apt = "#" + $('#id_address_information-apartment').val() + " ";
-              // }
+
               if ($('#id_address_information-street').val() ) {
-                street = $('#id_address_information-street').val()+ " ";
+                street = $('#id_address_information-street').val()+ "&";
               }
               if ($('#id_address_information-city').val()) {
-                city = $('#id_address_information-city').val() ;
+                city =  $('#id_address_information-city').val()+ "&"; ;
               }
-              // if ($('#id_address_information-postal_code').val()) {
-              //   zipcode = $('#id_address_information-postal_code').val() ;
-              // }
-              var yourQuery = apt +  street + city +zipcode;
+
+              var yourQuery = apt +  street + city + zipcode;
 
               geocoder.geocode(yourQuery, function(results) {
-                    // latLng= new L.LatLng(results[0].center.lat, results[0].center.lng);
-                    if (results.length > 0 ) {
-                          //alert("lat" +results[0].center.lat + " long"+ results[0].center.lng);
-                          //alert(results[0].name);
+                    if (results.length > 0 ) {;
                           var data = { address: results[0].name,
                                        lat: results[0].center.lat,
                                        long: results[0].center.lng };
 
-//                              $('.modal').modal('show');
+                          // calculate distance between santropol and the place found
                           var dist = distance(45.516564,-73.575145, results[0].center.lat, results[0].center.lng,"K")
-                          console.log("Info reverse geocode lat:" + data.lat + " long:"+ data.long + " address:"+ data.address +" distance from santropol" + dist );
 
-                          // $.ajaxSetup({
-                          //     headers: { "X-CSRFToken": getCookie("csrftoken") }
-                          // });
-                          //
-                          // $.post("../../geolocateAddress/", data, function(result){
-                          //   alert("Post Successful " + result.latitude);
-                          // });
-
+                          // update text field withe info
                           $('#id_address_information-latitude').val(data.lat);
                           $('#id_address_information-longitude').val(data.long);
                           $('#id_address_information-distance').val(dist);
 
+                         // Add or update marker for the found address
+                         if (typeof(marker)==='undefined') {
+                           marker =   L.marker([ data.lat, data.long], {draggable:true});
+                           marker.addTo(mymap);
+                           mymap.setView([data.lat, data.long], 17);
+                         }
+                         else {
+                            marker.setLatLng([data.lat,data.long]);
+                            mymap.setView([data.lat, data.long], 17);
+                         }
 
+                          // Adjust latitude / longitude if user drag the marker
+                          marker.on("dragend",function(ev){
+                              var chagedPos = ev.target.getLatLng();
+                              $('#id_address_information-latitude').val(chagedPos.lat);
+                              $('#id_address_information-longitude').val(chagedPos.lng);
+                              var newdist = distance(45.516564,-73.575145, chagedPos.lat,chagedPos.lng,"K")
+                              $('#id_address_information-distance').val(newdist);
+                          });
                     }
                     else {
                         alert("Address not Found !!");
