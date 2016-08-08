@@ -7,53 +7,65 @@
 
 {% block extrahead %}
     {% load leaflet_tags %}
-    {% leaflet_js %}
     {% leaflet_css %}
 
     <link href="{% static 'leaflet-routing/leaflet-routing-machine.css' %}" rel="stylesheet">
     <link href="{% static 'leaflet-geocoder/Control.Geocoder.css' %}" rel="stylesheet">
     <link href="{% static 'leaflet-awesome-markers/leaflet.awesome-markers.css' %}" rel="stylesheet">
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet">
-    <style>
-    .leaflet-container-default {
-        position: block;
-        height: 600px;
-    }
-    .leaflet-routing-alternatives-container h2 {
-      display: none;
-    }
-    .leaflet-routing-container-hide .leaflet-routing-collapse-btn{
-      display: none;
-    }
-    .leaflet-routing-container h3 {
-      font-size: 22px;
-      font-weight: bold;
-    }
-    .leaflet-popup-content{
-        font-size: 18px;
-    }
-    .leaflet-routing-alt {
-      max-height:400px;
-    }
-    </style>
+{% endblock %}
+
+{% block content %}
+
+{% include 'kitchen_count_steps.html' with step='routes' %}
+
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">Organize Routes</h2>
+    <div class="right menu">
+      <div class="ui item"><h3><i class="ui calendar icon"></i>{% now "j F Y" %}</h3></div>
+    </div>
+</div>
+
+<select class="ui dropdown">
+    {% for route in routes %}
+    <option value="{{ route.id }}">{{ route.name }}</option>
+    {% endfor %}
+</select>
+
+<button id='btnprint' class="ui primary labeled icon right floated  button">
+    <i class="print icon"></i>
+    Print
+</button>
+<button id='btnsave' class="ui  labeled icon right floated button">
+    <i class="save icon"></i>
+    Save
+</button>
+
+<div class="row">
+  <div class="twelve wide column">
+    {% leaflet_map "main" callback="main_map_init" %}
+  </div>
+  <div class="four wide column">
+    <div class="controls"></div>
+  </div>
+</div>
+
+<a class="big ui right floated button" href="{% url 'delivery:kitchen_count' %}">Back</a>
+
+{% endblock %}
+
+{% block extrajs %}
+    {% leaflet_js %}
     <script src="{% static 'leaflet-routing/leaflet-routing-machine.js' %}" type="application/javascript"></script>
     <script src="{% static 'leaflet-geocoder/Control.Geocoder.js' %}" type="application/javascript"></script>
     <script src="{% static 'leaflet-awesome-markers/leaflet.awesome-markers.js' %}" type="application/javascript"></script>
     <script src="{% static 'leaflet-icon-glyph/Leaflet.Icon.Glyph.js' %}" type="application/javascript"></script>
     <script src="{% static 'sortable/Sortable.js' %}" type="application/javascript"></script>
     <script src="{% static 'leaflet-routing/mapbox/lrm-mapbox-1.0.4.js' %}" type="application/javascript"></script>
-{% endblock %}
 
-{% block extrajs %}
-<script type="text/javascript">
+    <script type="text/javascript">
     $('.ui.dropdown').dropdown({transition: 'drop'});
-</script>
-{% endblock %}
 
-
-{% block content %}
-
-<script type="text/javascript">
     var control;
 
     function printMapAndItinerary() {
@@ -126,8 +138,8 @@
         // add the layer to the map
         map.addLayer(layer);
 
-        // center on montreal
-        map.setView(new L.LatLng(45.5017, -73.5673), 8);
+        // center on santropol
+        map.setView(new L.LatLng(45.516564, -73.575145), 13);
 
         // Create bike router using mapbox
         var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
@@ -161,24 +173,24 @@
                     createMarker: function(i, wp) {
                          var  marker;
 
-                         // adjust marker according waypoints
-                         if (wp.name == "santropol") {
+                        // adjust marker according waypoints
+                        if (wp.name == "santropol") {
                            // add awesome marker for santropol
                            marker =  L.marker([45.516564, -73.575145], {
                                draggable: false,
                                opacity: 1,
                                icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
-                             });
+                           });
 
-                             var info = "<div class='ui list'>"
-                                            +"<div class='item'><i class='user icon'></i> Santro </div>"
-                                            +"</div>"
+                           var info = "<div class='ui list'>"
+                                          +"<div class='item'><i class='user icon'></i> Santro </div>"
+                                          +"</div>"
 
-                             marker.bindPopup(info).openPopup();
+                           marker.bindPopup(info).openPopup();
 
-                             return marker;
-                         }
-                         else {
+                           return marker;
+                        }
+                        else {
                            marker =  L.marker(wp.latLng, {
                                icon: L.icon.glyph({
                                    prefix: '',
@@ -196,7 +208,7 @@
 
                            marker.bindPopup(info).openPopup();
                            return marker;
-                         }
+                        }
 
                     },
                     createGeocoder: L.bind(function(i) {
@@ -226,25 +238,25 @@
 
         $("#btnprint").click(function(){
            printMapAndItinerary();
-         });
+        });
 
-         $("#btnsave").click(function(){
+        $("#btnsave").click(function(){
             var wp = control.getWaypoints();
             var data ={ members: [] };
 
             // simplify waypoint into a list of member id in the map order
             $.each(wp, function(key,value) {
-              console.log(value);
-              console.log(value.options);
-              if (typeof value.options.id !== "undefined") {
-                data.members.push({
-                    "id" : value.options.id
-                });
-              }
+                console.log(value);
+                console.log(value.options);
+                if (typeof value.options.id !== "undefined") {
+                    data.members.push({
+                        "id" : value.options.id
+                    });
+                }
             });
 
-            // Post simple list of members to server
-            $.ajax("../saveRoute/", {
+             // Post simple list of members to server
+             $.ajax("../saveRoute/", {
                   data : JSON.stringify(data),
                   contentType : 'application/json; charset=utf-8',
                   type : 'POST',
@@ -252,15 +264,15 @@
                   success: function(result) {
                       alert("Route Saved");
                   }
-                });
-          });
+             });
+        });
 
-           // during init
-         $('.ui.dropdown').dropdown({
-             onChange: function(routeId) {
-               getWaypoints(routeId);
-             }
-         });
+         // during init
+        $('.ui.dropdown').dropdown({
+            onChange: function(routeId) {
+                getWaypoints(routeId);
+            }
+        });
 
 
          // Add sortable on the route controler
@@ -284,45 +296,7 @@
          });
 
          getWaypoints(1);
-
-  }
-
+    }
 
 </script>
-
-{% include 'kitchen_count_steps.html' with step='routes' %}
-
-<div class="ui secondary pointing fluid menu">
-    <h2 class="ui header">Organize Routes</h2>
-    <div class="right menu">
-      <div class="ui item"><h3><i class="ui calendar icon"></i>{% now "j F Y" %}</h3></div>
-    </div>
-</div>
-
-<select class="ui dropdown">
-    {% for route in routes %}
-    <option value="{{ route.id }}">{{ route.name }}</option>
-    {% endfor %}
-</select>
-
-<button id='btnprint' class="ui primary labeled icon right floated  button">
-    <i class="print icon"></i>
-    Print
-</button>
-<button id='btnsave' class="ui  labeled icon right floated button">
-    <i class="save icon"></i>
-    Save
-</button>
-
-<div class="row">
-  <div class="twelve wide column">
-    {% leaflet_map "main" callback="main_map_init" %}
-  </div>
-  <div class="four wide column">
-    <div class="controls"></div>
-  </div>
-</div>
-
-<a class="big ui right floated button" href="{% url 'delivery:kitchen_count' %}">Back</a>
-
 {% endblock %}
