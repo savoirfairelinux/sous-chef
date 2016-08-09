@@ -45,22 +45,24 @@
       <thead>
         <th>Component</th>
         <th>Description</th>
-        <th class="">{% trans 'Quantity' %}</th>
+        <th class="">{% trans 'Total Quantity' %}</th>
+        <th class="">{% trans 'Free Quantity' %}</th>
         <th class="right aligned">{% trans 'Price' %}</th>
       </thead>
       <tbody>
           {% for item in order.orders.all %}
           <tr>
-            <td><strong>{{item.component.name}}</strong></td>
-            <td>{{item.component.description}}</td>
+            <td><strong>{{item.order_item_type}}</strong></td>
+            <td>{{item.component_group}}</td>
             <td>{{item.total_quantity}}</td>
+            <td>{{item.free_quantity}}</td>
             <td class="right aligned"><i class="dollar icon"></i>{{item.price}}</td>
           </tr>
           {% endfor %}
       </tbody>
       <tfoot>
           <tr>
-              <th colspan="3">Total</th>
+              <th colspan="4">Total</th>
               <th class="right aligned"><i class="dollar icon"></i>{{ order.price }}</th>
           </tr>
       </tfoot>

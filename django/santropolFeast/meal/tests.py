@@ -122,14 +122,6 @@ class CreateMenuAndComponentsTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         insert_all()  # load fresh data into DB
-        # clear menu and menu_components if any for chosen date
-        try:
-            menu = Menu.objects.filter(date=datetime.date(2016, 7, 15))
-        except Menu.DoesNotExist:
-            pass
-        else:
-            Menu_component.objects.filter(menu=menu).delete()
-            menu.delete()
 
     def test_menu_new(self):
         number = Menu.create_menu_and_components(

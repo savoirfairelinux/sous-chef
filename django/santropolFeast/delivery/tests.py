@@ -1,5 +1,8 @@
+import datetime
 from django.test import TestCase
+
 from dataload import insert_all
+from meal.models import Menu
 
 
 class KitchenCountReportTestCase(TestCase):
@@ -8,6 +11,12 @@ class KitchenCountReportTestCase(TestCase):
     def setUpTestData(cls):
         # This data set includes 'Ground porc' clashing ingredient
         insert_all()  # load fresh data into DB
+        Menu.create_menu_and_components(
+            datetime.date(2016, 5, 21),
+            ['Ginger pork',
+             'Green Salad', 'Fruit Salad',
+             'Day s Dessert', 'Day s Diabetic Dessert',
+             'Day s Pudding', 'Day s Compote'])
 
     def test_clashing_ingredient(self):
         """An ingredient we know will clash must be in the page"""
@@ -29,22 +38,6 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
         response = self.client.get('/delivery/meal/2016/05/21/')
         self.assertTrue(b'Ground porc' in response.content and
                         b'Pepper' in response.content)
-
-    def test_no_main_dish_on_date(self):
-        """No main dish on this date"""
-        response = self.client.get('/delivery/meal/2016/05/01/')
-        self.assertTrue(b'None for chosen date' in response.content)
-
-    def test_change_date_with_dish(self):
-        """Change main dish date."""
-        response = self.client.get('/delivery/meal/')
-        response = self.client.post(
-            '/delivery/meal/',
-            {'_change': 'Change',
-             'date_year': '2016',
-             'date_month': '5',
-             'date_day': '21'})
-        self.assertTrue('2016/05/21' in response.url)
 
     def test_date_with_dish_next(self):
         """From ingredient choice go to Kitchen Count Report."""
