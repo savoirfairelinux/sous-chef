@@ -199,7 +199,8 @@ class ClientWizard(NamedUrlSessionWizardView):
                 "delivery_type"
             ), meal_default_week=self.save_json(dietary_restriction),
             route=Route.objects.get(
-                name=address_information.cleaned_data.get('route'))
+                name=address_information.cleaned_data.get('route')),
+            delivery_note=address_information.cleaned_data.get('delivery_note')
         )
         if dietary_restriction.cleaned_data.get('status'):
             client.status = 'A'

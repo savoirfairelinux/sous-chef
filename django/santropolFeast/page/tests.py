@@ -42,6 +42,3 @@ class HomeViewTestCase(TestCase):
             reverse('page:login') + '?next=/p/home',
             status_code=302
         )
-
-    def tearDown(self):
-        self.client.logout()

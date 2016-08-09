@@ -73,7 +73,7 @@
 </div>
 
 {% if display == 'block' %}
-
+  {% if clients %}
 <div class="ui cards">
     {% for obj in clients %}
     <a class="ui card" href="{% url 'member:client_information' pk=obj.id %}">
@@ -103,13 +103,17 @@
             </div>
         </div>
     </a>
-    {% empty %}
-        <p>Sorry, no result found.</p>
-    {% endfor %}
-</div>
 
+    {% endfor %}
+
+</div>
+{% else %}
+    <div class="ui row"><p>Sorry, no result found.</p></div>
+
+{% endif %}
 {% else %}
 
+{% if clients %}
 <table class="ui very basic stripped celled table">
     <thead>
         <tr>
@@ -129,9 +133,6 @@
             <td>{{ obj.route }}</td>
             <td>{{ obj.member.updated_at|date:"Y/m/d H:h:m"  }}</td>
         </tr>
-
-        {% empty %}
-            <p>Sorry, no result found.</p>
         {% endfor %}
     </tbody>
     <tfoot>
@@ -143,7 +144,9 @@
           </tr>
     </tfoot>
 </table>
-
+{% else %}
+  <div class="ui row"><p>Sorry, no result found.</p></div>
+{% endif %}
 {% endif %}
 
 {% if is_paginated %}

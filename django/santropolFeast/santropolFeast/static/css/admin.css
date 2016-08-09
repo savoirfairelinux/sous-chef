@@ -32,6 +32,11 @@ body {
     background-color: #fff;
 }
 
+.errorlist {
+    color: #9f3a38;
+    margin-left: 20px;
+}
+
 /* LOGIN STYLES */
 
 [data-page="login"] .ui.container {
@@ -253,4 +258,26 @@ ul.doughnut-legend {
   .ui.left.fixed.vertical.inverted.menu {
     display: block;
   }
+}
+
+/* DELIVERY ROUTES*/
+.leaflet-container-default {
+    position: block;
+    height: 600px;
+}
+.leaflet-routing-alternatives-container h2 {
+  display: none;
+}
+.leaflet-routing-container-hide .leaflet-routing-collapse-btn{
+  display: none;
+}
+.leaflet-routing-container h3 {
+  font-size: 22px;
+  font-weight: bold;
+}
+.leaflet-popup-content{
+    font-size: 18px;
+}
+.leaflet-routing-alt {
+  max-height:400px;
 }

@@ -72,8 +72,8 @@
 
 <div class="ui row">
 
-    <a href="{% url 'order:update' pk=order.id %}" class="ui primary button">Update</a>
-    <a href="#" id="order-delete" class="ui basic button"><i class="icon trash"></i>Delete</a>
+    <a class="ui green button" href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i>Update</a>
+    <a class="ui red button order-delete" href="#" data-order-id="{{order.id}}"><i class="icon trash"></i>Delete</a>
 
 </div>
 
@@ -83,36 +83,30 @@
 
 {% block extrajs %}
 
-    <script type="text/javascript">
+<script type="text/javascript">
+    $('.order-delete').click(function(){
+        var order_id = $(this).attr('data-order-id');
+        var selector = '.ui.basic.modal.order-' + order_id;
+        $(selector).modal('show');
+    });
 
-        $('#order-delete').click(function(){
-            $('.ui.basic.modal')
-                .modal('show')
-            ;
-        });
-
-        $('.actions .ok').click(function(){
-            var form = document.getElementById('order-delete-form');
-            form.submit();
-        });
-
-        $('.ui.dropdown.status').dropdown({
-            transition: 'drop',
-            onChange: function(value, text, $selectedItem) {
-                $(this).addClass('loading');
-                $.ajax({
-                    url: "{% url 'order:update_status' pk=order.id %}",
-                    type: "POST",
-                    data: {
-                        'status': value,
-                        'csrfmiddlewaretoken': '{{ csrf_token }}',
-                    },
-                    success: function(response) {
-                        $('.ui.dropdown.status').removeClass('loading');
-                    }
-                })
-            }
-        });
-    </script>
+    $('.ui.dropdown.status').dropdown({
+        transition: 'drop',
+        onChange: function(value, text, $selectedItem) {
+            $(this).addClass('loading');
+            $.ajax({
+                url: "{% url 'order:update_status' pk=order.id %}",
+                type: "POST",
+                data: {
+                    'status': value,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                },
+                success: function(response) {
+                    $('.ui.dropdown.status').removeClass('loading');
+                }
+            })
+        }
+    });
+</script>
 
 {% endblock %}

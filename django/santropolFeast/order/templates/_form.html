@@ -1,7 +1,15 @@
+{% if form.errors %}
+    <div class="ui error message">
+      <div class="header">{{ _('Required information missing')}}</div>
+      <p>{{ _('Please review the form to make sure that all required fields are filled.')}}</p>
+    </div>
+{% endif %}
+
 <div class="order">
     <div class="field {% if form.client.errors %} error {% endif %}">
         <label>{{ form.client.label }}</label>
         {{ form.client }}
+        {% if form.client.errors %} {{ form.client.errors }} {% endif %}
     </div>
 
     <div class="field {% if form.creation_date.errors %} error {% endif %}">
@@ -12,6 +20,7 @@
                   {{ form.creation_date }}
             </div>
         </div>
+        {% if form.creation_date.errors %} {{ form.creation_date.errors }} {% endif %}
     </div>
 
     <div class="field {% if form.delivery_date.errors %} error {% endif %}">
@@ -22,16 +31,13 @@
                   {{ form.delivery_date }}
             </div>
         </div>
+        {% if form.delivery_date.errors %} {{ form.delivery_date.errors }} {% endif %}
     </div>
 
     <div class="field {% if form.status.errors %} error {% endif %}">
         <label>{{ form.status.label }}</label>
         {{ form.status }}
-    </div>
-
-    <div class="field {% if form.orders.errors %} error {% endif %}">
-        <label>{{ form.orders.label }}</label>
-        {{ form.orders }}
+        {% if form.status.errors %} {{ form.status.errors }} {% endif %}
     </div>
 </div>
 
@@ -39,7 +45,12 @@
     {% for formset in inlines %}
         {{ formset.management_form }}
         <div id="{{ formset.prefix }}">
-
+            {% if formset.errors %}
+                <div class="ui error message">
+                  <div class="header">{{ _('Required information missing')}}</div>
+                  <p>{{ _('Please review the form to make sure that all required fields are filled.')}}</p>
+                </div>
+            {% endif %}
             {% for subform in formset.forms %}
                 <div class="title active">
                     <i class="dropdown icon"></i> Order item
@@ -50,40 +61,49 @@
                         {{ subform.id }}
                     </div>
                     <div class="field {% if subform.component.errors %} error {% endif %}">
-                        <label> {{ subform.component.label }} </label>
+                        <label> {{ subform.component.label }}  </label>
                         {{ subform.component }}
+                        {% if subform.component.errors %} {{ subform.component.errors }} {% endif %}
                     </div>
                     <div class="field {% if subform.component_group.errors %} error {% endif %}">
-                        <label> {{ subform.component_group.label }} </label>
+                        <label> {{ subform.component_group.label }}</label>
                         {{ subform.component_group }}
+                        {% if subform.component_group.errors %} {{ subform.component_group.errors }} {% endif %}
                     </div>
                     <div class="field {% if subform.price.errors %} error {% endif %}">
                         <label> {{ subform.price.label }} </label>
                         {{ subform.price }}
+                        {% if subform.price.errors %} {{ subform.price.errors }} {% endif %}
                     </div>
                     <div class="field {% if subform.billable_flag.errors %} error {% endif %}">
                         <label> {{ subform.billable_flag.label }} </label>
                         {{ subform.billable_flag }}
+                        {% if subform.billable_flag.errors %} {{ subform.billable_flag }} {% endif %}
                     </div>
                     <div class="field {% if subform.size.errors %} error {% endif %}">
                         <label> {{ subform.size.label }} </label>
                         {{ subform.size }}
+                        {% if subform.size.errors %} {{ subform.size.errors }} {% endif %}
                     </div>
                     <div class="field {% if subform.order_item_type.errors %} error {% endif %}">
                         <label> {{ subform.order_item_type.label }} </label>
+                        {% if subform.order_item_type.errors %} {{ subform.order_item_type.errors }} {% endif %}
                         {{ subform.order_item_type }}
                     </div>
                     <div class="field {% if subform.remark.errors %} error {% endif %}">
                         <label> {{ subform.remark.label }} </label>
                         {{ subform.remark }}
+                        {% if subform.remark.errors %} {{ subform.remark.errors }} {% endif %}
                     </div>
                     <div class="field {% if subform.total_quantity.errors %} error {% endif %}">
                         <label> {{ subform.total_quantity.label }} </label>
                         {{ subform.total_quantity }}
+                        {% if subform.total_quantity.errors %} {{ subform.total_quantity.errors }} {% endif %}
                     </div>
                     <div class="field {% if subform.free_quantity.errors %} error {% endif %}">
                         <label> {{ subform.free_quantity.label }} </label>
                         {{ subform.free_quantity }}
+                        {% if subform.free_quantity.errors %} {{ subform.free_quantity.errors }} {% endif %}
                     </div>
                 </div>
             {% endfor %}
