@@ -222,7 +222,7 @@ class Menu(models.Model):
             Menu_component.objects.filter(menu__in=menus).delete()
             # flush extra menus
             for menu in menus[1:]:
-                Menu.objects.filter(menu=menu).delete()
+                Menu.objects.filter(id=menu.id).delete()
             # reuse the first one
             menu = menus[0]
         for dish_name in dish_names:
