@@ -124,7 +124,7 @@ class ClientAddressInformation(forms.Form):
             'rows': 2,
             'placeholder': _('Delivery Note here ...')
         })
-        )
+    )
 
 
 class ClientRestrictionsInformation(forms.Form):
@@ -235,6 +235,11 @@ class MemberForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(MemberForm, self).clean()
+
+        """If the client pays for himself. """
+        if cleaned_data.get('same_as_client') is True:
+            return cleaned_data
+
         member = cleaned_data.get('member')
         firstname = cleaned_data.get('firstname')
         lastname = cleaned_data.get('lastname')
@@ -284,6 +289,15 @@ class ClientPaymentInformation(MemberForm):
         widget=forms.Select(attrs={'class': 'ui dropdown'})
     )
 
+    same_as_client = forms.BooleanField(
+        label=_("Same As Client"),
+        initial=True,
+        required=False,
+        help_text=_('If checked, the personal information \
+            of the client will be used as billing information.'),
+        widget=forms.CheckboxInput(
+            attrs={}))
+
     billing_payment_type = forms.ChoiceField(
         label=_("Payment Type"),
         choices=PAYMENT_TYPE,
@@ -308,6 +322,10 @@ class ClientPaymentInformation(MemberForm):
 
     def clean(self):
         cleaned_data = super(ClientPaymentInformation, self).clean()
+
+        if cleaned_data.get('same_as_client') is True:
+            return cleaned_data
+
         member = cleaned_data.get('member')
         if member:
             member_id = member.split(' ')[0].replace('[', '').replace(']', '')
