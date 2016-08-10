@@ -8,11 +8,12 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from member.models import (
-    Client, Member, Address, Contact, Referencing,
+    Client, Member, Address, Contact, Referencing, Restriction, Client_option,
     ClientFilter, ClientFilter, DAYS_OF_WEEK, Route
 )
 from note.models import Note
 from order.models import Order
+from meal.models import Restricted_item
 from meal.models import COMPONENT_GROUP_CHOICES
 from formtools.wizard.views import NamedUrlSessionWizardView
 from django.core.urlresolvers import reverse_lazy
@@ -79,6 +80,7 @@ class ClientWizard(NamedUrlSessionWizardView):
         emergency = self.save_emergency_contact(billing_member)
         client = self.save_client(member, billing_member, emergency)
         self.save_referent_information(client, billing_member, emergency)
+        self.save_preferences(client)
 
     def save_address(self):
         address_information = self.form_dict['address_information']
@@ -242,6 +244,24 @@ class ClientWizard(NamedUrlSessionWizardView):
         )
         referencing.save()
         return referencing
+
+    def save_preferences(self, client):
+        preferences = self.form_dict['dietary_restriction'].cleaned_data
+
+        # Save restricted items
+        for restricted_item in preferences.get('restrictions'):
+            Restriction.objects.create(
+                client=client,
+                restricted_item=restricted_item
+            )
+
+        # Save food preparation
+        for food_preparation in preferences.get('food_preparation'):
+            Client_option.objects.create(
+                client=client,
+                option=food_preparation
+            )
+
 
     def billing_member_is_member(self):
         basic_information = self.form_dict['basic_information']

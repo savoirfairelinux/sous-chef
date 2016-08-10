@@ -1,10 +1,11 @@
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _
-from meal.models import Ingredient, Component, COMPONENT_GROUP_CHOICES
+from meal.models import Ingredient, Component, COMPONENT_GROUP_CHOICES, \
+    Restricted_item
 from order.models import SIZE_CHOICES
 from member.models import (
-    Member, Client, RATE_TYPE, CONTACT_TYPE_CHOICES,
+    Member, Client, RATE_TYPE, CONTACT_TYPE_CHOICES, Option,
     GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE,
     DAYS_OF_WEEK, Route,
 )
@@ -171,18 +172,16 @@ class ClientRestrictionsInformation(forms.Form):
 
     restrictions = forms.ModelMultipleChoiceField(
         label=_("Restrictions"),
-        queryset=Ingredient.objects.all(),
+        queryset=Restricted_item.objects.all(),
         required=False,
         widget=forms.SelectMultiple(attrs={'class': 'ui dropdown search'})
     )
 
     food_preparation = forms.ModelMultipleChoiceField(
         label=_("Preparation"),
-        queryset=Ingredient.objects.all(),
         required=False,
-        widget=forms.SelectMultiple(
-            attrs={'class': 'ui dropdown search'}
-        )
+        queryset=Option.objects.filter(option_group='preparation'),
+        widget=forms.SelectMultiple(attrs={'class': 'ui dropdown'}),
     )
 
     ingredient_to_avoid = forms.ModelMultipleChoiceField(
@@ -195,7 +194,7 @@ class ClientRestrictionsInformation(forms.Form):
     )
 
     dish_to_avoid = forms.ModelMultipleChoiceField(
-        label=_("Dish To Avoid"),
+        label=_("Dish(es) To Avoid"),
         queryset=Component.objects.all(),
         required=False,
         widget=forms.SelectMultiple(

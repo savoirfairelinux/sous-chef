@@ -383,6 +383,12 @@ class FormTestCase(TestCase):
             lastname='Member'
         )
         cls.route = RouteFactory()
+        cls.restricted_item_1 = Restricted_item.objects.create(
+            name='pork', restricted_item_group='meat')
+        cls.restricted_item_2 = Restricted_item.objects.create(
+            name='soya', restricted_item_group='other')
+        cls.food_preparation = Option.objects.create(
+            name='PUREE ALL', option_group='preparation')
 
     def setUp(self):
         self.client.login(username=self.admin.username, password='test1234')
@@ -515,6 +521,8 @@ class FormTestCase(TestCase):
             "dietary_restriction-delivery_type": "O",
             "dietary_restriction-delivery_schedule": "monday",
             "dietary_restriction-meal_default": "1",
+            "dietary_restriction-restrictions": [ self.restricted_item_1.id, self.restricted_item_2.id ],
+            "dietary_restriction-food_preparation": self.food_preparation.id,
             "wizard_goto_step": ""
         }
 
@@ -536,7 +544,7 @@ class FormTestCase(TestCase):
         ]
 
         for step, data in stepsdata:
-            self.client.post(
+            response = self.client.post(
                 reverse_lazy('member:member_step', kwargs={'step': step}),
                 data,
                 follow=True
@@ -641,6 +649,24 @@ class FormTestCase(TestCase):
             client.emergency_contact.member_contact.first().value,
             "555-444-5555"
         )
+
+        # test_restrictions
+        restriction_1 = Restriction.objects.get(
+            client=client, restricted_item=self.restricted_item_1)
+        restriction_2 = Restriction.objects.get(
+            client=client, restricted_item=self.restricted_item_2)
+        self.assertTrue(self.restricted_item_1.name in str(restriction_1))
+        self.assertTrue(self.restricted_item_2.name in str(restriction_2))
+
+        # Test food preparation
+        food_preparation = Client_option.objects.get(
+            client=client,
+            option=self.food_preparation
+        )
+        self.assertTrue(self.food_preparation.name in str(food_preparation))
+
+
+
 
     def _test_client_detail_view_all_different_members(self, client):
         response = self.client.get(
