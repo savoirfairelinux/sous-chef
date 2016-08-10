@@ -120,40 +120,44 @@ class ClientWizard(NamedUrlSessionWizardView):
         return member
 
     def save_billing_member(self, member):
-        payment_information = self.form_dict['payment_information']
-        e_b_member = payment_information.cleaned_data.get('member')
-        if self.billing_member_is_member():
-            billing_member = member
-        elif e_b_member:
-            e_b_member_id = e_b_member.split(' ')[0].\
-                replace('[', '').replace(']', '')
-            billing_member = Member.objects.get(pk=e_b_member_id)
-        else:
-            billing_address = Address.objects.create(
-                number=payment_information.cleaned_data.get('number'),
-                street=payment_information.cleaned_data.get('street'),
-                apartment=payment_information.cleaned_data.get('apartment'),
-                floor=payment_information.cleaned_data.get('floor'),
-                city=payment_information.cleaned_data.get('city'),
-                postal_code=payment_information.cleaned_data.get(
-                    'postal_code'
-                ),
-            )
-            billing_address.save()
+        payment_information = \
+            self.form_dict['payment_information'].cleaned_data
 
-            billing_member = Member.objects.create(
-                firstname=payment_information.cleaned_data.get('firstname'),
-                lastname=payment_information.cleaned_data.get('lastname'),
-                address=billing_address,
-            )
-            billing_member.save()
+        if payment_information.get('same_as_client'):
+            billing_member = member
+
+        else:
+            e_b_member = payment_information.get('member')
+            if self.billing_member_is_member():
+                billing_member = member
+            elif e_b_member:
+                e_b_member_id = e_b_member.split(' ')[0].\
+                    replace('[', '').replace(']', '')
+                billing_member = Member.objects.get(pk=e_b_member_id)
+            else:
+                billing_address = Address.objects.create(
+                    number=payment_information.get('number'),
+                    street=payment_information.get('street'),
+                    apartment=payment_information.get('apartment'),
+                    floor=payment_information.get('floor'),
+                    city=payment_information.get('city'),
+                    postal_code=payment_information.get('postal_code'),
+                )
+                billing_address.save()
+
+                billing_member = Member.objects.create(
+                    firstname=payment_information.get('firstname'),
+                    lastname=payment_information.get('lastname'),
+                    address=billing_address,
+                )
+                billing_member.save()
 
         return billing_member
 
     def save_emergency_contact(self, billing_member):
         emergency_contact = self.form_dict['emergency_contact']
         e_emergency_member = emergency_contact.cleaned_data.get('member')
-        if self.billing_member_is_emergency_contact():
+        if self.billing_member_is_emergency_contact(billing_member):
             emergency = billing_member
         elif e_emergency_member:
             e_emergency_member_id = e_emergency_member.split(' ')[0]\
@@ -257,18 +261,16 @@ class ClientWizard(NamedUrlSessionWizardView):
             return True
         return False
 
-    def billing_member_is_emergency_contact(self):
+    def billing_member_is_emergency_contact(self, billing_member):
         emergency_contact = self.form_dict['emergency_contact']
-        payment_information = self.form_dict['payment_information']
 
         e_firstname = emergency_contact.cleaned_data.get('firstname')
         e_lastname = emergency_contact.cleaned_data.get('lastname')
 
-        p_firstname = payment_information.cleaned_data.get('firstname')
-        p_lastname = payment_information.cleaned_data.get('lastname')
-
-        if e_firstname == p_firstname and e_lastname == p_lastname:
+        if e_firstname == billing_member.firstname \
+                and e_lastname == billing_member.lastname:
             return True
+
         return False
 
     def referent_is_emergency_contact(self):
