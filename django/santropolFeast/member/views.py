@@ -8,8 +8,19 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from member.models import (
-    Client, Member, Address, Contact, Referencing, Restriction, Client_option,
-    ClientFilter, ClientFilter, DAYS_OF_WEEK, Route
+    Client,
+    Member,
+    Address,
+    Contact,
+    Referencing,
+    Restriction,
+    Client_option,
+    ClientFilter,
+    ClientFilter,
+    DAYS_OF_WEEK,
+    Route,
+    Client_avoid_ingredient,
+    Client_avoid_component,
 )
 from note.models import Note
 from order.models import Order
@@ -266,6 +277,19 @@ class ClientWizard(NamedUrlSessionWizardView):
                 option=food_preparation
             )
 
+        # Save ingredients to avoid
+        for ingredient_to_avoid in preferences.get('ingredient_to_avoid'):
+            Client_avoid_ingredient.objects.create(
+                client=client,
+                ingredient=ingredient_to_avoid
+            )
+
+        # Save components to avoid
+        for component_to_avoid in preferences.get('dish_to_avoid'):
+            Client_avoid_component.objects.create(
+                client=client,
+                component=component_to_avoid
+            )
 
     def billing_member_is_member(self):
         basic_information = self.form_dict['basic_information']
@@ -871,3 +895,23 @@ def change_status(request, id):
 
         # just return a JsonResponse
         return JsonResponse({'status': 200})
+
+
+class DeleteRestriction(generic.DeleteView):
+    model = Restriction
+    success_url = reverse_lazy('member:list')
+
+
+class DeleteClientOption(generic.DeleteView):
+    model = Client_option
+    success_url = reverse_lazy('member:list')
+
+
+class DeleteIngredientToAvoid(generic.DeleteView):
+    model = Client_avoid_ingredient
+    success_url = reverse_lazy('member:list')
+
+
+class DeleteComponentToAvoid(generic.DeleteView):
+    model = Client_avoid_component
+    success_url = reverse_lazy('member:list')
