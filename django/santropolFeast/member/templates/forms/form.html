@@ -132,6 +132,19 @@
         }
       });
 
+      var same_as_client = document.getElementById('id_payment_information-same_as_client')
+      // Initial state
+      if (same_as_client && same_as_client.checked) {
+          $('#billing_select_member').hide();
+      }
+      $("#id_payment_information-same_as_client").on("change", function() {
+          if (this.checked) {
+              $('#billing_select_member').hide();
+          } else {
+              $('#billing_select_member').show();
+          }
+      });
+
       $('#wizard_form_birthdate').calendar({
         type: 'date',
         formatter: {

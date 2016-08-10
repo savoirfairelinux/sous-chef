@@ -504,6 +504,7 @@ class FormTestCase(TestCase):
 
         payment_information_data = {
             "client_wizard-current_step": "payment_information",
+            "payment_information-same_as_client": False,
             "payment_information-firstname": "Billing",
             "payment_information-lastname": "Testing",
             "payment_information-billing_payment_type": "check",
@@ -722,14 +723,9 @@ class FormTestCase(TestCase):
 
         payment_information_data = {
             "client_wizard-current_step": "payment_information",
-            "payment_information-firstname": "Same",
-            "payment_information-lastname": "User",
+            "payment_information-same_as_client": True,
             "payment_information-billing_payment_type": "check",
             "payment_information-facturation": "default",
-            "payment_information-street": "8686 rue clark",
-            "payment_information-apartement": "86",
-            "payment_information-city": "Montreal",
-            "payment_information-postal_code": "H8C6G8",
             "address_information-latitude": 0.0,
             "address_information-longitude": 0.0,
             "address_information-distance": 0.0,
@@ -845,7 +841,7 @@ class FormTestCase(TestCase):
             "Testing referral reason"
         )
 
-        # test client member is billint member
+        # test client member is billing member
         self.assertEqual(client.member.id, client.billing_member.id)
 
         # test_billing_name:

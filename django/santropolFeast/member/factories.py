@@ -86,8 +86,8 @@ class ClientFactory (factory.DjangoModelFactory):
     )
     birthdate = factory.Faker('date')
     route = factory.LazyAttribute(
-            lambda x: random.choice(Route.objects.all())
-        )
+        lambda x: random.choice(Route.objects.all())
+    )
 
     meal_default_week = factory.LazyAttribute(lambda x: generate_json())
 

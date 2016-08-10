@@ -1,6 +1,16 @@
 <h4 class="ui dividing header">{{ _('Billing information') }}</h4>
 
-<div class="ui center aligned basic segment">
+<div class="field">
+    <div class="ui toggle checkbox">
+      {{wizard.form.same_as_client}}
+      <label>
+          {{wizard.form.same_as_client.label}}
+          <i class="help-text question yellow icon link" data-content="{{ wizard.form.same_as_client.help_text }}"></i>
+      </label>
+    </div>
+</div>
+
+<div class="ui center aligned basic segment" id="billing_select_member">
   <div class="ui fluid category search">
     <div class="ui icon input">
       {{wizard.form.member}}
