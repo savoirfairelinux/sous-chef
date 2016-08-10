@@ -1,0 +1,41 @@
+{% extends "base_billing.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans 'Billing' %}{% endblock %}
+{% block content %}
+<div class="ui secondary pointing fluid menu">
+  <h2 class="ui header">{% trans 'Billing' %}</h2>
+</div>
+<div class="ui mobile reversed equal width grid">
+  <div class="fourteen wide column">
+
+    <form action="" method="get" class="ui form">
+
+      <div class="inline fields">
+
+        <div class="field">
+          <label>Client Name</label>
+          <div class="field">
+            <div class="ui large left icon input">
+              <i class="users icon"></i>
+              {{ filter.form.name }}
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Billing Period</label>
+          <div class="field">
+            <div class="ui large left icon input">
+              <i class="calendar icon"></i>
+              {{filter.form.date}}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
