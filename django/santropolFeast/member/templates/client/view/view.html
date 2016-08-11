@@ -189,7 +189,7 @@
               {% trans 'Order' %}
           </h3>
           <div class="ui feed">
-            {% for order in client.client_order.all %}
+            {% for order in client.orders %}
             <a class="event"  href="/order/view/{{order.id}}/">
               <div class="content">
                 <div class="date">
