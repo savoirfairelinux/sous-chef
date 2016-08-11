@@ -1,13 +1,13 @@
 {% if wizard.steps.step1 == step  %}
-<div class="step active">
+<a class="step active" href="{% url 'member:member_step' step=url %}">
 {% elif wizard.steps.step1 > step %}
-<div class="completed step">
+<a class="completed step link" href="{% url 'member:member_step' step=url %}">
 {% else %}
-<div class="link step">
+<a class="disabled step">
 {% endif %}
     <i class="{{icon}} icon"></i>
     <div class="content">
         <div class="title">{{ name }}</div>
         <div class="description">{{ description }}</div>
     </div>
-</div>
+</a>
