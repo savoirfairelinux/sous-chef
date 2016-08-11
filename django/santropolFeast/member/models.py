@@ -443,15 +443,48 @@ class Client(models.Model):
         """
         Returns orders associated to this client
         """
-
         return self.client_order.all()
+
+    @property
+    def restrictions(self):
+        """
+        Returns restrictions associated to this client
+        """
+        return Restriction.objects.filter(client=self.id)
+
+    @property
+    def food_preparation(self):
+        """
+        Returns specific food preparation associated to this client
+        """
+        return Client_option.objects.filter(
+            client=self.id,
+            option__option_group='preparation'
+        )
+
+    @property
+    def ingredients_to_avoid(self):
+        """
+        Returns ingredients to avoid associated to this client
+        """
+        return Client_avoid_ingredient.objects.filter(
+            client=self.id,
+        )
+
+    @property
+    def components_to_avoid(self):
+        """
+        Returns component(s) to avoid associated to this client
+        """
+        return Client_avoid_component.objects.filter(
+            client=self.id,
+        )
 
     @property
     def notes(self):
         """
-        Returns orders associated to this client
+        Returns notes associated to this client
         """
-
         return self.client_notes.all()
 
     @property

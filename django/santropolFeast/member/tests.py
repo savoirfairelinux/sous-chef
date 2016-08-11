@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse, reverse_lazy
 from order.models import Order
 from member.factories import RouteFactory
+from meal.factories import IngredientFactory, ComponentFactory
 
 
 class MemberEmptyContact(TestCase):
@@ -389,6 +390,8 @@ class FormTestCase(TestCase):
             name='soya', restricted_item_group='other')
         cls.food_preparation = Option.objects.create(
             name='PUREE ALL', option_group='preparation')
+        cls.ingredient = IngredientFactory()
+        cls.component = ComponentFactory()
 
     def setUp(self):
         self.client.login(username=self.admin.username, password='test1234')
@@ -522,8 +525,11 @@ class FormTestCase(TestCase):
             "dietary_restriction-delivery_type": "O",
             "dietary_restriction-delivery_schedule": "monday",
             "dietary_restriction-meal_default": "1",
-            "dietary_restriction-restrictions": [ self.restricted_item_1.id, self.restricted_item_2.id ],
+            "dietary_restriction-restrictions":
+                [self.restricted_item_1.id, self.restricted_item_2.id],
             "dietary_restriction-food_preparation": self.food_preparation.id,
+            "dietary_restriction-ingredient_to_avoid": self.ingredient.id,
+            "dietary_restriction-dish_to_avoid": self.component.id,
             "wizard_goto_step": ""
         }
 
@@ -557,7 +563,9 @@ class FormTestCase(TestCase):
         client = Client.objects.get(member=member)
         self._test_assert_client_info_all_different_members(client)
 
+        # Test the client view
         self._test_client_detail_view_all_different_members(client)
+        self._test_client_view_preferences(client)
 
     def _test_assert_member_info_all_different_members(self, member):
         # test firstname and lastname
@@ -666,12 +674,37 @@ class FormTestCase(TestCase):
         )
         self.assertTrue(self.food_preparation.name in str(food_preparation))
 
+        # Test for ingredients to avoid
+        ingredients = Client_avoid_ingredient.objects.filter(
+            client=client.id,
+        )
+        self.assertTrue(self.ingredient.name in str(ingredients))
 
+        # Test for components to avoid
+        components = Client_avoid_component.objects.filter(
+            client=client.id,
+        )
+        self.assertTrue(self.component.name in str(components))
 
+    """
+    Test that the meals preferences are properly displayed.
+    """
+
+    def _test_client_view_preferences(self, client):
+        resp = self.client.get(
+            reverse_lazy('member:client_allergies', kwargs={'pk': client.id})
+        )
+
+        # self.assertContains(resp, client.get_status_display)
+        self.assertContains(resp, self.restricted_item_1)
+        self.assertContains(resp, self.restricted_item_2)
+        self.assertContains(resp, self.food_preparation)
+        self.assertContains(resp, self.ingredient.name)
+        self.assertContains(resp, self.component.name)
 
     def _test_client_detail_view_all_different_members(self, client):
         response = self.client.get(
-            reverse_lazy('member:view', kwargs={'pk': client.id})
+            reverse_lazy('member:client_information', kwargs={'pk': client.id})
         )
 
         self.assertTrue(b"User" in response.content)
@@ -681,7 +714,6 @@ class FormTestCase(TestCase):
         self.assertTrue(b"H3C2C2" in response.content)
         self.assertTrue(b"montreal" in response.content)
         self.assertTrue(b"Testing alert message" in response.content)
-        self.assertTrue(b"Testing referral reason" in response.content)
         self.assertTrue(b"555-444-5555" in response.content)
 
     def test_form_save_data_same_members(self):
@@ -880,7 +912,7 @@ class FormTestCase(TestCase):
 
     def _test_client_detail_view_same_members(self, client):
         response = self.client.get(
-            reverse_lazy('member:view', kwargs={'pk': client.id})
+            reverse_lazy('member:client_information', kwargs={'pk': client.id})
         )
         self.assertTrue(b"User" in response.content)
         self.assertTrue(b"Same" in response.content)
@@ -889,7 +921,6 @@ class FormTestCase(TestCase):
         self.assertTrue(b"H8C6C8" in response.content)
         self.assertTrue(b"Montreal" in response.content)
         self.assertTrue(b"Testing alert message" in response.content)
-        self.assertTrue(b"Testing referral reason" in response.content)
         self.assertTrue(b"514-868-8686" in response.content)
 
     def _test_client_list_view_same_members(self):

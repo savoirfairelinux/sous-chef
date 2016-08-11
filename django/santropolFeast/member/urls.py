@@ -4,9 +4,18 @@ from django.utils.translation import ugettext_lazy as _
 
 from member.views import (
     ClientWizard,
-    ClientDetail, ClientList, SearchMembers,
-    ClientOrderList, ClientInfoView, ClientReferentView, ClientPaymentView,
+    ClientDetail,
+    ClientList,
+    SearchMembers,
+    ClientOrderList,
+    ClientInfoView,
+    ClientReferentView,
+    ClientPaymentView,
     ClientAllergiesView,
+    DeleteRestriction,
+    DeleteClientOption,
+    DeleteIngredientToAvoid,
+    DeleteComponentToAvoid,
 )
 
 from member.forms import (
@@ -51,4 +60,14 @@ urlpatterns = [
     url(_(r'^geolocateAddress/$'), geolocateAddress, name='geolocateAddress'),
     url(_(r'^change_status/(?P<id>\d+)/$'),
         change_status, name='change_status'),
+
+    url(_(r'^restriction/(?P<pk>\d+)/delete/$'),
+        DeleteRestriction.as_view(), name='restriction_delete'),
+    url(_(r'^client_option/(?P<pk>\d+)/delete/$'),
+        DeleteClientOption.as_view(), name='client_option_delete'),
+    url(_(r'^ingredient_to_avoid/(?P<pk>\d+)/delete/$'),
+        DeleteIngredientToAvoid.as_view(), name='ingredient_to_avoid_delete'),
+    url(_(r'^component_to_avoid/(?P<pk>\d+)/delete/$'),
+        DeleteComponentToAvoid.as_view(), name='component_to_avoid_delete'),
+
 ]
