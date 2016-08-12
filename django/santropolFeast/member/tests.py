@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse, reverse_lazy
 from order.models import Order
 from member.factories import RouteFactory
+from meal.factories import IngredientFactory, ComponentFactory
 
 
 class MemberEmptyContact(TestCase):
@@ -383,6 +384,14 @@ class FormTestCase(TestCase):
             lastname='Member'
         )
         cls.route = RouteFactory()
+        cls.restricted_item_1 = Restricted_item.objects.create(
+            name='pork', restricted_item_group='meat')
+        cls.restricted_item_2 = Restricted_item.objects.create(
+            name='soya', restricted_item_group='other')
+        cls.food_preparation = Option.objects.create(
+            name='PUREE ALL', option_group='preparation')
+        cls.ingredient = IngredientFactory()
+        cls.component = ComponentFactory()
 
     def setUp(self):
         self.client.login(username=self.admin.username, password='test1234')
@@ -498,6 +507,7 @@ class FormTestCase(TestCase):
 
         payment_information_data = {
             "client_wizard-current_step": "payment_information",
+            "payment_information-same_as_client": False,
             "payment_information-firstname": "Billing",
             "payment_information-lastname": "Testing",
             "payment_information-billing_payment_type": "check",
@@ -515,6 +525,11 @@ class FormTestCase(TestCase):
             "dietary_restriction-delivery_type": "O",
             "dietary_restriction-delivery_schedule": "monday",
             "dietary_restriction-meal_default": "1",
+            "dietary_restriction-restrictions":
+                [self.restricted_item_1.id, self.restricted_item_2.id],
+            "dietary_restriction-food_preparation": self.food_preparation.id,
+            "dietary_restriction-ingredient_to_avoid": self.ingredient.id,
+            "dietary_restriction-dish_to_avoid": self.component.id,
             "wizard_goto_step": ""
         }
 
@@ -536,7 +551,7 @@ class FormTestCase(TestCase):
         ]
 
         for step, data in stepsdata:
-            self.client.post(
+            response = self.client.post(
                 reverse_lazy('member:member_step', kwargs={'step': step}),
                 data,
                 follow=True
@@ -548,7 +563,9 @@ class FormTestCase(TestCase):
         client = Client.objects.get(member=member)
         self._test_assert_client_info_all_different_members(client)
 
+        # Test the client view
         self._test_client_detail_view_all_different_members(client)
+        self._test_client_view_preferences(client)
 
     def _test_assert_member_info_all_different_members(self, member):
         # test firstname and lastname
@@ -642,9 +659,52 @@ class FormTestCase(TestCase):
             "555-444-5555"
         )
 
+        # test_restrictions
+        restriction_1 = Restriction.objects.get(
+            client=client, restricted_item=self.restricted_item_1)
+        restriction_2 = Restriction.objects.get(
+            client=client, restricted_item=self.restricted_item_2)
+        self.assertTrue(self.restricted_item_1.name in str(restriction_1))
+        self.assertTrue(self.restricted_item_2.name in str(restriction_2))
+
+        # Test food preparation
+        food_preparation = Client_option.objects.get(
+            client=client,
+            option=self.food_preparation
+        )
+        self.assertTrue(self.food_preparation.name in str(food_preparation))
+
+        # Test for ingredients to avoid
+        ingredients = Client_avoid_ingredient.objects.filter(
+            client=client.id,
+        )
+        self.assertTrue(self.ingredient.name in str(ingredients))
+
+        # Test for components to avoid
+        components = Client_avoid_component.objects.filter(
+            client=client.id,
+        )
+        self.assertTrue(self.component.name in str(components))
+
+    """
+    Test that the meals preferences are properly displayed.
+    """
+
+    def _test_client_view_preferences(self, client):
+        resp = self.client.get(
+            reverse_lazy('member:client_allergies', kwargs={'pk': client.id})
+        )
+
+        # self.assertContains(resp, client.get_status_display)
+        self.assertContains(resp, self.restricted_item_1)
+        self.assertContains(resp, self.restricted_item_2)
+        self.assertContains(resp, self.food_preparation)
+        self.assertContains(resp, self.ingredient.name)
+        self.assertContains(resp, self.component.name)
+
     def _test_client_detail_view_all_different_members(self, client):
         response = self.client.get(
-            reverse_lazy('member:view', kwargs={'pk': client.id})
+            reverse_lazy('member:client_information', kwargs={'pk': client.id})
         )
 
         self.assertTrue(b"User" in response.content)
@@ -654,7 +714,6 @@ class FormTestCase(TestCase):
         self.assertTrue(b"H3C2C2" in response.content)
         self.assertTrue(b"montreal" in response.content)
         self.assertTrue(b"Testing alert message" in response.content)
-        self.assertTrue(b"Testing referral reason" in response.content)
         self.assertTrue(b"555-444-5555" in response.content)
 
     def test_form_save_data_same_members(self):
@@ -696,14 +755,9 @@ class FormTestCase(TestCase):
 
         payment_information_data = {
             "client_wizard-current_step": "payment_information",
-            "payment_information-firstname": "Same",
-            "payment_information-lastname": "User",
+            "payment_information-same_as_client": True,
             "payment_information-billing_payment_type": "check",
             "payment_information-facturation": "default",
-            "payment_information-street": "8686 rue clark",
-            "payment_information-apartement": "86",
-            "payment_information-city": "Montreal",
-            "payment_information-postal_code": "H8C6G8",
             "address_information-latitude": 0.0,
             "address_information-longitude": 0.0,
             "address_information-distance": 0.0,
@@ -819,7 +873,7 @@ class FormTestCase(TestCase):
             "Testing referral reason"
         )
 
-        # test client member is billint member
+        # test client member is billing member
         self.assertEqual(client.member.id, client.billing_member.id)
 
         # test_billing_name:
@@ -858,7 +912,7 @@ class FormTestCase(TestCase):
 
     def _test_client_detail_view_same_members(self, client):
         response = self.client.get(
-            reverse_lazy('member:view', kwargs={'pk': client.id})
+            reverse_lazy('member:client_information', kwargs={'pk': client.id})
         )
         self.assertTrue(b"User" in response.content)
         self.assertTrue(b"Same" in response.content)
@@ -867,7 +921,6 @@ class FormTestCase(TestCase):
         self.assertTrue(b"H8C6C8" in response.content)
         self.assertTrue(b"Montreal" in response.content)
         self.assertTrue(b"Testing alert message" in response.content)
-        self.assertTrue(b"Testing referral reason" in response.content)
         self.assertTrue(b"514-868-8686" in response.content)
 
     def _test_client_list_view_same_members(self):

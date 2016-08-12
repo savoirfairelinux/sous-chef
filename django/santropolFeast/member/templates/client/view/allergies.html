@@ -10,39 +10,106 @@
 
 {% endblock %}
 
+{% block extrajs %}
+
+<script type="text/javascript">
+    // Generic code to delete any model related to the member
+    $('.ui.label .delete').on('click', function(){
+        var model = $(this).attr('data-model');
+        var id = $(this).attr('data-id');
+        var label = $(this).parent();
+        $(this).addClass('loading');
+        $.ajax({
+            url: '/member/' + model + '/' + id + '/delete/',
+            type: "POST",
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            success: function(response) {
+                label.hide();
+            }
+        })
+    })
+
+</script>
+
+{% endblock %}
+
+
 {% block subcontent %}
 
 <div class="ui segment">
 
-<h3 class="ui header">
-    {% trans 'Meal status' %}
-    <a  href="{% url 'admin:member_client_change' client.id %}">
-        <i class="write grey icon"></i>
-    </a>
-</h3>
-<div class="ui orange label">{{client.get_status_display}}</div>
-<h3 class="ui header">
-    {% trans 'Restrictions' %}
-    <a  href="{% url 'admin:member_client_change' client.id %}">
-        <i class="write grey icon"></i>
-    </a>
-</h3>
-<div>
+    <h3 class="ui header">
+        {% trans 'Meal status' %}
+        <a  href="{% url 'admin:member_client_change' client.id %}">
+            <i class="write grey icon"></i>
+        </a>
+    </h3>
+
+    <div class="ui yellow label">{{client.get_status_display}}</div>
+
+    <h3 class="ui header">
+        {% trans 'Restrictions' %}
+        <a  href="{% url 'admin:member_client_change' client.id %}">
+            <i class="write grey icon"></i>
+        </a>
+    </h3>
+    {% for restriction in client.restrictions %}
     <div class="ui label">
-        {% trans 'Tomato' %}
+        {{ restriction.restricted_item.name }}
+        <i class="delete icon" data-id={{restriction.id}} data-model="restriction"></i>
     </div>
-    <div class="ui label">
-        {% trans 'Basil' %}
-    </div>
-    {% for restriction in client.restrictions.all %}
-    <div class="ui label">
-        {% trans 'Tomato' %}
-    </div>
-    <div class="ui label">
-        {% trans 'Basil' %}
+    {% empty %}
+    <div class="ui row">
+        <em>Yipee! No restriction.</em>
     </div>
     {% endfor %}
-</div>
+
+    <h3 class="ui header">
+        {% trans 'Food preparation' %}
+        <a  href="{% url 'admin:member_client_change' client.id %}">
+            <i class="write grey icon"></i>
+        </a>
+    </h3>
+    {% for food_preparation in client.food_preparation %}
+    <div class="ui label">
+        {{ food_preparation.option }}
+        <i class="delete icon" data-id={{food_preparation.id}} data-model="client_option"></i>
+    </div>
+    {% empty %}
+    <div class="ui row">
+        <em>Nope! Nothing specific.</em>
+    </div>
+    {% endfor %}
+
+    <h3 class="ui header">
+        {% trans 'Ingredients to avoid' %}
+    </h3>
+    {% for ingredient_to_avoid in client.ingredients_to_avoid %}
+    <div class="ui label">
+        {{ ingredient_to_avoid.ingredient.name }}
+        <i class="delete icon" data-id={{ingredient_to_avoid.id}} data-model="ingredient_to_avoid"></i>
+    </div>
+    {% empty %}
+    <div class="ui row">
+        <em>Yeah! Likes everything!</em>
+    </div>
+    {% endfor %}
+
+    <h3 class="ui header">
+        {% trans 'Dish(es) to avoid' %}
+    </h3>
+    {% for component_to_avoid in client.components_to_avoid %}
+    <div class="ui label">
+        {{ component_to_avoid.component.name }}
+        <i class="delete icon" data-id={{component_to_avoid.id}} data-model="component_to_avoid"></i>
+    </div>
+    {% empty %}
+    <div class="ui row">
+        <em>Yeah! Likes everything!</em>
+    </div>
+    {% endfor %}
 </div>
 
 

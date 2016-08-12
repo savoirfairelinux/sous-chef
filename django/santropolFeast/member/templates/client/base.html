@@ -71,32 +71,21 @@
 
 {% endif %}
 
-<div class="ui row">
+<div class="ui stackable relaxed grid container">
+
+    <div class="sixteen wide column">
+        {% include 'client/client_info.html' %}
+    </div>
 
     <div class="four wide column">
         {% include 'client/menu.html' %}
     </div>
 
     <div class="twelve wide column">
-
-<!--
-    1 - We need an "Alert" window on the top of the page
-
-    2 - We need the right
-
-    3 - One item of the menu need to be 'active' depending of the context variable 'active_tab' :
-    - info
-    - referent
-    - address
-    - payment
-    - allergies
-    - preferences
--->
-
-  {% block subcontent %}
-    <!-- A block used by all children to include content here-->
-  {% endblock %}
-
-</div>
+        {% block subcontent %}
+        <!-- A block used by all children to include content here-->
+        {% endblock %}
+    </div>
+    
 </div>
 {% endblock %}
