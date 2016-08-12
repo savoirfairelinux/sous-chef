@@ -9,10 +9,7 @@ from delivery.views import dailyOrders, refreshOrders, saveRoute
 urlpatterns = [
     url(_(r'^order/$'), Orderlist.as_view(), name='order'),
     url(_(r'^meal/$'), MealInformation.as_view(), name='meal'),
-    url(_(r'^meal/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d+)/$'),
-        MealInformation.as_view(), name='meal_date'),
-    url(_(r'^meal/(?P<id>\d+)/$'),
-        MealInformation.as_view(), name='meal_id'),
+    url(_(r'^meal/(?P<id>\d+)/$'), MealInformation.as_view(), name='meal_id'),
     url(_(r'^route/$'), RoutesInformation.as_view(), name='route'),
     url(_(r'^kitchen_count/$'), KitchenCount.as_view(), name='kitchen_count'),
     url(_(r'^kitchen_count/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d+)/$'),

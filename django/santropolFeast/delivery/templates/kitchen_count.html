@@ -15,14 +15,6 @@
     </div>
 </div>
 
-<div class="ui basic big label">
-  Delivery Date :
-</div>
-<form class="ui input" action="{% url 'delivery:kitchen_count' %}" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input class="ui button" type="submit" value="Change" name="_change" />
-</form>
 <table class="ui very compact table">
   <thead>
    <tr class="top aligned">
