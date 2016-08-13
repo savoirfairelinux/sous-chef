@@ -2,11 +2,15 @@
 <!-- Load Internationalization utils-->
 {% load i18n %}
 
-{% block title %}{% trans 'Kitchen Count report' %} {% endblock %}
+{% block title %}{% trans 'Pick Ingredients' %} {% endblock %}
 
 {% block extrajs %}
     <script type="text/javascript">
-     $('.ui.dropdown').dropdown({transition: 'drop'});
+     $('#id_maindish').dropdown({
+       onChange: function(value, text, $selectedItem) {
+         window.location.replace('{% url 'delivery:meal' %}'+value)
+       }
+     });
     </script>
 {% endblock %}
 
@@ -15,36 +19,36 @@
     {% include 'kitchen_count_steps.html' with step='ingredients' %}
 
     <div class="ui secondary pointing fluid menu">
-        <h2 class="ui header">Pick ingredients</h2>
+        <h1 class="ui header">Pick ingredients</h1>
         <div class="right menu">
             <div class="ui item"><h3><i class="ui calendar icon"></i>{{ date }}</h3></div>
         </div>
     </div>
 
-    <div class="ui basic big label">
-        Choose Day's Main Dish :
-    </div>
-    <form class="ui input" action="{% url 'delivery:meal' %}" method="post">
-        {% csrf_token %}
-        {{ dish_form }}
-        <input class="ui button" type="submit" value="Change" name="_change" />
-    </form>
-
-<div>
-    <script type="text/javascript" src="/static/admin/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
-    {{ ing_form.media }}
     <form class="ui form" action="{% url 'delivery:meal' %}" method="post">
-        {% csrf_token %}
-        <div class="field">
-            {{ ing_form.ingredients }}
+        <div class="ui container">
+            <div class="ui segment">
+                <h2 class="ui header">Main Dish</h2>
+                {{form.errors}}
+                <div class="ui row">
+                    {% csrf_token %}
+                        <div class="field dish selection">
+                            <label>{{ form.maindish.label }}</label>
+                            {{ form.maindish }}
+                        </div>
+                        <div class="field ingredients selection">
+                            <label>{{ form.ingredients.label }}</label>
+                            {{ form.ingredients }}
+                        </div>
+                        <div>
+                            <input class="ui button" type="submit" value="Restore recipe" name="_restore" />
+                        </div>
+                </div>
+            </div>
         </div>
-        {{ ing_form.date }}
-        {{ ing_form.dish }}
-        <div class="field">
-            <input class="ui yellow right floated button" type="submit" value="Next: Print Kitchen Count" name="_next" </>
-            <input class="ui right floated button" type="submit" value="Back" name="_back" </>
+        <div class="ui row">
+            <a class="ui big button" href="{% url 'delivery:order' %}">Back </a>
+            <input class="ui big yellow button" type="submit" value="Next: Print Kitchen Count" name="_next" </>
         </div>
     </form>
-</div>
 {% endblock content %}
