@@ -17,6 +17,8 @@ from member.views import (
     DeleteComponentToAvoid,
     geolocateAddress,
     ClientStatusScheduler,
+    ClientUpdateBasicInformation,
+    ClientUpdateAddressInformation
 )
 
 from member.forms import (
@@ -39,10 +41,18 @@ create_member_forms = (
 member_wizard = ClientWizard.as_view(create_member_forms,
                                      url_name='member:member_step')
 
+member_wizard_edit = ClientWizard.as_view(create_member_forms,
+                                     url_name='member:member_edit')
+
 urlpatterns = [
     url(r'^create/$', member_wizard, name='member_step'),
     url(r'^create/(?P<step>.+)/$', member_wizard,
         name='member_step'),
+    url(r'^(?P<client_id>\d+)/update/$', ClientUpdateBasicInformation.as_view(), name='member-update-basic-information'),
+    url(r'^(?P<client_id>\d+)/update/basic_information/$', ClientUpdateBasicInformation.as_view(),
+        name='member-update-basic-information'),
+    url(r'^(?P<client_id>\d+)/update/address_information/$', ClientUpdateAddressInformation.as_view(),
+        name='member-update-address-information'),
     url(r'^list/$', ClientList.as_view(), name='list'),
     url(r'^search/$', SearchMembers.as_view(), name='search'),
     url(_(r'^view/(?P<pk>\d+)/$'), ClientDetail.as_view(), name='view'),

@@ -290,7 +290,6 @@ class ClientPaymentInformation(MemberForm):
 
     same_as_client = forms.BooleanField(
         label=_("Same As Client"),
-        initial=True,
         required=False,
         help_text=_('If checked, the personal information \
             of the client will be used as billing information.'),
@@ -372,3 +371,36 @@ class ClientScheduledStatusForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ClientScheduledStatusForm, self).__init__(*args, **kwargs)
         self.fields['end_date'] = forms.DateField(required=False)
+
+
+def load_initial_data(client) :
+    """
+    Load initial for the given step and client.
+    """
+    initial = {
+        'firstname': client.member.firstname,
+        'lastname': client.member.lastname,
+        'alert': client.alert,
+        'gender': client.gender,
+        'language': client.language,
+        'birthdate': client.birthdate,
+        'contact_value': client.member.home_phone,
+        'street': client.member.address.street,
+        'city': client.member.address.city,
+        'apartment': client.member.address.apartment,
+        'postal_code': client.member.address.postal_code,
+        'delivery_note': client.delivery_note,
+        'route': client.route,
+        'latitude': client.member.address.latitude,
+        'longitude': client.member.address.longitude,
+        'distance': client.member.address.distance,
+        #'work_information': client.client_referent.get().work_information,
+        #'referral_reason': client.client_referent.get().referral_reason,
+        #'date': client.client_referent.get().date,
+        'member': client.id,
+        'same_as_client': True,
+        'facturation': '',
+        'billing_payment_type': '',
+
+    }
+    return initial
