@@ -105,7 +105,7 @@ class ClientAddressInformation(forms.Form):
     )
 
     distance = forms.CharField(
-        label=_('Distance'),
+        label=_('Distance from Santropol'),
         required=False,
         initial=0,
         widget=forms.TextInput()

@@ -22,6 +22,42 @@
         {{ wizard.form.postal_code }}
     </div>
 </div>
+
+<h4 class="ui dividing header">{{ _('Geolocation') }}</h4>
+
+<div class="field">
+    <button id="geocodeBtn" type="button" class="ui yellow button">
+      <i class="marker icon"></i>Geolocate
+    </button>
+    <i class="help-text question grey icon link" data-content="{{ wizard.form.status.help_text }}"></i>
+
+</div>
+
+<div class="equal width fields">
+    <div class="field {% if wizard.form.latitude.errors %} error {% endif %}">
+      <label>{{ wizard.form.latitude.label }}</label>
+      {{ wizard.form.latitude }}
+    </div>
+    <div class="field {% if wizard.form.longitude.errors %} error {% endif %}">
+        <label>{{ wizard.form.longitude.label }}</label>
+        {{ wizard.form.longitude }}
+    </div>
+    <div class="field {% if wizard.form.distance.errors %} error {% endif %}">
+        <label>{{ wizard.form.distance.label }}</label>
+        <div class="ui right labeled input">
+            {{ wizard.form.distance }}
+            <div class="ui basic label">km</div>
+        </div>
+    </div>
+</div>
+
+<div class="map_address">
+    <div id="mapid"></div>
+</div>
+<br>
+
+<h4 class="ui dividing header">{{ _('Delivery Route') }}</h4>
+
 <div class="equal width fields">
   <div class="field {% if wizard.form.route.errors %} error {% endif %}">
     <label>{{wizard.form.route.label}}</label>
@@ -34,28 +70,3 @@
   {{ wizard.form.delivery_note }}
   </div>
 </div>
-<div class="equal width fields">
-    <div class="field {% if wizard.form.latitude.errors %} error {% endif %}">
-      <label>{{ wizard.form.latitude.label }}</label>
-      {{ wizard.form.latitude }}
-    </div>
-    <div class="field {% if wizard.form.longitude.errors %} error {% endif %}">
-        <label>{{ wizard.form.longitude.label }}</label>
-        {{ wizard.form.longitude }}
-    </div>
-    <div class="field {% if wizard.form.distance.errors %} error {% endif %}">
-        <label>{{ wizard.form.distance.label }}</label>
-        {{ wizard.form.distance }}
-    </div>
-</div>
-<div class="">
-    <div class="">
-      <button id="geocodeBtn" type="button" class="ui green button">
-        <i class="world icon"></i>Geolocate</button>
-    </div>
-</div>
-<br>
-<div class="map_address">
-    <div id="mapid"></div>
-</div>
-<br>

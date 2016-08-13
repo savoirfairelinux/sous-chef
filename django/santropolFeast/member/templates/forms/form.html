@@ -220,6 +220,10 @@
         }
 
         $('#geocodeBtn').click(function(e) {
+
+            // Display a loading indicator
+            $('form').addClass('loading');
+
               var geocoder = new L.Control.Geocoder.nominatim({ geocodingQueryParams: { countrycodes: 'ca'}});
               // var yourQuery = "4846 rue cartier, Montreal, Qc";
               var apt='',street  ='' , city ='', zipcode ='';
@@ -270,6 +274,9 @@
                     else {
                         alert("Address not Found !!");
                     }
+
+                    // Remove the loading indicator
+                    $('form').removeClass('loading');
               });
         });
     });
