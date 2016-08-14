@@ -12,20 +12,20 @@
 :doc-asciidoctor: http://asciidoctor.org/docs/asciidoc-recommended-practices/
 :meetup-pyladies: http://www.meetup.com/fr-FR/PyLadiesMTL/events/230221872/
 
-Sous-Chef is a Django application to **help** organizations to **plan** and **deliver** meals, and to manage clients files.
+Sous-Chef is a web application to **help** organizations to **plan** and **deliver** meals, and to manage clients files.
 
-image::https://travis-ci.org/savoirfairelinux/santropol-feast.svg?branch=dev[alt="Build Status", link="https://travis-ci.org/savoirfairelinux/santropol-feast"]
-image::https://coveralls.io/repos/github/savoirfairelinux/santropol-feast/badge.svg?branch=dev[alt="Coverage Status", link="https://coveralls.io/github/savoirfairelinux/santropol-feast?branch=dev"]
-image::https://badge.waffle.io/savoirfairelinux/santropol-feast.png?label=ready&title=Ready[alt="Stories in Ready", link="https://waffle.io/savoirfairelinux/santropol-feast"]
+image::https://travis-ci.org/savoirfairelinux/sous-chef.svg?branch=dev[alt="Build Status", link="https://travis-ci.org/savoirfairelinux/sous-chef"]
+image::https://coveralls.io/repos/github/savoirfairelinux/sous-chef/badge.svg?branch=dev[alt="Coverage Status", link="https://coveralls.io/github/savoirfairelinux/sous-chef?branch=dev"]
+image::https://badge.waffle.io/savoirfairelinux/sous-chef.png?label=ready&title=Ready[alt="Stories in Ready", link="https://waffle.io/savoirfairelinux/sous-chef"]
 
 ## Resources
 
 Some useful resources:
 
 * https://www.python.org/dev/peps/pep-0008/[Coding style guide]
-* https://travis-ci.org/savoirfairelinux/santropol-feast[CI server (Travis)]
-* https://waffle.io/savoirfairelinux/santropol-feast[Waffle Dashboard]
-* https://coveralls.io/github/savoirfairelinux/santropol-feast?branch=dev[Coveralls]
+* https://travis-ci.org/savoirfairelinux/sous-chef[CI server (Travis)]
+* https://waffle.io/savoirfairelinux/sous-chef[Waffle Dashboard]
+* https://coveralls.io/github/savoirfairelinux/sous-chef?branch=dev[Coveralls]
 * http://semantic-ui.com[Semantic UI]
 * https://marvelapp.com/2187ig4[Interactive wireframes]
 * https://help.github.com/articles/creating-a-pull-request/[Creating a Pull Request on GitHub]
@@ -38,11 +38,11 @@ A public mailing list is also available. Feel free to https://lists.savoirfairel
 
 ## Installation
 
-Please refer to the https://github.com/savoirfairelinux/santropol-feast/blob/dev/INSTALL.md[installation procedure].
+Please refer to the https://github.com/savoirfairelinux/sous-chef/blob/dev/INSTALL.md[installation procedure].
 
 ## How to contribute
 
-Please refer to the https://github.com/savoirfairelinux/santropol-feast/blob/dev/CONTRIBUTING.md[contribution guidelines].
+Please refer to the https://github.com/savoirfairelinux/sous-chef/blob/dev/CONTRIBUTING.md[contribution guidelines].
 
 ## About the Santropol Roulant
 
