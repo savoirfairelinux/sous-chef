@@ -1,6 +1,7 @@
 # coding=utf-8
 import factory
 import random
+from datetime import date
 from faker import Factory as FakerFactory
 from member.factories import MemberFactory, ClientFactory
 from order.models import (
@@ -17,13 +18,7 @@ class OrderFactory(factory.DjangoModelFactory):
     class Meta:
         model = Order
 
-    creation_date = factory.LazyAttribute(
-        lambda x: fake.date_time_between(
-            start_date="-1y",
-            end_date="+1y",
-            tzinfo=None
-        )
-    )
+    creation_date = date.today()
 
     delivery_date = factory.LazyAttribute(
         lambda x: fake.date_time_between(

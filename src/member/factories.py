@@ -19,6 +19,8 @@ class AddressFactory (factory.DjangoModelFactory):
     street = factory.Faker('street_address')
     city = 'Montreal'
     postal_code = factory.Faker('postalcode')
+    latitude = "75.0484393"
+    longitude = "40.2324343"
 
 
 class MemberFactory (factory.DjangoModelFactory):
