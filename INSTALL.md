@@ -36,7 +36,7 @@ Then continue to the docker initialization step.
 ## Docker initialization
 
 ```
-$> git clone https://github.com/savoirfairelinux/santropol-feast/
+$> git clone https://github.com/savoirfairelinux/sous-chef
 $> docker-compose build
 $> docker-compose up
 ```
