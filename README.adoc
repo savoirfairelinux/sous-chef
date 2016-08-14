@@ -15,7 +15,7 @@
 Sous-Chef is a web application to **help** organizations to **plan** and **deliver** meals, and to manage clients files.
 
 image::https://travis-ci.org/savoirfairelinux/sous-chef.svg?branch=dev[alt="Build Status", link="https://travis-ci.org/savoirfairelinux/sous-chef"]
-image::https://coveralls.io/repos/github/savoirfairelinux/sous-chef/badge.svg?branch=dev[alt="Coverage Status", link="https://coveralls.io/github/savoirfairelinux/sous-chef?branch=dev"]
+image::https://coveralls.io/repos/github/savoirfairelinux/santropol-feast/badge.svg?branch=dev[alt="Coverage Status", link="https://coveralls.io/github/savoirfairelinux/santropol-feast?branch=dev"]
 image::https://badge.waffle.io/savoirfairelinux/sous-chef.png?label=ready&title=Ready[alt="Stories in Ready", link="https://waffle.io/savoirfairelinux/sous-chef"]
 
 ## Resources
