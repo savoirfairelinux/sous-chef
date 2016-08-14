@@ -71,6 +71,23 @@ class OrderManager(models.Manager):
             delivery_date=delivery_date,
         )
 
+    def get_orders_for_month(self, month, year):
+        """ Return the orders for the given month """
+        return self.filter(
+            delivery_date__year=year,
+            delivery_date__month=month,
+        )
+
+    def get_orders_for_month_client(self, month, year, client):
+        """Return the orders for the given month and client"""
+
+        return self.get_queryset().filter(
+            delivery_date__year=year,
+            delivery_date__month=month,
+            client=client,
+            status="D",
+        )
+
 
 class Order(models.Model):
 

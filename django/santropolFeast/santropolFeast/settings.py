@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'annoying',
     'leaflet',
     'note',
+    'billing',
 
 ]
 
@@ -159,6 +160,8 @@ LOCALE_PATHS = (
     'order/locale/',
     'page/locale/',
     'delivery/locale/',
+    'billing/locale',
+    'note/locale',
 )
 
 
