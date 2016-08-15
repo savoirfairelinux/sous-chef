@@ -3,10 +3,16 @@ language: python
 python:
   - 3.5
 
+services:
+  – postgresql
+
 install:
   - pip install -r requirements.txt
   - pip install coveralls
   - pip install pep8
+
+before_script:
+- psql -c 'create database feast;' -U postgres
 
 script:
   - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test --settings=santropolFeast.settings_test member meal order notification delivery note billing

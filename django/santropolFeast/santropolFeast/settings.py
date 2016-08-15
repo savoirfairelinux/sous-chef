@@ -97,12 +97,11 @@ WSGI_APPLICATION = 'santropolFeast.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'feast',
-        'USER': 'root',
-        'PASSWORD': '123456',
+        'USER': 'postgres',
         'HOST': 'db',
-        'port': '3306',
+        'PORT': 5432,
     }
 }
 
