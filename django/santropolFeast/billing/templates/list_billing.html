@@ -34,8 +34,36 @@
           </div>
         </div>
 
+        <div class="field">
+            <a href="{% url 'billing:list' %}" class="ui button">Reset</a>
+            <button class="ui yellow button" type="submit">Search</button>
+        </div>
+
       </div>
     </form>
   </div>
 </div>
+
+<table class="ui very basic stripped celled table">
+  <thead>
+    <tr>
+      <th class="sorted descending">Name</th>
+      <th class="">Price</th>
+      <th class="">Billing Period</th>
+      <th class="">Creation Date</th>
+      <th class="">Billing Summary</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for obj in billing %}
+    <tr>
+      <td><a href="{% url 'member:client_information' pk=obj.client.id %}">{{ obj.client.member }}</a></td>
+      <td>{{obj.total_amount}}</td>
+      <td>{{obj.billing_year}}/{{obj.billing_month}}</td>
+      <td>{{obj.created_date}}</td>
+      <td><a class="ui blue icon button" href="{% url 'billing:view' pk=obj.id %}"><i class="unhide icon"></i></a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
