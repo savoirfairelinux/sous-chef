@@ -26,6 +26,11 @@ class KitchenCountReportTestCase(TestCase):
         response = self.client.get('/delivery/kitchen_count/2016/05/21/')
         self.assertTrue(b'Ground porc' in response.content)
 
+    def test_no_components(self):
+        """No orders on this day therefore no component summary"""
+        response = self.client.get('/delivery/kitchen_count/2015/05/21/')
+        self.assertTrue(b'SUBTOTAL' not in response.content)
+
 
 class ChooseDayMainDishIngredientsTestCase(TestCase):
 
