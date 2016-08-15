@@ -3,67 +3,107 @@
 {% load static %}
 
 {% block title %}{% trans 'Billing' %}{% endblock %}
+
+{% block extrajs %}
+  <script src="{% static 'jquery/calendar.min.js' %}" type="application/javascript"></script>
+  <script type="text/javascript">
+
+    $(function() {
+      $('#billing_delivery_date').calendar({
+        type: 'month',
+        formatter: {
+          date: function (date, settings) {
+            if (!date) return '';
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            if (month < 10) month = '0' + month;
+            return year + '-' + month ;
+          }
+        }
+      });
+  });
+</script>
+
+{% endblock %}
 {% block content %}
+
+
 <div class="ui secondary pointing fluid menu">
   <h2 class="ui header">{% trans 'Billing' %}</h2>
 </div>
+
 <div class="ui mobile reversed equal width grid">
-  <div class="fourteen wide column">
+  <div class="column">
 
     <form action="" method="get" class="ui form">
 
-      <div class="inline fields">
-
-        <div class="field">
-          <label>Client Name</label>
-          <div class="field">
-            <div class="ui large left icon input">
-              <i class="users icon"></i>
-              {{ filter.form.name }}
+        <div class="inline fields">
+            <div class="field">
+                <label>Name</label>
+                <div class="field">
+                    <div class="ui large left icon input">
+                        <i class="users icon"></i>
+                        {{ filter.form.name }}
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Billing Period</label>
-          <div class="field">
-            <div class="ui large left icon input">
-              <i class="calendar icon"></i>
-              {{filter.form.date}}
+            <div class="field">
+                <label>Period</label>
+                <div class="field">
+                    <div class="ui calendar" id="billing_delivery_date">
+                        <div class="ui input left icon">
+                              <i class="time icon"></i>
+                              {{ filter.form.date }}
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-
         <div class="field">
             <a href="{% url 'billing:list' %}" class="ui button">Reset</a>
             <button class="ui yellow button" type="submit">Search</button>
         </div>
-
-      </div>
     </form>
+    <br/><br/>
   </div>
 </div>
 
+{% if billing %}
 <table class="ui very basic stripped celled table">
   <thead>
-    <tr>
-      <th class="sorted descending">Name</th>
-      <th class="">Price</th>
-      <th class="">Billing Period</th>
-      <th class="">Creation Date</th>
-      <th class="">Billing Summary</th>
-    </tr>
+    <th class="sorted descending">Billing</th>
+    <th class="">{% trans 'Client' %}</th>
+    <th class="">{% trans 'Date' %}</th>
+    <th class="">{% trans 'Amount' %}</th>
+    <th class="">{% trans 'Actions' %}</th>
   </thead>
   <tbody>
-    {% for obj in billing %}
-    <tr>
-      <td><a href="{% url 'member:client_information' pk=obj.client.id %}">{{ obj.client.member }}</a></td>
-      <td>{{obj.total_amount}}</td>
-      <td>{{obj.billing_year}}/{{obj.billing_month}}</td>
-      <td>{{obj.created_date}}</td>
-      <td><a class="ui blue icon button" href="{% url 'billing:view' pk=obj.id %}"><i class="unhide icon"></i></a></td>
-    </tr>
+    {% for bill in billing %}
+      <tr>
+        <td><strong>{{bill.id}}</strong></td>
+        <td><a href="">{{bill.client.member}}</a></td>
+        <td>{{bill.billing_month}}</td>
+        <td>${{bill.total_amount}}</td>
+        <td>
+          <a class="ui blue icon button"  href=""><i class="icon unhide"></i></a>
+          <a class="ui green icon button"  href=""><i class="icon edit"></i></a>
+          <a class="ui red icon button billing-delete" href="#" data-billing-id="{{billing.id}}"><i class="icon trash"></i></a>
+        </td>
+      </tr>
     {% endfor %}
   </tbody>
+  <tfoot>
+      <tr>
+          <th></th>
+          <th colspan="5">
+              {% include "system/_button_export.html" %}
+          </th>
+        </tr>
+  </tfoot>
 </table>
+
+{% else %}
+    <div class="ui row"><p>Sorry, no result found.</p></div>
+{% endif %}
+
 {% endblock %}
