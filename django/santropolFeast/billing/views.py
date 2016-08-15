@@ -20,19 +20,19 @@ class BillingList(generic.ListView):
     def dispatch(self, *args, **kwargs):
         return super(BillingList, self).dispatch(*args, **kwargs)
 
-    def get_queryset(self):
-        uf = BillingFilter(self.request.GET, queryset=self.get_queryset)
-        return uf.qs
-
     def get_context_data(self, **kwargs):
-        uf = BillingFilter(self.request.GET, queryset=self.get_queryset())
         context = super(BillingList, self).get_context_data(**kwargs)
-
+        uf = BillingFilter(self.request.GET, queryset=self.get_queryset())
         # Context variable
         context['myVariableOfContext'] = 0
+
         context['filter'] = uf
 
         return context
+
+    def get_queryset(self):
+        uf = BillingFilter(self.request.GET)
+        return uf.qs
 
 
 class BillingCreate(generic.CreateView):
@@ -81,7 +81,7 @@ class BillingCreate(generic.CreateView):
 class BillingView(generic.DetailView):
     # Display detail of billing
     model = Billing
-    template_name = "view.html"
+    template_name = "view_billing.html"
     context_object_name = "billing"
 
     @method_decorator(login_required)

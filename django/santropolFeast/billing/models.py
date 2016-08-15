@@ -55,7 +55,9 @@ class BillingFilter(FilterSet):
         label=_('Search by name')
     )
 
-    date = DateFilter()
+    date = MethodFilter(
+        action='filter_period'
+    )
 
     class Meta:
         model = Billing
@@ -71,16 +73,24 @@ class BillingFilter(FilterSet):
         for name in names:
 
             firstname_contains = Q(
-                member__firstname__icontains=name
+                client__member__firstname__icontains=name
             )
 
             lastname_contains = Q(
-                member__lastname__icontains=name
+                client__member__lastname__icontains=name
             )
 
             name_contains |= firstname_contains | lastname_contains
 
         return queryset.filter(name_contains)
+
+    @staticmethod
+    def filter_period(queryset, value):
+        if not value:
+            return queryset
+
+        year, month = value.split('-')
+        return queryset.filter(billing_year=year, billing_month=month)
 
 
 class BillingSummary(models.Model):
