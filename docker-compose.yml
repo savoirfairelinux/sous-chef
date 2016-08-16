@@ -6,7 +6,7 @@ services:
         POSTGRES_DB: feast
   web:
     build: .
-    command: python django/santropolFeast/manage.py runserver 0.0.0.0:8000
+    command: python src/manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
     ports:
