@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from member.models import Member, Client, User, Address, Referencing
+from member.models import Member, Client, Address, Referencing
 from member.models import Contact, Option, Client_option, Restriction, Route
 from member.models import Client_avoid_ingredient, Client_avoid_component
 from meal.models import Restricted_item, Ingredient, Component
