@@ -4,10 +4,10 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-from django_filters import FilterSet, MethodFilter, CharFilter, ChoiceFilter, \
-    BooleanFilter
-from django.contrib.auth.models import User
-from django.contrib.postgres.fields import JSONField
+from django_filters import (
+    FilterSet, MethodFilter, CharFilter, ChoiceFilter, BooleanFilter
+)
+from annoying.fields import JSONField
 from meal.models import COMPONENT_GROUP_CHOICES_MAIN_DISH
 
 

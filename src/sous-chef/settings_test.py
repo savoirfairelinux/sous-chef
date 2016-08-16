@@ -9,6 +9,7 @@ TEMPLATE_DEBUG = False
 if 'TRAVIS' in os.environ:
     DATABASES = {
         'default': {
-            'HOST': 'localhost',
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
         }
     }
