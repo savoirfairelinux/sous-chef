@@ -28,6 +28,13 @@ class OrderTestCase(TestCase):
             ) == 1
         )
 
+    def test_order_str_includes_date(self):
+        delivery_date = date.today()
+        OrderFactory(delivery_date=delivery_date)
+        orders = Order.objects.get_orders_for_date(
+            delivery_date=delivery_date)
+        self.assertTrue(str(delivery_date) in str(orders[0]))
+
 
 class OrderItemTestCase(TestCase):
 
@@ -101,6 +108,12 @@ class OrderItemTestCase(TestCase):
         order = Order.objects.get(delivery_date=date(2016, 5, 10))
         order_item = order.orders.first()
         self.assertEqual(order_item.remark, 'testing')
+
+    def test_order_item_str_includes_date(self):
+        delivery_date = date(2016, 5, 10)
+        order = Order.objects.get(delivery_date=delivery_date)
+        order_item = order.orders.first()
+        self.assertTrue(str(delivery_date) in str(order_item))
 
 
 class OrderCreateOnDefaultsTestCase(TestCase):

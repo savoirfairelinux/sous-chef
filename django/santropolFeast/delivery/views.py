@@ -10,7 +10,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from delivery.models import Delivery
 from django.http import JsonResponse
-from meal.factories import MenuFactory
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
 from django.contrib.contenttypes.models import ContentType
@@ -28,7 +27,7 @@ from meal.models import (
     Component, Ingredient,
     Menu, Menu_component,
     Component_ingredient)
-from member.apps import db_session
+from member.apps import db_sa_session
 from member.models import Client, Route
 from datetime import date
 
@@ -179,7 +178,7 @@ class KitchenCount(generic.View):
         # TODO detect if empty kitchen list + give message that no orders today
         component_lines, meal_lines = kcr_make_lines(kitchen_list, date)
         # release session for SQLAlchemy     TODO use signals instead
-        db_session.remove()
+        db_sa_session.remove()
         return render(request, 'kitchen_count.html',
                       {'component_lines': component_lines,
                        'meal_lines': meal_lines})
@@ -397,7 +396,6 @@ def refreshOrders(request):
     delivery_date = date.today()
     last_refresh_date = datetime.datetime.now()
     clients = Client.active.all()
-    MenuFactory.create(date=delivery_date)
     Order.create_orders_on_defaults(creation_date, delivery_date, clients)
     LogEntry.objects.log_action(
         user_id=1, content_type_id=1,
