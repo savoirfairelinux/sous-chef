@@ -1,7 +1,9 @@
+import datetime
 from django.test import TestCase, Client
 from member.models import Member, Client, User, Address, Referencing
 from member.models import Contact, Option, Client_option, Restriction, Route
 from member.models import Client_avoid_ingredient, Client_avoid_component
+from member.models import ClientScheduledStatus
 from meal.models import Restricted_item, Ingredient, Component
 from datetime import date
 from django.contrib.auth.models import User
@@ -1406,3 +1408,76 @@ class MemberSearchTestCase(TestCase):
             follow=True
         )
         self.assertTrue(b'Katrina Heide' in result.content)
+
+
+class ClientStatusUpdateAndScheduleCase(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        address = Address.objects.create(
+            number=1, street='Barral E',
+            city='Winterfell', postal_code='H3T3E5')
+        member0 = Member.objects.create(firstname='Edward',
+                                       lastname='Stark',
+                                       address=address)
+        member1 = Member.objects.create(firstname='Robb',
+                                      lastname='Stark',
+                                      address=address)
+        member2 = Member.objects.create(firstname='Bran',
+                                      lastname='Stark',
+                                      address=address)
+        Client.objects.create(
+            member=member1, billing_member=member0,
+            birthdate=date(1986, 12, 12))
+        Client.objects.create(
+            member=member2, billing_member=member0,
+            birthdate=date(1992, 6, 3))
+
+    def test_client_status_features(self):
+        member1 = Member.objects.get(firstname='Robb')
+        member2 = Member.objects.get(firstname='Bran')
+        self.client1 = Client.objects.get(member=member1)
+        self.client2 = Client.objects.get(member=member2)
+        self.client2.status = Client.ACTIVE
+
+        self._test_default_status()
+        self._define_and_test_instant_new_status()
+        self._schedule_standalone_status_update_and_test_status()
+
+    def _test_default_status(self):
+        self.assertEqual(self.client1.get_status_display(), 'Pending')
+
+    def _define_and_test_instant_new_status(self):
+        self.client1.status = Client.STOPNOCONTACT
+        self.assertEqual(self.client1.get_status_display(), 'Stop: no contact')
+
+    def _schedule_standalone_status_update_and_test_status(self):
+        """ Schedule a status update for Robb Stark, for tomorrow """
+        sts_change = ClientScheduledStatus(client=self.client1,
+            status_from=Client.STOPNOCONTACT, status_to=Client.DECEASED,
+            change_date=datetime.datetime.now() + datetime.timedelta(days=1))
+        self.assertEqual(self.client1.get_status_display(), 'Stop: no contact')
+        self.assertEqual(sts_change.change_state,
+            ClientScheduledStatus.ALONE)
+        self.assertEqual(sts_change.operation_status,
+            ClientScheduledStatus.TOBEPROCESSED)
+
+    def _schedule_timerange_status_update_and_test_status(self):
+        """ Schedule a status update for Bran Stark, for tomorrow, 1 week """
+        sts_change_sta = ClientScheduledStatus(client=self.client2,
+            status_from=Client.ACTIVE, status_to=Client.PAUSED,
+            change_date=datetime.datetime.now() + datetime.timedelta(days=1),
+            reason='Ran over the Ice Wall')
+        sts_change_end = ClientScheduledStatus(client=self.client2,
+            status_from=Client.PAUSED, status_to=Client.ACTIVE,
+            change_date=datetime.datetime.now() + datetime.timedelta(days=8),
+            reason='Ran over the Ice Wall')
+        self.assertEqual(self.client2.get_status_display(), 'Active')
+        self.assertEqual(sts_change_sta.change_state,
+            ClientScheduledStatus.START)
+        self.assertEqual(sts_change_sta.operation_status,
+            ClientScheduledStatus.TOBEPROCESSED)
+        self.assertEqual(sts_change_end.change_state,
+            ClientScheduledStatus.END)
+        self.assertEqual(sts_change_end.operation_status,
+            ClientScheduledStatus.TOBEPROCESSED)
