@@ -1,0 +1,44 @@
+<div class="header">
+    {{ _('Status modification') }}
+</div>
+<form class="content ui form" id="change-status-form" method="POST" action="{% url 'member:clientStatusAlterOrScheduleProc' client.id %}">
+    {% csrf_token %}
+    <div class="field">
+        <label>{{ _('Status') }}</label>
+        <select name="status_to" class="ui status_to dropdown" id="status-to">
+            {% for k,s in client_status %}
+            <option value={{k}} {% if k == status_to %}selected{% endif %}>{{s}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field">
+        <label>{{ _('Reason of status modification') }}</label>
+        <textarea name="reason" rows="2"></textarea>
+    </div>
+    <hr>
+    <p>{{ _('If you want to schedule a status modification, feel free to fill one or two of theses date fields.') }}</p>
+    <div class="two fields">
+        <div class="field">
+            <label>{{ _('Start date') }}</label>
+            <div class="ui calendar" id="rangestart">
+                <div class="ui input left icon">
+                    <i class="calendar icon"></i>
+                    <input type="text" placeholder="{{ _('Start date') }}" name="start_date" autocomplete="off">
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label>{{ _('End date') }}</label>
+            <div class="ui calendar" id="rangeend">
+                <div class="ui input left icon">
+                    <i class="calendar icon"></i>
+                    <input type="text" placeholder="{{ _('End date') }}" name="end_date" autocomplete="off">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="actions">
+    <button class="ui button deny">Cancel</button>
+    <input class="ui button approve" type="submit" value="OK" />
+</div>

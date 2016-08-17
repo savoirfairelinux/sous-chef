@@ -599,6 +599,86 @@ class Client(models.Model):
         #       self.meal_default_week)
 
 
+class ClientScheduledStatus(models.Model):
+
+    ALONE = 'ALONE'
+    START = 'START'
+    END = 'END'
+
+    CHANGE_STATUS = (
+        (ALONE, _('Alone')),
+        (START, _('Start')),
+        (END, _('End')),
+    )
+
+    TOBEPROCESSED = 'NEW'
+    PROCESSED = 'PRO'
+    ERROR = 'ERR'
+
+    OPERATION_STATUS = (
+        (TOBEPROCESSED, _('To be processed')),
+        (PROCESSED, _('Processed')),
+        (ERROR, _('Error')),
+    )
+
+    client = models.ForeignKey(
+        Client,
+        on_delete=models.CASCADE
+    )
+
+    linked_scheduled_status = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        default=None
+    )
+
+    status_from = models.CharField(
+        max_length=1,
+        choices=Client.CLIENT_STATUS
+    )
+
+    status_to = models.CharField(
+        max_length=1,
+        choices=Client.CLIENT_STATUS
+    )
+
+    reason = models.CharField(
+        max_length=200,
+        blank=True,
+        default=''
+    )
+
+    change_date = models.DateField(
+        auto_now=False,
+        auto_now_add=False,
+        default=timezone.now,
+        blank=True,
+        null=True
+    )
+
+    change_state = models.CharField(
+        max_length=5,
+        choices=CHANGE_STATUS,
+        default=ALONE
+    )
+
+    operation_status = models.CharField(
+        max_length=3,
+        choices=OPERATION_STATUS,
+        default=TOBEPROCESSED
+    )
+
+    def __str__(self):
+        return "{}: from {} to {}, on {}".format(
+            self.client.member,
+            self.status_from,
+            self.status_to,
+            self.change_date
+        )
+
+
 class ClientFilter(FilterSet):
 
     name = MethodFilter(

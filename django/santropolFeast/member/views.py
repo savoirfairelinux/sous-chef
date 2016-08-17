@@ -3,12 +3,13 @@
 from django.views import generic
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from member.models import (
     Client,
+    ClientScheduledStatus,
     Member,
     Address,
     Contact,
@@ -886,15 +887,76 @@ def geolocateAddress(request):
     return JsonResponse({'latitude': lat, 'longtitude': long})
 
 
-def change_status(request, id):
-    if request.method == "POST":
-        client = get_object_or_404(Client, pk=id)
-        status = request.POST.get('status')
-        client.status = status
-        client.save()
+def clientStatusScheduler(request, pk):
+    client = get_object_or_404(Client, pk=pk)
+    return render(request, 'client/modal/change_status.html', {
+        'client': client,
+        'client_status': Client.CLIENT_STATUS,
+        'status_to': request.GET.get('status', Client.PAUSED),
+    })
 
-        # just return a JsonResponse
-        return JsonResponse({'status': 200})
+
+def clientStatusAlterOrSchedule(request, pk):
+    if request.method == 'POST':
+        client = get_object_or_404(Client, pk=pk)
+        status_to = request.POST.get('status_to')
+        reason = request.POST.get('reason', '')
+        start_date = request.POST.get('start_date', '')
+        end_date = request.POST.get('end_date', '')
+
+        # Three available possibilities
+        # 1 - Immediat status modification
+        if start_date == '' and end_date == '':
+            client.status = status_to
+            client.save()
+
+        # 2 - Schedule a timerange during which status will be different,
+        # then back to current
+        elif start_date != '' and end_date != '':
+            change1 = ClientScheduledStatus(
+                client=client,
+                linked_scheduled_status=None,
+                status_from=client.status,
+                status_to=status_to,
+                reason=reason,
+                change_date=start_date,
+                change_state=ClientScheduledStatus.START,
+                operation_status=ClientScheduledStatus.TOBEPROCESSED
+            )
+            change1.save()
+            change2 = ClientScheduledStatus(
+                client=client,
+                linked_scheduled_status=change1,
+                status_from=status_to,
+                status_to=client.status,
+                reason=reason,
+                change_date=end_date,
+                change_state=ClientScheduledStatus.END,
+                operation_status=ClientScheduledStatus.TOBEPROCESSED
+            )
+            change2.save()
+
+        # 3 - Schedule a simple status modification (not back to current later)
+        elif start_date != '' and end_date == '':
+            change = ClientScheduledStatus(
+                client=client,
+                linked_scheduled_status=None,
+                status_from=client.status,
+                status_to=status_to,
+                reason=reason,
+                change_date=start_date,
+                change_state=ClientScheduledStatus.ALONE,
+                operation_status=ClientScheduledStatus.TOBEPROCESSED
+            )
+            change.save()
+
+        # Possimpible case (:P)
+        else:
+            pass
+
+    # Finally, back to client informations page
+    clientInfo = 'member:client_information'
+    return HttpResponseRedirect(reverse(clientInfo, args=(pk)))
 
 
 class DeleteRestriction(generic.DeleteView):
