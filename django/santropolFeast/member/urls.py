@@ -18,6 +18,7 @@ from member.views import (
     geolocateAddress,
     # change_status,
     clientStatusScheduler,
+    clientStatusAlterOrSchedule,
 )
 
 from member.forms import (
@@ -63,9 +64,13 @@ urlpatterns = [
     # url(_(r'^change_status/(?P<id>\d+)/$'),
     #     change_status, name='change_status'),
 
-    # ex: /client/status/S/scheduler
+    # ex: /client/3/status/scheduler
     url(r'^client/(?P<pk>\d+)/status/scheduler$',
         clientStatusScheduler, name='clientStatusSchedulerModal'),
+
+    # ex: /client/3/status/alter-or-schedule
+    url(r'^client/(?P<pk>\d+)/status/alter-or-schedule$',
+        clientStatusAlterOrSchedule, name='clientStatusAlterOrScheduleProcessor'),
 
     url(_(r'^restriction/(?P<pk>\d+)/delete/$'),
         DeleteRestriction.as_view(), name='restriction_delete'),
