@@ -905,10 +905,23 @@ def clientStatusAlterOrSchedule(request, pk):
         end_date = request.POST.get('end_date', '')
 
         # Three available possibilities
-        # 1 - Immediat status modification
+        # 1 - Immediat status update
         if start_date == '' and end_date == '':
+            client_get_oldstatus_display = client.get_status_display()
             client.status = status_to
             client.save()
+            msg = 'Instantly modify client status from {} to {}.'.format(
+                client_get_oldstatus_display,
+                client.get_status_display()
+            )
+            if (reason != ''):
+                msg += ' Reason: {}'.format(reason)
+            note = Note(
+                note=msg,
+                author=request.user,
+                client=client
+            )
+            note.save()
 
         # 2 - Schedule a timerange during which status will be different,
         # then back to current
@@ -935,8 +948,23 @@ def clientStatusAlterOrSchedule(request, pk):
                 operation_status=ClientScheduledStatus.TOBEPROCESSED
             )
             change2.save()
+            msg = 'Schedule a timerange during which client status will be:'
+            msg += ' {} instead of {}. From {} to {}.'.format(
+                    change1.get_status_to_display(),
+                    client.get_status_display(),
+                    start_date,
+                    end_date
+                )
+            if (reason != ''):
+                msg += ' Reason: {}'.format(reason)
+            note = Note(
+                note=msg,
+                author=request.user,
+                client=client
+            )
+            note.save()
 
-        # 3 - Schedule a simple status modification (not back to current later)
+        # 3 - Schedule a simple status update (not back to current later)
         elif start_date != '' and end_date == '':
             change = ClientScheduledStatus(
                 client=client,
@@ -949,6 +977,19 @@ def clientStatusAlterOrSchedule(request, pk):
                 operation_status=ClientScheduledStatus.TOBEPROCESSED
             )
             change.save()
+            msg = 'Schedule a status update, from {} to {}, on {}.'.format(
+                client.get_status_display(),
+                change.get_status_to_display(),
+                start_date
+            )
+            if (reason != ''):
+                msg += ' Reason: {}'.format(reason)
+            note = Note(
+                note=msg,
+                author=request.user,
+                client=client
+            )
+            note.save()
 
         # Possimpible case (:P)
         else:
