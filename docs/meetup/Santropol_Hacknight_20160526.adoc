@@ -35,14 +35,14 @@ Food will be served.
 
 ## Resources
 
-The project is hosted on GitHub: https://github.com/savoirfairelinux/santropol-feast
+The project is hosted on GitHub: https://github.com/savoirfairelinux/sous-chef
 
 Some useful resources:
 
 * https://www.python.org/dev/peps/pep-0008/[Coding style guide]
-* https://travis-ci.org/savoirfairelinux/santropol-feast[CI server (Travis)]
-* https://waffle.io/savoirfairelinux/santropol-feast[Waffle Dashboard]
-* https://coveralls.io/github/savoirfairelinux/santropol-feast?branch=dev[Coveralls]
+* https://travis-ci.org/savoirfairelinux/sous-chef[CI server (Travis)]
+* https://waffle.io/savoirfairelinux/sous-chef[Waffle Dashboard]
+* https://coveralls.io/github/savoirfairelinux/sous-chef?branch=dev[Coveralls]
 * https://help.github.com/articles/creating-a-pull-request/[Creating a Pull Request on GitHub]
 
 ## Communication
@@ -51,7 +51,7 @@ Please join `#feastproject` on *irc.freenode.net*.
 
 ## Installation
 
-Please refer to the https://github.com/savoirfairelinux/santropol-feast/blob/dev/INSTALL.md[installation procedure].
+Please refer to the https://github.com/savoirfairelinux/sous-chef/blob/dev/INSTALL.md[installation procedure].
 
 IMPORTANT: Make sure you already have installed the application before arriving.
 
@@ -67,13 +67,13 @@ Contributions to an open-source project can take multiple forms:
 ### Code
 
 A pre-requisite is to have Feast installed on your machine.
-The installation procedure is based on Docker and is described https://github.com/savoirfairelinux/santropol-feast/blob/dev/INSTALL.md[on GitHub].
+The installation procedure is based on Docker and is described https://github.com/savoirfairelinux/sous-chef/blob/dev/INSTALL.md[on GitHub].
 
 #### Issues
 
-Numerous issues are created and waiting for your love on the https://github.com/savoirfairelinux/santropol-feast/issues[issue board].
+Numerous issues are created and waiting for your love on the https://github.com/savoirfairelinux/sous-chef/issues[issue board].
 
-You may also use https://waffle.io/savoirfairelinux/santropol-feast[Waffle] as a more *Agile-like* dashboard.
+You may also use https://waffle.io/savoirfairelinux/sous-chef[Waffle] as a more *Agile-like* dashboard.
 
 ##### Issue trackers
 
@@ -100,7 +100,7 @@ CAUTION: Feast project is now using http://semantic-ui.com/[Semantic UI] as a fr
 
 * Fork the repository and work from there
 * Commit and push your changes into your fork
-* When you are done, create a https://github.com/savoirfairelinux/santropol-feast/compare[Pull Request] in Feast repository
+* When you are done, create a https://github.com/savoirfairelinux/sous-chef/compare[Pull Request] in Feast repository
 
 [IMPORTANT]
 ====
@@ -121,11 +121,11 @@ Documentation is important and can always be improved:
 * Installation instructions
 * Test procedures
 * How to help translating the project
-* Updating the https://github.com/savoirfairelinux/santropol-feast/wiki/TODO[Roadmap]
+* Updating the https://github.com/savoirfairelinux/sous-chef/wiki/TODO[Roadmap]
 
 The prefered syntax is {doc-asciidoctor}[Asciidoc]. Markdown is also accepted.
 
-The https://github.com/savoirfairelinux/santropol-feast/wiki/[project wiki] on GitHub could also be used.
+The https://github.com/savoirfairelinux/sous-chef/wiki/[project wiki] on GitHub could also be used.
 
 
 ### Tests and bug reporting

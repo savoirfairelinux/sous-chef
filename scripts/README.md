@@ -1,1 +1,0 @@
-Ex: Continuous integration scripts

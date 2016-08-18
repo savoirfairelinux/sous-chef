@@ -10,9 +10,9 @@ If you haven't already, please join us on IRC: `#feastproject` on Freenode.
 ## Useful resources
 
 * [Coding style guide](https://www.python.org/dev/peps/pep-0008/)
-* [CI server (Travis)](https://travis-ci.org/savoirfairelinux/santropol-feast)
-* [Waffle Dashboard](https://waffle.io/savoirfairelinux/santropol-feast)
-* [Coveralls](https://coveralls.io/github/savoirfairelinux/santropol-feast?branch=dev)
+* [CI server (Travis)](https://travis-ci.org/savoirfairelinux/sous-chef)
+* [Waffle Dashboard](https://waffle.io/savoirfairelinux/sous-chef)
+* [Coveralls](https://coveralls.io/github/savoirfairelinux/sous-chef?branch=dev)
 * [Semantic UI](http://semantic-ui.com/)
 * [Interactive wireframes](https://marvelapp.com/2187ig4)
 * [Creating a Pull Request on GitHub](https://help.github.com/articles/creating-a-pull-request/)
@@ -23,14 +23,14 @@ If you haven't already, please join us on IRC: `#feastproject` on Freenode.
 ### Code contribution
 
 A pre-requisite is to have Sous-Chef installed on your machine.
-The installation procedure is based on Docker and is described [on GitHub](https://github.com/savoirfairelinux/santropol-feast/blob/dev/INSTALL.md).
+The installation procedure is based on Docker and is described [on GitHub](https://github.com/savoirfairelinux/sous-chef/blob/dev/INSTALL.md).
 
 #### Issues
 
 If you are unsure where to begin contribution to Sous-Chef, you can start by looking through the issues page. 
-Numerous issues are created and waiting for your love on the [issue board](https://github.com/savoirfairelinux/santropol-feast/issues).
+Numerous issues are created and waiting for your love on the [issue board](https://github.com/savoirfairelinux/sous-chef/issues).
 
-You may also use [Waffle](https://waffle.io/savoirfairelinux/santropol-feast) as a more *Agile-like* dashboard.
+You may also use [Waffle](https://waffle.io/savoirfairelinux/sous-chef) as a more *Agile-like* dashboard.
 
 Please refer to the issues labels and topics for more information on how categorizing the issues.
 
@@ -40,7 +40,7 @@ Contributions will be accepted through the creation of Pull Requests. Here is th
 
 * Fork the repository into yours and work from there
 * Commit and push your changes into your fork
-* When you are done, create a [Pull Request](https://github.com/savoirfairelinux/santropol-feast/compare) in Feast repository on the **dev** branch
+* When you are done, create a [Pull Request](https://github.com/savoirfairelinux/sous-chef/compare) in Feast repository on the **dev** branch
 
 A template is provided to create your Pull Request. Try to fill the information at the best of your knowledge.
 
@@ -72,11 +72,11 @@ Documentation is important and can always be improved:
 * Installation instructions
 * Test procedures
 * How to help translating the project
-* Updating the [Roadmap](https://github.com/savoirfairelinux/santropol-feast/wiki/ROADMAP)
+* Updating the [Roadmap](https://github.com/savoirfairelinux/sous-chef/wiki/ROADMAP)
 
 The prefered syntax is Asciidoc. Markdown is also accepted.
 
-The [project wiki](https://github.com/savoirfairelinux/santropol-feast/wiki/) on GitHub could also be used.
+The [project wiki](https://github.com/savoirfairelinux/sous-chef/wiki/) on GitHub could also be used.
 
 ### Reporting bugs
 

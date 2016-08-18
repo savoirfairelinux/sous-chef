@@ -9,8 +9,8 @@ install:
   - pip install pep8
 
 script:
-  - coverage run --omit=*.virtualenvs*,*virtualenv* django/santropolFeast/manage.py test --settings=santropolFeast.settings_test member meal order notification delivery note billing
-  - pep8 --count --show-source --exclude=migrations django/santropolFeast/
+  - coverage run --omit=*.virtualenvs*,*virtualenv* src/manage.py test --settings=sous-chef.settings_test member meal order notification delivery note billing
+  - pep8 --count --show-source --exclude=migrations src/
 
 after_success:
   - coveralls

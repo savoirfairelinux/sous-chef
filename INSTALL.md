@@ -51,16 +51,16 @@ Ex: *44fcfefb015e*
 docker exec -it [container_id] bash
 
 # Run existing migrations
-python3 django/santropolFeast/manage.py migrate
+python3 src/manage.py migrate
 
 # Create a user with administrator privileges
-python3 django/santropolFeast/manage.py createsuperuser
+python3 src/manage.py createsuperuser
 
 # Populate the route table
-python django/santropolFeast/manage.py loaddata routes
+python src/manage.py loaddata routes
 
 # Randomly populate the client table
-python django/santropolFeast/manage.py createclients
+python src/manage.py createclients
 
 ```
 

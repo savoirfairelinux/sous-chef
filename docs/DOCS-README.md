@@ -7,6 +7,6 @@ $ make html
 ```
 ## Windows:
 ```
-$ sphinx-apidoc -f -o source ../django/SantropolFeast/ ../django/SantropolFeast/*/migrations
+$ sphinx-apidoc -f -o source ../src/ ../src/*/migrations
 $ make html
 ```
