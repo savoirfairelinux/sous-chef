@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Santropol Roulant documentation build configuration file, created by
+# Sous-chef documentation build configuration file, created by
 # sphinx-quickstart on Thu Apr 21 19:11:27 2016.
 #
 # This file is execfile()d with the current directory set to its
@@ -18,10 +18,10 @@ import os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('../django/santropolFeast'))
+sys.path.insert(0, os.path.abspath('../src'))
 
 import django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "santropolFeast.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sous-chef.settings")
 django.setup()
 
 # -- General configuration ------------------------------------------------
@@ -52,7 +52,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Santropol Roulant'
+project = u'Sous-chef'
 copyright = u'2016, Savoir Faire Linux'
 author = u'Savoir Faire Linux'
 
@@ -206,7 +206,7 @@ html_static_path = ['_static']
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'SantropolRoulantdoc'
+htmlhelp_basename = 'Sous-chef_doc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -228,7 +228,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'SantropolRoulant.tex', u'Santropol Roulant Documentation',
+    (master_doc, 'Sous-chef.tex', u'Sous-chef Documentation',
      u'Savoir Faire Linux', 'manual'),
 ]
 
@@ -258,7 +258,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'santropolroulant', u'Santropol Roulant Documentation',
+    (master_doc, 'sous-chef', u'Sous-chef Documentation',
      [author], 1)
 ]
 
@@ -272,8 +272,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'SantropolRoulant', u'Santropol Roulant Documentation',
-     author, 'SantropolRoulant', 'One line description of project.',
+    (master_doc, 'Sous-chef', u'Sous-chef Documentation',
+     author, 'Sous-chef', 'One line description of project.',
      'Miscellaneous'),
 ]
 
