@@ -9,6 +9,7 @@ from django_filters import FilterSet, MethodFilter, CharFilter, ChoiceFilter, \
     BooleanFilter
 from annoying.fields import JSONField
 from meal.models import COMPONENT_GROUP_CHOICES_MAIN_DISH
+from note.models import Note
 
 
 HOME = 'Home phone'
@@ -677,6 +678,36 @@ class ClientScheduledStatus(models.Model):
             self.status_to,
             self.change_date
         )
+
+    def process(self):
+        """ Process a scheduled change if valid."""
+        if self.is_valid():
+            # Update the client status
+            self.client.status = self.status_to
+            self.client.save()
+            # Update the instance status
+            self.operation_status = self.PROCESSED
+            self.save()
+            # TODO: Add note to client
+            self.add_note_to_client("Hello")
+            return True
+        else:
+            self.operation_status = self.ERROR
+            self.save()
+            return False
+
+    def is_valid(self):
+        """ Returns True if a scheduled change must be applied."""
+        return self.client.status == self.status_from \
+            and self.operation_status == self.TOBEPROCESSED
+
+    def add_note_to_client(self, message, author=None):
+        note = Note(
+            note=message,
+            author=author,
+            client=self.client,
+        )
+        note.save()
 
 
 class ClientFilter(FilterSet):

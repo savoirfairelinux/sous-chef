@@ -42,6 +42,7 @@ class Note (models.Model):
     author = models.ForeignKey(
         User,
         verbose_name=_('Author'),
+        null=True,
     )
 
     date = models.DateField(

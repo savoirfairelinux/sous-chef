@@ -950,11 +950,11 @@ def clientStatusAlterOrSchedule(request, pk):
             change2.save()
             msg = 'Schedule a timerange during which client status will be:'
             msg += ' {} instead of {}. From {} to {}.'.format(
-                    change1.get_status_to_display(),
-                    client.get_status_display(),
-                    start_date,
-                    end_date
-                )
+                change1.get_status_to_display(),
+                client.get_status_display(),
+                start_date,
+                end_date
+            )
             if (reason != ''):
                 msg += ' Reason: {}'.format(reason)
             note = Note(
@@ -997,7 +997,9 @@ def clientStatusAlterOrSchedule(request, pk):
 
     # Finally, back to client informations page
     clientInfo = 'member:client_information'
-    return HttpResponseRedirect(reverse(clientInfo, args=(pk)))
+    return HttpResponseRedirect(
+        reverse_lazy('member:client_information', kwargs={'pk': pk})
+    )
 
 
 class DeleteRestriction(generic.DeleteView):
