@@ -672,10 +672,10 @@ class ClientScheduledStatus(models.Model):
     )
 
     def __str__(self):
-        return "{}: from {} to {}, on {}".format(
+        return "Update {} status: from {} to {}, on {}".format(
             self.client.member,
-            self.status_from,
-            self.status_to,
+            self.get_status_from_display(),
+            self.get_status_to_display(),
             self.change_date
         )
 
@@ -688,8 +688,8 @@ class ClientScheduledStatus(models.Model):
             # Update the instance status
             self.operation_status = self.PROCESSED
             self.save()
-            # TODO: Add note to client
-            self.add_note_to_client("Hello")
+            # Add note to client
+            self.add_note_to_client()
             return True
         else:
             self.operation_status = self.ERROR
@@ -701,9 +701,14 @@ class ClientScheduledStatus(models.Model):
         return self.client.status == self.status_from \
             and self.operation_status == self.TOBEPROCESSED
 
-    def add_note_to_client(self, message, author=None):
+    def add_note_to_client(self, author=None):
+        # Define message
+        # message = self
+        # if self.linked_scheduled_status:
+        #     message += ' Related to: {}'.format(self.linked_scheduled_status)
+        # Store message
         note = Note(
-            note=message,
+            note=self,
             author=author,
             client=self.client,
         )

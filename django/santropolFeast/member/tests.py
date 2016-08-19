@@ -1461,7 +1461,8 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
             ClientScheduledStatus.PROCESSED)
         self.assertEqual(self.active_client.status, Client.PAUSED)
         self.assertEqual(self.active_client.notes.count(), 1)
-        self.assertEqual(self.active_client.notes.first().note, 'Hello')
+        self.assertEqual(self.active_client.notes.first().note,
+                         scheduled_change.__str__())
 
     def test_scheduled_change_process_failed(self):
         scheduled_change = ClientScheduledStatusFactory(
@@ -1494,9 +1495,11 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
         )
         out = StringIO()
         call_command('processscheduledstatuschange', stdout=out)
-        self.assertIn('Client «{}» status updated from {} to {}'.format(
+        self.assertIn('client «{}» status updated from {} to {}'.format(
             self.active_client.member,
-            Client.ACTIVE, Client.PAUSED), out.getvalue())
+            scheduled_change.get_status_from_display(),
+            scheduled_change.get_status_to_display()
+        ), out.getvalue())
         # Reload
         scheduled_change = ClientScheduledStatus.objects.get(
             id=scheduled_change.id)
@@ -1517,7 +1520,8 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
             'reason': '',
         }
         response = self.client.post(
-            reverse_lazy('member:clientStatusAlterOrScheduleProc', kwargs={'pk':self.active_client.id}),
+            reverse_lazy('member:clientStatusAlterOrScheduleProc',
+                         kwargs={'pk': self.active_client.id}),
             data,
             follow=True
         )
@@ -1539,7 +1543,8 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
             'end_date': '2018-10-02',
         }
         response = self.client.post(
-            reverse_lazy('member:clientStatusAlterOrScheduleProc', kwargs={'pk':self.active_client.id}),
+            reverse_lazy('member:clientStatusAlterOrScheduleProc',
+                         kwargs={'pk': self.active_client.id}),
             data,
             follow=True
         )
@@ -1548,16 +1553,21 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
             client=client.id, change_date='2018-09-23')
         scheduled_change_end = ClientScheduledStatus.objects.get(
             client=client.id, change_date='2018-10-02')
-        self.assertEqual(scheduled_change_start.operation_status, ClientScheduledStatus.TOBEPROCESSED)
-        self.assertEqual(scheduled_change_start.status_from, self.active_client.status)
+        self.assertEqual(scheduled_change_start.operation_status,
+                         ClientScheduledStatus.TOBEPROCESSED)
+        self.assertEqual(scheduled_change_start.status_from,
+                         self.active_client.status)
         self.assertEqual(scheduled_change_start.status_to, Client.PAUSED)
         self.assertEqual(scheduled_change_start.reason, 'Holidays')
         self.assertEqual(scheduled_change_start.linked_scheduled_status, None)
-        self.assertEqual(scheduled_change_end.operation_status, ClientScheduledStatus.TOBEPROCESSED)
+        self.assertEqual(scheduled_change_end.operation_status,
+                         ClientScheduledStatus.TOBEPROCESSED)
         self.assertEqual(scheduled_change_end.status_from, Client.PAUSED)
-        self.assertEqual(scheduled_change_end.status_to, self.active_client.status)
+        self.assertEqual(scheduled_change_end.status_to,
+                         self.active_client.status)
         self.assertEqual(scheduled_change_end.reason, 'Holidays')
-        self.assertEqual(scheduled_change_end.linked_scheduled_status, scheduled_change_start)
+        self.assertEqual(scheduled_change_end.linked_scheduled_status,
+                         scheduled_change_start)
 
     def test_view_client_status_update_no_end_date(self):
         admin = User.objects.create_superuser(
@@ -1573,15 +1583,18 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
             'start_date': '2019-09-23',
         }
         response = self.client.post(
-            reverse_lazy('member:clientStatusAlterOrScheduleProc', kwargs={'pk':self.active_client.id}),
+            reverse_lazy('member:clientStatusAlterOrScheduleProc',
+                         kwargs={'pk': self.active_client.id}),
             data,
             follow=True
         )
         client = Client.objects.get(pk=self.active_client.id)
         scheduled_change = ClientScheduledStatus.objects.get(
             client=client.id)
-        self.assertEqual(scheduled_change.operation_status, ClientScheduledStatus.TOBEPROCESSED)
-        self.assertEqual(scheduled_change.status_from, self.active_client.status)
+        self.assertEqual(scheduled_change.operation_status,
+                         ClientScheduledStatus.TOBEPROCESSED)
+        self.assertEqual(scheduled_change.status_from,
+                         self.active_client.status)
         self.assertEqual(scheduled_change.status_to, Client.STOPCONTACT)
         self.assertEqual(scheduled_change.reason, 'Holidays')
         self.assertEqual(scheduled_change.linked_scheduled_status, None)

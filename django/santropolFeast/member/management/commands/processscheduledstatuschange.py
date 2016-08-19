@@ -3,7 +3,7 @@ from member.factories import ClientFactory
 from member.models import Client, ClientScheduledStatus, Member
 from django.core.management import call_command
 import os
-import datetime
+from datetime import date, datetime
 from sys import path
 
 
@@ -16,24 +16,27 @@ class Command(BaseCommand):
         changes = ClientScheduledStatus.objects.filter(
             operation_status=ClientScheduledStatus.TOBEPROCESSED
         ).filter(
-            change_date__lte=datetime.date.today()
+            change_date__lte=date.today()
         )
 
         # For each change to be processed,
         for scheduled_change in changes:
             if scheduled_change.process():
-                suc_msg = "Client «{}» status updated from {} to {}.".format(
+                suc_msg = ": client «{}» status updated from {} to {}.".format(
                     scheduled_change.client.member,
-                    scheduled_change.status_from,
-                    scheduled_change.status_to
+                    scheduled_change.get_status_from_display(),
+                    scheduled_change.get_status_to_display()
                 )
-                self.stdout.write(self.style.SUCCESS(suc_msg))
+                self.stdout.write(self.style.SUCCESS(
+                    str(datetime.now()) + suc_msg))
             # If not, mark change as processed with error
             else:
-                err_msg = "Client «{}» status not updated. Current status \
-                    is {}, but it should be {}.".format(
-                    scheduled_change.client.member,
-                    scheduled_change.client.status,
-                    scheduled_change.status_from
+                err_msg = ': client «{}» status not updated.'.format(
+                    scheduled_change.client.member
                 )
-                self.stdout.write(self.style.ERROR(err_msg))
+                err_msg += ' Current status is «{}», should be «{}».'.format(
+                    scheduled_change.client.get_status_display(),
+                    scheduled_change.get_status_from_display()
+                )
+                self.stdout.write(self.style.ERROR(
+                    str(datetime.now()) + err_msg))

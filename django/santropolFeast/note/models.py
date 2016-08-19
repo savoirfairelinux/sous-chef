@@ -45,7 +45,7 @@ class Note (models.Model):
         null=True,
     )
 
-    date = models.DateField(
+    date = models.DateTimeField(
         verbose_name=_('Date'),
         default=timezone.now,
     )

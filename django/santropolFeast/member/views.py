@@ -32,6 +32,7 @@ from django.core.urlresolvers import reverse_lazy
 import csv
 from django.template import RequestContext
 from django.http import JsonResponse
+from datetime import date
 
 size = ['regular', 'large']
 
@@ -896,100 +897,62 @@ def clientStatusScheduler(request, pk):
     })
 
 
+def _create_scheduled_status(post_datas, client, change_state):
+    if change_state == ClientScheduledStatus.END:
+        change_date = post_datas.get('end_date', '')
+        st_from = post_datas.get('status_to')
+        st_to = client.status
+    else:
+        change_date = post_datas.get('start_date', '')
+        st_from = client.status
+        st_to = post_datas.get('status_to')
+    if change_date == '':
+        change_date = date.today()
+    # Instantiate object
+    scheduled_change = ClientScheduledStatus(
+        client=client,
+        status_from=st_from,
+        status_to=st_to,
+        reason=post_datas.get('reason', ''),
+        change_date=change_date,
+        change_state=change_state,
+        operation_status=ClientScheduledStatus.TOBEPROCESSED
+    )
+    # Return object
+    return scheduled_change
+
+
 def clientStatusAlterOrSchedule(request, pk):
     if request.method == 'POST':
         client = get_object_or_404(Client, pk=pk)
-        status_to = request.POST.get('status_to')
-        reason = request.POST.get('reason', '')
         start_date = request.POST.get('start_date', '')
         end_date = request.POST.get('end_date', '')
 
         # Three available possibilities
-        # 1 - Immediat status update
+        # 1 - Immediat status update (schedule and process)
         if start_date == '' and end_date == '':
-            client_get_oldstatus_display = client.get_status_display()
-            client.status = status_to
-            client.save()
-            msg = 'Instantly modify client status from {} to {}.'.format(
-                client_get_oldstatus_display,
-                client.get_status_display()
-            )
-            if (reason != ''):
-                msg += ' Reason: {}'.format(reason)
-            note = Note(
-                note=msg,
-                author=request.user,
-                client=client
-            )
-            note.save()
+            change = _create_scheduled_status(request.POST, client,
+                                              ClientScheduledStatus.ALONE)
+            change.save()
+            change.process()
 
         # 2 - Schedule a timerange during which status will be different,
-        # then back to current
+        # then back to current (double schedule)
         elif start_date != '' and end_date != '':
-            change1 = ClientScheduledStatus(
-                client=client,
-                linked_scheduled_status=None,
-                status_from=client.status,
-                status_to=status_to,
-                reason=reason,
-                change_date=start_date,
-                change_state=ClientScheduledStatus.START,
-                operation_status=ClientScheduledStatus.TOBEPROCESSED
-            )
+            change1 = _create_scheduled_status(request.POST, client,
+                                               ClientScheduledStatus.START)
             change1.save()
-            change2 = ClientScheduledStatus(
-                client=client,
-                linked_scheduled_status=change1,
-                status_from=status_to,
-                status_to=client.status,
-                reason=reason,
-                change_date=end_date,
-                change_state=ClientScheduledStatus.END,
-                operation_status=ClientScheduledStatus.TOBEPROCESSED
-            )
+            change2 = _create_scheduled_status(request.POST, client,
+                                               ClientScheduledStatus.END)
+            change2.linked_scheduled_status = change1
             change2.save()
-            msg = 'Schedule a timerange during which client status will be:'
-            msg += ' {} instead of {}. From {} to {}.'.format(
-                change1.get_status_to_display(),
-                client.get_status_display(),
-                start_date,
-                end_date
-            )
-            if (reason != ''):
-                msg += ' Reason: {}'.format(reason)
-            note = Note(
-                note=msg,
-                author=request.user,
-                client=client
-            )
-            note.save()
 
         # 3 - Schedule a simple status update (not back to current later)
+        # (simple schedule)
         elif start_date != '' and end_date == '':
-            change = ClientScheduledStatus(
-                client=client,
-                linked_scheduled_status=None,
-                status_from=client.status,
-                status_to=status_to,
-                reason=reason,
-                change_date=start_date,
-                change_state=ClientScheduledStatus.ALONE,
-                operation_status=ClientScheduledStatus.TOBEPROCESSED
-            )
+            change = _create_scheduled_status(request.POST, client,
+                                              ClientScheduledStatus.ALONE)
             change.save()
-            msg = 'Schedule a status update, from {} to {}, on {}.'.format(
-                client.get_status_display(),
-                change.get_status_to_display(),
-                start_date
-            )
-            if (reason != ''):
-                msg += ' Reason: {}'.format(reason)
-            note = Note(
-                note=msg,
-                author=request.user,
-                client=client
-            )
-            note.save()
 
         # Possimpible case (:P)
         else:
