@@ -16,8 +16,7 @@ from member.views import (
     DeleteIngredientToAvoid,
     DeleteComponentToAvoid,
     geolocateAddress,
-    clientStatusScheduler,
-    clientStatusAlterOrSchedule,
+    ClientStatusScheduler,
 )
 
 from member.forms import (
@@ -60,15 +59,8 @@ urlpatterns = [
     url(_(r'^view/(?P<pk>\d+)/notes$'),
         ClientNoteList.as_view(), name='client_notes'),
     url(_(r'^geolocateAddress/$'), geolocateAddress, name='geolocateAddress'),
-
-    # ex: /client/3/status/scheduler
     url(r'^client/(?P<pk>\d+)/status/scheduler$',
-        clientStatusScheduler, name='clientStatusSchedulerModal'),
-
-    # ex: /client/3/status/alter-or-schedule
-    url(r'^client/(?P<pk>\d+)/status/alter-or-schedule$',
-        clientStatusAlterOrSchedule, name='clientStatusAlterOrScheduleProc'),
-
+        ClientStatusScheduler.as_view(), name='clientStatusScheduler'),
     url(_(r'^restriction/(?P<pk>\d+)/delete/$'),
         DeleteRestriction.as_view(), name='restriction_delete'),
     url(_(r'^client_option/(?P<pk>\d+)/delete/$'),

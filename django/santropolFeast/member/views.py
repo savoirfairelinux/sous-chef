@@ -3,7 +3,7 @@
 from django.views import generic
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
-from django.core.urlresolvers import reverse, reverse_lazy
+from django import forms
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -24,7 +24,7 @@ from member.models import (
     Client_avoid_component,
 )
 from note.models import Note
-from order.models import Order
+from order.mixins import AjaxableResponseMixin
 from meal.models import Restricted_item
 from meal.models import COMPONENT_GROUP_CHOICES
 from formtools.wizard.views import NamedUrlSessionWizardView
@@ -888,81 +888,64 @@ def geolocateAddress(request):
     return JsonResponse({'latitude': lat, 'longtitude': long})
 
 
-def clientStatusScheduler(request, pk):
-    client = get_object_or_404(Client, pk=pk)
-    return render(request, 'client/modal/change_status.html', {
-        'client': client,
-        'client_status': Client.CLIENT_STATUS,
-        'status_to': request.GET.get('status', Client.PAUSED),
-    })
+class ClientStatusScheduler(generic.CreateView, AjaxableResponseMixin):
+    model = ClientScheduledStatus
+    fields = ['client', 'status_from', 'status_to', 'reason', 'change_date']
+    template_name = "client/modal/change_status.html"
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ClientStatusScheduler, self).dispatch(*args, **kwargs)
 
-def _create_scheduled_status(post_datas, client, change_state):
-    if change_state == ClientScheduledStatus.END:
-        change_date = post_datas.get('end_date', '')
-        st_from = post_datas.get('status_to')
-        st_to = client.status
-    else:
-        change_date = post_datas.get('start_date', '')
-        st_from = client.status
-        st_to = post_datas.get('status_to')
-    if change_date == '':
-        change_date = date.today()
-    # Instantiate object
-    scheduled_change = ClientScheduledStatus(
-        client=client,
-        status_from=st_from,
-        status_to=st_to,
-        reason=post_datas.get('reason', ''),
-        change_date=change_date,
-        change_state=change_state,
-        operation_status=ClientScheduledStatus.TOBEPROCESSED
-    )
-    # Return object
-    return scheduled_change
+    def get_context_data(self, **kwargs):
+        context = super(ClientStatusScheduler, self).get_context_data(**kwargs)
+        context['client'] = get_object_or_404(
+            Client, pk=self.kwargs.get('pk')
+        )
+        context['client_status'] = Client.CLIENT_STATUS
+        return context
 
+    def get_initial(self):
+        client = get_object_or_404(Client, pk=self.kwargs.get('pk'))
+        return {
+            'client': self.kwargs.get('pk'),
+            'status_from': client.status,
+            'status_to': self.request.GET.get('status', Client.PAUSED),
+        }
 
-def clientStatusAlterOrSchedule(request, pk):
-    if request.method == 'POST':
-        client = get_object_or_404(Client, pk=pk)
-        start_date = request.POST.get('start_date', '')
-        end_date = request.POST.get('end_date', '')
+    def form_valid(self, form):
+        client = get_object_or_404(Client, pk=self.kwargs.get('pk'))
+        start_date = form.cleaned_data.get('change_date')
+        # TODO: Validate end_date
+        end_date = self.request.POST.get('end_date', '')
 
-        # Three available possibilities
-        # 1 - Immediat status update (schedule and process)
-        if start_date == '' and end_date == '':
-            change = _create_scheduled_status(request.POST, client,
-                                              ClientScheduledStatus.ALONE)
-            change.save()
-            change.process()
+        response = super(ClientStatusScheduler, self).form_valid(form)
 
-        # 2 - Schedule a timerange during which status will be different,
+        # Immediate status update (schedule and process)
+        if start_date == date.today():
+            self.object.process()
+
+        # Schedule a time range during which status will be different,
         # then back to current (double schedule)
-        elif start_date != '' and end_date != '':
-            change1 = _create_scheduled_status(request.POST, client,
-                                               ClientScheduledStatus.START)
-            change1.save()
-            change2 = _create_scheduled_status(request.POST, client,
-                                               ClientScheduledStatus.END)
-            change2.linked_scheduled_status = change1
+        if end_date != '':
+            change2 = ClientScheduledStatus(
+                client=client,
+                status_from=form.cleaned_data.get('status_to'),
+                status_to=form.cleaned_data.get('status_from'),
+                reason=form.cleaned_data.get('reason'),
+                change_date=end_date,
+                change_state=ClientScheduledStatus.END,
+                operation_status=ClientScheduledStatus.TOBEPROCESSED
+            )
+            change2.linked_scheduled_status = self.object
             change2.save()
 
-        # 3 - Schedule a simple status update (not back to current later)
-        # (simple schedule)
-        elif start_date != '' and end_date == '':
-            change = _create_scheduled_status(request.POST, client,
-                                              ClientScheduledStatus.ALONE)
-            change.save()
+        return response
 
-        # Possimpible case (:P)
-        else:
-            pass
-
-    # Finally, back to client informations page
-    clientInfo = 'member:client_information'
-    return HttpResponseRedirect(
-        reverse_lazy('member:client_information', kwargs={'pk': pk})
-    )
+    def get_success_url(self):
+        return reverse_lazy(
+            'member:client_information', kwargs={'pk': self.kwargs.get('pk')}
+        )
 
 
 class DeleteRestriction(generic.DeleteView):
