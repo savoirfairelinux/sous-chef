@@ -4,7 +4,8 @@ import random
 from member.models import (
     Member, Client, Contact, Route, Address, Referencing,
     CONTACT_TYPE_CHOICES, GENDER_CHOICES, PAYMENT_TYPE,
-    DELIVERY_TYPE, DAYS_OF_WEEK, RATE_TYPE
+    DELIVERY_TYPE, DAYS_OF_WEEK, RATE_TYPE,
+    ClientScheduledStatus
 )
 from meal.models import COMPONENT_GROUP_CHOICES
 from django.contrib.auth.models import User
@@ -121,3 +122,26 @@ class ContactFactory (factory.DjangoModelFactory):
     type = 'Home phone'
     value = factory.Faker('phone_number')
     member = factory.SubFactory(MemberFactory)
+
+
+class ClientScheduledStatusFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = ClientScheduledStatus
+
+    client = factory.SubFactory(ClientFactory)
+    status_from = factory.LazyAttribute(
+        lambda x: random.choice(
+            Client.CLIENT_STATUS)[0]
+    )
+    status_to = factory.LazyAttribute(
+        lambda x: random.choice(
+            Client.CLIENT_STATUS)[0]
+    )
+    reason = factory.Faker('sentence')
+    change_date = factory.Faker('date')
+    change_state = factory.LazyAttribute(
+        lambda x: random.choice(
+            ClientScheduledStatus.CHANGE_STATUS)[0]
+    )
+    operation_status = ClientScheduledStatus.TOBEPROCESSED

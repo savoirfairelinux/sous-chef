@@ -1,5 +1,4 @@
 from django.conf.urls import url
-from member.views import geolocateAddress, change_status
 from django.utils.translation import ugettext_lazy as _
 
 from member.views import (
@@ -16,6 +15,9 @@ from member.views import (
     DeleteClientOption,
     DeleteIngredientToAvoid,
     DeleteComponentToAvoid,
+    geolocateAddress,
+    clientStatusScheduler,
+    clientStatusAlterOrSchedule,
 )
 
 from member.forms import (
@@ -58,8 +60,14 @@ urlpatterns = [
     url(_(r'^view/(?P<pk>\d+)/notes$'),
         ClientNoteList.as_view(), name='client_notes'),
     url(_(r'^geolocateAddress/$'), geolocateAddress, name='geolocateAddress'),
-    url(_(r'^change_status/(?P<id>\d+)/$'),
-        change_status, name='change_status'),
+
+    # ex: /client/3/status/scheduler
+    url(r'^client/(?P<pk>\d+)/status/scheduler$',
+        clientStatusScheduler, name='clientStatusSchedulerModal'),
+
+    # ex: /client/3/status/alter-or-schedule
+    url(r'^client/(?P<pk>\d+)/status/alter-or-schedule$',
+        clientStatusAlterOrSchedule, name='clientStatusAlterOrScheduleProc'),
 
     url(_(r'^restriction/(?P<pk>\d+)/delete/$'),
         DeleteRestriction.as_view(), name='restriction_delete'),

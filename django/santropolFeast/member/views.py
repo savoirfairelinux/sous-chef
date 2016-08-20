@@ -3,12 +3,13 @@
 from django.views import generic
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from member.models import (
     Client,
+    ClientScheduledStatus,
     Member,
     Address,
     Contact,
@@ -31,6 +32,7 @@ from django.core.urlresolvers import reverse_lazy
 import csv
 from django.template import RequestContext
 from django.http import JsonResponse
+from datetime import date
 
 size = ['regular', 'large']
 
@@ -886,15 +888,81 @@ def geolocateAddress(request):
     return JsonResponse({'latitude': lat, 'longtitude': long})
 
 
-def change_status(request, id):
-    if request.method == "POST":
-        client = get_object_or_404(Client, pk=id)
-        status = request.POST.get('status')
-        client.status = status
-        client.save()
+def clientStatusScheduler(request, pk):
+    client = get_object_or_404(Client, pk=pk)
+    return render(request, 'client/modal/change_status.html', {
+        'client': client,
+        'client_status': Client.CLIENT_STATUS,
+        'status_to': request.GET.get('status', Client.PAUSED),
+    })
 
-        # just return a JsonResponse
-        return JsonResponse({'status': 200})
+
+def _create_scheduled_status(post_datas, client, change_state):
+    if change_state == ClientScheduledStatus.END:
+        change_date = post_datas.get('end_date', '')
+        st_from = post_datas.get('status_to')
+        st_to = client.status
+    else:
+        change_date = post_datas.get('start_date', '')
+        st_from = client.status
+        st_to = post_datas.get('status_to')
+    if change_date == '':
+        change_date = date.today()
+    # Instantiate object
+    scheduled_change = ClientScheduledStatus(
+        client=client,
+        status_from=st_from,
+        status_to=st_to,
+        reason=post_datas.get('reason', ''),
+        change_date=change_date,
+        change_state=change_state,
+        operation_status=ClientScheduledStatus.TOBEPROCESSED
+    )
+    # Return object
+    return scheduled_change
+
+
+def clientStatusAlterOrSchedule(request, pk):
+    if request.method == 'POST':
+        client = get_object_or_404(Client, pk=pk)
+        start_date = request.POST.get('start_date', '')
+        end_date = request.POST.get('end_date', '')
+
+        # Three available possibilities
+        # 1 - Immediat status update (schedule and process)
+        if start_date == '' and end_date == '':
+            change = _create_scheduled_status(request.POST, client,
+                                              ClientScheduledStatus.ALONE)
+            change.save()
+            change.process()
+
+        # 2 - Schedule a timerange during which status will be different,
+        # then back to current (double schedule)
+        elif start_date != '' and end_date != '':
+            change1 = _create_scheduled_status(request.POST, client,
+                                               ClientScheduledStatus.START)
+            change1.save()
+            change2 = _create_scheduled_status(request.POST, client,
+                                               ClientScheduledStatus.END)
+            change2.linked_scheduled_status = change1
+            change2.save()
+
+        # 3 - Schedule a simple status update (not back to current later)
+        # (simple schedule)
+        elif start_date != '' and end_date == '':
+            change = _create_scheduled_status(request.POST, client,
+                                              ClientScheduledStatus.ALONE)
+            change.save()
+
+        # Possimpible case (:P)
+        else:
+            pass
+
+    # Finally, back to client informations page
+    clientInfo = 'member:client_information'
+    return HttpResponseRedirect(
+        reverse_lazy('member:client_information', kwargs={'pk': pk})
+    )
 
 
 class DeleteRestriction(generic.DeleteView):
