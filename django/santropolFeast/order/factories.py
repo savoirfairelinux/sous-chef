@@ -57,9 +57,8 @@ class OrderItemFactory(factory.DjangoModelFactory):
 
     price = fake.random_int(min=0, max=50)
 
-    billable_flag = fake.random_sample(
-        elements=(True, False),
-        length=None
+    billable_flag = factory.LazyAttribute(
+        lambda x: random.choice([True, False])
     )
 
     size = factory.LazyAttribute(

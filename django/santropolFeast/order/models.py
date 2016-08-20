@@ -7,9 +7,10 @@ from django_filters import FilterSet, MethodFilter, ChoiceFilter
 from django.core.urlresolvers import reverse
 
 from datetime import date
+from sqlalchemy.sql import select
 from sqlalchemy import and_
 
-from member.apps import db_session
+from member.apps import db_sa_session, db_sa_table
 from member.models import (Client, Member,
                            RATE_TYPE_LOW_INCOME, RATE_TYPE_SOLIDARY,
                            Address, Option, Client_option, Restriction,
@@ -213,47 +214,52 @@ class Order(models.Model):
     def get_kitchen_items(delivery_date):
         # get all client meal order specifics for delivery date
 
-        cli = Client.sa
-        mem = Member.sa
-        add = Address.sa
-        order = Order.sa
-        oi = Order_item.sa
-        comp = Component.sa
-        menu = Menu.sa
-        menucomp = Menu_component.sa
-        opt = Option.sa
-        co = Client_option.sa
-        rest = Restriction.sa
-        ri = Restricted_item.sa
-        ing = Ingredient.sa
-        inc = Incompatibility.sa
-        ci = Component_ingredient.sa
-        cai = Client_avoid_ingredient.sa
-        cac = Client_avoid_component.sa
+        # Use SQLAlchemy Core for selects
+        # identifiers pointing directly to database tables
+        tcom = db_sa_table(Component)
+        tmen = db_sa_table(Menu)
+        tmencom = db_sa_table(Menu_component)
+        tresitm = db_sa_table(Restricted_item)
+        ting = db_sa_table(Ingredient)
+        tinc = db_sa_table(Incompatibility)
+        tcoming = db_sa_table(Component_ingredient)
+        tcli = db_sa_table(Client)
+        tmem = db_sa_table(Member)
+        tadd = db_sa_table(Address)
+        topt = db_sa_table(Option)
+        tcliopt = db_sa_table(Client_option)
+        tres = db_sa_table(Restriction)
+        tcliavoing = db_sa_table(Client_avoid_ingredient)
+        tcliavocom = db_sa_table(Client_avoid_component)
+        tord = db_sa_table(Order)
+        torditm = db_sa_table(Order_item)
 
         # Day's avoid ingredients clashes
-        q_day_avo_ing = db_session.query(
-            cli.id.label('cid'),
-            mem.firstname, mem.lastname,
-            order.id, order.delivery_date,
-            menu.id, menucomp.id.label('menucompid'),
-            ing.name.label('ingredient'), comp.name,
-            oi.id, oi.order_id.label('oiorderid')).\
-            select_from(mem).\
-            join(cli, cli.member_id == mem.id).\
-            join(order, order.client_id == cli.id).\
-            join(menu, menu.date == delivery_date).\
-            join(cai, cai.client_id == cli.id).\
-            join(ing, ing.id == cai.ingredient_id).\
-            outerjoin(ci, and_(ci.ingredient_id == ing.id,
-                               ci.date == delivery_date)).\
-            outerjoin(comp, comp.id == ci.component_id).\
-            outerjoin(oi, and_(oi.component_group == comp.component_group,
-                               oi.order_id == order.id)).\
-            outerjoin(menucomp, and_(menucomp.component_id == comp.id,
-                                     menucomp.menu_id == menu.id)).\
-            filter(order.delivery_date == delivery_date).\
-            order_by(cli.id)
+        q_day_avo_ing = select(
+            [tcli.c.id.label('cid'),
+             tmem.c.firstname, tmem.c.lastname,
+             tord.c.id, tord.c.delivery_date,
+             tmen.c.id, tmencom.c.id.label('menucompid'),
+             ting.c.name.label('ingredient'), tcom.c.name,
+             torditm.c.id, torditm.c.order_id.label('oiorderid')]).\
+            select_from(
+                tmem.
+                join(tcli, tcli.c.member_id == tmem.c.id).
+                join(tord, tord.c.client_id == tcli.c.id).
+                join(tmen, tmen.c.date == delivery_date).
+                join(tcliavoing, tcliavoing.c.client_id == tcli.c.id).
+                join(ting, ting.c.id == tcliavoing.c.ingredient_id).
+                outerjoin(tcoming, and_(tcoming.c.ingredient_id == ting.c.id,
+                                        tcoming.c.date == delivery_date)).
+                outerjoin(tcom, tcom.c.id == tcoming.c.component_id).
+                outerjoin(
+                    torditm,
+                    and_(torditm.c.component_group == tcom.c.component_group,
+                         torditm.c.order_id == tord.c.id)).
+                outerjoin(tmencom, and_(tmencom.c.component_id == tcom.c.id,
+                                        tmencom.c.menu_id == tmen.c.id))).\
+            where(tord.c.delivery_date == delivery_date).\
+            order_by(tcli.c.id)
         print_rows(
             q_day_avo_ing,
             "\n***** Day's avoid ingredients clashes ****\nCLIENT_ID,"
@@ -264,26 +270,29 @@ class Order(models.Model):
             "ORDER_ITEM_ID, ORDER_ITEM_ORDER_ID")
 
         # Day's avoid component clashes
-        q_day_avo_com = db_session.query(
-            cli.id.label('cid'),
-            mem.firstname, mem.lastname,
-            order.id, order.delivery_date,
-            menu.id, menucomp.id.label('menucompid'),
-            comp.name.label('component'),
-            oi.id, oi.order_id.label('oiorderid')).\
-            select_from(mem).\
-            join(cli, cli.member_id == mem.id).\
-            join(order, and_(order.client_id == cli.id,
-                             order.delivery_date == delivery_date)).\
-            join(menu, menu.date == delivery_date).\
-            join(cac, cac.client_id == cli.id).\
-            join(comp, comp.id == cac.component_id).\
-            outerjoin(oi, and_(oi.component_group == comp.component_group,
-                               oi.order_id == order.id)).\
-            outerjoin(menucomp, and_(menucomp.component_id == comp.id,
-                                     menucomp.menu_id == menu.id)).\
-            filter(order.delivery_date == delivery_date).\
-            order_by(cli.id)
+        q_day_avo_com = select(
+            [tcli.c.id.label('cid'),
+             tmem.c.firstname, tmem.c.lastname,
+             tord.c.id, tord.c.delivery_date,
+             tmen.c.id, tmencom.c.id.label('menucompid'),
+             tcom.c.name.label('component'),
+             torditm.c.id, torditm.c.order_id.label('oiorderid')]).\
+            select_from(
+                tmem.
+                join(tcli, tcli.c.member_id == tmem.c.id).
+                join(tord, and_(tord.c.client_id == tcli.c.id,
+                                tord.c.delivery_date == delivery_date)).
+                join(tmen, tmen.c.date == delivery_date).
+                join(tcliavocom, tcliavocom.c.client_id == tcli.c.id).
+                join(tcom, tcom.c.id == tcliavocom.c.component_id).
+                outerjoin(
+                    torditm,
+                    and_(torditm.c.component_group == tcom.c.component_group,
+                         torditm.c.order_id == tord.c.id)).
+                outerjoin(tmencom, and_(tmencom.c.component_id == tcom.c.id,
+                                        tmencom.c.menu_id == tmen.c.id))).\
+            where(tord.c.delivery_date == delivery_date).\
+            order_by(tcli.c.id)
         print_rows(q_day_avo_com,
                    "\n***** Day's avoid component clashes ****\nCLIENT_ID,"
                    "FIRSTNAME, LASTNAME, "
@@ -293,31 +302,36 @@ class Order(models.Model):
                    "ORDER_ITEM_ID, ORDER_ITEM_ORDER_ID")
 
         # Day's restrictions
-        q_day_res = db_session.query(
-            cli.id.label('cid'),
-            mem.firstname, mem.lastname,
-            order.id, order.delivery_date,
-            menu.id, menucomp.id.label('menucompid'),
-            ri.name.label('restricted_item'),
-            ing.name.label('ingredient'), comp.name,
-            oi.id, oi.order_id.label('oiorderid')).\
-            select_from(mem).\
-            join(cli, cli.member_id == mem.id).\
-            join(order, order.client_id == cli.id).\
-            join(menu, menu.date == delivery_date).\
-            join(rest, rest.client_id == cli.id).\
-            join(ri, ri.id == rest.restricted_item_id).\
-            outerjoin(inc, inc.restricted_item_id == rest.restricted_item_id).\
-            outerjoin(ing, inc.ingredient_id == ing.id).\
-            outerjoin(ci, and_(ci.ingredient_id == ing.id,
-                               ci.date == delivery_date)).\
-            outerjoin(comp, ci.component_id == comp.id).\
-            outerjoin(oi, and_(oi.component_group == comp.component_group,
-                               oi.order_id == order.id)).\
-            outerjoin(menucomp, and_(menucomp.component_id == comp.id,
-                                     menucomp.menu_id == menu.id)).\
-            filter(order.delivery_date == delivery_date).\
-            order_by(cli.id)
+        q_day_res = select(
+            [tcli.c.id.label('cid'),
+             tmem.c.firstname, tmem.c.lastname,
+             tord.c.id, tord.c.delivery_date,
+             tmen.c.id, tmencom.c.id.label('menucompid'),
+             tresitm.c.name.label('restricted_item'),
+             ting.c.name.label('ingredient'), tcom.c.name,
+             torditm.c.id, torditm.c.order_id.label('oiorderid')]).\
+            select_from(
+                tmem.
+                join(tcli, tcli.c.member_id == tmem.c.id).
+                join(tord, tord.c.client_id == tcli.c.id).
+                join(tmen, tmen.c.date == delivery_date).
+                join(tres, tres.c.client_id == tcli.c.id).
+                join(tresitm, tresitm.c.id == tres.c.restricted_item_id).
+                outerjoin(
+                    tinc,
+                    tinc.c.restricted_item_id == tres.c.restricted_item_id).
+                outerjoin(ting, tinc.c.ingredient_id == ting.c.id).
+                outerjoin(tcoming, and_(tcoming.c.ingredient_id == ting.c.id,
+                                        tcoming.c.date == delivery_date)).
+                outerjoin(tcom, tcoming.c.component_id == tcom.c.id).
+                outerjoin(
+                    torditm,
+                    and_(torditm.c.component_group == tcom.c.component_group,
+                         torditm.c.order_id == tord.c.id)).
+                outerjoin(tmencom, and_(tmencom.c.component_id == tcom.c.id,
+                                        tmencom.c.menu_id == tmen.c.id))).\
+            where(tord.c.delivery_date == delivery_date).\
+            order_by(tcli.c.id)
         print_rows(q_day_res,
                    "\n***** Day's restrictions ****\nCLIENT_ID,"
                    "FIRSTNAME, LASTNAME, "
@@ -327,19 +341,20 @@ class Order(models.Model):
                    "ORDER_ITEM_ID, ORDER_ITEM_ORDER_ID")
 
         # Day's preparations
-        q_day_pre = db_session.query(
-            cli.id.label('cid'),
-            mem.firstname, mem.lastname,
-            opt.name.label('food_prep'),
-            order.id, order.delivery_date).\
-            select_from(mem).\
-            join(cli, cli.member_id == mem.id).\
-            join(co, co.client_id == cli.id).\
-            join(opt, opt.id == co.option_id).\
-            join(order, order.client_id == cli.id).\
-            filter(order.delivery_date == delivery_date,
-                   opt.option_group == 'preparation').\
-            order_by(mem.lastname, mem.firstname)
+        q_day_pre = select(
+            [tcli.c.id.label('cid'),
+             tmem.c.firstname, tmem.c.lastname,
+             topt.c.name.label('food_prep'),
+             tord.c.id, tord.c.delivery_date]).\
+            select_from(
+                tmem.
+                join(tcli, tcli.c.member_id == tmem.c.id).
+                join(tcliopt, tcliopt.c.client_id == tcli.c.id).
+                join(topt, topt.c.id == tcliopt.c.option_id).
+                join(tord, tord.c.client_id == tcli.c.id)).\
+            where(and_(tord.c.delivery_date == delivery_date,
+                       topt.c.option_group == 'preparation')).\
+            order_by(tmem.c.lastname, tmem.c.firstname)
         print_rows(q_day_pre,
                    "\n***** Day's preparations ****\nCLIENT_ID,"
                    "FIRSTNAME, LASTNAME, "
@@ -348,25 +363,29 @@ class Order(models.Model):
 
         # Day's Delivery List
         # TODO add route filter, full address, order by postal code
-        q_day_del_lis = db_session.query(
-            cli.id.label('cid'), mem.firstname, mem.lastname,
-            add.street, add.postal_code,
-            oi.total_quantity, oi.size,
-            menu.id, menucomp.id,
-            comp.id.label('component_id'),
-            comp.component_group,
-            comp.name.label('component_name')).\
-            select_from(mem).\
-            join(cli, cli.member_id == mem.id).\
-            join(add, add.id == mem.address_id).\
-            join(menu, menu.date == delivery_date).\
-            join(order, order.client_id == cli.id).\
-            join(oi, oi.order_id == order.id).\
-            join(menucomp, menucomp.menu_id == menu.id).\
-            join(comp, and_(comp.id == menucomp.component_id,
-                            comp.component_group == oi.component_group)).\
-            filter(order.delivery_date == delivery_date).\
-            order_by(add.postal_code, mem.lastname, mem.firstname)
+        q_day_del_lis = select(
+            [tcli.c.id.label('cid'), tmem.c.firstname, tmem.c.lastname,
+             tadd.c.street, tadd.c.postal_code,
+             torditm.c.total_quantity, torditm.c.size,
+             tmen.c.id, tmencom.c.id,
+             tcom.c.id.label('component_id'),
+             tcom.c.component_group,
+             tcom.c.name.label('component_name')]).\
+            select_from(
+                tmem.
+                join(tcli, tcli.c.member_id == tmem.c.id).
+                join(tadd, tadd.c.id == tmem.c.address_id).
+                join(tmen, tmen.c.date == delivery_date).
+                join(tord, tord.c.client_id == tcli.c.id).
+                join(torditm, torditm.c.order_id == tord.c.id).
+                join(tmencom, tmencom.c.menu_id == tmen.c.id).
+                join(
+                    tcom,
+                    and_(tcom.c.id == tmencom.c.component_id,
+                         tcom.c.component_group ==
+                         torditm.c.component_group))).\
+            where(tord.c.delivery_date == delivery_date).\
+            order_by(tadd.c.postal_code, tmem.c.lastname, tmem.c.firstname)
         print_rows(q_day_del_lis,
                    "\n***** Delivery List ******\n CLIENT_ID,"
                    " FIRSTNAME, LASTNAME, "
@@ -376,7 +395,8 @@ class Order(models.Model):
                    "COMPONENT_ID, COMPONENT_GROUP, COMPONENT_NAME")
 
         kitchen_list = {}
-        for row in q_day_avo_ing.all():
+        rows = db_sa_session.execute(q_day_avo_ing)
+        for row in rows:
             check_for_new_client(kitchen_list, row)
             if row.oiorderid and row.menucompid:
                 # found avoid ingredient clash
@@ -392,7 +412,8 @@ class Order(models.Model):
                     row.ingredient)
         # END FOR
 
-        for row in q_day_avo_com.all():
+        rows = db_sa_session.execute(q_day_avo_com)
+        for row in rows:
             check_for_new_client(kitchen_list, row)
             if row.oiorderid and row.menucompid:
                 # found avoid component clash
@@ -408,7 +429,8 @@ class Order(models.Model):
                     row.component)
         # END FOR
 
-        for row in q_day_res.all():
+        rows = db_sa_session.execute(q_day_res)
+        for row in rows:
             check_for_new_client(kitchen_list, row)
             if row.oiorderid and row.menucompid:
                 # found restriction clash
@@ -425,7 +447,8 @@ class Order(models.Model):
                 row.restricted_item)
         # END FOR
 
-        for row in q_day_pre.all():
+        rows = db_sa_session.execute(q_day_pre)
+        for row in rows:
             check_for_new_client(kitchen_list, row)
             # should be a sorted set
             # found client with food preparation
@@ -433,7 +456,8 @@ class Order(models.Model):
         # END FOR
 
         # Components summary for the day
-        for row in q_day_del_lis.all():
+        rows = db_sa_session.execute(q_day_del_lis)
+        for row in rows:
             check_for_new_client(kitchen_list, row)
             if row.component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH:
                 kitchen_list[row.cid].meal_qty = \
@@ -503,7 +527,8 @@ def print_rows(q, heading=""):  # DEBUG
     # print("\n-----------------------------------------------------\n",
     #       # q, "\n",
     #       heading)
-    # for row in q.all():
+    # rows = db_sa_session.execute(q)
+    # for row in rows:
     #     print(row)
     pass
 
@@ -627,4 +652,4 @@ class Order_item(models.Model):
             " {} <component_group:> {}".\
             format(str(self.order.delivery_date),
                    self.order_item_type,
-                   self.component.component_group)
+                   self.component_group)
