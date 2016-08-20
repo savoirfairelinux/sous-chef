@@ -2,8 +2,10 @@ from django.test import TestCase, Client
 from member.models import Member, Client, User, Address, Referencing
 from member.models import Contact, Option, Client_option, Restriction, Route
 from member.models import Client_avoid_ingredient, Client_avoid_component
+from member.admin import ClientAdmin, ClientOptionInline
 from meal.models import Restricted_item, Ingredient, Component
 from datetime import date
+from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse, reverse_lazy
 from order.models import Order
@@ -1406,3 +1408,36 @@ class MemberSearchTestCase(TestCase):
             follow=True
         )
         self.assertTrue(b'Katrina Heide' in result.content)
+
+
+class ClientAdminTestCase(TestCase):
+
+    def setUp(self):
+        self.client_admin = ClientAdmin(Client, AdminSite())
+        self.client_option_inline = ClientOptionInline(
+            Client_option, AdminSite())
+        address = Address.objects.create(
+            number=123, street='De Bullion',
+            city='Montreal', postal_code='H3C4G5')
+        member = Member.objects.create(firstname='Angela',
+                                       lastname='Desousa',
+                                       address=address)
+        self.client = Client.objects.create(
+            member=member, billing_member=member,
+            birthdate=date(1980, 4, 19),
+            meal_default_week={'monday_size': 'L',
+                               'monday_main_dish_quantity': 1
+                               })
+        self.option = Option.objects.create(
+            name='PUREE ALL', option_group='preparation')
+        self.client_option = \
+            Client_option.objects.create(
+                client=self.client, option=self.option)
+
+    def test_admin_address_details(self):
+        result = self.client_admin.address_details(self.client)
+        self.assertTrue('De Bullion' in str(result))
+
+    def test_admin_option_group(self):
+        result = self.client_option_inline.option_group(self.client_option)
+        self.assertTrue('preparation' in str(result))

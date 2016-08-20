@@ -1,10 +1,12 @@
 import datetime
 
+from django.contrib.admin.sites import AdminSite
 from django.test import TestCase
 
 from meal.models import Component, Component_ingredient
 from meal.models import Ingredient, Incompatibility
 from meal.models import Menu, Menu_component, Restricted_item
+from meal.admin import ComponentIngredientInline, IncompatibilityInline
 from dataload import insert_all
 
 
@@ -186,3 +188,47 @@ class Restricted_itemTestCase(TestCase):
         name = 'pork'
         restricted_item = Restricted_item.objects.get(name=name)
         self.assertEqual(name, str(restricted_item))
+
+
+class ComponentAdminTestCase(TestCase):
+
+    def setUp(self):
+        self.component_ingredient_inline = ComponentIngredientInline(
+            Component_ingredient, AdminSite())
+        component = Component.objects.create(
+            name='Coq au vin', component_group='main dish')
+        ingredient = Ingredient.objects.create(
+            name='Green peas', ingredient_group='veggies and fruits')
+        self.component_ingredient = Component_ingredient.objects.create(
+            component=component, ingredient=ingredient)
+
+    def test_admin_ComponentIngredient_queryset(self):
+        result = list(self.component_ingredient_inline.get_queryset(None))
+        self.assertTrue(self.component_ingredient in result)
+
+    def test_admin_ComponentIngredient_ingredient_group(self):
+        result = self.component_ingredient_inline.ingredient_group(
+            self.component_ingredient)
+        self.assertTrue('veggies and fruits' in str(result))
+
+
+class RestrictedItemAdminTestCase(TestCase):
+
+    def setUp(self):
+        self.incompatibility_inline = IncompatibilityInline(
+            Restricted_item, AdminSite())
+        restricted_item = Restricted_item.objects.create(
+            name='pork', restricted_item_group='meat')
+        ingredient = Ingredient.objects.create(
+            name='ham', ingredient_group='meat')
+        self.incompatibility = Incompatibility.objects.create(
+            restricted_item=restricted_item, ingredient=ingredient)
+
+    def test_admin_Incompatibility_queryset(self):
+        result = list(self.incompatibility_inline.get_queryset(None))
+        self.assertTrue(self.incompatibility in result)
+
+    def test_admin_Incompatibility_ingredient_group(self):
+        result = self.incompatibility_inline.ingredient_group(
+            self.incompatibility)
+        self.assertTrue('meat' in str(result))
