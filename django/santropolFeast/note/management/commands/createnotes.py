@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from member.factories import NoteFactory
+from note.factories import NoteFactory
 
 
 class Command(BaseCommand):
