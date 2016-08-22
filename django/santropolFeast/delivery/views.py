@@ -44,10 +44,10 @@ class Orderlist(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(Orderlist, self).get_context_data(**kwargs)
-        context['refresh'] = None
+        context['orders_refresh_date'] = None
         if LogEntry.objects.exists():
             log = LogEntry.objects.latest('action_time')
-            context['refresh'] = log
+            context['orders_refresh_date'] = log
 
         return context
 
