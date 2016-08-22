@@ -42,9 +42,10 @@ class Note (models.Model):
     author = models.ForeignKey(
         User,
         verbose_name=_('Author'),
+        null=True,
     )
 
-    date = models.DateField(
+    date = models.DateTimeField(
         verbose_name=_('Date'),
         default=timezone.now,
     )

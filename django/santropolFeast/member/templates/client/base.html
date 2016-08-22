@@ -5,26 +5,84 @@
 
 {% block title %}Client{% endblock %}
 
+{% block extrahead %}
+<link href="{% static 'css/calendar.min.css' %}" type="text/css" rel="stylesheet">
+{% endblock %}
+
 {% block extrajs %}
+<script src="{% static 'js/calendar.min.js' %}" type="application/javascript"></script>
 <script type="text/javascript">
+    // Init status dropdown behavior
     $('.ui.dropdown').dropdown({transition: 'drop'});
 
-    $('.ui.dropdown.status').dropdown({
-        transition: 'drop',
-        onChange: function(value, text, $selectedItem) {
-            $(this).addClass('loading');
-            $.ajax({
-                url: "/member/change_status/" + {{ client.id }} + '/',
-                type: "POST",
-                data: {
-                    'status': value,
-                    'csrfmiddlewaretoken': '{{ csrf_token }}',
-                },
-                success: function(response) {
-                    $('.ui.dropdown.status').removeClass('loading');
-                }
-            })
-        }
+    // I prefer to use «Click Event» instead of «Dropdown Change»,
+    // because I don't need this behavior when restoring default dropdown value
+    // when denying modal
+    $('.ui.dropdown.status > .menu > .item').click(function () {
+        var value = $(this).data('value');
+        var today = new Date();
+        var modalCtntURL = "{% url 'member:clientStatusSchedulerModal' client.id %}";
+        $.get(modalCtntURL, {status:value, csrfmiddlewaretoken: '{{ csrf_token }}',}, function(data){
+                $('.ui.modal.status')
+                    .html(data)
+                    .modal("setting", {
+                        closable: false,
+                        // Inside modal init
+                        onVisible: function () {
+                            // Enable status confirmation dropdown
+                            $('.ui.status_to.dropdown').dropdown();
+                            // Init dates field (start and end)
+                            $('#rangestart').calendar({
+                                type: 'date',
+                                on: 'click',
+                                minDate: new Date(
+                                    today.getFullYear(),
+                                    today.getMonth(),
+                                    today.getDate() + 1),
+                                formatter: {
+                                    date: function (date, settings) {
+                                        if (!date) return '';
+                                        var day = date.getDate();
+                                        var month = date.getMonth() + 1;
+                                        var year = date.getFullYear();
+                                        if (month < 10) month = '0' + month;
+                                        if (day < 10) day = '0' + day;
+                                        return year + '-' + month + '-' + day;
+                                    }
+                                },
+                                endCalendar: $('#rangeend')
+                            });
+                            $('#rangeend').calendar({
+                                type: 'date',
+                                minDate: new Date(
+                                    today.getFullYear(),
+                                    today.getMonth(),
+                                    today.getDate() + 1),
+                                formatter: {
+                                    date: function (date, settings) {
+                                        if (!date) return '';
+                                        var day = date.getDate();
+                                        var month = date.getMonth() + 1;
+                                        var year = date.getFullYear();
+                                        if (month < 10) month = '0' + month;
+                                        if (day < 10) day = '0' + day;
+                                        return year + '-' + month + '-' + day;
+                                    }
+                                },
+                                startCalendar: $('#rangestart')
+                            });
+                        },
+                        // When approvind modal, submit form
+                        onApprove: function($element) {
+                            $('#change-status-form').submit();
+                        },
+                        // When denying modal, restore default value for status dropdown
+                        onDeny: function($element) {
+                            $('.ui.dropdown.status').dropdown('restore defaults');
+                        }
+                    })
+                    .modal("show");
+            });
     });
 </script>
 {% endblock %}
@@ -35,7 +93,7 @@
 
     <h1 class="ui header">
         <div class="content">
-        {{client}}
+            {{client}}
             <div class="sub header">Client since {{ client.member.created_at|date:"Y/m/d"}}</div>
         </div>
     </h1>
@@ -59,14 +117,16 @@
     </div>
 </div>
 
+<div class="ui modal status"></div>
+
 {% if client.alert %}
 <div class="ui row"><div class="sixteen wide column">
-<div class="ui warning message">
-    <div class="header">
-        Important notice
+    <div class="ui warning message">
+        <div class="header">
+            Important notice
+        </div>
+        <p>{{ client.alert }}</p>
     </div>
-    <p>{{ client.alert }}</p>
-</div>
 </div></div>
 
 {% endif %}
@@ -86,6 +146,6 @@
         <!-- A block used by all children to include content here-->
         {% endblock %}
     </div>
-    
+
 </div>
 {% endblock %}
