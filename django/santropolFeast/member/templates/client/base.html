@@ -22,7 +22,7 @@
         var value = $(this).data('value');
         var today = new Date();
         var modalCtntURL = "{% url 'member:clientStatusScheduler' client.id %}";
-        $.get(modalCtntURL, {status:value, csrfmiddlewaretoken: '{{ csrf_token }}',}, function(data){
+        $.get(modalCtntURL, {status:value}, function(data){
                 $('.ui.modal.status')
                     .html(data)
                     .modal("setting", {
@@ -82,7 +82,7 @@
                                          console.log('show modal..')
                                          $('.ui.modal.status').modal("show");
                                      } else {
-                                         location.reload();
+                                         //location.reload();
                                      }
                                  },
                              });

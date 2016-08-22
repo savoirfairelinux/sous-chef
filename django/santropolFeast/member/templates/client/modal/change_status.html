@@ -33,9 +33,10 @@
             <div class="ui calendar" id="rangeend">
                 <div class="ui input left icon">
                     <i class="calendar icon"></i>
-                    <input type="text" placeholder="{{ _('End date') }}" name="end_date" autocomplete="off">
+                    {{ form.end_date }}
                 </div>
             </div>
+            {% if form.end_date.errors %} {{ form.end_date.errors }} {% endif %}
         </div>
     </div>
 </form>

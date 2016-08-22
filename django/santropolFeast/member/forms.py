@@ -7,7 +7,7 @@ from order.models import SIZE_CHOICES
 from member.models import (
     Member, Client, RATE_TYPE, CONTACT_TYPE_CHOICES, Option,
     GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE,
-    DAYS_OF_WEEK, Route,
+    DAYS_OF_WEEK, Route, ClientScheduledStatus
 )
 
 
@@ -353,3 +353,19 @@ class ClientEmergencyContactInformation(MemberForm):
     )
 
     contact_value = forms.CharField(label=_("Contact"))
+
+
+class ClientScheduledStatusForm(forms.ModelForm):
+
+    class Meta:
+        model = ClientScheduledStatus
+        fields = [
+            'client', 'status_from', 'status_to', 'reason', 'change_date'
+        ]
+        widgets = {
+            'reason': forms.Textarea(attrs={'rows': 2}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ClientScheduledStatusForm, self).__init__(*args, **kwargs)
+        self.fields['end_date'] = forms.DateField(required=False)

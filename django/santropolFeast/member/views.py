@@ -1,9 +1,13 @@
 # coding: utf-8
 
+
+import csv
+from datetime import date
+
+from django.core.urlresolvers import reverse_lazy
 from django.views import generic
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
-from django import forms
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -23,16 +27,12 @@ from member.models import (
     Client_avoid_ingredient,
     Client_avoid_component,
 )
+from member.forms import ClientScheduledStatusForm
 from note.models import Note
 from order.mixins import AjaxableResponseMixin
-from meal.models import Restricted_item
 from meal.models import COMPONENT_GROUP_CHOICES
 from formtools.wizard.views import NamedUrlSessionWizardView
-from django.core.urlresolvers import reverse_lazy
-import csv
-from django.template import RequestContext
-from django.http import JsonResponse
-from datetime import date
+
 
 size = ['regular', 'large']
 
@@ -890,7 +890,7 @@ def geolocateAddress(request):
 
 class ClientStatusScheduler(generic.CreateView, AjaxableResponseMixin):
     model = ClientScheduledStatus
-    fields = ['client', 'status_from', 'status_to', 'reason', 'change_date']
+    form_class = ClientScheduledStatusForm
     template_name = "client/modal/change_status.html"
 
     @method_decorator(login_required)
@@ -916,8 +916,7 @@ class ClientStatusScheduler(generic.CreateView, AjaxableResponseMixin):
     def form_valid(self, form):
         client = get_object_or_404(Client, pk=self.kwargs.get('pk'))
         start_date = form.cleaned_data.get('change_date')
-        # TODO: Validate end_date
-        end_date = self.request.POST.get('end_date', '')
+        end_date = form.cleaned_data.get('end_date')
 
         response = super(ClientStatusScheduler, self).form_valid(form)
 
@@ -927,7 +926,7 @@ class ClientStatusScheduler(generic.CreateView, AjaxableResponseMixin):
 
         # Schedule a time range during which status will be different,
         # then back to current (double schedule)
-        if end_date != '':
+        if end_date is not None:
             change2 = ClientScheduledStatus(
                 client=client,
                 status_from=form.cleaned_data.get('status_to'),

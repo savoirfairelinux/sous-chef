@@ -1585,6 +1585,7 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
             'status_to': Client.STOPCONTACT,
             'reason': 'Holidays',
             'change_date': '2019-09-23',
+            'end_date': '',
         }
         response = self.client.post(
             reverse_lazy('member:clientStatusScheduler',
