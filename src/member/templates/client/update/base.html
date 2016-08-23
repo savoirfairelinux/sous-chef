@@ -3,10 +3,6 @@
 {% load i18n %}
 {% load staticfiles %}
 
-{% block head %}
-{{ wizard.form.media}}
-{% endblock %}
-
 {% block extrahead %}
     <style> #mapid {height: 250px;}</style>
     {% load leaflet_tags %}
@@ -15,18 +11,14 @@
 {% endblock %}
 
 {% block title %}
-    {% if edit == True %}Edit existing client{% else %}Create a new client{% endif %}
+    Update Client
 {% endblock %}
 
 {% block message %}
 <div class="ui text container">
     <div class="ui warning small message">
-        <div class="header">Notice</div>
-        {% if not edit %}
-        <p>No information will be saved until all the steps are completed.</p>
-        {% else %}
-        <p>Save as soon as you're ready.</p>
-        {% endif %}
+        <div class="header">Tip</div>
+        <p>In update mode, each step can be saved individually.</p>
     </div>
 </div>
 {% endblock %}
@@ -35,46 +27,38 @@
 
 <div class="ui secondary pointing fluid menu">
     <h1 class="ui header">
-        {% if edit == True %}Edit Client{% else %}New Client{% endif %}
+        Update Client
     </h1>
 </div>
 
 <div class="six wide column">
     <div class="ui vertical steps">
-        {% include 'forms/step.html' with step=1 url='basic_information' icon='male' name=_('Personal') description=_('First name, last name, ...') %}
-        {% include 'forms/step.html' with step=2 url='address_information' icon='home' name=_('Address') description=_('Street number, city, ...') %}
-        {% include 'forms/step.html' with step=3 url='referent_information' icon='treatment' name=_('Referent') description=_('Referent contact information') %}
-        {% include 'forms/step.html' with step=4 url='payment_information' icon='payment' name=_('Payment') description=_('Payment method, card, ...') %}
-        {% include 'forms/step.html' with step=5 url='dietary_restriction' icon='food' name=_('Preferences') description=_('Deliveries, restrictions, ...') %}
-        {% include 'forms/step.html' with step=6 url='emergency_contact' icon='first aid' name=_('Emergency') description=_('Emergency contact information') %}
+        {% include 'client/update/step.html' with url='member_update_basic_information' step='basic_information' icon='male' name=_('Personal') description=_('First name, last name, ...') %}
+        {% include 'client/update/step.html' with url='member_update_address_information' step='address_information' icon='home' name=_('Address') description=_('Street number, city, ...') %}
+        {% include 'client/update/step.html' with url='member_update_referent_information' step='referent_information' icon='treatment' name=_('Referent') description=_('Referent contact information') %}
+        {% include 'client/update/step.html' with url='member_update_basic_information' step='payment_information' icon='payment' name=_('Payment') description=_('Payment method, card, ...') %}
+        {% include 'client/update/step.html' with url='member_update_basic_information' step='dietary_restriction' icon='food' name=_('Preferences') description=_('Deliveries, restrictions, ...') %}
+        {% include 'client/update/step.html' with url='member_update_basic_information' step='emergency_contact' icon='first aid' name=_('Emergency') description=_('Emergency contact information') %}
     </div>
  </div>
 
 <div class="ten wide column form-steps">
+
     <form action="" method="post" class="ui form error">{% csrf_token %}
-        {% if wizard.form.errors %}
+        {% if form.errors %}
         <div class="ui error message">
             <div class="header">{{ _('Required information missing')}}</div>
             <p>{{ _('Please review the form to make sure that all required fields are filled.')}}</p>
-            {{ wizard.form.errors }}
+            {{ form.errors }}
         </div>
         {% endif %}
 
-        {{wizard.management_form}}
+        {% block subcontent %}
+            <!-- A block used by all children to include content here-->
+        {% endblock %}
 
-        {% include 'forms/steps/'|add:wizard.steps.current|add:'.html' %}
+        <input class="big ui right floated yellow button" type="submit" value="Save"/>
 
-        {% if wizard.steps.prev and not edit %}
-        <button class="ui left floated button" name="wizard_goto_step" type="submit" value="{{wizard.steps.prev}}">
-            {% trans "Back"%}
-        </button>
-        {% endif %}
-
-        {% if wizard.steps.step1 == 6 %}
-            <input class="big ui right floated yellow button" type="submit" value="Save"/>
-        {% else %}
-            <button  class="big ui yellow right floated button" name="wizard_goto_step" type="submit">Next</button>
-        {% endif %}
 
     </form>
 </div>
@@ -234,11 +218,11 @@
               // var yourQuery = "4846 rue cartier, Montreal, Qc";
               var apt='',street  ='' , city ='', zipcode ='';
 
-              if ($('#id_address_information-street').val() ) {
-                street = $('#id_address_information-street').val()+ "&";
+              if ($('#id_street').val() ) {
+                street = $('#id_street').val()+ "&";
               }
-              if ($('#id_address_information-city').val()) {
-                city =  $('#id_address_information-city').val()+ "&"; ;
+              if ($('#id_city').val()) {
+                city =  $('#id_city').val()+ "&"; ;
               }
 
               var yourQuery = apt +  street + city + zipcode;
@@ -253,9 +237,9 @@
                           var dist = distance(45.516564,-73.575145, results[0].center.lat, results[0].center.lng,"K")
 
                           // update text field withe info
-                          $('#id_address_information-latitude').val(data.lat);
-                          $('#id_address_information-longitude').val(data.long);
-                          $('#id_address_information-distance').val(dist);
+                          $('#id_latitude').val(data.lat);
+                          $('#id_longitude').val(data.long);
+                          $('#id_distance').val(dist);
 
                          // Add or update marker for the found address
                          if (typeof(marker)==='undefined') {
@@ -271,10 +255,10 @@
                           // Adjust latitude / longitude if user drag the marker
                           marker.on("dragend",function(ev){
                               var chagedPos = ev.target.getLatLng();
-                              $('#id_address_information-latitude').val(chagedPos.lat);
-                              $('#id_address_information-longitude').val(chagedPos.lng);
+                              $('#id_latitude').val(chagedPos.lat);
+                              $('#id_longitude').val(chagedPos.lng);
                               var newdist = distance(45.516564,-73.575145, chagedPos.lat,chagedPos.lng,"K")
-                              $('#id_address_information-distance').val(newdist);
+                              $('#id_distance').val(newdist);
                           });
                     }
                     else {

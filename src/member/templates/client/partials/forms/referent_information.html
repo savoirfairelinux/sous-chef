@@ -3,7 +3,7 @@
 <div class="ui center aligned basic segment">
   <div class="ui fluid category search">
     <div class="ui icon input">
-      {{wizard.form.member}}
+      {{form.member}}
       <i class="search icon"></i>
     </div>
     <div class="results"></div>
@@ -24,11 +24,11 @@
       <div class="field">
         <label>{{ _('Name') }}</label>
         <div class="two fields">
-          <div class="field {% if wizard.form.firstname.errors %} error {% endif %}">
-              {{wizard.form.firstname}}
+          <div class="field {% if form.firstname.errors %} error {% endif %}">
+              {{form.firstname}}
           </div>
-          <div class="field {% if wizard.form.lastname.errors %} error {% endif %}">
-              {{wizard.form.lastname}}
+          <div class="field {% if form.lastname.errors %} error {% endif %}">
+              {{form.lastname}}
           </div>
         </div>
       </div>
@@ -37,26 +37,26 @@
 </div>
 
 
-<div class="field {% if wizard.form.work_information.errors %} error {% endif %}">
-    <label>{{ wizard.form.work_information.label }}</label>
-    {{ wizard.form.work_information }}
+<div class="field {% if form.work_information.errors %} error {% endif %}">
+    <label>{{ form.work_information.label }}</label>
+    {{ form.work_information }}
 </div>
 
 <h4 class="ui dividing header">{{ _('Referral reason') }}</h4>
 
-<div class="field {% if wizard.form.date.errors %} error {% endif %}">
-    <label>{{ wizard.form.date.label }}</label>
+<div class="field {% if form.date.errors %} error {% endif %}">
+    <label>{{ form.date.label }}</label>
     <div class="ui calendar" id="wizard_form_date">
         <div class="ui input left icon">
               <i class="calendar icon"></i>
-              {{ wizard.form.date }}
+              {{ form.date }}
         </div>
     </div>
 </div>
 
-<div class="field {% if wizard.form.referral_reason.errors %} error {% endif %}">
+<div class="field {% if form.referral_reason.errors %} error {% endif %}">
     <div class="ui message attached">
         <p>Please describe the referral reason(s)</p>
     </div>
-    {{ wizard.form.referral_reason }}
+    {{ form.referral_reason }}
 </div>

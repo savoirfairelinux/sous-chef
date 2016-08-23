@@ -2,10 +2,10 @@
 
 <div class="field">
     <div class="ui toggle checkbox">
-      {{wizard.form.same_as_client}}
+      {{form.same_as_client}}
       <label>
-          {{wizard.form.same_as_client.label}}
-          <i class="help-text question yellow icon link" data-content="{{ wizard.form.same_as_client.help_text }}"></i>
+          {{form.same_as_client.label}}
+          <i class="help-text question yellow icon link" data-content="{{ form.same_as_client.help_text }}"></i>
       </label>
     </div>
 </div>
@@ -13,7 +13,7 @@
 <div class="ui center aligned basic segment" id="billing_select_member">
   <div class="ui fluid category search">
     <div class="ui icon input">
-      {{wizard.form.member}}
+      {{form.member}}
       <i class="search icon"></i>
     </div>
     <div class="results"></div>
@@ -35,11 +35,11 @@
       <div class="field">
         <label>{{ _('Name') }}</label>
         <div class="two fields">
-          <div class="field {% if wizard.form.firstname.errors %} error {% endif %}">
-              {{wizard.form.firstname}}
+          <div class="field {% if form.firstname.errors %} error {% endif %}">
+              {{form.firstname}}
           </div>
-          <div class="field {% if wizard.form.lastname.errors %} error {% endif %}">
-              {{wizard.form.lastname}}
+          <div class="field {% if form.lastname.errors %} error {% endif %}">
+              {{form.lastname}}
           </div>
         </div>
       </div>
@@ -47,23 +47,23 @@
       <div class="field">
         <label>{{ _('Street') }}</label>
         <div class="fields">
-          <div class="twelve wide field {% if wizard.form.street.errors %} error {% endif %}">
-            {{ wizard.form.street}}
+          <div class="twelve wide field {% if form.street.errors %} error {% endif %}">
+            {{ form.street}}
           </div>
           <div class="four wide field">
-            {{ wizard.form.apartment }}
+            {{ form.apartment }}
           </div>
         </div>
       </div>
 
       <div class="equal width fields">
-        <div class="field {% if wizard.form.city.errors %} error {% endif %}">
-          <label>{{ wizard.form.city.label }}</label>
-          {{ wizard.form.city }}
+        <div class="field {% if form.city.errors %} error {% endif %}">
+          <label>{{ form.city.label }}</label>
+          {{ form.city }}
         </div>
-        <div class="field {% if wizard.form.postal_code.errors %} error {% endif %}">
-            <label>{{ wizard.form.postal_code.label }}</label>
-            {{ wizard.form.postal_code }}
+        <div class="field {% if form.postal_code.errors %} error {% endif %}">
+            <label>{{ form.postal_code.label }}</label>
+            {{ form.postal_code }}
         </div>
       </div>
 
@@ -72,11 +72,11 @@
 </div>
 
 <div class="field">
-    <label>{{ wizard.form.billing_payment_type.label }}</label>
-    {{ wizard.form.billing_payment_type }}
+    <label>{{ form.billing_payment_type.label }}</label>
+    {{ form.billing_payment_type }}
 </div>
 
 <div class="field">
-    <label>{{ wizard.form.facturation.label }}</label>
-    {{ wizard.form.facturation }}
+    <label>{{ form.facturation.label }}</label>
+    {{ form.facturation }}
 </div>

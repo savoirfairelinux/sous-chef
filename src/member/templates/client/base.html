@@ -128,8 +128,10 @@
     </div>
 </div>
 
+<div class="ui modal status"></div>
+
 <div class="sixteen wide column">
-    {% include 'client/client_info.html' %}
+    {% include 'client/view/summary.html' %}
 </div>
 
 {% if client.alert %}
@@ -147,9 +149,9 @@
 <div class="ui stackable relaxed grid container">
 
     <div class="four wide column">
-        {% include 'client/menu.html' %}
+        {% include 'client/partials/menu.html' %}
 
-        <a class="ui basic fluid button" href="{% url 'member:member-update-basic-information' client_id=client.id %}">
+        <a class="ui basic fluid button" href="{% url 'member:member_update_basic_information' client_id=client.id %}">
             Edit
         </a>
     </div>
