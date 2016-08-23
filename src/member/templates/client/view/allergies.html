@@ -55,9 +55,9 @@
             <i class="write grey icon"></i>
         </a>
     </h3>
-    {% for restriction in client.restrictions %}
+    {% for restricted_item in client.restrictions.all %}
     <div class="ui label">
-        {{ restriction.restricted_item.name }}
+        {{ restricted_item.name }}
         <i class="delete icon" data-id={{restriction.id}} data-model="restriction"></i>
     </div>
     {% empty %}

@@ -428,6 +428,11 @@ class Client(models.Model):
         through='Client_option'
     )
 
+    restrictions = models.ManyToManyField(
+        'meal.Restricted_item',
+        through='Restriction'
+    )
+
     def __str__(self):
         return "{} {}".format(self.member.firstname, self.member.lastname)
 
@@ -460,13 +465,6 @@ class Client(models.Model):
         Returns orders associated to this client
         """
         return self.client_order.all()
-
-    @property
-    def restrictions(self):
-        """
-        Returns restrictions associated to this client
-        """
-        return Restriction.objects.filter(client=self.id)
 
     @property
     def food_preparation(self):
