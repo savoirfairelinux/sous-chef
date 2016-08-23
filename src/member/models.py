@@ -418,6 +418,11 @@ class Client(models.Model):
         through='Client_avoid_ingredient'
     )
 
+    components_to_avoid = models.ManyToManyField(
+        'meal.Component',
+        through='Client_avoid_component'
+    )
+
     def __str__(self):
         return "{} {}".format(self.member.firstname, self.member.lastname)
 
@@ -466,15 +471,6 @@ class Client(models.Model):
         return Client_option.objects.filter(
             client=self.id,
             option__option_group='preparation'
-        )
-
-    @property
-    def components_to_avoid(self):
-        """
-        Returns component(s) to avoid associated to this client
-        """
-        return Client_avoid_component.objects.filter(
-            client=self.id,
         )
 
     @property

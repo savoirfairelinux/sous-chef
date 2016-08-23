@@ -100,9 +100,9 @@
     <h3 class="ui header">
         {% trans 'Dish(es) to avoid' %}
     </h3>
-    {% for component_to_avoid in client.components_to_avoid %}
+    {% for component_to_avoid in client.components_to_avoid.all %}
     <div class="ui label">
-        {{ component_to_avoid.component.name }}
+        {{ component_to_avoid.name }}
         <i class="delete icon" data-id={{component_to_avoid.id}} data-model="component_to_avoid"></i>
     </div>
     {% empty %}

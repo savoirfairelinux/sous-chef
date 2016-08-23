@@ -684,10 +684,7 @@ class FormTestCase(TestCase):
         self.assertTrue(self.ingredient in set(client.ingredients_to_avoid.all()))  # noqa
 
         # Test for components to avoid
-        components = Client_avoid_component.objects.filter(
-            client=client.id,
-        )
-        self.assertTrue(self.component.name in str(components))
+        self.assertTrue(self.component in set(client.components_to_avoid.all()))  # noqa
 
     """
     Test that the meals preferences are properly displayed.
