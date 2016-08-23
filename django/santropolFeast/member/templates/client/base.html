@@ -21,8 +21,8 @@
     $('.ui.dropdown.status > .menu > .item').click(function () {
         var value = $(this).data('value');
         var today = new Date();
-        var modalCtntURL = "{% url 'member:clientStatusSchedulerModal' client.id %}";
-        $.get(modalCtntURL, {status:value, csrfmiddlewaretoken: '{{ csrf_token }}',}, function(data){
+        var modalCtntURL = "{% url 'member:clientStatusScheduler' client.id %}";
+        $.get(modalCtntURL, {status:value}, function(data){
                 $('.ui.modal.status')
                     .html(data)
                     .modal("setting", {
@@ -38,7 +38,7 @@
                                 minDate: new Date(
                                     today.getFullYear(),
                                     today.getMonth(),
-                                    today.getDate() + 1),
+                                    today.getDate()),
                                 formatter: {
                                     date: function (date, settings) {
                                         if (!date) return '';
@@ -54,10 +54,6 @@
                             });
                             $('#rangeend').calendar({
                                 type: 'date',
-                                minDate: new Date(
-                                    today.getFullYear(),
-                                    today.getMonth(),
-                                    today.getDate() + 1),
                                 formatter: {
                                     date: function (date, settings) {
                                         if (!date) return '';
@@ -74,7 +70,22 @@
                         },
                         // When approvind modal, submit form
                         onApprove: function($element) {
-                            $('#change-status-form').submit();
+                            // $('#change-status-form').submit();
+                            console.log($('#change-status-form').serialize());
+                            $.ajax({
+                                 type: 'POST',
+                                 url: "{% url 'member:clientStatusScheduler' client.id %}"  ,
+                                 data: $('#change-status-form').serialize(),
+                                 success: function (xhr, ajaxOptions, thrownError) {
+                                     if ( $(xhr).find('.errorlist').length > 0 ) {
+                                         $('.ui.modal.status').html(xhr);
+                                         console.log('show modal..')
+                                         $('.ui.modal.status').modal("show");
+                                     } else {
+                                         location.reload();
+                                     }
+                                 },
+                             });
                         },
                         // When denying modal, restore default value for status dropdown
                         onDeny: function($element) {

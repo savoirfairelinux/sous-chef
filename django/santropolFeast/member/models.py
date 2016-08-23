@@ -602,12 +602,10 @@ class Client(models.Model):
 
 class ClientScheduledStatus(models.Model):
 
-    ALONE = 'ALONE'
     START = 'START'
     END = 'END'
 
     CHANGE_STATUS = (
-        (ALONE, _('Alone')),
         (START, _('Start')),
         (END, _('End')),
     )
@@ -655,14 +653,12 @@ class ClientScheduledStatus(models.Model):
         auto_now=False,
         auto_now_add=False,
         default=timezone.now,
-        blank=True,
-        null=True
     )
 
     change_state = models.CharField(
         max_length=5,
         choices=CHANGE_STATUS,
-        default=ALONE
+        default=START
     )
 
     operation_status = models.CharField(

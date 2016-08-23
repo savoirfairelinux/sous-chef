@@ -106,12 +106,11 @@
         // Ajax call to get waypoint according route
         $.get( "../getDailyOrders/?route="+routeId, function(data ) {
 
-            var deliveryPoints = L.Routing.Waypoint.extend({ member:"", address:"", meal:"", notes:"", allergies:"" });
+            var deliveryPoints = L.Routing.Waypoint.extend({ member:"", address:""});
             // create an array of waypoint from ajax call
             for(var i in data.waypoints)
             {
                  waypoints.push(new deliveryPoints(L.latLng(data.waypoints[i].latitude, data.waypoints[i].longitude)) );
-                 waypoints[i].options.meal = data.waypoints[i].meal;
                  waypoints[i].options.address = data.waypoints[i].address;
                  waypoints[i].options.member = data.waypoints[i].member;
                  waypoints[i].options.id = data.waypoints[i].id;
@@ -202,8 +201,6 @@
                            var info = "<div class='ui list'>"
                                           +"<div class='item'><i class='user icon'></i>" + wp.options.member + "</div>"
                                           +"<div class='item'><i class='home icon'></i>" + wp.options.address + "</div>"
-                                          +"<div class='item'><i class='food icon'></i>" + wp.options.meal + "</div>"
-                                          +"<div class='item'><i class='warning circle icon'></i>" + wp.options.meal + "</div>"
                                           +"</div>"
 
                            marker.bindPopup(info).openPopup();

@@ -2,7 +2,6 @@ import datetime
 from django.test import TestCase
 from django.core.urlresolvers import reverse_lazy
 
-from dataload import insert_all
 from meal.models import Menu, Component, Component_ingredient, Ingredient
 from order.models import Order
 from member.models import Client
@@ -10,10 +9,11 @@ from member.models import Client
 
 class KitchenCountReportTestCase(TestCase):
 
+    fixtures = ['initial_data']
+
     @classmethod
     def setUpTestData(cls):
         # This data set includes 'Ground porc' clashing ingredient
-        insert_all()  # load fresh data into DB
         Menu.create_menu_and_components(
             datetime.date(2016, 5, 21),
             ['Ginger pork',
@@ -34,13 +34,14 @@ class KitchenCountReportTestCase(TestCase):
 
 class ChooseDayMainDishIngredientsTestCase(TestCase):
 
+    fixtures = ['initial_data']
+
     @classmethod
     def setUpTestData(cls):
         # This data set includes 'Ginger pork' main dish
         # This data set includes 'Coq au vin' main dish
         # This data set includes 'Ground porc' main dish ingredient
         # This data set includes 'Pepper' available ingredient
-        insert_all()  # load fresh data into DB
         # create orders for today
         clients = Client.active.all()
         Order.create_orders_on_defaults(
