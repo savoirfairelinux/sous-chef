@@ -413,6 +413,11 @@ class Client(models.Model):
         null=True
     )
 
+    ingredients_to_avoid = models.ManyToManyField(
+        'meal.Ingredient',
+        through='Client_avoid_ingredient'
+    )
+
     def __str__(self):
         return "{} {}".format(self.member.firstname, self.member.lastname)
 
@@ -461,15 +466,6 @@ class Client(models.Model):
         return Client_option.objects.filter(
             client=self.id,
             option__option_group='preparation'
-        )
-
-    @property
-    def ingredients_to_avoid(self):
-        """
-        Returns ingredients to avoid associated to this client
-        """
-        return Client_avoid_ingredient.objects.filter(
-            client=self.id,
         )
 
     @property

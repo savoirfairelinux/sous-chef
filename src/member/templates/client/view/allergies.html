@@ -86,9 +86,9 @@
     <h3 class="ui header">
         {% trans 'Ingredients to avoid' %}
     </h3>
-    {% for ingredient_to_avoid in client.ingredients_to_avoid %}
+    {% for ingredient_to_avoid in client.ingredients_to_avoid.all %}
     <div class="ui label">
-        {{ ingredient_to_avoid.ingredient.name }}
+        {{ ingredient_to_avoid.name }}
         <i class="delete icon" data-id={{ingredient_to_avoid.id}} data-model="ingredient_to_avoid"></i>
     </div>
     {% empty %}

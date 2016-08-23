@@ -681,10 +681,7 @@ class FormTestCase(TestCase):
         self.assertTrue(self.food_preparation.name in str(food_preparation))
 
         # Test for ingredients to avoid
-        ingredients = Client_avoid_ingredient.objects.filter(
-            client=client.id,
-        )
-        self.assertTrue(self.ingredient.name in str(ingredients))
+        self.assertTrue(self.ingredient in set(client.ingredients_to_avoid.all()))  # noqa
 
         # Test for components to avoid
         components = Client_avoid_component.objects.filter(
