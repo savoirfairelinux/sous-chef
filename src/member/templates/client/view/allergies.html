@@ -72,10 +72,10 @@
             <i class="write grey icon"></i>
         </a>
     </h3>
-    {% for food_preparation in client.food_preparation %}
+    {% for option in client.food_preparation %}
     <div class="ui label">
-        {{ food_preparation.option }}
-        <i class="delete icon" data-id={{food_preparation.id}} data-model="client_option"></i>
+        {{ option.name }}
+        <i class="delete icon" data-id={{option.id}} data-model="client_option"></i>
     </div>
     {% empty %}
     <div class="ui row">

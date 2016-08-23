@@ -423,6 +423,11 @@ class Client(models.Model):
         through='Client_avoid_component'
     )
 
+    options = models.ManyToManyField(
+        'member.option',
+        through='Client_option'
+    )
+
     def __str__(self):
         return "{} {}".format(self.member.firstname, self.member.lastname)
 
@@ -468,10 +473,7 @@ class Client(models.Model):
         """
         Returns specific food preparation associated to this client
         """
-        return Client_option.objects.filter(
-            client=self.id,
-            option__option_group='preparation'
-        )
+        return self.options.filter(option_group='preparation')
 
     @property
     def notes(self):
