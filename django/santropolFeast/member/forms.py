@@ -363,7 +363,9 @@ class ClientScheduledStatusForm(forms.ModelForm):
             'client', 'status_from', 'status_to', 'reason', 'change_date'
         ]
         widgets = {
-            'status_to': forms.Select(attrs={'class': 'ui status_to dropdown'}),
+            'status_to': forms.Select(attrs={
+                'class': 'ui status_to dropdown'
+            }),
             'reason': forms.Textarea(attrs={'rows': 2}),
         }
 
