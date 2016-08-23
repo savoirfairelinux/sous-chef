@@ -1515,18 +1515,19 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
         )
         self.client.login(username=admin.username, password='test1234')
         data = {
-            'pk': self.active_client.id,
+            'client': self.active_client.id,
+            'status_from': self.active_client.status,
             'status_to': Client.PAUSED,
             'reason': '',
         }
         response = self.client.post(
-            reverse_lazy('member:clientStatusAlterOrScheduleProc',
+            reverse_lazy('member:clientStatusScheduler',
                          kwargs={'pk': self.active_client.id}),
             data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
             follow=True
         )
-        client = Client.objects.get(pk=self.active_client.id)
-        self.assertEqual(client.status, Client.PAUSED)
+        self.assertTrue(b'This field is required' in response.content)
 
     def test_view_client_status_update_future_date(self):
         admin = User.objects.create_superuser(
@@ -1536,16 +1537,18 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
         )
         self.client.login(username=admin.username, password='test1234')
         data = {
-            'pk': self.active_client.id,
+            'client': self.active_client.id,
+            'status_from': self.active_client.status,
             'status_to': Client.PAUSED,
             'reason': 'Holidays',
-            'start_date': '2018-09-23',
+            'change_date': '2018-09-23',
             'end_date': '2018-10-02',
         }
         response = self.client.post(
-            reverse_lazy('member:clientStatusAlterOrScheduleProc',
+            reverse_lazy('member:clientStatusScheduler',
                          kwargs={'pk': self.active_client.id}),
             data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
             follow=True
         )
         client = Client.objects.get(pk=self.active_client.id)
@@ -1577,16 +1580,19 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
         )
         self.client.login(username=admin.username, password='test1234')
         data = {
-            'pk': self.active_client.id,
+            'client': self.active_client.id,
+            'status_from': self.active_client.status,
             'status_to': Client.STOPCONTACT,
             'reason': 'Holidays',
-            'start_date': '2019-09-23',
+            'change_date': '2019-09-23',
+            'end_date': '',
         }
         response = self.client.post(
-            reverse_lazy('member:clientStatusAlterOrScheduleProc',
+            reverse_lazy('member:clientStatusScheduler',
                          kwargs={'pk': self.active_client.id}),
             data,
-            follow=True
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+            follow=True,
         )
         client = Client.objects.get(pk=self.active_client.id)
         scheduled_change = ClientScheduledStatus.objects.get(

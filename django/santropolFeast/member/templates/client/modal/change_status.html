@@ -1,40 +1,42 @@
 <div class="header">
     {{ _('Status modification') }}
 </div>
-<form class="content ui form" id="change-status-form" method="POST" action="{% url 'member:clientStatusAlterOrScheduleProc' client.id %}">
+<form class="content ui form" id="change-status-form" method="POST" action="{% url 'member:clientStatusScheduler' client.id %}">
     {% csrf_token %}
+    <input type="hidden" name="client" value="{{form.client.value}}">
+    <input type="hidden" name="status_from" value="{{form.status_from.value}}">
     <div class="field">
-        <label>{{ _('Status') }}</label>
-        <select name="status_to" class="ui status_to dropdown" id="status-to">
-            {% for k,s in client_status %}
-            <option value={{k}} {% if k == status_to %}selected{% endif %}>{{s}}</option>
-            {% endfor %}
-        </select>
+        <label>{{ form.status_to.label }}</label>
+        {{ form.status_to }}
+        {% if form.status_to.errors %} {{ form.status_to.errors }} {% endif %}
     </div>
     <div class="field">
-        <label>{{ _('Reason of status modification') }}</label>
-        <textarea name="reason" rows="2"></textarea>
+        <label>{{ form.reason.label }}</label>
+        {{ form.reason }}
+        {% if form.reason.errors %} {{ form.reason.errors }} {% endif %}
     </div>
     <hr>
     <p>{{ _('If you want to schedule a status modification, feel free to fill one or two of theses date fields.') }}</p>
     <div class="two fields">
         <div class="field">
-            <label>{{ _('Start date') }}</label>
+            <label>{{ form.change_date.label }}</label>
             <div class="ui calendar" id="rangestart">
                 <div class="ui input left icon">
                     <i class="calendar icon"></i>
-                    <input type="text" placeholder="{{ _('Start date') }}" name="start_date" autocomplete="off">
+                    {{ form.change_date }}
                 </div>
             </div>
+            {% if form.change_date.errors %} {{ form.change_date.errors }} {% endif %}
         </div>
         <div class="field">
             <label>{{ _('End date') }}</label>
             <div class="ui calendar" id="rangeend">
                 <div class="ui input left icon">
                     <i class="calendar icon"></i>
-                    <input type="text" placeholder="{{ _('End date') }}" name="end_date" autocomplete="off">
+                    {{ form.end_date }}
                 </div>
             </div>
+            {% if form.end_date.errors %} {{ form.end_date.errors }} {% endif %}
         </div>
     </div>
 </form>
