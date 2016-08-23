@@ -374,8 +374,8 @@ def dailyOrders(request):
                     'member': "{} {}".format(
                         order.client.member.firstname,
                         order.client.member.lastname),
-                    'address': order.client.member.address.street,
-                    'meal': 'meat'}
+                    'address': order.client.member.address.street
+                    }
                 data.append(waypoint)
 
     waypoints = {'waypoints': data}
