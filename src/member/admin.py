@@ -1,7 +1,7 @@
 from django.contrib import admin
 from member.models import (Member, Client, Contact, Address,
                            Referencing, Route, Option,
-                           Client_option, Restriction)
+                           Restriction)
 
 from meal.models import Ingredient
 
@@ -14,9 +14,14 @@ class ComponentsToAvoidInline(admin.TabularInline):
     model = Client.components_to_avoid.through
 
 
+class OptionsInline(admin.TabularInline):
+    model = Client.options.through
+
+
 class ClientAdmin(admin.ModelAdmin):
 
     inlines = [
+        OptionsInline,
         ComponentsToAvoidInline,
         IngredientsToAvoidInline
     ]
@@ -29,5 +34,4 @@ admin.site.register(Contact)
 admin.site.register(Address)
 admin.site.register(Referencing)
 admin.site.register(Option)
-admin.site.register(Client_option)
 admin.site.register(Restriction)
