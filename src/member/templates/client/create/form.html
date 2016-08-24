@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block extrahead %}
+    <link href="{% static 'calendar/calendar.min.css' %}" type="text/css" rel="stylesheet">
     <style> #mapid {height: 250px;}</style>
     {% load leaflet_tags %}
     {% leaflet_js %}
@@ -81,7 +82,7 @@
 {% endblock %}
 
 {% block extrajs %}
-  <script src="{% static 'js/calendar.min.js' %}" type="application/javascript"></script>
+  <script src="{% static 'calendar/calendar.min.js' %}" type="application/javascript"></script>
   <script src="{% static 'leaflet-geocoder/Control.Geocoder.js' %}" type="application/javascript"></script>
   <script type="text/javascript">
     $(function() {
