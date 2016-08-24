@@ -1,0 +1,69 @@
+{% extends "client/base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load admin_urls %}
+
+{% block title %}
+
+  {{client}} - Information
+
+{% endblock %}
+
+{% block subcontent %}
+
+<div class="ui segment">
+    <h2 class="ui header">
+        <div class="content">
+            {% trans 'Scheduled status modifications' %}
+            <div class="sub header">
+                {% trans 'Here are listed all scheduled status modifications.' %}
+            </div>
+        </div>
+    </h2>
+    <div class="ui divider"></div>
+
+    <form action="" method="GET" class="ui form">
+        <div class="inline fields">
+            <div class="field">
+                <label>{{ filter.form.operation_status.label }}</label>
+                {{ filter.form.operation_status }}
+            </div>
+            <div class="field">
+                <label>&nbsp;</label>
+                <a class="ui button" href="{{ request.path }}">{% trans 'Reset' %}</a>
+                <input class="ui button yellow" type="submit" value="{% trans 'Apply' %}" />
+            </div>
+        </div>
+    </form>
+
+    <table class="ui celled striped table">
+        <thead>
+            <tr>
+                <th>{% trans 'Date' %}</th>
+                <th>{% trans 'From' %}</th>
+                <th>{% trans 'To' %}</th>
+                <th>{% trans 'Reason' %}</th>
+                <th>{% trans 'Operation status' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% if not client_statuses %}
+            <tr>
+                <td colspan="5">{% trans 'No status modification.' %}</td>
+            </tr>
+        {% else %}
+            {% for status in client_statuses %}
+            <tr>
+                <td>{{ status.change_date }}</td>
+                <td>{{ status.get_status_from_display }}</td>
+                <td>{{ status.get_status_to_display }}</td>
+                <td>{{ status.reason }}</td>
+                <td>{{ status.get_operation_status_display }}</td>
+            </tr>
+            {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
