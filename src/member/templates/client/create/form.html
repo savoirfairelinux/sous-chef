@@ -7,22 +7,26 @@
 {{ wizard.form.media}}
 {% endblock %}
 
-
 {% block extrahead %}
-    <link href="{% static 'css/calendar.min.css' %}" type="text/css" rel="stylesheet">
     <style> #mapid {height: 250px;}</style>
     {% load leaflet_tags %}
     {% leaflet_js %}
     {% leaflet_css %}
 {% endblock %}
 
-{% block title %}Create a new client{% endblock %}
+{% block title %}
+    {% if edit == True %}Edit existing client{% else %}Create a new client{% endif %}
+{% endblock %}
 
 {% block message %}
 <div class="ui text container">
     <div class="ui warning small message">
         <div class="header">Notice</div>
+        {% if not edit %}
         <p>No information will be saved until all the steps are completed.</p>
+        {% else %}
+        <p>Save as soon as you're ready.</p>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
@@ -30,17 +34,19 @@
 {% block content %}
 
 <div class="ui secondary pointing fluid menu">
-    <h1 class="ui header">New Client</h1>
+    <h1 class="ui header">
+        {% if edit == True %}Edit Client{% else %}New Client{% endif %}
+    </h1>
 </div>
 
 <div class="six wide column">
     <div class="ui vertical steps">
-        {% include 'forms/step.html' with step=1 url='basic_information' icon='male' name=_('Personal') description=_('First name, last name, ...') %}
-        {% include 'forms/step.html' with step=2 url='address_information' icon='home' name=_('Address') description=_('Street number, city, ...') %}
-        {% include 'forms/step.html' with step=3 url='referent_information' icon='treatment' name=_('Referent') description=_('Referent contact information') %}
-        {% include 'forms/step.html' with step=4 url='payment_information' icon='payment' name=_('Payment') description=_('Payment method, card, ...') %}
-        {% include 'forms/step.html' with step=5 url='dietary_restriction' icon='food' name=_('Preferences') description=_('Deliveries, restrictions, ...') %}
-        {% include 'forms/step.html' with step=6 url='emergency_contact' icon='first aid' name=_('Emergency') description=_('Emergency contact information') %}
+        {% include 'client/create/steps.html' with step=1 url='basic_information' icon='male' name=_('Personal') description=_('First name, last name, ...') %}
+        {% include 'client/create/steps.html' with step=2 url='address_information' icon='home' name=_('Address') description=_('Street number, city, ...') %}
+        {% include 'client/create/steps.html' with step=3 url='referent_information' icon='treatment' name=_('Referent') description=_('Referent contact information') %}
+        {% include 'client/create/steps.html' with step=4 url='payment_information' icon='payment' name=_('Payment') description=_('Payment method, card, ...') %}
+        {% include 'client/create/steps.html' with step=5 url='dietary_restriction' icon='food' name=_('Preferences') description=_('Deliveries, restrictions, ...') %}
+        {% include 'client/create/steps.html' with step=6 url='emergency_contact' icon='first aid' name=_('Emergency') description=_('Emergency contact information') %}
     </div>
  </div>
 
@@ -56,9 +62,9 @@
 
         {{wizard.management_form}}
 
-        {% include 'forms/steps/'|add:wizard.steps.current|add:'.html' %}
+        {% include 'client/partials/forms/'|add:wizard.steps.current|add:'.html' %}
 
-        {% if wizard.steps.prev %}
+        {% if wizard.steps.prev and not edit %}
         <button class="ui left floated button" name="wizard_goto_step" type="submit" value="{{wizard.steps.prev}}">
             {% trans "Back"%}
         </button>

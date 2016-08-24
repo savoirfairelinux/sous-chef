@@ -17,6 +17,9 @@ from member.views import (
     DeleteComponentToAvoid,
     geolocateAddress,
     ClientStatusScheduler,
+    ClientUpdateBasicInformation,
+    ClientUpdateAddressInformation,
+    ClientUpdateReferentInformation,
 )
 
 from member.forms import (
@@ -38,6 +41,7 @@ create_member_forms = (
 
 member_wizard = ClientWizard.as_view(create_member_forms,
                                      url_name='member:member_step')
+
 
 urlpatterns = [
     url(r'^create/$', member_wizard, name='member_step'),
@@ -71,3 +75,17 @@ urlpatterns = [
         DeleteComponentToAvoid.as_view(), name='component_to_avoid_delete'),
 
 ]
+
+
+member_update_forms = (
+    ('basic_information', ClientUpdateBasicInformation),
+    ('address_information', ClientUpdateAddressInformation),
+    ('referent_information', ClientUpdateReferentInformation),
+)
+
+# Handle client update forms URL
+for k, v in member_update_forms:
+    urlpatterns.append(
+        url(_(r'^(?P<client_id>\d+)/update/{}/$'.format(k)), v.as_view(),
+            name='member_update_' + k)
+    )

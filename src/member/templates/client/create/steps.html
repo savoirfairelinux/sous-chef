@@ -1,0 +1,32 @@
+{% if edit %}
+
+{% if wizard.steps.step1 == step  %}
+<a class="step active" href="{% url 'member:member_edit' client_id=client_id step=url %}">
+{% elif wizard.steps.step1 > step %}
+<a class="step link" href="{% url 'member:member_edit' client_id=client_id step=url %}">
+{% else %}
+<a class="step link" href="{% url 'member:member_edit' client_id=client_id step=url %}">
+{% endif %}
+    <i class="{{icon}} icon"></i>
+    <div class="content">
+        <div class="title">{{ name }}</div>
+        <div class="description">{{ description }}</div>
+    </div>
+</a>
+
+{% else %}
+
+{% if wizard.steps.step1 == step  %}
+<a class="step active" href="{% url 'member:member_step' step=url %}">
+{% elif wizard.steps.step1 > step %}
+<a class="completed step link" href="{% url 'member:member_step' step=url %}">
+{% else %}
+<a class="disabled step" href="{% url 'member:member_step' step=url %}">
+{% endif %}
+    <i class="{{icon}} icon"></i>
+    <div class="content">
+        <div class="title">{{ name }}</div>
+        <div class="description">{{ description }}</div>
+    </div>
+</a>
+{% endif %}

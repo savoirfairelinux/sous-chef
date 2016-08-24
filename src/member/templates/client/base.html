@@ -130,26 +130,30 @@
 
 <div class="ui modal status"></div>
 
+<div class="sixteen wide column">
+    {% include 'client/view/summary.html' %}
+</div>
+
 {% if client.alert %}
-<div class="ui row"><div class="sixteen wide column">
+<div class="sixteen wide column">
     <div class="ui warning message">
         <div class="header">
             Important notice
         </div>
         <p>{{ client.alert }}</p>
     </div>
-</div></div>
-
+</div>
 {% endif %}
+
 
 <div class="ui stackable relaxed grid container">
 
-    <div class="sixteen wide column">
-        {% include 'client/client_info.html' %}
-    </div>
-
     <div class="four wide column">
-        {% include 'client/menu.html' %}
+        {% include 'client/partials/menu.html' %}
+
+        <a class="ui basic fluid button" href="{% url 'member:member_update_basic_information' client_id=client.id %}">
+            Edit
+        </a>
     </div>
 
     <div class="twelve wide column">

@@ -3,7 +3,7 @@
 <div class="ui center aligned basic segment">
   <div class="ui fluid category search">
     <div class="ui icon input">
-      {{wizard.form.member}}
+      {{form.member}}
       <i class="search icon"></i>
     </div>
     <div class="results"></div>
@@ -25,11 +25,11 @@
       <div class="field">
         <label>{{ _('Name') }}</label>
         <div class="two fields">
-          <div class="field {% if wizard.form.firstname.errors %} error {% endif %}">
-            {{wizard.form.firstname}}
+          <div class="field {% if form.firstname.errors %} error {% endif %}">
+            {{form.firstname}}
           </div>
-          <div class="field {% if wizard.form.lastname.errors %} error {% endif %}">
-            {{wizard.form.lastname}}
+          <div class="field {% if form.lastname.errors %} error {% endif %}">
+            {{form.lastname}}
           </div>
         </div>
       </div>
@@ -42,11 +42,10 @@
   <label>{{ _('Contact information') }}</label>
   <div class="two fields">
     <div class="field">
-      {{wizard.form.contact_type}}
+      {{form.contact_type}}
     </div>
-    <div class="field {% if wizard.form.contact_value.errors %} error {% endif %}">
-      {{wizard.form.contact_value}}
+    <div class="field {% if form.contact_value.errors %} error {% endif %}">
+      {{form.contact_value}}
     </div>
   </div>
 </div>
-

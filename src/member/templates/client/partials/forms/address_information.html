@@ -1,0 +1,72 @@
+<h4 class="ui dividing header">{{ _('Address information') }}</h4>
+
+<div class="field">
+    <label>{{ _('Street') }}</label>
+    <div class="fields">
+      <div class="twelve wide field {% if form.street.errors %} error {% endif %}">
+        {{ form.street}}
+      </div>
+      <div class="four wide field">
+        {{ form.apartment }}
+      </div>
+    </div>
+</div>
+
+<div class="equal width fields">
+    <div class="field {% if form.city.errors %} error {% endif %}">
+      <label>{{ form.city.label }}</label>
+      {{ form.city }}
+    </div>
+    <div class="field {% if form.postal_code.errors %} error {% endif %}">
+        <label>{{ form.postal_code.label }}</label>
+        {{ form.postal_code }}
+    </div>
+</div>
+
+<h4 class="ui dividing header">{{ _('Geolocation') }}</h4>
+
+<div class="field">
+    <button id="geocodeBtn" type="button" class="ui yellow button">
+      <i class="marker icon"></i>Geolocate
+    </button>
+    <i class="help-text question grey icon link" data-content="{{ form.status.help_text }}"></i>
+
+</div>
+
+<div class="equal width fields">
+    <div class="field {% if form.latitude.errors %} error {% endif %}">
+      <label>{{ form.latitude.label }}</label>
+      {{ form.latitude }}
+    </div>
+    <div class="field {% if form.longitude.errors %} error {% endif %}">
+        <label>{{ form.longitude.label }}</label>
+        {{ form.longitude }}
+    </div>
+    <div class="field {% if form.distance.errors %} error {% endif %}">
+        <label>{{ form.distance.label }}</label>
+        <div class="ui right labeled input">
+            {{ form.distance }}
+            <div class="ui basic label">km</div>
+        </div>
+    </div>
+</div>
+
+<div class="map_address">
+    <div id="mapid"></div>
+</div>
+<br>
+
+<h4 class="ui dividing header">{{ _('Delivery Route') }}</h4>
+
+<div class="equal width fields">
+  <div class="field {% if form.route.errors %} error {% endif %}">
+    <label>{{form.route.label}}</label>
+    {{form.route}}
+  </div>
+</div>
+<div class="equal width fields">
+  <div class="field {% if form.delivery_note.errors %} error {% endif %}">
+    <label>{{ form.delivery_note.label }}</label>
+  {{ form.delivery_note }}
+  </div>
+</div>
