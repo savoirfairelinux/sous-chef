@@ -22,7 +22,7 @@ from member.models import (
     Restriction,
     Client_option,
     ClientFilter,
-    ClientFilter,
+    ClientScheduledStatusFilter,
     DAYS_OF_WEEK,
     Route,
     Client_avoid_ingredient,
@@ -841,6 +841,33 @@ class ClientAllergiesView(generic.DetailView):
             'preferences'
         """
         context['myVariableOfContext'] = 0
+
+        return context
+
+
+class ClientStatusView(generic.DetailView):
+    model = Client
+    template_name = 'client/view/status.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ClientStatusView, self).dispatch(*args, **kwargs)
+
+    def get_default_ops_value(self):
+        operation_status_value = self.request.GET.get(
+            'operation_status', ClientScheduledStatus.TOBEPROCESSED)
+        if operation_status_value == ClientScheduledStatusFilter.ALL:
+            operation_status_value = None
+        return operation_status_value
+
+    def get_context_data(self, **kwargs):
+        context = super(ClientStatusView, self).get_context_data(**kwargs)
+        context['active_tab'] = 'status'
+        context['client_status'] = Client.CLIENT_STATUS
+        context['filter'] = ClientScheduledStatusFilter(
+            {'operation_status': self.get_default_ops_value()},
+            queryset=self.object.scheduled_statuses)
+        context['client_statuses'] = context['filter'].qs
 
         return context
 
