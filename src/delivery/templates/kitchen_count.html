@@ -9,13 +9,13 @@
 {% include 'kitchen_count_steps.html' with step='kitchen_count' %}
 
 <div class="ui secondary pointing fluid menu">
-    <h2 class="ui header">Print the kitchen count</h2>
+    <h1 class="ui header">Kitchen Count Report</h1>
     <div class="right menu">
       <div class="ui item"><h3><i class="ui calendar icon"></i>{% now "j F Y" %}</h3></div>
     </div>
 </div>
 
-<table class="ui very compact table">
+<table class="ui very basic celled table">
   <thead>
    <tr class="top aligned">
     <th class="">{% trans 'Component' %}</th>
@@ -37,24 +37,25 @@
     {% endfor %}
   </tbody>
 </table>
-<table class="ui very compact table">
+
+<table class="ui very compact celled  table">
   <thead>
-   <tr class="top aligned">
+   <tr class="top center aligned">
     <th class="">{% trans 'Client' %}</th>
-    <th class="">{% trans 'Qty' %}<br>{% trans 'Reg' %}</th>
-    <th class="">{% trans 'Qty' %}<br>{% trans 'Lge' %}</th>
-    <th class="">{% trans 'Clashing' %}<br>{% trans 'Component' %}</th>
-    <th class="">{% trans 'Clashing' %}<br>{% trans 'Ingredients' %}</th>
+    <th class="">{% trans 'Qty' %} - {% trans 'Reg' %}</th>
+    <th class="">{% trans 'Qty' %} - {% trans 'Lge' %}</th>
+    <th class="">{% trans 'Clashing' %} - {% trans 'Component' %}</th>
+    <th class="">{% trans 'Clashing' %} - {% trans 'Ingredients' %}</th>
     <th class="">{% trans 'Preparation' %}</th>
     <th class="">{% trans 'Restrictions' %}</th>
    </tr>
   </thead>
   <tbody>
     {% for obj in meal_lines %}
-      <tr{% if obj.client == "SUBTOTAL" or obj.client == "TOTAL SPECIALS" %} class="active"{% endif %}>
+      <tr{% if obj.client == "SUBTOTAL" or obj.client == "TOTAL SPECIALS" %} class="positive"{% endif %}>
         <td><strong>{{obj.client}}</strong></td>
-        <td>{{obj.rqty}}</td>
-        <td>{{obj.lqty}}</td>
+        <td class="center aligned">{{obj.rqty}}</td>
+        <td class="center aligned">{{obj.lqty}}</td>
         <td>{{obj.comp_clash}}</td>
         <td>{{obj.ingr_clash}}</td>
         <td>{{obj.preparation}}</td>
@@ -66,6 +67,8 @@
   </tbody>
 </table>
 
+<div class="actions">
 <a class="big ui right floated button" href="{% url 'delivery:meal' %}">Back</a>
 <a class="big ui yellow right floated button" href="{% url 'delivery:route' %}">Next: Organize Routes</a>
+</div>
 {% endblock %}
