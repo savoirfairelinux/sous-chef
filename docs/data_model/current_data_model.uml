@@ -2,7 +2,7 @@
 'To generate image : see http://www.plantuml.com/plantuml
 @startuml
 scale 1.0
-title santropol-feast Data Model (current_data_model.uml, up to commit 4739d94, 2016-05-20)\n
+title sous-chef Data Model (current_data_model.uml, up to commit 4739d94, 2016-05-20)\n
 hide methods
 'hide fields
 skinparam shadowing false
