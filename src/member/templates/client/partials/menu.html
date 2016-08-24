@@ -5,6 +5,7 @@
       <a class="{% if active_tab == 'information' %}active{% endif %} item" href="{% url 'member:client_information' pk=client.id %}"><i class="user icon"></i>Personal</a>
       <a class="{% if active_tab == 'referent' %}active{% endif %} item" href="{% url 'member:client_referent' pk=client.id %}"><i class="treatment icon"></i>Referent</a>
       <a class="{% if active_tab == 'billing' %}active{% endif %} item" href="{% url 'member:client_payment' pk=client.id %}"><i class="payment icon"></i>Billing</a>
+      <a class="{% if active_tab == 'status' %}active{% endif %} item" href="{% url 'member:client_status' pk=client.id %}"><i class="history icon"></i>Status</a>
     </div>
   </div>
   <a class="{% if active_tab == 'prefs' %}active{% endif %} item" href="{% url 'member:client_allergies' pk=client.id %}">
