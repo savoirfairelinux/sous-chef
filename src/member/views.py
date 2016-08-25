@@ -667,7 +667,7 @@ def ExportCSV(self, queryset):
             obj.id,
             obj.member.firstname,
             obj.member.lastname,
-            obj.status,
+            obj.get_status_display(),
             obj.alert,
             obj.gender,
             obj.birthdate,
