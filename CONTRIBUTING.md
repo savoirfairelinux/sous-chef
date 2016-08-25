@@ -2,7 +2,7 @@
 
 First of all, thanks for reading this and taking time to contribute! :+1: We need volunteer developers to help this project grow.
 
-The following is a set of guidelines for contributing to Sous-Chef, which is hosted in the [Savoir-faire Linux organization](https://github.com/savoirfairelinux) on GitHub. 
+The following is a set of guidelines for contributing to Sous-Chef, which is hosted in the [Savoir-faire Linux organization](https://github.com/savoirfairelinux) on GitHub.
 Feel free to propose changes to this document in a pull request.
 
 If you haven't already, please join us on IRC: `#feastproject` on Freenode.
@@ -27,7 +27,7 @@ The installation procedure is based on Docker and is described [on GitHub](https
 
 #### Issues
 
-If you are unsure where to begin contribution to Sous-Chef, you can start by looking through the issues page. 
+If you are unsure where to begin contribution to Sous-Chef, you can start by looking through the issues page.
 Numerous issues are created and waiting for your love on the [issue board](https://github.com/savoirfairelinux/sous-chef/issues).
 
 You may also use [Waffle](https://waffle.io/savoirfairelinux/sous-chef) as a more *Agile-like* dashboard.
@@ -46,7 +46,7 @@ A template is provided to create your Pull Request. Try to fill the information 
 
 #### Pull request checklist
 
-For your pull request to be merged, the answer to the following questions must be 'yes': 
+For your pull request to be merged, the answer to the following questions must be 'yes':
 
 ##### General
 
@@ -80,7 +80,7 @@ The [project wiki](https://github.com/savoirfairelinux/sous-chef/wiki/) on GitHu
 
 ### Reporting bugs
 
-Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/). 
+Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/).
 
 #### How to submit a good bug report
 
@@ -94,7 +94,7 @@ Please include as many details as possible. An issue template is automatically l
 
 ### Testing the application
 
-Our development process is based on Continuous Integration. We love to have a nice code coverage! 
+Our development process is based on Continuous Integration. We love to have a nice code coverage!
 
 Each Django module comes with its own `tests.py` file. Feel free to implement missing unit or functional tests.
 
@@ -124,7 +124,7 @@ An other way to contribute there is to review the code and make sure all strings
 | `enhancement` | Feature requests. |
 | `bug` | Confirmed bugs or reports that are very likely to be bugs. |
 | `question` | Questions more than bug reports or feature requests (e.g. how do I do X). |
-| `help-wanted` | The Sous-Chef core team would appreciate help from the community in resolving these issues. |
+| `advanced` | The Sous-Chef core team would appreciate help from the community in resolving these more complex issues. |
 | `beginner` | Less complex issues which would be good first issues to work on for users who want to contribute to Sous-Chef. |
 | `duplicate` | Issues which are duplicates of other issues, i.e. they have been reported before. |
 | `wontfix` | The core team has decided not to fix these issues for now, either because they're working as intended or for some other reason. |
@@ -132,10 +132,13 @@ An other way to contribute there is to review the code and make sure all strings
 
 ### Issue topics
 
+When applicable, the issue topics often refer to the Django application name.
+
 | Label name | Description |
 | --- | --- |
-| `client` | Related to client management. |
+| `member` | Related to client management. |
 | `order` | Related to the orders and order items management. |
+| `billing` | Related to the billing system. |
 | `documentation` | Related to any kind of documentation. |
 | `frontend` | Related to Semantic UI integration, or Javascript problems. |
 | `migration` | Related to the data migration from the old application. |
