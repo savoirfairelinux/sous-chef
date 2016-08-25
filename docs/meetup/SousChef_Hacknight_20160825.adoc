@@ -50,7 +50,7 @@ Some useful resources:
 
 ## Communication
 
-Please join `#feastproject` on *irc.freenode.net*.
+Please join `#souschef` on *irc.freenode.net*.
 
 A {souschef-mailinglist}[public mailing-list] is also available. Feel free to subscribe.
 

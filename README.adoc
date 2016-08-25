@@ -35,7 +35,7 @@ Some useful resources:
 
 ## Communication
 
-Please join `#feastproject` on *irc.freenode.net*.
+Please join `#souschef` on *irc.freenode.net*.
 
 A public mailing list is also available. Feel free to https://lists.savoirfairelinux.net/mailman/listinfo/sous-chef[subscribe].
 

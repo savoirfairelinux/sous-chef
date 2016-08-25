@@ -5,7 +5,7 @@ First of all, thanks for reading this and taking time to contribute! :+1: We nee
 The following is a set of guidelines for contributing to Sous-Chef, which is hosted in the [Savoir-faire Linux organization](https://github.com/savoirfairelinux) on GitHub.
 Feel free to propose changes to this document in a pull request.
 
-If you haven't already, please join us on IRC: `#feastproject` on Freenode.
+If you haven't already, please join us on IRC: `#souschef` on Freenode.
 
 ## Useful resources
 
@@ -16,7 +16,7 @@ If you haven't already, please join us on IRC: `#feastproject` on Freenode.
 * [Semantic UI](http://semantic-ui.com/)
 * [Interactive wireframes](https://marvelapp.com/2187ig4)
 * [Creating a Pull Request on GitHub](https://help.github.com/articles/creating-a-pull-request/)
-* [IRC](http://webchat.freenode.net): channel **#feastproject**
+* [IRC](http://webchat.freenode.net): channel **#souschef**
 
 ## How can I contribute ?
 

@@ -20,7 +20,7 @@
     <i class="ui history icon"></i>
     {% if orders_refresh_date %}{% trans "Orders have been generated on" %} {{ orders_refresh_date.action_time }}{% endif %}
 </div>
-<div class="ui row"><a class="ui button" href="{% url 'delivery:refresh_orders' %}"><i class="ui refresh icon"></i>Refresh orders</a></div>
+<div class="ui row"><a class="ui button" href="{% url 'delivery:refresh_orders' %}"><i class="ui refresh icon"></i>Generate orders</a></div>
 
 <table class="ui very basic stripped celled table">
   <thead>

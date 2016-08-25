@@ -47,7 +47,7 @@ Some useful resources:
 
 ## Communication
 
-Please join `#feastproject` on *irc.freenode.net*.
+Please join `#souschef` on *irc.freenode.net*.
 
 ## Installation
 
