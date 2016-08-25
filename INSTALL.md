@@ -50,17 +50,17 @@ Ex: *44fcfefb015e*
 ```
 docker exec -it [container_id] bash
 
+# Move to the application root dir
+cd src
+
 # Run existing migrations
-python3 src/manage.py migrate
+python3 manage.py migrate
 
 # Create a user with administrator privileges
-python3 src/manage.py createsuperuser
+python3 manage.py createsuperuser
 
-# Populate the route table
-python src/manage.py loaddata routes
-
-# Randomly populate the client table
-python src/manage.py createclients
+# Load the initial data set
+python3 manage.py loaddata routes delivery_initial_data
 
 ```
 
