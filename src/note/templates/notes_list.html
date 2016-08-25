@@ -63,7 +63,7 @@
         </div>
         <i class="{% if note.priority == 'urgent' %} warning sign {% else %} info {% endif %} middle aligned icon"></i>
         <div class="content">
-            <a class="header" href="{% url 'member:view' pk=note.client.id %}">{{note.client}}</a>
+            <a class="header" href="{% url 'member:client_information' pk=note.client.id %}">{{note.client}}</a>
             <div class="description">
                 {{ note.note }}
             </div>
