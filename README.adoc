@@ -14,9 +14,12 @@
 
 Sous-Chef is a web application to **help** organizations to **plan** and **deliver** meals, and to manage clients files.
 
-image::https://travis-ci.org/savoirfairelinux/sous-chef.svg?branch=dev[alt="Build Status", link="https://travis-ci.org/savoirfairelinux/sous-chef"]
-image::https://coveralls.io/repos/github/savoirfairelinux/sous-chef/badge.svg?branch=dev[alt="Coverage Status", link="https://coveralls.io/github/savoirfairelinux/sous-chef?branch=dev"]
-image::https://badge.waffle.io/savoirfairelinux/sous-chef.png?label=ready&title=Ready[alt="Stories in Ready", link="https://waffle.io/savoirfairelinux/sous-chef"]
+image:https://travis-ci.org/savoirfairelinux/sous-chef.svg?branch=dev[alt="Build Status", link="https://travis-ci.org/savoirfairelinux/sous-chef"]
+image:https://coveralls.io/repos/github/savoirfairelinux/santropol-feast/badge.svg?branch=dev[alt="Coverage Status", link="https://coveralls.io/github/savoirfairelinux/sous-chef?branch=dev"]
+
+image:https://badge.waffle.io/savoirfairelinux/sous-chef.png?label=beginner&title=beginners[alt="Stories for Beginners", link="https://waffle.io/savoirfairelinux/sous-chef"]
+image:https://badge.waffle.io/savoirfairelinux/sous-chef.png?label=advanced&title=advanced[alt="Advanced Stories", link="https://waffle.io/savoirfairelinux/sous-chef"]
+image:https://badge.waffle.io/savoirfairelinux/sous-chef.png?label=work-in-progress&title=wip[alt="Stories in WIP", link="https://waffle.io/savoirfairelinux/sous-chef"]
 
 ## Resources
 
@@ -32,7 +35,7 @@ Some useful resources:
 
 ## Communication
 
-Please join `#feastproject` on *irc.freenode.net*. 
+Please join `#feastproject` on *irc.freenode.net*.
 
 A public mailing list is also available. Feel free to https://lists.savoirfairelinux.net/mailman/listinfo/sous-chef[subscribe].
 
@@ -43,6 +46,10 @@ Please refer to the https://github.com/savoirfairelinux/sous-chef/blob/dev/INSTA
 ## How to contribute
 
 Please refer to the https://github.com/savoirfairelinux/sous-chef/blob/dev/CONTRIBUTING.md[contribution guidelines].
+
+## Licensing
+
+Sous-Chef is an open-source software published under the GNU AFFERO GENERAL PUBLIC licence, version 3.
 
 ## About the Santropol Roulant
 
