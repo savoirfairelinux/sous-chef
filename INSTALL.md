@@ -69,9 +69,9 @@ python3 manage.py loaddata routes delivery_initial_data
 
 You should now be ready to run the Django application by pointing your browser to the container address.
 
-On Linux, open http://localhost:8000.
+On Linux and OS X, open http://localhost:8000.
 
-On Windows and OS X, use the container IP address.
+On Windows, use the container IP address.
 
 ## Troubleshooting
 
