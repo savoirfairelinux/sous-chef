@@ -66,6 +66,7 @@
         <div class="field">
             <a href="{{ request.path }}?display={{ display }}" class="ui button">Reset</a>
             <button class="ui yellow button" type="submit">Search</button>
+            <a href="{% url 'member:member_step' %}" class="ui button green"><i class="add user icon"></i>{% trans 'New client' %}</a>
         </div>
     </form>
     <br/><br/>
