@@ -4,8 +4,8 @@
         <i class="dropdown icon"></i>
                 <div class="menu transition hidden">
                     <div class="header">Format</div>
-                    <div class="item"><a href="{{request.get_full_path}}&format=csv">CSV</a></div>
-                    <div class="item"><a href="{{request.get_full_path}}&format=pdf">PDF</a></div>
+                    <div class="item"><a href="{{request.path}}?{{request.META.QUERY_STRING}}&format=csv">CSV</a></div>
+                    <div class="item"><a href="{{request.path}}?{{request.META.QUERY_STRING}}&format=pdf">PDF</a></div>
                 </div>
             </div>
         </div>
