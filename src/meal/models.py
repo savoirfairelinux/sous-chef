@@ -193,6 +193,11 @@ class Menu(models.Model):
     # Menu information for a specific date
     date = models.DateField(verbose_name=_('date'))
 
+    components = models.ManyToManyField(
+        'meal.Component',
+        through="Menu_component"
+    )
+
     def __str__(self):
         return "Menu for {}".format(str(self.date))
 
