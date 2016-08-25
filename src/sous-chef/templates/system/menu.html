@@ -36,15 +36,13 @@
     <a class="item" href="{% url 'note:note_list' %}">{% trans 'Staff Notes' %}
         <div class="ui label">{{ NOTES_TOTAL }}</div>
     </a>
-    <a class="item" href="{% url 'billing:list' %}">{% trans 'Billing' %}
-      <div class="ui label">42</div>
-    </a>
 
 </div>
 
 <div class="item">
     <a class="item" href="{% url 'member:member_step' %}"><i class="add user icon"></i>{% trans 'Add a new client' %}</a>
     <a class="item" href="{% url 'delivery:order' %}"><i class="food icon"></i>{% trans 'Kitchen Count' %}</a>
+    <a class="item" href="{% url 'billing:list' %}"><i class="dollar icon"></i>{% trans 'Billing' %}</a>
     <a class="item" href="{% url 'order:create' %}"><i class="add to cart icon"></i>{% trans 'Add a new order' %}</a>
     <a class="item" href="{% url 'admin:index' %}"><i class="settings icon"></i>{% trans 'Admin' %}</a>
     <a href="{% url 'page:logout' %}" class="item"><i class="sign out icon"></i>{% trans 'Logout' %}</a>
