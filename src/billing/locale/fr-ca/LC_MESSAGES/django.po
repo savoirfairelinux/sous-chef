@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-29 19:59+0000\n"
+"POT-Creation-Date: 2016-08-25 22:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,74 +17,31 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: delivery/models.py:9
-msgid "deliveries"
+#: models.py:35
+msgid "total_amount"
 msgstr ""
 
-#: delivery/templates/information.html:5
-msgid "Meal Information"
-msgstr ""
+#: models.py:55
+msgid "Search by name"
+msgstr "Recherche par nom"
 
-#: delivery/templates/information.html:12
-msgid "Recipe"
-msgstr ""
+#: templates/list_billing.html:5 templates/list_billing.html:32
+#: templates/view_billing.html:5
+msgid "Billing"
+msgstr "Facturation"
 
-#: delivery/templates/order.html:5
-msgid "View Order"
-msgstr ""
+#: templates/list_billing.html:75
+msgid "Client"
+msgstr "Client"
 
-#: delivery/templates/order.html:14
-msgid "Alert for the selected day"
-msgstr ""
+#: templates/list_billing.html:76
+msgid "Date"
+msgstr "Date"
 
-#: delivery/templates/order.html:17 delivery/templates/routes.html:16
-msgid "Name"
-msgstr ""
+#: templates/list_billing.html:77
+msgid "Amount"
+msgstr "Montant"
 
-#: delivery/templates/order.html:18
-msgid "Alert"
-msgstr ""
-
-#: delivery/templates/order.html:31
-msgid "Orders"
-msgstr ""
-
-#: delivery/templates/order.html:34
-msgid "First Name"
-msgstr ""
-
-#: delivery/templates/order.html:35
-msgid "Last Name"
-msgstr ""
-
-#: delivery/templates/order.html:36
-msgid "Status"
-msgstr ""
-
-#: delivery/templates/order.html:37
-msgid "Route"
-msgstr ""
-
-#: delivery/templates/routes.html:5
-msgid "Routes Information"
-msgstr ""
-
-#: delivery/templates/routes.html:15
-msgid "Delivery Order"
-msgstr ""
-
-#: delivery/templates/routes.html:17
-msgid "Address"
-msgstr ""
-
-#: delivery/urls.py:7
-msgid "^order/$"
-msgstr ""
-
-#: delivery/urls.py:8
-msgid "^meal/$"
-msgstr ""
-
-#: delivery/urls.py:9
-msgid "^route/$"
-msgstr ""
+#: templates/list_billing.html:78
+msgid "Actions"
+msgstr "Actions"
