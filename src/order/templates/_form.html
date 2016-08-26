@@ -56,15 +56,6 @@
                     <i class="dropdown icon"></i> Order item
                 </div>
                 <div class="content active">
-                    <div class="field hidden">
-                        <label> {{ subform.component.id }} </label>
-                        {{ subform.id }}
-                    </div>
-                    <div class="field {% if subform.component.errors %} error {% endif %}">
-                        <label> {{ subform.component.label }}  </label>
-                        {{ subform.component }}
-                        {% if subform.component.errors %} {{ subform.component.errors }} {% endif %}
-                    </div>
                     <div class="field {% if subform.component_group.errors %} error {% endif %}">
                         <label> {{ subform.component_group.label }}</label>
                         {{ subform.component_group }}
