@@ -1,6 +1,17 @@
 from django.contrib import admin
-from billing.models import Billing, OrderBilling
+from billing.models import Billing
+
 
 # Register your models here.
-admin.site.register(Billing)
-admin.site.register(OrderBilling)
+class OrdersInline(admin.TabularInline):
+    model = Billing.orders.through
+
+
+class BillingAdmin(admin.ModelAdmin):
+
+    inlines = [
+        OrdersInline,
+    ]
+
+
+admin.site.register(Billing, BillingAdmin)
