@@ -91,6 +91,28 @@
   </tfoot>
 </table>
 
+{% if is_paginated %}
+
+<div class="ui pagination menu" style="margin: 2em auto; width=100%;";>
+    {% if page_obj.has_previous %}
+    <a class="icon item"
+       href="{{ request.path }}{{ get }}display={{ display }}&page={{ page_obj.previous_page_number }}">
+        <i class="left arrow icon"></i>
+    </a>
+    {% endif %}
+    <a class="active item">
+        {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </a>
+    {% if page_obj.has_next %}
+    <a class="icon item"
+       href="{{ request.path }}{{ get }}display={{ display }}&page={{ page_obj.next_page_number }}">
+        <i class="right arrow icon"></i>
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+
+
 {% else %}
     <div class="ui row"><p>Sorry, no result found.</p></div>
 {% endif %}
