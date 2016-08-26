@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from billing.models import (
-    Billing, OrderBilling, calculate_amount_total, BillingFilter
+    Billing, calculate_amount_total, BillingFilter
     )
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -70,10 +70,8 @@ class BillingCreate(generic.CreateView):
         )
 
         for order in orders:
-            OrderBilling.objects.create(
-                order_id=order.id,
-                billing_id=billing.id
-            )
+            billing.orders.add(order)
+        billing.save()
 
         return HttpResponseRedirect(reverse_lazy('billing:list'))
 
