@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-29 19:59+0000\n"
+"POT-Creation-Date: 2016-08-25 23:36+0000\n"
 "PO-Revision-Date: 2016-04-21 19:24-0400\n"
 "Last-Translator: Julie Moussu <julie.moussu@savoirfairelinux.com>\n"
 "Language-Team: \n"
@@ -17,154 +17,144 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.4\n"
 
-#: meal/models.py:5
-msgid "main dish"
-msgstr ""
+#: models.py:5
+msgid "Main Dish"
+msgstr "Plat principal"
 
-#: meal/models.py:6
-msgid "Vegetable"
-msgstr ""
+#: models.py:6
+msgid "Dessert"
+msgstr "Dessert"
 
-#: meal/models.py:7
-msgid "side dish"
-msgstr ""
+#: models.py:7
+msgid "Diabetic Dessert"
+msgstr "Dessert diabétique"
 
-#: meal/models.py:8
-msgid "Seasonal"
-msgstr ""
+#: models.py:8
+msgid "Fruit Salad"
+msgstr "Salade de fruit"
 
-#: meal/models.py:12 meal/models.py:26
+#: models.py:9
+msgid "Green Salad"
+msgstr "Salade verte"
+
+#: models.py:10
+msgid "Pudding"
+msgstr "Pudding"
+
+#: models.py:11
+msgid "Compote"
+msgstr "Compote"
+
+#: models.py:17 models.py:31
 msgid "Meat"
-msgstr ""
+msgstr "Viande"
 
-#: meal/models.py:13
+#: models.py:18
 msgid "Dairy"
-msgstr ""
+msgstr "Produits laitiers"
 
-#: meal/models.py:14
+#: models.py:19
 msgid "Fish"
-msgstr ""
+msgstr "Poisson"
 
-#: meal/models.py:15 meal/models.py:28
+#: models.py:20 models.py:33
 msgid "Seafood"
-msgstr ""
+msgstr "Fruits de mer"
 
-#: meal/models.py:16
+#: models.py:21
 msgid "Veggies and fruits"
-msgstr ""
+msgstr "Fruits et légumes"
 
-#: meal/models.py:17
+#: models.py:22
 msgid "Legumineuse"
-msgstr ""
+msgstr "Légumineuses"
 
-#: meal/models.py:18
+#: models.py:23
 msgid "Grains"
-msgstr ""
+msgstr "Céréales"
 
-#: meal/models.py:19
+#: models.py:24
 msgid "Fresh herbs"
-msgstr ""
+msgstr "Fines herbes"
 
-#: meal/models.py:20
+#: models.py:25
 msgid "Spices"
-msgstr ""
+msgstr "Épices"
 
-#: meal/models.py:21
+#: models.py:26
 msgid "Dry and canned goods"
-msgstr ""
+msgstr "Conserves et produits déshydratés"
 
-#: meal/models.py:22
+#: models.py:27
 msgid "Oils and sauces"
-msgstr ""
+msgstr "Huile, sauces"
 
-#: meal/models.py:27
+#: models.py:32
 msgid "Vegetables"
-msgstr ""
+msgstr "Légumes"
 
-#: meal/models.py:29
+#: models.py:34
 msgid "Seeds and nuts"
-msgstr ""
+msgstr "Noix et graines"
 
-#: meal/models.py:30
+#: models.py:35
 msgid "Other"
-msgstr ""
+msgstr "Autres"
 
-#: meal/models.py:36
-msgid "meals"
-msgstr "repas"
+#: models.py:41
+msgid "ingredients"
+msgstr "ingrédients"
 
-#: meal/models.py:41 meal/models.py:68 meal/models.py:112
+#: models.py:46 models.py:74 models.py:147
 msgid "name"
 msgstr "nom"
 
-#: meal/models.py:45 meal/models.py:72 meal/models.py:116
+#: models.py:51 models.py:79 models.py:151
 msgid "description"
 msgstr "description"
 
-#: meal/models.py:53
-#, fuzzy
-#| msgid "ingredients"
+#: models.py:59
 msgid "ingredient group"
-msgstr "ingrédients"
+msgstr "groupe d'ingrédients"
 
-#: meal/models.py:63
+#: models.py:69
 msgid "components"
-msgstr ""
+msgstr "composants"
 
-#: meal/models.py:80
+#: models.py:87
 msgid "component group"
-msgstr ""
+msgstr "group de composants"
 
-#: meal/models.py:90 meal/models.py:167
+#: models.py:112 models.py:258
 msgid "component"
-msgstr ""
+msgstr "composant"
 
-#: meal/models.py:95 meal/models.py:139
+#: models.py:117 models.py:174
 #, fuzzy
 #| msgid "ingredients"
 msgid "ingredient"
 msgstr "ingrédients"
 
-#: meal/models.py:106
-msgid "restricted items"
-msgstr ""
-
-#: meal/models.py:124
-msgid "restricted item group"
-msgstr ""
-
-#: meal/models.py:134
-msgid "restricted item"
-msgstr ""
-
-#: meal/models.py:150
-msgid "menus"
-msgstr ""
-
-#: meal/models.py:153
+#: models.py:121 models.py:188
 msgid "date"
-msgstr ""
+msgstr "date"
 
-#: meal/models.py:162
+#: models.py:141
+msgid "restricted items"
+msgstr "items avec restrictions"
+
+#: models.py:159
+msgid "restricted item group"
+msgstr "groupe d'items avec restrictions"
+
+#: models.py:169
+msgid "restricted item"
+msgstr "item avec restriction"
+
+#: models.py:185
+msgid "menus"
+msgstr "menus"
+
+#: models.py:253
 msgid "menu"
-msgstr ""
-
-#, fuzzy
-#~| msgid "meals"
-#~ msgid "^meal/$"
-#~ msgstr "repas"
-
-#~ msgid "Regular"
-#~ msgstr "normal"
-
-#~ msgid "Large"
-#~ msgstr "grand"
-
-#~ msgid "allergies"
-#~ msgstr "allergies"
-
-#~ msgid "French"
-#~ msgstr "Français"
-
-#~ msgid "English"
-#~ msgstr "Anglais"
+msgstr "menu"
