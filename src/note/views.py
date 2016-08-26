@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
-from django.contrib.auth.mixins import LoginRequiredMixin
 from note.models import Note, NoteFilter
 from note.forms import NoteForm
 from member.models import Client
@@ -9,11 +10,15 @@ from member.models import Client
 
 # Create your views here.
 
-class NoteList(LoginRequiredMixin, generic.ListView):
+class NoteList(generic.ListView):
     # Display the list of notes
     model = Note
     template_name = 'notes_list.html'
     context_object_name = 'notes'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(NoteList, self).dispatch(*args, **kwargs)
 
     def get_queryset(self):
         uf = NoteFilter(self.request.GET)
