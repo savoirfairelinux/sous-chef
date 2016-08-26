@@ -8,16 +8,26 @@ class ComponentsInline(admin.TabularInline):
     model = Menu.components.through
 
 
-class MenuAdmin(admin.ModelAdmin):
+class ComponentIngredientInline(admin.TabularInline):
+    model = Component_ingredient
 
+
+class MenuAdmin(admin.ModelAdmin):
+    """Allows accessing menu components within the Menu admin."""
     inlines = [
         ComponentsInline
     ]
 
 
-admin.site.register(Component)
+class ComponentAdmin(admin.ModelAdmin):
+    """Allows accessing ingredients within the Component admin."""
+    inlines = [
+        ComponentIngredientInline
+    ]
+
+
+admin.site.register(Component, ComponentAdmin)
 admin.site.register(Restricted_item)
 admin.site.register(Ingredient)
-admin.site.register(Component_ingredient)
 admin.site.register(Incompatibility)
 admin.site.register(Menu, MenuAdmin)
