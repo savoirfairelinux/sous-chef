@@ -13,7 +13,7 @@
 {% block content %}
 
 <div class="ui secondary pointing fluid menu">
-    <h2 class="ui header">Clients</h2>
+    <h1 class="ui header">Clients</h1>
 
     <div class="right menu">
       <a class="ui item {% if display == 'block' %} active {% endif %}"
@@ -66,7 +66,7 @@
         <div class="field">
             <a href="{{ request.path }}?display={{ display }}" class="ui button">Reset</a>
             <button class="ui yellow button" type="submit">Search</button>
-            <a href="{% url 'member:member_step' %}" class="ui button green"><i class="add user icon"></i>{% trans 'New client' %}</a>
+            <a href="{% url 'member:member_step' %}" class="ui button"><i class="add user icon"></i>{% trans 'New client' %}</a>
         </div>
     </form>
     <br/><br/>
