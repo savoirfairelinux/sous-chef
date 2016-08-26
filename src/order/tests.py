@@ -328,7 +328,6 @@ class OrderCreateFormTestCase(OrderFormTestCase):
 
     def test_create_form_save_data(self):
         client = ClientFactory()
-        component = ComponentFactory(name="Component create save test")
         data = {
             'orders-TOTAL_FORMS': 1,
             'orders-INITIAL_FORMS': 0,
@@ -338,7 +337,6 @@ class OrderCreateFormTestCase(OrderFormTestCase):
             'creation_date': '2016-12-12',
             'delivery_date': '2016-12-22',
             'status': 'O',
-            'orders-0-component': component.id,
             'orders-0-component_group': 'main_dish',
             'orders-0-price': '5',
             'orders-0-billable_flag': True,
@@ -355,7 +353,7 @@ class OrderCreateFormTestCase(OrderFormTestCase):
         )
         order = Order.objects.latest('id')
         self.assertEqual(order.client.id, client.id)
-        self.assertEqual(order.orders.first().component.id, component.id)
+        self.assertEqual(order.orders.first().component_group, 'main_dish')
         self.assertEqual(order.creation_date, date(2016, 12, 12))
         self.assertEqual(order.delivery_date, date(2016, 12, 22))
         self.assertEqual(order.price, 5)
@@ -413,7 +411,6 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
             'delivery_date': '2016-12-22',
             'status': 'O',
             'orders-0-id': self.order.orders.first().id,
-            'orders-0-component': self.order.orders.first().component.id,
             'orders-0-component_group': 'main_dish',
             'orders-0-price': '5',
             'orders-0-billable_flag': True,

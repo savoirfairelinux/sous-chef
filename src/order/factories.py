@@ -9,7 +9,6 @@ from order.models import (
 from meal.factories import ComponentFactory
 from order.models import SIZE_CHOICES
 
-
 fake = FakerFactory.create()
 
 
@@ -52,8 +51,6 @@ class OrderItemFactory(factory.DjangoModelFactory):
         model = Order_item
 
     order = factory.SubFactory(OrderFactory)
-
-    component = factory.SubFactory(ComponentFactory)
 
     price = fake.random_int(min=0, max=50)
 

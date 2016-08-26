@@ -596,12 +596,6 @@ class Order_item(models.Model):
         related_name='orders',
     )
 
-    component = models.ForeignKey(
-        'meal.Component',
-        verbose_name=_('component'),
-        null=True,
-    )
-
     price = models.DecimalField(
         max_digits=6,
         decimal_places=2,
