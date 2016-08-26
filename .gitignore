@@ -93,3 +93,6 @@ ENV/
 
 # Ignore all emacs backup files
 *~
+
+# Ignore vim swap files
+*.swp
