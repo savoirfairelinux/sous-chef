@@ -1,4 +1,5 @@
 import random
+import urllib.parse
 from datetime import date
 
 from django.test import TestCase
@@ -453,8 +454,13 @@ class DeleteOrderTestCase(OrderFormTestCase):
         self.assertContains(response, 'Delete Order #{}'.format(self.order.id))
 
     def test_delete_order(self):
+        # The template will POST with a 'next' parameter, which is the URL to
+        # follow on success.
+        next_value = '?name=&status=O&delivery_date='
         response = self.client.post(
-            reverse('order:delete', args=(self.order.id,)),
+            (reverse('order:delete', args=(self.order.id,)) + '?next=' +
+                reverse('order:list') + urllib.parse.quote_plus(next_value)),
             follow=True
         )
-        self.assertRedirects(response, reverse('order:list'), status_code=302)
+        self.assertRedirects(response, reverse('order:list') + next_value,
+                             status_code=302)
