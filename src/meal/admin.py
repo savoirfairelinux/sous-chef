@@ -7,14 +7,17 @@ from meal.models import Incompatibility, Menu, Menu_component
 class ComponentsInline(admin.TabularInline):
     model = Menu.components.through
 
+
 class ComponentIngredientInline(admin.TabularInline):
     model = Component_ingredient
+
 
 class MenuAdmin(admin.ModelAdmin):
     """Allows accessing menu components within the Menu admin."""
     inlines = [
         ComponentsInline
     ]
+
 
 class ComponentAdmin(admin.ModelAdmin):
     """Allows accessing ingredients within the Component admin."""
