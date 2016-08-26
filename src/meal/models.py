@@ -159,11 +159,17 @@ class Restricted_item(models.Model):
         verbose_name=_('restricted item group')
     )
 
+    ingredients = models.ManyToManyField(
+        'meal.Ingredient',
+        through='Incompatibility'
+    )
+
     def __str__(self):
         return self.name
 
 
 class Incompatibility(models.Model):
+
     restricted_item = models.ForeignKey(
         'meal.Restricted_item',
         verbose_name=_('restricted item'),
@@ -186,6 +192,11 @@ class Menu(models.Model):
 
     # Menu information for a specific date
     date = models.DateField(verbose_name=_('date'))
+
+    components = models.ManyToManyField(
+        'meal.Component',
+        through="Menu_component"
+    )
 
     def __str__(self):
         return "Menu for {}".format(str(self.date))

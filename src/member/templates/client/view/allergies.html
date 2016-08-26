@@ -55,9 +55,9 @@
             <i class="write grey icon"></i>
         </a>
     </h3>
-    {% for restriction in client.restrictions %}
+    {% for restricted_item in client.restrictions.all %}
     <div class="ui label">
-        {{ restriction.restricted_item.name }}
+        {{ restricted_item.name }}
         <i class="delete icon" data-id={{restriction.id}} data-model="restriction"></i>
     </div>
     {% empty %}
@@ -72,10 +72,10 @@
             <i class="write grey icon"></i>
         </a>
     </h3>
-    {% for food_preparation in client.food_preparation %}
+    {% for option in client.food_preparation %}
     <div class="ui label">
-        {{ food_preparation.option }}
-        <i class="delete icon" data-id={{food_preparation.id}} data-model="client_option"></i>
+        {{ option.name }}
+        <i class="delete icon" data-id={{option.id}} data-model="client_option"></i>
     </div>
     {% empty %}
     <div class="ui row">
@@ -86,9 +86,9 @@
     <h3 class="ui header">
         {% trans 'Ingredients to avoid' %}
     </h3>
-    {% for ingredient_to_avoid in client.ingredients_to_avoid %}
+    {% for ingredient_to_avoid in client.ingredients_to_avoid.all %}
     <div class="ui label">
-        {{ ingredient_to_avoid.ingredient.name }}
+        {{ ingredient_to_avoid.name }}
         <i class="delete icon" data-id={{ingredient_to_avoid.id}} data-model="ingredient_to_avoid"></i>
     </div>
     {% empty %}
@@ -100,9 +100,9 @@
     <h3 class="ui header">
         {% trans 'Dish(es) to avoid' %}
     </h3>
-    {% for component_to_avoid in client.components_to_avoid %}
+    {% for component_to_avoid in client.components_to_avoid.all %}
     <div class="ui label">
-        {{ component_to_avoid.component.name }}
+        {{ component_to_avoid.name }}
         <i class="delete icon" data-id={{component_to_avoid.id}} data-model="component_to_avoid"></i>
     </div>
     {% empty %}

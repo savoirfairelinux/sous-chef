@@ -48,6 +48,11 @@ class Billing(models.Model):
 
     detail = JSONField()
 
+    orders = models.ManyToManyField(
+        'order.Order',
+        through='OrderBilling'
+    )
+
 
 class BillingFilter(FilterSet):
     name = MethodFilter(

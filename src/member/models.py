@@ -413,6 +413,26 @@ class Client(models.Model):
         null=True
     )
 
+    ingredients_to_avoid = models.ManyToManyField(
+        'meal.Ingredient',
+        through='Client_avoid_ingredient'
+    )
+
+    components_to_avoid = models.ManyToManyField(
+        'meal.Component',
+        through='Client_avoid_component'
+    )
+
+    options = models.ManyToManyField(
+        'member.option',
+        through='Client_option'
+    )
+
+    restrictions = models.ManyToManyField(
+        'meal.Restricted_item',
+        through='Restriction'
+    )
+
     def __str__(self):
         return "{} {}".format(self.member.firstname, self.member.lastname)
 
@@ -447,39 +467,11 @@ class Client(models.Model):
         return self.client_order.all()
 
     @property
-    def restrictions(self):
-        """
-        Returns restrictions associated to this client
-        """
-        return Restriction.objects.filter(client=self.id)
-
-    @property
     def food_preparation(self):
         """
         Returns specific food preparation associated to this client
         """
-        return Client_option.objects.filter(
-            client=self.id,
-            option__option_group='preparation'
-        )
-
-    @property
-    def ingredients_to_avoid(self):
-        """
-        Returns ingredients to avoid associated to this client
-        """
-        return Client_avoid_ingredient.objects.filter(
-            client=self.id,
-        )
-
-    @property
-    def components_to_avoid(self):
-        """
-        Returns component(s) to avoid associated to this client
-        """
-        return Client_avoid_component.objects.filter(
-            client=self.id,
-        )
+        return self.options.filter(option_group='preparation')
 
     @property
     def notes(self):
