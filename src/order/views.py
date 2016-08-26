@@ -121,7 +121,10 @@ class UpdateOrderStatus(AjaxableResponseMixin, generic.UpdateView):
 class DeleteOrder(generic.DeleteView):
     model = Order
     template_name = 'order_confirm_delete.html'
-    success_url = reverse_lazy('order:list')
+
+    def get_success_url(self):
+        # 'next' parameter should always be included in POST'ed URL.
+        return self.request.GET['next']
 
 
 def ExportCSV(request, queryset):
