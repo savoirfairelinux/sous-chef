@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.http import HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 from note.models import Note, NoteFilter
 from note.forms import NoteForm
 from member.models import Client
@@ -8,7 +9,7 @@ from member.models import Client
 
 # Create your views here.
 
-class NoteList(generic.ListView):
+class NoteList(LoginRequiredMixin, generic.ListView):
     # Display the list of notes
     model = Note
     template_name = 'notes_list.html'
