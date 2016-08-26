@@ -1,3 +1,4 @@
+{% load i18n %}
 <h4 class="ui dividing header">{{ _('Identity') }}</h4>
 
 <div class="ui center aligned basic segment">
@@ -12,7 +13,7 @@
     {{ _('Or') }}
   </div>
   <div class="ui teal labeled icon button add referent member">
-    Create new referent member
+    {% trans 'Create new referent member' %}
     <i class="add icon"></i>
   </div>
 
@@ -56,7 +57,7 @@
 
 <div class="field {% if form.referral_reason.errors %} error {% endif %}">
     <div class="ui message attached">
-        <p>Please describe the referral reason(s)</p>
+        <p>{% trans 'Please describe the referral reason(s)' %}</p>
     </div>
     {{ form.referral_reason }}
 </div>
