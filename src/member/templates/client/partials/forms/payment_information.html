@@ -1,3 +1,4 @@
+{% load i18n %}
 <h4 class="ui dividing header">{{ _('Billing information') }}</h4>
 
 <div class="field">
@@ -22,7 +23,7 @@
     {{ _('Or') }}
   </div>
   <div class="ui teal labeled icon button add payment member">
-    Create new payment member
+    {% trans 'Create new payment member' %}
     <i class="add icon"></i>
   </div>
 

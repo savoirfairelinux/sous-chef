@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block title %}
-    {% if edit == True %}Edit existing client{% else %}Create a new client{% endif %}
+    {% if edit == True %}{% trans 'Edit existing client' %}{% else %}{% trans 'Create a new client ' %}{% endif %}
 {% endblock %}
 
 {% block message %}
@@ -23,9 +23,9 @@
     <div class="ui warning small message">
         <div class="header">Notice</div>
         {% if not edit %}
-        <p>No information will be saved until all the steps are completed.</p>
+        <p>{% trans 'No information will be saved until all the steps are completed.' %}</p>
         {% else %}
-        <p>Save as soon as you're ready.</p>
+        <p>{% trans 'Save as soon as you\'re ready.' %}</p>
         {% endif %}
     </div>
 </div>
@@ -35,7 +35,7 @@
 
 <div class="ui secondary pointing fluid menu">
     <h1 class="ui header">
-        {% if edit == True %}Edit Client{% else %}New Client{% endif %}
+        {% if edit == True %}{% trans 'Edit Client' %}{% else %}{% trans 'New Client' %}{% endif %}
     </h1>
 </div>
 
@@ -66,14 +66,14 @@
 
         {% if wizard.steps.prev and not edit %}
         <button class="ui left floated button" name="wizard_goto_step" type="submit" value="{{wizard.steps.prev}}">
-            {% trans "Back"%}
+            {% trans 'Back' %}
         </button>
         {% endif %}
 
         {% if wizard.steps.step1 == 6 %}
-            <input class="big ui right floated yellow button" type="submit" value="Save"/>
+            <input class="big ui right floated yellow button" type="submit" value="{% trans 'Save' %}"/>
         {% else %}
-            <button  class="big ui yellow right floated button" name="wizard_goto_step" type="submit">Next</button>
+            <button  class="big ui yellow right floated button" name="wizard_goto_step" type="submit">{% trans 'Next' %}</button>
         {% endif %}
 
     </form>

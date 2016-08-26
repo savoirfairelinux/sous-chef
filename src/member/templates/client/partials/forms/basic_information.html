@@ -1,3 +1,4 @@
+{% load i18n %}
 <h4 class="ui dividing header">{{ _('Identity') }}</h4>
 <div class="field">
     <label>{{ _('Name') }}</label>
@@ -51,7 +52,7 @@
 <h4 class="ui dividing header">{{ _('Alert') }}</h4>
 <div class="field {% if form.alert.errors %} error {% endif %}">
     <div class="ui message attached">
-        <p>This message will be hightlighted on the client record.</p>
+        <p>{% trans 'This message will be hightlighted on the client record.' %}</p>
     </div>
     {{ form.alert }}
 </div>

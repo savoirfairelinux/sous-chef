@@ -1,3 +1,4 @@
+{% load i18n %}
 <h4 class="ui dividing header">{{ _('Emergency contact') }}</h4>
 
 <div class="ui center aligned basic segment">
@@ -12,7 +13,7 @@
     {{ _('Or') }}
   </div>
   <div class="ui teal labeled icon button add emergency contact member">
-    Create new emergency contact
+    {% trans 'Create new emergency contact' %}
     <i class="add icon"></i>
   </div>
 
