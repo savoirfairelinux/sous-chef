@@ -15,6 +15,7 @@ class OrderList(generic.ListView):
     model = Order
     template_name = 'list.html'
     context_object_name = 'orders'
+    paginate_by = 20
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -35,6 +36,8 @@ class OrderList(generic.ListView):
         text = ''
         count = 0
         for getVariable in self.request.GET:
+            if getVariable == "display" or getVariable == "page":
+                continue
             for getValue in self.request.GET.getlist(getVariable):
                 if count == 0:
                     text += "?" + getVariable + "=" + getValue
@@ -42,6 +45,7 @@ class OrderList(generic.ListView):
                     text += "&" + getVariable + "=" + getValue
                 count += 1
 
+        text = text + "?" if count == 0 else text + "&"
         context['get'] = text
 
         return context
