@@ -18,7 +18,7 @@
 </div>
 {% endif %}
 <div class="item">
-    <a class="item" href="{% url 'member:list'%}">{% trans 'Clients' %}
+    <a class="item" href="{% url 'member:list'%}?status={{ CLIENT_FILTER_DEFAULT_STATUS | urlencode }}">{% trans 'Clients' %}
         <div class="ui label">{{ CLIENTS_TOTAL }}</div>
     </a>
 
@@ -30,10 +30,10 @@
             </div>
         </form>
     </div>
-    <a class="item" href="{% url 'order:list' %}">{% trans 'Orders' %}
+    <a class="item" href="{% url 'order:list' %}?status={{ ORDER_FILTER_DEFAULT_STATUS | urlencode }}&delivery_date={{ ORDER_FILTER_DEFAULT_DATE | date:'SHORT_DATE_FORMAT' | urlencode }}">{% trans 'Orders' %}
         <div class="ui label">{{ ORDERS_TOTAL }}</div>
     </a>
-    <a class="item" href="{% url 'note:note_list' %}">{% trans 'Staff Notes' %}
+    <a class="item" href="{% url 'note:note_list' %}?is_read={{ NOTE_FILTER_DEFAULT_IS_READ | urlencode }}">{% trans 'Staff Notes' %}
         <div class="ui label">{{ NOTES_TOTAL }}</div>
     </a>
 
