@@ -125,6 +125,10 @@ class DeleteOrder(generic.DeleteView):
         # 'next' parameter should always be included in POST'ed URL.
         return self.request.GET['next']
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(DeleteOrder, self).dispatch(*args, **kwargs)
+
 
 def ExportCSV(request, queryset):
     response = HttpResponse(content_type="text/csv")
