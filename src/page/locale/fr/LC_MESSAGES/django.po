@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-29 19:59+0000\n"
+"POT-Creation-Date: 2016-08-28 01:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,14 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: notification/models.py:9
-msgid "notifications"
-msgstr ""
-
-#: notification/models.py:12
-msgid "description"
-msgstr ""
-
-#: notification/models.py:17
-msgid "member"
-msgstr ""
+#: page/templates/pages/home.html:12
+msgid "Dashboard"
+msgstr "Tableau de bord"

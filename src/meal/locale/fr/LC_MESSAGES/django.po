@@ -1,0 +1,245 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-28 01:16+0000\n"
+"PO-Revision-Date: 2016-04-21 19:24-0400\n"
+"Last-Translator: Julie Moussu <julie.moussu@savoirfairelinux.com>\n"
+"Language-Team: \n"
+"Language: fr_CA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.4\n"
+
+#: note/models.py:30
+msgid "Normal"
+msgstr ""
+
+#: note/models.py:31
+msgid "Urgent"
+msgstr ""
+
+#: note/models.py:35
+msgid "Notes"
+msgstr ""
+
+#: note/models.py:39
+msgid "Note"
+msgstr ""
+
+#: note/models.py:44
+msgid "Author"
+msgstr ""
+
+#: note/models.py:49
+msgid "Date"
+msgstr ""
+
+#: note/models.py:54
+msgid "Is read"
+msgstr ""
+
+#: note/models.py:60
+msgid "Client"
+msgstr ""
+
+#: note/models.py:108
+msgid "Search by name"
+msgstr ""
+
+#: note/templates/notes_client_list.html:17
+#: sous-chef/templates/system/menu.html:36
+msgid "Staff Notes"
+msgstr ""
+
+#: note/templates/notes_client_list.html:58 note/templates/notes_list.html:57
+msgid "Mark as unread"
+msgstr ""
+
+#: note/templates/notes_client_list.html:61 note/templates/notes_list.html:60
+msgid "Mark as read"
+msgstr ""
+
+#: note/urls.py:9
+msgid "^$"
+msgstr ""
+
+#: note/urls.py:10
+msgid "^read/(?P<id>\\d+)/$"
+msgstr ""
+
+#: note/urls.py:12
+msgid "^unread/(?P<id>\\d+)/$"
+msgstr ""
+
+#: sous-chef/templates/system/menu.html:21
+msgid "Clients"
+msgstr ""
+
+#: sous-chef/templates/system/menu.html:33
+msgid "Orders"
+msgstr ""
+
+#: sous-chef/templates/system/menu.html:43
+msgid "Kitchen Count"
+msgstr ""
+
+#: sous-chef/templates/system/menu.html:44
+msgid "Billing"
+msgstr ""
+
+#: sous-chef/templates/system/menu.html:45
+msgid "Admin"
+msgstr ""
+
+#: sous-chef/templates/system/menu.html:46
+msgid "Logout"
+msgstr ""
+
+#: meal/models.py:5
+msgid "Main Dish"
+msgstr "Plat principal"
+
+#: meal/models.py:6
+msgid "Dessert"
+msgstr "Dessert"
+
+#: meal/models.py:7
+msgid "Diabetic Dessert"
+msgstr "Dessert diabétique"
+
+#: meal/models.py:8
+msgid "Fruit Salad"
+msgstr "Salade de fruit"
+
+#: meal/models.py:9
+msgid "Green Salad"
+msgstr "Salade verte"
+
+#: meal/models.py:10
+msgid "Pudding"
+msgstr "Pudding"
+
+#: meal/models.py:11
+msgid "Compote"
+msgstr "Compote"
+
+#: meal/models.py:17 meal/models.py:31
+msgid "Meat"
+msgstr "Viande"
+
+#: meal/models.py:18
+msgid "Dairy"
+msgstr "Produits laitiers"
+
+#: meal/models.py:19
+msgid "Fish"
+msgstr "Poisson"
+
+#: meal/models.py:20 meal/models.py:33
+msgid "Seafood"
+msgstr "Fruits de mer"
+
+#: meal/models.py:21
+msgid "Veggies and fruits"
+msgstr "Fruits et légumes"
+
+#: meal/models.py:22
+msgid "Legumineuse"
+msgstr "Légumineuses"
+
+#: meal/models.py:23
+msgid "Grains"
+msgstr "Céréales"
+
+#: meal/models.py:24
+msgid "Fresh herbs"
+msgstr "Fines herbes"
+
+#: meal/models.py:25
+msgid "Spices"
+msgstr "Épices"
+
+#: meal/models.py:26
+msgid "Dry and canned goods"
+msgstr "Conserves et produits déshydratés"
+
+#: meal/models.py:27
+msgid "Oils and sauces"
+msgstr "Huile, sauces"
+
+#: meal/models.py:32
+msgid "Vegetables"
+msgstr "Légumes"
+
+#: meal/models.py:34
+msgid "Seeds and nuts"
+msgstr "Noix et graines"
+
+#: meal/models.py:35
+msgid "Other"
+msgstr "Autres"
+
+#: meal/models.py:41
+msgid "ingredients"
+msgstr "ingrédients"
+
+#: meal/models.py:46 meal/models.py:74 meal/models.py:147
+msgid "name"
+msgstr "nom"
+
+#: meal/models.py:51 meal/models.py:79 meal/models.py:151
+msgid "description"
+msgstr "description"
+
+#: meal/models.py:59
+msgid "ingredient group"
+msgstr "groupe d'ingrédients"
+
+#: meal/models.py:69
+msgid "components"
+msgstr "composants"
+
+#: meal/models.py:87
+msgid "component group"
+msgstr "group de composants"
+
+#: meal/models.py:112 meal/models.py:269
+msgid "component"
+msgstr "composant"
+
+#: meal/models.py:117 meal/models.py:180
+#, fuzzy
+#| msgid "ingredients"
+msgid "ingredient"
+msgstr "ingrédients"
+
+#: meal/models.py:121 meal/models.py:194
+msgid "date"
+msgstr "date"
+
+#: meal/models.py:141
+msgid "restricted items"
+msgstr "items avec restrictions"
+
+#: meal/models.py:159
+msgid "restricted item group"
+msgstr "groupe d'items avec restrictions"
+
+#: meal/models.py:175
+msgid "restricted item"
+msgstr "item avec restriction"
+
+#: meal/models.py:191
+msgid "menus"
+msgstr "menus"
+
+#: meal/models.py:264
+msgid "menu"
+msgstr "menu"

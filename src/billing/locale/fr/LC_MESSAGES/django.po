@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-25 22:43+0000\n"
+"POT-Creation-Date: 2016-08-28 01:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,31 +17,32 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: models.py:35
+#: billing/models.py:35
 msgid "total_amount"
 msgstr ""
 
-#: models.py:55
+#: billing/models.py:60
 msgid "Search by name"
 msgstr "Recherche par nom"
 
-#: templates/list_billing.html:5 templates/list_billing.html:32
-#: templates/view_billing.html:5
+#: billing/templates/list_billing.html:5
+#: billing/templates/list_billing.html:32
+#: billing/templates/view_billing.html:5
 msgid "Billing"
 msgstr "Facturation"
 
-#: templates/list_billing.html:75
+#: billing/templates/list_billing.html:75
 msgid "Client"
 msgstr "Client"
 
-#: templates/list_billing.html:76
+#: billing/templates/list_billing.html:76
 msgid "Date"
 msgstr "Date"
 
-#: templates/list_billing.html:77
+#: billing/templates/list_billing.html:77
 msgid "Amount"
 msgstr "Montant"
 
-#: templates/list_billing.html:78
+#: billing/templates/list_billing.html:78
 msgid "Actions"
 msgstr "Actions"

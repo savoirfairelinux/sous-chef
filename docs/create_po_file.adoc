@@ -1,8 +1,8 @@
-## instructions
+## Instructions for internationalization
 
-1. In your application create a folder "locale"
-2. In "settings.py" add the locale path in "LOCALE_PATHS",
-  for exemple
+1. In your application create a folder `locale`
+2. In `settings.py` add the locale path in `LOCALE_PATHS`,
+  for example
 ```
     LOCALE_PATHS = (
     'meal/locale/',
@@ -12,5 +12,6 @@
     'page/locale/',
     )
 ```
-3. Run "python3 manage.py makemessages -l en-ca"
-4. Run "python3 manage.py makemessages -l fr-ca"
+3. Run `python3 manage.py makemessages -a`
+4. In order to create .po files and to see new translations reflected in the
+application, run `python3 manage.py compilemessages`
