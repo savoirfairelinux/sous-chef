@@ -16,13 +16,13 @@ class ClientBasicInformation (forms.Form):
     firstname = forms.CharField(
         max_length=100,
         label=_("First Name"),
-        widget=forms.TextInput(attrs={'placeholder': _('First name')})
+        widget=forms.TextInput(attrs={'placeholder': _('First Name')})
     )
 
     lastname = forms.CharField(
         max_length=100,
         label=_("Last Name"),
-        widget=forms.TextInput(attrs={'placeholder': _('Last name')})
+        widget=forms.TextInput(attrs={'placeholder': _('Last Name')})
     )
 
     gender = forms.ChoiceField(
@@ -32,7 +32,7 @@ class ClientBasicInformation (forms.Form):
 
     language = forms.ChoiceField(
         choices=Client.LANGUAGES,
-        label=_("Preferred language"),
+        label=_("Preferred Language"),
         widget=forms.Select(attrs={'class': 'ui dropdown'})
     )
 
@@ -44,7 +44,7 @@ class ClientBasicInformation (forms.Form):
         widget=forms.Select(attrs={'class': 'ui dropdown'})
     )
 
-    contact_value = forms.CharField(label=_("Contact information"))
+    contact_value = forms.CharField(label=_("Contact Information"))
 
     alert = forms.CharField(
         label=_("Alert"),
@@ -185,7 +185,7 @@ class ClientRestrictionsInformation(forms.Form):
     )
 
     ingredient_to_avoid = forms.ModelMultipleChoiceField(
-        label=_("Ingredient To Avoid"),
+        label=_("Ingredient to Avoid"),
         queryset=Ingredient.objects.all(),
         required=False,
         widget=forms.SelectMultiple(
@@ -194,7 +194,7 @@ class ClientRestrictionsInformation(forms.Form):
     )
 
     dish_to_avoid = forms.ModelMultipleChoiceField(
-        label=_("Dish(es) To Avoid"),
+        label=_("Dish(es) to Avoid"),
         queryset=Component.objects.all(),
         required=False,
         widget=forms.SelectMultiple(
@@ -235,7 +235,7 @@ class MemberForm(forms.Form):
     def clean(self):
         cleaned_data = super(MemberForm, self).clean()
 
-        """If the client pays for himself. """
+        """If the client pays for themselves. """
         if cleaned_data.get('same_as_client') is True:
             return cleaned_data
 
@@ -266,7 +266,7 @@ class ClientReferentInformation(MemberForm):
 
     work_information = forms.CharField(
         max_length=200,
-        label=_('Work information'),
+        label=_('Work Information'),
         widget=forms.TextInput(attrs={
             'placeholder': _('Hotel-Dieu, St-Anne Hospital, ...')
         })
@@ -289,7 +289,7 @@ class ClientPaymentInformation(MemberForm):
     )
 
     same_as_client = forms.BooleanField(
-        label=_("Same As Client"),
+        label=_("Same as Client"),
         required=False,
         help_text=_('If checked, the personal information \
             of the client will be used as billing information.'),
