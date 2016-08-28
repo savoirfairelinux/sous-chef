@@ -13,12 +13,12 @@ script:
   - pep8 --count --show-source --exclude=migrations src/
   # Run `makemessages` and report an error if it should have been run by the
   # developer for this pull request.
-  - python3 manage.py makemessages -l fr
+  - python3 src/manage.py makemessages -l fr
   # We allow for a 1-line difference since `makemessages` will change the
   # timestamp within the file.
   - git diff --numstat | awk '{if ($1>1 || $2>1) {
      print "***ERROR***\nLarge diff detected in", $3
-     print "Please run `python3 manage.py makemessages -l fr` and commit."
+     print "Please run `python3 src/manage.py makemessages -l fr` and commit."
      exit 1 } else { exit 0 }}'
 
 after_success:
