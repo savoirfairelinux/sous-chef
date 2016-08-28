@@ -375,7 +375,7 @@ class ClientScheduledStatusForm(forms.ModelForm):
 
 def load_initial_data(client):
     """
-    Load initial for the given step and client.
+    Load initial for the given client.
     """
     initial = {
         'firstname': client.member.firstname,
@@ -394,9 +394,18 @@ def load_initial_data(client):
         'latitude': client.member.address.latitude,
         'longitude': client.member.address.longitude,
         'distance': client.member.address.distance,
-        'work_information': client.client_referent.get().work_information,
-        'referral_reason': client.client_referent.get().referral_reason,
-        'date': client.client_referent.get().date,
+        'work_information':
+            client.client_referent.get().work_information
+            if client.client_referent.count()
+            else '',
+        'referral_reason':
+            client.client_referent.get().referral_reason
+            if client.client_referent.count()
+            else '',
+        'date':
+            client.client_referent.get().date
+            if client.client_referent.count()
+            else '',
         'member': client.id,
         'same_as_client': True,
         'facturation': '',

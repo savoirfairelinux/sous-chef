@@ -1,23 +1,26 @@
+{% load i18n %}
 <div class="ui vertical menu">
   <div class="item">
-    Information
+    {% trans 'Information' %}
     <div class="menu">
-      <a class="{% if active_tab == 'information' %}active{% endif %} item" href="{% url 'member:client_information' pk=client.id %}"><i class="user icon"></i>Personal</a>
-      <a class="{% if active_tab == 'referent' %}active{% endif %} item" href="{% url 'member:client_referent' pk=client.id %}"><i class="treatment icon"></i>Referent</a>
-      <a class="{% if active_tab == 'billing' %}active{% endif %} item" href="{% url 'member:client_payment' pk=client.id %}"><i class="payment icon"></i>Billing</a>
-      <a class="{% if active_tab == 'status' %}active{% endif %} item" href="{% url 'member:client_status' pk=client.id %}"><i class="history icon"></i>Status</a>
+      <a class="{% if active_tab == 'information' %}active{% endif %} item" href="{% url 'member:client_information' pk=client.id %}"><i class="user icon"></i>{% trans 'Personal' %}</a>
+      {% if client.client_referent.all.count %}
+      <a class="{% if active_tab == 'referent' %}active{% endif %} item" href="{% url 'member:client_referent' pk=client.id %}"><i class="treatment icon"></i>{% trans 'Referent' %}</a>
+      {% else %}<em><a class="item" alt="{% trans 'Add a referent' %} "href="{% url 'member:member_update_referent_information' client_id=client.id %}"><i class="warning sign orange icon"></i>{% trans 'No referent available' %}</a></em>{% endif %}
+      <a class="{% if active_tab == 'billing' %}active{% endif %} item" href="{% url 'member:client_payment' pk=client.id %}"><i class="payment icon"></i>{% trans 'Billing' %}</a>
+      <a class="{% if active_tab == 'status' %}active{% endif %} item" href="{% url 'member:client_status' pk=client.id %}"><i class="history icon"></i>{% trans 'Status' %}</a>
     </div>
   </div>
   <a class="{% if active_tab == 'prefs' %}active{% endif %} item" href="{% url 'member:client_allergies' pk=client.id %}">
-    <i class="food icon"></i>Preferences
+    <i class="food icon"></i>{% trans 'Preferences' %}
   </a>
   <a class="{% if active_tab == 'notes' %}active{% endif %} item" href="{% url 'member:client_notes' pk=client.id %}">
     <div class="ui teal label">{{ client.notes.count }}</div>
-    Notes
+    {% trans 'Notes' %}
   </a>
   <a class="{% if active_tab == 'orders' %}active{% endif %} item" href="{% url 'member:list_orders' pk=client.id %}">
       <div class="ui teal label">{{ client.orders.count }}</div>
-    Orders
+    {% trans 'Orders' %}
   </a>
 
 </div>
