@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-14 20:54+0000\n"
+"POT-Creation-Date: 2016-09-14 23:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -156,7 +156,7 @@ msgstr ""
 msgid "Client"
 msgstr ""
 
-#: order/templates/_order_info.html:14 order/templates/view.html:50
+#: order/templates/_order_info.html:14 order/templates/view.html:48
 msgid "Price"
 msgstr ""
 
@@ -254,7 +254,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: order/templates/update.html:25 order/templates/view.html:76
+#: order/templates/update.html:25 order/templates/view.html:74
 msgid "Update"
 msgstr ""
 
@@ -262,35 +262,35 @@ msgstr ""
 msgid "View Order"
 msgstr ""
 
-#: order/templates/view.html:37
+#: order/templates/view.html:35
 msgid "Order detail"
 msgstr ""
 
-#: order/templates/view.html:39
+#: order/templates/view.html:37
 msgid "Order items attached to the order"
 msgstr ""
 
-#: order/templates/view.html:46
+#: order/templates/view.html:44
 msgid "Component"
 msgstr ""
 
-#: order/templates/view.html:47
+#: order/templates/view.html:45
 msgid "Description"
 msgstr ""
 
-#: order/templates/view.html:48
+#: order/templates/view.html:46
 msgid "Total Quantity"
 msgstr ""
 
-#: order/templates/view.html:49
+#: order/templates/view.html:47
 msgid "Free Quantity"
 msgstr ""
 
-#: order/templates/view.html:65
+#: order/templates/view.html:63
 msgid "Total"
 msgstr ""
 
-#: order/templates/view.html:75
+#: order/templates/view.html:73
 msgid "Delete"
 msgstr ""
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-14 23:35+0000\n"
+"POT-Creation-Date: 2016-09-16 00:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: savoirfairelinux <support@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -27,66 +27,66 @@ msgstr ""
 msgid "Search by name"
 msgstr "Recherche par nom"
 
-#: billing/templates/billing/add.html:5 billing/templates/billing/add.html:32
+#: billing/templates/billing/add.html:5 billing/templates/billing/add.html:19
 #: billing/templates/billing/list.html:5
-#: billing/templates/billing/list.html:39
+#: billing/templates/billing/list.html:10
 #: billing/templates/billing/view.html:5
 msgid "Billing"
 msgstr "Facturation"
 
-#: billing/templates/billing/add.html:49
+#: billing/templates/billing/add.html:36
 msgid "Period"
 msgstr ""
 
-#: billing/templates/billing/add.html:62
-#: billing/templates/billing/list.html:69
+#: billing/templates/billing/add.html:49
+#: billing/templates/billing/list.html:40
 #, fuzzy
 #| msgid "Search by name"
 msgid "Search"
 msgstr "Recherche par nom"
 
-#: billing/templates/billing/add.html:80
+#: billing/templates/billing/add.html:67
 #: billing/templates/billing/view.html:27
 msgid "Order"
 msgstr ""
 
-#: billing/templates/billing/add.html:81
+#: billing/templates/billing/add.html:68
 #: billing/templates/billing/view.html:28
 msgid "Client"
 msgstr "Client"
 
-#: billing/templates/billing/add.html:82
+#: billing/templates/billing/add.html:69
 #: billing/templates/billing/view.html:29
 msgid "Delivery Date"
 msgstr ""
 
-#: billing/templates/billing/add.html:83
+#: billing/templates/billing/add.html:70
 msgid "Status"
 msgstr ""
 
-#: billing/templates/billing/add.html:84
-#: billing/templates/billing/list.html:80
+#: billing/templates/billing/add.html:71
+#: billing/templates/billing/list.html:51
 #: billing/templates/billing/view.html:30
 msgid "Amount"
 msgstr "Montant"
 
-#: billing/templates/billing/add.html:85
-#: billing/templates/billing/list.html:82
+#: billing/templates/billing/add.html:72
+#: billing/templates/billing/list.html:53
 msgid "Actions"
 msgstr "Actions"
 
-#: billing/templates/billing/add.html:110
+#: billing/templates/billing/add.html:97
 #, fuzzy
 #| msgid "Billing"
 msgid "Create Billing"
 msgstr "Facturation"
 
-#: billing/templates/billing/add.html:127
+#: billing/templates/billing/add.html:114
 msgid "of"
 msgstr ""
 
-#: billing/templates/billing/add.html:140
-#: billing/templates/billing/list.html:102
+#: billing/templates/billing/add.html:127
+#: billing/templates/billing/list.html:73
 msgid "Sorry, no result found"
 msgstr ""
 
@@ -108,18 +108,18 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: billing/templates/billing/list.html:56
-#: billing/templates/billing/list.html:79
+#: billing/templates/billing/list.html:27
+#: billing/templates/billing/list.html:50
 #, fuzzy
 #| msgid "Billing"
 msgid "Billing Period"
 msgstr "Facturation"
 
-#: billing/templates/billing/list.html:68
+#: billing/templates/billing/list.html:39
 msgid "Reset"
 msgstr ""
 
-#: billing/templates/billing/list.html:81
+#: billing/templates/billing/list.html:52
 msgid "Orders count"
 msgstr ""
 

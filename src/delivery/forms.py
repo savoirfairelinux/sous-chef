@@ -11,7 +11,7 @@ class DishIngredientsForm(forms.Form):
         label=_("Today's main dish:"),
         queryset=Component.objects.order_by(Lower('name')).filter(
             component_group=COMPONENT_GROUP_CHOICES_MAIN_DISH),
-        widget=forms.Select,
+        widget=forms.Select(attrs={'class': 'ui dropdown maindish'}),
     )
 
     ingredients = forms.ModelMultipleChoiceField(

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-14 20:54+0000\n"
+"POT-Creation-Date: 2016-09-14 23:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,24 +33,24 @@ msgstr ""
 msgid "Pick Ingredients"
 msgstr ""
 
-#: delivery/templates/ingredients.html:22
+#: delivery/templates/ingredients.html:12
 msgid "Pick ingredients"
 msgstr ""
 
-#: delivery/templates/ingredients.html:37
+#: delivery/templates/ingredients.html:27
 msgid "Main dish"
 msgstr ""
 
-#: delivery/templates/ingredients.html:80
+#: delivery/templates/ingredients.html:70
 msgid "Restore recipe"
 msgstr ""
 
-#: delivery/templates/ingredients.html:86
-#: delivery/templates/kitchen_count.html:77 delivery/templates/routes.html:53
+#: delivery/templates/ingredients.html:76
+#: delivery/templates/kitchen_count.html:77 delivery/templates/routes.html:50
 msgid "Back"
 msgstr ""
 
-#: delivery/templates/ingredients.html:87
+#: delivery/templates/ingredients.html:77
 msgid "Next: Print Kitchen Count"
 msgstr ""
 
@@ -238,19 +238,19 @@ msgstr ""
 msgid "Routes Information"
 msgstr ""
 
-#: delivery/templates/routes.html:23
+#: delivery/templates/routes.html:20
 msgid "Organize Routes"
 msgstr ""
 
-#: delivery/templates/routes.html:37
+#: delivery/templates/routes.html:34
 msgid "Print"
 msgstr ""
 
-#: delivery/templates/routes.html:41
+#: delivery/templates/routes.html:38
 msgid "Save"
 msgstr ""
 
-#: delivery/templates/routes.html:55
+#: delivery/templates/routes.html:52
 msgid "Next: Delivery Route Sheet"
 msgstr ""
 

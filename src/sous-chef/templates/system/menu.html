@@ -3,12 +3,12 @@
 
 <div class="item">
     <a href="{% url 'home' %}">
-        <img class="ui large image item" src="{% static 'assets/logo-souschef-coul.png' %}" title="{% trans "Logo Sous-Chef" %}"/>
+        <img class="ui large image item" src="{% static 'images/logo-souschef-coul.png' %}" title="{% trans "Logo Sous-Chef" %}"/>
     </a>
 </div>
 {% if request.user %}
 <div class="item loggedin-user">
-    <img class="ui tiny left floated circular image" src="{% static 'assets/joe.jpg' %}">
+    <img class="ui tiny left floated circular image" src="{% static 'images/joe.jpg' %}">
     <h4 class="ui header name">
         {{ request.user.first_name }} <span class="sub-name">({{ request.user.username }})</span>
     </h4>

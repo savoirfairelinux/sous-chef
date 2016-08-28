@@ -27,6 +27,13 @@ SECRET_KEY = '15ine$#^qas4_h2u7yk&lxat*&g*b8+)@wp$2x@vi2#v9)i2#u'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# This IP may change for different computers and should be the
+# request.META.get('REMOTE_ADDR') for your local computer.
+# Don't run with this in production and don't
+# commit any changes to this INTERNAL_IPS settings.
+# WE NEED THIS IN ORDER TO USE 'debug' IN TEMPLATES!!!
+INTERNAL_IPS = ['172.19.0.1']
+
 ALLOWED_HOSTS = []
 
 

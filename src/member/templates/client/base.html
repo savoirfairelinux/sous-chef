@@ -5,99 +5,6 @@
 
 {% block title %}{% trans "Client" %}{% endblock %}
 
-{% block extrahead %}
-<link href="{% static 'css/calendar.min.css' %}" type="text/css" rel="stylesheet">
-{% endblock %}
-
-{% block extrajs %}
-<script src="{% static 'js/calendar.min.js' %}" type="application/javascript"></script>
-<script type="text/javascript">
-    // Init status dropdown behavior
-    $('.ui.dropdown').dropdown({transition: 'drop'});
-
-    // I prefer to use «Click Event» instead of «Dropdown Change»,
-    // because I don't need this behavior when restoring default dropdown value
-    // when denying modal
-    $('.ui.dropdown.status > .menu > .item').click(function () {
-        var value = $(this).data('value');
-        var today = new Date();
-        var modalCtntURL = "{% url 'member:clientStatusScheduler' client.id %}";
-        $.get(modalCtntURL, {status:value}, function(data){
-                $('.ui.modal.status')
-                    .html(data)
-                    .modal("setting", {
-                        closable: false,
-                        // Inside modal init
-                        onVisible: function () {
-                            // Enable status confirmation dropdown
-                            $('.ui.status_to.dropdown').dropdown();
-                            // Init dates field (start and end)
-                            $('#rangestart').calendar({
-                                type: 'date',
-                                on: 'click',
-                                minDate: new Date(
-                                    today.getFullYear(),
-                                    today.getMonth(),
-                                    today.getDate()),
-                                formatter: {
-                                    date: function (date, settings) {
-                                        if (!date) return '';
-                                        var day = date.getDate();
-                                        var month = date.getMonth() + 1;
-                                        var year = date.getFullYear();
-                                        if (month < 10) month = '0' + month;
-                                        if (day < 10) day = '0' + day;
-                                        return year + '-' + month + '-' + day;
-                                    }
-                                },
-                                endCalendar: $('#rangeend')
-                            });
-                            $('#rangeend').calendar({
-                                type: 'date',
-                                formatter: {
-                                    date: function (date, settings) {
-                                        if (!date) return '';
-                                        var day = date.getDate();
-                                        var month = date.getMonth() + 1;
-                                        var year = date.getFullYear();
-                                        if (month < 10) month = '0' + month;
-                                        if (day < 10) day = '0' + day;
-                                        return year + '-' + month + '-' + day;
-                                    }
-                                },
-                                startCalendar: $('#rangestart')
-                            });
-                        },
-                        // When approvind modal, submit form
-                        onApprove: function($element) {
-                            // $('#change-status-form').submit();
-                            console.log($('#change-status-form').serialize());
-                            $.ajax({
-                                 type: 'POST',
-                                 url: "{% url 'member:clientStatusScheduler' client.id %}"  ,
-                                 data: $('#change-status-form').serialize(),
-                                 success: function (xhr, ajaxOptions, thrownError) {
-                                     if ( $(xhr).find('.errorlist').length > 0 ) {
-                                         $('.ui.modal.status').html(xhr);
-                                         console.log('show modal..')
-                                         $('.ui.modal.status').modal("show");
-                                     } else {
-                                         location.reload();
-                                     }
-                                 },
-                             });
-                        },
-                        // When denying modal, restore default value for status dropdown
-                        onDeny: function($element) {
-                            $('.ui.dropdown.status').dropdown('restore defaults');
-                        }
-                    })
-                    .modal("show");
-            });
-    });
-</script>
-{% endblock %}
-
 {% block content %}
 
 <div class="ui secondary pointing fluid menu">
@@ -110,7 +17,7 @@
     </h1>
     <div class="right menu">
       <div class="ui item">
-          <div class="ui dropdown status">
+          <div class="ui dropdown member status" data-url="{% url 'member:clientStatusScheduler' client.id %}">
               <div class="ui large yellow label text">{{ client.get_status_display }}</div>
               <i class="dropdown icon"></i>
               <div class="menu">
