@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-28 01:16+0000\n"
+"POT-Creation-Date: 2016-08-28 14:20+0000\n"
 "PO-Revision-Date: 2016-04-21 19:43-0400\n"
 "Last-Translator: Julie Moussu <julie.moussu@savoirfairelinux.com>\n"
 "Language-Team: \n"
@@ -563,6 +563,7 @@ msgid "New Client"
 msgstr "Nouveau client"
 
 #: member/templates/client/create/form.html:44
+#: member/templates/client/partials/menu.html:6
 #: member/templates/client/update/base.html:36
 msgid "Personal"
 msgstr "Personnel"
@@ -583,6 +584,7 @@ msgid "Street number, city, ..."
 msgstr "Rue, ville, ..."
 
 #: member/templates/client/create/form.html:46
+#: member/templates/client/partials/menu.html:8
 #: member/templates/client/update/base.html:38
 #: member/templates/client/view/referent.html:16
 msgid "Referent"
@@ -604,6 +606,7 @@ msgid "Payment method, card, ..."
 msgstr "Méthode de paiement, carte, ..."
 
 #: member/templates/client/create/form.html:48
+#: member/templates/client/partials/menu.html:15
 #: member/templates/client/update/base.html:40
 msgid "Preferences"
 msgstr "Préférences"
@@ -765,6 +768,43 @@ msgstr ""
 msgid "Please describe the referral reason(s)"
 msgstr ""
 
+#: member/templates/client/partials/menu.html:4
+#, fuzzy
+#| msgid "Basic information"
+msgid "Information"
+msgstr "Informations de base"
+
+#: member/templates/client/partials/menu.html:9
+#, fuzzy
+#| msgid "referent"
+msgid "Add a referent"
+msgstr "référent"
+
+#: member/templates/client/partials/menu.html:9
+msgid "No referent available"
+msgstr ""
+
+#: member/templates/client/partials/menu.html:10
+#: member/templates/client/view/payment.html:17
+msgid "Billing"
+msgstr "Facturation"
+
+#: member/templates/client/partials/menu.html:11
+#: member/templates/client/view/orders.html:28
+msgid "Status"
+msgstr "État"
+
+#: member/templates/client/partials/menu.html:19
+#, fuzzy
+#| msgid "Staff Notes"
+msgid "Notes"
+msgstr "Notes du personnel"
+
+#: member/templates/client/partials/menu.html:23
+#: member/templates/client/view/orders.html:18
+msgid "Orders"
+msgstr "Commandes"
+
 #: member/templates/client/update/status.html:2
 msgid "Status modification"
 msgstr ""
@@ -827,17 +867,9 @@ msgstr "Fait/Lu"
 msgid "New"
 msgstr "Nouveau"
 
-#: member/templates/client/view/orders.html:18
-msgid "Orders"
-msgstr "Commandes"
-
 #: member/templates/client/view/orders.html:27
 msgid "Delivery Date"
 msgstr "Date de livraison"
-
-#: member/templates/client/view/orders.html:28
-msgid "Status"
-msgstr "État"
 
 #: member/templates/client/view/orders.html:29
 msgid "Amount"
@@ -846,10 +878,6 @@ msgstr "Montant"
 #: member/templates/client/view/orders.html:30
 msgid "Actions"
 msgstr "Actions"
-
-#: member/templates/client/view/payment.html:17
-msgid "Billing"
-msgstr "Facturation"
 
 #: member/templates/client/view/payment.html:25
 msgid "Payment method"
