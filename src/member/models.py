@@ -78,17 +78,17 @@ class Member(models.Model):
     # Member information
     firstname = models.CharField(
         max_length=50,
-        verbose_name=_('firstname')
+        verbose_name=_('First Name')
     )
 
     lastname = models.CharField(
         max_length=50,
-        verbose_name=_('lastname')
+        verbose_name=_('Last Name')
     )
 
     address = models.ForeignKey(
         'member.Address',
-        verbose_name=_('address'),
+        verbose_name=_('Address'),
         null=True,
     )
 
@@ -135,43 +135,43 @@ class Member(models.Model):
 class Address(models.Model):
 
     class Meta:
-        verbose_name_plural = _('addresses')
+        verbose_name_plural = _('Addresses')
 
     # Member address information
     number = models.PositiveIntegerField(
-        verbose_name=_('street number'),
+        verbose_name=_('Street Number'),
         blank=True,
         null=True,
     )
 
     street = models.CharField(
         max_length=100,
-        verbose_name=_('street')
+        verbose_name=_('Street')
     )
 
     # Can look like B02 so can't be an IntegerField
     apartment = models.CharField(
         max_length=10,
-        verbose_name=_('apartment'),
+        verbose_name=_('Apartment'),
         blank=True,
         null=True,
     )
 
     floor = models.IntegerField(
-        verbose_name=_('floor'),
+        verbose_name=_('Floor'),
         blank=True,
         null=True,
     )
 
     city = models.CharField(
         max_length=50,
-        verbose_name=_('city')
+        verbose_name=_('City')
     )
 
-    # Montreal postal code look like H3E 1C2
+    # Montreal postal codes look like H3E 1C2
     postal_code = models.CharField(
         max_length=6,
-        verbose_name=_('postal code')
+        verbose_name=_('Postal Code')
     )
 
     longitude = models.DecimalField(
@@ -202,23 +202,23 @@ class Address(models.Model):
 class Contact(models.Model):
 
     class Meta:
-        verbose_name_plural = _('contacts')
+        verbose_name_plural = _('Contacts')
 
     # Member contact information
     type = models.CharField(
         max_length=100,
         choices=CONTACT_TYPE_CHOICES,
-        verbose_name=_('contact type')
+        verbose_name=_('Contact Type')
     )
 
     value = models.CharField(
         max_length=50,
-        verbose_name=_('value')
+        verbose_name=_('Value')
     )
 
     member = models.ForeignKey(
         'member.Member',
-        verbose_name=_('member'),
+        verbose_name=_('Member'),
         related_name='member_contact',
     )
 
@@ -234,11 +234,11 @@ class Route(models.Model):
     # Information about options added to the meal
     name = models.CharField(
         max_length=50,
-        verbose_name=_('name')
+        verbose_name=_('Name')
     )
 
     description = models.TextField(
-        verbose_name=_('description'),
+        verbose_name=_('Description'),
         blank=True,
         null=True,
     )
@@ -315,12 +315,12 @@ class Client(models.Model):
     )
 
     class Meta:
-        verbose_name_plural = _('clients')
+        verbose_name_plural = _('Clients')
 
     billing_member = models.ForeignKey(
         'member.Member',
         related_name='+',
-        verbose_name=_('billing member'),
+        verbose_name=_('Billing Member'),
     )
 
     billing_payment_type = models.CharField(
@@ -331,7 +331,7 @@ class Client(models.Model):
     )
 
     rate_type = models.CharField(
-        verbose_name=_('rate type'),
+        verbose_name=_('Rate Type'),
         max_length=10,
         choices=RATE_TYPE,
         default='default'
@@ -339,19 +339,19 @@ class Client(models.Model):
 
     member = models.ForeignKey(
         'member.Member',
-        verbose_name=_('member')
+        verbose_name=_('Member')
     )
 
     emergency_contact = models.ForeignKey(
         'member.Member',
-        verbose_name=_('emergency contact'),
+        verbose_name=_('Emergency Contact'),
         related_name='emergency_contact',
         null=True,
     )
 
     emergency_contact_relationship = models.CharField(
         max_length=100,
-        verbose_name=_('emergency contact relationship'),
+        verbose_name=_('Emergency Contact Relationship'),
         blank=True,
         null=True,
     )
@@ -369,7 +369,7 @@ class Client(models.Model):
     )
 
     alert = models.TextField(
-        verbose_name=_('alert client'),
+        verbose_name=_('Alert Client'),
         blank=True,
         null=True,
     )
@@ -398,7 +398,7 @@ class Client(models.Model):
 
     route = models.ForeignKey(
         'member.Route',
-        verbose_name=_('route'),
+        verbose_name=_('Route'),
         blank=True,
         null=True
     )
@@ -761,26 +761,26 @@ class ClientFilter(FilterSet):
 class Referencing (models.Model):
 
     class Meta:
-        verbose_name_plural = _('referents')
+        verbose_name_plural = _('Referents')
 
     referent = models.ForeignKey('member.Member',
-                                 verbose_name=_('referent'))
+                                 verbose_name=_('Referent'))
 
     client = models.ForeignKey('member.Client',
-                               verbose_name=_('client'),
+                               verbose_name=_('Client'),
                                related_name='client_referent')
 
     referral_reason = models.TextField(
-        verbose_name=_("Referral reason")
+        verbose_name=_("Referral Reason")
     )
 
     work_information = models.TextField(
-        verbose_name=_('Work information'),
+        verbose_name=_('Work Information'),
         blank=True,
         null=True,
     )
 
-    date = models.DateField(verbose_name=_("Referral date"),
+    date = models.DateField(verbose_name=_("Referral Date"),
                             auto_now=False, auto_now_add=False,
                             default=datetime.date.today)
 
@@ -794,16 +794,16 @@ class Referencing (models.Model):
 class Option(models.Model):
 
     class Meta:
-        verbose_name_plural = _('options')
+        verbose_name_plural = _('Options')
 
     # Information about options added to the meal
     name = models.CharField(
         max_length=50,
-        verbose_name=_('name')
+        verbose_name=_('Name')
     )
 
     description = models.TextField(
-        verbose_name=_('description'),
+        verbose_name=_('Description'),
         blank=True,
         null=True,
     )
@@ -811,7 +811,7 @@ class Option(models.Model):
     option_group = models.CharField(
         max_length=100,
         choices=OPTION_GROUP_CHOICES,
-        verbose_name=_('option group')
+        verbose_name=_('Option Group')
     )
 
     def __str__(self):
@@ -821,18 +821,18 @@ class Option(models.Model):
 class Client_option(models.Model):
     client = models.ForeignKey(
         'member.Client',
-        verbose_name=_('client'),
+        verbose_name=_('Client'),
         related_name='+')
 
     option = models.ForeignKey(
         'member.option',
-        verbose_name=_('option'),
+        verbose_name=_('Option'),
         related_name='+')
 
     value = models.CharField(
         max_length=100,
         null=True,
-        verbose_name=_('value')
+        verbose_name=_('Value')
     )
     #  value contents depends on option_group of option occurence pointed to:
     #    if option_group = main_dish_size : 'Regular' or 'Large'
@@ -849,12 +849,12 @@ class Client_option(models.Model):
 class Restriction(models.Model):
     client = models.ForeignKey(
         'member.Client',
-        verbose_name=_('client'),
+        verbose_name=_('Client'),
         related_name='+')
 
     restricted_item = models.ForeignKey(
         'meal.Restricted_item',
-        verbose_name=_('restricted item'),
+        verbose_name=_('Restricted Item'),
         related_name='+')
 
     def __str__(self):
@@ -866,12 +866,12 @@ class Restriction(models.Model):
 class Client_avoid_ingredient(models.Model):
     client = models.ForeignKey(
         'member.Client',
-        verbose_name=_('client'),
+        verbose_name=_('Client'),
         related_name='+')
 
     ingredient = models.ForeignKey(
         'meal.Ingredient',
-        verbose_name=_('ingredient'),
+        verbose_name=_('Ingredient'),
         related_name='+')
 
     def __str__(self):
@@ -883,12 +883,12 @@ class Client_avoid_ingredient(models.Model):
 class Client_avoid_component(models.Model):
     client = models.ForeignKey(
         'member.Client',
-        verbose_name=_('client'),
+        verbose_name=_('Client'),
         related_name='+')
 
     component = models.ForeignKey(
         'meal.Component',
-        verbose_name=_('component'),
+        verbose_name=_('Component'),
         related_name='+')
 
     def __str__(self):
