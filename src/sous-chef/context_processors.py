@@ -25,7 +25,6 @@ def total(request):
         'ORDER_FILTER_DEFAULT_STATUS': ORDER_STATUS_ORDERED,
         'ORDER_FILTER_DEFAULT_DATE': datetime.datetime.now(),
         'NOTE_FILTER_DEFAULT_IS_READ': NoteFilter.NOTE_STATUS_UNREAD
-        
     }
 
     return COMMON_CONTEXT
