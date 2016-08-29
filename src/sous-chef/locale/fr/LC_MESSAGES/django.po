@@ -16,7 +16,31 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+#: sous-chef/templates/system/menu.html:21
+msgid "Clients"
+msgstr ""
 
-#: page/templates/pages/home.html:12
-msgid "Dashboard"
-msgstr "Tableau de bord"
+#: sous-chef/templates/system/menu.html:33
+msgid "Orders"
+msgstr ""
+
+#: sous-chef/templates/system/menu.html:36
+msgid "Staff Notes"
+msgstr ""
+
+#: sous-chef/templates/system/menu.html:43
+msgid "Kitchen Count"
+msgstr ""
+
+#: sous-chef/templates/system/menu.html:44
+msgid "Billing"
+msgstr ""
+
+#: sous-chef/templates/system/menu.html:45
+msgid "Admin"
+msgstr ""
+
+#: sous-chef/templates/system/menu.html:46
+msgid "Logout"
+msgstr ""

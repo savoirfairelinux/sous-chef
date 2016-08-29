@@ -1,5 +1,5 @@
 {% load i18n %}
-<h4 class="ui dividing header">{{ _('Billing information') }}</h4>
+<h4 class="ui dividing header">{% trans 'Billing information' %}</h4>
 
 <div class="field">
     <div class="ui toggle checkbox">
@@ -20,7 +20,7 @@
     <div class="results"></div>
   </div>
   <div class="ui horizontal divider">
-    {{ _('Or') }}
+    {% trans 'Or' %}
   </div>
   <div class="ui teal labeled icon button add payment member">
     {% trans 'Create new payment member' %}
@@ -34,7 +34,7 @@
       </div>
 
       <div class="field">
-        <label>{{ _('Name') }}</label>
+        <label>{% trans 'Name' %}</label>
         <div class="two fields">
           <div class="field {% if form.firstname.errors %} error {% endif %}">
               {{form.firstname}}
@@ -46,7 +46,7 @@
       </div>
 
       <div class="field">
-        <label>{{ _('Street') }}</label>
+        <label>{% trans 'Street' %}</label>
         <div class="fields">
           <div class="twelve wide field {% if form.street.errors %} error {% endif %}">
             {{ form.street}}

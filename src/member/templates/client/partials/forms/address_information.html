@@ -1,8 +1,8 @@
 {% load i18n %}
-<h4 class="ui dividing header">{{ _('Address information') }}</h4>
+<h4 class="ui dividing header">{% trans 'Address information' %}</h4>
 
 <div class="field">
-    <label>{{ _('Street') }}</label>
+    <label>{% trans 'Street' %}</label>
     <div class="fields">
       <div class="twelve wide field {% if form.street.errors %} error {% endif %}">
         {{ form.street}}
@@ -24,7 +24,7 @@
     </div>
 </div>
 
-<h4 class="ui dividing header">{{ _('Geolocation') }}</h4>
+<h4 class="ui dividing header">{% trans 'Geolocation' %}</h4>
 
 <div class="field">
     <button id="geocodeBtn" type="button" class="ui yellow button">
@@ -57,7 +57,7 @@
 </div>
 <br>
 
-<h4 class="ui dividing header">{{ _('Delivery Route') }}</h4>
+<h4 class="ui dividing header">{% trans 'Delivery Route' %}</h4>
 
 <div class="equal width fields">
   <div class="field {% if form.route.errors %} error {% endif %}">

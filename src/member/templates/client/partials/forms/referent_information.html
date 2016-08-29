@@ -1,5 +1,5 @@
 {% load i18n %}
-<h4 class="ui dividing header">{{ _('Identity') }}</h4>
+<h4 class="ui dividing header">{% trans 'Identity' %}</h4>
 
 <div class="ui center aligned basic segment">
   <div class="ui fluid category search">
@@ -10,7 +10,7 @@
     <div class="results"></div>
   </div>
   <div class="ui horizontal divider">
-    {{ _('Or') }}
+    {% trans 'Or' %}
   </div>
   <div class="ui teal labeled icon button add referent member">
     {% trans 'Create new referent member' %}
@@ -23,7 +23,7 @@
         <i class="close icon"></i>
       </div>
       <div class="field">
-        <label>{{ _('Name') }}</label>
+        <label>{% trans 'Name' %}</label>
         <div class="two fields">
           <div class="field {% if form.firstname.errors %} error {% endif %}">
               {{form.firstname}}
@@ -43,7 +43,7 @@
     {{ form.work_information }}
 </div>
 
-<h4 class="ui dividing header">{{ _('Referral reason') }}</h4>
+<h4 class="ui dividing header">{% trans 'Referral reason' %}</h4>
 
 <div class="field {% if form.date.errors %} error {% endif %}">
     <label>{{ form.date.label }}</label>
