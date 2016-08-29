@@ -7,13 +7,13 @@
 {% block breadcrumb %}
 {{ block.super }}
 <i class="right arrow icon divider"></i>
-<div class="active section">{% trans "Clients" %}</div>
+<div class="active section">{% trans 'Clients' %}</div>
 {% endblock breadcrumb %}
 
 {% block content %}
 
 <div class="ui secondary pointing fluid menu">
-    <h1 class="ui header">Clients</h1>
+    <h1 class="ui header">{% trans 'Clients' %}</h1>
 
     <div class="right menu">
       <a class="ui item {% if display == 'block' %} active {% endif %}"
@@ -35,7 +35,7 @@
 
         <div class="inline fields">
             <div class="field">
-                <label>Name</label>
+                <label>{% trans 'Name' %}</label>
                 <div class="field">
                     <div class="ui large left icon input">
                         <i class="users icon"></i>
@@ -44,19 +44,19 @@
                 </div>
             </div>
             <div class="field">
-                <label>Route</label>
+                <label>{% trans 'Route' %}</label>
                 <div class="field">
                     {{ filter.form.route }}
                 </div>
             </div>
             <div class="field">
-                <label>Status</label>
+                <label>{% trans 'Status' %}</label>
                 <div class="field">
                     {{ filter.form.status }}
                 </div>
             </div>
             <div class="field">
-                <label>Delivery</label>
+                <label>{% trans 'Delivery' %}</label>
                 <div class="field">
                     {{ filter.form.delivery_type }}
                 </div>
@@ -64,8 +64,8 @@
             <input id="id_display" name="display" type="text" value="{{display}}" style="display:none">
         </div>
         <div class="field">
-            <a href="{{ request.path }}?display={{ display }}" class="ui button">Reset</a>
-            <button class="ui yellow button" type="submit">Search</button>
+            <a href="{{ request.path }}?display={{ display }}" class="ui button">{% trans 'Reset' %}</a>
+            <button class="ui yellow button" type="submit">{% trans 'Search' %}</button>
             <a href="{% url 'member:member_step' %}" class="ui button"><i class="add user icon"></i>{% trans 'New client' %}</a>
         </div>
     </form>
@@ -109,7 +109,7 @@
 
 </div>
 {% else %}
-    <div class="ui row"><p>Sorry, no result found.</p></div>
+    <div class="ui row"><p>{% trans 'Sorry, no result found.' %}</p></div>
 
 {% endif %}
 {% else %}
@@ -118,11 +118,11 @@
 <table class="ui very basic stripped celled table">
     <thead>
         <tr>
-            <th class="sorted descending">Name</th>
-            <th class="">Status</th>
-            <th class="">Delivery</th>
-            <th class="">Route</th>
-            <th class="">Last update</th>
+            <th class="sorted descending">{% trans 'Name' %}</th>
+            <th class="">{% trans 'Status' %}</th>
+            <th class="">{% trans 'Delivery' %}</th>
+            <th class="">{% trans 'Route' %}</th>
+            <th class="">{% trans 'Last update' %}</th>
         </tr>
     </thead>
     <tbody>
@@ -146,7 +146,7 @@
     </tfoot>
 </table>
 {% else %}
-  <div class="ui row"><p>Sorry, no result found.</p></div>
+  <div class="ui row"><p>{% trans 'Sorry, no result found.' %}</p></div>
 {% endif %}
 {% endif %}
 

@@ -50,7 +50,7 @@
     </form>
 
 <div class="ui feed">
-    
+
     {% for note in notes %}
     <div class="event">
         <div class="label">
@@ -65,10 +65,10 @@
                 <div class="date">
                     {% if note.is_read %}
                     <a class="ui tiny like label " href="{% url 'member:unread' note.id %}">
-                    {{ _('Done/Read') }}</a>
+                    {% trans 'Done/Read' %}</a>
                     {% else %}
                     <a class="ui tiny label like" href="{% url 'member:read' note.id %}">
-                    {{ _('New') }}
+                    {% trans 'New' %}
                     {% endif %}
                     </a>
                 </div>

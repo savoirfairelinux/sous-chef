@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-28 14:20+0000\n"
+"POT-Creation-Date: 2016-08-29 18:06+0000\n"
 "PO-Revision-Date: 2016-04-21 19:24-0400\n"
 "Last-Translator: Julie Moussu <julie.moussu@savoirfairelinux.com>\n"
 "Language-Team: \n"
@@ -16,91 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.4\n"
-
-#: note/models.py:30
-msgid "Normal"
-msgstr ""
-
-#: note/models.py:31
-msgid "Urgent"
-msgstr ""
-
-#: note/models.py:35
-msgid "Notes"
-msgstr ""
-
-#: note/models.py:39
-msgid "Note"
-msgstr ""
-
-#: note/models.py:44
-msgid "Author"
-msgstr ""
-
-#: note/models.py:49
-msgid "Date"
-msgstr ""
-
-#: note/models.py:54
-msgid "Is read"
-msgstr ""
-
-#: note/models.py:60
-msgid "Client"
-msgstr ""
-
-#: note/models.py:108
-msgid "Search by name"
-msgstr ""
-
-#: note/templates/notes_client_list.html:17
-#: sous-chef/templates/system/menu.html:36
-msgid "Staff Notes"
-msgstr ""
-
-#: note/templates/notes_client_list.html:58 note/templates/notes_list.html:57
-msgid "Mark as unread"
-msgstr ""
-
-#: note/templates/notes_client_list.html:61 note/templates/notes_list.html:60
-msgid "Mark as read"
-msgstr ""
-
-#: note/urls.py:9
-msgid "^$"
-msgstr ""
-
-#: note/urls.py:10
-msgid "^read/(?P<id>\\d+)/$"
-msgstr ""
-
-#: note/urls.py:12
-msgid "^unread/(?P<id>\\d+)/$"
-msgstr ""
-
-#: sous-chef/templates/system/menu.html:21
-msgid "Clients"
-msgstr ""
-
-#: sous-chef/templates/system/menu.html:33
-msgid "Orders"
-msgstr ""
-
-#: sous-chef/templates/system/menu.html:43
-msgid "Kitchen Count"
-msgstr ""
-
-#: sous-chef/templates/system/menu.html:44
-msgid "Billing"
-msgstr ""
-
-#: sous-chef/templates/system/menu.html:45
-msgid "Admin"
-msgstr ""
-
-#: sous-chef/templates/system/menu.html:46
-msgid "Logout"
-msgstr ""
 
 #: meal/models.py:5
 msgid "Main Dish"

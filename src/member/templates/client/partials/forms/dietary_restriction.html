@@ -1,5 +1,5 @@
 {% load i18n %}
-<h4 class="ui dividing header">{{ _('Meal status') }}</h4>
+<h4 class="ui dividing header">{% trans 'Meal status' %}</h4>
 
 <div class="field">
     <div class="ui ten wide toggle checkbox">
@@ -10,7 +10,7 @@
     </div>
 </div>
 
-<h4 class="ui dividing header">{{ _('Delivery') }}</h4>
+<h4 class="ui dividing header">{% trans 'Delivery' %}</h4>
 
 <div class="field">
   <label>{{ form.delivery_type.label }}</label>
@@ -22,7 +22,7 @@
     {{ form.delivery_schedule }}
 </div>
 
-<h4 class="ui dividing header">{{ _('Meals default') }}</h4>
+<h4 class="ui dividing header">{% trans 'Meals default' %}</h4>
 
 <div class="field">
   <label class="inline">{{ form.meal_default.label }}</label>
@@ -31,7 +31,7 @@
 
 {% include 'client/partials/forms/meal_defaults.html'%}
 
-<h4 class="ui dividing header">{{ _('Food preferences') }}</h4>
+<h4 class="ui dividing header">{% trans 'Food preferences' %}</h4>
 
 <div class="field">
     <label>{{ form.restrictions.label }}</label>

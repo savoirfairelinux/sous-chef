@@ -1,7 +1,7 @@
 {% load i18n %}
-<h4 class="ui dividing header">{{ _('Identity') }}</h4>
+<h4 class="ui dividing header">{% trans 'Identity' %}</h4>
 <div class="field">
-    <label>{{ _('Name') }}</label>
+    <label>{% trans 'Name' %}</label>
     <div class="two fields">
         <div class="field {% if form.firstname.errors %} error {% endif %}">
             {{form.firstname}}
@@ -28,7 +28,7 @@
     </div>
 </div>
 
-<h4 class="ui dividing header">{{ _('Contact information') }}</h4>
+<h4 class="ui dividing header">{% trans 'Contact information' %}</h4>
 
 <div class="field">
     <label>{{ form.language.label }}</label>
@@ -49,7 +49,7 @@
         </div>
     </div>
 </div>
-<h4 class="ui dividing header">{{ _('Alert') }}</h4>
+<h4 class="ui dividing header">{% trans 'Alert' %}</h4>
 <div class="field {% if form.alert.errors %} error {% endif %}">
     <div class="ui message attached">
         <p>{% trans 'This message will be hightlighted on the client record.' %}</p>

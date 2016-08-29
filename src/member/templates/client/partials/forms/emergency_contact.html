@@ -1,5 +1,5 @@
 {% load i18n %}
-<h4 class="ui dividing header">{{ _('Emergency contact') }}</h4>
+<h4 class="ui dividing header">{% trans 'Emergency contact' %}</h4>
 
 <div class="ui center aligned basic segment">
   <div class="ui fluid category search">
@@ -10,7 +10,7 @@
     <div class="results"></div>
   </div>
   <div class="ui horizontal divider">
-    {{ _('Or') }}
+    {% trans 'Or' %}
   </div>
   <div class="ui teal labeled icon button add emergency contact member">
     {% trans 'Create new emergency contact' %}
@@ -24,7 +24,7 @@
       </div>
 
       <div class="field">
-        <label>{{ _('Name') }}</label>
+        <label>{% trans 'Name' %}</label>
         <div class="two fields">
           <div class="field {% if form.firstname.errors %} error {% endif %}">
             {{form.firstname}}
@@ -40,7 +40,7 @@
 </div>
 
 <div class="field">
-  <label>{{ _('Contact information') }}</label>
+  <label>{% trans 'Contact information' %}</label>
   <div class="two fields">
     <div class="field">
       {{form.contact_type}}

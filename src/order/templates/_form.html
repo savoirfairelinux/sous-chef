@@ -1,7 +1,7 @@
 {% if form.errors %}
     <div class="ui error message">
-      <div class="header">{{ _('Required information missing')}}</div>
-      <p>{{ _('Please review the form to make sure that all required fields are filled.')}}</p>
+      <div class="header">{% trans 'Required information missing' %}</div>
+      <p>{% trans 'Please review the form to make sure that all required fields are filled.' %}</p>
     </div>
 {% endif %}
 
@@ -47,8 +47,8 @@
         <div id="{{ formset.prefix }}">
             {% if formset.errors %}
                 <div class="ui error message">
-                  <div class="header">{{ _('Required information missing')}}</div>
-                  <p>{{ _('Please review the form to make sure that all required fields are filled.')}}</p>
+                  <div class="header">{% trans 'Required information missing' %}</div>
+                  <p>{% trans 'Please review the form to make sure that all required fields are filled.' %}</p>
                 </div>
             {% endif %}
             {% for subform in formset.forms %}

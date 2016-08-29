@@ -1,5 +1,6 @@
+{% load i18n %}
 <div class="header">
-    {{ _('Status modification') }}
+    {% trans 'Status modification' %}
 </div>
 <form class="content ui form" id="change-status-form" method="POST" action="{% url 'member:clientStatusScheduler' client.id %}">
     {% csrf_token %}
@@ -16,7 +17,7 @@
         {% if form.reason.errors %} {{ form.reason.errors }} {% endif %}
     </div>
     <hr>
-    <p>{{ _('If you want to schedule a status modification, feel free to fill one or two of theses date fields.') }}</p>
+    <p>{% trans 'If you want to schedule a status modification, feel free to fill one or two of theses date fields.' %}</p>
     <div class="two fields">
         <div class="field">
             <label>{{ form.change_date.label }}</label>
@@ -29,7 +30,7 @@
             {% if form.change_date.errors %} {{ form.change_date.errors }} {% endif %}
         </div>
         <div class="field">
-            <label>{{ _('End date') }}</label>
+            <label>{% trans 'End date' %}</label>
             <div class="ui calendar" id="rangeend">
                 <div class="ui input left icon">
                     <i class="calendar icon"></i>

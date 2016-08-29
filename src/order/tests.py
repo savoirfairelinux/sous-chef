@@ -5,6 +5,7 @@ from datetime import date
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.utils.translation import ugettext as _
 
 from member.models import Client, Address, Member
 from member.factories import RouteFactory, ClientFactory
@@ -212,11 +213,12 @@ class OrderFormTestCase(TestCase):
             'status': ''
         }
         response = self.client.post(route, data, follow=True)
-        self.assertTrue(b'Required information missing' in response.content)
-        self.assertTrue(b'Client' in response.content)
-        self.assertTrue(b'Creation date' in response.content)
-        self.assertTrue(b'Delivery date' in response.content)
-        self.assertTrue(b'Order status' in response.content)
+        content = str(response.content)
+        self.assertTrue(content.find('Required information missing'))
+        self.assertTrue(content.find('Client'))
+        self.assertTrue(content.find('Creation date'))
+        self.assertTrue(content.find('Delivery date'))
+        self.assertTrue(content.find('Order status'))
 
     def _test_order_without_errors(self, route, client):
         data = {
@@ -230,8 +232,9 @@ class OrderFormTestCase(TestCase):
             'status': 'O'
         }
         response = self.client.post(route, data, follow=True)
+        content = str(response.content)
         order = Order.objects.latest('id')
-        self.assertTrue(b'Required information' not in response.content)
+        self.assertTrue(content.find('Required information') == -1)
         self.assertTrue(response.status_code, 200)
         self.assertRedirects(
             response,
@@ -260,21 +263,22 @@ class OrderFormTestCase(TestCase):
             'orders-0-free_quantity': '',
         }
         response = self.client.post(route, data, follow=True)
-        self.assertTrue(b'Required information' in response.content)
-        self.assertTrue(b'Client' in response.content)
-        self.assertTrue(b'Creation date' in response.content)
-        self.assertTrue(b'Delivery date' in response.content)
-        self.assertTrue(b'Order status' in response.content)
-        self.assertTrue(b'Order item' in response.content)
-        self.assertTrue(b'Component' in response.content)
-        self.assertTrue(b'Component group' in response.content)
-        self.assertTrue(b'Price' in response.content)
-        self.assertTrue(b'Size' in response.content)
-        self.assertTrue(b'Order item type' in response.content)
-        self.assertTrue(b'Billable flag' in response.content)
-        self.assertTrue(b'Remark' in response.content)
-        self.assertTrue(b'Total quantity' in response.content)
-        self.assertTrue(b'Free quantity' in response.content)
+        content = str(response.content)
+        self.assertTrue(content.find('Required information'))
+        self.assertTrue(content.find('Client'))
+        self.assertTrue(content.find('Creation date'))
+        self.assertTrue(content.find('Delivery date'))
+        self.assertTrue(content.find('Order status'))
+        self.assertTrue(content.find('Order item'))
+        self.assertTrue(content.find('Component'))
+        self.assertTrue(content.find('Component group'))
+        self.assertTrue(content.find('Price'))
+        self.assertTrue(content.find('Size'))
+        self.assertTrue(content.find('Order item type'))
+        self.assertTrue(content.find('Billable flag'))
+        self.assertTrue(content.find('Remark'))
+        self.assertTrue(content.find('Total quantity'))
+        self.assertTrue(content.find('Free quantity'))
 
     def _test_order_item_without_errors(self, route, client, component):
         data = {

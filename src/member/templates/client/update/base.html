@@ -47,8 +47,8 @@
     <form action="" method="post" class="ui form error">{% csrf_token %}
         {% if form.errors %}
         <div class="ui error message">
-            <div class="header">{{ _('Required information missing')}}</div>
-            <p>{{ _('Please review the form to make sure that all required fields are filled.')}}</p>
+            <div class="header">{% trans 'Required information missing' %}</div>
+            <p>{% trans 'Please review the form to make sure that all required fields are filled.' %}</p>
             {{ form.errors }}
         </div>
         {% endif %}
