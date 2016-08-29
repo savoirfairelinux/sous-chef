@@ -2,6 +2,7 @@ from django.test import TestCase
 from order.factories import OrderFactory, OrderItemFactory
 from billing.models import Billing, calculate_amount_total
 import datetime
+from billing.factories import BillingFactory
 from member.factories import ClientFactory, RouteFactory
 from order.models import Order
 
@@ -10,7 +11,8 @@ class TestBilling(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        RouteFactory.create_batch(10)
+
+        cls.billing = BillingFactory()
 
     def testTotalAmount(self):
         order = OrderFactory(delivery_date=datetime.datetime.today())
