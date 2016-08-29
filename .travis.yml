@@ -9,7 +9,7 @@ install:
   - pip install pep8
 
 script:
-  - coverage run --omit=*.virtualenvs*,*virtualenv* src/manage.py test --settings=sous-chef.settings_test member meal order notification delivery note billing
+  - coverage run --omit=*.virtualenvs*,*virtualenv* src/manage.py test --settings=sous-chef.settings_test member meal order notification delivery note billing page
   - pep8 --count --show-source --exclude=migrations src/
   # Run `makemessages` and report an error if it should have been run by the
   # developer for this pull request.
