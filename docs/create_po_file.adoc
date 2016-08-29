@@ -12,6 +12,7 @@
     'page/locale/',
     )
 ```
-3. Run `python3 manage.py makemessages -a`
+3. Run `python3 manage.py makemessages -l fr` to update the various django.po
+files.
 4. In order to create .po files and to see new translations reflected in the
 application, run `python3 manage.py compilemessages`
