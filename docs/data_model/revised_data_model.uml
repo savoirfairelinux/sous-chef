@@ -2,7 +2,7 @@
 'To generate image : see http://www.plantuml.com/plantuml
 @startuml
 scale 1.0
-title sous-chef Data Model (revised_data_model.uml, 2016-06-02 at 8:40)\n
+title SousChef Data Model (revised_data_model.uml, 2016-08-29 at 8:30)\n(this may be out of sync with the django models)\n
 hide methods
 'hide fields
 skinparam shadowing false
@@ -20,30 +20,37 @@ skinparam classArrowFontStyle bold
 
 legend left
   <u>LEGEND</u>
-  <b>App :<color:green> Meal=green</color> <color:red> Member=red</color> <color:blue> Order=blue</color> <color:yellow> Notification=yellow</color> <color:orange> Route=orange</color></b>
+  <b>App : Meal=<color:green>green</color> Member=<color:red>red</color> Order=<color:blue>blue</color> Notification=<color:orange>=orange</color> Billing=<color:purple>purple</color> Note=<color:pink>pink</color></b>
   <b>(C)</b> : ORM class + DB table
   <b>(M)</b> : Many-to-many DB table
 endlegend
 
-Incompatibility "*" -d- "1" Ingredient
-Incompatibility "*" -u- "1" Restricted_item
 Client "0..1" -u- "1" Member
 Client "*" -u- "1" Member : Bill
 Client "*" -u- "0..1" Member : Emer
 Client "*" -u- "1" Route
+Client_avoid_component "*" -u- "1" Client
+Client_avoid_component "*" -d- "1" Component
+Client_avoid_ingredient "*" -u- "1" Client
+Client_avoid_ingredient "*" -d- "1" Ingredient
 Client_option "*" -d- "1" Client
 Client_option "*" -u- "1" Option
+ClientScheduledStatus "*" -d- "1" Client
+ClientScheduledStatus "0..1" -- "1" ClientScheduledStatus
 Component_Ingredient "*" -u- "1" Ingredient
 Component_Ingredient "*" -l- "1" Component
 Contact "*" -r- "1" Member
+Incompatibility "*" -d- "1" Ingredient
+Incompatibility "*" -u- "1" Restricted_item
 Member "*" -u- "0..1" Address
 Menu_component "*" -r- "1" Component
 Menu_component "*" -u- "1" Menu
-Note "*" -d- "1" Member
+Note "*" -u- "1" Client
 Note "*" -d- "1" User
 Notification "*" -d- "1" Member
 Order "*" -u- "1" Client
-Order_item "*" -d- "0..1" Component
+OrderBilling "*" -u- "1" Billing
+OrderBilling "*" -u- "1" Order
 Order_item "*" -u- "1" Order
 Referencing "*" -r- "1" Client
 Referencing "*" -u- "1" Member
@@ -61,6 +68,28 @@ class Address << (C,red) >> {
     floor
     city
     postal_code
+    longitude
+    latitude
+    distance
+}
+
+class Billing << (C,purple) >> {
+    id
+    client_id
+    total_amount
+    billing_month
+    billing_year
+    created_date
+    detail
+}
+
+class BillingSummary << (C,purple) >> {
+    id
+    total_order
+    detail
+    billing_year
+    billing_month
+    amount_total
 }
 
 class Client << (C,red) >> {
@@ -80,12 +109,43 @@ class Client << (C,red) >> {
     gender
     birthdate
     route_id
+    meal_default_week
+    delivery_note
+}
+
+class Client_avoid_component << (M,white) >> {
+    id
+    client_id
+    component_id
+}
+
+class Client_avoid_ingredient << (M,white) >> {
+    id
+    client_id
+    ingredient_id
 }
 
 class Client_option << (C,red) >> {
     id
     client_id
     option_id
+    value
+      'if option_group = main_dish_size : 'Regular', 'Large'
+      'if option_group = dish : qty/day as json {0, 1, 0, 0, 0, 2, 0}
+      'if option_group = preparation : Null
+      'if option_group = other_order_item : No occurrence
+}
+
+class ClientScheduledStatus << (C,red) >> {
+    id
+    client_id
+    linked_scheduled_status_id
+    status_from
+    status_to
+    reason
+    change_date
+    change_state
+    operation_status
 }
 
 class Component << (C,green) >> {
@@ -93,13 +153,15 @@ class Component << (C,green) >> {
     name
     description
     component_group
-      'main dish, vegetable, seasonal, side dish
+      'maindish, dessert, diabetic dessert, fruit salad, green salad, pudding, compote
+      'OLD main dish, vegetable, seasonal, side dish
 }
 
 class Component_Ingredient << (C,green) >> {
     id
     component_id
     ingredient_id
+    date
 }
 
 class Contact << (C,red) >> {
@@ -109,7 +171,7 @@ class Contact << (C,red) >> {
     member_id
 }
 
-class Incompatibility << (C,green) >> {
+class Incompatibility << (M,white) >> {
     id
     restricted_item_id
     ingredient_id
@@ -127,6 +189,8 @@ class Member << (C,red) >> {
     firstname
     lastname
     address_id
+    created_at
+    updated_at
 }
 
 class Menu << (C,green) >> {
@@ -134,24 +198,24 @@ class Menu << (C,green) >> {
     date
 }
 
-class Menu_component << (C,green) >> {
+class Menu_component << (M,white) >> {
     id
     menu_id
     component_id
 }
 
-class Note << (C,red) >> {
+class Note << (C,pink) >> {
     id
     note
     author_user_id
     date
     is_read
-    member_id
+    client_id
     priority
       'choices: normal, urgent
 }
 
-class Notification << (C,yellow) >> {
+class Notification << (C,orange) >> {
     id
     description
     member_id
@@ -162,11 +226,13 @@ class Option << (C,red) >> {
     'Client can choose more that one per option group
     id
     name
-      '(side dish) dessert, diabetic dessert, fruit salad, green salad, pudding
+      '(main_dish_size) size
+      '(dish) maindish, dessert, diabetic dessert, fruit salad, green salad, pudding, compote
       '(preparation) puree all, puree side, cut meat
+      '(other_order_item) Deliver commercial item, Pickup payment, Deliver invitation, Visit
     description
     option_group
-      'side_dish, preparation
+      'main_dish_size, dish, preparation, other_order_item
 }
 
 class Order << (C,blue) >> {
@@ -178,10 +244,15 @@ class Order << (C,blue) >> {
     client_id
 }
 
+class OrderBilling << (M,white) >> {
+    id
+    order_id
+    billing_id
+}
+
 class Order_item << (C,blue) >> {
     id
     order_id
-    component_id
     price
     billable_flag
     size
@@ -193,6 +264,9 @@ class Order_item << (C,blue) >> {
       'non billable pickup (ex. payment check)
     remark
       'ex. name of general store item to deliver
+    total_quantity
+    free_quantity
+    component_group
 }
 
 class Referencing << (C,red) >> {
@@ -213,19 +287,19 @@ class Restricted_item << (C,green) >> {
       'dairy, meat, vegetables
 }
 
-class Restriction << (C,red) >> {
+class Restriction << (M,white) >> {
     id
     client_id
     restricted_item__id
 }
 
-class Route << (C,orange) >> {
+class Route << (C,red) >> {
     id
     name
+    description
 }
 
-class User {
+class User << (C,white) >> {
     id
 }
-
 @enduml
