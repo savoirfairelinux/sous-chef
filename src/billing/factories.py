@@ -10,7 +10,7 @@ class BillingFactory(factory.DjangoModelFactory):
     class Meta:
         model = Billing
 
-    client = ClientFactory()
+    client = factory.SubFactory(ClientFactory)
 
     total_amount = random.randrange(1, stop=75, step=1)
 
