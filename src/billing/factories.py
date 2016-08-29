@@ -22,6 +22,6 @@ class BillingFactory(factory.DjangoModelFactory):
 
 
 class BillingOrder(factory.DjangoModelFactory):
-    billing_id = BillingFactory()
+    billing_id = BillingFactory().id
 
     order_id = OrderFactory()
