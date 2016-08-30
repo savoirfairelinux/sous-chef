@@ -1,6 +1,6 @@
 from django.contrib import admin
 from member.models import (Member, Client, Contact, Address,
-                           Referencing, Route)
+                           Referencing, Route, Option)
 
 from meal.models import Ingredient
 
@@ -37,3 +37,4 @@ admin.site.register(Route)
 admin.site.register(Contact)
 admin.site.register(Address)
 admin.site.register(Referencing)
+admin.site.register(Option)

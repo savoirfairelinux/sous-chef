@@ -1,4 +1,5 @@
 import datetime
+import json
 from django.test import TestCase, Client
 from member.models import Member, Client, User, Address, Referencing
 from member.models import Contact, Option, Client_option, Restriction, Route
@@ -215,34 +216,44 @@ class OptionTestCase(TestCase):
 
 class ClientOptionTestCase(TestCase):
 
+    fixtures = ['routes']
+
     @classmethod
     def setUpTestData(cls):
-        address = Address.objects.create(
-            number=123, street='De Bullion',
-            city='Montreal', postal_code='H3C4G5')
-        member = Member.objects.create(firstname='Angela',
-                                       lastname='Desousa',
-                                       address=address)
-        client = Client.objects.create(
-            member=member, billing_member=member,
-            birthdate=date(1980, 4, 19))
+        cls.clientTest = ClientFactory()
         option = Option.objects.create(
             name='PUREE ALL', option_group='preparation')
-        Client_option.objects.create(client=client, option=option)
+        meals_schedule_option = Option.objects.create(
+            name='meals_schedule', option_group='dish'
+        )
+        Client_option.objects.create(client=cls.clientTest, option=option)
+        Client_option.objects.create(
+            client=cls.clientTest,
+            option=meals_schedule_option,
+            value=json.dumps(['monday', 'wednesday', 'friday']),
+        )
 
     def test_str_includes_all_names(self):
-        """A Client_option's string representation includes the name
+        """
+        A Client_option's string representation includes the name
         of the client and the name of the option.
         """
-        member = Member.objects.get(firstname='Angela')
-        client = Client.objects.get(member=member)
         name = 'PUREE ALL'
         option = Option.objects.get(name=name)
         client_option = Client_option.objects.get(
-            client=client, option=option)
-        self.assertTrue(client.member.firstname in str(client_option))
-        self.assertTrue(client.member.lastname in str(client_option))
+            client=self.clientTest, option=option)
+        self.assertTrue(self.clientTest.member.firstname in str(client_option))
+        self.assertTrue(self.clientTest.member.lastname in str(client_option))
         self.assertTrue(option.name in str(client_option))
+
+    def test_meals_schedule_option(self):
+        """
+        Meals schedule must be saved as a client option.
+        """
+        self.assertEqual(
+            self.clientTest.simple_meals_schedule,
+            ['monday', 'wednesday', 'friday']
+        )
 
 
 class RestrictionTestCase(TestCase):
@@ -346,6 +357,8 @@ class ClientAvoidComponentTestCase(TestCase):
 
 
 class FormTestCase(TestCase):
+
+    fixtures = ['client_options.json']
 
     @classmethod
     def setUpTestData(cls):
@@ -507,7 +520,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "dietary_restriction",
             "dietary_restriction-status": "on",
             "dietary_restriction-delivery_type": "O",
-            "dietary_restriction-delivery_schedule": "monday",
+            "dietary_restriction-meals_schedule": ['monday', 'wednesday'],
             "dietary_restriction-meal_default": "1",
             "dietary_restriction-restrictions":
                 [self.restricted_item_1.id, self.restricted_item_2.id],
@@ -643,6 +656,9 @@ class FormTestCase(TestCase):
             "555-444-5555"
         )
 
+        # Test meals schedule
+        self.assertEqual(client.simple_meals_schedule,['monday','wednesday'])
+
         # test_restrictions
         restriction_1 = Restriction.objects.get(
             client=client, restricted_item=self.restricted_item_1)
@@ -746,7 +762,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "dietary_restriction",
             "dietary_restriction-status": "on",
             "dietary_restriction-delivery_type": "O",
-            "dietary_restriction-delivery_schedule": "monday",
+            "dietary_restriction-meals_schedule": "monday",
             "dietary_restriction-meal_default": "1",
             "wizard_goto_step": ""
         }
@@ -1247,7 +1263,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "dietary_restriction",
             "dietary_restriction-status": "",
             "dietary_restriction-delivery_type": "",
-            "dietary_restriction-delivery_schedule": "",
+            "dietary_restriction-meals_schedule": "",
             "dietary_restriction-meal_default": "",
             "wizard_goto_step": ""
         }
@@ -1266,7 +1282,7 @@ class FormTestCase(TestCase):
         self.assertTrue(b'Required information' in response_error.content)
         self.assertTrue(b'status' in response_error.content)
         self.assertTrue(b'delivery_type' in response_error.content)
-        self.assertTrue(b'delivery_schedule' in response_error.content)
+        self.assertTrue(b'meals_schedule' in response_error.content)
 
     def _test_step_dietary_restriction_without_errors(self):
         # Data for the address_information step without errors.
@@ -1274,7 +1290,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "dietary_restriction",
             "dietary_restriction-status": "on",
             "dietary_restriction-delivery_type": "O",
-            "dietary_restriction-delivery_schedule": "monday",
+            "dietary_restriction-meals_schedule": "monday",
             "dietary_restriction-meal_default": "1",
             "wizard_goto_step": ""
         }

@@ -155,7 +155,7 @@ class ClientRestrictionsInformation(forms.Form):
         widget=forms.Select(attrs={'class': 'ui dropdown'})
     )
 
-    delivery_schedule = forms.MultipleChoiceField(
+    meals_schedule = forms.MultipleChoiceField(
         label=_('Schedule'),
         initial='Select days of week',
         choices=DAYS_OF_WEEK,

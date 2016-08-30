@@ -3,7 +3,7 @@
 
 import csv
 from datetime import date
-
+import json
 from django.core.urlresolvers import reverse_lazy
 from django.views import generic
 from django.utils.decorators import method_decorator
@@ -478,6 +478,11 @@ class ClientWizard(NamedUrlSessionWizardView):
     def save_preferences(self, client):
         preferences = self.form_dict['dietary_restriction'].cleaned_data
 
+        # Save meals schedule as a Client option
+        client.set_meals_schedule(
+            preferences.get('meals_schedule')
+        )
+
         # Save restricted items
         for restricted_item in preferences.get('restrictions'):
             Restriction.objects.create(
@@ -824,11 +829,7 @@ class ClientAllergiesView(generic.DetailView):
         context = super(ClientAllergiesView, self).get_context_data(**kwargs)
         context['active_tab'] = 'prefs'
         context['client_status'] = Client.CLIENT_STATUS
-        if self.object.meal_default_week:
-            context['meal_default'] = parse_json(self.object.meal_default_week)
-        else:
-            context['meal_default'] = []
-
+        
         """
         Here we need to add some variable of context to send to template :
          1 - A string active_tab who can be:

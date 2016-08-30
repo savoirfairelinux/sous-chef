@@ -175,7 +175,7 @@
         $(selector).show();
       }
       function showUiAccordionSelectedDays() {
-        var $selected = $('#id_dietary_restriction-delivery_schedule').val();
+        var $selected = $('#id_dietary_restriction-meals_schedule').val();
         if ($selected) {
           $selected.forEach(showOneAccordionElement);
         }
@@ -185,7 +185,7 @@
           $(this).hide();
         });
       }
-      $('#id_dietary_restriction-delivery_schedule').change(function () {
+      $('#id_dietary_restriction-meals_schedule').change(function () {
         hideUiAccordionDays();
         showUiAccordionSelectedDays();
       });

@@ -1,5 +1,5 @@
 import datetime
-import math
+import math, json
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -491,6 +491,22 @@ class Client(models.Model):
         return self.client_notes.all()
 
     @property
+    def simple_meals_schedule(self):
+        """
+        Returns a list of days, corresponding to the client's delivery
+        days.
+        """
+        option = Option.objects.get(name='meals_schedule')
+        try:
+            meals_schedule_option = Client_option.objects.get(
+                client=self, option=option
+            )
+            return json.loads(meals_schedule_option.value)
+        except Client_option.DoesNotExist:
+            return []
+
+
+    @property
     def meals_schedule(self):
         """
         Returns a hierarchical dict representing the meals schedule.
@@ -523,6 +539,20 @@ class Client(models.Model):
                 prefs[day] = current
 
         return prefs
+
+
+    def set_meals_schedule(self, schedule):
+        """
+        Set the delivery days for the client.
+        @param schedule
+            A python list of days.
+        """
+        option = Option.objects.get(name='meals_schedule')
+        Client_option.objects.create(
+            client=self,
+            option=option,
+            value=json.dumps(schedule),
+        )
 
     @staticmethod
     def get_meal_defaults(client, component_group, day):
