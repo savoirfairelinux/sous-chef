@@ -30,13 +30,12 @@ class OrderList(generic.ListView):
 
         context = super(OrderList, self).get_context_data(**kwargs)
 
-        context['myVariableOfContext'] = 0
         context['filter'] = uf
 
         text = ''
         count = 0
         for getVariable in self.request.GET:
-            if getVariable == "display" or getVariable == "page":
+            if getVariable == "page":
                 continue
             for getValue in self.request.GET.getlist(getVariable):
                 if count == 0:

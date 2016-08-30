@@ -566,7 +566,7 @@ class ClientList(generic.ListView):
     model = Client
     template_name = 'client/list.html'
     context_object_name = 'clients'
-    paginate_by = 21
+    paginate_by = 20
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -584,7 +584,6 @@ class ClientList(generic.ListView):
         context = super(ClientList, self).get_context_data(**kwargs)
 
         # Here you add some variable of context to display on template
-        context['myVariableOfContext'] = 0
         context['filter'] = uf
         context['display'] = self.request.GET.get('display', 'block')
         text = ''
