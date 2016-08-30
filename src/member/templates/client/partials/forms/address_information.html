@@ -1,8 +1,8 @@
 {% load i18n %}
-<h4 class="ui dividing header">{% trans 'Address information' %}</h4>
+<h4 class="ui dividing header">{% trans 'Address' %}</h4>
 
 <div class="field">
-    <label>{% trans 'Street' %}</label>
+    <label>{{ form.street.label }}</label>
     <div class="fields">
       <div class="twelve wide field {% if form.street.errors %} error {% endif %}">
         {{ form.street}}

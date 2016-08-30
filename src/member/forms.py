@@ -58,24 +58,16 @@ class ClientBasicInformation (forms.Form):
 
 class ClientAddressInformation(forms.Form):
 
-    number = forms.IntegerField(
-        label=_("Street Number"),
-        widget=forms.TextInput(attrs={'placeholder': _('#')}),
-        required=False
-    )
-
     apartment = forms.IntegerField(
         label=_("Apt #"),
         widget=forms.TextInput(attrs={'placeholder': _('Apt #')}),
         required=False
     )
 
-    floor = forms.IntegerField(label=_("Floor"), required=False)
-
     street = forms.CharField(
         max_length=100,
-        label=_("Street Name"),
-        widget=forms.TextInput(attrs={'placeholder': _('Street Address')})
+        label=_("Address information"),
+        widget=forms.TextInput(attrs={'placeholder': _('7275 Rue Saint-Urbain')})
     )
 
     city = forms.CharField(
