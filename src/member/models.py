@@ -443,6 +443,16 @@ class Client(models.Model):
     contact = ContactClientManager()
 
     @property
+    def is_geolocalized(self):
+        """
+        Returns if the client's address is properly geolocalized.
+        """
+        if self.member.address.latitude is None or \
+                self.member.address.longitude is None:
+            return False
+        return True
+
+    @property
     def age(self):
         """
         Returns integer specifying person's age in years on the current date.

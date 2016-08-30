@@ -15,6 +15,7 @@ from member.factories import(
 from meal.factories import IngredientFactory, ComponentFactory
 from django.core.management import call_command
 from django.utils.six import StringIO
+from order.factories import OrderFactory
 
 
 class MemberEmptyContact(TestCase):
@@ -154,70 +155,47 @@ class AddressTestCase(TestCase):
 
 class ClientTestCase(TestCase):
 
+    fixtures = ['routes.json']
+
     @classmethod
     def setUpTestData(cls):
-        address = Address.objects.create(
-            number=123, street='De Bullion',
-            city='Montreal', postal_code='H3C4G5')
-        member = Member.objects.create(firstname='Angela',
-                                       lastname='Desousa',
-                                       address=address)
-        client = Client.objects.create(
-            member=member, billing_member=member,
+        cls.ss_client = ClientFactory(
             birthdate=date(1980, 4, 19),
-            meal_default_week={'monday_size': 'L',
-                               'monday_main_dish_quantity': 1
-                               })
-
-        Order.objects.create(
-            creation_date=date(2016, 5, 5),
-            delivery_date=date(2016, 5, 10),
-            status='B', client=client,
+            meal_default_week={
+                'monday_size': 'L',
+                'monday_main_dish_quantity': 1
+            }
+        )
+        cls.order = OrderFactory(
+            client=cls.ss_client
         )
 
     def test_str_is_fullname(self):
         """A client must be listed using his/her fullname"""
-        member = Member.objects.get(firstname='Angela')
-        client = Client.objects.get(member=member)
-        self.assertTrue(member.firstname in str(client))
-        self.assertTrue(member.lastname in str(client))
+        self.assertTrue(self.ss_client.member.firstname in str(self.ss_client))
+        self.assertTrue(self.ss_client.member.lastname in str(self.ss_client))
+
+    def test_is_geolocalized(self):
+        self.assertTrue(self.ss_client.is_geolocalized)
 
     def test_age(self):
         """The age on given date is properly computed"""
-        member = Member.objects.get(firstname='Angela')
-        angela = Client.objects.get(member=member)
-        self.assertEqual(angela.age, 36)
-
-    def test_default(self):
-        """Default values must be properly set on client creation"""
-        member = Member.objects.get(firstname='Angela')
-        angela = Client.objects.get(member=member)
-        # Language: French
-        self.assertEqual(angela.language, 'fr')
-        # Status: Pending
-        self.assertEqual(angela.status, 'D')
-        # Gender: empty
-        self.assertEqual(angela.gender, 'U')
-        # Delivery type: Ongoing
-        self.assertEqual(angela.delivery_type, 'O')
+        self.assertEqual(self.ss_client.age, 36)
 
     def test_orders(self):
         """Orders of a given client must be available as a model property"""
-        member = Member.objects.get(firstname='Angela')
-        angela = Client.objects.get(member=member)
-        self.assertEqual(angela.orders.count(), 1)
-        self.assertEqual(angela.orders.first().creation_date, date(2016, 5, 5))
+        self.assertEqual(self.ss_client.orders.count(), 1)
+        self.assertEqual(
+            self.ss_client.orders.first().creation_date,
+            date.today())
 
     def test_meal_default(self):
-        member = Member.objects.get(firstname='Angela')
-        angela = Client.objects.get(member=member)
-
         # monday_size = 'L'
-        self.assertEqual(angela.meal_default_week['monday_size'], 'L')
+        self.assertEqual(self.ss_client.meal_default_week['monday_size'], 'L')
 
         # monday_main_dish_quantity = 1
         self.assertEqual(
-            angela.meal_default_week['monday_main_dish_quantity'], 1
+            self.ss_client.meal_default_week['monday_main_dish_quantity'], 1
         )
 
 
