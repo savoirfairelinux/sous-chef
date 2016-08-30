@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-29 19:59+0000\n"
+"POT-Creation-Date: 2016-08-30 20:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,166 +17,222 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: order/models.py:8
+#: order/models.py:26
 msgid "Ordered"
 msgstr ""
 
-#: order/models.py:9
+#: order/models.py:27
 msgid "Delivered"
 msgstr ""
 
-#: order/models.py:10
-msgid "Billed"
-msgstr ""
-
-#: order/models.py:11
-msgid "Paid"
-msgstr ""
-
-#: order/models.py:15
-msgid "Serving size"
-msgstr ""
-
-#: order/models.py:16
-msgid "Regular"
-msgstr ""
-
-#: order/models.py:17
-msgid "Large"
-msgstr ""
-
-#: order/models.py:21
-msgid "Order item type"
-msgstr ""
-
-#: order/models.py:23
-msgid "BILLABLE meal component (main dish, vegetable, side dish, seasonal)"
-msgstr ""
-
-#: order/models.py:25
-msgid "BILLABLE delivery (general store item, ...)"
-msgstr ""
-
-#: order/models.py:27
-msgid "NON BILLABLE delivery (ex. invitation card, ...)"
+#: order/models.py:28
+msgid "No Charge"
 msgstr ""
 
 #: order/models.py:29
-msgid "NON BILLABLE pickup (payment)"
+msgid "Billed"
+msgstr ""
+
+#: order/models.py:30
+msgid "Paid"
 msgstr ""
 
 #: order/models.py:36
-msgid "orders"
+msgid "Serving size"
 msgstr ""
 
-#: order/models.py:40
-msgid "creation date"
+#: order/models.py:37
+msgid "Regular"
+msgstr ""
+
+#: order/models.py:38
+msgid "Large"
+msgstr ""
+
+#: order/models.py:42
+msgid "Order item type"
 msgstr ""
 
 #: order/models.py:44
+msgid "BILLABLE meal component (main dish, vegetable, side dish, seasonal)"
+msgstr ""
+
+#: order/models.py:46
+msgid "BILLABLE delivery (general store item, ...)"
+msgstr ""
+
+#: order/models.py:48
+msgid "NON BILLABLE delivery (ex. invitation card, ...)"
+msgstr ""
+
+#: order/models.py:50
+msgid "NON BILLABLE pickup (payment)"
+msgstr ""
+
+#: order/models.py:96
+msgid "orders"
+msgstr ""
+
+#: order/models.py:100
+msgid "creation date"
+msgstr ""
+
+#: order/models.py:104
 msgid "delivery date"
 msgstr ""
 
-#: order/models.py:50 order/templates/view_order.html:15
+#: order/models.py:110
 msgid "order status"
 msgstr ""
 
-#: order/models.py:55
+#: order/models.py:115
 msgid "client"
 msgstr ""
 
-#: order/models.py:77
+#: order/models.py:551
 msgid "Search by name"
 msgstr ""
 
-#: order/models.py:120
+#: order/models.py:591
 msgid "order items"
 msgstr ""
 
-#: order/models.py:124
+#: order/models.py:595
 msgid "order"
 msgstr ""
 
-#: order/models.py:130
-msgid "component"
-msgstr ""
-
-#: order/models.py:137
+#: order/models.py:602
 msgid "price"
 msgstr ""
 
-#: order/models.py:141
+#: order/models.py:606
 msgid "billable flag"
 msgstr ""
 
-#: order/models.py:145
+#: order/models.py:610
 msgid "size"
 msgstr ""
 
-#: order/models.py:152
+#: order/models.py:617
 msgid "order item type"
 msgstr ""
 
-#: order/models.py:159
+#: order/models.py:624
 msgid "remark"
 msgstr ""
 
-#: order/models.py:163
+#: order/models.py:628
 msgid "total quantity"
 msgstr ""
 
-#: order/models.py:168
+#: order/models.py:633
 msgid "free quantity"
 msgstr ""
 
-#: order/templates/list.html:5 order/templates/list.html:10
+#: order/models.py:640
+msgid "component group"
+msgstr ""
+
+#: order/templates/_form.html:5 order/templates/_form.html:52
+#: order/templates/update.html:18
+msgid "Required information missing"
+msgstr ""
+
+#: order/templates/_form.html:6 order/templates/_form.html:53
+#: order/templates/update.html:19
+msgid ""
+"Please review the form to make sure that all required fields are filled."
+msgstr ""
+
+#: order/templates/create.html:6 order/templates/list.html:6
+#: order/templates/update.html:6
 msgid "Orders"
 msgstr ""
 
-#: order/templates/list.html:55
+#: order/templates/list.html:16
+msgid "New order"
+msgstr ""
+
+#: order/templates/list.html:19
+msgid "Or"
+msgstr ""
+
+#: order/templates/list.html:30
 msgid "Client"
 msgstr ""
 
-#: order/templates/list.html:56
+#: order/templates/list.html:31
 msgid "Delivery Date"
 msgstr ""
 
-#: order/templates/list.html:57
+#: order/templates/list.html:32 order/templates/order/partials/filters.html:16
 msgid "Status"
 msgstr ""
 
-#: order/templates/list.html:58
+#: order/templates/list.html:33
 msgid "Amount"
 msgstr ""
 
-#: order/templates/view.html:5 order/templates/view_order.html:5
+#: order/templates/list.html:34
+msgid "Actions"
+msgstr ""
+
+#: order/templates/order/partials/filters.html:7
+msgid "Name"
+msgstr ""
+
+#: order/templates/order/partials/filters.html:22
+msgid "Delivery date"
+msgstr ""
+
+#: order/templates/order/partials/filters.html:34
+msgid "Reset"
+msgstr ""
+
+#: order/templates/order/partials/filters.html:35
+msgid "Search"
+msgstr ""
+
+#: order/templates/order_confirm_delete.html:9
+msgid "This order will be deleted and all the info will be lost, are you sure?"
+msgstr ""
+
+#: order/templates/view.html:5
 msgid "View Order"
 msgstr ""
 
-#: order/templates/view.html:30
-msgid "Quantity"
+#: order/templates/view.html:48
+msgid "Total Quantity"
 msgstr ""
 
-#: order/templates/view.html:31
+#: order/templates/view.html:49
+msgid "Free Quantity"
+msgstr ""
+
+#: order/templates/view.html:50
 msgid "Price"
 msgstr ""
 
-#: order/templates/view_order.html:19
-msgid "order creation date"
-msgstr ""
-
-#: order/templates/view_order.html:23
-msgid "order delivery_date"
-msgstr ""
-
-#: order/templates/view_order.html:27
-msgid "order total price"
-msgstr ""
-
-#: order/urls.py:7
+#: order/urls.py:12
 msgid "^list/$"
 msgstr ""
 
-#: order/urls.py:8
-msgid "^view/(?P<id>\\d+)/$"
+#: order/urls.py:13
+msgid "^view/(?P<pk>\\d+)/$"
+msgstr ""
+
+#: order/urls.py:14
+msgid "^create/$"
+msgstr ""
+
+#: order/urls.py:15
+msgid "^update/(?P<pk>\\d+)/$"
+msgstr ""
+
+#: order/urls.py:17
+msgid "^update/(?P<pk>\\d+)/status$"
+msgstr ""
+
+#: order/urls.py:21
+msgid "^delete/(?P<pk>\\d+)/$"
 msgstr ""
