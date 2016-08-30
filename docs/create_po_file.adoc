@@ -3,23 +3,17 @@
 ### Updating .po files for every pull request, if applicable
 **READ this section if you're here because of a failing Travis CI check.**
 
-If commits in your pull request have introduced new translatable content, you
-must update the .po files and include them in your pull request.
+If commits in your pull request have introduced new translatable content, you must update the .po files and include them in your pull request.
 
 1. `docker ps` to obtain the container ID for 'web'
-2. `docker exec -it <container_id> bash
+2. `docker exec -it <container_id> bash`
 3. `cd src`
 4. `python3 manage.py makemessages -l fr -l en` to update the various django.po
-files with your new strings.and
+files with your new strings.
 5. Commit the changes to your branch to be included in the pull request.
 
 ### How the project gets translated
-We use Transifex to translate the sous-chef project. In a nutshell, Transifex
-regularly obtains the translation (.po) files from this Django project, and
-translators can contribute on the
-[Transifex website](https://www.transifex.com/savoirfairelinux/sous-chef). Once
-in a while, a project member can run `tx pull` in the Docker container's root
-directory to pull (and then commit) the new translations.
+We use Transifex to translate the sous-chef project. In a nutshell, Transifex regularly obtains the translation (.po) files from this Django project, and translators can contribute on the [Transifex website](https://www.transifex.com/savoirfairelinux/sous-chef). Once in a while, a project member can run `tx pull` in the Docker container's root directory to pull (and then commit) the new translations.
 
 ### Enabling translations for a new Django application.
 1. In your application create a folder `locale`
