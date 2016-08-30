@@ -67,8 +67,9 @@ class ClientAddressInformation(forms.Form):
     street = forms.CharField(
         max_length=100,
         label=_("Address information"),
-        widget=forms.TextInput(attrs={'placeholder': _('7275 Rue Saint-Urbain')})
-    )
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('7275 Rue Saint-Urbain')}))
 
     city = forms.CharField(
         max_length=50,
