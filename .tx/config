@@ -1,0 +1,57 @@
+[main]
+host = https://www.transifex.com
+
+[sous-chef.billing_djangopo]
+file_filter = src/billing/locale/<lang>/LC_MESSAGES/django.po
+source_file = src/billing/locale/en/LC_MESSAGES/django.po
+source_lang = en
+type = PO
+
+[sous-chef.delivery_djangopo]
+file_filter = src/delivery/locale/<lang>/LC_MESSAGES/django.po
+source_file = src/delivery/locale/en/LC_MESSAGES/django.po
+source_lang = en
+type = PO
+
+[sous-chef.meal_djangopo]
+file_filter = src/meal/locale/<lang>/LC_MESSAGES/django.po
+source_file = src/meal/locale/en/LC_MESSAGES/django.po
+source_lang = en
+type = PO
+
+[sous-chef.member_djangopo]
+file_filter = src/member/locale/<lang>/LC_MESSAGES/django.po
+source_file = src/member/locale/en/LC_MESSAGES/django.po
+source_lang = en
+type = PO
+
+[sous-chef.note_djangopo]
+file_filter = src/note/locale/<lang>/LC_MESSAGES/django.po
+source_file = src/note/locale/en/LC_MESSAGES/django.po
+source_lang = en
+type = PO
+
+[sous-chef.notification_djangopo]
+file_filter = src/notification/locale/<lang>/LC_MESSAGES/django.po
+source_file = src/notification/locale/en/LC_MESSAGES/django.po
+source_lang = en
+type = PO
+
+[sous-chef.order_djangopo]
+file_filter = src/order/locale/<lang>/LC_MESSAGES/django.po
+source_file = src/order/locale/en/LC_MESSAGES/django.po
+source_lang = en
+type = PO
+
+[sous-chef.page_djangopo]
+file_filter = src/page/locale/<lang>/LC_MESSAGES/django.po
+source_file = src/page/locale/en/LC_MESSAGES/django.po
+source_lang = en
+type = PO
+
+[sous-chef.sous-chef_djangopo]
+file_filter = src/sous-chef/locale/<lang>/LC_MESSAGES/django.po
+source_file = src/sous-chef/locale/en/LC_MESSAGES/django.po
+source_lang = en
+type = PO
+

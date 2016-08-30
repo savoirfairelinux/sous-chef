@@ -10,143 +10,141 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-30 20:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: savoirfairelinux <support@savoirfairelinux.com>, 2016\n"
-"Language-Team: French (https://www.transifex.com/savoirfairelinux/"
-"teams/63058/fr/)\n"
-"Language: fr\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: delivery/forms.py:11
 msgid "Today's main dish:"
-msgstr "Plat du jour:"
+msgstr ""
 
 #: delivery/forms.py:18
 msgid "Select Ingredients:"
-msgstr "Sélectionner les ingrédients:"
+msgstr ""
 
 #: delivery/models.py:9
 msgid "deliveries"
-msgstr "livraisons"
+msgstr ""
 
 #: delivery/templates/ingredients.html:5
 msgid "Pick Ingredients"
-msgstr "Sélectionner les ingrédients"
+msgstr ""
 
 #: delivery/templates/kitchen_count.html:5
 msgid "Kitchen Count report"
-msgstr "Inventaire des repas"
+msgstr ""
 
 #: delivery/templates/kitchen_count.html:21
 #: delivery/templates/kitchen_count.html:47
 msgid "Component"
-msgstr "Composant"
+msgstr ""
 
 #: delivery/templates/kitchen_count.html:22
 msgid "Regular"
-msgstr "Régulier"
+msgstr ""
 
 #: delivery/templates/kitchen_count.html:23
 msgid "Large"
-msgstr "Large"
+msgstr ""
 
 #: delivery/templates/kitchen_count.html:24
 msgid "Dish today"
-msgstr "Plat du jour"
+msgstr ""
 
 #: delivery/templates/kitchen_count.html:25
 msgid "Ingredients today"
-msgstr "Ingrédients du jour"
+msgstr ""
 
 #: delivery/templates/kitchen_count.html:44
 #: delivery/templates/review_orders.html:28
 msgid "Client"
-msgstr "Client"
+msgstr ""
 
 #: delivery/templates/kitchen_count.html:45
 #: delivery/templates/kitchen_count.html:46
 msgid "Qty"
-msgstr "Qte"
+msgstr ""
 
 #: delivery/templates/kitchen_count.html:45
 msgid "Reg"
-msgstr "Rég"
+msgstr ""
 
 #: delivery/templates/kitchen_count.html:46
 msgid "Lge"
-msgstr "Lrg"
+msgstr ""
 
 #: delivery/templates/kitchen_count.html:47
 #: delivery/templates/kitchen_count.html:48
 msgid "Clashing"
-msgstr "En conflit"
+msgstr ""
 
 #: delivery/templates/kitchen_count.html:48
 #: delivery/templates/kitchen_count_steps.html:12
 msgid "Ingredients"
-msgstr "Ingrédients"
+msgstr ""
 
 #: delivery/templates/kitchen_count.html:49
 msgid "Preparation"
-msgstr "Préparation"
+msgstr ""
 
 #: delivery/templates/kitchen_count.html:50
 msgid "Restrictions"
-msgstr "Restrictions"
+msgstr ""
 
 #: delivery/templates/kitchen_count_steps.html:6
 msgid "Review Orders"
-msgstr "Réviser les commandes"
+msgstr ""
 
 #: delivery/templates/kitchen_count_steps.html:7
 msgid "Review the orders for the day."
-msgstr "Passer les commandes en revues."
+msgstr ""
 
 #: delivery/templates/kitchen_count_steps.html:13
 msgid "Pick ingredients for the day."
-msgstr "Sélectionner les ingrédients à utiliser aujourd'hui."
+msgstr ""
 
 #: delivery/templates/kitchen_count_steps.html:18
 msgid "Kitchen Count"
-msgstr "Inventaire des repas"
+msgstr ""
 
 #: delivery/templates/kitchen_count_steps.html:19
 msgid "Print the kitchen count."
-msgstr "Imprimer l'inventaire des repas."
+msgstr ""
 
 #: delivery/templates/kitchen_count_steps.html:24
 msgid "Routes"
-msgstr "Itinéraires"
+msgstr ""
 
 #: delivery/templates/kitchen_count_steps.html:25
 msgid "Organize the delivery routes."
-msgstr "Organiser les itinéraires pour la livraison."
+msgstr ""
 
 #: delivery/templates/review_orders.html:6
 msgid "Orders"
-msgstr "Commandes"
+msgstr ""
 
 #: delivery/templates/review_orders.html:21
 msgid "Orders have been generated on"
-msgstr "Les commandes ont été générées le"
+msgstr ""
 
 #: delivery/templates/review_orders.html:29
 msgid "Delivery Date"
-msgstr "Date de livraison"
+msgstr ""
 
 #: delivery/templates/review_orders.html:30
 msgid "Status"
-msgstr "État"
+msgstr ""
 
 #: delivery/templates/review_orders.html:31
 msgid "Amount"
-msgstr "Montant"
+msgstr ""
 
 #: delivery/templates/routes.html:6
 msgid "Routes Information"
-msgstr "Plans de livraison"
+msgstr ""
 
 #: delivery/urls.py:10
 msgid "^order/$"
