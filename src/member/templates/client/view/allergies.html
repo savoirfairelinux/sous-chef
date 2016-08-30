@@ -42,18 +42,12 @@
 
     <h3 class="ui header">
         {% trans 'Meal status' %}
-        <a  href="{% url 'admin:member_client_change' client.id %}">
-            <i class="write grey icon"></i>
-        </a>
     </h3>
 
     <div class="ui yellow label">{{client.get_status_display}}</div>
 
     <h3 class="ui header">
         {% trans 'Restrictions' %}
-        <a  href="{% url 'admin:member_client_change' client.id %}">
-            <i class="write grey icon"></i>
-        </a>
     </h3>
     {% for restricted_item in client.restrictions.all %}
     <div class="ui label">
@@ -68,9 +62,6 @@
 
     <h3 class="ui header">
         {% trans 'Food preparation' %}
-        <a  href="{% url 'admin:member_client_change' client.id %}">
-            <i class="write grey icon"></i>
-        </a>
     </h3>
     {% for option in client.food_preparation %}
     <div class="ui label">

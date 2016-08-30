@@ -17,10 +17,11 @@ class AddressFactory (factory.DjangoModelFactory):
         model = Address
 
     street = factory.Faker('street_address')
+    apartment = factory.Faker('random_number')
     city = 'Montreal'
     postal_code = factory.Faker('postalcode')
-    latitude = "75.0484393"
-    longitude = "40.2324343"
+    latitude = "75.048439"
+    longitude = "40.232434"
 
 
 class MemberFactory (factory.DjangoModelFactory):
@@ -91,6 +92,8 @@ class ClientFactory (factory.DjangoModelFactory):
     route = factory.LazyAttribute(
         lambda x: random.choice(Route.objects.all())
     )
+
+    delivery_note = factory.Faker('sentence')
 
     meal_default_week = factory.LazyAttribute(lambda x: generate_json())
 
