@@ -72,8 +72,8 @@
 
 <div class="ui row">
 
-    <a class="ui green button" href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i>Update</a>
-    <a class="ui red button order-delete" href="#" data-order-id="{{order.id}}"><i class="icon trash"></i>Delete</a>
+    <a class="ui basic red button order-delete" href="#" data-order-id="{{order.id}}"><i class="icon trash"></i>Delete</a>
+    <a class="ui basic green button" href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i>Update</a>
 
 </div>
 

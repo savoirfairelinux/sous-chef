@@ -74,9 +74,9 @@
         <td>{{order.get_status_display}}</td>
         <td>${{order.price}}</td>
         <td>
-          <a class="ui blue icon button"  href="{% url 'order:view' pk=order.id %}"><i class="icon unhide"></i></a>
-          <a class="ui green icon button"  href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i></a>
-          <a class="ui red icon button order-delete" href="#" data-order-id="{{order.id}}"><i class="icon trash"></i></a>
+          <a class="ui basic icon button"  href="{% url 'order:view' pk=order.id %}"><i class="icon unhide"></i></a>
+          <a class="ui basic icon button"  href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i></a>
+          <a class="ui basic icon button order-delete" href="#" data-order-id="{{order.id}}"><i class="icon trash"></i></a>
         </td>
       </tr>
       {% include "order_confirm_delete.html" %}
