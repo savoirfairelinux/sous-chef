@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -10,13 +10,12 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-30 20:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: savoirfairelinux <support@savoirfairelinux.com>, 2016\n"
-"Language-Team: French (https://www.transifex.com/savoirfairelinux/"
-"teams/63058/fr/)\n"
-"Language: fr\n"
+"Last-Translator: Mathieu Perreault <mathieu.perreault@gmail.com>, 2016\n"
+"Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: order/models.py:26
@@ -57,19 +56,19 @@ msgstr "Type d'éléments de commande"
 
 #: order/models.py:44
 msgid "BILLABLE meal component (main dish, vegetable, side dish, seasonal)"
-msgstr ""
+msgstr "FACTURABLE - Composant de repas (principal, légumes, à-côtés...)"
 
 #: order/models.py:46
 msgid "BILLABLE delivery (general store item, ...)"
-msgstr ""
+msgstr "FACTURABLE - Livraison (par ex. item général)"
 
 #: order/models.py:48
 msgid "NON BILLABLE delivery (ex. invitation card, ...)"
-msgstr ""
+msgstr "NON FACTURABLE - Livraison (par ex. carte d'invitation)"
 
 #: order/models.py:50
 msgid "NON BILLABLE pickup (payment)"
-msgstr ""
+msgstr "NON FACTURABLE - Ramassage (par ex. paiement)"
 
 #: order/models.py:96
 msgid "orders"
@@ -109,7 +108,7 @@ msgstr "prix"
 
 #: order/models.py:606
 msgid "billable flag"
-msgstr ""
+msgstr "facturable"
 
 #: order/models.py:610
 msgid "size"
@@ -129,7 +128,7 @@ msgstr "quantité"
 
 #: order/models.py:633
 msgid "free quantity"
-msgstr ""
+msgstr "quantité gratuite"
 
 #: order/models.py:640
 msgid "component group"
@@ -144,7 +143,7 @@ msgstr "Information requise manquante"
 #: order/templates/update.html:19
 msgid ""
 "Please review the form to make sure that all required fields are filled."
-msgstr ""
+msgstr "S'il vous plaît vous assurer que les champs requis sont remplis."
 
 #: order/templates/create.html:6 order/templates/list.html:6
 #: order/templates/update.html:6
@@ -157,7 +156,7 @@ msgstr "Nouvelle commande"
 
 #: order/templates/list.html:19
 msgid "Or"
-msgstr ""
+msgstr "ou"
 
 #: order/templates/list.html:30
 msgid "Client"
@@ -177,7 +176,7 @@ msgstr "Montant"
 
 #: order/templates/list.html:34
 msgid "Actions"
-msgstr ""
+msgstr "Actions"
 
 #: order/templates/order/partials/filters.html:7
 msgid "Name"
@@ -196,7 +195,8 @@ msgid "Search"
 msgstr "Recherche"
 
 #: order/templates/order_confirm_delete.html:9
-msgid "This order will be deleted and all the info will be lost, are you sure?"
+msgid ""
+"This order will be deleted and all the info will be lost, are you sure?"
 msgstr ""
 "Cette commande va être effacée, ainsi que ses informations. Êtes-vous "
 "sûr(er) ?"
@@ -207,11 +207,11 @@ msgstr "Voir Commande"
 
 #: order/templates/view.html:48
 msgid "Total Quantity"
-msgstr ""
+msgstr "Quantité totale"
 
 #: order/templates/view.html:49
 msgid "Free Quantity"
-msgstr ""
+msgstr "Quantité gratuite"
 
 #: order/templates/view.html:50
 msgid "Price"
@@ -219,24 +219,24 @@ msgstr "Prix"
 
 #: order/urls.py:12
 msgid "^list/$"
-msgstr ""
+msgstr "^list/$"
 
 #: order/urls.py:13
 msgid "^view/(?P<pk>\\d+)/$"
-msgstr ""
+msgstr "^view/(?P<pk>\\d+)/$"
 
 #: order/urls.py:14
 msgid "^create/$"
-msgstr ""
+msgstr "^create/$"
 
 #: order/urls.py:15
 msgid "^update/(?P<pk>\\d+)/$"
-msgstr ""
+msgstr "^update/(?P<pk>\\d+)/$"
 
 #: order/urls.py:17
 msgid "^update/(?P<pk>\\d+)/status$"
-msgstr ""
+msgstr "^update/(?P<pk>\\d+)/status$"
 
 #: order/urls.py:21
 msgid "^delete/(?P<pk>\\d+)/$"
-msgstr ""
+msgstr "^delete/(?P<pk>\\d+)/$"
