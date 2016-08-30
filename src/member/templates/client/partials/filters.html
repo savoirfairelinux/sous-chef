@@ -1,0 +1,39 @@
+{% load i18n %}
+
+<form action="" method="get" class="ui form">
+
+    <div class="inline fields">
+        <div class="field">
+            <label>{% trans 'Name' %}</label>
+            <div class="field">
+                <div class="ui large left icon input">
+                    <i class="users icon"></i>
+                    {{ filter.form.name }}
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label>{% trans 'Route' %}</label>
+            <div class="field">
+                {{ filter.form.route }}
+            </div>
+        </div>
+        <div class="field">
+            <label>{% trans 'Status' %}</label>
+            <div class="field">
+                {{ filter.form.status }}
+            </div>
+        </div>
+        <div class="field">
+            <label>{% trans 'Delivery' %}</label>
+            <div class="field">
+                {{ filter.form.delivery_type }}
+            </div>
+        </div>
+        <input id="id_display" name="display" type="text" value="{{display}}" style="display:none">
+    </div>
+    <div class="field">
+        <a href="{{ request.path }}?display={{ display }}" class="ui basic button">{% trans 'Reset' %}</a>
+        <button class="ui yellow button" type="submit">{% trans 'Search' %}</button>
+    </div>
+</form>

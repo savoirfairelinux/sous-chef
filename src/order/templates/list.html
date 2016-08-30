@@ -11,48 +11,16 @@
     <h1 class="ui header">Orders</h1>
 </div>
 
+<div class="ui padded basic segment">
+    <a href="{% url 'order:create' %}" class="ui big button">
+        <i class="add icon"></i>{% trans 'New order' %}
+    </a>
+    <div class="ui horizontal divider">
+        {% trans 'Or' %}
+    </div>
 
-<div class="ui mobile reversed equal width grid">
-  <div class="column">
+    {% include 'order/partials/filters.html' %}
 
-    <form action="" method="get" class="ui form">
-
-        <div class="inline fields">
-            <div class="field">
-                <label>Name</label>
-                <div class="field">
-                    <div class="ui large left icon input">
-                        <i class="users icon"></i>
-                        {{ filter.form.name }}
-                    </div>
-                </div>
-            </div>
-            <div class="field">
-                <label>Status</label>
-                <div class="field">
-                    {{ filter.form.status }}
-                </div>
-            </div>
-            <div class="field">
-                <label>Delivery date</label>
-                <div class="field">
-                    <div class="ui calendar" id="order_delivery_date">
-                        <div class="ui input left icon">
-                              <i class="calendar icon"></i>
-                              {{ filter.form.delivery_date }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="field">
-            <a href="{% url 'order:list' %}" class="ui button">Reset</a>
-            <button class="ui yellow button" type="submit">Search</button>
-            <a href="{% url 'order:create' %}" class="ui button"><i class="add to cart icon"></i>{% trans 'New order' %}</a>
-        </div>
-    </form>
-    <br/><br/>
-  </div>
 </div>
 
 {% if orders %}

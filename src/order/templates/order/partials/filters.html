@@ -1,0 +1,37 @@
+{% load i18n %}
+
+<form action="" method="get" class="ui form">
+
+    <div class="inline fields">
+        <div class="field">
+            <label>{% trans 'Name' %}</label>
+            <div class="field">
+                <div class="ui large left icon input">
+                    <i class="users icon"></i>
+                    {{ filter.form.name }}
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label>{% trans 'Status' %}</label>
+            <div class="field">
+                {{ filter.form.status }}
+            </div>
+        </div>
+        <div class="field">
+            <label>{% trans 'Delivery date' %}</label>
+            <div class="field">
+                <div class="ui calendar" id="order_delivery_date">
+                    <div class="ui input left icon">
+                          <i class="calendar icon"></i>
+                          {{ filter.form.delivery_date }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <a href="{% url 'order:list' %}" class="ui basic button">{% trans 'Reset' %}</a>
+        <button class="ui yellow button" type="submit">{% trans 'Search' %}</button>
+    </div>
+</form>
