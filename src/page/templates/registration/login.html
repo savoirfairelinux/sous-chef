@@ -5,13 +5,13 @@
 <!-- Load internationalisation utils-->
 {% load i18n %}
 
-{% block title %}Login{% endblock %}
+{% block title %}{% trans "Login" %}{% endblock %}
 
 {% block content %}
 <h2 class="ui yellow image header">
     <img src="{% static 'assets/logo-souschef-coul.png' %}" class="ui large image">
     <div class="content">
-        Log-in to your account
+        {% trans "Log-in to your account" %}
     </div>
 </h2>
 
@@ -34,7 +34,7 @@
 
         <input type="hidden" name="next" value="{{ next }}"/>
 
-        <button class="ui fluid large yellow button" type="submit">Login</button>
+        <button class="ui fluid large yellow button" type="submit">{% trans "Login" %}</button>
     </div>
 </form>
 
@@ -77,7 +77,7 @@ document.addEventListener( 'DOMContentLoaded', function () {
 </script>
 
 {% else %}
-    <p>Connecté</p>
+    <p>{% trans "Connect" %}é</p>
 {% endif %}
 
 {% endblock %}

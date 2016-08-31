@@ -6,17 +6,17 @@
 {% block content %}
 
 <div class="ui secondary pointing fluid menu">
-    <h1 class="ui header">Billing #{{ billing.id}}</h1>
+    <h1 class="ui header">{% trans "Billing" %} #{{ billing.id}}</h1>
 </div>
 
 <table class="ui very basic stripped celled table">
   <thead>
     <tr>
-      <th>order id</th>
-      <th>client name</th>
-      <th>order date</th>
-      <th>order status</th>
-      <th>price</th>
+      <th>{% trans "order id" %}</th>
+      <th>{% trans "client name" %}</th>
+      <th>{% trans "order date" %}</th>
+      <th>{% trans "order status" %}</th>
+      <th>{% trans "price" %}</th>
     </tr>
   </thead>
   <tbody>

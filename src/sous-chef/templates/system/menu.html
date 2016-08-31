@@ -2,8 +2,8 @@
 {% load admin_urls %}
 
 <div class="item">
-    <a href={% url 'home' %}>
-        <img class="ui large image item" src="{% static 'assets/logo-souschef-coul.png' %}" title="Logo Sous-Chef"/>
+    <a href="{% url 'home' %}">
+        <img class="ui large image item" src="{% static 'assets/logo-souschef-coul.png' %}" title="{% trans "Logo Sous-Chef" %}"/>
     </a>
 </div>
 {% if request.user %}

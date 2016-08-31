@@ -5,7 +5,7 @@
 
 {% block title %}
 
-  {{client}} - Referent information
+  {{client}} - {% trans "Referent information" %}
 
 {% endblock %}
 
@@ -14,7 +14,7 @@
     <h2 class="ui header">
         <div class="content">
             {% trans 'Referent' %}
-            <div class="sub header">Contact information of the referent person.<a  href="{% url 'admin:member_referencing_change' client.client_referent.first.id %}">
+            <div class="sub header">{% trans "Contact information of the referent person" %}.<a  href="{% url 'admin:member_referencing_change' client.client_referent.first.id %}">
                 <i class="write grey icon"></i>
             </a></div>
         </div>

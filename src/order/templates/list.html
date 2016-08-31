@@ -8,7 +8,7 @@
 {% block content %}
 
 <div class="ui secondary pointing fluid menu">
-    <h1 class="ui header">Orders</h1>
+    <h1 class="ui header">{% trans "Orders" %}</h1>
 </div>
 
 <div class="ui padded basic segment">
@@ -26,7 +26,7 @@
 {% if orders %}
 <table class="ui very basic stripped celled table">
   <thead>
-    <th class="sorted descending">Order</th>
+    <th class="sorted descending">{% trans "Order" %}</th>
     <th class="">{% trans 'Client' %}</th>
     <th class="">{% trans 'Delivery Date' %}</th>
     <th class="">{% trans 'Status' %}</th>
@@ -70,7 +70,7 @@
     </a>
     {% endif %}
     <a class="active item">
-        {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}
     </a>
     {% if page_obj.has_next %}
     <a class="icon item"
@@ -83,7 +83,7 @@
 
 
 {% else %}
-    <div class="ui row"><p>Sorry, no result found.</p></div>
+    <div class="ui row"><p>{% trans "Sorry, no result found" %}.</p></div>
 {% endif %}
 
 {% endblock %}

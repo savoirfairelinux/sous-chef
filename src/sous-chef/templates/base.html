@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>
-        {% block title %}Sous-Chef{% endblock %}
+        {% block title %}{% trans "Sous-Chef" %}{% endblock %}
     </title>
     <link href="{% static 'css/admin.css' %}" type="text/css" rel="stylesheet">
     <link href="{% static 'css/print.css' %}" media="print" type="text/css" rel="stylesheet">
@@ -50,7 +50,7 @@
         <div class="ui center aligned container">
             <img src="{% static 'assets/logo-souschef-coul.png' %}" class="ui centered small image">
             <div class="ui horizontal inverted small divided link list">
-                <p><i class="code yellow icon"></i> with &nbsp;<i class="heart yellow icon"></i> in Montreal</p>
+                <p><i class="code yellow icon"></i> {% trans "with" %} &nbsp;<i class="heart yellow icon"></i> {% trans "in Montreal" %}</p>
             </div>
         </div>
     </div>

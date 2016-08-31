@@ -39,7 +39,7 @@
 
         <div class="inline fields">
             <div class="field">
-                <label>Name</label>
+                <label>{% trans "Name" %}</label>
                 <div class="field">
                     <div class="ui large left icon input">
                         <i class="users icon"></i>
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="field">
-                <label>Period</label>
+                <label>{% trans "Period" %}</label>
                 <div class="field">
                     <div class="ui calendar" id="billing_delivery_date">
                         <div class="ui input left icon">
@@ -60,8 +60,8 @@
             </div>
         </div>
         <div class="field">
-            <a href="{% url 'billing:list' %}" class="ui button">Reset</a>
-            <button class="ui yellow button" type="submit">Search</button>
+            <a href="{% url 'billing:list' %}" class="ui button">{% trans "Reset" %}</a>
+            <button class="ui yellow button" type="submit">{% trans "Search" %}</button>
         </div>
     </form>
     <br/><br/>
@@ -71,7 +71,7 @@
 {% if billing %}
 <table class="ui very basic stripped celled table">
   <thead>
-    <th class="sorted descending">Billing</th>
+    <th class="sorted descending">{% trans "Billing" %}</th>
     <th class="">{% trans 'Client' %}</th>
     <th class="">{% trans 'Date' %}</th>
     <th class="">{% trans 'Amount' %}</th>
@@ -103,7 +103,7 @@
 </table>
 
 {% else %}
-    <div class="ui row"><p>Sorry, no result found.</p></div>
+    <div class="ui row"><p>{% trans "Sorry, no result found" %}.</p></div>
 {% endif %}
 
 {% endblock %}

@@ -4,14 +4,14 @@
 
 {% load staticfiles %}
 
-{% block title %}Homepage{% endblock %}
+{% block title %}{% trans "Homepage" %}{% endblock %}
 
 {% block breadcrumb %}
 {{ block.super }}
 <i class="right chevron icon divider"></i>
 <a href="#" class="section">{% trans "Dashboard" %}</a>
 <i class="right arrow icon divider"></i>
-<div class="active section">Overview</div>
+<div class="active section">{% trans "Overview" %}</div>
 {% endblock breadcrumb %}
 
 {% block content %}
@@ -25,7 +25,7 @@
     <div class="dashboard-stat column">
         <div class="ui segments">
             <div class="ui segment">
-                <h3 class="ui blue header">Clients</h3>
+                <h3 class="ui blue header">{% trans "Clients" %}</h3>
             </div>
             <div class="ui secondary olive green inverted dashboard center aligned segment">
                 <div class="ui dashboard statistic">
@@ -33,19 +33,19 @@
                       {{ active_clients }}
                     </div>
                     <div class="label">
-                        Active clients
+                        {% trans "Active clients" %}
                     </div>
                 </div>
             </div>
             <div class="ui segment">
-                <p><i class="warning icon"></i><strong>{{ pending_clients }}</strong> clients are <a href="{% url "member:list" %}?status=D">pending</a>.</p>
+                <p><i class="warning icon"></i><strong>{{ pending_clients }}</strong> {% trans "clients are" %} <a href="{% url "member:list" %}?status=D">{% trans "pending" %}</a>.</p>
             </div>
         </div>
     </div>
            <div class="dashboard-stat column">
               <div class="ui segments">
                 <div class="ui segment">
-                  <h3 class="ui blue header">Orders</h3>
+                  <h3 class="ui blue header">{% trans "Orders" %}</h3>
                 </div>
                 <div class="ui teal inverted dashboard center aligned segment">
                   <div class="ui dashboard statistic">
@@ -53,7 +53,7 @@
                       {{ ORDERS_TOTAL}}
                     </div>
                     <div class="label">
-                      Orders
+                      {% trans "Orders" %}
                     </div>
                   </div>
 
@@ -61,26 +61,26 @@
                     <a class="item">
                       <i class="add circle icon"></i>
                       <div class="content">
-                        <div class="description">95% delivered</div>
+                        <div class="description">{% trans "95% delivered" %}</div>
                       </div>
                     </a>
                     <a class="item">
                       <i class="minus circle icon"></i>
                       <div class="content">
-                        <div class="description">5% not charged</div>
+                        <div class="description">{% trans "5% not charged" %}</div>
                       </div>
                     </a>
                   </div>
                 </div>
                 <div class="ui segment">
-                  <p>Footer</p>
+                  <p>{% trans "Footer" %}</p>
                 </div>
               </div>
             </div>
             <div class="dashboard-stat column">
               <div class="ui segments">
                 <div class="ui segment">
-                  <h3 class="ui blue header">Any Header</h3>
+                  <h3 class="ui blue header">{% trans "Any Header" %}</h3>
                 </div>
                 <div class="ui secondary blue inverted dashboard center aligned segment">
                   <div class="ui dashboard statistic">
@@ -88,12 +88,12 @@
                       5,550
                     </div>
                     <div class="label">
-                      Downloads
+                      {% trans "Downloads" %}
                     </div>
                   </div>
                 </div>
                 <div class="ui segment">
-                  <p>Footer</p>
+                  <p>{% trans "Footer" %}</p>
                 </div>
               </div>
             </div>

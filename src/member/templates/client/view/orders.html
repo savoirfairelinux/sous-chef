@@ -5,7 +5,7 @@
 
 {% block title %}
 
-  {{client}} - Orders list
+  {{client}} - {% trans "Orders list" %}
 
 {% endblock %}
 
@@ -16,14 +16,14 @@
     <h2 class="ui header">
         <div class="content">
             {% trans 'Orders' %}
-            <div class="sub header">List of all orders from {{client}}.</div>
+            <div class="sub header">{% trans "List of all orders from" %} {{client}}.</div>
         </div>
     </h2>
     <div class="ui divider"></div>
 
     <table class="ui very basic stripped celled table">
         <thead>
-            <th class="sorted descending">Order</th>
+            <th class="sorted descending">{% trans "Order" %}</th>
             <th class="">{% trans 'Delivery Date' %}</th>
             <th class="">{% trans 'Status' %}</th>
             <th class="">{% trans 'Amount' %}</th>
