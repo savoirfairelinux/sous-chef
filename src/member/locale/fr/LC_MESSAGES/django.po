@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -10,13 +10,12 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-30 20:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: savoirfairelinux <support@savoirfairelinux.com>, 2016\n"
-"Language-Team: French (https://www.transifex.com/savoirfairelinux/"
-"teams/63058/fr/)\n"
-"Language: fr\n"
+"Last-Translator: Mathieu Perreault <mathieu.perreault@gmail.com>, 2016\n"
+"Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: member/forms.py:18 member/forms.py:211 member/forms.py:213
@@ -81,7 +80,7 @@ msgstr "Adresse civile"
 
 #: member/forms.py:72
 msgid "7275 Rue Saint-Urbain"
-msgstr ""
+msgstr "7275 Rue Saint-Urbain"
 
 #: member/forms.py:76
 msgid "City"
@@ -101,11 +100,11 @@ msgstr "H2R 2Y5"
 
 #: member/forms.py:87
 msgid "Latitude"
-msgstr ""
+msgstr "Latitude"
 
 #: member/forms.py:94
 msgid "Longitude"
-msgstr ""
+msgstr "Longitude"
 
 #: member/forms.py:101
 msgid "Distance from Santropol"
@@ -118,7 +117,7 @@ msgstr "Itinéraire"
 
 #: member/forms.py:115 member/models.py:411
 msgid "Delivery Note"
-msgstr "Notes de Livraison"
+msgstr "Note de livraison"
 
 #: member/forms.py:119
 msgid "Delivery Note here ..."
@@ -191,7 +190,7 @@ msgstr "Date du référencement"
 
 #: member/forms.py:279
 msgid "Billing Type"
-msgstr "Type de Facturation"
+msgstr "Type de facturation"
 
 #: member/forms.py:285
 msgid "Same As Client"
@@ -207,7 +206,7 @@ msgstr ""
 
 #: member/forms.py:293 member/models.py:327
 msgid "Payment Type"
-msgstr "Type de Paiement"
+msgstr "Type de paiement"
 
 #: member/forms.py:298
 msgid "Street Number"
@@ -231,7 +230,7 @@ msgid ""
 "member, so it can be used for the billing."
 msgstr ""
 "Ce membre ne possède pas une adresse valide. Veillez ajouter une adresse "
-"valide afin qu'elle puisse être utiliser pour la facturation."
+"valide afin qu'elle puisse être utilisée pour la facturation."
 
 #: member/forms.py:330
 msgid "This field is required"
@@ -239,7 +238,7 @@ msgstr "Ce champ est requis"
 
 #: member/forms.py:347
 msgid "Contact"
-msgstr ""
+msgstr "Contact"
 
 #: member/models.py:21 member/templates/client/view/information.html:28
 msgid "Gender"
@@ -255,7 +254,7 @@ msgstr "Homme"
 
 #: member/models.py:34
 msgid "Default"
-msgstr "Par Défaut"
+msgstr "Par défaut"
 
 #: member/models.py:35
 msgid "Low income"
@@ -263,7 +262,7 @@ msgstr "Revenu faible"
 
 #: member/models.py:36
 msgid "Solidary"
-msgstr "Solidaire"
+msgstr "Aide sociale/solidarité"
 
 #: member/models.py:43
 msgid "Check"
@@ -541,7 +540,7 @@ msgstr "Modifier un client existant"
 
 #: member/templates/client/create/form.html:18
 msgid "Create a new client "
-msgstr ""
+msgstr "Créer un nouveau client"
 
 #: member/templates/client/create/form.html:26
 msgid "No information will be saved until all the steps are completed."
@@ -551,7 +550,7 @@ msgstr ""
 
 #: member/templates/client/create/form.html:28
 msgid "Save as soon as you\\"
-msgstr ""
+msgstr "Sauvegarder aussitôt"
 
 #: member/templates/client/create/form.html:38
 msgid "Edit Client"
@@ -559,7 +558,7 @@ msgstr "Modifier le Client"
 
 #: member/templates/client/create/form.html:38
 msgid "New Client"
-msgstr ""
+msgstr "New Client"
 
 #: member/templates/client/create/form.html:44
 #: member/templates/client/partials/menu.html:6
@@ -700,7 +699,7 @@ msgstr "Dernière modification"
 
 #: member/templates/client/partials/birthdays.html:3
 msgid "Happy Birthday"
-msgstr "Bonne Fête"
+msgstr "Joyeux anniversaire"
 
 #: member/templates/client/partials/filters.html:36
 #: member/templates/client/view/status.html:33
@@ -729,7 +728,7 @@ msgstr "Identité"
 
 #: member/templates/client/partials/forms/basic_information.html:55
 msgid "This message will be hightlighted on the client record."
-msgstr ""
+msgstr "Ce message sera réflété dans le dossier du client."
 
 #: member/templates/client/partials/forms/dietary_restriction.html:2
 #: member/templates/client/view/allergies.html:44
@@ -818,6 +817,8 @@ msgid ""
 "If you want to schedule a status modification, feel free to fill one or two "
 "of theses date fields."
 msgstr ""
+"Si vous souhaitez programmer un changement de statut, remplissez un ou "
+"plusieurs de ces champs."
 
 #: member/templates/client/update/status.html:33
 msgid "End date"
@@ -837,7 +838,7 @@ msgstr "Plats à éviter"
 
 #: member/templates/client/view/allergies.html:119
 msgid "Meal Default"
-msgstr ""
+msgstr "Préférences par défaut"
 
 #: member/templates/client/view/information.html:17
 msgid "Basic information"
@@ -850,11 +851,11 @@ msgstr "Langue"
 
 #: member/templates/client/view/information.html:30
 msgid "Delivery Type"
-msgstr "Type de Livraison"
+msgstr "Type de livraison"
 
 #: member/templates/client/view/information.html:45
 msgid "Emergency Contact"
-msgstr "Contact d'Urgence"
+msgstr "Contact d'urgence"
 
 #: member/templates/client/view/information.html:56
 msgid "Relationship"
@@ -874,7 +875,7 @@ msgstr "Nouveau"
 
 #: member/templates/client/view/orders.html:27
 msgid "Delivery Date"
-msgstr "Date de Livraison"
+msgstr "Date de livraison"
 
 #: member/templates/client/view/orders.html:29
 msgid "Amount"
@@ -938,65 +939,56 @@ msgstr "Domicile"
 
 #: member/urls.py:53
 msgid "^view/(?P<pk>\\d+)/$"
-msgstr ""
+msgstr "^view/(?P<pk>\\d+)/$"
 
 #: member/urls.py:54
 msgid "^view/(?P<pk>\\d+)/orders$"
-msgstr ""
+msgstr "^view/(?P<pk>\\d+)/orders$"
 
 #: member/urls.py:56
 msgid "^view/(?P<pk>\\d+)/information$"
-msgstr ""
+msgstr "^view/(?P<pk>\\d+)/information$"
 
 #: member/urls.py:58
 msgid "^view/(?P<pk>\\d+)/referent$"
-msgstr ""
+msgstr "^view/(?P<pk>\\d+)/referent$"
 
 #: member/urls.py:60
 msgid "^view/(?P<pk>\\d+)/billing$"
-msgstr ""
+msgstr "^view/(?P<pk>\\d+)/billing$"
 
 #: member/urls.py:62
 msgid "^view/(?P<pk>\\d+)/preferences$"
-msgstr ""
+msgstr "^view/(?P<pk>\\d+)/preferences$"
 
 #: member/urls.py:64
 msgid "^view/(?P<pk>\\d+)/notes$"
-msgstr ""
+msgstr "^view/(?P<pk>\\d+)/notes$"
 
 #: member/urls.py:66
 msgid "^geolocateAddress/$"
-msgstr ""
+msgstr "^geolocateAddress/$"
 
 #: member/urls.py:67
 msgid "^view/(?P<pk>\\d+)/status$"
-msgstr ""
+msgstr "^view/(?P<pk>\\d+)/status$"
 
 #: member/urls.py:71
 msgid "^restriction/(?P<pk>\\d+)/delete/$"
-msgstr ""
+msgstr "^restriction/(?P<pk>\\d+)/delete/$"
 
 #: member/urls.py:73
 msgid "^client_option/(?P<pk>\\d+)/delete/$"
-msgstr ""
+msgstr "^client_option/(?P<pk>\\d+)/delete/$"
 
 #: member/urls.py:75
 msgid "^ingredient_to_avoid/(?P<pk>\\d+)/delete/$"
-msgstr ""
+msgstr "^ingredient_to_avoid/(?P<pk>\\d+)/delete/$"
 
 #: member/urls.py:77
 msgid "^component_to_avoid/(?P<pk>\\d+)/delete/$"
-msgstr ""
+msgstr "^component_to_avoid/(?P<pk>\\d+)/delete/$"
 
 #: member/urls.py:92
 msgid "^(?P<client_id>\\d+)/update/{}/$"
-msgstr ""
-
-#~ msgid "#"
-#~ msgstr "#"
-
-#~ msgid "Street Address"
-#~ msgstr "Adresse Civile"
-
-#~ msgid "Meals default"
-#~ msgstr "Préférences par défaut"
+msgstr "^(?P<client_id>\\d+)/update/{}/$"
