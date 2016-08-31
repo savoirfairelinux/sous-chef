@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-30 20:29+0000\n"
+"POT-Creation-Date: 2016-08-31 13:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -144,9 +144,38 @@ msgid ""
 "Please review the form to make sure that all required fields are filled."
 msgstr ""
 
+#: order/templates/_form.html:58
+msgid "Order item"
+msgstr ""
+
+#: order/templates/_order_info.html:5 order/templates/list.html:30
+msgid "Client"
+msgstr ""
+
+#: order/templates/_order_info.html:12 order/templates/view.html:50
+msgid "Price"
+msgstr ""
+
+#: order/templates/_order_info.html:19
+#: order/templates/order/partials/filters.html:22
+msgid "Delivery date"
+msgstr ""
+
+#: order/templates/_order_info.html:26
+msgid "Creation date"
+msgstr ""
+
 #: order/templates/create.html:6 order/templates/list.html:6
-#: order/templates/update.html:6
+#: order/templates/list.html:11 order/templates/update.html:6
 msgid "Orders"
+msgstr ""
+
+#: order/templates/create.html:11
+msgid "New Order"
+msgstr ""
+
+#: order/templates/create.html:18
+msgid "Create"
 msgstr ""
 
 #: order/templates/list.html:16
@@ -157,8 +186,8 @@ msgstr ""
 msgid "Or"
 msgstr ""
 
-#: order/templates/list.html:30
-msgid "Client"
+#: order/templates/list.html:29 order/templates/view.html:10
+msgid "Order"
 msgstr ""
 
 #: order/templates/list.html:31
@@ -177,12 +206,16 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: order/templates/order/partials/filters.html:7
-msgid "Name"
+#: order/templates/list.html:73
+msgid "of"
 msgstr ""
 
-#: order/templates/order/partials/filters.html:22
-msgid "Delivery date"
+#: order/templates/list.html:86
+msgid "Sorry, no result found"
+msgstr ""
+
+#: order/templates/order/partials/filters.html:7
+msgid "Name"
 msgstr ""
 
 #: order/templates/order/partials/filters.html:34
@@ -193,12 +226,52 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
+#: order/templates/order_confirm_delete.html:6
+msgid "Delete Order"
+msgstr ""
+
 #: order/templates/order_confirm_delete.html:9
 msgid "This order will be deleted and all the info will be lost, are you sure?"
 msgstr ""
 
+#: order/templates/order_confirm_delete.html:13
+msgid "No"
+msgstr ""
+
+#: order/templates/order_confirm_delete.html:14
+msgid "Yes"
+msgstr ""
+
+#: order/templates/update.html:11
+msgid "Update Order"
+msgstr ""
+
+#: order/templates/update.html:24
+msgid "Cancel"
+msgstr ""
+
+#: order/templates/update.html:25 order/templates/view.html:76
+msgid "Update"
+msgstr ""
+
 #: order/templates/view.html:5
 msgid "View Order"
+msgstr ""
+
+#: order/templates/view.html:37
+msgid "Order detail"
+msgstr ""
+
+#: order/templates/view.html:39
+msgid "Order items attached to the order"
+msgstr ""
+
+#: order/templates/view.html:46
+msgid "Component"
+msgstr ""
+
+#: order/templates/view.html:47
+msgid "Description"
 msgstr ""
 
 #: order/templates/view.html:48
@@ -209,8 +282,12 @@ msgstr ""
 msgid "Free Quantity"
 msgstr ""
 
-#: order/templates/view.html:50
-msgid "Price"
+#: order/templates/view.html:65
+msgid "Total"
+msgstr ""
+
+#: order/templates/view.html:75
+msgid "Delete"
 msgstr ""
 
 #: order/urls.py:12

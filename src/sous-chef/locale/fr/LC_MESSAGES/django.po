@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-30 20:29+0000\n"
+"POT-Creation-Date: 2016-08-31 13:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
 "teams/63058/fr/)\n"
@@ -17,6 +17,58 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: sous-chef/templates/base.html:9 sous-chef/templates/splash.html:8
+msgid "Sous-Chef"
+msgstr ""
+
+#: sous-chef/templates/base.html:53
+msgid "with"
+msgstr ""
+
+#: sous-chef/templates/base.html:53
+msgid "in Montreal"
+msgstr ""
+
+#: sous-chef/templates/dashboard/statistics.html:9
+msgid "Active clients"
+msgstr ""
+
+#: sous-chef/templates/dashboard/statistics.html:14
+msgid "One"
+msgstr ""
+
+#: sous-chef/templates/dashboard/statistics.html:15
+msgid "Hundred"
+msgstr ""
+
+#: sous-chef/templates/dashboard/statistics.html:18
+msgid "Meals a day"
+msgstr ""
+
+#: sous-chef/templates/dashboard/statistics.html:26
+msgid "Routes"
+msgstr ""
+
+#: sous-chef/templates/dashboard/statistics.html:35
+msgid "Volunteers"
+msgstr ""
+
+#: sous-chef/templates/system/_button_export.html:2
+msgid "Export to CSV"
+msgstr ""
+
+#: sous-chef/templates/system/_button_export.html:2
+msgid "Export"
+msgstr ""
+
+#: sous-chef/templates/system/breadcrumb.html:3
+msgid "Home"
+msgstr ""
+
+#: sous-chef/templates/system/menu.html:6
+msgid "Logo Sous-Chef"
+msgstr ""
 
 #: sous-chef/templates/system/menu.html:21
 msgid "Clients"

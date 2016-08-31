@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-30 20:29+0000\n"
+"POT-Creation-Date: 2016-08-31 13:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,8 +27,25 @@ msgstr ""
 
 #: billing/templates/list_billing.html:5
 #: billing/templates/list_billing.html:32
-#: billing/templates/view_billing.html:5
+#: billing/templates/list_billing.html:74
+#: billing/templates/view_billing.html:5 billing/templates/view_billing.html:9
 msgid "Billing"
+msgstr ""
+
+#: billing/templates/list_billing.html:42
+msgid "Name"
+msgstr ""
+
+#: billing/templates/list_billing.html:51
+msgid "Period"
+msgstr ""
+
+#: billing/templates/list_billing.html:63
+msgid "Reset"
+msgstr ""
+
+#: billing/templates/list_billing.html:64
+msgid "Search"
 msgstr ""
 
 #: billing/templates/list_billing.html:75
@@ -45,4 +62,28 @@ msgstr ""
 
 #: billing/templates/list_billing.html:78
 msgid "Actions"
+msgstr ""
+
+#: billing/templates/list_billing.html:106
+msgid "Sorry, no result found"
+msgstr ""
+
+#: billing/templates/view_billing.html:15
+msgid "order id"
+msgstr ""
+
+#: billing/templates/view_billing.html:16
+msgid "client name"
+msgstr ""
+
+#: billing/templates/view_billing.html:17
+msgid "order date"
+msgstr ""
+
+#: billing/templates/view_billing.html:18
+msgid "order status"
+msgstr ""
+
+#: billing/templates/view_billing.html:19
+msgid "price"
 msgstr ""

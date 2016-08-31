@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-30 20:29+0000\n"
+"POT-Creation-Date: 2016-08-31 13:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
 "teams/63058/fr/)\n"
@@ -42,7 +42,8 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: note/models.py:54
+#: note/models.py:54 note/templates/notes_client_list.html:38
+#: note/templates/notes_list.html:37
 msgid "Is read"
 msgstr ""
 
@@ -54,8 +55,33 @@ msgstr ""
 msgid "Search by name"
 msgstr ""
 
-#: note/templates/notes_client_list.html:17
+#: note/templates/notes_client_list.html:8
+msgid "Information"
+msgstr ""
+
+#: note/templates/notes_client_list.html:17 note/templates/notes_list.html:5
+#: note/templates/notes_list.html:10
 msgid "Staff Notes"
+msgstr ""
+
+#: note/templates/notes_client_list.html:19
+msgid "Notes added to"
+msgstr ""
+
+#: note/templates/notes_client_list.html:19
+msgid "s file"
+msgstr ""
+
+#: note/templates/notes_client_list.html:31 note/templates/notes_list.html:31
+msgid "Priority"
+msgstr ""
+
+#: note/templates/notes_client_list.html:47 note/templates/notes_list.html:44
+msgid "Reset"
+msgstr ""
+
+#: note/templates/notes_client_list.html:48 note/templates/notes_list.html:45
+msgid "Search"
 msgstr ""
 
 #: note/templates/notes_client_list.html:58 note/templates/notes_list.html:57
@@ -64,6 +90,10 @@ msgstr ""
 
 #: note/templates/notes_client_list.html:61 note/templates/notes_list.html:60
 msgid "Mark as read"
+msgstr ""
+
+#: note/templates/notes_list.html:22
+msgid "Name"
 msgstr ""
 
 #: note/urls.py:9
