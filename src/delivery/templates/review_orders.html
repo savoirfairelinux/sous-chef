@@ -16,29 +16,79 @@
     </div>
 </div>
 
-<div class="ui row">
-    <i class="ui history icon"></i>
-    {% if orders_refresh_date %}{% trans "Orders have been generated on" %} {{ orders_refresh_date.action_time }}{% endif %}
+<div class="ui stackable relaxed grid container">
+
+    <div class="sixteen wide column">
+
+        <div class="ui list">
+            <a class="item">
+                <i class="right triangle icon"></i>
+                <div class="content">
+                    <div class="header">{% trans 'Orders of the day' %}</div>
+                    <div class="description">Orders of the day include ongoing and episodic clients.</div>
+                </div>
+            </a>
+            <a class="item">
+                <i class="refresh icon"></i>
+                <div class="content">
+                    <div class="header">Generate orders</div>
+                    <div class="description">Orders for ongoing clients are automatically generated at midnight every day, based on their default preferences. Press the <em>Generate orders</em> button to manually run the script.</div>
+                </div>
+            </a>
+            <a class="item">
+                <i class="marker icon"></i>
+                <div class="content">
+                    <div class="header">Geolocation</div>
+                    <div class="description">Highlighted orders are not properly geolocated. Edit the client information to fix it.</div>
+                </div>
+            </a>
+        </div>
+
+
+    </div>
+
+
+    <div class="ten wide column">
+
+        <div class="ui row">
+            <a class="ui big button orders" href="{% url 'delivery:refresh_orders' %}"><i data-content="Ole" class="ui refresh icon"></i>Generate orders</a>
+
+        </div><div class="ui row"></div>
+
+    </div>
+
+    <div class="six wide column">
+        <div class="ui pink horizontal statistic">
+            <div class="value">
+                {{ orders.count }}
+            </div>
+            <div class="label">
+                {% trans 'Orders' %}
+            </div>
+        </div>
+    </div
 </div>
-<div class="ui row"><a class="ui button" href="{% url 'delivery:refresh_orders' %}"><i class="ui refresh icon"></i>{% trans "Generate orders" %}</a></div>
+
 
 <table class="ui very basic stripped celled table">
   <thead>
-    <th class="sorted descending">{% trans "Order" %}</th>
+    <th class="sorted descending center aligned">{% trans "Order" %}</th>
     <th class="">{% trans 'Client' %}</th>
     <th class="">{% trans 'Delivery Date' %}</th>
+    <th class="">{% trans 'Route' %}</th>
     <th class="">{% trans 'Status' %}</th>
-    <th class="">{% trans 'Amount' %}</th>
+    <th class="center aligned">{% trans 'Amount' %}</th>
     <th class=""></th>
   </thead>
   <tbody>
     {% for order in orders %}
-      <tr>
-        <td><strong>{{order.id}}</strong></td>
+      <tr {% if not order.client.is_geolocalized %}class="warning"{% endif %}>
+        <td class="center aligned"><strong>#{{order.id}}</strong></td>
         <td><a href="{% url 'member:client_information' pk=order.client.id %}">{{order.client.member}}</a></td>
         <td>{{order.delivery_date}}</td>
+        <td>{{order.client.route}}</td>
         <td>{{order.get_status_display}}</td>
-        <td>${{order.price}}</td>
+        <td class="center aligned"><i class="dollar icon"></i>{{order.price}}</td>
         <td><button class="ui button"  onclick="location.href='{% url 'order:view' pk=order.id %}';" value="{% trans "View Order" %}" >{% trans "View Order" %}</button></td>
       </tr>
         {% endfor %}
@@ -59,6 +109,20 @@
     document.addEventListener( 'DOMContentLoaded', function () {
       $('table').tablesort();
     })
+</script>
+
+{% endblock %}
+
+{% block extrajs %}
+
+<script type="text/javascript">
+    $('.orders.button')
+        .popup({
+            position : 'left center',
+            target   : '.ui.statistic',
+            title    : 'Orders number for today',
+        })
+    ;
 </script>
 
 {% endblock %}

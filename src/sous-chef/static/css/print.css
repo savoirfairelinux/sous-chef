@@ -14,3 +14,7 @@
 {display:none;}
 
 div{font-size:xx-small;}
+
+.no-print {
+    display:none;
+}
