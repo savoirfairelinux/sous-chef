@@ -119,8 +119,8 @@
         "floor": 10,
         "city": "Montreal",
         "postal_code": "H1A2B3",
-        "longitude": null,
-        "latitude": null,
+        "longitude": 4,
+        "latitude": 4,
         "distance": null
     }
 },
@@ -134,8 +134,8 @@
         "floor": null,
         "city": "Montreal",
         "postal_code": "H3D4G6",
-        "longitude": null,
-        "latitude": null,
+        "longitude": 6,
+        "latitude": 6,
         "distance": null
     }
 },
@@ -149,8 +149,8 @@
         "floor": null,
         "city": "Montreal",
         "postal_code": "H4E3WS",
-        "longitude": null,
-        "latitude": null,
+        "longitude": 5,
+        "latitude": 5,
         "distance": null
     }
 },
