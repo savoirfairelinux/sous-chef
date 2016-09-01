@@ -21,34 +21,72 @@
 <div class="ui secondary pointing fluid menu">
     <h1 class="ui header">{% trans "Pick ingredients" %}</h1>
     <div class="right menu">
-        <div class="ui item"><h3><i class="ui calendar icon"></i>{{ date }}</h3></div>
+        <div class="ui item"><h3><i class="ui calendar icon"></i>{% now "j F Y" %}</h3></div>
     </div>
 </div>
 
-    <form class="ui form" action="{% url 'delivery:meal' %}" method="post">
-        <div class="ui container">
-            <div class="ui segment">
-                <h2 class="ui header">{% trans "Main Dish" %}</h2>
-                {{form.errors}}
-                <div class="ui row">
-                    {% csrf_token %}
-                        <div class="field dish selection">
-                            <label>{{ form.maindish.label }}</label>
-                            {{ form.maindish }}
-                        </div>
-                        <div class="field ingredients selection">
-                            <label>{{ form.ingredients.label }}</label>
-                            {{ form.ingredients }}
-                        </div>
-                        <div>
-                            <input class="ui button" type="submit" value="{% trans "Restore recipe" %}" name="_restore" />
-                        </div>
+<div class="ui stackable relaxed grid container">
+
+    <div class="sixteen wide column">
+
+        <div class="ui basic segment">
+        <div class="ui list">
+            <a class="item">
+                <i class="food icon"></i>
+                <div class="content">
+                    <div class="header">{% trans 'Main dish' %}</div>
+                    <div class="description">Selecting a main dish in the list will load an editable list of ingredients.</div>
+                </div>
+            </a>
+            <a class="item">
+                <i class="refresh icon"></i>
+                <div class="content">
+                    <div class="header">Restore recipe</div>
+                    <div class="description">The <em>Restore recipe</em> action resets the ingredients list to the default one.</div>
+                </div>
+            </a>
+            <a class="item">
+                <i class="marker icon"></i>
+                <div class="content">
+                    <div class="header">Geolocation</div>
+                    <div class="description">Highlighted orders are not properly geolocated. Edit the client information to fix it.</div>
+                </div>
+            </a>
+        </div>
+        <div class="ui row"></div>
+    </div>
+</div>
+</div>
+
+<form class="ui form" action="{% url 'delivery:meal' %}" method="post">
+    <div class="ui stackable relaxed grid container">
+        <div class="six wide column">
+
+            {{form.errors}}
+            <div class="ui row">
+                {% csrf_token %}
+                <div class="field dish selection">
+                    <label>{{ form.maindish.label }}</label>
+                    {{ form.maindish }}
                 </div>
             </div>
         </div>
-        <div class="ui row">
-            <a class="ui big button" href="{% url 'delivery:order' %}">{% trans "Back" %} </a>
-            <input class="ui big yellow button" type="submit" value="{% trans "Next: Print Kitchen Count" %}" name="_next" </>
+        <div class="ten wide column">
+            <div class="field ingredients selection">
+                <label>{{ form.ingredients.label }}</label>
+                {{ form.ingredients }}
+            </div>
+            <div class="ui field">
+                <input class="ui button" type="submit" value="{% trans "Restore recipe" %}" name="_restore" />
+            </div>
         </div>
-    </form>
+
+        <div class="ten wide column">
+            <div class="ui row">
+                <a class="ui big button" href="{% url 'delivery:order' %}">{% trans "Back" %} </a>
+                <input class="ui big yellow button" type="submit" value="{% trans "Next: Print Kitchen Count" %}" name="_next" </>
+            </div>
+        </div>
+    </div>
+</form>
 {% endblock content %}
