@@ -2,20 +2,21 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-30 20:29+0000\n"
+"POT-Creation-Date: 2016-08-31 22:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Mathieu Perreault <mathieu.perreault@gmail.com>, 2016\n"
-"Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
+"Language-Team: French (https://www.transifex.com/savoirfairelinux/"
+"teams/63058/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: order/models.py:26
@@ -145,10 +146,47 @@ msgid ""
 "Please review the form to make sure that all required fields are filled."
 msgstr "S'il vous plaît vous assurer que les champs requis sont remplis."
 
+#: order/templates/_form.html:58
+#, fuzzy
+#| msgid "order items"
+msgid "Order item"
+msgstr "éléments de la commande"
+
+#: order/templates/_order_info.html:5 order/templates/list.html:30
+msgid "Client"
+msgstr "Client"
+
+#: order/templates/_order_info.html:12 order/templates/view.html:50
+msgid "Price"
+msgstr "Prix"
+
+#: order/templates/_order_info.html:19
+#: order/templates/order/partials/filters.html:22
+msgid "Delivery date"
+msgstr "Date de livraison"
+
+#: order/templates/_order_info.html:26
+#, fuzzy
+#| msgid "creation date"
+msgid "Creation date"
+msgstr "date de création"
+
 #: order/templates/create.html:6 order/templates/list.html:6
-#: order/templates/update.html:6
+#: order/templates/list.html:11 order/templates/update.html:6
 msgid "Orders"
 msgstr "Commandes"
+
+#: order/templates/create.html:11
+#, fuzzy
+#| msgid "New order"
+msgid "New Order"
+msgstr "Nouvelle commande"
+
+#: order/templates/create.html:18
+#, fuzzy
+#| msgid "^create/$"
+msgid "Create"
+msgstr "^create/$"
 
 #: order/templates/list.html:16
 msgid "New order"
@@ -158,9 +196,11 @@ msgstr "Nouvelle commande"
 msgid "Or"
 msgstr "ou"
 
-#: order/templates/list.html:30
-msgid "Client"
-msgstr "Client"
+#: order/templates/list.html:29 order/templates/view.html:10
+#, fuzzy
+#| msgid "Orders"
+msgid "Order"
+msgstr "Commandes"
 
 #: order/templates/list.html:31
 msgid "Delivery Date"
@@ -178,13 +218,17 @@ msgstr "Montant"
 msgid "Actions"
 msgstr "Actions"
 
+#: order/templates/list.html:73
+msgid "of"
+msgstr ""
+
+#: order/templates/list.html:86
+msgid "Sorry, no result found"
+msgstr ""
+
 #: order/templates/order/partials/filters.html:7
 msgid "Name"
 msgstr "Nom"
-
-#: order/templates/order/partials/filters.html:22
-msgid "Delivery date"
-msgstr "Date de livraison"
 
 #: order/templates/order/partials/filters.html:34
 msgid "Reset"
@@ -194,16 +238,63 @@ msgstr "Réinitialiser"
 msgid "Search"
 msgstr "Recherche"
 
+#: order/templates/order_confirm_delete.html:6
+#, fuzzy
+#| msgid "View Order"
+msgid "Delete Order"
+msgstr "Voir Commande"
+
 #: order/templates/order_confirm_delete.html:9
-msgid ""
-"This order will be deleted and all the info will be lost, are you sure?"
+msgid "This order will be deleted and all the info will be lost, are you sure?"
 msgstr ""
 "Cette commande va être effacée, ainsi que ses informations. Êtes-vous "
 "sûr(er) ?"
 
+#: order/templates/order_confirm_delete.html:13
+msgid "No"
+msgstr ""
+
+#: order/templates/order_confirm_delete.html:14
+msgid "Yes"
+msgstr ""
+
+#: order/templates/update.html:11
+#, fuzzy
+#| msgid "View Order"
+msgid "Update Order"
+msgstr "Voir Commande"
+
+#: order/templates/update.html:24
+msgid "Cancel"
+msgstr ""
+
+#: order/templates/update.html:25 order/templates/view.html:76
+msgid "Update"
+msgstr ""
+
 #: order/templates/view.html:5
 msgid "View Order"
 msgstr "Voir Commande"
+
+#: order/templates/view.html:37
+#, fuzzy
+#| msgid "Ordered"
+msgid "Order detail"
+msgstr "Prête"
+
+#: order/templates/view.html:39
+msgid "Order items attached to the order"
+msgstr ""
+
+#: order/templates/view.html:46
+#, fuzzy
+#| msgid "component group"
+msgid "Component"
+msgstr "groupe de composant"
+
+#: order/templates/view.html:47
+msgid "Description"
+msgstr ""
 
 #: order/templates/view.html:48
 msgid "Total Quantity"
@@ -213,9 +304,13 @@ msgstr "Quantité totale"
 msgid "Free Quantity"
 msgstr "Quantité gratuite"
 
-#: order/templates/view.html:50
-msgid "Price"
-msgstr "Prix"
+#: order/templates/view.html:65
+msgid "Total"
+msgstr ""
+
+#: order/templates/view.html:75
+msgid "Delete"
+msgstr ""
 
 #: order/urls.py:12
 msgid "^list/$"

@@ -21,7 +21,7 @@
 {% block message %}
 <div class="ui text container">
     <div class="ui warning small message">
-        <div class="header">Notice</div>
+        <div class="header">{% trans "Notice" %}</div>
         {% if not edit %}
         <p>{% trans 'No information will be saved until all the steps are completed.' %}</p>
         {% else %}

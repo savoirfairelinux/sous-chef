@@ -5,7 +5,7 @@
 
 {% block title %}
 
-  {{client}} - Information
+  {{client}} - {% trans "Information" %}
 
 {% endblock %}
 
@@ -15,7 +15,7 @@
     <h2 class="ui header">
         <div class="content">
             {% trans 'Basic information' %}
-            <div class="sub header">Contact information of the client.<a  href="{% url 'admin:member_client_change' client.id %}">
+            <div class="sub header">{% trans "Contact information of the client" %}.<a  href="{% url 'admin:member_client_change' client.id %}">
                 <i class="write grey icon"></i>
             </a></div>
         </div>
@@ -32,8 +32,8 @@
     {% for contact in client.member.member_contact.all %}
         <div class="item"><div class="header">{{contact.type}}</div>{{contact.value}}</div>
     {% endfor %}
-    <div class="item"><div class="header"><i class="icon home"></i>Address</div>{{client.member.address.street}}, {{client.member.address.city}}, {{client.member.address.postal_code}}</div>
-    <div class="item"><div class="header">Delivery Note</div>{{client.delivery_note}}</div>
+    <div class="item"><div class="header"><i class="icon home"></i>{% trans "Address" %}</div>{{client.member.address.street}}, {{client.member.address.city}}, {{client.member.address.postal_code}}</div>
+    <div class="item"><div class="header">{% trans "Delivery Note" %}</div>{{client.delivery_note}}</div>
 </div>
 </div>
 
@@ -43,7 +43,7 @@
 <h2 class="ui header">
     <div class="content">
         {% trans 'Emergency Contact' %}
-        <div class="sub header">Information of the person to contact in case of an emergency.<a  href="{% url 'admin:member_member_change' client.emergency_contact.id %}">
+        <div class="sub header">{% trans "Information of the person to contact in case of an emergency" %}.<a  href="{% url 'admin:member_member_change' client.emergency_contact.id %}">
             <i class="write grey icon"></i>
         </a></div>
     </div>

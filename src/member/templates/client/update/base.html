@@ -11,14 +11,14 @@
 {% endblock %}
 
 {% block title %}
-    Update Client
+    {% trans "Update Client" %}
 {% endblock %}
 
 {% block message %}
 <div class="ui text container">
     <div class="ui warning small message">
-        <div class="header">Tip</div>
-        <p>In update mode, each step can be saved individually.</p>
+        <div class="header">{% trans "Tip" %}</div>
+        <p>{% trans "In update mode, each step can be saved individually" %}.</p>
     </div>
 </div>
 {% endblock %}
@@ -27,7 +27,7 @@
 
 <div class="ui secondary pointing fluid menu">
     <h1 class="ui header">
-        Update Client
+        {% trans "Update Client" %}
     </h1>
 </div>
 
@@ -57,7 +57,7 @@
             <!-- A block used by all children to include content here-->
         {% endblock %}
 
-        <input class="big ui right floated yellow button" type="submit" value="Save"/>
+        <input class="big ui right floated yellow button" type="submit" value="{% trans "Save" %}"/>
 
 
     </form>

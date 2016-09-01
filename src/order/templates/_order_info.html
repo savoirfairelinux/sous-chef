@@ -2,28 +2,28 @@
     <div class="item">
         <i class="large user middle aligned icon"></i>
         <div class="content">
-            <a class="header">Client</a>
+            <a class="header">{% trans "Client" %}</a>
             <div class="description">{{ order.client }}</div>
         </div>
     </div>
     <div class="item">
         <i class="large dollar middle aligned icon"></i>
         <div class="content">
-            <a class="header">Price</a>
+            <a class="header">{% trans "Price" %}</a>
             <div class="description">$ {{order.price}}</div>
         </div>
     </div>
     <div class="item">
         <i class="large calendar middle aligned icon"></i>
         <div class="content">
-            <a class="header">Delivery date</a>
+            <a class="header">{% trans "Delivery date" %}</a>
             <div class="description">{{order.delivery_date}}</div>
         </div>
     </div>
     <div class="item">
         <i class="large calendar middle aligned icon"></i>
         <div class="content">
-            <a class="header">Creation date</a>
+            <a class="header">{% trans "Creation date" %}</a>
             <div class="description">{{order.creation_date}}</div>
         </div>
     </div>

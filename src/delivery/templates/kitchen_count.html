@@ -9,7 +9,7 @@
 {% include 'kitchen_count_steps.html' with step='kitchen_count' %}
 
 <div class="ui secondary pointing fluid menu">
-    <h1 class="ui header">Kitchen Count Report</h1>
+    <h1 class="ui header">{% trans "Kitchen Count Report" %}</h1>
     <div class="right menu">
       <div class="ui item"><h3><i class="ui calendar icon"></i>{% now "j F Y" %}</h3></div>
     </div>
@@ -19,8 +19,8 @@
   <thead>
    <tr class="top aligned">
     <th class="">{% trans 'Component' %}</th>
-    <th class="">TOTAL<br>{% trans 'Regular' %}</th>
-    <th class="">TOTAL<br>{% trans 'Large' %}</th>
+    <th class="">{% trans "TOTAL" %}<br>{% trans 'Regular' %}</th>
+    <th class="">{% trans "TOTAL" %}<br>{% trans 'Large' %}</th>
     <th class="">{% trans 'Dish today' %}</th>
     <th class="">{% trans 'Ingredients today' %}</th>
    </tr>
@@ -68,7 +68,7 @@
 </table>
 
 <div class="actions">
-<a class="big ui button" href="{% url 'delivery:meal' %}">Back</a>
-<a class="big ui yellow button" href="{% url 'delivery:route' %}">Next: Organize Routes</a>
+<a class="big ui button" href="{% url 'delivery:meal' %}">{% trans "Back" %}</a>
+<a class="big ui yellow button" href="{% url 'delivery:route' %}">{% trans "Next: Organize Routes" %}</a>
 </div>
 {% endblock %}

@@ -2,12 +2,12 @@
 <!-- Load internationalisation utils-->
 {% load i18n %}
 
-{% block title %}Staff Notes{% endblock %}
+{% block title %}{% trans "Staff Notes" %}{% endblock %}
 
 {% block content %}
 
 <div class="ui secondary pointing fluid menu">
-    <h1 class="ui header">Staff Notes</h1>
+    <h1 class="ui header">{% trans "Staff Notes" %}</h1>
 
     <div class="right menu">
 
@@ -19,7 +19,7 @@
 
     <div class="inline fields">
         <div class="field">
-            <label>Name</label>
+            <label>{% trans "Name" %}</label>
             <div class="field">
                 <div class="ui large left icon input">
                     <i class="users icon"></i>
@@ -28,21 +28,21 @@
             </div>
         </div>
         <div class="field">
-            <label>Priority</label>
+            <label>{% trans "Priority" %}</label>
             <div class="field">
                 {{ filter.form.priority }}
             </div>
         </div>
         <div class="field">
-            <label>Is read</label>
+            <label>{% trans "Is read" %}</label>
             <div class="field">
                 {{ filter.form.is_read }}
             </div>
         </div>
     </div>
     <div class="field">
-        <a href="{{ request.path }}?display={{ display }}" class="ui button">Reset</a>
-        <button class="ui yellow button" type="submit">Search</button>
+        <a href="{{ request.path }}?display={{ display }}" class="ui button">{% trans "Reset" %}</a>
+        <button class="ui yellow button" type="submit">{% trans "Search" %}</button>
     </div>
 </form>
 </div>

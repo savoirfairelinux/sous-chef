@@ -2,7 +2,7 @@
 <!-- Load internationalisation utils-->
 {% load i18n %}
 
-{% block title %}Clients{% endblock %}
+{% block title %}{% trans "Clients" %}{% endblock %}
 
 {% block breadcrumb %}
 {{ block.super }}
@@ -49,12 +49,12 @@
             <span class="right floated time">
                 <i class="help-text info icon link" data-content="Language: {{ obj.get_language_display }}"></i>
             </span>
-            <span class="category">{{ obj.age }} years old</span>
+            <span class="category">{{ obj.age }} {% trans "years old" %}</span>
         </div>
         <div class="description">
-            <p>{{ obj.member.firstname }} is an <strong>{{ obj.get_delivery_type_display }}</strong>
-                client on the <strong>{{ obj.route }}</strong> route.</p>
-                <p>This client is currently <strong>{{ obj.get_status_display }}</strong>.</p>
+            <p>{{ obj.member.firstname }} {% trans "is an" %} <strong>{{ obj.get_delivery_type_display }}</strong>
+                {% trans "client on the" %} <strong>{{ obj.route }}</strong> {% trans "route" %}.</p>
+                <p>{% trans "This client is currently" %} <strong>{{ obj.get_status_display }}</strong>.</p>
             </div>
         </div>
         <div class="extra content">
@@ -93,7 +93,7 @@
     <tbody>
         {% for obj in clients %}
         <tr>
-            <td><a href="{% url 'member:client_information' pk=obj.id %}">{{ obj.member }}</a><br/>{{ obj.age }} years old</td>
+            <td><a href="{% url 'member:client_information' pk=obj.id %}">{{ obj.member }}</a><br/>{{ obj.age }} {% trans "years old" %}</td>
             <td>{{ obj.get_status_display }}</td>
             <td>{{ obj.get_delivery_type_display }}</td>
             <td>{{ obj.route }}</td>
@@ -125,7 +125,7 @@
     </a>
     {% endif %}
     <a class="active item">
-        {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}
     </a>
     {% if page_obj.has_next %}
     <a class="icon item"

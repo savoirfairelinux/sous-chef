@@ -19,7 +19,7 @@
 {% include 'kitchen_count_steps.html' with step='ingredients' %}
 
 <div class="ui secondary pointing fluid menu">
-    <h1 class="ui header">Pick ingredients</h1>
+    <h1 class="ui header">{% trans "Pick ingredients" %}</h1>
     <div class="right menu">
         <div class="ui item"><h3><i class="ui calendar icon"></i>{{ date }}</h3></div>
     </div>
@@ -28,7 +28,7 @@
     <form class="ui form" action="{% url 'delivery:meal' %}" method="post">
         <div class="ui container">
             <div class="ui segment">
-                <h2 class="ui header">Main Dish</h2>
+                <h2 class="ui header">{% trans "Main Dish" %}</h2>
                 {{form.errors}}
                 <div class="ui row">
                     {% csrf_token %}
@@ -41,14 +41,14 @@
                             {{ form.ingredients }}
                         </div>
                         <div>
-                            <input class="ui button" type="submit" value="Restore recipe" name="_restore" />
+                            <input class="ui button" type="submit" value="{% trans "Restore recipe" %}" name="_restore" />
                         </div>
                 </div>
             </div>
         </div>
         <div class="ui row">
-            <a class="ui big button" href="{% url 'delivery:order' %}">Back </a>
-            <input class="ui big yellow button" type="submit" value="Next: Print Kitchen Count" name="_next" </>
+            <a class="ui big button" href="{% url 'delivery:order' %}">{% trans "Back" %} </a>
+            <input class="ui big yellow button" type="submit" value="{% trans "Next: Print Kitchen Count" %}" name="_next" </>
         </div>
     </form>
 {% endblock content %}

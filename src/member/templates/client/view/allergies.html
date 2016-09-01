@@ -6,7 +6,7 @@
 
 {% block title %}
 
-  {{client}} - Food preferences
+  {{client}} - {% trans "Food preferences" %}
 
 {% endblock %}
 
@@ -62,7 +62,7 @@
     </div>
     {% empty %}
     <div class="ui row">
-        <em>Yipee! No restriction.</em>
+        <em>{% trans "Yipee! No restriction" %}.</em>
     </div>
     {% endfor %}
 
@@ -79,7 +79,7 @@
     </div>
     {% empty %}
     <div class="ui row">
-        <em>Nope! Nothing specific.</em>
+        <em>{% trans "Nope! Nothing specific" %}.</em>
     </div>
     {% endfor %}
 
@@ -93,7 +93,7 @@
     </div>
     {% empty %}
     <div class="ui row">
-        <em>Yeah! Likes everything!</em>
+        <em>{% trans "Yeah! Likes everything" %}!</em>
     </div>
     {% endfor %}
 
@@ -107,7 +107,7 @@
     </div>
     {% empty %}
     <div class="ui row">
-        <em>Yeah! Likes everything!</em>
+        <em>{% trans "Yeah! Likes everything" %}!</em>
     </div>
     {% endfor %}
 </div>

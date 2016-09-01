@@ -10,7 +10,7 @@
 {% include 'kitchen_count_steps.html' with step='orders' %}
 
 <div class="ui secondary pointing fluid menu">
-    <h1 class="ui header">Review Orders</h1>
+    <h1 class="ui header">{% trans "Review Orders" %}</h1>
     <div class="right menu">
       <div class="ui item"><h3><i class="ui calendar icon"></i>{% now "j F Y" %}</h3></div>
     </div>
@@ -20,11 +20,11 @@
     <i class="ui history icon"></i>
     {% if orders_refresh_date %}{% trans "Orders have been generated on" %} {{ orders_refresh_date.action_time }}{% endif %}
 </div>
-<div class="ui row"><a class="ui button" href="{% url 'delivery:refresh_orders' %}"><i class="ui refresh icon"></i>Generate orders</a></div>
+<div class="ui row"><a class="ui button" href="{% url 'delivery:refresh_orders' %}"><i class="ui refresh icon"></i>{% trans "Generate orders" %}</a></div>
 
 <table class="ui very basic stripped celled table">
   <thead>
-    <th class="sorted descending">Order</th>
+    <th class="sorted descending">{% trans "Order" %}</th>
     <th class="">{% trans 'Client' %}</th>
     <th class="">{% trans 'Delivery Date' %}</th>
     <th class="">{% trans 'Status' %}</th>
@@ -39,7 +39,7 @@
         <td>{{order.delivery_date}}</td>
         <td>{{order.get_status_display}}</td>
         <td>${{order.price}}</td>
-        <td><button class="ui button"  onclick="location.href='{% url 'order:view' pk=order.id %}';" value="View Order" >View Order</button></td>
+        <td><button class="ui button"  onclick="location.href='{% url 'order:view' pk=order.id %}';" value="{% trans "View Order" %}" >{% trans "View Order" %}</button></td>
       </tr>
         {% endfor %}
   </tbody>
@@ -47,13 +47,13 @@
       <tr>
           <th></th>
           <th colspan="5">
-              <em>{{orders.count}} orders today</em>
+              <em>{{orders.count}} {% trans "orders today" %}</em>
           </th>
         </tr>
   </tfoot>
 </table>
 
-<a class="big ui yellow right floated button" href="{% url 'delivery:meal' %}">OK, I'm ready</a>
+<a class="big ui yellow right floated button" href="{% url 'delivery:meal' %}">{% trans "OK, I'm ready" %}</a>
 
 <script type="text/javascript">
     document.addEventListener( 'DOMContentLoaded', function () {

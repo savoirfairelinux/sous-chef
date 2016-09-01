@@ -5,7 +5,7 @@
 
 {% block title %}
 
-  {{client}} - Information
+  {{client}} - {% trans "Information" %}
 
 {% endblock %}
 
@@ -16,7 +16,7 @@
         <div class="content">
             {% trans 'Staff Notes' %}
             <div class="sub header">
-                Notes added to {{client}}'s file.
+                {% trans "Notes added to" %} {{client}}'{% trans "s file" %}.
             </div>
         </div>
     </h2>
@@ -28,14 +28,14 @@
         <div class="inline fields">
 
             <div class="field">
-                <label>Priority</label>
+                <label>{% trans "Priority" %}</label>
                 <div class="field">
                     {{ filter.form.priority }}
                 </div>
             </div>
 
             <div class="field">
-                <label>Is read</label>
+                <label>{% trans "Is read" %}</label>
                 <div class="field">
                     {{ filter.form.is_read }}
                 </div>
@@ -44,8 +44,8 @@
             <input id="id_display" name="display" type="text" value="{{display}}" style="display:none">
         </div>
         <div class="field">
-            <a href="{{ request.path }}?display={{ display }}" class="ui button">Reset</a>
-            <button class="ui yellow button" type="submit">Search</button>
+            <a href="{{ request.path }}?display={{ display }}" class="ui button">{% trans "Reset" %}</a>
+            <button class="ui yellow button" type="submit">{% trans "Search" %}</button>
         </div>
     </form>
 

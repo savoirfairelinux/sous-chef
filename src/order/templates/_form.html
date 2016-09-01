@@ -55,7 +55,7 @@
             {% endif %}
             {% for subform in formset.forms %}
                 <div class="title active">
-                    <i class="dropdown icon"></i> Order item
+                    <i class="dropdown icon"></i> {% trans "Order item" %}
                 </div>
                 <div class="content active">
                     <div class="field {% if subform.component_group.errors %} error {% endif %}">
