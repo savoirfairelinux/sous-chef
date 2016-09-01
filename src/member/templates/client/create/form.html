@@ -88,7 +88,7 @@
 
       $('.ui.dropdown').dropdown({transition: 'drop'});
 
-      $('#id_dietary_restriction-delivery_type').dropdown({
+      $('#dietary_restriction-delivery_type .dropdown').dropdown({
         onChange: function(value, text, $selectedItem) {
           if($selectedItem.data('value') == 'E')
           {
