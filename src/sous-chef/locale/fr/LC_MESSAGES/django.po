@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-31 22:24+0000\n"
+"POT-Creation-Date: 2016-09-01 21:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
 "teams/63058/fr/)\n"
@@ -54,11 +54,11 @@ msgstr ""
 msgid "Volunteers"
 msgstr ""
 
-#: sous-chef/templates/system/_button_export.html:2
+#: sous-chef/templates/system/_button_export.html:4
 msgid "Export to CSV"
 msgstr ""
 
-#: sous-chef/templates/system/_button_export.html:2
+#: sous-chef/templates/system/_button_export.html:4
 msgid "Export"
 msgstr ""
 

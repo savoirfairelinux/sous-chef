@@ -63,7 +63,7 @@
            {% for formset in inlines %}
            $('div#{{ formset.prefix }}').formset({
                prefix: '{{ formset.prefix }}',
-               formCssClass: 'dynamic-formset{{ forloop.counter }}',
+               formCssClass: 'dynamic-formset-{{ forloop.counter }}',
                addText: '<i class="ui add icon item"></i> Add order item',
                deleteText: '<i class="ui remove icon order item"></i> Remove order item',
                addCssClass: 'positive ui button right floated',

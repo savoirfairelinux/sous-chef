@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-31 22:24+0000\n"
+"POT-Creation-Date: 2016-09-01 21:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: savoirfairelinux <support@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -41,20 +41,20 @@ msgstr "Sélectionner les ingrédients"
 msgid "Pick ingredients"
 msgstr "Sélectionner les ingrédients"
 
-#: delivery/templates/ingredients.html:31
-msgid "Main Dish"
+#: delivery/templates/ingredients.html:37
+msgid "Main dish"
 msgstr ""
 
-#: delivery/templates/ingredients.html:44
+#: delivery/templates/ingredients.html:80
 msgid "Restore recipe"
 msgstr ""
 
-#: delivery/templates/ingredients.html:50
-#: delivery/templates/kitchen_count.html:71 delivery/templates/routes.html:53
+#: delivery/templates/ingredients.html:86
+#: delivery/templates/kitchen_count.html:77 delivery/templates/routes.html:53
 msgid "Back"
 msgstr ""
 
-#: delivery/templates/ingredients.html:51
+#: delivery/templates/ingredients.html:87
 #, fuzzy
 #| msgid "Print the kitchen count."
 msgid "Next: Print Kitchen Count"
@@ -70,69 +70,75 @@ msgstr "Inventaire des repas"
 msgid "Kitchen Count Report"
 msgstr "Inventaire des repas"
 
-#: delivery/templates/kitchen_count.html:21
-#: delivery/templates/kitchen_count.html:47
+#: delivery/templates/kitchen_count.html:20
+#, fuzzy
+#| msgid "Print the kitchen count."
+msgid "Print the Report"
+msgstr "Imprimer l'inventaire des repas."
+
+#: delivery/templates/kitchen_count.html:27
+#: delivery/templates/kitchen_count.html:53
 msgid "Component"
 msgstr "Composant"
 
-#: delivery/templates/kitchen_count.html:22
-#: delivery/templates/kitchen_count.html:23
+#: delivery/templates/kitchen_count.html:28
+#: delivery/templates/kitchen_count.html:29
 msgid "TOTAL"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:22
+#: delivery/templates/kitchen_count.html:28
 msgid "Regular"
 msgstr "Régulier"
 
-#: delivery/templates/kitchen_count.html:23
+#: delivery/templates/kitchen_count.html:29
 msgid "Large"
 msgstr "Large"
 
-#: delivery/templates/kitchen_count.html:24
+#: delivery/templates/kitchen_count.html:30
 msgid "Dish today"
 msgstr "Plat du jour"
 
-#: delivery/templates/kitchen_count.html:25
+#: delivery/templates/kitchen_count.html:31
 msgid "Ingredients today"
 msgstr "Ingrédients du jour"
 
-#: delivery/templates/kitchen_count.html:44
-#: delivery/templates/review_orders.html:28
+#: delivery/templates/kitchen_count.html:50
+#: delivery/templates/review_orders.html:76
 msgid "Client"
 msgstr "Client"
 
-#: delivery/templates/kitchen_count.html:45
-#: delivery/templates/kitchen_count.html:46
+#: delivery/templates/kitchen_count.html:51
+#: delivery/templates/kitchen_count.html:52
 msgid "Qty"
 msgstr "Qte"
 
-#: delivery/templates/kitchen_count.html:45
+#: delivery/templates/kitchen_count.html:51
 msgid "Reg"
 msgstr "Rég"
 
-#: delivery/templates/kitchen_count.html:46
+#: delivery/templates/kitchen_count.html:52
 msgid "Lge"
 msgstr "Lrg"
 
-#: delivery/templates/kitchen_count.html:47
-#: delivery/templates/kitchen_count.html:48
+#: delivery/templates/kitchen_count.html:53
+#: delivery/templates/kitchen_count.html:54
 msgid "Clashing"
 msgstr "En conflit"
 
-#: delivery/templates/kitchen_count.html:48
+#: delivery/templates/kitchen_count.html:54
 #: delivery/templates/kitchen_count_steps.html:12
 msgid "Ingredients"
 msgstr "Ingrédients"
 
-#: delivery/templates/kitchen_count.html:49
+#: delivery/templates/kitchen_count.html:55
 msgid "Preparation"
 msgstr "Préparation"
 
-#: delivery/templates/kitchen_count.html:50
+#: delivery/templates/kitchen_count.html:56
 msgid "Restrictions"
 msgstr "Restrictions"
 
-#: delivery/templates/kitchen_count.html:72
+#: delivery/templates/kitchen_count.html:78
 msgid "Next: Organize Routes"
 msgstr ""
 
@@ -166,48 +172,53 @@ msgid "Organize the delivery routes."
 msgstr "Organiser les itinéraires pour la livraison."
 
 #: delivery/templates/review_orders.html:6
+#: delivery/templates/review_orders.html:66
 msgid "Orders"
 msgstr "Commandes"
 
-#: delivery/templates/review_orders.html:21
-msgid "Orders have been generated on"
-msgstr "Les commandes ont été générées le"
-
-#: delivery/templates/review_orders.html:23
-msgid "Generate orders"
-msgstr ""
-
 #: delivery/templates/review_orders.html:27
+#, fuzzy
+#| msgid "Ingredients today"
+msgid "Orders of the day"
+msgstr "Ingrédients du jour"
+
+#: delivery/templates/review_orders.html:75
 #, fuzzy
 #| msgid "Orders"
 msgid "Order"
 msgstr "Commandes"
 
-#: delivery/templates/review_orders.html:29
+#: delivery/templates/review_orders.html:77
 msgid "Delivery Date"
 msgstr "Date de livraison"
 
-#: delivery/templates/review_orders.html:30
+#: delivery/templates/review_orders.html:78
+#, fuzzy
+#| msgid "Routes"
+msgid "Route"
+msgstr "Itinéraires"
+
+#: delivery/templates/review_orders.html:79
 msgid "Status"
 msgstr "État"
 
-#: delivery/templates/review_orders.html:31
+#: delivery/templates/review_orders.html:80
 msgid "Amount"
 msgstr "Montant"
 
-#: delivery/templates/review_orders.html:42
+#: delivery/templates/review_orders.html:92
 #, fuzzy
 #| msgid "Review Orders"
 msgid "View Order"
 msgstr "Réviser les commandes"
 
-#: delivery/templates/review_orders.html:50
+#: delivery/templates/review_orders.html:100
 #, fuzzy
 #| msgid "Ingredients today"
 msgid "orders today"
 msgstr "Ingrédients du jour"
 
-#: delivery/templates/review_orders.html:56
+#: delivery/templates/review_orders.html:106
 msgid "OK, I'm ready"
 msgstr ""
 
@@ -265,3 +276,6 @@ msgstr ""
 #: delivery/urls.py:19
 msgid "^saveRoute/$"
 msgstr ""
+
+#~ msgid "Orders have been generated on"
+#~ msgstr "Les commandes ont été générées le"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-31 22:24+0000\n"
+"POT-Creation-Date: 2016-09-01 21:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -148,20 +148,20 @@ msgstr ""
 msgid "Order item"
 msgstr ""
 
-#: order/templates/_order_info.html:5 order/templates/list.html:30
+#: order/templates/_order_info.html:7 order/templates/list.html:30
 msgid "Client"
 msgstr ""
 
-#: order/templates/_order_info.html:12 order/templates/view.html:50
+#: order/templates/_order_info.html:14 order/templates/view.html:50
 msgid "Price"
 msgstr ""
 
-#: order/templates/_order_info.html:19
+#: order/templates/_order_info.html:21
 #: order/templates/order/partials/filters.html:22
 msgid "Delivery date"
 msgstr ""
 
-#: order/templates/_order_info.html:26
+#: order/templates/_order_info.html:28
 msgid "Creation date"
 msgstr ""
 
