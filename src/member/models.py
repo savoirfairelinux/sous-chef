@@ -243,8 +243,35 @@ class Route(models.Model):
         null=True,
     )
 
+    # ordered client ids for each weekday's delivery
+    #   saved by visual route sequencing page
+    client_id_sequence = JSONField(
+        blank=True, null=True
+    )
+
     def __str__(self):
         return self.name
+
+    def set_client_sequence(self, date, route_client_ids):
+        # reset in case it was corrupted by user in the admin
+        try:
+            sequence = self.client_id_sequence
+        except:
+            sequence = {}
+        if not isinstance(sequence, dict):
+            sequence = {}
+        # print("set client sequence 1 seq, ids", sequence, route_client_ids)
+        # weekday : Monday is 0, Sunday is 6
+        sequence[str(date.weekday())] = route_client_ids
+        # print("set client sequence 2", sequence)
+        self.client_id_sequence = sequence
+
+    def get_client_sequence(self, date):
+        sequence = self.client_id_sequence
+        if isinstance(sequence, dict):
+            return sequence.get(str(date.weekday()), None)
+        else:
+            return None
 
 
 class ClientManager(models.Manager):
@@ -573,8 +600,8 @@ class Client(models.Model):
             quantity = 0
             size = ''
         # DEBUG
-        # print("client, compgroup, day, qty",
-        #       client, component_group, days[day], quantity)
+        # print("client, compgroup, day, qty, size",
+        #       client, component_group, DAYS_OF_WEEK[day][0], quantity, size)
         return quantity, size
 
     def set_meal_defaults(self, component_group, day, quantity=0, size=''):

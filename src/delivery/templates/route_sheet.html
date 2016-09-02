@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+<!-- Load Internationalization utils-->
+{% load i18n %}
+
+{% block title %}{% trans 'Delivery Route Sheet' %} {% endblock %}
+
+{% block content %}
+
+{% include 'kitchen_count_steps.html' with step='delivery_sheet' %}
+
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">Route Sheet for : {{route.name}}</h1>
+    <div class="right menu">
+      <div class="ui item"><h3><i class="ui calendar icon"></i>{% now "j F Y" %}</h3></div>
+    </div>
+</div>
+
+<table class="ui three column very basic celled table">
+  <thead>
+   <tr class="top aligned">
+    <th class="three wide">{% trans 'Dish' %}</th>
+    <th class="one wide">{% trans 'Regular' %}</th>
+    <th class="one wide">{% trans 'Large' %}</th>
+   </tr>
+  </thead>
+  <tbody>
+    {% for obj in summary_lines %}
+      <tr>
+        <td><strong>{{obj.component_group}}</strong></td>
+        <td class="center aligned">{{obj.rqty}}</td>
+        <td class="center aligned">{{obj.lqty}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<table class="ui very compact celled  table">
+  <thead>
+   <tr class="top center aligned">
+    <th class="three wide">{% trans 'Client' %}</th>
+    <th class="six wide">{% trans 'Note' %}</th>
+    <th class="two wide">{% trans 'Item' %}</th>
+    <th class="one wide">{% trans 'Qty' %}</th>
+   </tr>
+  </thead>
+  <tbody>
+    {% for obj in detail_lines %}
+      <tr>
+        <td>
+          <strong>{{obj.firstname}} {{obj.lastname}}</strong><br>
+          {{obj.number}} {{obj.street}}<br>
+          {% if obj.apartment %}
+            {% trans 'Apt' %} {{obj.apartment}}<br>
+          {% endif %}
+          {{obj.phone}}
+        </td>
+        <td class="left aligned">{{obj.delivery_note}}</td>
+        <td>
+          {% for item in obj.delivery_items %}
+            {{item.component_group}} {{item.remark}}<br>
+          {% endfor %}
+        </td>
+        <td class="center aligned">
+          {% for item in obj.delivery_items %}
+            {{item.total_quantity}}<br>
+          {% endfor %}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="actions">
+<a class="big ui right floated button" href="{% url 'delivery:route' %}">Back</a>
+</div>
+{% endblock %}

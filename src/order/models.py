@@ -480,6 +480,52 @@ class Order(models.Model):
 
         return kitchen_list
 
+    @staticmethod
+    def get_delivery_list(delivery_date, route_id):
+        # get all delivery order specifics for delivery date and route
+        orditms = Order_item.objects.\
+            select_related('order__client__member__address').\
+            filter(
+                order__delivery_date=delivery_date,
+                order__client__route__id=route_id).\
+            order_by('order__client_id')
+
+        # print(orditms.query)  # DEBUG
+
+        route_list = {}
+        for oi in orditms:
+            if not route_list.get(oi.order.client.id):
+                # found new client
+                route_list[oi.order.client.id] = DeliveryClient(
+                    oi.order.client.member.firstname,
+                    oi.order.client.member.lastname,
+                    oi.order.client.member.address.number,
+                    oi.order.client.member.address.street,
+                    oi.order.client.member.address.apartment,
+                    # TODO idea : get list of member ids, later select
+                    #   contacts and loop to add phone number
+                    (oi.order.client.member.home_phone or
+                     oi.order.client.member.cell_phone),
+                    oi.order.client.delivery_note,
+                    delivery_items=[])
+            # found new delivery item for client
+            route_list[oi.order.client.id].delivery_items.append(
+                DeliveryItem(
+                    oi.component_group,
+                    oi.total_quantity,
+                    oi.order_item_type,
+                    oi.remark,
+                    size=(
+                        oi.size if
+                        oi.component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH
+                        else '')))
+
+        # Sort delivery items for each client
+        for client in route_list.values():
+            client.delivery_items.sort(key=component_group_sorting)
+
+        return route_list
+
 # get_kitchen_items helper classes and functions
 
 MealComponent = \
@@ -542,6 +588,44 @@ def check_for_new_client(kitchen_list, row):
         kitchen_list[row.cid].firstname = row.firstname
 
 # End kitchen items helpers
+
+
+# get_delivery_items helper classes and functions
+
+# item contained in a delivery for a client
+DeliveryItem = \
+    collections.namedtuple(
+        'DeliveryItem',
+        ['component_group',
+         'total_quantity',
+         'order_item_type',
+         'remark',
+         'size'])
+
+# delivery specifics for a client's order
+DeliveryClient = \
+    collections.namedtuple(
+        'DeliveryClient',
+        ['firstname',
+         'lastname',
+         'number',
+         'street',
+         'apartment',
+         'phone',
+         'delivery_note',
+         'delivery_items'])  # list of DeliveryItem
+
+
+def component_group_sorting(component):
+    # sorting sequence for component groups
+    if component.component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH:
+        return '1'
+    elif component.component_group != '':
+        return '2' + component.component_group
+    else:
+        return '3'
+
+# End get_delivery_items helpers
 
 
 class OrderFilter(FilterSet):
