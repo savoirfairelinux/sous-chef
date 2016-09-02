@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
 from note.models import Note, NoteFilter
 from note.forms import NoteForm
@@ -13,6 +15,10 @@ class NoteList(generic.ListView):
     model = Note
     template_name = 'notes_list.html'
     context_object_name = 'notes'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(NoteList, self).dispatch(*args, **kwargs)
 
     def get_queryset(self):
         uf = NoteFilter(self.request.GET)

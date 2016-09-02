@@ -10,7 +10,7 @@ class BillingFactory(factory.DjangoModelFactory):
     class Meta:
         model = Billing
 
-    client = ClientFactory()
+    client = factory.SubFactory(ClientFactory)
 
     total_amount = random.randrange(1, stop=75, step=1)
 
@@ -19,9 +19,3 @@ class BillingFactory(factory.DjangoModelFactory):
     billing_year = random.randrange(2016, stop=2020, step=1)
 
     detail = {"123": 123}
-
-
-class BillingOrder(factory.DjangoModelFactory):
-    billing_id = BillingFactory()
-
-    order_id = OrderFactory()

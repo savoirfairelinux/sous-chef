@@ -4,6 +4,8 @@ from billing.models import Billing, calculate_amount_total
 import datetime
 from member.factories import ClientFactory, RouteFactory
 from order.models import Order
+from django.core.urlresolvers import reverse
+from billing.factories import BillingFactory
 
 
 class TestBilling(TestCase):
@@ -50,3 +52,50 @@ class TestBilling(TestCase):
             )
 
         self.assertTrue(order, orders.first())
+
+
+class BillingViewTestCase(TestCase):
+
+    fixtures = ['routes.json']
+
+    def test_anonymous_user_gets_redirect_to_login_page(self):
+        self.client.logout()
+        bill = BillingFactory()
+        response = self.client.get(
+            reverse(
+                'billing:view',
+                kwargs={'pk': bill.id}
+            )
+        )
+        self.assertRedirects(
+            response,
+            reverse('page:login') + '?next=' + reverse('billing:view',
+                                                       kwargs={'pk': bill.id}),
+            status_code=302
+        )
+
+
+class BillingListTestCase(TestCase):
+
+    def test_anonymous_user_gets_redirected_to_login_page(self):
+        self.client.logout()
+        response = self.client.get(reverse('billing:list'))
+        self.assertRedirects(
+            response,
+            reverse('page:login') + '?next=' + reverse('billing:list'),
+            status_code=302
+        )
+
+
+class BillingFormTestCase(TestCase):
+
+    fixtures = ['routes.json']
+
+    def test_anonymous_user_gets_redirected_to_login_page_on_creation(self):
+        self.client.logout()
+        response = self.client.get(reverse('billing:create'))
+        self.assertRedirects(
+            response,
+            reverse('page:login') + '?next=' + reverse('billing:create'),
+            status_code=302
+        )

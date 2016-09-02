@@ -3,6 +3,7 @@ from note.models import Note
 from note.factories import NoteFactory
 from django.contrib.auth.models import User
 from member.factories import ClientFactory
+from django.core.urlresolvers import reverse
 
 
 class NoteTestCase(TestCase):
@@ -44,3 +45,12 @@ class NoteTestCase(TestCase):
             note='x123y'
         )
         self.assertTrue('x123y' in note.note)
+
+    def test_anonymous_user_gets_redirected_to_login_page(self):
+        self.client.logout()
+        response = self.client.get('/note/')
+        self.assertRedirects(
+            response,
+            reverse('page:login') + '?next=/note/',
+            status_code=302
+        )
