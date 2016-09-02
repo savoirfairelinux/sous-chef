@@ -1,282 +1,662 @@
 [
 {
-    "model": "contenttypes.contenttype",
-    "pk": 1,
+    "model": "member.member",
+    "pk": 861,
     "fields": {
-        "app_label": "admin",
-        "model": "logentry"
+        "firstname": "John",
+        "lastname": "Doe",
+        "address": 508,
+        "created_at": "2016-08-12T12:04:20.783Z",
+        "updated_at": "2016-08-12T12:04:20.783Z"
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 2,
+    "model": "member.member",
+    "pk": 862,
     "fields": {
-        "app_label": "auth",
-        "model": "permission"
+        "firstname": "Louise",
+        "lastname": "Dallaire",
+        "address": 509,
+        "created_at": "2016-08-12T12:04:20.799Z",
+        "updated_at": "2016-08-12T12:04:20.799Z"
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 3,
+    "model": "member.member",
+    "pk": 863,
     "fields": {
-        "app_label": "auth",
-        "model": "group"
+        "firstname": "Paul",
+        "lastname": "Taylor",
+        "address": 511,
+        "created_at": "2016-08-12T12:04:20.799Z",
+        "updated_at": "2016-08-12T12:04:20.799Z"
     }
 },
 {
-    "model": "contenttypes.contenttype",
+    "model": "member.member",
+    "pk": 864,
+    "fields": {
+        "firstname": "Peter",
+        "lastname": "Murray",
+        "address": 510,
+        "created_at": "2016-08-12T12:04:20.815Z",
+        "updated_at": "2016-08-12T12:04:20.815Z"
+    }
+},
+{
+    "model": "member.member",
+    "pk": 865,
+    "fields": {
+        "firstname": "Dr. Lucie",
+        "lastname": "Tremblay",
+        "address": null,
+        "created_at": "2016-08-12T12:04:20.815Z",
+        "updated_at": "2016-08-12T12:04:20.815Z"
+    }
+},
+{
+    "model": "member.member",
+    "pk": 866,
+    "fields": {
+        "firstname": "Dr. Mary",
+        "lastname": "Johnson",
+        "address": null,
+        "created_at": "2016-08-12T12:04:20.830Z",
+        "updated_at": "2016-08-12T12:04:20.830Z"
+    }
+},
+{
+    "model": "member.member",
+    "pk": 867,
+    "fields": {
+        "firstname": "Bob",
+        "lastname": "Brown",
+        "address": 510,
+        "created_at": "2016-08-12T12:04:20.830Z",
+        "updated_at": "2016-08-12T12:04:20.830Z"
+    }
+},
+{
+    "model": "member.member",
+    "pk": 868,
+    "fields": {
+        "firstname": "Kevin",
+        "lastname": "Tracy",
+        "address": 511,
+        "created_at": "2016-08-12T12:04:20.846Z",
+        "updated_at": "2016-08-12T12:04:20.846Z"
+    }
+},
+{
+    "model": "member.member",
+    "pk": 869,
+    "fields": {
+        "firstname": "Roger",
+        "lastname": "Blondin",
+        "address": 509,
+        "created_at": "2016-08-12T12:04:20.846Z",
+        "updated_at": "2016-08-12T12:04:20.846Z"
+    }
+},
+{
+    "model": "member.member",
+    "pk": 870,
+    "fields": {
+        "firstname": "Mario",
+        "lastname": "Rossi",
+        "address": 512,
+        "created_at": "2016-08-31T12:06:06.250Z",
+        "updated_at": "2016-08-31T12:06:06.277Z"
+    }
+},
+{
+    "model": "member.address",
+    "pk": 508,
+    "fields": {
+        "number": 2444,
+        "street": "Des Perdrix",
+        "apartment": "407",
+        "floor": 10,
+        "city": "Montreal",
+        "postal_code": "H1A2B3",
+        "longitude": null,
+        "latitude": null,
+        "distance": null
+    }
+},
+{
+    "model": "member.address",
+    "pk": 509,
+    "fields": {
+        "number": 1244,
+        "street": "Des Hirondelles",
+        "apartment": "4",
+        "floor": null,
+        "city": "Montreal",
+        "postal_code": "H3D4G6",
+        "longitude": null,
+        "latitude": null,
+        "distance": null
+    }
+},
+{
+    "model": "member.address",
+    "pk": 510,
+    "fields": {
+        "number": 543,
+        "street": "Des \u00c9perviers",
+        "apartment": "",
+        "floor": null,
+        "city": "Montreal",
+        "postal_code": "H4E3WS",
+        "longitude": null,
+        "latitude": null,
+        "distance": null
+    }
+},
+{
+    "model": "member.address",
+    "pk": 511,
+    "fields": {
+        "number": 4218,
+        "street": "4218 Avenue Madison",
+        "apartment": "1",
+        "floor": null,
+        "city": "Montreal",
+        "postal_code": "H4B2T9",
+        "longitude": "-73.634610",
+        "latitude": "45.469894",
+        "distance": "6.957810"
+    }
+},
+{
+    "model": "member.address",
+    "pk": 512,
+    "fields": {
+        "number": 4194,
+        "street": "4194 Avenue Kensington",
+        "apartment": "",
+        "floor": null,
+        "city": "Montreal",
+        "postal_code": "H4B 2W",
+        "longitude": "-73.628281",
+        "latitude": "45.468036",
+        "distance": "6.802049"
+    }
+},
+{
+    "model": "member.contact",
+    "pk": 383,
+    "fields": {
+        "type": "Home phone",
+        "value": "514-345-6789",
+        "member": 861
+    }
+},
+{
+    "model": "member.contact",
+    "pk": 384,
+    "fields": {
+        "type": "Cell phone",
+        "value": "438-234-4567",
+        "member": 862
+    }
+},
+{
+    "model": "member.contact",
+    "pk": 385,
+    "fields": {
+        "type": "Home phone",
+        "value": "514-654-1289",
+        "member": 864
+    }
+},
+{
+    "model": "member.contact",
+    "pk": 386,
+    "fields": {
+        "type": "Home phone",
+        "value": "514-653-1225",
+        "member": 870
+    }
+},
+{
+    "model": "member.contact",
+    "pk": 387,
+    "fields": {
+        "type": "Home phone",
+        "value": "514-987-5443",
+        "member": 861
+    }
+},
+{
+    "model": "member.route",
     "pk": 4,
     "fields": {
-        "app_label": "auth",
-        "model": "user"
+        "name": "ndg",
+        "description": "",
+        "client_id_sequence": "{\n  \"2\": [\n    870,\n    612,\n    611,\n    610,\n    609,\n    608,\n    607,\n    606\n  ],\n  \"3\": [\n    609,\n    608,\n    606,\n    612,\n    611,\n    610,\n    607\n  ],\n  \"4\": [\n    606,\n    607,\n    608,\n    609,\n    610,\n    611,\n    612\n  ]\n}"
     }
 },
 {
-    "model": "contenttypes.contenttype",
+    "model": "member.route",
     "pk": 5,
     "fields": {
-        "app_label": "contenttypes",
-        "model": "contenttype"
+        "name": "mile_end",
+        "description": "",
+        "client_id_sequence": "{\n  \"2\": []\n}"
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 6,
+    "model": "member.client",
+    "pk": 606,
     "fields": {
-        "app_label": "sessions",
-        "model": "session"
+        "billing_member": 862,
+        "billing_payment_type": "check",
+        "rate_type": "default",
+        "member": 861,
+        "emergency_contact": 863,
+        "emergency_contact_relationship": "Nephew",
+        "status": "A",
+        "language": "en",
+        "alert": "",
+        "delivery_type": "O",
+        "gender": "M",
+        "birthdate": "1940-02-23",
+        "route": 4,
+        "meal_default_week": "{\n  \"compote_friday_quantity\": 0,\n  \"compote_monday_quantity\": 0,\n  \"compote_saturday_quantity\": 0,\n  \"compote_sunday_quantity\": 0,\n  \"compote_thursday_quantity\": 0,\n  \"compote_tuesday_quantity\": 0,\n  \"compote_wednesday_quantity\": 0,\n  \"dessert_friday_quantity\": 1,\n  \"dessert_monday_quantity\": 1,\n  \"dessert_saturday_quantity\": 1,\n  \"dessert_sunday_quantity\": 1,\n  \"dessert_thursday_quantity\": 1,\n  \"dessert_tuesday_quantity\": 1,\n  \"dessert_wednesday_quantity\": 1,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 1,\n  \"green_salad_monday_quantity\": 1,\n  \"green_salad_saturday_quantity\": 1,\n  \"green_salad_sunday_quantity\": 1,\n  \"green_salad_thursday_quantity\": 1,\n  \"green_salad_tuesday_quantity\": 1,\n  \"green_salad_wednesday_quantity\": 1,\n  \"main_dish_friday_quantity\": 2,\n  \"main_dish_monday_quantity\": 2,\n  \"main_dish_saturday_quantity\": 2,\n  \"main_dish_sunday_quantity\": 2,\n  \"main_dish_thursday_quantity\": 2,\n  \"main_dish_tuesday_quantity\": 2,\n  \"main_dish_wednesday_quantity\": 2,\n  \"pudding_friday_quantity\": 1,\n  \"pudding_monday_quantity\": 1,\n  \"pudding_saturday_quantity\": 1,\n  \"pudding_sunday_quantity\": 1,\n  \"pudding_thursday_quantity\": 1,\n  \"pudding_tuesday_quantity\": 1,\n  \"pudding_wednesday_quantity\": 1,\n  \"size_friday\": \"L\",\n  \"size_monday\": \"L\",\n  \"size_saturday\": \"L\",\n  \"size_sunday\": \"L\",\n  \"size_thursday\": \"L\",\n  \"size_tuesday\": \"L\",\n  \"size_wednesday\": \"L\"\n}",
+        "delivery_note": ""
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 7,
+    "model": "member.client",
+    "pk": 607,
     "fields": {
-        "app_label": "meal",
-        "model": "ingredient"
+        "billing_member": 864,
+        "billing_payment_type": "check",
+        "rate_type": "default",
+        "member": 864,
+        "emergency_contact": 861,
+        "emergency_contact_relationship": "Friend",
+        "status": "A",
+        "language": "en",
+        "alert": "",
+        "delivery_type": "O",
+        "gender": "M",
+        "birthdate": "1945-12-13",
+        "route": 4,
+        "meal_default_week": "{\n  \"compote_friday_quantity\": 0,\n  \"compote_monday_quantity\": 0,\n  \"compote_saturday_quantity\": 0,\n  \"compote_sunday_quantity\": 0,\n  \"compote_thursday_quantity\": 0,\n  \"compote_tuesday_quantity\": 0,\n  \"compote_wednesday_quantity\": 0,\n  \"dessert_friday_quantity\": 1,\n  \"dessert_monday_quantity\": 1,\n  \"dessert_saturday_quantity\": 1,\n  \"dessert_sunday_quantity\": 1,\n  \"dessert_thursday_quantity\": 1,\n  \"dessert_tuesday_quantity\": 1,\n  \"dessert_wednesday_quantity\": 1,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
+        "delivery_note": ""
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 8,
+    "model": "member.client",
+    "pk": 608,
     "fields": {
-        "app_label": "meal",
-        "model": "component"
+        "billing_member": 862,
+        "billing_payment_type": "check",
+        "rate_type": "default",
+        "member": 862,
+        "emergency_contact": 864,
+        "emergency_contact_relationship": "Friend",
+        "status": "A",
+        "language": "en",
+        "alert": "",
+        "delivery_type": "O",
+        "gender": "M",
+        "birthdate": "1943-12-13",
+        "route": 4,
+        "meal_default_week": "{\n  \"compote_friday_quantity\": 0,\n  \"compote_monday_quantity\": 0,\n  \"compote_saturday_quantity\": 0,\n  \"compote_sunday_quantity\": 0,\n  \"compote_thursday_quantity\": 0,\n  \"compote_tuesday_quantity\": 0,\n  \"compote_wednesday_quantity\": 0,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 2,\n  \"green_salad_monday_quantity\": 2,\n  \"green_salad_saturday_quantity\": 2,\n  \"green_salad_sunday_quantity\": 2,\n  \"green_salad_thursday_quantity\": 2,\n  \"green_salad_tuesday_quantity\": 2,\n  \"green_salad_wednesday_quantity\": 2,\n  \"main_dish_friday_quantity\": 2,\n  \"main_dish_monday_quantity\": 2,\n  \"main_dish_saturday_quantity\": 2,\n  \"main_dish_sunday_quantity\": 2,\n  \"main_dish_thursday_quantity\": 2,\n  \"main_dish_tuesday_quantity\": 2,\n  \"main_dish_wednesday_quantity\": 2,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
+        "delivery_note": ""
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 9,
+    "model": "member.client",
+    "pk": 609,
     "fields": {
-        "app_label": "meal",
-        "model": "component_ingredient"
+        "billing_member": 863,
+        "billing_payment_type": "check",
+        "rate_type": "default",
+        "member": 863,
+        "emergency_contact": 862,
+        "emergency_contact_relationship": "Friend",
+        "status": "A",
+        "language": "en",
+        "alert": "",
+        "delivery_type": "O",
+        "gender": "M",
+        "birthdate": "1943-12-13",
+        "route": 4,
+        "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"L\",\n  \"size_monday\": \"L\",\n  \"size_saturday\": \"L\",\n  \"size_sunday\": \"L\",\n  \"size_thursday\": \"L\",\n  \"size_tuesday\": \"L\",\n  \"size_wednesday\": \"L\"\n}",
+        "delivery_note": "The door key is hidden under the pink geranium planter."
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 10,
+    "model": "member.client",
+    "pk": 610,
     "fields": {
-        "app_label": "meal",
-        "model": "restricted_item"
+        "billing_member": 867,
+        "billing_payment_type": "check",
+        "rate_type": "default",
+        "member": 867,
+        "emergency_contact": 868,
+        "emergency_contact_relationship": "Friend",
+        "status": "A",
+        "language": "en",
+        "alert": "",
+        "delivery_type": "O",
+        "gender": "M",
+        "birthdate": "1943-12-13",
+        "route": 4,
+        "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"L\",\n  \"size_monday\": \"L\",\n  \"size_saturday\": \"L\",\n  \"size_sunday\": \"L\",\n  \"size_thursday\": \"L\",\n  \"size_tuesday\": \"L\",\n  \"size_wednesday\": \"L\"\n}",
+        "delivery_note": ""
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 11,
+    "model": "member.client",
+    "pk": 611,
     "fields": {
-        "app_label": "meal",
-        "model": "incompatibility"
+        "billing_member": 868,
+        "billing_payment_type": "check",
+        "rate_type": "default",
+        "member": 868,
+        "emergency_contact": 867,
+        "emergency_contact_relationship": "Friend",
+        "status": "A",
+        "language": "en",
+        "alert": "",
+        "delivery_type": "O",
+        "gender": "M",
+        "birthdate": "1943-12-13",
+        "route": 4,
+        "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
+        "delivery_note": ""
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 12,
+    "model": "member.client",
+    "pk": 612,
     "fields": {
-        "app_label": "meal",
-        "model": "menu"
+        "billing_member": 869,
+        "billing_payment_type": "check",
+        "rate_type": "default",
+        "member": 869,
+        "emergency_contact": 868,
+        "emergency_contact_relationship": "Friend",
+        "status": "A",
+        "language": "en",
+        "alert": "",
+        "delivery_type": "O",
+        "gender": "M",
+        "birthdate": "1943-12-13",
+        "route": 4,
+        "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
+        "delivery_note": ""
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 13,
+    "model": "member.client",
+    "pk": 870,
     "fields": {
-        "app_label": "meal",
-        "model": "menu_component"
+        "billing_member": 870,
+        "billing_payment_type": "check",
+        "rate_type": "default",
+        "member": 870,
+        "emergency_contact": 861,
+        "emergency_contact_relationship": null,
+        "status": "A",
+        "language": "en",
+        "alert": "",
+        "delivery_type": "O",
+        "gender": "M",
+        "birthdate": "1940-03-12",
+        "route": 4,
+        "meal_default_week": "{\n  \"compote_friday_quantity\": null,\n  \"compote_monday_quantity\": null,\n  \"compote_saturday_quantity\": null,\n  \"compote_sunday_quantity\": null,\n  \"compote_thursday_quantity\": null,\n  \"compote_tuesday_quantity\": null,\n  \"compote_wednesday_quantity\": null,\n  \"dessert_friday_quantity\": null,\n  \"dessert_monday_quantity\": null,\n  \"dessert_saturday_quantity\": null,\n  \"dessert_sunday_quantity\": null,\n  \"dessert_thursday_quantity\": null,\n  \"dessert_tuesday_quantity\": null,\n  \"dessert_wednesday_quantity\": null,\n  \"diabetic_friday_quantity\": null,\n  \"diabetic_monday_quantity\": null,\n  \"diabetic_saturday_quantity\": null,\n  \"diabetic_sunday_quantity\": null,\n  \"diabetic_thursday_quantity\": null,\n  \"diabetic_tuesday_quantity\": null,\n  \"diabetic_wednesday_quantity\": null,\n  \"fruit_salad_friday_quantity\": null,\n  \"fruit_salad_monday_quantity\": null,\n  \"fruit_salad_saturday_quantity\": null,\n  \"fruit_salad_sunday_quantity\": null,\n  \"fruit_salad_thursday_quantity\": null,\n  \"fruit_salad_tuesday_quantity\": null,\n  \"fruit_salad_wednesday_quantity\": null,\n  \"green_salad_friday_quantity\": null,\n  \"green_salad_monday_quantity\": null,\n  \"green_salad_saturday_quantity\": null,\n  \"green_salad_sunday_quantity\": null,\n  \"green_salad_thursday_quantity\": null,\n  \"green_salad_tuesday_quantity\": null,\n  \"green_salad_wednesday_quantity\": null,\n  \"main_dish_friday_quantity\": null,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": null,\n  \"main_dish_sunday_quantity\": null,\n  \"main_dish_thursday_quantity\": null,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": null,\n  \"pudding_monday_quantity\": null,\n  \"pudding_saturday_quantity\": null,\n  \"pudding_sunday_quantity\": null,\n  \"pudding_thursday_quantity\": null,\n  \"pudding_tuesday_quantity\": null,\n  \"pudding_wednesday_quantity\": null,\n  \"size_friday\": null,\n  \"size_monday\": \"R\",\n  \"size_saturday\": null,\n  \"size_sunday\": null,\n  \"size_thursday\": null,\n  \"size_tuesday\": null,\n  \"size_wednesday\": \"R\"\n}",
+        "delivery_note": "Ring door bell many times."
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 14,
+    "model": "member.clientscheduledstatus",
+    "pk": 1,
     "fields": {
-        "app_label": "member",
-        "model": "member"
+        "client": 870,
+        "linked_scheduled_status": null,
+        "status_from": "D",
+        "status_to": "A",
+        "reason": "He deserves it.",
+        "change_date": "2016-08-31",
+        "change_state": "START",
+        "operation_status": "PRO"
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 15,
+    "model": "member.referencing",
+    "pk": 255,
     "fields": {
-        "app_label": "member",
-        "model": "address"
+        "referent": 865,
+        "client": 606,
+        "referral_reason": "Can hardly walk.",
+        "work_information": "CHUM H\u00f4tel-Dieu",
+        "date": "2015-11-02"
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 16,
+    "model": "member.referencing",
+    "pk": 256,
     "fields": {
-        "app_label": "member",
-        "model": "contact"
+        "referent": 866,
+        "client": 607,
+        "referral_reason": "Had an operation.",
+        "work_information": "CUSM",
+        "date": "2014-01-12"
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 17,
+    "model": "member.referencing",
+    "pk": 257,
     "fields": {
-        "app_label": "member",
-        "model": "route"
+        "referent": 865,
+        "client": 609,
+        "referral_reason": "Needs help.",
+        "work_information": "",
+        "date": "2016-05-04"
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 18,
+    "model": "member.referencing",
+    "pk": 258,
     "fields": {
-        "app_label": "member",
-        "model": "client"
+        "referent": 870,
+        "client": 870,
+        "referral_reason": "Needs help.",
+        "work_information": "CHUM",
+        "date": "2016-06-07"
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 19,
+    "model": "member.option",
+    "pk": 883,
     "fields": {
-        "app_label": "member",
-        "model": "clientscheduledstatus"
+        "name": "Fruit Salad",
+        "description": "",
+        "option_group": "side dish"
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 20,
+    "model": "member.option",
+    "pk": 884,
     "fields": {
-        "app_label": "member",
-        "model": "referencing"
+        "name": "Green Salad",
+        "description": "",
+        "option_group": "side dish"
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 21,
+    "model": "member.option",
+    "pk": 885,
     "fields": {
-        "app_label": "member",
-        "model": "option"
+        "name": "Dessert",
+        "description": "",
+        "option_group": "side dish"
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 22,
+    "model": "member.option",
+    "pk": 886,
     "fields": {
-        "app_label": "member",
-        "model": "client_option"
+        "name": "Pudding",
+        "description": "",
+        "option_group": "side dish"
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 23,
+    "model": "member.option",
+    "pk": 887,
     "fields": {
-        "app_label": "member",
-        "model": "restriction"
+        "name": "Diabetic dessert",
+        "description": "",
+        "option_group": "side dish"
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 24,
+    "model": "member.option",
+    "pk": 888,
     "fields": {
-        "app_label": "member",
-        "model": "client_avoid_ingredient"
+        "name": "Puree all",
+        "description": "",
+        "option_group": "preparation"
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 25,
+    "model": "member.option",
+    "pk": 889,
     "fields": {
-        "app_label": "member",
-        "model": "client_avoid_component"
+        "name": "Cut up meat",
+        "description": "",
+        "option_group": "preparation"
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 26,
+    "model": "member.client_option",
+    "pk": 507,
     "fields": {
-        "app_label": "order",
-        "model": "order"
+        "client": 606,
+        "option": 886,
+        "value": null
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 27,
+    "model": "member.client_option",
+    "pk": 508,
     "fields": {
-        "app_label": "order",
-        "model": "order_item"
+        "client": 607,
+        "option": 885,
+        "value": null
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 28,
+    "model": "member.client_option",
+    "pk": 509,
     "fields": {
-        "app_label": "notification",
-        "model": "notification"
+        "client": 608,
+        "option": 889,
+        "value": null
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 29,
+    "model": "member.restriction",
+    "pk": 412,
     "fields": {
-        "app_label": "delivery",
-        "model": "delivery"
+        "client": 606,
+        "restricted_item": 1012
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 30,
+    "model": "member.restriction",
+    "pk": 413,
     "fields": {
-        "app_label": "note",
-        "model": "note"
+        "client": 606,
+        "restricted_item": 1010
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 31,
+    "model": "member.restriction",
+    "pk": 415,
     "fields": {
-        "app_label": "billing",
-        "model": "orderbilling"
+        "client": 611,
+        "restricted_item": 1015
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 32,
+    "model": "member.client_avoid_ingredient",
+    "pk": 410,
     "fields": {
-        "app_label": "billing",
-        "model": "billing"
+        "client": 609,
+        "ingredient": 3237
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 33,
+    "model": "member.client_avoid_ingredient",
+    "pk": 411,
     "fields": {
-        "app_label": "billing",
-        "model": "billingsummary"
+        "client": 609,
+        "ingredient": 3246
     }
 },
 {
-    "model": "sessions.session",
-    "pk": "a1aduc6ll4drzptbsm92bhzxr29noh0y",
+    "model": "member.client_avoid_ingredient",
+    "pk": 412,
     "fields": {
-        "session_data": "MjkxZmQzMzY0NWI1MTQzMzBkNzM4MWM4NTUzYmZlNTY5ZGVlM2UxMzp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZjRiZWRmN2QyZmVjYWRjNWEyNDM2Y2FiYjcwZTA1NWY3ODdkZjkwYyIsIl9hdXRoX3VzZXJfaWQiOiIxIn0=",
-        "expire_date": "2016-09-13T00:24:56.823Z"
+        "client": 609,
+        "ingredient": 3239
     }
 },
 {
-    "model": "sessions.session",
-    "pk": "npikvysjq8ofernmg4j95w2n7tmcx8ww",
+    "model": "member.client_avoid_ingredient",
+    "pk": 413,
     "fields": {
-        "session_data": "MmVmMTlhNTFlMjIyODlkMzYxNzA1ZGE3ZGQ1ZmVhYzYzMTQ5OGMwNzp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiZjRiZWRmN2QyZmVjYWRjNWEyNDM2Y2FiYjcwZTA1NWY3ODdkZjkwYyIsIl9hdXRoX3VzZXJfaWQiOiIxIiwid2l6YXJkX2NsaWVudF93aXphcmQiOnsic3RlcF9kYXRhIjp7fSwiZXh0cmFfZGF0YSI6e30sInN0ZXBfZmlsZXMiOnt9LCJzdGVwIjpudWxsfX0=",
-        "expire_date": "2016-09-14T12:06:06.376Z"
+        "client": 612,
+        "ingredient": 3239
+    }
+},
+{
+    "model": "member.client_avoid_ingredient",
+    "pk": 414,
+    "fields": {
+        "client": 612,
+        "ingredient": 3237
+    }
+},
+{
+    "model": "member.client_avoid_component",
+    "pk": 382,
+    "fields": {
+        "client": 609,
+        "component": 1571
+    }
+},
+{
+    "model": "member.client_avoid_component",
+    "pk": 383,
+    "fields": {
+        "client": 609,
+        "component": 1577
+    }
+},
+{
+    "model": "member.client_avoid_component",
+    "pk": 384,
+    "fields": {
+        "client": 609,
+        "component": 1573
+    }
+},
+{
+    "model": "member.client_avoid_component",
+    "pk": 385,
+    "fields": {
+        "client": 610,
+        "component": 1576
     }
 },
 {
@@ -1406,7 +1786,7 @@
 },
 {
     "model": "meal.component_ingredient",
-    "pk": 2633,
+    "pk": 2638,
     "fields": {
         "component": 1576,
         "ingredient": 3260,
@@ -1415,7 +1795,7 @@
 },
 {
     "model": "meal.component_ingredient",
-    "pk": 2634,
+    "pk": 2639,
     "fields": {
         "component": 1576,
         "ingredient": 3239,
@@ -1424,7 +1804,7 @@
 },
 {
     "model": "meal.component_ingredient",
-    "pk": 2635,
+    "pk": 2640,
     "fields": {
         "component": 1576,
         "ingredient": 3237,
@@ -1433,7 +1813,7 @@
 },
 {
     "model": "meal.component_ingredient",
-    "pk": 2636,
+    "pk": 2641,
     "fields": {
         "component": 1576,
         "ingredient": 3261,
@@ -1442,11 +1822,56 @@
 },
 {
     "model": "meal.component_ingredient",
-    "pk": 2637,
+    "pk": 2642,
     "fields": {
         "component": 1576,
         "ingredient": 3259,
         "date": "2016-09-01"
+    }
+},
+{
+    "model": "meal.component_ingredient",
+    "pk": 2653,
+    "fields": {
+        "component": 1576,
+        "ingredient": 3260,
+        "date": "2016-09-02"
+    }
+},
+{
+    "model": "meal.component_ingredient",
+    "pk": 2654,
+    "fields": {
+        "component": 1576,
+        "ingredient": 3239,
+        "date": "2016-09-02"
+    }
+},
+{
+    "model": "meal.component_ingredient",
+    "pk": 2655,
+    "fields": {
+        "component": 1576,
+        "ingredient": 3237,
+        "date": "2016-09-02"
+    }
+},
+{
+    "model": "meal.component_ingredient",
+    "pk": 2656,
+    "fields": {
+        "component": 1576,
+        "ingredient": 3261,
+        "date": "2016-09-02"
+    }
+},
+{
+    "model": "meal.component_ingredient",
+    "pk": 2657,
+    "fields": {
+        "component": 1576,
+        "ingredient": 3259,
+        "date": "2016-09-02"
     }
 },
 {
@@ -1686,6 +2111,13 @@
     "pk": 467,
     "fields": {
         "date": "2016-09-01"
+    }
+},
+{
+    "model": "meal.menu",
+    "pk": 468,
+    "fields": {
+        "date": "2016-09-02"
     }
 },
 {
@@ -2522,7 +2954,7 @@
 },
 {
     "model": "meal.menu_component",
-    "pk": 3603,
+    "pk": 3610,
     "fields": {
         "menu": 467,
         "component": 1576
@@ -2530,7 +2962,7 @@
 },
 {
     "model": "meal.menu_component",
-    "pk": 3604,
+    "pk": 3611,
     "fields": {
         "menu": 467,
         "component": 1578
@@ -2538,7 +2970,7 @@
 },
 {
     "model": "meal.menu_component",
-    "pk": 3605,
+    "pk": 3612,
     "fields": {
         "menu": 467,
         "component": 1579
@@ -2546,7 +2978,7 @@
 },
 {
     "model": "meal.menu_component",
-    "pk": 3606,
+    "pk": 3613,
     "fields": {
         "menu": 467,
         "component": 1580
@@ -2554,7 +2986,7 @@
 },
 {
     "model": "meal.menu_component",
-    "pk": 3607,
+    "pk": 3614,
     "fields": {
         "menu": 467,
         "component": 1581
@@ -2562,7 +2994,7 @@
 },
 {
     "model": "meal.menu_component",
-    "pk": 3608,
+    "pk": 3615,
     "fields": {
         "menu": 467,
         "component": 1582
@@ -2570,670 +3002,66 @@
 },
 {
     "model": "meal.menu_component",
-    "pk": 3609,
+    "pk": 3616,
     "fields": {
         "menu": 467,
         "component": 1583
     }
 },
 {
-    "model": "member.member",
-    "pk": 861,
+    "model": "meal.menu_component",
+    "pk": 3631,
     "fields": {
-        "firstname": "John",
-        "lastname": "Doe",
-        "address": 508,
-        "created_at": "2016-08-12T12:04:20.783Z",
-        "updated_at": "2016-08-12T12:04:20.783Z"
-    }
-},
-{
-    "model": "member.member",
-    "pk": 862,
-    "fields": {
-        "firstname": "Louise",
-        "lastname": "Dallaire",
-        "address": 509,
-        "created_at": "2016-08-12T12:04:20.799Z",
-        "updated_at": "2016-08-12T12:04:20.799Z"
-    }
-},
-{
-    "model": "member.member",
-    "pk": 863,
-    "fields": {
-        "firstname": "Paul",
-        "lastname": "Taylor",
-        "address": 511,
-        "created_at": "2016-08-12T12:04:20.799Z",
-        "updated_at": "2016-08-12T12:04:20.799Z"
-    }
-},
-{
-    "model": "member.member",
-    "pk": 864,
-    "fields": {
-        "firstname": "Peter",
-        "lastname": "Murray",
-        "address": 510,
-        "created_at": "2016-08-12T12:04:20.815Z",
-        "updated_at": "2016-08-12T12:04:20.815Z"
-    }
-},
-{
-    "model": "member.member",
-    "pk": 865,
-    "fields": {
-        "firstname": "Dr. Lucie",
-        "lastname": "Tremblay",
-        "address": null,
-        "created_at": "2016-08-12T12:04:20.815Z",
-        "updated_at": "2016-08-12T12:04:20.815Z"
-    }
-},
-{
-    "model": "member.member",
-    "pk": 866,
-    "fields": {
-        "firstname": "Dr. Mary",
-        "lastname": "Johnson",
-        "address": null,
-        "created_at": "2016-08-12T12:04:20.830Z",
-        "updated_at": "2016-08-12T12:04:20.830Z"
-    }
-},
-{
-    "model": "member.member",
-    "pk": 867,
-    "fields": {
-        "firstname": "Bob",
-        "lastname": "Brown",
-        "address": 510,
-        "created_at": "2016-08-12T12:04:20.830Z",
-        "updated_at": "2016-08-12T12:04:20.830Z"
-    }
-},
-{
-    "model": "member.member",
-    "pk": 868,
-    "fields": {
-        "firstname": "Kevin",
-        "lastname": "Tracy",
-        "address": 511,
-        "created_at": "2016-08-12T12:04:20.846Z",
-        "updated_at": "2016-08-12T12:04:20.846Z"
-    }
-},
-{
-    "model": "member.member",
-    "pk": 869,
-    "fields": {
-        "firstname": "Roger",
-        "lastname": "Blondin",
-        "address": 509,
-        "created_at": "2016-08-12T12:04:20.846Z",
-        "updated_at": "2016-08-12T12:04:20.846Z"
-    }
-},
-{
-    "model": "member.member",
-    "pk": 870,
-    "fields": {
-        "firstname": "Mario",
-        "lastname": "Rossi",
-        "address": 512,
-        "created_at": "2016-08-31T12:06:06.250Z",
-        "updated_at": "2016-08-31T12:06:06.277Z"
-    }
-},
-{
-    "model": "member.address",
-    "pk": 508,
-    "fields": {
-        "number": 2444,
-        "street": "Des Perdrix",
-        "apartment": "407",
-        "floor": 10,
-        "city": "Montreal",
-        "postal_code": "H1A2B3",
-        "longitude": null,
-        "latitude": null,
-        "distance": null
-    }
-},
-{
-    "model": "member.address",
-    "pk": 509,
-    "fields": {
-        "number": 1244,
-        "street": "Des Hirondelles",
-        "apartment": "4",
-        "floor": null,
-        "city": "Montreal",
-        "postal_code": "H3D4G6",
-        "longitude": null,
-        "latitude": null,
-        "distance": null
-    }
-},
-{
-    "model": "member.address",
-    "pk": 510,
-    "fields": {
-        "number": 543,
-        "street": "Des \u00c9perviers",
-        "apartment": "",
-        "floor": null,
-        "city": "Montreal",
-        "postal_code": "H4E3WS",
-        "longitude": null,
-        "latitude": null,
-        "distance": null
-    }
-},
-{
-    "model": "member.address",
-    "pk": 511,
-    "fields": {
-        "number": 4218,
-        "street": "4218 Avenue Madison",
-        "apartment": "1",
-        "floor": null,
-        "city": "Montreal",
-        "postal_code": "H4B2T9",
-        "longitude": "-73.634610",
-        "latitude": "45.469894",
-        "distance": "6.957810"
-    }
-},
-{
-    "model": "member.address",
-    "pk": 512,
-    "fields": {
-        "number": 4194,
-        "street": "4194 Avenue Kensington",
-        "apartment": "",
-        "floor": null,
-        "city": "Montreal",
-        "postal_code": "H4B 2W",
-        "longitude": "-73.628281",
-        "latitude": "45.468036",
-        "distance": "6.802049"
-    }
-},
-{
-    "model": "member.contact",
-    "pk": 383,
-    "fields": {
-        "type": "Home phone",
-        "value": "514-345-6789",
-        "member": 861
-    }
-},
-{
-    "model": "member.contact",
-    "pk": 384,
-    "fields": {
-        "type": "Cell phone",
-        "value": "438-234-4567",
-        "member": 862
-    }
-},
-{
-    "model": "member.contact",
-    "pk": 385,
-    "fields": {
-        "type": "Home phone",
-        "value": "514-654-1289",
-        "member": 864
-    }
-},
-{
-    "model": "member.contact",
-    "pk": 386,
-    "fields": {
-        "type": "Home phone",
-        "value": "514-653-1225",
-        "member": 870
-    }
-},
-{
-    "model": "member.contact",
-    "pk": 387,
-    "fields": {
-        "type": "Home phone",
-        "value": "514-987-5443",
-        "member": 861
-    }
-},
-{
-    "model": "member.route",
-    "pk": 4,
-    "fields": {
-        "name": "ndg",
-        "description": "",
-        "client_id_sequence": "{\n  \"2\": [\n    870,\n    612,\n    611,\n    610,\n    609,\n    608,\n    607,\n    606\n  ],\n  \"3\": [\n    607,\n    610,\n    611,\n    612,\n    606,\n    608,\n    609\n  ]\n}"
-    }
-},
-{
-    "model": "member.route",
-    "pk": 5,
-    "fields": {
-        "name": "mile_end",
-        "description": "",
-        "client_id_sequence": "{\n  \"2\": []\n}"
-    }
-},
-{
-    "model": "member.client",
-    "pk": 606,
-    "fields": {
-        "billing_member": 862,
-        "billing_payment_type": "check",
-        "rate_type": "default",
-        "member": 861,
-        "emergency_contact": 863,
-        "emergency_contact_relationship": "Nephew",
-        "status": "A",
-        "language": "en",
-        "alert": "",
-        "delivery_type": "O",
-        "gender": "M",
-        "birthdate": "1940-02-23",
-        "route": 4,
-        "meal_default_week": "{\n  \"compote_friday_quantity\": 0,\n  \"compote_monday_quantity\": 0,\n  \"compote_saturday_quantity\": 0,\n  \"compote_sunday_quantity\": 0,\n  \"compote_thursday_quantity\": 0,\n  \"compote_tuesday_quantity\": 0,\n  \"compote_wednesday_quantity\": 0,\n  \"dessert_friday_quantity\": 1,\n  \"dessert_monday_quantity\": 1,\n  \"dessert_saturday_quantity\": 1,\n  \"dessert_sunday_quantity\": 1,\n  \"dessert_thursday_quantity\": 1,\n  \"dessert_tuesday_quantity\": 1,\n  \"dessert_wednesday_quantity\": 1,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 1,\n  \"green_salad_monday_quantity\": 1,\n  \"green_salad_saturday_quantity\": 1,\n  \"green_salad_sunday_quantity\": 1,\n  \"green_salad_thursday_quantity\": 1,\n  \"green_salad_tuesday_quantity\": 1,\n  \"green_salad_wednesday_quantity\": 1,\n  \"main_dish_friday_quantity\": 2,\n  \"main_dish_monday_quantity\": 2,\n  \"main_dish_saturday_quantity\": 2,\n  \"main_dish_sunday_quantity\": 2,\n  \"main_dish_thursday_quantity\": 2,\n  \"main_dish_tuesday_quantity\": 2,\n  \"main_dish_wednesday_quantity\": 2,\n  \"pudding_friday_quantity\": 1,\n  \"pudding_monday_quantity\": 1,\n  \"pudding_saturday_quantity\": 1,\n  \"pudding_sunday_quantity\": 1,\n  \"pudding_thursday_quantity\": 1,\n  \"pudding_tuesday_quantity\": 1,\n  \"pudding_wednesday_quantity\": 1,\n  \"size_friday\": \"L\",\n  \"size_monday\": \"L\",\n  \"size_saturday\": \"L\",\n  \"size_sunday\": \"L\",\n  \"size_thursday\": \"L\",\n  \"size_tuesday\": \"L\",\n  \"size_wednesday\": \"L\"\n}",
-        "delivery_note": ""
-    }
-},
-{
-    "model": "member.client",
-    "pk": 607,
-    "fields": {
-        "billing_member": 864,
-        "billing_payment_type": "check",
-        "rate_type": "default",
-        "member": 864,
-        "emergency_contact": 861,
-        "emergency_contact_relationship": "Friend",
-        "status": "A",
-        "language": "en",
-        "alert": "",
-        "delivery_type": "O",
-        "gender": "M",
-        "birthdate": "1945-12-13",
-        "route": 4,
-        "meal_default_week": "{\n  \"compote_friday_quantity\": 0,\n  \"compote_monday_quantity\": 0,\n  \"compote_saturday_quantity\": 0,\n  \"compote_sunday_quantity\": 0,\n  \"compote_thursday_quantity\": 0,\n  \"compote_tuesday_quantity\": 0,\n  \"compote_wednesday_quantity\": 0,\n  \"dessert_friday_quantity\": 1,\n  \"dessert_monday_quantity\": 1,\n  \"dessert_saturday_quantity\": 1,\n  \"dessert_sunday_quantity\": 1,\n  \"dessert_thursday_quantity\": 1,\n  \"dessert_tuesday_quantity\": 1,\n  \"dessert_wednesday_quantity\": 1,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
-        "delivery_note": ""
-    }
-},
-{
-    "model": "member.client",
-    "pk": 608,
-    "fields": {
-        "billing_member": 862,
-        "billing_payment_type": "check",
-        "rate_type": "default",
-        "member": 862,
-        "emergency_contact": 864,
-        "emergency_contact_relationship": "Friend",
-        "status": "A",
-        "language": "en",
-        "alert": "",
-        "delivery_type": "O",
-        "gender": "M",
-        "birthdate": "1943-12-13",
-        "route": 4,
-        "meal_default_week": "{\n  \"compote_friday_quantity\": 0,\n  \"compote_monday_quantity\": 0,\n  \"compote_saturday_quantity\": 0,\n  \"compote_sunday_quantity\": 0,\n  \"compote_thursday_quantity\": 0,\n  \"compote_tuesday_quantity\": 0,\n  \"compote_wednesday_quantity\": 0,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 2,\n  \"green_salad_monday_quantity\": 2,\n  \"green_salad_saturday_quantity\": 2,\n  \"green_salad_sunday_quantity\": 2,\n  \"green_salad_thursday_quantity\": 2,\n  \"green_salad_tuesday_quantity\": 2,\n  \"green_salad_wednesday_quantity\": 2,\n  \"main_dish_friday_quantity\": 2,\n  \"main_dish_monday_quantity\": 2,\n  \"main_dish_saturday_quantity\": 2,\n  \"main_dish_sunday_quantity\": 2,\n  \"main_dish_thursday_quantity\": 2,\n  \"main_dish_tuesday_quantity\": 2,\n  \"main_dish_wednesday_quantity\": 2,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
-        "delivery_note": ""
-    }
-},
-{
-    "model": "member.client",
-    "pk": 609,
-    "fields": {
-        "billing_member": 863,
-        "billing_payment_type": "check",
-        "rate_type": "default",
-        "member": 863,
-        "emergency_contact": 862,
-        "emergency_contact_relationship": "Friend",
-        "status": "A",
-        "language": "en",
-        "alert": "",
-        "delivery_type": "O",
-        "gender": "M",
-        "birthdate": "1943-12-13",
-        "route": 4,
-        "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"L\",\n  \"size_monday\": \"L\",\n  \"size_saturday\": \"L\",\n  \"size_sunday\": \"L\",\n  \"size_thursday\": \"L\",\n  \"size_tuesday\": \"L\",\n  \"size_wednesday\": \"L\"\n}",
-        "delivery_note": "The door key is hidden under the pink geranium planter."
-    }
-},
-{
-    "model": "member.client",
-    "pk": 610,
-    "fields": {
-        "billing_member": 867,
-        "billing_payment_type": "check",
-        "rate_type": "default",
-        "member": 867,
-        "emergency_contact": 868,
-        "emergency_contact_relationship": "Friend",
-        "status": "A",
-        "language": "en",
-        "alert": "",
-        "delivery_type": "O",
-        "gender": "M",
-        "birthdate": "1943-12-13",
-        "route": 4,
-        "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"L\",\n  \"size_monday\": \"L\",\n  \"size_saturday\": \"L\",\n  \"size_sunday\": \"L\",\n  \"size_thursday\": \"L\",\n  \"size_tuesday\": \"L\",\n  \"size_wednesday\": \"L\"\n}",
-        "delivery_note": ""
-    }
-},
-{
-    "model": "member.client",
-    "pk": 611,
-    "fields": {
-        "billing_member": 868,
-        "billing_payment_type": "check",
-        "rate_type": "default",
-        "member": 868,
-        "emergency_contact": 867,
-        "emergency_contact_relationship": "Friend",
-        "status": "A",
-        "language": "en",
-        "alert": "",
-        "delivery_type": "O",
-        "gender": "M",
-        "birthdate": "1943-12-13",
-        "route": 4,
-        "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
-        "delivery_note": ""
-    }
-},
-{
-    "model": "member.client",
-    "pk": 612,
-    "fields": {
-        "billing_member": 869,
-        "billing_payment_type": "check",
-        "rate_type": "default",
-        "member": 869,
-        "emergency_contact": 868,
-        "emergency_contact_relationship": "Friend",
-        "status": "A",
-        "language": "en",
-        "alert": "",
-        "delivery_type": "O",
-        "gender": "M",
-        "birthdate": "1943-12-13",
-        "route": 4,
-        "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
-        "delivery_note": ""
-    }
-},
-{
-    "model": "member.client",
-    "pk": 870,
-    "fields": {
-        "billing_member": 870,
-        "billing_payment_type": "check",
-        "rate_type": "default",
-        "member": 870,
-        "emergency_contact": 861,
-        "emergency_contact_relationship": null,
-        "status": "A",
-        "language": "en",
-        "alert": "",
-        "delivery_type": "O",
-        "gender": "M",
-        "birthdate": "1940-03-12",
-        "route": 4,
-        "meal_default_week": "{\n  \"compote_friday_quantity\": null,\n  \"compote_monday_quantity\": null,\n  \"compote_saturday_quantity\": null,\n  \"compote_sunday_quantity\": null,\n  \"compote_thursday_quantity\": null,\n  \"compote_tuesday_quantity\": null,\n  \"compote_wednesday_quantity\": null,\n  \"dessert_friday_quantity\": null,\n  \"dessert_monday_quantity\": null,\n  \"dessert_saturday_quantity\": null,\n  \"dessert_sunday_quantity\": null,\n  \"dessert_thursday_quantity\": null,\n  \"dessert_tuesday_quantity\": null,\n  \"dessert_wednesday_quantity\": null,\n  \"diabetic_friday_quantity\": null,\n  \"diabetic_monday_quantity\": null,\n  \"diabetic_saturday_quantity\": null,\n  \"diabetic_sunday_quantity\": null,\n  \"diabetic_thursday_quantity\": null,\n  \"diabetic_tuesday_quantity\": null,\n  \"diabetic_wednesday_quantity\": null,\n  \"fruit_salad_friday_quantity\": null,\n  \"fruit_salad_monday_quantity\": null,\n  \"fruit_salad_saturday_quantity\": null,\n  \"fruit_salad_sunday_quantity\": null,\n  \"fruit_salad_thursday_quantity\": null,\n  \"fruit_salad_tuesday_quantity\": null,\n  \"fruit_salad_wednesday_quantity\": null,\n  \"green_salad_friday_quantity\": null,\n  \"green_salad_monday_quantity\": null,\n  \"green_salad_saturday_quantity\": null,\n  \"green_salad_sunday_quantity\": null,\n  \"green_salad_thursday_quantity\": null,\n  \"green_salad_tuesday_quantity\": null,\n  \"green_salad_wednesday_quantity\": null,\n  \"main_dish_friday_quantity\": null,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": null,\n  \"main_dish_sunday_quantity\": null,\n  \"main_dish_thursday_quantity\": null,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": null,\n  \"pudding_monday_quantity\": null,\n  \"pudding_saturday_quantity\": null,\n  \"pudding_sunday_quantity\": null,\n  \"pudding_thursday_quantity\": null,\n  \"pudding_tuesday_quantity\": null,\n  \"pudding_wednesday_quantity\": null,\n  \"size_friday\": null,\n  \"size_monday\": \"R\",\n  \"size_saturday\": null,\n  \"size_sunday\": null,\n  \"size_thursday\": null,\n  \"size_tuesday\": null,\n  \"size_wednesday\": \"R\"\n}",
-        "delivery_note": "Ring door bell many times."
-    }
-},
-{
-    "model": "member.clientscheduledstatus",
-    "pk": 1,
-    "fields": {
-        "client": 870,
-        "linked_scheduled_status": null,
-        "status_from": "D",
-        "status_to": "A",
-        "reason": "He deserves it.",
-        "change_date": "2016-08-31",
-        "change_state": "START",
-        "operation_status": "PRO"
-    }
-},
-{
-    "model": "member.referencing",
-    "pk": 255,
-    "fields": {
-        "referent": 865,
-        "client": 606,
-        "referral_reason": "Can hardly walk.",
-        "work_information": "CHUM H\u00f4tel-Dieu",
-        "date": "2015-11-02"
-    }
-},
-{
-    "model": "member.referencing",
-    "pk": 256,
-    "fields": {
-        "referent": 866,
-        "client": 607,
-        "referral_reason": "Had an operation.",
-        "work_information": "CUSM",
-        "date": "2014-01-12"
-    }
-},
-{
-    "model": "member.referencing",
-    "pk": 257,
-    "fields": {
-        "referent": 865,
-        "client": 609,
-        "referral_reason": "Needs help.",
-        "work_information": "",
-        "date": "2016-05-04"
-    }
-},
-{
-    "model": "member.referencing",
-    "pk": 258,
-    "fields": {
-        "referent": 870,
-        "client": 870,
-        "referral_reason": "Needs help.",
-        "work_information": "CHUM",
-        "date": "2016-06-07"
-    }
-},
-{
-    "model": "member.option",
-    "pk": 883,
-    "fields": {
-        "name": "Fruit Salad",
-        "description": "",
-        "option_group": "side dish"
-    }
-},
-{
-    "model": "member.option",
-    "pk": 884,
-    "fields": {
-        "name": "Green Salad",
-        "description": "",
-        "option_group": "side dish"
-    }
-},
-{
-    "model": "member.option",
-    "pk": 885,
-    "fields": {
-        "name": "Dessert",
-        "description": "",
-        "option_group": "side dish"
-    }
-},
-{
-    "model": "member.option",
-    "pk": 886,
-    "fields": {
-        "name": "Pudding",
-        "description": "",
-        "option_group": "side dish"
-    }
-},
-{
-    "model": "member.option",
-    "pk": 887,
-    "fields": {
-        "name": "Diabetic dessert",
-        "description": "",
-        "option_group": "side dish"
-    }
-},
-{
-    "model": "member.option",
-    "pk": 888,
-    "fields": {
-        "name": "Puree all",
-        "description": "",
-        "option_group": "preparation"
-    }
-},
-{
-    "model": "member.option",
-    "pk": 889,
-    "fields": {
-        "name": "Cut up meat",
-        "description": "",
-        "option_group": "preparation"
-    }
-},
-{
-    "model": "member.client_option",
-    "pk": 507,
-    "fields": {
-        "client": 606,
-        "option": 886,
-        "value": null
-    }
-},
-{
-    "model": "member.client_option",
-    "pk": 508,
-    "fields": {
-        "client": 607,
-        "option": 885,
-        "value": null
-    }
-},
-{
-    "model": "member.client_option",
-    "pk": 509,
-    "fields": {
-        "client": 608,
-        "option": 889,
-        "value": null
-    }
-},
-{
-    "model": "member.restriction",
-    "pk": 412,
-    "fields": {
-        "client": 606,
-        "restricted_item": 1012
-    }
-},
-{
-    "model": "member.restriction",
-    "pk": 413,
-    "fields": {
-        "client": 606,
-        "restricted_item": 1010
-    }
-},
-{
-    "model": "member.restriction",
-    "pk": 415,
-    "fields": {
-        "client": 611,
-        "restricted_item": 1015
-    }
-},
-{
-    "model": "member.client_avoid_ingredient",
-    "pk": 410,
-    "fields": {
-        "client": 609,
-        "ingredient": 3237
-    }
-},
-{
-    "model": "member.client_avoid_ingredient",
-    "pk": 411,
-    "fields": {
-        "client": 609,
-        "ingredient": 3246
-    }
-},
-{
-    "model": "member.client_avoid_ingredient",
-    "pk": 412,
-    "fields": {
-        "client": 609,
-        "ingredient": 3239
-    }
-},
-{
-    "model": "member.client_avoid_ingredient",
-    "pk": 413,
-    "fields": {
-        "client": 612,
-        "ingredient": 3239
-    }
-},
-{
-    "model": "member.client_avoid_ingredient",
-    "pk": 414,
-    "fields": {
-        "client": 612,
-        "ingredient": 3237
-    }
-},
-{
-    "model": "member.client_avoid_component",
-    "pk": 382,
-    "fields": {
-        "client": 609,
-        "component": 1571
-    }
-},
-{
-    "model": "member.client_avoid_component",
-    "pk": 383,
-    "fields": {
-        "client": 609,
-        "component": 1577
-    }
-},
-{
-    "model": "member.client_avoid_component",
-    "pk": 384,
-    "fields": {
-        "client": 609,
-        "component": 1573
-    }
-},
-{
-    "model": "member.client_avoid_component",
-    "pk": 385,
-    "fields": {
-        "client": 610,
+        "menu": 468,
         "component": 1576
+    }
+},
+{
+    "model": "meal.menu_component",
+    "pk": 3632,
+    "fields": {
+        "menu": 468,
+        "component": 1578
+    }
+},
+{
+    "model": "meal.menu_component",
+    "pk": 3633,
+    "fields": {
+        "menu": 468,
+        "component": 1579
+    }
+},
+{
+    "model": "meal.menu_component",
+    "pk": 3634,
+    "fields": {
+        "menu": 468,
+        "component": 1580
+    }
+},
+{
+    "model": "meal.menu_component",
+    "pk": 3635,
+    "fields": {
+        "menu": 468,
+        "component": 1581
+    }
+},
+{
+    "model": "meal.menu_component",
+    "pk": 3636,
+    "fields": {
+        "menu": 468,
+        "component": 1582
+    }
+},
+{
+    "model": "meal.menu_component",
+    "pk": 3637,
+    "fields": {
+        "menu": 468,
+        "component": 1583
     }
 },
 {
@@ -4432,6 +4260,76 @@
     "fields": {
         "creation_date": "2016-09-01",
         "delivery_date": "2016-09-01",
+        "status": "O",
+        "client": 612
+    }
+},
+{
+    "model": "order.order",
+    "pk": 932,
+    "fields": {
+        "creation_date": "2016-09-02",
+        "delivery_date": "2016-09-02",
+        "status": "O",
+        "client": 606
+    }
+},
+{
+    "model": "order.order",
+    "pk": 933,
+    "fields": {
+        "creation_date": "2016-09-02",
+        "delivery_date": "2016-09-02",
+        "status": "O",
+        "client": 607
+    }
+},
+{
+    "model": "order.order",
+    "pk": 934,
+    "fields": {
+        "creation_date": "2016-09-02",
+        "delivery_date": "2016-09-02",
+        "status": "O",
+        "client": 608
+    }
+},
+{
+    "model": "order.order",
+    "pk": 935,
+    "fields": {
+        "creation_date": "2016-09-02",
+        "delivery_date": "2016-09-02",
+        "status": "O",
+        "client": 609
+    }
+},
+{
+    "model": "order.order",
+    "pk": 936,
+    "fields": {
+        "creation_date": "2016-09-02",
+        "delivery_date": "2016-09-02",
+        "status": "O",
+        "client": 610
+    }
+},
+{
+    "model": "order.order",
+    "pk": 937,
+    "fields": {
+        "creation_date": "2016-09-02",
+        "delivery_date": "2016-09-02",
+        "status": "O",
+        "client": 611
+    }
+},
+{
+    "model": "order.order",
+    "pk": 938,
+    "fields": {
+        "creation_date": "2016-09-02",
+        "delivery_date": "2016-09-02",
         "status": "O",
         "client": 612
     }
@@ -8517,1470 +8415,243 @@
     }
 },
 {
-    "model": "auth.permission",
-    "pk": 1,
-    "fields": {
-        "name": "Can add log entry",
-        "content_type": 1,
-        "codename": "add_logentry"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 2,
-    "fields": {
-        "name": "Can change log entry",
-        "content_type": 1,
-        "codename": "change_logentry"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 3,
-    "fields": {
-        "name": "Can delete log entry",
-        "content_type": 1,
-        "codename": "delete_logentry"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 4,
-    "fields": {
-        "name": "Can add permission",
-        "content_type": 2,
-        "codename": "add_permission"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 5,
-    "fields": {
-        "name": "Can change permission",
-        "content_type": 2,
-        "codename": "change_permission"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 6,
-    "fields": {
-        "name": "Can delete permission",
-        "content_type": 2,
-        "codename": "delete_permission"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 7,
-    "fields": {
-        "name": "Can add group",
-        "content_type": 3,
-        "codename": "add_group"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 8,
-    "fields": {
-        "name": "Can change group",
-        "content_type": 3,
-        "codename": "change_group"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 9,
-    "fields": {
-        "name": "Can delete group",
-        "content_type": 3,
-        "codename": "delete_group"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 10,
-    "fields": {
-        "name": "Can add user",
-        "content_type": 4,
-        "codename": "add_user"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 11,
-    "fields": {
-        "name": "Can change user",
-        "content_type": 4,
-        "codename": "change_user"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 12,
-    "fields": {
-        "name": "Can delete user",
-        "content_type": 4,
-        "codename": "delete_user"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 13,
-    "fields": {
-        "name": "Can add content type",
-        "content_type": 5,
-        "codename": "add_contenttype"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 14,
-    "fields": {
-        "name": "Can change content type",
-        "content_type": 5,
-        "codename": "change_contenttype"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 15,
-    "fields": {
-        "name": "Can delete content type",
-        "content_type": 5,
-        "codename": "delete_contenttype"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 16,
-    "fields": {
-        "name": "Can add session",
-        "content_type": 6,
-        "codename": "add_session"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 17,
-    "fields": {
-        "name": "Can change session",
-        "content_type": 6,
-        "codename": "change_session"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 18,
-    "fields": {
-        "name": "Can delete session",
-        "content_type": 6,
-        "codename": "delete_session"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 19,
-    "fields": {
-        "name": "Can add ingredient",
-        "content_type": 7,
-        "codename": "add_ingredient"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 20,
-    "fields": {
-        "name": "Can change ingredient",
-        "content_type": 7,
-        "codename": "change_ingredient"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 21,
-    "fields": {
-        "name": "Can delete ingredient",
-        "content_type": 7,
-        "codename": "delete_ingredient"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 22,
-    "fields": {
-        "name": "Can add component",
-        "content_type": 8,
-        "codename": "add_component"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 23,
-    "fields": {
-        "name": "Can change component",
-        "content_type": 8,
-        "codename": "change_component"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 24,
-    "fields": {
-        "name": "Can delete component",
-        "content_type": 8,
-        "codename": "delete_component"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 25,
-    "fields": {
-        "name": "Can add component_ingredient",
-        "content_type": 9,
-        "codename": "add_component_ingredient"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 26,
-    "fields": {
-        "name": "Can change component_ingredient",
-        "content_type": 9,
-        "codename": "change_component_ingredient"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 27,
-    "fields": {
-        "name": "Can delete component_ingredient",
-        "content_type": 9,
-        "codename": "delete_component_ingredient"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 28,
-    "fields": {
-        "name": "Can add restricted_item",
-        "content_type": 10,
-        "codename": "add_restricted_item"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 29,
-    "fields": {
-        "name": "Can change restricted_item",
-        "content_type": 10,
-        "codename": "change_restricted_item"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 30,
-    "fields": {
-        "name": "Can delete restricted_item",
-        "content_type": 10,
-        "codename": "delete_restricted_item"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 31,
-    "fields": {
-        "name": "Can add incompatibility",
-        "content_type": 11,
-        "codename": "add_incompatibility"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 32,
-    "fields": {
-        "name": "Can change incompatibility",
-        "content_type": 11,
-        "codename": "change_incompatibility"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 33,
-    "fields": {
-        "name": "Can delete incompatibility",
-        "content_type": 11,
-        "codename": "delete_incompatibility"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 34,
-    "fields": {
-        "name": "Can add menu",
-        "content_type": 12,
-        "codename": "add_menu"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 35,
-    "fields": {
-        "name": "Can change menu",
-        "content_type": 12,
-        "codename": "change_menu"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 36,
-    "fields": {
-        "name": "Can delete menu",
-        "content_type": 12,
-        "codename": "delete_menu"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 37,
-    "fields": {
-        "name": "Can add menu_component",
-        "content_type": 13,
-        "codename": "add_menu_component"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 38,
-    "fields": {
-        "name": "Can change menu_component",
-        "content_type": 13,
-        "codename": "change_menu_component"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 39,
-    "fields": {
-        "name": "Can delete menu_component",
-        "content_type": 13,
-        "codename": "delete_menu_component"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 40,
-    "fields": {
-        "name": "Can add member",
-        "content_type": 14,
-        "codename": "add_member"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 41,
-    "fields": {
-        "name": "Can change member",
-        "content_type": 14,
-        "codename": "change_member"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 42,
-    "fields": {
-        "name": "Can delete member",
-        "content_type": 14,
-        "codename": "delete_member"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 43,
-    "fields": {
-        "name": "Can add address",
-        "content_type": 15,
-        "codename": "add_address"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 44,
-    "fields": {
-        "name": "Can change address",
-        "content_type": 15,
-        "codename": "change_address"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 45,
-    "fields": {
-        "name": "Can delete address",
-        "content_type": 15,
-        "codename": "delete_address"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 46,
-    "fields": {
-        "name": "Can add contact",
-        "content_type": 16,
-        "codename": "add_contact"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 47,
-    "fields": {
-        "name": "Can change contact",
-        "content_type": 16,
-        "codename": "change_contact"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 48,
-    "fields": {
-        "name": "Can delete contact",
-        "content_type": 16,
-        "codename": "delete_contact"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 49,
-    "fields": {
-        "name": "Can add route",
-        "content_type": 17,
-        "codename": "add_route"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 50,
-    "fields": {
-        "name": "Can change route",
-        "content_type": 17,
-        "codename": "change_route"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 51,
-    "fields": {
-        "name": "Can delete route",
-        "content_type": 17,
-        "codename": "delete_route"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 52,
-    "fields": {
-        "name": "Can add client",
-        "content_type": 18,
-        "codename": "add_client"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 53,
-    "fields": {
-        "name": "Can change client",
-        "content_type": 18,
-        "codename": "change_client"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 54,
-    "fields": {
-        "name": "Can delete client",
-        "content_type": 18,
-        "codename": "delete_client"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 55,
-    "fields": {
-        "name": "Can add client scheduled status",
-        "content_type": 19,
-        "codename": "add_clientscheduledstatus"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 56,
-    "fields": {
-        "name": "Can change client scheduled status",
-        "content_type": 19,
-        "codename": "change_clientscheduledstatus"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 57,
-    "fields": {
-        "name": "Can delete client scheduled status",
-        "content_type": 19,
-        "codename": "delete_clientscheduledstatus"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 58,
-    "fields": {
-        "name": "Can add referencing",
-        "content_type": 20,
-        "codename": "add_referencing"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 59,
-    "fields": {
-        "name": "Can change referencing",
-        "content_type": 20,
-        "codename": "change_referencing"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 60,
-    "fields": {
-        "name": "Can delete referencing",
-        "content_type": 20,
-        "codename": "delete_referencing"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 61,
-    "fields": {
-        "name": "Can add option",
-        "content_type": 21,
-        "codename": "add_option"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 62,
-    "fields": {
-        "name": "Can change option",
-        "content_type": 21,
-        "codename": "change_option"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 63,
-    "fields": {
-        "name": "Can delete option",
-        "content_type": 21,
-        "codename": "delete_option"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 64,
-    "fields": {
-        "name": "Can add client_option",
-        "content_type": 22,
-        "codename": "add_client_option"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 65,
-    "fields": {
-        "name": "Can change client_option",
-        "content_type": 22,
-        "codename": "change_client_option"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 66,
-    "fields": {
-        "name": "Can delete client_option",
-        "content_type": 22,
-        "codename": "delete_client_option"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 67,
-    "fields": {
-        "name": "Can add restriction",
-        "content_type": 23,
-        "codename": "add_restriction"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 68,
-    "fields": {
-        "name": "Can change restriction",
-        "content_type": 23,
-        "codename": "change_restriction"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 69,
-    "fields": {
-        "name": "Can delete restriction",
-        "content_type": 23,
-        "codename": "delete_restriction"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 70,
-    "fields": {
-        "name": "Can add client_avoid_ingredient",
-        "content_type": 24,
-        "codename": "add_client_avoid_ingredient"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 71,
-    "fields": {
-        "name": "Can change client_avoid_ingredient",
-        "content_type": 24,
-        "codename": "change_client_avoid_ingredient"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 72,
-    "fields": {
-        "name": "Can delete client_avoid_ingredient",
-        "content_type": 24,
-        "codename": "delete_client_avoid_ingredient"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 73,
-    "fields": {
-        "name": "Can add client_avoid_component",
-        "content_type": 25,
-        "codename": "add_client_avoid_component"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 74,
-    "fields": {
-        "name": "Can change client_avoid_component",
-        "content_type": 25,
-        "codename": "change_client_avoid_component"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 75,
-    "fields": {
-        "name": "Can delete client_avoid_component",
-        "content_type": 25,
-        "codename": "delete_client_avoid_component"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 76,
-    "fields": {
-        "name": "Can add order",
-        "content_type": 26,
-        "codename": "add_order"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 77,
-    "fields": {
-        "name": "Can change order",
-        "content_type": 26,
-        "codename": "change_order"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 78,
-    "fields": {
-        "name": "Can delete order",
-        "content_type": 26,
-        "codename": "delete_order"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 79,
-    "fields": {
-        "name": "Can add order_item",
-        "content_type": 27,
-        "codename": "add_order_item"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 80,
-    "fields": {
-        "name": "Can change order_item",
-        "content_type": 27,
-        "codename": "change_order_item"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 81,
-    "fields": {
-        "name": "Can delete order_item",
-        "content_type": 27,
-        "codename": "delete_order_item"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 82,
-    "fields": {
-        "name": "Can add notification",
-        "content_type": 28,
-        "codename": "add_notification"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 83,
-    "fields": {
-        "name": "Can change notification",
-        "content_type": 28,
-        "codename": "change_notification"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 84,
-    "fields": {
-        "name": "Can delete notification",
-        "content_type": 28,
-        "codename": "delete_notification"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 85,
-    "fields": {
-        "name": "Can add delivery",
-        "content_type": 29,
-        "codename": "add_delivery"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 86,
-    "fields": {
-        "name": "Can change delivery",
-        "content_type": 29,
-        "codename": "change_delivery"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 87,
-    "fields": {
-        "name": "Can delete delivery",
-        "content_type": 29,
-        "codename": "delete_delivery"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 88,
-    "fields": {
-        "name": "Can add note",
-        "content_type": 30,
-        "codename": "add_note"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 89,
-    "fields": {
-        "name": "Can change note",
-        "content_type": 30,
-        "codename": "change_note"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 90,
-    "fields": {
-        "name": "Can delete note",
-        "content_type": 30,
-        "codename": "delete_note"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 91,
-    "fields": {
-        "name": "Can add order billing",
-        "content_type": 31,
-        "codename": "add_orderbilling"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 92,
-    "fields": {
-        "name": "Can change order billing",
-        "content_type": 31,
-        "codename": "change_orderbilling"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 93,
-    "fields": {
-        "name": "Can delete order billing",
-        "content_type": 31,
-        "codename": "delete_orderbilling"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 94,
-    "fields": {
-        "name": "Can add billing",
-        "content_type": 32,
-        "codename": "add_billing"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 95,
-    "fields": {
-        "name": "Can change billing",
-        "content_type": 32,
-        "codename": "change_billing"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 96,
-    "fields": {
-        "name": "Can delete billing",
-        "content_type": 32,
-        "codename": "delete_billing"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 97,
-    "fields": {
-        "name": "Can add billing summary",
-        "content_type": 33,
-        "codename": "add_billingsummary"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 98,
-    "fields": {
-        "name": "Can change billing summary",
-        "content_type": 33,
-        "codename": "change_billingsummary"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 99,
-    "fields": {
-        "name": "Can delete billing summary",
-        "content_type": 33,
-        "codename": "delete_billingsummary"
-    }
-},
-{
-    "model": "auth.user",
-    "pk": 1,
-    "fields": {
-        "password": "pbkdf2_sha256$24000$nyIvW5Kz5EFp$l92bHsCWj5n3HDHaEkV1To7hXb51BIXDVUZ0dQE2418=",
-        "last_login": "2016-08-30T01:01:51.919Z",
-        "is_superuser": true,
-        "username": "admin",
-        "first_name": "",
-        "last_name": "",
-        "email": "florasol@hotmail.com",
-        "is_staff": true,
-        "is_active": true,
-        "date_joined": "2016-08-30T00:24:35.994Z",
-        "groups": [],
-        "user_permissions": []
-    }
-},
-{
-    "model": "note.note",
-    "pk": 1,
-    "fields": {
-        "note": "Update Mario Rossi status: from Pending to Active, on 2016-08-31",
-        "author": null,
-        "date": "2016-08-31T12:23:15.154Z",
-        "is_read": false,
-        "client": 870,
-        "priority": "normal"
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 1,
-    "fields": {
-        "action_time": "2016-08-30T10:20:18.610Z",
-        "user": 1,
-        "content_type": 1,
-        "object_id": "",
-        "object_repr": "Generation of order for 2016-08-30 06:20",
-        "action_flag": 1,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 2,
-    "fields": {
-        "action_time": "2016-08-31T00:55:31.653Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2629",
-        "object_repr": "<For delivery on:> 2016-08-30 <order_item_type:> B component <component_group:> main_dish",
-        "action_flag": 2,
-        "change_message": "Modification de remark."
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 3,
-    "fields": {
-        "action_time": "2016-08-31T00:58:11.683Z",
-        "user": 1,
-        "content_type": 18,
-        "object_id": "609",
-        "object_repr": "Paul Taylor",
-        "action_flag": 2,
-        "change_message": "Modification de meal_default_week et delivery_note."
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 4,
-    "fields": {
-        "action_time": "2016-08-31T10:20:41.073Z",
-        "user": 1,
-        "content_type": 1,
-        "object_id": "",
-        "object_repr": "Generation of order for 2016-08-31 06:20",
-        "action_flag": 1,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 5,
-    "fields": {
-        "action_time": "2016-08-31T11:52:27.463Z",
-        "user": 1,
-        "content_type": 15,
-        "object_id": "511",
-        "object_repr": "Avenue Madison",
-        "action_flag": 2,
-        "change_message": "Modification de number, street, postal_code, longitude, latitude et distance."
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 6,
-    "fields": {
-        "action_time": "2016-08-31T12:06:15.467Z",
-        "user": 1,
-        "content_type": 1,
-        "object_id": "",
-        "object_repr": "Generation of order for 2016-08-31 08:06",
-        "action_flag": 1,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 7,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.241Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2652",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> compote",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 8,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.252Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2651",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> main_dish",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 9,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.262Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2650",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> compote",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 10,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.273Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2649",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> main_dish",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 11,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.284Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2648",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> compote",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 12,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.296Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2647",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> main_dish",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 13,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.307Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2646",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> compote",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 14,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.318Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2645",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> main_dish",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 15,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.330Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2644",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> green_salad",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 16,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.341Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2643",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> main_dish",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 17,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.353Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2642",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> dessert",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 18,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.365Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2641",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> main_dish",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 19,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.378Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2640",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> pudding",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 20,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.389Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2639",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> green_salad",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 21,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.403Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2638",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> dessert",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 22,
-    "fields": {
-        "action_time": "2016-08-31T12:07:42.415Z",
-        "user": 1,
-        "content_type": 27,
-        "object_id": "2637",
-        "object_repr": "<For delivery on:> 2016-08-31 <order_item_type:> B component <component_group:> main_dish",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 23,
-    "fields": {
-        "action_time": "2016-08-31T12:07:58.948Z",
-        "user": 1,
-        "content_type": 26,
-        "object_id": "916",
-        "object_repr": "client=Roger Blondin, delivery_date=2016-08-31",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 24,
-    "fields": {
-        "action_time": "2016-08-31T12:07:58.958Z",
-        "user": 1,
-        "content_type": 26,
-        "object_id": "915",
-        "object_repr": "client=Kevin Tracy, delivery_date=2016-08-31",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 25,
-    "fields": {
-        "action_time": "2016-08-31T12:07:58.969Z",
-        "user": 1,
-        "content_type": 26,
-        "object_id": "914",
-        "object_repr": "client=Bob Brown, delivery_date=2016-08-31",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 26,
-    "fields": {
-        "action_time": "2016-08-31T12:07:58.978Z",
-        "user": 1,
-        "content_type": 26,
-        "object_id": "913",
-        "object_repr": "client=Paul Taylor, delivery_date=2016-08-31",
-        "action_flag": 3,
-        "change_message": ""
-    }
-},
-{
-    "model": "admin.logentry",
-    "pk": 27,
-    "fields": {
-        "action_time": "2016-08-31T12:07:58.989Z",
-        "user": 1,
-        "content_type": 26,
-        "object_id": "912",
-        "object_repr": "client=Louise Dallaire, delivery_date=2016-08-31",
-        "action_flag": 3,
-        "change_message": ""
+    "model": "order.order_item",
+    "pk": 2686,
+    "fields": {
+        "order": 932,
+        "price": "16.00",
+        "billable_flag": true,
+        "size": "L",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 2,
+        "free_quantity": 0,
+        "component_group": "main_dish"
     }
 },
 {
-    "model": "admin.logentry",
-    "pk": 28,
-    "fields": {
-        "action_time": "2016-08-31T12:07:59.001Z",
-        "user": 1,
-        "content_type": 26,
-        "object_id": "911",
-        "object_repr": "client=Peter Murray, delivery_date=2016-08-31",
-        "action_flag": 3,
-        "change_message": ""
+    "model": "order.order_item",
+    "pk": 2687,
+    "fields": {
+        "order": 932,
+        "price": "0.00",
+        "billable_flag": true,
+        "size": "L",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 1,
+        "free_quantity": 1,
+        "component_group": "dessert"
     }
 },
 {
-    "model": "admin.logentry",
-    "pk": 29,
+    "model": "order.order_item",
+    "pk": 2688,
     "fields": {
-        "action_time": "2016-08-31T12:07:59.011Z",
-        "user": 1,
-        "content_type": 26,
-        "object_id": "910",
-        "object_repr": "client=John Doe, delivery_date=2016-08-31",
-        "action_flag": 3,
-        "change_message": ""
+        "order": 932,
+        "price": "0.00",
+        "billable_flag": true,
+        "size": "L",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 1,
+        "free_quantity": 1,
+        "component_group": "green_salad"
     }
 },
 {
-    "model": "admin.logentry",
-    "pk": 30,
+    "model": "order.order_item",
+    "pk": 2689,
     "fields": {
-        "action_time": "2016-08-31T12:08:03.619Z",
-        "user": 1,
-        "content_type": 1,
-        "object_id": "",
-        "object_repr": "Generation of order for 2016-08-31 08:08",
-        "action_flag": 1,
-        "change_message": ""
+        "order": 932,
+        "price": "1.00",
+        "billable_flag": true,
+        "size": "L",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 1,
+        "free_quantity": 0,
+        "component_group": "pudding"
     }
 },
 {
-    "model": "admin.logentry",
-    "pk": 31,
+    "model": "order.order_item",
+    "pk": 2690,
     "fields": {
-        "action_time": "2016-08-31T12:11:13.069Z",
-        "user": 1,
-        "content_type": 1,
-        "object_id": "",
-        "object_repr": "Generation of order for 2016-08-31 08:11",
-        "action_flag": 1,
-        "change_message": ""
+        "order": 933,
+        "price": "8.00",
+        "billable_flag": true,
+        "size": "R",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 1,
+        "free_quantity": 0,
+        "component_group": "main_dish"
     }
 },
 {
-    "model": "admin.logentry",
-    "pk": 32,
+    "model": "order.order_item",
+    "pk": 2691,
     "fields": {
-        "action_time": "2016-08-31T12:20:42.730Z",
-        "user": 1,
-        "content_type": 1,
-        "object_id": "",
-        "object_repr": "Generation of order for 2016-08-31 08:20",
-        "action_flag": 1,
-        "change_message": ""
+        "order": 933,
+        "price": "0.00",
+        "billable_flag": true,
+        "size": "R",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 1,
+        "free_quantity": 1,
+        "component_group": "dessert"
     }
 },
 {
-    "model": "admin.logentry",
-    "pk": 33,
+    "model": "order.order_item",
+    "pk": 2692,
     "fields": {
-        "action_time": "2016-08-31T12:22:19.697Z",
-        "user": 1,
-        "content_type": 1,
-        "object_id": "",
-        "object_repr": "Generation of order for 2016-08-31 08:22",
-        "action_flag": 1,
-        "change_message": ""
+        "order": 934,
+        "price": "16.00",
+        "billable_flag": true,
+        "size": "R",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 2,
+        "free_quantity": 0,
+        "component_group": "main_dish"
     }
 },
 {
-    "model": "admin.logentry",
-    "pk": 34,
+    "model": "order.order_item",
+    "pk": 2693,
     "fields": {
-        "action_time": "2016-08-31T12:23:20.834Z",
-        "user": 1,
-        "content_type": 1,
-        "object_id": "",
-        "object_repr": "Generation of order for 2016-08-31 08:23",
-        "action_flag": 1,
-        "change_message": ""
+        "order": 934,
+        "price": "0.00",
+        "billable_flag": true,
+        "size": "R",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 2,
+        "free_quantity": 2,
+        "component_group": "green_salad"
     }
 },
 {
-    "model": "admin.logentry",
-    "pk": 35,
+    "model": "order.order_item",
+    "pk": 2694,
     "fields": {
-        "action_time": "2016-08-31T12:25:53.821Z",
-        "user": 1,
-        "content_type": 15,
-        "object_id": "512",
-        "object_repr": "4194 Avenue Kensington",
-        "action_flag": 2,
-        "change_message": "Modification de number."
+        "order": 935,
+        "price": "8.00",
+        "billable_flag": true,
+        "size": "L",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 1,
+        "free_quantity": 0,
+        "component_group": "main_dish"
     }
 },
 {
-    "model": "admin.logentry",
-    "pk": 36,
+    "model": "order.order_item",
+    "pk": 2695,
     "fields": {
-        "action_time": "2016-08-31T12:26:02.626Z",
-        "user": 1,
-        "content_type": 15,
-        "object_id": "511",
-        "object_repr": "4218 Avenue Madison",
-        "action_flag": 2,
-        "change_message": "Modification de street."
+        "order": 935,
+        "price": "0.00",
+        "billable_flag": true,
+        "size": "L",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 1,
+        "free_quantity": 1,
+        "component_group": "compote"
     }
 },
 {
-    "model": "admin.logentry",
-    "pk": 37,
+    "model": "order.order_item",
+    "pk": 2696,
     "fields": {
-        "action_time": "2016-08-31T12:30:40.107Z",
-        "user": 1,
-        "content_type": 15,
-        "object_id": "511",
-        "object_repr": "4218 Avenue Madison",
-        "action_flag": 2,
-        "change_message": "Modification de longitude et latitude."
+        "order": 936,
+        "price": "8.00",
+        "billable_flag": true,
+        "size": "L",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 1,
+        "free_quantity": 0,
+        "component_group": "main_dish"
     }
 },
 {
-    "model": "admin.logentry",
-    "pk": 38,
+    "model": "order.order_item",
+    "pk": 2697,
     "fields": {
-        "action_time": "2016-09-01T00:03:07.076Z",
-        "user": 1,
-        "content_type": 17,
-        "object_id": "4",
-        "object_repr": "ndg",
-        "action_flag": 2,
-        "change_message": "Modification de client_id_sequence."
+        "order": 936,
+        "price": "0.00",
+        "billable_flag": true,
+        "size": "L",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 1,
+        "free_quantity": 1,
+        "component_group": "compote"
     }
 },
 {
-    "model": "admin.logentry",
-    "pk": 39,
+    "model": "order.order_item",
+    "pk": 2698,
     "fields": {
-        "action_time": "2016-09-01T00:04:15.506Z",
-        "user": 1,
-        "content_type": 17,
-        "object_id": "4",
-        "object_repr": "ndg",
-        "action_flag": 2,
-        "change_message": "Modification de client_id_sequence."
+        "order": 937,
+        "price": "8.00",
+        "billable_flag": true,
+        "size": "R",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 1,
+        "free_quantity": 0,
+        "component_group": "main_dish"
     }
 },
 {
-    "model": "admin.logentry",
-    "pk": 40,
+    "model": "order.order_item",
+    "pk": 2699,
     "fields": {
-        "action_time": "2016-09-01T00:07:34.205Z",
-        "user": 1,
-        "content_type": 17,
-        "object_id": "4",
-        "object_repr": "ndg",
-        "action_flag": 2,
-        "change_message": "Modification de client_id_sequence."
+        "order": 937,
+        "price": "0.00",
+        "billable_flag": true,
+        "size": "R",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 1,
+        "free_quantity": 1,
+        "component_group": "compote"
     }
 },
 {
-    "model": "admin.logentry",
-    "pk": 41,
+    "model": "order.order_item",
+    "pk": 2700,
     "fields": {
-        "action_time": "2016-09-01T00:09:26.398Z",
-        "user": 1,
-        "content_type": 17,
-        "object_id": "4",
-        "object_repr": "ndg",
-        "action_flag": 2,
-        "change_message": "Modification de client_id_sequence."
+        "order": 938,
+        "price": "8.00",
+        "billable_flag": true,
+        "size": "R",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 1,
+        "free_quantity": 0,
+        "component_group": "main_dish"
     }
 },
 {
-    "model": "admin.logentry",
-    "pk": 42,
+    "model": "order.order_item",
+    "pk": 2701,
     "fields": {
-        "action_time": "2016-09-01T10:13:57.030Z",
-        "user": 1,
-        "content_type": 1,
-        "object_id": "",
-        "object_repr": "Generation of order for 2016-09-01 06:13",
-        "action_flag": 1,
-        "change_message": ""
+        "order": 938,
+        "price": "0.00",
+        "billable_flag": true,
+        "size": "R",
+        "order_item_type": "B component",
+        "remark": "",
+        "total_quantity": 1,
+        "free_quantity": 1,
+        "component_group": "compote"
     }
 }
 ]
