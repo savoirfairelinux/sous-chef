@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-31 22:24+0000\n"
+"POT-Creation-Date: 2016-09-01 21:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -537,11 +537,11 @@ msgstr ""
 msgid "Client since"
 msgstr ""
 
-#: member/templates/client/base.html:141
+#: member/templates/client/base.html:138
 msgid "Important notice"
 msgstr ""
 
-#: member/templates/client/base.html:155
+#: member/templates/client/base.html:152
 msgid "Edit"
 msgstr ""
 
@@ -589,7 +589,7 @@ msgstr ""
 #: member/templates/client/update/base.html:37
 #: member/templates/client/view/information.html:35
 #: member/templates/client/view/payment.html:27
-#: member/templates/client/view/summary.html:7
+#: member/templates/client/view/summary.html:14
 msgid "Address"
 msgstr ""
 
@@ -683,7 +683,7 @@ msgid "Or"
 msgstr ""
 
 #: member/templates/client/list.html:52 member/templates/client/list.html:96
-#: member/templates/client/view/summary.html:29
+#: member/templates/client/view/summary.html:36
 msgid "years old"
 msgstr ""
 
@@ -854,11 +854,11 @@ msgstr ""
 msgid "Orders"
 msgstr ""
 
-#: member/templates/client/partials/prefs.html:7
+#: member/templates/client/partials/prefs.html:8
 msgid "Add"
 msgstr ""
 
-#: member/templates/client/partials/prefs.html:7
+#: member/templates/client/partials/prefs.html:8
 msgid "Change"
 msgstr ""
 
@@ -935,7 +935,7 @@ msgid "Contact information of the client"
 msgstr ""
 
 #: member/templates/client/view/information.html:29
-#: member/templates/client/view/summary.html:21
+#: member/templates/client/view/summary.html:28
 msgid "Language"
 msgstr ""
 
@@ -1068,7 +1068,11 @@ msgstr ""
 msgid "No status modification."
 msgstr ""
 
-#: member/templates/client/view/summary.html:14
+#: member/templates/client/view/summary.html:7
+msgid "Delivery type"
+msgstr ""
+
+#: member/templates/client/view/summary.html:21
 msgid "Home"
 msgstr ""
 

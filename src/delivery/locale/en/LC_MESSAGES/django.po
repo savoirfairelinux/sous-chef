@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-31 22:24+0000\n"
+"POT-Creation-Date: 2016-09-01 21:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,20 +37,20 @@ msgstr ""
 msgid "Pick ingredients"
 msgstr ""
 
-#: delivery/templates/ingredients.html:31
-msgid "Main Dish"
+#: delivery/templates/ingredients.html:37
+msgid "Main dish"
 msgstr ""
 
-#: delivery/templates/ingredients.html:44
+#: delivery/templates/ingredients.html:80
 msgid "Restore recipe"
 msgstr ""
 
-#: delivery/templates/ingredients.html:50
-#: delivery/templates/kitchen_count.html:71 delivery/templates/routes.html:53
+#: delivery/templates/ingredients.html:86
+#: delivery/templates/kitchen_count.html:77 delivery/templates/routes.html:53
 msgid "Back"
 msgstr ""
 
-#: delivery/templates/ingredients.html:51
+#: delivery/templates/ingredients.html:87
 msgid "Next: Print Kitchen Count"
 msgstr ""
 
@@ -62,69 +62,73 @@ msgstr ""
 msgid "Kitchen Count Report"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:21
-#: delivery/templates/kitchen_count.html:47
+#: delivery/templates/kitchen_count.html:20
+msgid "Print the Report"
+msgstr ""
+
+#: delivery/templates/kitchen_count.html:27
+#: delivery/templates/kitchen_count.html:53
 msgid "Component"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:22
-#: delivery/templates/kitchen_count.html:23
+#: delivery/templates/kitchen_count.html:28
+#: delivery/templates/kitchen_count.html:29
 msgid "TOTAL"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:22
+#: delivery/templates/kitchen_count.html:28
 msgid "Regular"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:23
+#: delivery/templates/kitchen_count.html:29
 msgid "Large"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:24
+#: delivery/templates/kitchen_count.html:30
 msgid "Dish today"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:25
+#: delivery/templates/kitchen_count.html:31
 msgid "Ingredients today"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:44
-#: delivery/templates/review_orders.html:28
+#: delivery/templates/kitchen_count.html:50
+#: delivery/templates/review_orders.html:76
 msgid "Client"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:45
-#: delivery/templates/kitchen_count.html:46
+#: delivery/templates/kitchen_count.html:51
+#: delivery/templates/kitchen_count.html:52
 msgid "Qty"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:45
+#: delivery/templates/kitchen_count.html:51
 msgid "Reg"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:46
+#: delivery/templates/kitchen_count.html:52
 msgid "Lge"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:47
-#: delivery/templates/kitchen_count.html:48
+#: delivery/templates/kitchen_count.html:53
+#: delivery/templates/kitchen_count.html:54
 msgid "Clashing"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:48
+#: delivery/templates/kitchen_count.html:54
 #: delivery/templates/kitchen_count_steps.html:12
 msgid "Ingredients"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:49
+#: delivery/templates/kitchen_count.html:55
 msgid "Preparation"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:50
+#: delivery/templates/kitchen_count.html:56
 msgid "Restrictions"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:72
+#: delivery/templates/kitchen_count.html:78
 msgid "Next: Organize Routes"
 msgstr ""
 
@@ -158,42 +162,43 @@ msgid "Organize the delivery routes."
 msgstr ""
 
 #: delivery/templates/review_orders.html:6
+#: delivery/templates/review_orders.html:66
 msgid "Orders"
 msgstr ""
 
-#: delivery/templates/review_orders.html:21
-msgid "Orders have been generated on"
-msgstr ""
-
-#: delivery/templates/review_orders.html:23
-msgid "Generate orders"
-msgstr ""
-
 #: delivery/templates/review_orders.html:27
+msgid "Orders of the day"
+msgstr ""
+
+#: delivery/templates/review_orders.html:75
 msgid "Order"
 msgstr ""
 
-#: delivery/templates/review_orders.html:29
+#: delivery/templates/review_orders.html:77
 msgid "Delivery Date"
 msgstr ""
 
-#: delivery/templates/review_orders.html:30
+#: delivery/templates/review_orders.html:78
+msgid "Route"
+msgstr ""
+
+#: delivery/templates/review_orders.html:79
 msgid "Status"
 msgstr ""
 
-#: delivery/templates/review_orders.html:31
+#: delivery/templates/review_orders.html:80
 msgid "Amount"
 msgstr ""
 
-#: delivery/templates/review_orders.html:42
+#: delivery/templates/review_orders.html:92
 msgid "View Order"
 msgstr ""
 
-#: delivery/templates/review_orders.html:50
+#: delivery/templates/review_orders.html:100
 msgid "orders today"
 msgstr ""
 
-#: delivery/templates/review_orders.html:56
+#: delivery/templates/review_orders.html:106
 msgid "OK, I'm ready"
 msgstr ""
 

@@ -67,14 +67,20 @@
 
        $(function() {
            {% for formset in inlines %}
-           $('div#{{ formset.prefix }}').formset({
-               prefix: '{{ formset.prefix }}',
-               formCssClass: 'dynamic-formset{{ forloop.counter }}',
-               addText: '<i class="ui add icon item"></i> Add order item',
-               deleteText: '<i class="ui remove icon order item"></i> Remove order item',
-               addCssClass: 'positive ui button right floated',
-               deleteCssClass: 'negative ui button'
-           });
+               {% for subform in formset.forms %}
+                   $('div#{{ subform.prefix }}').formset({
+                       prefix: '{{ formset.prefix }}',
+                       formCssClass: 'dynamic-formset-{{ forloop.counter }}',
+                       deleteText: '<i class="ui remove icon order item"></i> Remove order item',
+                       deleteCssClass: 'negative ui button',
+                       {% if forloop.counter == formset.forms|length %}
+                       addText: '<i class="ui add icon item"></i> Add order item',
+                       addCssClass: 'positive ui button right floated',
+                       {% else %}
+                       addCssClass: 'ui transition hidden',
+                       {% endif %}
+                   });
+               {% endfor %}
            {% endfor %}
        })
 

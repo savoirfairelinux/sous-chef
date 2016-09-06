@@ -54,49 +54,55 @@
                 </div>
             {% endif %}
             {% for subform in formset.forms %}
-                <div class="title active">
-                    <i class="dropdown icon"></i> {% trans "Order item" %}
-                </div>
-                <div class="content active">
-                    <div class="field {% if subform.component_group.errors %} error {% endif %}">
-                        <label> {{ subform.component_group.label }}</label>
-                        {{ subform.component_group }}
-                        {% if subform.component_group.errors %} {{ subform.component_group.errors }} {% endif %}
+                <div id="{{ subform.prefix }}">
+                    <div class="title active">
+                        <i class="dropdown icon"></i> {% trans "Order item" %}
                     </div>
-                    <div class="field {% if subform.price.errors %} error {% endif %}">
-                        <label> {{ subform.price.label }} </label>
-                        {{ subform.price }}
-                        {% if subform.price.errors %} {{ subform.price.errors }} {% endif %}
-                    </div>
-                    <div class="field {% if subform.billable_flag.errors %} error {% endif %}">
-                        <label> {{ subform.billable_flag.label }} </label>
-                        {{ subform.billable_flag }}
-                        {% if subform.billable_flag.errors %} {{ subform.billable_flag }} {% endif %}
-                    </div>
-                    <div class="field {% if subform.size.errors %} error {% endif %}">
-                        <label> {{ subform.size.label }} </label>
-                        {{ subform.size }}
-                        {% if subform.size.errors %} {{ subform.size.errors }} {% endif %}
-                    </div>
-                    <div class="field {% if subform.order_item_type.errors %} error {% endif %}">
-                        <label> {{ subform.order_item_type.label }} </label>
-                        {% if subform.order_item_type.errors %} {{ subform.order_item_type.errors }} {% endif %}
-                        {{ subform.order_item_type }}
-                    </div>
-                    <div class="field {% if subform.remark.errors %} error {% endif %}">
-                        <label> {{ subform.remark.label }} </label>
-                        {{ subform.remark }}
-                        {% if subform.remark.errors %} {{ subform.remark.errors }} {% endif %}
-                    </div>
-                    <div class="field {% if subform.total_quantity.errors %} error {% endif %}">
-                        <label> {{ subform.total_quantity.label }} </label>
-                        {{ subform.total_quantity }}
-                        {% if subform.total_quantity.errors %} {{ subform.total_quantity.errors }} {% endif %}
-                    </div>
-                    <div class="field {% if subform.free_quantity.errors %} error {% endif %}">
-                        <label> {{ subform.free_quantity.label }} </label>
-                        {{ subform.free_quantity }}
-                        {% if subform.free_quantity.errors %} {{ subform.free_quantity.errors }} {% endif %}
+                    <div class="content active">
+                        {% if subform.instance.pk %}
+                            {{ subform.DELETE }}
+                            {{ subform.id }}
+                        {% endif %}
+                        <div class="field {% if subform.component_group.errors %} error {% endif %}">
+                            <label> {{ subform.component_group.label }}</label>
+                            {{ subform.component_group }}
+                            {% if subform.component_group.errors %} {{ subform.component_group.errors }} {% endif %}
+                        </div>
+                        <div class="field {% if subform.price.errors %} error {% endif %}">
+                            <label> {{ subform.price.label }} </label>
+                            {{ subform.price }}
+                            {% if subform.price.errors %} {{ subform.price.errors }} {% endif %}
+                        </div>
+                        <div class="field {% if subform.billable_flag.errors %} error {% endif %}">
+                            <label> {{ subform.billable_flag.label }} </label>
+                            {{ subform.billable_flag }}
+                            {% if subform.billable_flag.errors %} {{ subform.billable_flag }} {% endif %}
+                        </div>
+                        <div class="field {% if subform.size.errors %} error {% endif %}">
+                            <label> {{ subform.size.label }} </label>
+                            {{ subform.size }}
+                            {% if subform.size.errors %} {{ subform.size.errors }} {% endif %}
+                        </div>
+                        <div class="field {% if subform.order_item_type.errors %} error {% endif %}">
+                            <label> {{ subform.order_item_type.label }} </label>
+                            {% if subform.order_item_type.errors %} {{ subform.order_item_type.errors }} {% endif %}
+                            {{ subform.order_item_type }}
+                        </div>
+                        <div class="field {% if subform.remark.errors %} error {% endif %}">
+                            <label> {{ subform.remark.label }} </label>
+                            {{ subform.remark }}
+                            {% if subform.remark.errors %} {{ subform.remark.errors }} {% endif %}
+                        </div>
+                        <div class="field {% if subform.total_quantity.errors %} error {% endif %}">
+                            <label> {{ subform.total_quantity.label }} </label>
+                            {{ subform.total_quantity }}
+                            {% if subform.total_quantity.errors %} {{ subform.total_quantity.errors }} {% endif %}
+                        </div>
+                        <div class="field {% if subform.free_quantity.errors %} error {% endif %}">
+                            <label> {{ subform.free_quantity.label }} </label>
+                            {{ subform.free_quantity }}
+                            {% if subform.free_quantity.errors %} {{ subform.free_quantity.errors }} {% endif %}
+                        </div>
                     </div>
                 </div>
             {% endfor %}
