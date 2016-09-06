@@ -26,7 +26,7 @@
     </div>
 </div>
 
-<select class="ui dropdown">
+<select id="routeselect" class="ui dropdown">
     {% for route in routes %}
     <option value="{{ route.id }}">{{ route.name }}</option>
     {% endfor %}
@@ -51,6 +51,9 @@
 </div>
 
 <a class="big ui right floated button" href="{% url 'delivery:kitchen_count' %}">{% trans "Back" %}</a>
+<button id='btnnext' class="big ui yellow right floated button">
+    {% trans "Next: Delivery Route Sheet" %}
+</button>
 
 {% endblock %}
 
@@ -239,7 +242,9 @@
 
         $("#btnsave").click(function(){
             var wp = control.getWaypoints();
-            var data ={ members: [] };
+            var data ={ route: [], members: [] };
+            var routeid = $("#routeselect").val();
+            data.route.push({"id" : routeid});
 
             // simplify waypoint into a list of member id in the map order
             $.each(wp, function(key,value) {
@@ -269,6 +274,14 @@
             onChange: function(routeId) {
                 getWaypoints(routeId);
             }
+        });
+
+        // Go to delivery route sheet using selected route id
+        $("#btnnext").click(function(){
+           var routeid = $("#routeselect").val();
+           var urlmask = "{% url 'delivery:route_sheet_id' 999 %}".replace(/999/, routeid);
+           // console.log("urlmask=", urlmask)
+           window.location.replace(urlmask);
         });
 
 

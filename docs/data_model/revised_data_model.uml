@@ -2,7 +2,7 @@
 'To generate image : see http://www.plantuml.com/plantuml
 @startuml
 scale 1.0
-title SousChef Data Model (revised_data_model.uml, 2016-08-29 at 8:30)\n(this may be out of sync with the django models)\n
+title SousChef Data Model (revised_data_model.uml, 2016-09-02 at 6:00)\n(this may be out of sync with the django models)\n
 hide methods
 'hide fields
 skinparam shadowing false
@@ -297,6 +297,7 @@ class Route << (C,red) >> {
     id
     name
     description
+    client_id_sequence
 }
 
 class User << (C,white) >> {

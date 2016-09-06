@@ -1,6 +1,8 @@
 import datetime
 import types
 import json
+import collections
+
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.views import generic
@@ -9,6 +11,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from delivery.models import Delivery
+from member.models import Member, Route
 from django.http import JsonResponse
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
@@ -21,7 +24,7 @@ from sqlalchemy import func, or_, and_
 
 from .models import Delivery
 from .forms import DishIngredientsForm
-from order.models import Order
+from order.models import Order, component_group_sorting
 from meal.models import (
     COMPONENT_GROUP_CHOICES, COMPONENT_GROUP_CHOICES_MAIN_DISH,
     Component, Ingredient,
@@ -162,7 +165,7 @@ class RoutesInformation(generic.ListView):
         return context
 
 
-# kitchen count report view and helper class and functions
+# Kitchen count report view, helper classes and functions
 
 class KitchenCount(generic.View):
 
@@ -176,7 +179,6 @@ class KitchenCount(generic.View):
             date = datetime.date.today()
 
         kitchen_list = Order.get_kitchen_items(date)
-        # TODO detect if empty kitchen list + give message that no orders today
         component_lines, meal_lines = kcr_make_lines(kitchen_list, date)
         # release session for SQLAlchemy     TODO use signals instead
         db_sa_session.remove()
@@ -256,11 +258,11 @@ def kcr_make_lines(kitchen_list, date):
                              meal_component.id, date)])))
             if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH and
                     item.meal_size == 'L'):
-                component_lines[component_group].lqty = \
-                    component_lines[component_group].lqty + meal_component.qty
+                component_lines[component_group].lqty += \
+                    meal_component.qty
             else:
-                component_lines[component_group].rqty = \
-                    component_lines[component_group].rqty + meal_component.qty
+                component_lines[component_group].rqty += \
+                    meal_component.qty
         # END FOR
     # END FOR
     items = component_lines.items()
@@ -356,6 +358,101 @@ def kcr_make_lines(kitchen_list, date):
     return (component_lines_sorted, meal_lines)
 
 
+# END Kitchen count report view, helper classes and functions
+
+# Delivery route sheet view, helper classes and functions
+
+class DeliveryRouteSheet(generic.View):
+
+    def get(self, request, **kwargs):
+        # Display today's delivery sheet for given route
+        route_id = int(kwargs['id'])
+        date = datetime.date.today()
+
+        route = Route.objects.get(id=route_id)
+        route_client_ids = route.get_client_sequence(date)
+        # print("delivery route sheet", "route_client_ids", route_client_ids)
+        route_list = Order.get_delivery_list(date, route_id)
+        route_list = sort_sequence_ids(route_list, route_client_ids)
+        # TODO sort route_list using sequence from leaflet
+        summary_lines, detail_lines = drs_make_lines(route_list, date)
+        return render(request, 'route_sheet.html',
+                      {'route': route,
+                       'summary_lines': summary_lines,
+                       'detail_lines': detail_lines})
+
+
+RouteSummaryLine = \
+    collections.namedtuple(
+        'RouteSummaryLine',
+        ['component_group',
+         'rqty',
+         'lqty'])
+
+
+def drs_make_lines(route_list, date):
+    # generate all the lines for the delivery route sheet
+
+    summary_lines = {}
+    for k, item in route_list.items():
+        # print("\nitem = ", item)
+        for delivery_item in item.delivery_items:
+            component_group = delivery_item.component_group
+            if component_group:
+                # TODO use constant for Meal size
+                line = summary_lines.setdefault(
+                    component_group,
+                    RouteSummaryLine(
+                        component_group,
+                        rqty=0,
+                        lqty=0))
+                # print("\nline", line)
+                if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH and
+                        delivery_item.size == 'L'):
+                    summary_lines[component_group] = \
+                        line._replace(lqty=line.lqty +
+                                      delivery_item.total_quantity)
+                elif component_group != '':
+                    summary_lines[component_group] = \
+                        line._replace(rqty=line.rqty +
+                                      delivery_item.total_quantity)
+                # END IF
+            # END IF
+        # END FOR
+    # END FOR
+
+    # print("values before sort", summary_lines.values())
+    summary_lines_sorted = sorted(
+        summary_lines.values(),
+        key=component_group_sorting)
+    # print("values after sort", summary_lines_sorted)
+    return summary_lines_sorted, list(route_list.values())
+
+
+def sort_sequence_ids(dic, seq):
+    # sort items in dictionary according to sequence of keys
+    # dic : dictionary for which some keys are not items in sequence
+    # seq : list of keys that may not all be entries in dic
+
+    # build an ordered dictionary from seq skipping keys not in dic
+    od = collections.OrderedDict()
+    if seq:
+        for k in seq:
+            if dic.get(k):
+                od[k] = None
+    # place all values in dic into ordered dict;
+    #   keys not in seq will be at the end.
+    for k, val in dic.items():
+        od[k] = val
+    # print("sort_sequence_ids",
+    #       "dic.items()", dic.items(),
+    #       "seq", seq,
+    #       "od.items()", od.items())
+    return od
+
+# END Delivery route sheet view, helper classes and functions
+
+
 def dailyOrders(request):
     data = []
     route_id = request.GET.get('route')
@@ -376,7 +473,24 @@ def dailyOrders(request):
                         order.client.member.lastname),
                     'address': order.client.member.address.street
                     }
+                # print("waypoint=", waypoint)
                 data.append(waypoint)
+
+    # sort waypoints according to previously saved route for same weekday
+    # print("dailyOrders1", "route_id", route_id,
+    #       "ids", [waypoint['id'] for waypoint in data])
+    if data:
+        route = Route.objects.get(id=route_id)
+        route_client_ids = route.get_client_sequence(datetime.date.today())
+        if route_client_ids:
+            member_ids = \
+                [Client.objects.get(id=cid).member.id
+                 for cid in route_client_ids]
+            unsorted_dic = {waypoint['id']: waypoint for waypoint in data}
+            sorted_dic = sort_sequence_ids(unsorted_dic, member_ids)
+            data = list(sorted_dic.values())
+            # print("dailyOrders2",
+            #       "ids", [waypoint['id'] for waypoint in data])
 
     waypoints = {'waypoints': data}
 
@@ -385,11 +499,22 @@ def dailyOrders(request):
 
 @csrf_exempt
 def saveRoute(request):
-    members = json.loads(request.body.decode('utf-8'))
-
+    # print("saveRoute1", "request", request, "request.body=", request.body)
+    data = json.loads(request.body.decode('utf-8'))
+    # print("saveRoute2", "data=", data)
+    member_ids = [member['id'] for member in data['members']]
+    route_id = data['route'][0]['id']
+    route_client_ids = \
+        [Client.objects.get(member__id=member_id).id
+         for member_id in member_ids]
+    # print("saveRoute3", "route_id=", route_id,
+    #       "route_client_ids=", route_client_ids)
+    route = Route.objects.get(id=route_id)
+    route.set_client_sequence(datetime.date.today(), route_client_ids)
+    route.save()
     # To do print roadmap according the list of members received
 
-    return JsonResponse(waypoints, safe=False)
+    return JsonResponse('OK', safe=False)
 
 
 def refreshOrders(request):

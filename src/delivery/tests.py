@@ -1,10 +1,12 @@
 import datetime
+import json
+
 from django.test import TestCase
 from django.core.urlresolvers import reverse_lazy
 
 from meal.models import Menu, Component, Component_ingredient, Ingredient
 from order.models import Order
-from member.models import Client
+from member.models import Client, Member, Route
 
 
 class KitchenCountReportTestCase(TestCase):
@@ -132,3 +134,62 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
         req['maindish'] = 'wrong'
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         self.assertTrue(b'Select a valid choice.' in response.content)
+
+
+class DeliveryRouteSheetTestCase(TestCase):
+
+    fixtures = ['delivery_route_data']
+
+    def setUp(self):
+        # This data set includes 'Blondin' client lastname
+        # generate orders today
+        self.today = datetime.date.today()
+        clients = Client.active.all()
+        numorders = Order.create_orders_on_defaults(
+            self.today, self.today, clients)
+        self.route_id = Route.objects.get(name='ndg').id
+
+    def test_query(self):
+        """Sample route sheet query."""
+        route_list = Order.get_delivery_list(self.today, self.route_id)
+        self.assertTrue('Blondin' in repr(route_list))
+
+    def test_sheet(self):
+        """Sample route sheet page."""
+        response = self.client.get(
+            reverse_lazy('delivery:route_sheet_id', args=[self.route_id]))
+        # print("test route", response, response.content)
+        self.assertTrue(b'Blondin' in response.content)
+
+
+class RouteSequencingTestCase(TestCase):
+
+    fixtures = ['delivery_route_data']
+
+    def setUp(self):
+        # This data set includes 'Blondin' client lastname
+        # generate orders today
+        self.today = datetime.date.today()
+        clients = Client.active.all()
+        numorders = Order.create_orders_on_defaults(
+            self.today, self.today, clients)
+        self.route_id = Route.objects.get(name='ndg').id
+
+    def test_get_orders(self):
+        """Route get orders."""
+        response = self.client.get(
+            '/delivery/getDailyOrders/?route='+str(self.route_id))
+        # print("test get orders", response, response.content)
+        self.assertTrue(b'Blondin' in response.content)
+
+    def test_save_route(self):
+        """Route save sequence."""
+        dic = {"route": [{"id": "4"}],
+               "members": [{"id": 864}, {"id": 867}, {"id": 868},
+                           {"id": 869}, {"id": 861}, {"id": 862}, {"id": 863}]}
+        response = self.client.post(
+            '/delivery/saveRoute/',
+            json.dumps(dic),
+            content_type="application/json")
+        # print("test save route", response, response.content)
+        self.assertTrue(b'OK' in response.content)
