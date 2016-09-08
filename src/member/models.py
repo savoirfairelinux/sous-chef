@@ -1,5 +1,6 @@
 import datetime
 import math
+import json
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -18,7 +19,6 @@ WORK = 'Work phone'
 EMAIL = 'Email'
 
 GENDER_CHOICES = (
-    ('', _('Gender')),
     ('F', _('Female')),
     ('M', _('Male')),
 )
@@ -518,6 +518,21 @@ class Client(models.Model):
         return self.client_notes.all()
 
     @property
+    def simple_meals_schedule(self):
+        """
+        Returns a list of days, corresponding to the client's delivery
+        days.
+        """
+        option = Option.objects.get(name='meals_schedule')
+        try:
+            meals_schedule_option = Client_option.objects.get(
+                client=self, option=option
+            )
+            return json.loads(meals_schedule_option.value)
+        except Client_option.DoesNotExist:
+            return None
+
+    @property
     def meals_schedule(self):
         """
         Returns a hierarchical dict representing the meals schedule.
@@ -544,12 +559,36 @@ class Client(models.Model):
             ) or ''
             current['size'] = size
 
-            if current['main_dish'] == 0:
+            if day not in self.simple_meals_schedule:
                 prefs[day] = None
             else:
                 prefs[day] = current
 
         return prefs
+
+    def set_meals_schedule(self, schedule):
+        """
+        Set the delivery days for the client.
+        @param schedule
+            A python list of days.
+        """
+        option = Option.objects.get(name='meals_schedule')
+        id = None
+        try:
+            meals_schedule_option = Client_option.objects.get(
+                client=self, option=option
+            )
+            id = meals_schedule_option.id
+        except Client_option.DoesNotExist:
+            pass
+        Client_option.objects.update_or_create(
+            id=id,
+            defaults={
+                'client': self,
+                'option': option,
+                'value': json.dumps(schedule),
+            }
+        )
 
     @staticmethod
     def get_meal_defaults(client, component_group, day):

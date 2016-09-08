@@ -155,7 +155,7 @@ class ClientRestrictionsInformation(forms.Form):
         widget=forms.Select(attrs={'class': 'ui dropdown'})
     )
 
-    delivery_schedule = forms.MultipleChoiceField(
+    meals_schedule = forms.MultipleChoiceField(
         label=_('Schedule'),
         initial='Select days of week',
         choices=DAYS_OF_WEEK,
@@ -378,12 +378,13 @@ def load_initial_data(client):
         'language': client.language,
         'birthdate': client.birthdate,
         'contact_value': client.member.home_phone,
+        'contact_type': 'Home phone',
         'street': client.member.address.street,
         'city': client.member.address.city,
         'apartment': client.member.address.apartment,
         'postal_code': client.member.address.postal_code,
         'delivery_note': client.delivery_note,
-        'route': client.route,
+        'route': client.route.id,
         'latitude': client.member.address.latitude,
         'longitude': client.member.address.longitude,
         'distance': client.member.address.distance,

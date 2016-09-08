@@ -1,34 +1,39 @@
 {% load i18n %}
 {% load member_extras %}
-{% for day, Day in weekday %}
-<div class="ui styled fluid accordion meals {{ day }}">
-  <div class="title">
-    <i class="dropdown icon"></i>
-    {% trans Day %}
-  </div>
-  <div class="content">
-    <table class="ui compact table">
-      <thead>
-        <tr>
-          <th>{% trans 'Size' %}</th>
-          <th>{% trans 'Component' %}</th>
-          <th>{% trans 'Quantity' %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for meal, Meal in meals %}
-        <tr>
-          {% if meal == "main_dish" %}
-          <td>{% size day %}</td>
-          {% else %}
-          <td></td>
-          {% endif %}
-          <td>{{ Meal }}</td>
-          <td>{% cell meal day %}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+
+{% for k,v in weekday %}
+
+<div class="ui styled fluid accordion meals {{ k }}">
+    <div class="title">
+        <i class="dropdown icon"></i>
+        {% trans v %}
+    </div>
+
+    <div class="content">
+        <table class="ui compact table">
+            <thead>
+                <tr>
+                    <th>{% trans 'Size' %}</th>
+                    <th>{% trans 'Component' %}</th>
+                    <th>{% trans 'Quantity' %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for meal in meals %}
+                <tr>
+                    {% if meal.0 == "main_dish" %}
+                    <td>{% size k %}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    <td>{{ meal.0 }}</td>
+                    <td>{% cell meal.0 k %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 </div>
+
 {% endfor %}

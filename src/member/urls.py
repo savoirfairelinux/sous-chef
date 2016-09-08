@@ -21,6 +21,7 @@ from member.views import (
     ClientUpdateBasicInformation,
     ClientUpdateAddressInformation,
     ClientUpdateReferentInformation,
+    ClientUpdateDietaryRestriction,
 )
 
 from member.forms import (
@@ -84,6 +85,7 @@ member_update_forms = (
     ('basic_information', ClientUpdateBasicInformation),
     ('address_information', ClientUpdateAddressInformation),
     ('referent_information', ClientUpdateReferentInformation),
+    ('dietary_restriction', ClientUpdateDietaryRestriction)
 )
 
 # Handle client update forms URL

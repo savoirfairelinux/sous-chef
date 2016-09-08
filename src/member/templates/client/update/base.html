@@ -37,7 +37,7 @@
         {% include 'client/update/step.html' with url='member_update_address_information' step='address_information' icon='home' name=_('Address') description=_('Street number, city, ...') %}
         {% include 'client/update/step.html' with url='member_update_referent_information' step='referent_information' icon='treatment' name=_('Referent') description=_('Referent contact information') %}
         {% include 'client/update/step.html' with url='member_update_basic_information' step='payment_information' icon='payment' name=_('Payment') description=_('Payment method, card, ...') %}
-        {% include 'client/update/step.html' with url='member_update_basic_information' step='dietary_restriction' icon='food' name=_('Preferences') description=_('Deliveries, restrictions, ...') %}
+        {% include 'client/update/step.html' with url='member_update_dietary_restriction' step='dietary_restriction' icon='food' name=_('Preferences') description=_('Deliveries, restrictions, ...') %}
         {% include 'client/update/step.html' with url='member_update_basic_information' step='emergency_contact' icon='first aid' name=_('Emergency') description=_('Emergency contact information') %}
     </div>
  </div>
@@ -76,10 +76,10 @@
         onChange: function(value, text, $selectedItem) {
           if($selectedItem.data('value') == 'E')
           {
-            $('#form-delivery-schedule').hide();
+            $('#form-meals-schedule').hide();
           }
           else {
-            $('#form-delivery-schedule').show();
+            $('#form-meals-schedule').show();
           }
         }
       });
@@ -159,7 +159,7 @@
         $(selector).show();
       }
       function showUiAccordionSelectedDays() {
-        var $selected = $('#id_dietary_restriction-delivery_schedule').val();
+        var $selected = $('#id_meals_schedule').val();
         if ($selected) {
           $selected.forEach(showOneAccordionElement);
         }
@@ -169,7 +169,7 @@
           $(this).hide();
         });
       }
-      $('#id_dietary_restriction-delivery_schedule').change(function () {
+      $('#id_meals_schedule').change(function () {
         hideUiAccordionDays();
         showUiAccordionSelectedDays();
       });

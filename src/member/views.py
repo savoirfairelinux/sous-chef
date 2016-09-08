@@ -3,7 +3,7 @@
 
 import csv
 from datetime import date
-
+import json
 from django.core.urlresolvers import reverse_lazy
 from django.views import generic
 from django.utils.decorators import method_decorator
@@ -33,6 +33,7 @@ from member.forms import (
     ClientBasicInformation,
     ClientAddressInformation,
     ClientReferentInformation,
+    ClientRestrictionsInformation,
 )
 from note.models import Note
 from order.mixins import AjaxableResponseMixin
@@ -143,7 +144,6 @@ class ClientUpdateAddressInformation(generic.edit.FormView):
         client.member.address.apartment = form['apartment']
         client.member.address.city = form['city']
         client.member.address.postal_code = form['postal_code']
-        client.member.address.distance = form['distance']
         client.member.address.latitude = form['latitude']
         client.member.address.longitude = form['longitude']
         client.member.address.save()
@@ -207,6 +207,125 @@ class ClientUpdateReferentInformation(generic.edit.FormView):
 
         client.route = form['route']
         client.delivery_note = form['delivery_note']
+        client.save()
+
+
+class ClientUpdateDietaryRestriction(generic.edit.FormView):
+    template_name = 'client/update/dietary_restriction.html'
+    form_class = ClientRestrictionsInformation
+    success_url = reverse_lazy('member:list')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(
+            ClientUpdateDietaryRestriction,
+            self).dispatch(
+            *args,
+            **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            ClientUpdateDietaryRestriction,
+            self).get_context_data(
+            **kwargs)
+        context.update({'current_step': 'dietary_restriction'})
+        context.update({'client_id': self.kwargs['client_id']})
+        context["weekday"] = DAYS_OF_WEEK
+        context["meals"] = COMPONENT_GROUP_CHOICES
+        return context
+
+    def get_initial(self):
+        initial = super(ClientUpdateDietaryRestriction, self).get_initial()
+        client = get_object_or_404(
+            Client, pk=self.kwargs.get('client_id')
+        )
+        initial = {
+            'status': True if client.status == Client.ACTIVE else False,
+            'delivery_type': client.delivery_type,
+            'meals_schedule': client.simple_meals_schedule,
+            'restrictions': client.restrictions.all,
+            'ingredient_to_avoid': client.ingredients_to_avoid.all,
+            'dish_to_avoid': client.components_to_avoid.all,
+            'food_preparation': client.food_preparation.all,
+
+        }
+
+        day_count = 0
+        for day, v in DAYS_OF_WEEK:
+            for component, v in COMPONENT_GROUP_CHOICES:
+                meals_default = Client.get_meal_defaults(
+                    client, component, day_count)
+                initial[component + '_' + day + '_quantity'] = meals_default[0]
+                if component == 'main_dish':
+                    initial['size_' + day] = meals_default[1]
+            day_count += 1
+
+        return initial
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+        client = get_object_or_404(
+            Client, pk=self.kwargs.get('client_id')
+        )
+        self.save(form.cleaned_data, client)
+        return super(ClientUpdateDietaryRestriction, self).form_valid(form)
+
+    def save(self, form, client):
+        """
+        Save the basic information step data.
+        """
+        # Save meals schedule as a Client option
+        client.set_meals_schedule(
+            form['meals_schedule']
+        )
+
+        # Save restricted items
+        client.restrictions.clear()
+        for restricted_item in form['restrictions']:
+            Restriction.objects.create(
+                client=client,
+                restricted_item=restricted_item
+            )
+
+        # client.food_preparation.delete()
+        # for food_preparation in form['food_preparation']:
+        #    Client_option.objects.create(
+        #        client=client,
+        #        option=food_preparation
+        #    )
+
+        # Save ingredients to avoid
+        client.ingredients_to_avoid.clear()
+        for ingredient_to_avoid in form['ingredient_to_avoid']:
+            Client_avoid_ingredient.objects.create(
+                client=client,
+                ingredient=ingredient_to_avoid
+            )
+
+        # Save components to avoid
+        client.components_to_avoid.clear()
+        for component_to_avoid in form['dish_to_avoid']:
+            Client_avoid_component.objects.create(
+                client=client,
+                component=component_to_avoid
+            )
+
+        # Save preferences
+        json = {}
+        for days, v in DAYS_OF_WEEK:
+            json['size_{}'.format(days)] = form['size_{}'.format(days)]
+
+            if json['size_{}'.format(days)] is "":
+                json['size_{}'.format(days)] = None
+
+            for meal in COMPONENT_GROUP_CHOICES:
+                json['{}_{}_quantity'.format(meal[0], days)] \
+                    = form[
+                    '{}_{}_quantity'.format(meal[0], days)
+                ]
+        client.meal_default_week = json
+
         client.save()
 
 
@@ -477,6 +596,11 @@ class ClientWizard(NamedUrlSessionWizardView):
 
     def save_preferences(self, client):
         preferences = self.form_dict['dietary_restriction'].cleaned_data
+
+        # Save meals schedule as a Client option
+        client.set_meals_schedule(
+            preferences.get('meals_schedule')
+        )
 
         # Save restricted items
         for restricted_item in preferences.get('restrictions'):
@@ -824,10 +948,6 @@ class ClientAllergiesView(generic.DetailView):
         context = super(ClientAllergiesView, self).get_context_data(**kwargs)
         context['active_tab'] = 'prefs'
         context['client_status'] = Client.CLIENT_STATUS
-        if self.object.meal_default_week:
-            context['meal_default'] = parse_json(self.object.meal_default_week)
-        else:
-            context['meal_default'] = []
 
         """
         Here we need to add some variable of context to send to template :

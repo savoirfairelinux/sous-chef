@@ -1,4 +1,5 @@
 import datetime
+import json
 from django.test import TestCase, Client
 from member.models import Member, Client, User, Address, Referencing
 from member.models import Contact, Option, Client_option, Restriction, Route
@@ -16,6 +17,10 @@ from meal.factories import IngredientFactory, ComponentFactory
 from django.core.management import call_command
 from django.utils.six import StringIO
 from order.factories import OrderFactory
+from member.forms import(
+    ClientBasicInformation, ClientAddressInformation,
+    load_initial_data,
+)
 
 
 class MemberEmptyContact(TestCase):
@@ -215,34 +220,44 @@ class OptionTestCase(TestCase):
 
 class ClientOptionTestCase(TestCase):
 
+    fixtures = ['routes']
+
     @classmethod
     def setUpTestData(cls):
-        address = Address.objects.create(
-            number=123, street='De Bullion',
-            city='Montreal', postal_code='H3C4G5')
-        member = Member.objects.create(firstname='Angela',
-                                       lastname='Desousa',
-                                       address=address)
-        client = Client.objects.create(
-            member=member, billing_member=member,
-            birthdate=date(1980, 4, 19))
+        cls.clientTest = ClientFactory()
         option = Option.objects.create(
             name='PUREE ALL', option_group='preparation')
-        Client_option.objects.create(client=client, option=option)
+        meals_schedule_option = Option.objects.create(
+            name='meals_schedule', option_group='dish'
+        )
+        Client_option.objects.create(client=cls.clientTest, option=option)
+        Client_option.objects.create(
+            client=cls.clientTest,
+            option=meals_schedule_option,
+            value=json.dumps(['monday', 'wednesday', 'friday']),
+        )
 
     def test_str_includes_all_names(self):
-        """A Client_option's string representation includes the name
+        """
+        A Client_option's string representation includes the name
         of the client and the name of the option.
         """
-        member = Member.objects.get(firstname='Angela')
-        client = Client.objects.get(member=member)
         name = 'PUREE ALL'
         option = Option.objects.get(name=name)
         client_option = Client_option.objects.get(
-            client=client, option=option)
-        self.assertTrue(client.member.firstname in str(client_option))
-        self.assertTrue(client.member.lastname in str(client_option))
+            client=self.clientTest, option=option)
+        self.assertTrue(self.clientTest.member.firstname in str(client_option))
+        self.assertTrue(self.clientTest.member.lastname in str(client_option))
         self.assertTrue(option.name in str(client_option))
+
+    def test_meals_schedule_option(self):
+        """
+        Meals schedule must be saved as a client option.
+        """
+        self.assertEqual(
+            self.clientTest.simple_meals_schedule,
+            ['monday', 'wednesday', 'friday']
+        )
 
 
 class RestrictionTestCase(TestCase):
@@ -346,6 +361,8 @@ class ClientAvoidComponentTestCase(TestCase):
 
 
 class FormTestCase(TestCase):
+
+    fixtures = ['client_options.json']
 
     @classmethod
     def setUpTestData(cls):
@@ -507,7 +524,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "dietary_restriction",
             "dietary_restriction-status": "on",
             "dietary_restriction-delivery_type": "O",
-            "dietary_restriction-delivery_schedule": "monday",
+            "dietary_restriction-meals_schedule": ['monday', 'wednesday'],
             "dietary_restriction-meal_default": "1",
             "dietary_restriction-restrictions":
                 [self.restricted_item_1.id, self.restricted_item_2.id],
@@ -643,6 +660,9 @@ class FormTestCase(TestCase):
             "555-444-5555"
         )
 
+        # Test meals schedule
+        self.assertEqual(client.simple_meals_schedule, ['monday', 'wednesday'])
+
         # test_restrictions
         restriction_1 = Restriction.objects.get(
             client=client, restricted_item=self.restricted_item_1)
@@ -746,7 +766,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "dietary_restriction",
             "dietary_restriction-status": "on",
             "dietary_restriction-delivery_type": "O",
-            "dietary_restriction-delivery_schedule": "monday",
+            "dietary_restriction-meals_schedule": "monday",
             "dietary_restriction-meal_default": "1",
             "wizard_goto_step": ""
         }
@@ -1247,7 +1267,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "dietary_restriction",
             "dietary_restriction-status": "",
             "dietary_restriction-delivery_type": "",
-            "dietary_restriction-delivery_schedule": "",
+            "dietary_restriction-meals_schedule": "",
             "dietary_restriction-meal_default": "",
             "wizard_goto_step": ""
         }
@@ -1266,7 +1286,7 @@ class FormTestCase(TestCase):
         self.assertTrue(b'Required information' in response_error.content)
         self.assertTrue(b'status' in response_error.content)
         self.assertTrue(b'delivery_type' in response_error.content)
-        self.assertTrue(b'delivery_schedule' in response_error.content)
+        self.assertTrue(b'meals_schedule' in response_error.content)
 
     def _test_step_dietary_restriction_without_errors(self):
         # Data for the address_information step without errors.
@@ -1274,7 +1294,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "dietary_restriction",
             "dietary_restriction-status": "on",
             "dietary_restriction-delivery_type": "O",
-            "dietary_restriction-delivery_schedule": "monday",
+            "dietary_restriction-meals_schedule": "monday",
             "dietary_restriction-meal_default": "1",
             "wizard_goto_step": ""
         }
@@ -1576,3 +1596,139 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
         self.assertEqual(scheduled_change.status_to, Client.STOPCONTACT)
         self.assertEqual(scheduled_change.reason, 'Holidays')
         self.assertEqual(scheduled_change.linked_scheduled_status, None)
+
+
+class ClientUpdateBasicInformation(TestCase):
+
+    fixtures = ['routes.json']
+
+    """
+    Login as administrator.
+    """
+
+    def login_as_admin(self):
+        admin = User.objects.create_superuser(
+            username='admin@example.com',
+            email='admin@example.com',
+            password='test1234'
+        )
+        self.client.login(username=admin.username, password='test1234')
+
+    """
+    Test validation form.
+    """
+
+    def test_form_validation(self):
+        client = ClientFactory()
+        form_data = {
+            'firstname': 'John'
+        }
+        form = ClientBasicInformation(data=form_data)
+        self.assertFalse(form.is_valid())
+        form = ClientBasicInformation(data=load_initial_data(client))
+        self.assertTrue(form.is_valid())
+
+    """
+    Test the update basic information form.
+    """
+
+    def test_update_basic_information(self):
+        client = ClientFactory()
+        # Load initial data related to the client
+        data = load_initial_data(client)
+        # Update some data
+        data['firstname'] = 'John'
+        data['lastname'] = 'Doe'
+        data['birthdate'] = '1923-03-21'
+        # Login as admin
+        self.login_as_admin()
+
+        # Send the data to the form.
+        response = self.client.post(
+            reverse_lazy(
+                'member:member_update_basic_information',
+                kwargs={'client_id': client.id}
+            ),
+            data,
+            follow=True
+        )
+
+        # Reload client data as it should have been changed in the database
+        client = Client.objects.get(id=client.id)
+        # Test that values have been updated
+        self.assertEqual(str(client), 'John Doe')
+        self.assertEqual(client.birthdate, date(1923, 3, 21))
+        # Test that old values are still there
+        self.assertEqual(client.alert, data.get('alert'))
+        self.assertEqual(client.gender, data.get('gender'))
+        self.assertEqual(client.language, data.get('language'))
+
+
+class ClientUpdateAddressInformation(TestCase):
+
+    fixtures = ['routes.json']
+
+    """
+    Login as administrator.
+    """
+
+    def login_as_admin(self):
+        admin = User.objects.create_superuser(
+            username='admin@example.com',
+            email='admin@example.com',
+            password='test1234'
+        )
+        self.client.login(username=admin.username, password='test1234')
+
+    """
+    Test validation form.
+    """
+
+    def test_form_validation(self):
+        client = ClientFactory()
+        print(client.route)
+        form_data = {
+            'street': '111 rue Roy',
+        }
+        form = ClientAddressInformation(data=form_data)
+        self.assertFalse(form.is_valid())
+        form = ClientAddressInformation(data=load_initial_data(client))
+        print(form.errors)
+        self.assertTrue(form.is_valid())
+
+    """
+    Test the update basic information form.
+    """
+
+    def test_update_address_information(self):
+        client = ClientFactory()
+        # Load initial data related to the client
+        data = load_initial_data(client)
+        # Update some data
+        data['street'] = '111 rue Roy Est'
+        # Login as admin
+        self.login_as_admin()
+
+        print(data)
+
+        # Send the data to the form.
+        response = self.client.post(
+            reverse_lazy(
+                'member:member_update_address_information',
+                kwargs={'client_id': client.id}
+            ),
+            data,
+            follow=True
+        )
+
+        print(response.content)
+        # Reload client data as it should have been changed in the database
+        client = Client.objects.get(id=client.id)
+        self.assertEqual(client.member.address.street, '111 rue Roy Est')
+        self.assertEqual(client.member.address.city, data.get('city'))
+        self.assertEqual(client.route.id, data.get('route'))
+        self.assertEqual(client.delivery_note, data.get('delivery_note'))
+        self.assertEqual(str(client.member.address.latitude),
+                         data.get('latitude'))
+        self.assertEqual(str(client.member.address.longitude),
+                         data.get('longitude'))

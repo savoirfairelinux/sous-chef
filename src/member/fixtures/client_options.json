@@ -1,0 +1,10 @@
+[
+    {
+        "model": "member.option",
+        "pk": 1,
+        "fields": {
+          "name": "meals_schedule",
+          "option_group": "dish"
+        }
+    }
+]
