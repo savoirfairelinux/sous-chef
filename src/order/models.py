@@ -443,8 +443,11 @@ class Order(models.Model):
                 # should be a set
                 kitchen_list[row.cid].other_ingredients.append(
                     row.ingredient)
-            kitchen_list[row.cid].restricted_items.append(
-                row.restricted_item)
+            if (row.restricted_item not in
+                    kitchen_list[row.cid].restricted_items):
+                # remember restricted_item
+                kitchen_list[row.cid].restricted_items.append(
+                    row.restricted_item)
         # END FOR
 
         rows = db_sa_session.execute(q_day_pre)
