@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-01 21:17+0000\n"
+"POT-Creation-Date: 2016-09-10 02:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: sous-chef/templates/base.html:9 sous-chef/templates/splash.html:8
+#: sous-chef/templates/base.html:9 sous-chef/templates/splash.html:9
 msgid "Sous-Chef"
 msgstr ""
 
@@ -29,27 +29,27 @@ msgstr ""
 msgid "in Montreal"
 msgstr ""
 
-#: sous-chef/templates/dashboard/statistics.html:9
+#: sous-chef/templates/dashboard/statistics.html:10
 msgid "Active clients"
 msgstr ""
 
-#: sous-chef/templates/dashboard/statistics.html:14
+#: sous-chef/templates/dashboard/statistics.html:15
 msgid "One"
 msgstr ""
 
-#: sous-chef/templates/dashboard/statistics.html:15
+#: sous-chef/templates/dashboard/statistics.html:16
 msgid "Hundred"
 msgstr ""
 
-#: sous-chef/templates/dashboard/statistics.html:18
+#: sous-chef/templates/dashboard/statistics.html:19
 msgid "Meals a day"
 msgstr ""
 
-#: sous-chef/templates/dashboard/statistics.html:26
+#: sous-chef/templates/dashboard/statistics.html:27
 msgid "Routes"
 msgstr ""
 
-#: sous-chef/templates/dashboard/statistics.html:35
+#: sous-chef/templates/dashboard/statistics.html:36
 msgid "Volunteers"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Export"
 msgstr ""
 
-#: sous-chef/templates/system/breadcrumb.html:3
+#: sous-chef/templates/system/breadcrumb.html:4
 msgid "Home"
 msgstr ""
 
