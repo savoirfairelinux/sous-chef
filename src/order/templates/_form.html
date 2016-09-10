@@ -12,7 +12,7 @@
         <label>{{ form.client.label }}</label>
         {% if form.client.errors %} {{ form.client.errors }} {% endif %}
         <div class="ui fluid search selection dropdown">
-          <input type="hidden" name="{{ form.client.name }}">
+          <input type="hidden" name="{{ form.client.name }}" value={{form.client.value}}>
           <i class="dropdown icon"></i>
           <div class="default text">{% trans 'Select a client' %}</div>
           <div class="menu">
