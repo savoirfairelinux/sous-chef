@@ -181,7 +181,6 @@ class RouteSequencingTestCase(TestCase):
         """Route get orders."""
         response = self.client.get(
             '/delivery/getDailyOrders/?route='+str(self.route_id))
-        # print("test get orders", response, response.content)
         self.assertTrue(b'Blondin' in response.content)
 
     def test_save_route(self):
@@ -193,5 +192,4 @@ class RouteSequencingTestCase(TestCase):
             '/delivery/saveRoute/',
             json.dumps(dic),
             content_type="application/json")
-        # print("test save route", response, response.content)
         self.assertTrue(b'OK' in response.content)

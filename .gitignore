@@ -96,3 +96,7 @@ ENV/
 
 # Ignore vim swap files
 *.swp
+
+# Ignore some tools directories.
+tools/gulp
+tools/mariadb
