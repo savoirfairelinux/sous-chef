@@ -114,6 +114,8 @@ class Order(models.Model):
         'member.Client',
         verbose_name=_('client'),
         related_name='client_order',
+        blank=False,
+        default=""
     )
 
     objects = OrderManager()

@@ -10,8 +10,17 @@
 <div class="order">
     <div class="field {% if form.client.errors %} error {% endif %}">
         <label>{{ form.client.label }}</label>
-        {{ form.client }}
         {% if form.client.errors %} {{ form.client.errors }} {% endif %}
+        <div class="ui fluid search selection dropdown">
+          <input type="hidden" name="{{ form.client.name }}">
+          <i class="dropdown icon"></i>
+          <div class="default text">{% trans 'Select a client' %}</div>
+          <div class="menu">
+            {% for value, option in form.client.field.choices %}
+              <div class="item" data-value="{{value}}">{{option}}</div>
+            {% endfor %}
+          </div>
+        </div>
     </div>
 
     <div class="field {% if form.creation_date.errors %} error {% endif %}">
