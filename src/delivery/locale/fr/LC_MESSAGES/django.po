@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-01 21:17+0000\n"
+"POT-Creation-Date: 2016-09-10 02:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: savoirfairelinux <support@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -87,10 +87,12 @@ msgid "TOTAL"
 msgstr ""
 
 #: delivery/templates/kitchen_count.html:28
+#: delivery/templates/route_sheet.html:22
 msgid "Regular"
 msgstr "Régulier"
 
 #: delivery/templates/kitchen_count.html:29
+#: delivery/templates/route_sheet.html:23
 msgid "Large"
 msgstr "Large"
 
@@ -104,11 +106,13 @@ msgstr "Ingrédients du jour"
 
 #: delivery/templates/kitchen_count.html:50
 #: delivery/templates/review_orders.html:76
+#: delivery/templates/route_sheet.html:40
 msgid "Client"
 msgstr "Client"
 
 #: delivery/templates/kitchen_count.html:51
 #: delivery/templates/kitchen_count.html:52
+#: delivery/templates/route_sheet.html:43
 msgid "Qty"
 msgstr "Qte"
 
@@ -126,7 +130,6 @@ msgid "Clashing"
 msgstr "En conflit"
 
 #: delivery/templates/kitchen_count.html:54
-#: delivery/templates/kitchen_count_steps.html:12
 msgid "Ingredients"
 msgstr "Ingrédients"
 
@@ -143,20 +146,31 @@ msgid "Next: Organize Routes"
 msgstr ""
 
 #: delivery/templates/kitchen_count_steps.html:6
-#: delivery/templates/review_orders.html:13
-msgid "Review Orders"
+#, fuzzy
+#| msgid "Review Orders"
+msgid "1- Review Orders"
 msgstr "Réviser les commandes"
 
 #: delivery/templates/kitchen_count_steps.html:7
-msgid "Review the orders for the day."
+#, fuzzy
+#| msgid "Review the orders for the day."
+msgid "Review orders for the day."
 msgstr "Passer les commandes en revues."
+
+#: delivery/templates/kitchen_count_steps.html:12
+#, fuzzy
+#| msgid "Ingredients"
+msgid "2- Ingredients"
+msgstr "Ingrédients"
 
 #: delivery/templates/kitchen_count_steps.html:13
 msgid "Pick ingredients for the day."
 msgstr "Sélectionner les ingrédients à utiliser aujourd'hui."
 
 #: delivery/templates/kitchen_count_steps.html:18
-msgid "Kitchen Count"
+#, fuzzy
+#| msgid "Kitchen Count"
+msgid "3- Kitchen Count"
 msgstr "Inventaire des repas"
 
 #: delivery/templates/kitchen_count_steps.html:19
@@ -164,17 +178,37 @@ msgid "Print the kitchen count."
 msgstr "Imprimer l'inventaire des repas."
 
 #: delivery/templates/kitchen_count_steps.html:24
-msgid "Routes"
+#, fuzzy
+#| msgid "Routes"
+msgid "4- Routes"
 msgstr "Itinéraires"
 
 #: delivery/templates/kitchen_count_steps.html:25
-msgid "Organize the delivery routes."
+#, fuzzy
+#| msgid "Organize the delivery routes."
+msgid "Organize delivery routes."
 msgstr "Organiser les itinéraires pour la livraison."
+
+#: delivery/templates/kitchen_count_steps.html:30
+#, fuzzy
+#| msgid "Delivery Date"
+msgid "5- Delivery sheet"
+msgstr "Date de livraison"
+
+#: delivery/templates/kitchen_count_steps.html:31
+#, fuzzy
+#| msgid "Print the kitchen count."
+msgid "Print route sheet."
+msgstr "Imprimer l'inventaire des repas."
 
 #: delivery/templates/review_orders.html:6
 #: delivery/templates/review_orders.html:66
 msgid "Orders"
 msgstr "Commandes"
+
+#: delivery/templates/review_orders.html:13
+msgid "Review Orders"
+msgstr "Réviser les commandes"
 
 #: delivery/templates/review_orders.html:27
 #, fuzzy
@@ -222,6 +256,28 @@ msgstr "Ingrédients du jour"
 msgid "OK, I'm ready"
 msgstr ""
 
+#: delivery/templates/route_sheet.html:5
+#, fuzzy
+#| msgid "Delivery Date"
+msgid "Delivery Route Sheet"
+msgstr "Date de livraison"
+
+#: delivery/templates/route_sheet.html:21
+msgid "Dish"
+msgstr ""
+
+#: delivery/templates/route_sheet.html:41
+msgid "Note"
+msgstr ""
+
+#: delivery/templates/route_sheet.html:42
+msgid "Item"
+msgstr ""
+
+#: delivery/templates/route_sheet.html:53
+msgid "Apt"
+msgstr ""
+
 #: delivery/templates/routes.html:6
 msgid "Routes Information"
 msgstr "Plans de livraison"
@@ -238,6 +294,10 @@ msgstr ""
 
 #: delivery/templates/routes.html:41
 msgid "Save"
+msgstr ""
+
+#: delivery/templates/routes.html:55
+msgid "Next: Delivery Route Sheet"
 msgstr ""
 
 #: delivery/urls.py:10
@@ -266,14 +326,18 @@ msgid "^kitchen_count/(?P<year>\\d{4})/(?P<month>\\d{2})/(?P<day>\\d+)/$"
 msgstr ""
 
 #: delivery/urls.py:17
-msgid "^getDailyOrders/$"
-msgstr ""
-
-#: delivery/urls.py:18
-msgid "^refresh_orders/$"
+msgid "^route_sheet/(?P<id>\\d+)/$"
 msgstr ""
 
 #: delivery/urls.py:19
+msgid "^getDailyOrders/$"
+msgstr ""
+
+#: delivery/urls.py:20
+msgid "^refresh_orders/$"
+msgstr ""
+
+#: delivery/urls.py:21
 msgid "^saveRoute/$"
 msgstr ""
 

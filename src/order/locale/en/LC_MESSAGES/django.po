@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-01 21:17+0000\n"
+"POT-Creation-Date: 2016-09-10 02:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -89,62 +89,66 @@ msgstr ""
 msgid "client"
 msgstr ""
 
-#: order/models.py:551
+#: order/models.py:637
 msgid "Search by name"
 msgstr ""
 
-#: order/models.py:591
+#: order/models.py:677
 msgid "order items"
 msgstr ""
 
-#: order/models.py:595
+#: order/models.py:681
 msgid "order"
 msgstr ""
 
-#: order/models.py:602
+#: order/models.py:688
 msgid "price"
 msgstr ""
 
-#: order/models.py:606
+#: order/models.py:692
 msgid "billable flag"
 msgstr ""
 
-#: order/models.py:610
+#: order/models.py:696
 msgid "size"
 msgstr ""
 
-#: order/models.py:617
+#: order/models.py:703
 msgid "order item type"
 msgstr ""
 
-#: order/models.py:624
+#: order/models.py:710
 msgid "remark"
 msgstr ""
 
-#: order/models.py:628
+#: order/models.py:714
 msgid "total quantity"
 msgstr ""
 
-#: order/models.py:633
+#: order/models.py:719
 msgid "free quantity"
 msgstr ""
 
-#: order/models.py:640
+#: order/models.py:726
 msgid "component group"
 msgstr ""
 
-#: order/templates/_form.html:5 order/templates/_form.html:52
+#: order/templates/_form.html:5 order/templates/_form.html:61
 #: order/templates/update.html:18
 msgid "Required information missing"
 msgstr ""
 
-#: order/templates/_form.html:6 order/templates/_form.html:53
+#: order/templates/_form.html:6 order/templates/_form.html:62
 #: order/templates/update.html:19
 msgid ""
 "Please review the form to make sure that all required fields are filled."
 msgstr ""
 
-#: order/templates/_form.html:58
+#: order/templates/_form.html:17
+msgid "Select a client"
+msgstr ""
+
+#: order/templates/_form.html:68
 msgid "Order item"
 msgstr ""
 

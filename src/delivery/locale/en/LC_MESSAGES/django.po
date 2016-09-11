@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-01 21:17+0000\n"
+"POT-Creation-Date: 2016-09-10 02:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,10 +77,12 @@ msgid "TOTAL"
 msgstr ""
 
 #: delivery/templates/kitchen_count.html:28
+#: delivery/templates/route_sheet.html:22
 msgid "Regular"
 msgstr ""
 
 #: delivery/templates/kitchen_count.html:29
+#: delivery/templates/route_sheet.html:23
 msgid "Large"
 msgstr ""
 
@@ -94,11 +96,13 @@ msgstr ""
 
 #: delivery/templates/kitchen_count.html:50
 #: delivery/templates/review_orders.html:76
+#: delivery/templates/route_sheet.html:40
 msgid "Client"
 msgstr ""
 
 #: delivery/templates/kitchen_count.html:51
 #: delivery/templates/kitchen_count.html:52
+#: delivery/templates/route_sheet.html:43
 msgid "Qty"
 msgstr ""
 
@@ -116,7 +120,6 @@ msgid "Clashing"
 msgstr ""
 
 #: delivery/templates/kitchen_count.html:54
-#: delivery/templates/kitchen_count_steps.html:12
 msgid "Ingredients"
 msgstr ""
 
@@ -133,12 +136,15 @@ msgid "Next: Organize Routes"
 msgstr ""
 
 #: delivery/templates/kitchen_count_steps.html:6
-#: delivery/templates/review_orders.html:13
-msgid "Review Orders"
+msgid "1- Review Orders"
 msgstr ""
 
 #: delivery/templates/kitchen_count_steps.html:7
-msgid "Review the orders for the day."
+msgid "Review orders for the day."
+msgstr ""
+
+#: delivery/templates/kitchen_count_steps.html:12
+msgid "2- Ingredients"
 msgstr ""
 
 #: delivery/templates/kitchen_count_steps.html:13
@@ -146,7 +152,7 @@ msgid "Pick ingredients for the day."
 msgstr ""
 
 #: delivery/templates/kitchen_count_steps.html:18
-msgid "Kitchen Count"
+msgid "3- Kitchen Count"
 msgstr ""
 
 #: delivery/templates/kitchen_count_steps.html:19
@@ -154,16 +160,28 @@ msgid "Print the kitchen count."
 msgstr ""
 
 #: delivery/templates/kitchen_count_steps.html:24
-msgid "Routes"
+msgid "4- Routes"
 msgstr ""
 
 #: delivery/templates/kitchen_count_steps.html:25
-msgid "Organize the delivery routes."
+msgid "Organize delivery routes."
+msgstr ""
+
+#: delivery/templates/kitchen_count_steps.html:30
+msgid "5- Delivery sheet"
+msgstr ""
+
+#: delivery/templates/kitchen_count_steps.html:31
+msgid "Print route sheet."
 msgstr ""
 
 #: delivery/templates/review_orders.html:6
 #: delivery/templates/review_orders.html:66
 msgid "Orders"
+msgstr ""
+
+#: delivery/templates/review_orders.html:13
+msgid "Review Orders"
 msgstr ""
 
 #: delivery/templates/review_orders.html:27
@@ -202,6 +220,26 @@ msgstr ""
 msgid "OK, I'm ready"
 msgstr ""
 
+#: delivery/templates/route_sheet.html:5
+msgid "Delivery Route Sheet"
+msgstr ""
+
+#: delivery/templates/route_sheet.html:21
+msgid "Dish"
+msgstr ""
+
+#: delivery/templates/route_sheet.html:41
+msgid "Note"
+msgstr ""
+
+#: delivery/templates/route_sheet.html:42
+msgid "Item"
+msgstr ""
+
+#: delivery/templates/route_sheet.html:53
+msgid "Apt"
+msgstr ""
+
 #: delivery/templates/routes.html:6
 msgid "Routes Information"
 msgstr ""
@@ -216,6 +254,10 @@ msgstr ""
 
 #: delivery/templates/routes.html:41
 msgid "Save"
+msgstr ""
+
+#: delivery/templates/routes.html:55
+msgid "Next: Delivery Route Sheet"
 msgstr ""
 
 #: delivery/urls.py:10
@@ -244,13 +286,17 @@ msgid "^kitchen_count/(?P<year>\\d{4})/(?P<month>\\d{2})/(?P<day>\\d+)/$"
 msgstr ""
 
 #: delivery/urls.py:17
-msgid "^getDailyOrders/$"
-msgstr ""
-
-#: delivery/urls.py:18
-msgid "^refresh_orders/$"
+msgid "^route_sheet/(?P<id>\\d+)/$"
 msgstr ""
 
 #: delivery/urls.py:19
+msgid "^getDailyOrders/$"
+msgstr ""
+
+#: delivery/urls.py:20
+msgid "^refresh_orders/$"
+msgstr ""
+
+#: delivery/urls.py:21
 msgid "^saveRoute/$"
 msgstr ""
