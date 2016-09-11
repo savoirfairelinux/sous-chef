@@ -6,7 +6,7 @@
       <a class="{% if active_tab == 'information' %}active{% endif %} item" href="{% url 'member:client_information' pk=client.id %}"><i class="user icon"></i>{% trans 'Personal' %}</a>
       {% if client.client_referent.all.count %}
       <a class="{% if active_tab == 'referent' %}active{% endif %} item" href="{% url 'member:client_referent' pk=client.id %}"><i class="treatment icon"></i>{% trans 'Referent' %}</a>
-      {% else %}<em><a class="item" alt="{% trans 'Add a referent' %} "href="{% url 'member:member_update_referent_information' client_id=client.id %}"><i class="warning sign orange icon"></i>{% trans 'No referent available' %}</a></em>{% endif %}
+      {% else %}<em><a class="item" alt="{% trans 'Add a referent' %} "href="{% url 'admin:member_referencing_add'  %}"><i class="warning sign orange icon"></i>{% trans 'No referent available' %}</a></em>{% endif %}
       <a class="{% if active_tab == 'billing' %}active{% endif %} item" href="{% url 'member:client_payment' pk=client.id %}"><i class="payment icon"></i>{% trans 'Billing' %}</a>
       <a class="{% if active_tab == 'status' %}active{% endif %} item" href="{% url 'member:client_status' pk=client.id %}"><i class="history icon"></i>{% trans 'Status' %}</a>
     </div>
