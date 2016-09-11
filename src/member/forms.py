@@ -38,13 +38,23 @@ class ClientBasicInformation (forms.Form):
 
     birthdate = forms.DateField(label=_("Birthday"))
 
-    contact_type = forms.ChoiceField(
-        choices=CONTACT_TYPE_CHOICES,
-        label=_("Contact Type"),
-        widget=forms.Select(attrs={'class': 'ui dropdown'})
+    email = forms.CharField(
+        label='<i class="email icon"></i>',
+        widget=forms.TextInput(attrs={'placeholder': _('Email')}),
+        required=False,
     )
 
-    contact_value = forms.CharField(label=_("Contact information"))
+    home_phone = forms.CharField(
+        label='Home',
+        widget=forms.TextInput(attrs={'placeholder': _('Home phone')}),
+        required=False,
+    )
+
+    cell_phone = forms.CharField(
+        label='Cell',
+        widget=forms.TextInput(attrs={'placeholder': _('Cellular')}),
+        required=False,
+    )
 
     alert = forms.CharField(
         label=_("Alert"),
@@ -377,14 +387,18 @@ def load_initial_data(client):
         'gender': client.gender,
         'language': client.language,
         'birthdate': client.birthdate,
-        'contact_value': client.member.home_phone,
-        'contact_type': 'Home phone',
+        'home_phone': client.member.home_phone,
+        'cell_phone': client.member.cell_phone,
+        'email': client.member.email,
         'street': client.member.address.street,
         'city': client.member.address.city,
         'apartment': client.member.address.apartment,
         'postal_code': client.member.address.postal_code,
         'delivery_note': client.delivery_note,
-        'route': client.route.id,
+        'route':
+            client.route.id
+            if client.route is not None
+            else '',
         'latitude': client.member.address.latitude,
         'longitude': client.member.address.longitude,
         'distance': client.member.address.distance,
