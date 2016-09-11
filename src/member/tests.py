@@ -477,8 +477,9 @@ class FormTestCase(TestCase):
             "basic_information-language": "fr",
             "basic_information-gender": "M",
             "basic_information-birthdate": "1990-12-12",
-            "basic_information-contact_type": "Home phone",
-            "basic_information-contact_value": "555-555-5555",
+            "basic_information-home_phone": "555-555-5555",
+            "basic_information-email": "test@example.com",
+            "basic_information-cell_phone": "438-000-0000",
             "basic_information-alert": "Testing alert message",
             "wizard_goto_step": ""
         }
@@ -575,6 +576,8 @@ class FormTestCase(TestCase):
 
         # test_home_phone_member:
         self.assertTrue(member.home_phone.startswith('555'))
+        self.assertEquals(member.email, 'test@example.com')
+        self.assertEquals(member.cell_phone, '438-000-0000')
 
         # test_client_contact_type:
         self.assertEqual(member.member_contact.first().type, "Home phone")
@@ -722,8 +725,9 @@ class FormTestCase(TestCase):
             "basic_information-language": "fr",
             "basic_information-gender": "M",
             "basic_information-birthdate": "1986-06-06",
-            "basic_information-contact_type": "Home phone",
-            "basic_information-contact_value": "514-868-8686",
+            "basic_information-home_phone": "514-868-8686",
+            "basic_information-cell_phone": "438-000-0000",
+            "basic_information-email": "test@example.com",
             "basic_information-alert": "Testing alert message",
             "wizard_goto_step": ""
         }
@@ -811,6 +815,8 @@ class FormTestCase(TestCase):
 
         # test_home_phone_member:
         self.assertTrue(member.home_phone.startswith('514'))
+        self.assertEquals(member.email, 'test@example.com')
+        self.assertEquals(member.cell_phone, '438-000-0000')
 
         # test_client_contact_type:
         self.assertEqual(member.member_contact.first().type, "Home phone")
@@ -954,8 +960,6 @@ class FormTestCase(TestCase):
             "basic_information-language": "fr",
             "basic_information-gender": "M",
             "basic_information-birthdate": "",
-            "basic_information-contact_type": "Home phone",
-            "basic_information-contact_value": "",
             "basic_information-alert": "",
             "wizard_goto_step": ""
         }
@@ -974,7 +978,6 @@ class FormTestCase(TestCase):
         self.assertTrue(b'Required information' in error_response.content)
         self.assertTrue(b'lastname' in error_response.content)
         self.assertTrue(b'birthdate' in error_response.content)
-        self.assertTrue(b'contact_value' in error_response.content)
         self.assertTrue(b'This field is required' in error_response.content)
 
     def _test_basic_information_without_errors(self):
@@ -986,8 +989,7 @@ class FormTestCase(TestCase):
             "basic_information-language": "fr",
             "basic_information-gender": "M",
             "basic_information-birthdate": "1990-12-12",
-            "basic_information-contact_type": "Home phone",
-            "basic_information-contact_value": "555-555-5555",
+            "basic_information-home_phone": "555-555-5555",
             "basic_information-alert": "Testing alert message",
             "wizard_goto_step": ""
         }
@@ -1686,14 +1688,12 @@ class ClientUpdateAddressInformation(TestCase):
 
     def test_form_validation(self):
         client = ClientFactory()
-        print(client.route)
         form_data = {
             'street': '111 rue Roy',
         }
         form = ClientAddressInformation(data=form_data)
         self.assertFalse(form.is_valid())
         form = ClientAddressInformation(data=load_initial_data(client))
-        print(form.errors)
         self.assertTrue(form.is_valid())
 
     """
@@ -1709,8 +1709,6 @@ class ClientUpdateAddressInformation(TestCase):
         # Login as admin
         self.login_as_admin()
 
-        print(data)
-
         # Send the data to the form.
         response = self.client.post(
             reverse_lazy(
@@ -1721,7 +1719,6 @@ class ClientUpdateAddressInformation(TestCase):
             follow=True
         )
 
-        print(response.content)
         # Reload client data as it should have been changed in the database
         client = Client.objects.get(id=client.id)
         self.assertEqual(client.member.address.street, '111 rue Roy Est')
