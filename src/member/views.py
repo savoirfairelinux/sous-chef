@@ -98,34 +98,15 @@ class ClientUpdateBasicInformation(generic.edit.FormView):
         client.save()
 
         # Save contact information
-        if form['home_phone'] is not '':
-            contact, created = Contact.objects.update_or_create(
-                member=client.member, type=HOME,
-                defaults={
-                    'value': form['home_phone'],
-                    'member': client.member
-                }
-            )
-
-        # Add cell phone
-        if form['cell_phone'] is not '':
-            contact, created = Contact.objects.update_or_create(
-                member=client.member, type=CELL,
-                defaults={
-                    'value': form['cell_phone'],
-                    'member': client.member
-                }
-            )
-
-        # Add email
-        if form['email'] is not '':
-            contact, created = Contact.objects.update_or_create(
-                member=client.member, type=EMAIL,
-                defaults={
-                    'value': form['email'],
-                    'member': client.member
-                }
-            )
+        if client.member.home_phone != form['home_phone']:
+            client.member.add_contact_information(
+                HOME, form['home_phone'], True)
+        if client.member.cell_phone != form['cell_phone']:
+            client.member.add_contact_information(
+                CELL, form['cell_phone'], True)
+        if client.member.email != form['email']:
+            client.member.add_contact_information(
+                EMAIL, form['email'], True)
 
 
 class ClientUpdateAddressInformation(generic.edit.FormView):
@@ -492,31 +473,14 @@ class ClientWizard(NamedUrlSessionWizardView):
         member.address = address
         member.save()
 
-        # Add home phone
-        contact, created = Contact.objects.update_or_create(
-            member=member, type=HOME,
-            defaults={
-                'value': basic_information.get('home_phone'),
-                'member': member
-            }
+        member.add_contact_information(
+            HOME, basic_information.get('home_phone')
         )
-
-        # Add cell phone
-        contact, created = Contact.objects.update_or_create(
-            member=member, type=CELL,
-            defaults={
-                'value': basic_information.get('cell_phone'),
-                'member': member
-            }
+        member.add_contact_information(
+            CELL, basic_information.get('cell_phone')
         )
-
-        # Add email
-        contact, created = Contact.objects.update_or_create(
-            member=member, type=EMAIL,
-            defaults={
-                'value': basic_information.get('email'),
-                'member': member
-            }
+        member.add_contact_information(
+            EMAIL, basic_information.get('email')
         )
 
         billing_member = self.save_billing_member(member)

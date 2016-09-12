@@ -5,13 +5,14 @@ from member.models import Member, Client, User, Address, Referencing
 from member.models import Contact, Option, Client_option, Restriction, Route
 from member.models import Client_avoid_ingredient, Client_avoid_component
 from member.models import ClientScheduledStatus
+from member.models import CELL, HOME, EMAIL
 from meal.models import Restricted_item, Ingredient, Component
 from datetime import date
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse, reverse_lazy
 from order.models import Order
 from member.factories import(
-    RouteFactory, ClientFactory, ClientScheduledStatusFactory
+    RouteFactory, ClientFactory, ClientScheduledStatusFactory, MemberFactory
 )
 from meal.factories import IngredientFactory, ComponentFactory
 from django.core.management import call_command
@@ -23,28 +24,64 @@ from member.forms import(
 )
 
 
-class MemberEmptyContact(TestCase):
+class MemberContact(TestCase):
+
+    """
+    Contact information data should be attached to members.
+    Three types of data: EMAIL, CELL and HOME.
+    """
 
     @classmethod
     def setUpTestData(cls):
-        member = Member.objects.create(
-            firstname='Katrina', lastname='Heide')
+        cls.member = MemberFactory()
 
-    def test_home_phone_blank(self):
-        member = Member.objects.get(firstname="Katrina")
-        self.assertEqual(member.home_phone, "")
+    def test_home_phone(self):
+        """
+        Test that the factory properly sets a home phone information.
+        """
+        self.assertNotEqual(self.member.home_phone, "")
 
-    def test_cell_phone_blank(self):
-        member = Member.objects.get(firstname="Katrina")
-        self.assertEqual(member.cell_phone, "")
+    def test_add_contact_information(self):
+        """
+        Test the add_contact_information method when no contact information
+        of the given type exists yet.
+        It is supposed to return TRUE if a new contact information is created.
+        """
+        self.assertTrue(
+            self.member.add_contact_information(CELL, '438-000-0000')
+        )
+        self.assertEquals(self.member.cell_phone, '438-000-0000')
+        self.assertTrue(
+            self.member.add_contact_information(EMAIL, 'admin@example.com')
+        )
+        self.assertEquals(self.member.email, 'admin@example.com')
 
-    def test_work_phone_blank(self):
-        member = Member.objects.get(firstname="Katrina")
-        self.assertEqual(member.work_phone, "")
+    def test_add_contact_information_empty(self):
+        """
+        Passing an empty value should not update nor create anything, unless
+        the force_update parameter was passed.
+        """
+        self.member.add_contact_information(CELL, '438-000-0000')
+        self.assertEquals(self.member.cell_phone, '438-000-0000')
+        self.assertFalse(
+            self.member.add_contact_information(CELL, '')
+        )
+        self.assertEquals(self.member.cell_phone, '438-000-0000')
+        self.assertFalse(
+            self.member.add_contact_information(CELL, '', True)
+        )
+        self.assertEquals(self.member.cell_phone, '')
 
-    def test_email_blank(self):
-        member = Member.objects.get(firstname="Katrina")
-        self.assertEqual(member.email, "")
+    def test_update_contact_information(self):
+        """
+        Test the add_contact_information method when a contact information
+        of the given type already exists. The contact information should be
+        updated, instead of creating a new one.
+        """
+        self.assertFalse(
+            self.member.add_contact_information(HOME, '514-000-0000')
+        )
+        self.assertEquals(self.member.home_phone, '514-000-0000')
 
 
 class MemberTestCase(TestCase):

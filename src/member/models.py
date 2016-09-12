@@ -131,6 +131,23 @@ class Member(models.Model):
         except:
             return ""
 
+    def add_contact_information(self, type, value, force_update=False):
+        """
+        Attach a new contact information to the member instance.
+        If a contact information of the given type already exists, it should be
+        updated. Otherwise, it should create a new one.
+        """
+        created = False
+        if force_update or value is not '':
+            contact, created = Contact.objects.update_or_create(
+                member=self, type=type,
+                defaults={
+                    'value': value,
+                    'member': self
+                }
+            )
+        return created
+
 
 class Address(models.Model):
 

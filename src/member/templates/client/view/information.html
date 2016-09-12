@@ -15,9 +15,8 @@
     <h2 class="ui header">
         <div class="content">
             {% trans 'Basic information' %}
-            <div class="sub header">{% trans "Contact information of the client" %}.<a  href="{% url 'admin:member_client_change' client.id %}">
-                <i class="write grey icon"></i>
-            </a></div>
+            <div class="sub header">{% trans "Contact information of the client" %}.
+            </div>
         </div>
     </h2>
     <div class="ui divider"></div>
@@ -55,7 +54,9 @@
     <div class="item"><div class="header">{% trans 'Last Name' %}</div>{{client.emergency_contact.lastname}}</div>
     <div class="item"><div class="header">{% trans 'Relationship' %}</div>{{rclient.emergency_contact.relationship}}</div>
     {% for contact in client.emergency_contact.member_contact.all %}
-    <div class="item"><div class="header">{{contact.type}}</div>{{contact.value}}</div>
+    {% if contact.value is not empty %}
+        <div class="item"><div class="header">{{contact.type}}</div>{{contact.value}}</div>
+    {% endif %}
     {% endfor %}
 </div>
 {% endif %}

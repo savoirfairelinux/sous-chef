@@ -1,34 +1,34 @@
 {% load i18n %}
 
-<div class="ui mini steps">
+<div class="ui five ordered steps">
   <a class="{% if step == 'orders' %} active{% endif %} step" href="{% url 'delivery:order' %}">
     <div class="content">
-      <div class="title">{% trans '1- Review Orders' %}</div>
+      <div class="title">{% trans 'Review Orders' %}</div>
       <div class="description">{% trans 'Review orders for the day.' %}</div>
     </div>
   </a>
   <a class="{% if step == 'ingredients' %} active{% endif %} step" href="{% url 'delivery:meal' %}">
     <div class="content">
-      <div class="title">{% trans '2- Ingredients' %}</div>
+      <div class="title">{% trans 'Ingredients' %}</div>
       <div class="description">{% trans 'Pick ingredients for the day.' %}</div>
     </div>
   </a>
   <a class="{% if step == 'kitchen_count' %} active{% endif %} step" href="{% url 'delivery:kitchen_count' %}">
     <div class="content">
-      <div class="title">{% trans '3- Kitchen Count' %}</div>
+      <div class="title">{% trans 'Kitchen Count' %}</div>
       <div class="description">{% trans 'Print the kitchen count.' %}</div>
     </div>
   </a>
   <a class="{% if step == 'routes' %} active{% endif %} step" href="{% url 'delivery:route' %}">
     <div class="content">
-      <div class="title">{% trans '4- Routes' %}</div>
+      <div class="title">{% trans 'Routes' %}</div>
       <div class="description">{% trans 'Organize delivery routes.' %}</div>
     </div>
   </a>
   <div class="{% if step == 'delivery_sheet' %} active{% endif %} step">
     <div class="content">
-      <div class="title">{% trans '5- Delivery sheet' %}</div>
-      <div class="description">{% trans 'Print route sheet.' %}</div>
+      <div class="title">{% trans 'Route sheet' %}</div>
+      <div class="description">{% trans 'Print route sheet for deliveries.' %}</div>
     </div>
   </div>
 </div>
