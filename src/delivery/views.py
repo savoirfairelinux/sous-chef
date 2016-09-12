@@ -33,6 +33,7 @@ from meal.models import (
 from member.apps import db_sa_session
 from member.models import Client, Route
 from datetime import date
+from . import tsp
 
 
 class Orderlist(generic.ListView):
@@ -476,21 +477,27 @@ def dailyOrders(request):
                 # print("waypoint=", waypoint)
                 data.append(waypoint)
 
-    # sort waypoints according to previously saved route for same weekday
-    # print("dailyOrders1", "route_id", route_id,
-    #       "ids", [waypoint['id'] for waypoint in data])
-    if data:
-        route = Route.objects.get(id=route_id)
-        route_client_ids = route.get_client_sequence(datetime.date.today())
-        if route_client_ids:
-            member_ids = \
-                [Client.objects.get(id=cid).member.id
-                 for cid in route_client_ids]
-            unsorted_dic = {waypoint['id']: waypoint for waypoint in data}
-            sorted_dic = sort_sequence_ids(unsorted_dic, member_ids)
-            data = list(sorted_dic.values())
-            # print("dailyOrders2",
-            #       "ids", [waypoint['id'] for waypoint in data])
+    # Since the
+    # https://www.mapbox.com/api-documentation/#retrieve-a-duration-matrix
+    # endpoint is not yet available, we solve an approximation of the
+    # problem by assuming the world is flat and has no obstacles (2D
+    # Euclidean plane). This should still give good results.
+
+    node_to_waypoint = {}
+    nodes = [tsp.Node(None, 45.516564,  -73.575145)]  # Santropol
+    for waypoint in data:
+        node = tsp.Node(waypoint['id'], float(waypoint['latitude']),
+                        float(waypoint['longitude']))
+        node_to_waypoint[node] = waypoint
+        nodes.append(node)
+
+    nodes = tsp.solve(nodes)
+
+    data = []
+    for node in nodes:
+        # Guard against Santropol which is not in node_to_waypoint
+        if node in node_to_waypoint:
+            data.append(node_to_waypoint[node])
 
     waypoints = {'waypoints': data}
 
