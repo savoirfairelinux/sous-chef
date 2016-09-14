@@ -60,7 +60,7 @@ python3 manage.py migrate
 python3 manage.py createsuperuser
 
 # Load the initial data set
-python3 manage.py loaddata routes delivery_initial_data
+python3 manage.py loaddata routes client_options delivery_initial_data
 
 ```
 
