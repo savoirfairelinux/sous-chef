@@ -27,7 +27,7 @@ from member.models import (
     Route,
     Client_avoid_ingredient,
     Client_avoid_component,
-    HOME, CELL, EMAIL,
+    HOME, WORK, CELL, EMAIL,
 )
 from member.forms import (
     ClientScheduledStatusForm,
@@ -590,6 +590,33 @@ class ClientWizard(NamedUrlSessionWizardView):
                 lastname=referent_information.cleaned_data.get("lastname"),
             )
             referent.save()
+            ref_email = referent_information.cleaned_data.get(
+                "email", None)
+            ref_work_phone = referent_information.cleaned_data.get(
+                "work_phone", None)
+            ref_cell_phone = referent_information.cleaned_data.get(
+                "cell_phone", None)
+            if ref_email:
+                ctc_email = Contact.objects.create(
+                    type=EMAIL,
+                    value=ref_email,
+                    member=referent,
+                )
+                ctc_email.save()
+            if ref_work_phone:
+                ctc_work_phone = Contact.objects.create(
+                    type=WORK,
+                    value=ref_work_phone,
+                    member=referent,
+                )
+                ctc_work_phone.save()
+            if ref_cell_phone:
+                ctc_cell_phone = Contact.objects.create(
+                    type=CELL,
+                    value=ref_cell_phone,
+                    member=referent,
+                )
+                ctc_cell_phone.save()
 
         referencing = Referencing.objects.create(
             referent=referent,
