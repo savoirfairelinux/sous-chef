@@ -11,7 +11,7 @@ from member.models import Client, Member, Route
 
 class KitchenCountReportTestCase(TestCase):
 
-    fixtures = ['delivery_initial_data']
+    fixtures = ['delivery_route_data']
 
     @classmethod
     def setUpTestData(cls):
@@ -36,7 +36,7 @@ class KitchenCountReportTestCase(TestCase):
 
 class ChooseDayMainDishIngredientsTestCase(TestCase):
 
-    fixtures = ['delivery_initial_data']
+    fixtures = ['delivery_route_data']
 
     @classmethod
     def setUpTestData(cls):
@@ -116,6 +116,8 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
     def test_change_main_dish(self):
         """Change dish then go directly to Kitchen Count Report."""
         maindish = Component.objects.get(name='Coq au vin')
+
+        print(maindish.id)
 
         response = self.client.get(
             reverse_lazy('delivery:meal_id', args=[maindish.id]))

@@ -1,0 +1,50 @@
+{% extends "base_billing.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans 'Billing' %}{% endblock %}
+{% block content %}
+
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">{% trans "Billing Details" %}</h1>
+    <div class="right menu">
+      <div class="ui item"><h3><i class="ui calendar icon"></i>{{billing.billing_period|date:"F Y"}}</h3></div>
+    </div>
+</div>
+
+
+
+<div class="ui basic segment no-print">
+    <div class="ui row">
+        {% include 'billing/partials/statistics.html' with orders=billing.orders.all %}
+    </div>
+    <a href="javascript:window.print()" class="ui labeled icon right big button"><i class="print icon"></i>{% trans 'Print' %}</a>
+</div>
+
+<table class="ui very basic stripped celled table">
+  <thead>
+    <tr>
+      <th class="center aligned">{% trans "Order" %}</th>
+      <th>{% trans "Client" %}</th>
+      <th>{% trans "Delivery Date" %}</th>
+      <th class="right aligned">{% trans "Amount" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in billing.orders.all %}
+    <tr>
+      <td class="center aligned"><a href="{% url 'order:view' pk=order.id %}">#{{order.id}}</a></td>
+      <td><a href="{% url 'member:view' pk=order.client.id %}">{{order.client}}
+      <td>{{order.delivery_date}}</td>
+      <td class="right aligned"><i class="dollar icon"></i>{{order.price}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+      <tr>
+          <th colspan="3">{% trans "Total" %}</th>
+          <th class="right aligned"><i class="dollar icon"></i>{{ billing.total_amount }}</th>
+      </tr>
+  </tfoot>
+</table>
+{% endblock %}

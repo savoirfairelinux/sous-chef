@@ -6,7 +6,7 @@ class Command(BaseCommand):
     help = 'Creates a happy bunch of clients with orders'
 
     def handle(self, *args, **options):
-        orders = OrderFactory.create_batch(10)
+        orders = OrderFactory.create_batch(500, status='D')
         self.stdout.write(
             self.style.SUCCESS(
                 'Successfully created client {} orders'.format(orders)
