@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-10 02:37+0000\n"
+"POT-Creation-Date: 2016-09-14 20:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -89,47 +89,47 @@ msgstr ""
 msgid "client"
 msgstr ""
 
-#: order/models.py:637
+#: order/models.py:640
 msgid "Search by name"
 msgstr ""
 
-#: order/models.py:677
+#: order/models.py:680
 msgid "order items"
 msgstr ""
 
-#: order/models.py:681
+#: order/models.py:684
 msgid "order"
 msgstr ""
 
-#: order/models.py:688
+#: order/models.py:691
 msgid "price"
 msgstr ""
 
-#: order/models.py:692
+#: order/models.py:695
 msgid "billable flag"
 msgstr ""
 
-#: order/models.py:696
+#: order/models.py:699
 msgid "size"
 msgstr ""
 
-#: order/models.py:703
+#: order/models.py:706
 msgid "order item type"
 msgstr ""
 
-#: order/models.py:710
+#: order/models.py:713
 msgid "remark"
 msgstr ""
 
-#: order/models.py:714
+#: order/models.py:717
 msgid "total quantity"
 msgstr ""
 
-#: order/models.py:719
+#: order/models.py:722
 msgid "free quantity"
 msgstr ""
 
-#: order/models.py:726
+#: order/models.py:729
 msgid "component group"
 msgstr ""
 
