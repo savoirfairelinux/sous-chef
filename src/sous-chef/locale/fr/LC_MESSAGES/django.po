@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-14 20:54+0000\n"
+"POT-Creation-Date: 2016-09-14 23:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
 "teams/63058/fr/)\n"
@@ -17,6 +17,22 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: sous-chef/templates/404.html:4 sous-chef/templates/404.html:6
+msgid "Page not found"
+msgstr "La page demandée est introuvable"
+
+#: sous-chef/templates/404.html:7
+msgid "We couldn't find the page you are looking for."
+msgstr "Nous n'avons pas réussi à trouver la page demandée."
+
+#: sous-chef/templates/404.html:10
+msgid "Go back from where you came from"
+msgstr "Retournez d'où vous venez"
+
+#: sous-chef/templates/404.html:11 sous-chef/templates/404.html:14
+msgid "Go back to homepage"
+msgstr "Retournez à la page d'accueil"
 
 #: sous-chef/templates/base.html:9 sous-chef/templates/splash.html:9
 msgid "Sous-Chef"
