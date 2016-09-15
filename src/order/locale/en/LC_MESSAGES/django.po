@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-15 16:53+0000\n"
+"POT-Creation-Date: 2016-09-15 19:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -140,8 +140,7 @@ msgstr ""
 
 #: order/templates/_form.html:6 order/templates/_form.html:62
 #: order/templates/update.html:19
-msgid ""
-"Please review the form to make sure that all required fields are filled."
+msgid "Please review the form to make sure that all required fields are filled."
 msgstr ""
 
 #: order/templates/_form.html:17

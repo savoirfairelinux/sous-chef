@@ -8,11 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-15 16:53+0000\n"
+"POT-Creation-Date: 2016-09-15 19:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: savoirfairelinux <support@savoirfairelinux.com>, 2016\n"
-"Language-Team: French (https://www.transifex.com/savoirfairelinux/"
-"teams/63058/fr/)\n"
+"Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -169,8 +168,7 @@ msgstr "Ce champ est requis sauf si vous souhaitez ajouter un nouveau membre."
 
 #: member/forms.py:253
 msgid "This field is required unless you chose an existing member."
-msgstr ""
-"Ce champ est requis à moins que vous ne choisissiez un membre existant."
+msgstr "Ce champ est requis à moins que vous ne choisissiez un membre existant."
 
 #: member/forms.py:263
 msgid "Not a valid member, please chose an existing member."
@@ -201,12 +199,8 @@ msgid "Same As Client"
 msgstr "Identique au Client"
 
 #: member/forms.py:297
-msgid ""
-"If checked, the personal information             of the client will be used "
-"as billing information."
-msgstr ""
-"Si sélectionné, les informations personnelles du client seront utilisées "
-"pour la facturation.."
+msgid "If checked, the personal information             of the client will be used as billing information."
+msgstr "Si sélectionné, les informations personnelles du client seront utilisées pour la facturation.."
 
 #: member/forms.py:303 member/models.py:371
 msgid "Payment Type"
@@ -229,12 +223,8 @@ msgid "City Name"
 msgstr "Ville"
 
 #: member/forms.py:335
-msgid ""
-"This member has not a valid address, please add a valid address to this "
-"member, so it can be used for the billing."
-msgstr ""
-"Ce membre ne possède pas une adresse valide. Veillez ajouter une adresse "
-"valide afin qu'elle puisse être utiliser pour la facturation."
+msgid "This member has not a valid address, please add a valid address to this member, so it can be used for the billing."
+msgstr "Ce membre ne possède pas une adresse valide. Veillez ajouter une adresse valide afin qu'elle puisse être utiliser pour la facturation."
 
 #: member/forms.py:340
 msgid "This field is required"
@@ -572,9 +562,7 @@ msgstr ""
 
 #: member/templates/client/create/form.html:26
 msgid "No information will be saved until all the steps are completed."
-msgstr ""
-"Aucune information ne sera sauvegardée tant que toutes les étapes ne sont "
-"pas complétées."
+msgstr "Aucune information ne sera sauvegardée tant que toutes les étapes ne sont pas complétées."
 
 #: member/templates/client/create/form.html:28
 msgid "Save as soon as you\\"
@@ -658,11 +646,8 @@ msgstr "Information requise manquante"
 
 #: member/templates/client/create/form.html:58
 #: member/templates/client/update/base.html:48
-msgid ""
-"Please review the form to make sure that all required fields are filled."
-msgstr ""
-"Veuillez réviser le formulaire afin de valider que tous les champs requis "
-"sont remplis."
+msgid "Please review the form to make sure that all required fields are filled."
+msgstr "Veuillez réviser le formulaire afin de valider que tous les champs requis sont remplis."
 
 #: member/templates/client/create/form.html:69
 msgid "Back"
@@ -905,9 +890,7 @@ msgid "Status modification"
 msgstr "Changement de statut"
 
 #: member/templates/client/update/status.html:20
-msgid ""
-"If you want to schedule a status modification, feel free to fill one or two "
-"of theses date fields."
+msgid "If you want to schedule a status modification, feel free to fill one or two of theses date fields."
 msgstr ""
 
 #: member/templates/client/update/status.html:33

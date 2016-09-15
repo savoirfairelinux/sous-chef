@@ -13,10 +13,10 @@ script:
   - pep8 --count --show-source --exclude=migrations src/
   # Run `makemessages` and report an error if it should have been run by the
   # developer for this pull request.
-  - cd src && python3 manage.py makemessages -l fr -l en
+  - cd src && python3 manage.py makemessages --no-wrap -l fr -l en
   # We allow for a 1-line difference since `makemessages` will change the
   # timestamp within the file.
-  - git diff
+  - git diff --unified=1
   - git diff --numstat | awk '{if ($1>1 || $2>1) { print "***ERROR***\nLarge diff detected in", $3; print "Please see https://github.com/savoirfairelinux/sous-chef/blob/dev/docs/create_po_file.adoc"; exit 1 }}'
 
 after_success:
