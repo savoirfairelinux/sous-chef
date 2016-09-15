@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-14 20:54+0000\n"
+"POT-Creation-Date: 2016-09-15 19:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -198,9 +198,7 @@ msgid "Same As Client"
 msgstr ""
 
 #: member/forms.py:297
-msgid ""
-"If checked, the personal information             of the client will be used "
-"as billing information."
+msgid "If checked, the personal information             of the client will be used as billing information."
 msgstr ""
 
 #: member/forms.py:303 member/models.py:371
@@ -224,9 +222,7 @@ msgid "City Name"
 msgstr ""
 
 #: member/forms.py:335
-msgid ""
-"This member has not a valid address, please add a valid address to this "
-"member, so it can be used for the billing."
+msgid "This member has not a valid address, please add a valid address to this member, so it can be used for the billing."
 msgstr ""
 
 #: member/forms.py:340
@@ -645,8 +641,7 @@ msgstr ""
 
 #: member/templates/client/create/form.html:58
 #: member/templates/client/update/base.html:48
-msgid ""
-"Please review the form to make sure that all required fields are filled."
+msgid "Please review the form to make sure that all required fields are filled."
 msgstr ""
 
 #: member/templates/client/create/form.html:69
@@ -882,9 +877,7 @@ msgid "Status modification"
 msgstr ""
 
 #: member/templates/client/update/status.html:20
-msgid ""
-"If you want to schedule a status modification, feel free to fill one or two "
-"of theses date fields."
+msgid "If you want to schedule a status modification, feel free to fill one or two of theses date fields."
 msgstr ""
 
 #: member/templates/client/update/status.html:33

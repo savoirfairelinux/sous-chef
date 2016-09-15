@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-14 20:54+0000\n"
+"POT-Creation-Date: 2016-09-15 19:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,67 +69,67 @@ msgstr ""
 msgid "NON BILLABLE pickup (payment)"
 msgstr ""
 
-#: order/models.py:96
+#: order/models.py:97
 msgid "orders"
 msgstr ""
 
-#: order/models.py:100
+#: order/models.py:101
 msgid "creation date"
 msgstr ""
 
-#: order/models.py:104
+#: order/models.py:105
 msgid "delivery date"
 msgstr ""
 
-#: order/models.py:110
+#: order/models.py:111
 msgid "order status"
 msgstr ""
 
-#: order/models.py:115
+#: order/models.py:116
 msgid "client"
 msgstr ""
 
-#: order/models.py:640
+#: order/models.py:641
 msgid "Search by name"
 msgstr ""
 
-#: order/models.py:680
+#: order/models.py:703
 msgid "order items"
 msgstr ""
 
-#: order/models.py:684
+#: order/models.py:707
 msgid "order"
 msgstr ""
 
-#: order/models.py:691
+#: order/models.py:714
 msgid "price"
 msgstr ""
 
-#: order/models.py:695
+#: order/models.py:718
 msgid "billable flag"
 msgstr ""
 
-#: order/models.py:699
+#: order/models.py:722
 msgid "size"
 msgstr ""
 
-#: order/models.py:706
+#: order/models.py:729
 msgid "order item type"
 msgstr ""
 
-#: order/models.py:713
+#: order/models.py:736
 msgid "remark"
 msgstr ""
 
-#: order/models.py:717
+#: order/models.py:740
 msgid "total quantity"
 msgstr ""
 
-#: order/models.py:722
+#: order/models.py:745
 msgid "free quantity"
 msgstr ""
 
-#: order/models.py:729
+#: order/models.py:752
 msgid "component group"
 msgstr ""
 
@@ -140,8 +140,7 @@ msgstr ""
 
 #: order/templates/_form.html:6 order/templates/_form.html:62
 #: order/templates/update.html:19
-msgid ""
-"Please review the form to make sure that all required fields are filled."
+msgid "Please review the form to make sure that all required fields are filled."
 msgstr ""
 
 #: order/templates/_form.html:17
