@@ -64,8 +64,7 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
         # This data set includes 'Pepper' available ingredient
         # create orders for today
         clients = Client.active.all()
-        Order.create_orders_on_defaults(
-            datetime.date.today(),
+        Order.objects.auto_create_orders(
             datetime.date.today(),
             clients)
 
@@ -165,8 +164,8 @@ class DeliveryRouteSheetTestCase(TestCase):
         # generate orders today
         self.today = datetime.date.today()
         clients = Client.active.all()
-        numorders = Order.create_orders_on_defaults(
-            self.today, self.today, clients)
+        numorders = Order.objects.auto_create_orders(
+            self.today, clients)
         self.route_id = Route.objects.get(name='ndg').id
 
     def test_query(self):
@@ -191,8 +190,8 @@ class RouteSequencingTestCase(TestCase):
         # generate orders today
         self.today = datetime.date.today()
         clients = Client.active.all()
-        numorders = Order.create_orders_on_defaults(
-            self.today, self.today, clients)
+        numorders = Order.objects.auto_create_orders(
+            self.today, clients)
         self.route_id = Route.objects.get(name='ndg').id
 
     def test_get_orders(self):

@@ -63,33 +63,114 @@ SIDE_PRICE_SOLIDARY = 0.50
 
 class OrderManager(models.Manager):
 
-    def get_orders_for_date(self, delivery_date=None):
-        """ Return the orders for the given date """
-
+    def get_shippable_orders(self, delivery_date=None):
+        """
+        Return the orders ready to be delivered for a given date.
+        A shippable order must be created in the database, and its ORDER_STATUS
+        must be 'O' (Ordered).
+        """
+        # If no date is passed, use the current day
         if delivery_date is None:
             delivery_date = date.today()
-
         return self.get_queryset().filter(
-            delivery_date=delivery_date,
-        )
+            delivery_date=delivery_date, status=ORDER_STATUS_ORDERED)
 
     def get_billable_orders(self, year, month):
-        """ Return the delivered orders during the given period. """
+        """
+        Return the orders that have successfully delivered during
+        the given period.
+        A period is represented by a year and a month.
+        """
         return self.get_queryset().filter(
             delivery_date__year=year,
             delivery_date__month=month,
-            status="D",
+            status='D',
         )
 
     def get_billable_orders_client(self, month, year, client):
-        """Return the orders for the given month and client"""
-
+        """
+        Return the orders that have successfully delivered during
+        the given period to a given client.
+        A period is represented by a year and a month.
+        """
         return self.get_queryset().filter(
             delivery_date__year=year,
             delivery_date__month=month,
             client=client,
             status="D",
         )
+
+    def auto_create_orders(self, delivery_date, clients):
+        """
+        Automatically creates orders and order items for the given delivery
+        date and given client list.
+        Order items will be created based on client's meals default.
+
+        Parameters:
+          delivery_date : date on which orders are to be delivered
+          clients : a list of one or many client objects
+
+        Returns:
+          Number of orders created.
+        """
+        created = 0
+        day = delivery_date.weekday()  # Monday is 0, Sunday is 6
+        for client in clients:
+            # No main_dish means no delivery this day
+            main_dish_quantity, main_dish_size = Client.get_meal_defaults(
+                client,
+                COMPONENT_GROUP_CHOICES_MAIN_DISH, day)
+            if main_dish_quantity == 0:
+                continue
+            try:
+                # If an order is already created, skip order items creation
+                # (if want to replace, must be deleted first)
+                Order.objects.get(client=client, delivery_date=delivery_date)
+                continue
+            except Order.DoesNotExist:
+                order = Order.objects.create(client=client,
+                              creation_date=datetime.today(),
+                              delivery_date=delivery_date,
+                              status=ORDER_STATUS_ORDERED)
+                created += 1
+
+            # TODO Use Parameters Model in member to store unit prices
+            if client.rate_type == RATE_TYPE_LOW_INCOME:
+                main_price = MAIN_PRICE_LOW_INCOME
+                side_price = SIDE_PRICE_LOW_INCOME
+            elif client.rate_type == RATE_TYPE_SOLIDARY:
+                main_price = MAIN_PRICE_SOLIDARY
+                side_price = SIDE_PRICE_SOLIDARY
+            else:
+                main_price = MAIN_PRICE_DEFAULT
+                side_price = SIDE_PRICE_DEFAULT
+
+            for component_group, trans in COMPONENT_GROUP_CHOICES:
+                item_quantity, item_size = Client.get_meal_defaults(
+                    client, component_group, day)
+                if item_quantity > 0:
+                    # Set the quantity of the current item
+                    total_quantity = item_quantity
+                    free_quantity = 0
+                    # Set the unit price of the current item
+                    if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH):
+                        unit_price = main_price
+                    else:
+                        unit_price = side_price
+                        while main_dish_quantity > 0 and item_quantity > 0:
+                            main_dish_quantity -= 1
+                            item_quantity -= 1
+                            free_quantity += 1
+                    Order_item.objects.create(
+                        order=order,
+                        component_group=component_group,
+                        price=(total_quantity - free_quantity) * unit_price,
+                        billable_flag=True,
+                        size=item_size,
+                        order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
+                        total_quantity=total_quantity,
+                        free_quantity=free_quantity)
+        return created
 
 
 class Order(models.Model):
@@ -127,92 +208,34 @@ class Order(models.Model):
 
     @property
     def price(self):
+        """
+        Sum the items prices for the given order.
+        """
         total = 0
         for item in self.orders.all():
             if item.billable_flag is True:
                 total = total + item.price
-
         return total
+
+    def add_item(self, type, **kwargs):
+        """
+        Add a new item to the given order.
+        """
+        Order_item.objects.create(
+            order=self,
+            component_group=type,
+            price=quantity * MAIN_PRICE_DEFAULT,
+            billable_flag=True,
+            size=size,
+            order_item_type=type,
+            total_quantity=quantity,
+            free_quantity=0)
 
     def __str__(self):
         return "client={}, delivery_date={}".format(
             self.client,
             self.delivery_date
         )
-
-    @staticmethod
-    def create_orders_on_defaults(creation_date, delivery_date, clients):
-        """Create orders and order items for one or many clients.
-
-        Args:
-            creation_date : date on which orders are created
-            delivery_date : date on which orders are to be delivered
-            clients : a list of one or many client objects
-
-        Returns:
-            Number of orders created.
-        """
-
-        num_orders_created = 0
-        day = delivery_date.weekday()  # Monday is 0, Sunday is 6
-        for client in clients:
-            # find quantity of free side dishes based on number of main dishes
-            free_side_dish_qty = Client.get_meal_defaults(
-                client,
-                COMPONENT_GROUP_CHOICES_MAIN_DISH, day)[0]
-            # print ("Side dish", free_side_dish_qty)
-            if free_side_dish_qty == 0:
-                continue  # No meal for client on this day
-            try:
-                Order.objects.get(client=client, delivery_date=delivery_date)
-                # order already created, skip order items creation
-                # (if want to replace, must be deleted first)
-                continue
-            except Order.DoesNotExist:
-                order = Order(client=client,
-                              creation_date=creation_date,
-                              delivery_date=delivery_date,
-                              status=ORDER_STATUS_ORDERED)
-                order.save()
-                num_orders_created += 1
-            # TODO Use Parameters Model in member to store unit prices
-            if client.rate_type == RATE_TYPE_LOW_INCOME:
-                main_price = MAIN_PRICE_LOW_INCOME
-                side_price = SIDE_PRICE_LOW_INCOME
-            elif client.rate_type == RATE_TYPE_SOLIDARY:
-                main_price = MAIN_PRICE_SOLIDARY
-                side_price = SIDE_PRICE_SOLIDARY
-            else:
-                main_price = MAIN_PRICE_DEFAULT
-                side_price = SIDE_PRICE_DEFAULT
-            for component_group, trans in COMPONENT_GROUP_CHOICES:
-                default_qty, default_size = \
-                    Client.get_meal_defaults(
-                        client, component_group, day)
-                if default_qty > 0:
-                    total_quantity = default_qty
-                    free_quantity = 0
-                    if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH):
-                        unit_price = main_price
-                    else:
-                        unit_price = side_price
-                        while free_side_dish_qty > 0 and default_qty > 0:
-                            free_side_dish_qty -= 1
-                            default_qty -= 1
-                            free_quantity += 1
-                    oi = Order_item(
-                        order=order,
-                        component_group=component_group,
-                        price=(total_quantity - free_quantity) * unit_price,
-                        billable_flag=True,
-                        size=default_size,
-                        order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
-                        total_quantity=total_quantity,
-                        free_quantity=free_quantity)
-                    oi.save()
-
-        # print("Number of orders created = ", num_orders_created) #DEBUG
-        return num_orders_created
 
     @staticmethod
     def get_kitchen_items(delivery_date):

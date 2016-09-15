@@ -1,5 +1,6 @@
 import random
 import urllib.parse
+import random
 from datetime import date
 
 from django.test import TestCase
@@ -16,24 +17,50 @@ from order.factories import OrderFactory
 
 class OrderTestCase(TestCase):
 
+    fixtures = ['routes.json']
+
     @classmethod
     def setUpTestData(cls):
-        RouteFactory.create_batch(10)
+        """
+        Provide an order Object, without any items.
+        """
+        cls.order = OrderFactory(order_item=None)
 
-    def test_get_orders_for_date(self):
-        OrderFactory(delivery_date=date.today())
-        self.assertTrue(
-            len(
-                Order.objects.get_orders_for_date(
-                    delivery_date=date.today()
-                )
-            ) == 1
+    def test_order_add_item(self):
+        self.order.add_item('main_dish', 2)
+        self.order.add_item('fruit_salad')
+        self.order.add_item('visit')
+        self.assertEqual(0, self.order.orders.count())
+
+
+class OrderManagerTestCase(TestCase):
+
+    fixtures = ['routes.json']
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.orders = OrderFactory.create_batch(10,
+            delivery_date=date.today(), status='O'
         )
+        cls.past_order = OrderFactory(
+            delivery_date=date(2015, 7, 15), status='O'
+        )
+
+    def test_get_shippable_orders(self):
+        """
+        Should return all shippable orders for the given date.
+        A shippable order must be created in the database, and its ORDER_STATUS
+        must be 'O' (Ordered).
+        """
+        orders = Order.objects.get_shippable_orders()
+        self.assertEqual(len(orders), len(self.orders))
+        past_order = Order.objects.get_shippable_orders(date(2015, 7, 15))
+        self.assertEqual(len(past_order), 1)
 
     def test_order_str_includes_date(self):
         delivery_date = date.today()
         OrderFactory(delivery_date=delivery_date)
-        orders = Order.objects.get_orders_for_date(
+        orders = Order.objects.get_shippable_orders(
             delivery_date=delivery_date)
         self.assertTrue(str(delivery_date) in str(orders[0]))
 
@@ -124,62 +151,69 @@ class OrderCreateOnDefaultsTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        clients = ClientFactory.create_batch(4)
-        for client in clients:
-            client.set_meal_defaults(
-                'main_dish',
-                4,
-                random.choice([1, 2]),
-                random.choice(['R', 'L'])
-            )
-            client.set_meal_defaults(
-                'dessert', 4, random.choice([0, 1, 2]), ''
-            )
-            client.set_meal_defaults(
-                'diabetic dessert', 4, random.choice([0, 1, 2]), ''
-            )
-            client.set_meal_defaults(
-                'fruit_salad', 4, random.choice([0, 1, 2]), ''
-            )
-            client.set_meal_defaults(
-                'green_salad', 4, random.choice([0, 1, 2]), ''
-            )
-            client.set_meal_defaults(
-                'pudding', 4, random.choice([0, 1, 2]), ''
-            )
-            client.set_meal_defaults(
-                'compote', 4, random.choice([0, 1, 2]), ''
-            )
-            client.save()
+        """
+        Create active ongoing clients with predefined meals default.
+        """
+        meals_default = {
+            'main_dish_friday_quantity':2,
+            'size_friday':'L',
+            'dessert_friday_quantity':0,
+            'diabetic_dessert_friday_quantity':0,
+            'fruit_salad_friday_quantity':1,
+            'green_salad_friday_quantity':0,
+            'pudding_friday_quantity':1,
+            'compote_friday_quantity':0,
+        }
+        cls.ongoing_clients = ClientFactory.create_batch(4,
+            status=Client.ACTIVE, delivery_type='O', meal_default_week=meals_default)
+        cls.episodic_clients = ClientFactory.create_batch(6,
+            status=Client.ACTIVE, delivery_type='E')
+        # The delivery date must be a Friday, to match the meals defaults
+        cls.delivery_date = date(2016, 7, 15)
 
-    def test_create_all_orders_fixed_date(self):
-        """All orders will be created"""
-        creation_date = date(2016, 7, 8)
-        delivery_date = date(2016, 7, 15)
-        clients = Client.objects.all()
-        Order.create_orders_on_defaults(
-            creation_date, delivery_date, clients)
-        new = Order.objects.filter(delivery_date=delivery_date)
-        self.assertEqual(len(new), len(clients))
+    def test_auto_create_orders(self):
+        """
+        One order per active ongoing client must have been created.
+        """
+        count = Order.objects.auto_create_orders(
+            self.delivery_date, self.ongoing_clients)
+        self.assertEqual(count, len(self.ongoing_clients))
+        created = Order.objects.filter(delivery_date=self.delivery_date)
+        self.assertEqual(created.count(), len(self.ongoing_clients))
 
-    def test_create_only_new_orders_fixed_date(self):
-        """Only new orders for delivery date will be created"""
-        creation_date = date(2016, 7, 9)
-        delivery_date = date(2016, 7, 15)
-        clients = Client.objects.all()
-        # create 2 old orders
-        Order.create_orders_on_defaults(
-            date(2016, 7, 5), delivery_date, clients[0:2])
-        old = Order.objects.filter(delivery_date=delivery_date)
-        numold = len(old)  # because query is lazy and old will change below
-        # create new orders
-        Order.create_orders_on_defaults(
-            creation_date, delivery_date, clients)
-        new = Order.objects.filter(
-            creation_date=creation_date, delivery_date=delivery_date)
-        # TODO improve using join on old clients
-        # check that old orders not overridden
-        self.assertEqual(len(new), len(clients) - numold)
+    def test_auto_create_orders_existing_order(self):
+        """
+        Only new orders for delivery date should be created.
+        """
+        # Create an  for a random ongoing client
+        client = random.choice(self.ongoing_clients)
+        order = OrderFactory(
+            delivery_date=self.delivery_date,
+            client=client,
+        )
+        Order.objects.auto_create_orders(self.delivery_date, self.ongoing_clients)
+        self.assertEqual(Order.objects.filter(client=client).count(), 1)
+
+    def test_auto_create_orders_items(self):
+        """
+        Orders must be created with the meals defaults.
+        """
+        # Create orders for my ongoing active clients
+        Order.objects.auto_create_orders(
+            self.delivery_date, self.ongoing_clients)
+        client = random.choice(self.ongoing_clients)
+        order = Order.objects.filter(client=client).get()
+        items = order.orders.all()
+        self.assertEqual(items.count(), 3)
+        main_dish_item = items.filter(component_group='main_dish').get()
+        self.assertEqual(main_dish_item.total_quantity, 2)
+        self.assertEqual(main_dish_item.size, 'L')
+        self.assertTrue(main_dish_item.billable_flag)
+        pudding_item = items.filter(component_group='pudding').get()
+        self.assertEqual(pudding_item.total_quantity, 1)
+        fruit_salad_item = items.filter(component_group='fruit_salad').get()
+        self.assertEqual(fruit_salad_item.total_quantity, 1)
+        self.assertEqual(items.filter(component_group='compote').count(), 0)
 
 
 class OrderFormTestCase(TestCase):

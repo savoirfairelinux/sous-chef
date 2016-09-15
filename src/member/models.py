@@ -314,6 +314,15 @@ class ActiveClientManager(ClientManager):
         )
 
 
+class OngoingClientManager(ClientManager):
+
+    def get_queryset(self):
+
+        return super(OngoingClientManager, self).get_queryset().filter(
+            status=Client.ACTIVE, delivery_type='O'
+        )
+
+
 class PendingClientManager(ClientManager):
 
     def get_queryset(self):
@@ -486,6 +495,7 @@ class Client(models.Model):
 
     active = ActiveClientManager()
     pending = PendingClientManager()
+    ongoing = OngoingClientManager()
     contact = ContactClientManager()
 
     @property
@@ -618,7 +628,7 @@ class Client(models.Model):
         Static method called only on class object.
 
         Parameters:
-          client : client object
+          client : client objectget_meal_defaults
           component_group : as in meal.models.COMPONENT_GROUP_CHOICES
           day : day of week where 0 is monday, 6 is sunday
 
