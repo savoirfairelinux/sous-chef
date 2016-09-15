@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-14 20:54+0000\n"
+"POT-Creation-Date: 2016-09-15 15:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Mathieu Perreault <mathieu.perreault@gmail.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -71,67 +71,67 @@ msgstr "NON FACTURABLE - Livraison (par ex. carte d'invitation)"
 msgid "NON BILLABLE pickup (payment)"
 msgstr "NON FACTURABLE - Ramassage (par ex. paiement)"
 
-#: order/models.py:96
+#: order/models.py:97
 msgid "orders"
 msgstr "commandes"
 
-#: order/models.py:100
+#: order/models.py:101
 msgid "creation date"
 msgstr "date de création"
 
-#: order/models.py:104
+#: order/models.py:105
 msgid "delivery date"
 msgstr "date de livraison"
 
-#: order/models.py:110
+#: order/models.py:111
 msgid "order status"
 msgstr "statut de la commande"
 
-#: order/models.py:115
+#: order/models.py:116
 msgid "client"
 msgstr "client"
 
-#: order/models.py:640
+#: order/models.py:641
 msgid "Search by name"
 msgstr "Chercher par nom"
 
-#: order/models.py:680
+#: order/models.py:703
 msgid "order items"
 msgstr "éléments de la commande"
 
-#: order/models.py:684
+#: order/models.py:707
 msgid "order"
 msgstr "commande"
 
-#: order/models.py:691
+#: order/models.py:714
 msgid "price"
 msgstr "prix"
 
-#: order/models.py:695
+#: order/models.py:718
 msgid "billable flag"
 msgstr "facturable"
 
-#: order/models.py:699
+#: order/models.py:722
 msgid "size"
 msgstr "taille"
 
-#: order/models.py:706
+#: order/models.py:729
 msgid "order item type"
 msgstr "type d'éléments de commande"
 
-#: order/models.py:713
+#: order/models.py:736
 msgid "remark"
 msgstr "remarque"
 
-#: order/models.py:717
+#: order/models.py:740
 msgid "total quantity"
 msgstr "quantité"
 
-#: order/models.py:722
+#: order/models.py:745
 msgid "free quantity"
 msgstr "quantité gratuite"
 
-#: order/models.py:729
+#: order/models.py:752
 msgid "component group"
 msgstr "groupe de composant"
 
