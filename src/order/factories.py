@@ -36,7 +36,9 @@ class OrderFactory(factory.DjangoModelFactory):
 
     order_item = factory.RelatedFactory(
         'order.factories.OrderItemFactory',
-        'order'
+        'order',
+        price='5',
+        billable_flag=True,
     )
 
 

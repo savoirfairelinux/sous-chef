@@ -72,14 +72,15 @@ class OrderManager(models.Manager):
             delivery_date=delivery_date,
         )
 
-    def get_orders_for_month(self, month, year):
-        """ Return the orders for the given month """
-        return self.filter(
+    def get_billable_orders(self, year, month):
+        """ Return the delivered orders during the given period. """
+        return self.get_queryset().filter(
             delivery_date__year=year,
             delivery_date__month=month,
+            status="D",
         )
 
-    def get_orders_for_month_client(self, month, year, client):
+    def get_billable_orders_client(self, month, year, client):
         """Return the orders for the given month and client"""
 
         return self.get_queryset().filter(
@@ -671,6 +672,28 @@ class OrderFilter(FilterSet):
 
         return queryset.filter(
             name_contains
+        )
+
+
+class DeliveredOrdersByMonth(FilterSet):
+
+    delivery_date = MethodFilter(
+        action='filter_period'
+    )
+
+    class Meta:
+        model = Order
+
+    @staticmethod
+    def filter_period(queryset, value):
+        if not value:
+            return None
+
+        year, month = value.split('-')
+        return queryset.filter(
+            status="D",
+            delivery_date__year=year,
+            delivery_date__month=month,
         )
 
 

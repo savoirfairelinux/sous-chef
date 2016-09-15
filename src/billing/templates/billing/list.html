@@ -7,7 +7,11 @@
 {% block extrajs %}
   <script src="{% static 'js/calendar.min.js' %}" type="application/javascript"></script>
   <script type="text/javascript">
-
+  $('.billing-delete').click(function(){
+      var billing_id = $(this).attr('data-billing-id');
+      var selector = '.ui.basic.modal.billing-' + billing_id;
+      $(selector).modal('show');
+  });
     $(function() {
       $('#billing_delivery_date').calendar({
         type: 'month',
@@ -22,6 +26,9 @@
         }
       });
   });
+
+    $('.add.icon')
+        .popup();
 </script>
 
 {% endblock %}
@@ -30,6 +37,13 @@
 
 <div class="ui secondary pointing fluid menu">
   <h1 class="ui header">{% trans 'Billing' %}</h1>
+
+  <div class="right menu">
+    <a class="ui item"
+       href="{% url 'billing:add' %}">
+        <i class="add icon" data-content="Add a new billing cycle"></i>
+    </a>
+  </div>
 </div>
 
 <div class="ui mobile reversed equal width grid">
@@ -39,16 +53,7 @@
 
         <div class="inline fields">
             <div class="field">
-                <label>{% trans "Name" %}</label>
-                <div class="field">
-                    <div class="ui large left icon input">
-                        <i class="users icon"></i>
-                        {{ filter.form.name }}
-                    </div>
-                </div>
-            </div>
-            <div class="field">
-                <label>{% trans "Period" %}</label>
+                <label>{% trans "Billing Period" %}</label>
                 <div class="field">
                     <div class="ui calendar" id="billing_delivery_date">
                         <div class="ui input left icon">
@@ -68,38 +73,29 @@
   </div>
 </div>
 
-{% if billing %}
+{% if billings %}
 <table class="ui very basic stripped celled table">
   <thead>
-    <th class="sorted descending">{% trans "Billing" %}</th>
-    <th class="">{% trans 'Client' %}</th>
-    <th class="">{% trans 'Date' %}</th>
+    <th class="sorted descending">{% trans "Billing Period" %}</th>
     <th class="">{% trans 'Amount' %}</th>
+    <th class="">{% trans 'Orders count' %}</th>
     <th class="">{% trans 'Actions' %}</th>
   </thead>
   <tbody>
-    {% for bill in billing %}
+    {% for billing in billings %}
       <tr>
-        <td><strong>{{bill.id}}</strong></td>
-        <td><a href="">{{bill.client.member}}</a></td>
-        <td>{{bill.billing_month}}</td>
-        <td>${{bill.total_amount}}</td>
+        <td><strong>{{billing.billing_period|date:"F Y"}}</strong></td>
+        <td><i class="dollar icon"></i>{{billing.total_amount}}</td>
+        <td>{{billing.orders.all.count}}</td>
         <td>
-          <a class="ui blue icon button"  href=""><i class="icon unhide"></i></a>
-          <a class="ui green icon button"  href=""><i class="icon edit"></i></a>
-          <a class="ui red icon button billing-delete" href="#" data-billing-id="{{billing.id}}"><i class="icon trash"></i></a>
+          <a class="ui basic icon button"  href="{% url 'billing:view' pk=billing.id %}"><i class="icon unhide"></i></a>
+          <a class="ui basic icon button"  href=""><i class="icon edit"></i></a>
+          <a class="ui basic icon button billing-delete" href="#" data-billing-id="{{billing.id}}"><i class="icon trash"></i></a>
         </td>
       </tr>
+      {% include "billing/billing_confirm_delete.html" %}
     {% endfor %}
   </tbody>
-  <tfoot>
-      <tr>
-          <th></th>
-          <th colspan="5">
-              {% include "system/_button_export.html" %}
-          </th>
-        </tr>
-  </tfoot>
 </table>
 
 {% else %}

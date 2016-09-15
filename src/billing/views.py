@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.views import generic
 from billing.models import (
     Billing, calculate_amount_total, BillingFilter
-    )
+)
+from order.models import DeliveredOrdersByMonth
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.urlresolvers import reverse_lazy
@@ -13,8 +14,8 @@ from django.http import HttpResponseRedirect
 class BillingList(generic.ListView):
     # Display the billing list
     model = Billing
-    template_name = "list_billing.html"
-    context_object_name = "billing"
+    template_name = "billing/list.html"
+    context_object_name = "billings"
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -23,9 +24,6 @@ class BillingList(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(BillingList, self).get_context_data(**kwargs)
         uf = BillingFilter(self.request.GET, queryset=self.get_queryset())
-        # Context variable
-        context['myVariableOfContext'] = 0
-
         context['filter'] = uf
 
         return context
@@ -37,49 +35,49 @@ class BillingList(generic.ListView):
 
 class BillingCreate(generic.CreateView):
     # View to create the billing
-
     model = Billing
-    template_name = "create.html"
     context_object_name = "billing"
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(BillingCreate, self).dispatch(*args, **kwargs)
 
+    def get(self, request):
+        date = self.request.GET.get('delivery_date', '')
+        year, month = date.split('-')
+
+        if year is '' or month is '':
+            return HttpResponseRedirect(reverse_lazy('billing:list'))
+
+        Billing.objects.billing_create_new(year, month)
+        return HttpResponseRedirect(reverse_lazy('billing:list'))
+
+
+class BillingAdd(generic.ListView):
+    model = Order
+    template_name = "billing/add.html"
+    context_object_name = "orders"
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(BillingAdd, self).dispatch(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
-        # TODO get 3 variable: year, month ,and client
-
-        context = super(BillingCreate, self).get_context_data(**kwargs)
-
-        # Context variable
-        context['myVariableOfContext'] = 0
-
+        context = super(BillingAdd, self).get_context_data(**kwargs)
+        uf = DeliveredOrdersByMonth(
+            self.request.GET, queryset=self.get_queryset())
+        context['filter'] = uf
         return context
 
-    def create_bill(client, year, month):
-
-        orders = Order.objects.get_orders_for_month_client(month, year, client)
-
-        billing = Billing.objects.create(
-            client=client,
-            total_amount=calculate_amount_total(orders),
-            billing_month=month,
-            billing_year=year,
-            generation_date=datetime.now(),
-            detail=get_order_detail(orders),
-        )
-
-        for order in orders:
-            billing.orders.add(order)
-        billing.save()
-
-        return HttpResponseRedirect(reverse_lazy('billing:list'))
+    def get_queryset(self):
+        uf = DeliveredOrdersByMonth(self.request.GET)
+        return uf.qs
 
 
 class BillingView(generic.DetailView):
     # Display detail of billing
     model = Billing
-    template_name = "view_billing.html"
+    template_name = "billing/view.html"
     context_object_name = "billing"
 
     @method_decorator(login_required)
@@ -88,12 +86,17 @@ class BillingView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(BillingView, self).get_context_data(**kwargs)
-
-        # Context variable
-        context['myVariableOfContext'] = 0
-
         return context
 
 
 class BillingDelete(generic.DeleteView):
-    pass
+    model = Billing
+    template_name = 'billing_confirm_delete.html'
+
+    def get_success_url(self):
+        # 'next' parameter should always be included in POST'ed URL.
+        return self.request.GET['next']
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(BillingDelete, self).dispatch(*args, **kwargs)

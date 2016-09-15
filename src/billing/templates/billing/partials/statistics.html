@@ -1,0 +1,28 @@
+{% load i18n %}
+
+<div class="ui row">
+    <div class="ui small statistic">
+      <div class="value">
+         <i class="shipping icon" data-content="{% trans 'Delivered orders' %}"></i> {{orders.count}}
+      </div>
+      <div class="label">
+        {% trans 'Delivered orders' %}
+      </div>
+    </div>
+    <div class="ui small statistic">
+      <div class="value">
+         <i class="user icon"></i> {{orders.count}}
+      </div>
+      <div class="label">
+        {% trans 'Clients' %}
+      </div>
+    </div>
+    <div class="ui small statistic">
+      <div class="value">
+         <i class="dollar icon"></i> {{billing.total_amount}}
+      </div>
+      <div class="label">
+        {% trans 'Revenues' %}
+      </div>
+    </div>
+</div>

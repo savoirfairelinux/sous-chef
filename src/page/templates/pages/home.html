@@ -6,14 +6,6 @@
 
 {% block title %}{% trans "Homepage" %}{% endblock %}
 
-{% block breadcrumb %}
-{{ block.super }}
-<i class="right chevron icon divider"></i>
-<a href="#" class="section">{% trans "Dashboard" %}</a>
-<i class="right arrow icon divider"></i>
-<div class="active section">{% trans "Overview" %}</div>
-{% endblock breadcrumb %}
-
 {% block content %}
 
 <div class="ui secondary pointing fluid menu">
@@ -25,9 +17,9 @@
     <div class="dashboard-stat column">
         <div class="ui segments">
             <div class="ui segment">
-                <h3 class="ui blue header">{% trans "Clients" %}</h3>
+                <h3 class="ui teal header">{% trans "Clients" %}</h3>
             </div>
-            <div class="ui secondary olive green inverted dashboard center aligned segment">
+            <div class="ui secondary teal inverted dashboard center aligned segment">
                 <div class="ui dashboard statistic">
                     <div class="value">
                       {{ active_clients }}
@@ -45,31 +37,16 @@
            <div class="dashboard-stat column">
               <div class="ui segments">
                 <div class="ui segment">
-                  <h3 class="ui blue header">{% trans "Orders" %}</h3>
+                  <h3 class="ui yellow header">{% trans "Delivered this month" %}</h3>
                 </div>
-                <div class="ui teal inverted dashboard center aligned segment">
+                <div class="ui yellow  inverted dashboard center aligned segment">
                   <div class="ui dashboard statistic">
                     <div class="value">
-                      {{ ORDERS_TOTAL}}
+                      {{ billable_orders.count }}
                     </div>
                     <div class="label">
                       {% trans "Orders" %}
                     </div>
-                  </div>
-
-                  <div class="ui center animated list">
-                    <a class="item">
-                      <i class="add circle icon"></i>
-                      <div class="content">
-                        <div class="description">{% trans "95% delivered" %}</div>
-                      </div>
-                    </a>
-                    <a class="item">
-                      <i class="minus circle icon"></i>
-                      <div class="content">
-                        <div class="description">{% trans "5% not charged" %}</div>
-                      </div>
-                    </a>
                   </div>
                 </div>
                 <div class="ui segment">

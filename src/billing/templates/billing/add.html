@@ -1,0 +1,143 @@
+{% extends "base_billing.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans 'Billing' %}{% endblock %}
+
+{% block extrajs %}
+  <script src="{% static 'js/calendar.min.js' %}" type="application/javascript"></script>
+  <script type="text/javascript">
+
+    $(function() {
+      $('#billing_delivery_date').calendar({
+        type: 'month',
+        formatter: {
+          date: function (date, settings) {
+            if (!date) return '';
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            if (month < 10) month = '0' + month;
+            return year + '-' + month ;
+          }
+        }
+      });
+  });
+</script>
+
+{% endblock %}
+{% block content %}
+
+
+<div class="ui secondary pointing fluid menu">
+  <h1 class="ui header">{% trans 'Billing' %}</h1>
+
+  <div class="right menu">
+    <a class="ui item"
+       href="{% url 'billing:list' %}">
+        <i class="list layout icon"></i>
+    </a>
+  </div>
+</div>
+
+<div class="ui mobile reversed equal width grid">
+  <div class="column">
+
+    <form action="" method="get" class="ui form">
+
+        <div class="inline fields">
+            <div class="field">
+                <label>{% trans "Period" %}</label>
+                <div class="field">
+                    <div class="ui calendar" id="billing_delivery_date">
+                        <div class="ui input left icon">
+                              <i class="time icon"></i>
+                              {{ filter.form.delivery_date }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label></label>
+                <div class="field">
+                    <button class="ui yellow button" type="submit">{% trans "Search" %}</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+    <br/><br/>
+  </div>
+</div>
+
+<div class="ui row">
+    {% include 'billing/partials/statistics.html' %}
+</div>
+
+
+{% if orders %}
+<table class="ui very basic stripped celled table">
+  <thead>
+    <th class="sorted descending">{% trans "Order" %}</th>
+    <th class="">{% trans 'Client' %}</th>
+    <th class="">{% trans 'Delivery Date' %}</th>
+    <th class="">{% trans 'Status' %}</th>
+    <th class="">{% trans 'Amount' %}</th>
+    <th class="">{% trans 'Actions' %}</th>
+  </thead>
+  <tbody>
+    {% for order in orders %}
+      <tr>
+        <td><strong>#{{order.id}}</strong></td>
+        <td><a href="{% url 'member:client_information' pk=order.client.id %}">{{order.client.member}}</a></td>
+        <td>{{order.delivery_date}}</td>
+        <td>{{order.get_status_display}}</td>
+        <td>${{order.price}}</td>
+        <td>
+          <a class="ui basic icon button"  href="{% url 'order:view' pk=order.id %}"><i class="icon unhide"></i></a>
+          <a class="ui basic icon button"  href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i></a>
+          <a class="ui basic icon button order-delete" href="#" data-order-id="{{order.id}}"><i class="icon trash"></i></a>
+        </td>
+      </tr>
+      {% include "order_confirm_delete.html" %}
+    {% endfor %}
+  </tbody>
+  <tfoot>
+      <tr>
+          <th></th>
+          <th colspan="5">
+              <div class="ui import-export blue buttons">
+                  <a class="ui button"
+                    href="{% url 'billing:create' %}?{{request.META.QUERY_STRING}}" title="{% trans "Create Billing" %}">{% trans "Create Billing" %}</a>
+              </div>
+          </th>
+        </tr>
+  </tfoot>
+</table>
+
+{% if is_paginated %}
+
+<div class="ui pagination menu" style="margin: 2em auto; width=100%;";>
+    {% if page_obj.has_previous %}
+    <a class="icon item"
+       href="{{ request.path }}{{ get }}page={{ page_obj.previous_page_number }}">
+        <i class="left arrow icon"></i>
+    </a>
+    {% endif %}
+    <a class="active item">
+        {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}
+    </a>
+    {% if page_obj.has_next %}
+    <a class="icon item"
+       href="{{ request.path }}{{ get }}page={{ page_obj.next_page_number }}">
+        <i class="right arrow icon"></i>
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+
+
+{% else %}
+    <div class="ui row"><p>{% trans "Sorry, no result found" %}.</p></div>
+{% endif %}
+
+{% endblock %}
