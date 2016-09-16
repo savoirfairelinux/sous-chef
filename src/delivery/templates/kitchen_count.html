@@ -18,6 +18,11 @@
 
 <div class="ui basic segment no-print">
     <a href="javascript:window.print()" class="ui labeled icon right big button"><i class="print icon"></i>{% trans 'Print the Report' %}</a>
+    {% if num_labels > 0 %}
+      <a class="big ui button" href="{% url 'delivery:mealLabels' %}">{% trans "Download Labels" %}</a>
+    {% else %}
+      <button type="button" disabled class="big ui button">{% trans "No Labels Found" %}</button>
+    {% endif %}
 </div>
 
 

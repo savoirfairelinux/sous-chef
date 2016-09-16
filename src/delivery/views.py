@@ -2,11 +2,14 @@ import datetime
 import types
 import json
 import collections
+import textwrap
+import os
 
+from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.views import generic
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
@@ -22,9 +25,13 @@ from .apps import DeliveryConfig
 
 from sqlalchemy import func, or_, and_
 
+import labels  # package pylabels
+from reportlab.graphics import shapes
+
 from .models import Delivery
 from .forms import DishIngredientsForm
-from order.models import Order, component_group_sorting
+from order.models import (
+    Order, component_group_sorting, SIZE_CHOICES_REGULAR, SIZE_CHOICES_LARGE)
 from meal.models import (
     COMPONENT_GROUP_CHOICES, COMPONENT_GROUP_CHOICES_MAIN_DISH,
     Component, Ingredient,
@@ -34,6 +41,8 @@ from member.apps import db_sa_session
 from member.models import Client, Route
 from datetime import date
 from . import tsp
+
+MEAL_LABELS_FILE = os.path.join(settings.BASE_DIR, "meallabels.pdf")
 
 
 class Orderlist(generic.ListView):
@@ -181,11 +190,13 @@ class KitchenCount(generic.View):
 
         kitchen_list = Order.get_kitchen_items(date)
         component_lines, meal_lines = kcr_make_lines(kitchen_list, date)
+        num_labels = kcr_make_labels(kitchen_list)
         # release session for SQLAlchemy     TODO use signals instead
         db_sa_session.remove()
         return render(request, 'kitchen_count.html',
                       {'component_lines': component_lines,
-                       'meal_lines': meal_lines})
+                       'meal_lines': meal_lines,
+                       'num_labels': num_labels})
 
 
 class Component_line(types.SimpleNamespace):
@@ -213,8 +224,8 @@ def meal_line(v):
     # factory for Meal_line
     return Meal_line(
         client=v.lastname + ', ' + v.firstname[0:2] + '.',
-        rqty=str(v.meal_qty) if v.meal_size == 'R' else '',
-        lqty=str(v.meal_qty) if v.meal_size == 'L' else '',
+        rqty=str(v.meal_qty) if v.meal_size == SIZE_CHOICES_REGULAR else '',
+        lqty=str(v.meal_qty) if v.meal_size == SIZE_CHOICES_LARGE else '',
         comp_clash=', '.join(v.incompatible_components),
         ingr_clash=', '.join(v.incompatible_ingredients),
         preparation=', '.join(v.preparation),
@@ -226,8 +237,7 @@ def meal_line(v):
 def kcr_cumulate(regular, large, meal):
     # count cumulative meal quantities by size
 
-    # TODO use constant for meal size
-    if meal.meal_size == 'R':
+    if meal.meal_size == SIZE_CHOICES_REGULAR:
         regular = regular + meal.meal_qty
     else:
         large = large + meal.meal_qty
@@ -247,7 +257,6 @@ def kcr_make_lines(kitchen_list, date):
     for k, item in kitchen_list.items():
         for component_group, meal_component \
                 in item.meal_components.items():
-            # TODO use constant for Meal size
             component_lines.setdefault(
                 component_group,
                 Component_line(
@@ -258,7 +267,7 @@ def kcr_make_lines(kitchen_list, date):
                          Component.get_day_ingredients(
                              meal_component.id, date)])))
             if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH and
-                    item.meal_size == 'L'):
+                    item.meal_size == SIZE_CHOICES_LARGE):
                 component_lines[component_group].lqty += \
                     meal_component.qty
             else:
@@ -359,9 +368,97 @@ def kcr_make_lines(kitchen_list, date):
     return (component_lines_sorted, meal_lines)
 
 
+def kcr_make_labels(kitchen_list):
+    # see https://github.com/bcbnz/pylabels
+
+    # dimensions are in millimeters; 1 inch = 25.4 mm
+    specs = labels.Specification(
+        sheet_width=8.5 * 25.4, sheet_height=11 * 25.4,
+        columns=2, rows=7,
+        label_width=4 * 25.4, label_height=1.33 * 25.4,
+        top_margin=20, bottom_margin=20,
+        corner_radius=2)
+
+    def draw_label(label, width, height, data):
+        # callback function
+        obj, j, qty = data
+        label.add(shapes.String(2, height * 0.8,
+                                obj.lastname + ", " + obj.firstname[0:2] + ".",
+                                fontName="Helvetica-Bold",
+                                fontSize=12))
+        label.add(shapes.String(width-2, height * 0.8,
+                                "{}".format(datetime.date.today().
+                                            strftime("%a, %b-%d")),
+                                fontName="Helvetica",
+                                fontSize=10,
+                                textAnchor="end"))
+        if obj.meal_size == SIZE_CHOICES_LARGE:
+            label.add(shapes.String(2, height * 0.65,
+                                    "LARGE",
+                                    fontName="Helvetica",
+                                    fontSize=10))
+        if qty > 1:
+            label.add(shapes.String(width * 0.5, height * 0.65,
+                                    "(" + str(j) + " of " + str(qty) + ")",
+                                    fontName="Helvetica",
+                                    fontSize=10))
+        label.add(shapes.String(width-3, height * 0.65,
+                                obj.routename,
+                                fontName="Helvetica-Oblique",
+                                fontSize=8,
+                                textAnchor="end"))
+
+        special = obj.preparation or []
+        special.extend(["No " + item for item in obj.incompatible_ingredients])
+        special.extend(["No " + item for item in obj.other_ingredients])
+        special.extend(["No " + item for item in obj.restricted_items])
+        special = textwrap.wrap(
+            ' / '.join(special), width=68,
+            break_long_words=False, break_on_hyphens=False)
+        position = height * 0.45
+        for line in special:
+            label.add(shapes.String(2, position,
+                                    line,
+                                    fontName="Helvetica",
+                                    fontSize=9))
+            position -= 10
+
+    sheet = labels.Sheet(specs, draw_label, border=True)
+
+    # obj is a KitchenItem instance (see order/models.py)
+    for obj in sorted(
+            list(kitchen_list.values()),
+            key=lambda x: x.lastname + x.firstname):
+        qty = obj.meal_qty
+        for j in range(1, qty + 1):
+            sheet.add_label((obj, j, qty))
+
+    if sheet.label_count > 0:
+        sheet.save(MEAL_LABELS_FILE)
+        print("SousChef Printed {} meal label(s) on {} page(s)"
+              " into file {}".format(
+                  sheet.label_count, sheet.page_count, MEAL_LABELS_FILE))
+    return sheet.label_count
+
 # END Kitchen count report view, helper classes and functions
 
 # Delivery route sheet view, helper classes and functions
+
+
+class MealLabels(generic.View):
+    def get(self, request, **kwargs):
+        try:
+            f = open(MEAL_LABELS_FILE, "rb")
+        except:
+            raise Http404("File " + MEAL_LABELS_FILE + " does not exist")
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = \
+            'attachment; filename="labels{}.pdf"'. \
+            format(datetime.date.today().strftime("%Y%m%d"))
+        response.write(f.read())
+        f.close()
+        return response
+
 
 class DeliveryRouteSheet(generic.View):
 
@@ -400,7 +497,6 @@ def drs_make_lines(route_list, date):
         for delivery_item in item.delivery_items:
             component_group = delivery_item.component_group
             if component_group:
-                # TODO use constant for Meal size
                 line = summary_lines.setdefault(
                     component_group,
                     RouteSummaryLine(
@@ -409,7 +505,7 @@ def drs_make_lines(route_list, date):
                         lqty=0))
                 # print("\nline", line)
                 if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH and
-                        delivery_item.size == 'L'):
+                        delivery_item.size == SIZE_CHOICES_LARGE):
                     summary_lines[component_group] = \
                         line._replace(lqty=line.lqty +
                                       delivery_item.total_quantity)
