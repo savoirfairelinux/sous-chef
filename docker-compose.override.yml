@@ -10,3 +10,7 @@ services:
       - "8000"
     ports:
       - "8000:8000"
+
+  nginx:
+    volumes:
+      - ./code/src/sous-chef/static:/usr/share/nginx/html

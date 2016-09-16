@@ -44,7 +44,7 @@ $> docker-compose up
 If you want to run docker-compose with the production settings
 
 ```
-$> docker-compose -f docker-compose.yml -f docker-compose-prod.yml up
+$> docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
 ```
 
 Docker must be up and running at this point.
