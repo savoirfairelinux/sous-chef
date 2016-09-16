@@ -538,6 +538,8 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "referent_information",
             "referent_information-firstname": "Referent",
             "referent_information-lastname": "Testing",
+            "referent_information-email": "referent@testing.com",
+            "referent_information-work_phone": "458-458-4584 #458",
             "referent_information-work_information": "CLSC",
             "referent_information-date": "2012-12-12",
             "referent_information-referral_reason": "Testing referral reason",
@@ -649,6 +651,16 @@ class FormTestCase(TestCase):
         self.assertEqual(
             client.client_referent.first().referent.lastname,
             "Testing"
+        )
+
+        # test referent contact infos (email and work phone)
+        self.assertEqual(
+            client.client_referent.first().referent.email,
+            "referent@testing.com"
+        )
+        self.assertEqual(
+            client.client_referent.first().referent.work_phone,
+            "458-458-4584 #458"
         )
 
         # test_referent_work_information:
@@ -786,6 +798,8 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "referent_information",
             "referent_information-firstname": "Same",
             "referent_information-lastname": "User",
+            # "referent_information-email": "same@user.com",
+            # "referent_information-work_phone": "514-514-5145 #514",
             "referent_information-work_information": "CLSC",
             "referent_information-date": "2012-06-06",
             "referent_information-referral_reason": "Testing referral reason",
