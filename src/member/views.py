@@ -4,12 +4,14 @@
 import csv
 from datetime import date
 import json
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.views import generic
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q
 from member.forms import load_initial_data
 from member.models import (
@@ -81,6 +83,10 @@ class ClientUpdateBasicInformation(generic.edit.FormView):
             Client, pk=self.kwargs.get('client_id')
         )
         self.save(form.cleaned_data, client)
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _("The client has been updated")
+        )
         return super(ClientUpdateBasicInformation, self).form_valid(form)
 
     def save(self, form, client):
@@ -146,6 +152,10 @@ class ClientUpdateAddressInformation(generic.edit.FormView):
             Client, pk=self.kwargs.get('client_id')
         )
         self.save(form.cleaned_data, client)
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _("The client has been updated")
+        )
         return super(ClientUpdateAddressInformation, self).form_valid(form)
 
     def save(self, form, client):
@@ -202,6 +212,10 @@ class ClientUpdateReferentInformation(generic.edit.FormView):
             Client, pk=self.kwargs.get('client_id')
         )
         self.save(form.cleaned_data, client)
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _("The client has been updated")
+        )
         return super(ClientUpdateReferentInformation, self).form_valid(form)
 
     def save(self, form, client):
@@ -281,6 +295,10 @@ class ClientUpdateDietaryRestriction(generic.edit.FormView):
             Client, pk=self.kwargs.get('client_id')
         )
         self.save(form.cleaned_data, client)
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _("The client has been updated")
+        )
         return super(ClientUpdateDietaryRestriction, self).form_valid(form)
 
     def save(self, form, client):
@@ -381,6 +399,10 @@ class ClientWizard(NamedUrlSessionWizardView):
         if 'client_id' in kwargs:
             client_id = kwargs['client_id']
         self.save(client_id)
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _("The client has been created")
+        )
         return HttpResponseRedirect(reverse_lazy('member:list'))
 
     def load_initial_data(self, step, client):
@@ -1229,7 +1251,7 @@ def geolocateAddress(request):
     return JsonResponse({'latitude': lat, 'longtitude': long})
 
 
-class ClientStatusScheduler(generic.CreateView, AjaxableResponseMixin):
+class ClientStatusScheduler(AjaxableResponseMixin, generic.CreateView):
     model = ClientScheduledStatus
     form_class = ClientScheduledStatusForm
     template_name = "client/update/status.html"
@@ -1279,11 +1301,14 @@ class ClientStatusScheduler(generic.CreateView, AjaxableResponseMixin):
             )
             change2.linked_scheduled_status = self.object
             change2.save()
-
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _("The status has been changed")
+        )
         return response
 
     def get_success_url(self):
-        return reverse_lazy(
+        return reverse(
             'member:client_information', kwargs={'pk': self.kwargs.get('pk')}
         )
 
