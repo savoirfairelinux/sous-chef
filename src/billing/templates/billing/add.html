@@ -8,20 +8,7 @@
   <script src="{% static 'js/calendar.min.js' %}" type="application/javascript"></script>
   <script type="text/javascript">
 
-    $(function() {
-      $('#billing_delivery_date').calendar({
-        type: 'month',
-        formatter: {
-          date: function (date, settings) {
-            if (!date) return '';
-            var month = date.getMonth() + 1;
-            var year = date.getFullYear();
-            if (month < 10) month = '0' + month;
-            return year + '-' + month ;
-          }
-        }
-      });
-  });
+
 </script>
 
 {% endblock %}

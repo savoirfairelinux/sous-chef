@@ -49,17 +49,3 @@
     </table>
  </div>
 {% endblock %}
-
-{% block extrajs %}
-<script type="text/javascript">
-  document.addEventListener( 'DOMContentLoaded', function () {
-      $('table').tablesort();
-  })
-
-  $('.order-delete').click(function(){
-      var order_id = $(this).attr('data-order-id');
-      var selector = '.ui.basic.modal.order-' + order_id;
-      $(selector).modal('show');
-  });
-</script>
-{% endblock %}

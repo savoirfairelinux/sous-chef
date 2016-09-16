@@ -23,54 +23,21 @@
 {% endblock %}
 
 {% block extrajs %}
-    <script src="{% static 'js/calendar.min.js' %}" type="application/javascript"></script>
-    <script src="{% static 'js/jquery.formset.js' %}" type="application/javascript"></script>
-    <script type="text/javascript">
-        $(function() {
-            $('#form_creation_date').calendar({
-                type: 'date',
-                formatter: {
-                    date: function (date, settings) {
-                      if (!date) return '';
-                      var day = date.getDate();
-                      var month = date.getMonth() + 1;
-                      var year = date.getFullYear();
-                      if (month < 10) month = '0' + month;
-                      if (day < 10) day = '0' + day;
-                      return year + '-' + month + '-' + day;
-                    }
-                }
+<script type="text/javascript">
+
+    // We need this JavaScript inline to generate new inlines from the django formset object.
+
+    $(function() {
+        {% for formset in inlines %}
+            $('div#{{ formset.prefix }}').formset({
+                prefix: '{{ formset.prefix }}',
+                formCssClass: 'dynamic-formset{{ forloop.counter }}',
+                addText: '<i class="ui add icon item"></i> Add order item',
+                deleteText: '<i class="ui remove icon order item"></i> Remove order item',
+                addCssClass: 'positive ui button right floated',
+                deleteCssClass: 'negative ui button'
             });
-            $('#form_delivery_date').calendar({
-                type: 'date',
-                startCalendar: $('#form_creation_date'),
-                formatter: {
-                    date: function (date, settings) {
-                      if (!date) return '';
-                      var day = date.getDate();
-                      var month = date.getMonth() + 1;
-                      var year = date.getFullYear();
-                      if (month < 10) month = '0' + month;
-                      if (day < 10) day = '0' + day;
-                      return year + '-' + month + '-' + day;
-                    }
-                }
-            });
-        });
-
-
-       $(function() {
-           {% for formset in inlines %}
-           $('div#{{ formset.prefix }}').formset({
-               prefix: '{{ formset.prefix }}',
-               formCssClass: 'dynamic-formset-{{ forloop.counter }}',
-               addText: '<i class="ui add icon item"></i> Add order item',
-               deleteText: '<i class="ui remove icon order item"></i> Remove order item',
-               addCssClass: 'positive ui button right floated',
-               deleteCssClass: 'negative ui button'
-           });
-           {% endfor %}
-       })
-
-    </script>
+       {% endfor %}
+    })
+</script>
 {% endblock %}

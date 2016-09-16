@@ -873,9 +873,11 @@ class Referencing (models.Model):
         null=True,
     )
 
-    date = models.DateField(verbose_name=_("Referral date"),
-                            auto_now=False, auto_now_add=False,
-                            default=datetime.date.today)
+    date = models.DateField(
+        verbose_name=_("Referral date"),
+        auto_now=False, auto_now_add=False,
+        default=datetime.date.today
+    )
 
     def __str__(self):
         return "{} {} referred {} {} on {}".format(

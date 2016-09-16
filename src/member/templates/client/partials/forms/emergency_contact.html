@@ -2,7 +2,7 @@
 <h4 class="ui dividing header">{% trans 'Emergency contact' %}</h4>
 
 <div class="ui center aligned basic segment">
-  <div class="ui fluid category search">
+  <div class="ui fluid category search" data-url="{% url 'member:search' %}">
     <div class="ui icon input">
       {{form.member}}
       <i class="search icon"></i>

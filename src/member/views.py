@@ -411,9 +411,6 @@ class ClientWizard(NamedUrlSessionWizardView):
             'same_as_client': True,
             'facturation': '',
             'billing_payment_type': '',
-
-
-
         }
         return initial
 

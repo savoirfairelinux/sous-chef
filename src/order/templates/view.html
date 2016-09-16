@@ -10,14 +10,12 @@
     <h1 class="ui header">{% trans "Order" %} #{{ order.id }}</h1>
     <div class="right menu">
         <div class="ui item">
-            <div class="ui dropdown status">
+            <div id="order-status " class="ui dropdown order status" data-url="{% url 'order:update_status' pk=order.id %}" data-csrf-token="{{ csrf_token }}">
                 <div class="ui large yellow label text">{{ order.get_status_display }}</div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
                     {% for k,s in status %}
-                        <div class="item" data-value={{k}}>
-                             {{s}}
-                        </div>
+                        <div class="item" data-value={{k}}> {{s}} </div>
                     {% endfor %}
                 </div>
             </div>
@@ -78,35 +76,5 @@
 </div>
 
 {% include 'order_confirm_delete.html' %}
-
-{% endblock %}
-
-{% block extrajs %}
-
-<script type="text/javascript">
-    $('.order-delete').click(function(){
-        var order_id = $(this).attr('data-order-id');
-        var selector = '.ui.basic.modal.order-' + order_id;
-        $(selector).modal('show');
-    });
-
-    $('.ui.dropdown.status').dropdown({
-        transition: 'drop',
-        onChange: function(value, text, $selectedItem) {
-            $(this).addClass('loading');
-            $.ajax({
-                url: "{% url 'order:update_status' pk=order.id %}",
-                type: "POST",
-                data: {
-                    'status': value,
-                    'csrfmiddlewaretoken': '{{ csrf_token }}',
-                },
-                success: function(response) {
-                    $('.ui.dropdown.status').removeClass('loading');
-                }
-            })
-        }
-    });
-</script>
 
 {% endblock %}

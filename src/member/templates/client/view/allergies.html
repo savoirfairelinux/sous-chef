@@ -10,32 +10,6 @@
 
 {% endblock %}
 
-{% block extrajs %}
-
-<script type="text/javascript">
-    // Generic code to delete any model related to the member
-    $('.ui.label .delete').on('click', function(){
-        var model = $(this).attr('data-model');
-        var id = $(this).attr('data-id');
-        var label = $(this).parent();
-        $(this).addClass('loading');
-        $.ajax({
-            url: '/member/' + model + '/' + id + '/delete/',
-            type: "POST",
-            data: {
-                'csrfmiddlewaretoken': '{{ csrf_token }}',
-            },
-            success: function(response) {
-                label.hide();
-            }
-        })
-    })
-
-</script>
-
-{% endblock %}
-
-
 {% block subcontent %}
 
 <div class="ui segment">

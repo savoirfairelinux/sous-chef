@@ -8,10 +8,9 @@
     <title>
         {% block title %}{% trans "Sous-Chef" %}{% endblock %}
     </title>
-    <link href="{% static 'css/admin.css' %}" type="text/css" rel="stylesheet">
-    <link href="{% static 'css/print.css' %}" media="print" type="text/css" rel="stylesheet">
-    <link href="{% static 'css/calendar.min.css' %}" type="text/css" rel="stylesheet">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css" rel="stylesheet">
+    <link href="{% static 'css/main.min.css' %}" type="text/css" rel="stylesheet">
     {% block extrahead %}{% endblock %}
 </head>
 
@@ -48,30 +47,21 @@
     <div class="ui inverted vertical footer segment" style="margin-top: 4em;">
         <br>
         <div class="ui center aligned container">
-            <img src="{% static 'assets/logo-souschef-coul.png' %}" class="ui centered small image">
+            <img src="{% static 'images/logo-souschef-coul.png' %}" class="ui centered small image">
             <div class="ui horizontal inverted small divided link list">
                 <p><i class="code yellow icon"></i> {% trans "with" %} &nbsp;<i class="heart yellow icon"></i> {% trans "in Montreal" %}</p>
             </div>
         </div>
     </div>
 
-    <script src="{% static 'js/jquery-2.2.2.min.js' %}" type="application/javascript"></script>
-    <script src="{% static 'js/jquery.tablesort.min.js' %}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js" type="application/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js" type="application/javascript"></script>
-    <script type="text/javascript">
-        $('.ui.open-menu').on('click', function() {
-            $('.ui.sidebar').sidebar('toggle');
-        });
-
-        $('.help-text').popup();
-
-        $('.message .close').on('click', function() {
-            $(this).closest('.message').transition('fade');
-        });
-
-        $('.ui.accordion').accordion();
-        $('.ui.dropdown').dropdown();
-    </script>
+    {% if debug %}
+        <script src="{% static 'js/sous-chef.js' %}" type="application/javascript"></script>
+    {% else %}
+        <script src="{% static 'js/sous-chef.min.js' %}" type="application/javascript"></script>
+    {% endif %}
     <!-- WARNING :  Do not move this line before a manual import of script! -->
     {% block extrajs %}{% endblock %}
 </body>

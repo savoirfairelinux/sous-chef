@@ -4,16 +4,6 @@
 
 {% block title %}{% trans 'Pick Ingredients' %} {% endblock %}
 
-{% block extrajs %}
-    <script type="text/javascript">
-     $('#id_maindish').dropdown({
-       onChange: function(value, text, $selectedItem) {
-         window.location.replace('{% url 'delivery:meal' %}'+value)
-       }
-     });
-    </script>
-{% endblock %}
-
 {% block content %}
 
 {% include 'kitchen_count_steps.html' with step='ingredients' %}
@@ -21,7 +11,7 @@
 <div class="ui secondary pointing fluid menu">
     <h1 class="ui header">{% trans "Pick ingredients" %}</h1>
     <div class="right menu">
-        <div class="ui item"><h3><i class="ui calendar icon"></i>{% now "j F Y" %}</h3></div>
+        <div class="ui item"><h3><i class="calendar icon"></i>{% now "j F Y" %}</h3></div>
     </div>
 </div>
 
@@ -65,7 +55,7 @@
             {{form.errors}}
             <div class="ui row">
                 {% csrf_token %}
-                <div class="field dish selection">
+                <div class="field dish selection" data-url="{% url 'delivery:meal' %}">
                     <label>{{ form.maindish.label }}</label>
                     {{ form.maindish }}
                 </div>

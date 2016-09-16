@@ -36,7 +36,10 @@ class ClientBasicInformation (forms.Form):
         widget=forms.Select(attrs={'class': 'ui dropdown'})
     )
 
-    birthdate = forms.DateField(label=_("Birthday"))
+    birthdate = forms.DateField(
+        label=_("Birthday"),
+        widget=forms.TextInput(attrs={'class': 'ui calendar'})
+    )
 
     email = forms.CharField(
         label='<i class="email icon"></i>',
@@ -70,48 +73,59 @@ class ClientAddressInformation(forms.Form):
 
     apartment = forms.IntegerField(
         label=_("Apt #"),
-        widget=forms.TextInput(attrs={'placeholder': _('Apt #')}),
+        widget=forms.TextInput(attrs={
+            'placeholder': _('Apt #'),
+            'class': 'apartment'
+        }),
         required=False
     )
 
     street = forms.CharField(
         max_length=100,
         label=_("Address information"),
-        widget=forms.TextInput(
-            attrs={
-                'placeholder': _('7275 Rue Saint-Urbain')}))
+        widget=forms.TextInput(attrs={
+            'placeholder': _('7275 Rue Saint-Urbain'),
+            'class': 'street name'
+        })
+    )
 
     city = forms.CharField(
         max_length=50,
         label=_("City"),
-        widget=forms.TextInput(attrs={'placeholder': _('Montreal')})
+        widget=forms.TextInput(attrs={
+            'placeholder': _('Montreal'),
+            'class': 'city'
+        })
     )
 
     postal_code = forms.CharField(
         max_length=6,
         label=_("Postal Code"),
-        widget=forms.TextInput(attrs={'placeholder': _('H2R 2Y5')})
+        widget=forms.TextInput(attrs={
+            'placeholder': _('H2R 2Y5'),
+            'class': 'postal code'
+        })
     )
 
     latitude = forms.CharField(
         label=_('Latitude'),
         required=False,
         initial=0,
-        widget=forms.TextInput()
+        widget=forms.TextInput(attrs={'class': 'latitude'})
     )
 
     longitude = forms.CharField(
         label=_('Longitude'),
         required=False,
         initial=0,
-        widget=forms.TextInput()
+        widget=forms.TextInput(attrs={'class': 'longitude'})
     )
 
     distance = forms.CharField(
         label=_('Distance from Santropol'),
         required=False,
         initial=0,
-        widget=forms.TextInput()
+        widget=forms.TextInput(attrs={'class': 'distance'})
     )
 
     route = forms.ModelChoiceField(
@@ -280,7 +294,10 @@ class ClientReferentInformation(MemberForm):
         widget=forms.Textarea(attrs={'rows': 4})
     )
 
-    date = forms.DateField(label=_("Referral Date"))
+    date = forms.DateField(
+        label=_("Referral Date"),
+        widget=forms.TextInput(attrs={'class': 'ui calendar'})
+    )
 
 
 class ClientPaymentInformation(MemberForm):
@@ -373,7 +390,10 @@ class ClientScheduledStatusForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ClientScheduledStatusForm, self).__init__(*args, **kwargs)
-        self.fields['end_date'] = forms.DateField(required=False)
+        self.fields['end_date'] = forms.DateField(
+            required=False,
+            widget=forms.TextInput(attrs={'class': 'ui calendar'})
+        )
 
 
 def load_initial_data(client):
