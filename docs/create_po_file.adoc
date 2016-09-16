@@ -1,7 +1,6 @@
 ## Instructions for internationalization
 
 ### Updating .po files for every pull request, if applicable
-**READ this section if you're here because of a failing Travis CI check.**
 
 If commits in your pull request have introduced new translatable content, you must update the .po files and include them in your pull request.
 
