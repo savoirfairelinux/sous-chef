@@ -38,8 +38,8 @@ class KitchenCountReportTestCase(TestCase):
         # generate orders today
         self.today = datetime.date.today()
         clients = Client.active.all()
-        numorders = Order.create_orders_on_defaults(
-            self.today, self.today, clients)
+        numorders = Order.objects.auto_create_orders(
+            self.today, clients)
         Menu.create_menu_and_components(
             self.today,
             ['Ginger pork',
@@ -133,8 +133,6 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
     def test_change_main_dish(self):
         """Change dish then go directly to Kitchen Count Report."""
         maindish = Component.objects.get(name='Coq au vin')
-
-        print(maindish.id)
 
         response = self.client.get(
             reverse_lazy('delivery:meal_id', args=[maindish.id]))

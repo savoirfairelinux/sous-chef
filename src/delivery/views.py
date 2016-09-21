@@ -430,9 +430,6 @@ def kcr_make_labels(kitchen_list):
 
     if sheet.label_count > 0:
         sheet.save(MEAL_LABELS_FILE)
-        print("SousChef Printed {} meal label(s) on {} page(s)"
-              " into file {}".format(
-                  sheet.label_count, sheet.page_count, MEAL_LABELS_FILE))
     return sheet.label_count
 
 # END Kitchen count report view, helper classes and functions

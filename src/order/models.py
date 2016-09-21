@@ -1,5 +1,5 @@
 import collections
-from datetime import date
+from datetime import date, datetime
 import re
 
 from django.db import models, connection
@@ -24,6 +24,7 @@ ORDER_STATUS = (
     ('O', _('Ordered')),
     ('D', _('Delivered')),
     ('N', _('No Charge')),
+    ('C', _('Cancelled')),
     ('B', _('Billed')),
     ('P', _('Paid')),
 )
@@ -129,9 +130,9 @@ class OrderManager(models.Manager):
                 continue
             except Order.DoesNotExist:
                 order = Order.objects.create(client=client,
-                              creation_date=datetime.today(),
-                              delivery_date=delivery_date,
-                              status=ORDER_STATUS_ORDERED)
+                                             creation_date=datetime.today(),
+                                             delivery_date=delivery_date,
+                                             status=ORDER_STATUS_ORDERED)
                 created += 1
 
             # TODO Use Parameters Model in member to store unit prices
@@ -151,7 +152,6 @@ class OrderManager(models.Manager):
                 if item_quantity > 0:
                     # Set the quantity of the current item
                     total_quantity = item_quantity
-                    free_quantity = 0
                     # Set the unit price of the current item
                     if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH):
                         unit_price = main_price
@@ -160,16 +160,14 @@ class OrderManager(models.Manager):
                         while main_dish_quantity > 0 and item_quantity > 0:
                             main_dish_quantity -= 1
                             item_quantity -= 1
-                            free_quantity += 1
                     Order_item.objects.create(
                         order=order,
                         component_group=component_group,
-                        price=(total_quantity - free_quantity) * unit_price,
+                        price=total_quantity * unit_price,
                         billable_flag=True,
                         size=item_size,
                         order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
-                        total_quantity=total_quantity,
-                        free_quantity=free_quantity)
+                        total_quantity=total_quantity)
         return created
 
 
@@ -180,7 +178,8 @@ class Order(models.Model):
 
     # Order information
     creation_date = models.DateField(
-        verbose_name=_('creation date')
+        verbose_name=_('creation date'),
+        auto_now_add=True
     )
 
     delivery_date = models.DateField(
@@ -221,15 +220,30 @@ class Order(models.Model):
         """
         Add a new item to the given order.
         """
+        quantity = kwargs.get('total_quantity', 1)
+        billable = kwargs.get('billable', True)
         Order_item.objects.create(
             order=self,
-            component_group=type,
-            price=quantity * MAIN_PRICE_DEFAULT,
-            billable_flag=True,
-            size=size,
+            component_group=kwargs.get('component_group', ''),
+            price=quantity * MAIN_PRICE_DEFAULT if billable else 0,
+            billable_flag=billable,
+            size=kwargs.get('size', 'R'),
             order_item_type=type,
-            total_quantity=quantity,
-            free_quantity=0)
+            total_quantity=quantity)
+
+    def remove_item(self, order_item_id):
+        """
+        Remove an existing item from the order.
+        """
+        self.orders.remove(order_item_id)
+
+    def cancel(self):
+        """
+        Cancel the given order.
+        """
+        # 'C' = Cancelled
+        self.status = 'C'
+        self.save()
 
     def __str__(self):
         return "client={}, delivery_date={}".format(
@@ -934,6 +948,7 @@ class Order_item(models.Model):
     free_quantity = models.IntegerField(
         verbose_name=_('free quantity'),
         null=True,
+        blank=True,
     )
 
     component_group = models.CharField(

@@ -78,7 +78,7 @@ class OrderDetail(generic.DetailView):
 
 class CreateOrder(AjaxableResponseMixin, CreateWithInlinesView):
     model = Order
-    fields = '__all__'
+    fields = ['client', 'delivery_date']
     inlines = [CreateOrderItem]
     template_name = 'create.html'
 

@@ -8,6 +8,7 @@
 {% endif %}
 
 <div class="order">
+    <h4 class="ui dividing header">Order Information</h4>
     <div class="field {% if form.client.errors %} error {% endif %}">
         <label>{{ form.client.label }}</label>
         {% if form.client.errors %} {{ form.client.errors }} {% endif %}
@@ -23,17 +24,6 @@
         </div>
     </div>
 
-    <div class="field {% if form.creation_date.errors %} error {% endif %}">
-        <label>{{ form.creation_date.label }}</label>
-        <div class="ui calendar" id="form_creation_date">
-            <div class="ui input left icon">
-                  <i class="calendar icon"></i>
-                  {{ form.creation_date }}
-            </div>
-        </div>
-        {% if form.creation_date.errors %} {{ form.creation_date.errors }} {% endif %}
-    </div>
-
     <div class="field {% if form.delivery_date.errors %} error {% endif %}">
         <label>{{ form.delivery_date.label }}</label>
         <div class="ui calendar" id="form_delivery_date">
@@ -45,14 +35,12 @@
         {% if form.delivery_date.errors %} {{ form.delivery_date.errors }} {% endif %}
     </div>
 
-    <div class="field {% if form.status.errors %} error {% endif %}">
-        <label>{{ form.status.label }}</label>
-        {{ form.status }}
-        {% if form.status.errors %} {{ form.status.errors }} {% endif %}
-    </div>
 </div>
 
+<h4 class="ui dividing header">Order items</h4>
+
 <div class="ui styled fluid accordion order items">
+
     {% for formset in inlines %}
         {{ formset.management_form }}
         <div id="{{ formset.prefix }}">
@@ -83,9 +71,12 @@
                             {% if subform.price.errors %} {{ subform.price.errors }} {% endif %}
                         </div>
                         <div class="field {% if subform.billable_flag.errors %} error {% endif %}">
+                            <div class="ui toggle checkbox">
+                                {{ subform.billable_flag }}
+
                             <label> {{ subform.billable_flag.label }} </label>
-                            {{ subform.billable_flag }}
                             {% if subform.billable_flag.errors %} {{ subform.billable_flag }} {% endif %}
+                        </div>
                         </div>
                         <div class="field {% if subform.size.errors %} error {% endif %}">
                             <label> {{ subform.size.label }} </label>
@@ -106,11 +97,6 @@
                             <label> {{ subform.total_quantity.label }} </label>
                             {{ subform.total_quantity }}
                             {% if subform.total_quantity.errors %} {{ subform.total_quantity.errors }} {% endif %}
-                        </div>
-                        <div class="field {% if subform.free_quantity.errors %} error {% endif %}">
-                            <label> {{ subform.free_quantity.label }} </label>
-                            {{ subform.free_quantity }}
-                            {% if subform.free_quantity.errors %} {{ subform.free_quantity.errors }} {% endif %}
                         </div>
                     </div>
                 </div>

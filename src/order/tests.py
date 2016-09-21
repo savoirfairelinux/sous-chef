@@ -11,7 +11,7 @@ from django.utils.translation import ugettext as _
 from member.models import Client, Address, Member
 from member.factories import RouteFactory, ClientFactory
 from meal.factories import ComponentFactory
-from order.models import Order, Order_item
+from order.models import Order, Order_item, MAIN_PRICE_DEFAULT
 from order.factories import OrderFactory
 
 
@@ -22,15 +22,38 @@ class OrderTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         """
-        Provide an order Object, without any items.
+        Provides an order Object, without any items.
         """
         cls.order = OrderFactory(order_item=None)
 
-    def test_order_add_item(self):
-        self.order.add_item('main_dish', 2)
-        self.order.add_item('fruit_salad')
-        self.order.add_item('visit')
-        self.assertEqual(0, self.order.orders.count())
+    def test_order_add_item_meal_component(self):
+        """
+        Add a billable meal component item to an order.
+        """
+        self.order.add_item(
+            'B component',
+            component_group='main_dish',
+            total_quantity=2,
+            size='L')
+        self.assertEqual(1, self.order.orders.count())
+        item = self.order.orders.filter(order_item_type='B component').get()
+        self.assertTrue(item.billable_flag)
+        self.assertEqual(item.component_group, 'main_dish')
+        self.assertEqual(item.total_quantity, 2)
+        self.assertEqual(item.size, 'L')
+        self.assertEqual(item.price, MAIN_PRICE_DEFAULT * 2)
+
+    def test_order_add_item_visit(self):
+        """
+        Add a non-billable visit item to an order.
+        """
+        self.order.add_item('N delivery',
+                            billable=False)
+        self.assertEqual(1, self.order.orders.count())
+        item = self.order.orders.filter(order_item_type='N delivery').get()
+        self.assertFalse(item.billable_flag)
+        self.assertEqual(item.total_quantity, 1)
+        self.assertEqual(item.price, 0)
 
 
 class OrderManagerTestCase(TestCase):
@@ -39,9 +62,8 @@ class OrderManagerTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.orders = OrderFactory.create_batch(10,
-            delivery_date=date.today(), status='O'
-        )
+        cls.orders = OrderFactory.create_batch(
+            10, delivery_date=date.today(), status='O')
         cls.past_order = OrderFactory(
             delivery_date=date(2015, 7, 15), status='O'
         )
@@ -86,41 +108,47 @@ class OrderItemTestCase(TestCase):
             member=member, billing_member=member,
             birthdate=date(1980, 4, 19)
         )
-        total_zero_order = Order.objects.create(
+        cls.total_zero_order = Order.objects.create(
             creation_date=date(2016, 10, 5),
             delivery_date=date(2016, 10, 10),
             status='B', client=client,
         )
         Order_item.objects.create(
-            order=total_zero_order,
+            order=cls.total_zero_order,
             price=22.50,
             billable_flag=False,
             order_item_type='',
             remark="12"
         )
-        order = Order.objects.create(
-            creation_date=date(2016, 5, 5),
+        cls.order = Order.objects.create(
             delivery_date=date(2016, 5, 10),
             status='B', client=client,
         )
         Order_item.objects.create(
-            order=order, price=6.50, billable_flag=True, order_item_type='',
-            remark="testing", size="R",
+            order=cls.order,
+            price=6.50,
+            billable_flag=True,
+            order_item_type='',
+            remark="testing",
+            size="R",
         )
         Order_item.objects.create(
-            order=order, price=12.50, billable_flag=False, order_item_type='',
-            remark="testing", size="L",
+            order=cls.order,
+            price=12.50,
+            billable_flag=False,
+            order_item_type='',
+            remark="testing",
+            size="L",
         )
 
     def test_billable_flag(self):
-        order = Order.objects.get(creation_date=date(2016, 5, 5))
-        billable_order_item = Order_item.objects.get(order=order, price=6.50)
+        billable_order_item = Order_item.objects.get(
+            order=self.order, price=6.50)
         self.assertEqual(billable_order_item.billable_flag, True)
 
     def test_non_billable_flag(self):
-        order = Order.objects.get(creation_date=date(2016, 5, 5))
         non_billable_order_item = Order_item.objects.get(
-            order=order,
+            order=self.order,
             price=12.50
         )
         self.assertEqual(non_billable_order_item.billable_flag, False)
@@ -155,19 +183,22 @@ class OrderCreateOnDefaultsTestCase(TestCase):
         Create active ongoing clients with predefined meals default.
         """
         meals_default = {
-            'main_dish_friday_quantity':2,
-            'size_friday':'L',
-            'dessert_friday_quantity':0,
-            'diabetic_dessert_friday_quantity':0,
-            'fruit_salad_friday_quantity':1,
-            'green_salad_friday_quantity':0,
-            'pudding_friday_quantity':1,
-            'compote_friday_quantity':0,
+            'main_dish_friday_quantity': 2,
+            'size_friday': 'L',
+            'dessert_friday_quantity': 0,
+            'diabetic_dessert_friday_quantity': 0,
+            'fruit_salad_friday_quantity': 1,
+            'green_salad_friday_quantity': 0,
+            'pudding_friday_quantity': 1,
+            'compote_friday_quantity': 0,
         }
-        cls.ongoing_clients = ClientFactory.create_batch(4,
-            status=Client.ACTIVE, delivery_type='O', meal_default_week=meals_default)
-        cls.episodic_clients = ClientFactory.create_batch(6,
-            status=Client.ACTIVE, delivery_type='E')
+        cls.ongoing_clients = ClientFactory.create_batch(
+            4,
+            status=Client.ACTIVE,
+            delivery_type='O',
+            meal_default_week=meals_default)
+        cls.episodic_clients = ClientFactory.create_batch(
+            6, status=Client.ACTIVE, delivery_type='E')
         # The delivery date must be a Friday, to match the meals defaults
         cls.delivery_date = date(2016, 7, 15)
 
@@ -191,7 +222,8 @@ class OrderCreateOnDefaultsTestCase(TestCase):
             delivery_date=self.delivery_date,
             client=client,
         )
-        Order.objects.auto_create_orders(self.delivery_date, self.ongoing_clients)
+        Order.objects.auto_create_orders(
+            self.delivery_date, self.ongoing_clients)
         self.assertEqual(Order.objects.filter(client=client).count(), 1)
 
     def test_auto_create_orders_items(self):
@@ -294,7 +326,6 @@ class OrderFormTestCase(TestCase):
             'orders-0-order_item_type': '',
             'orders-0-remark': 'Order item with errors',
             'orders-0-total_quantity': '',
-            'orders-0-free_quantity': '',
         }
         response = self.client.post(route, data, follow=True)
         content = str(response.content)
@@ -332,7 +363,6 @@ class OrderFormTestCase(TestCase):
             'orders-0-order_item_type': 'B component',
             'orders-0-remark': 'Order item without errors',
             'orders-0-total_quantity': '5',
-            'orders-0-free_quantity': '3',
         }
         response = self.client.post(route, data, follow=True)
         order = Order.objects.latest('id')
@@ -404,7 +434,6 @@ class OrderCreateFormTestCase(OrderFormTestCase):
             'orders-0-order_item_type': 'B component',
             'orders-0-remark': 'Order item without errors',
             'orders-0-total_quantity': '5',
-            'orders-0-free_quantity': '3',
         }
         self.client.post(
             reverse('order:create'),
@@ -414,7 +443,7 @@ class OrderCreateFormTestCase(OrderFormTestCase):
         order = Order.objects.latest('id')
         self.assertEqual(order.client.id, client.id)
         self.assertEqual(order.orders.first().component_group, 'main_dish')
-        self.assertEqual(order.creation_date, date(2016, 12, 12))
+        self.assertEqual(order.creation_date, date.today())
         self.assertEqual(order.delivery_date, date(2016, 12, 22))
         self.assertEqual(order.price, 5)
         self.assertEqual(order.orders.first().billable_flag, True)
@@ -425,7 +454,6 @@ class OrderCreateFormTestCase(OrderFormTestCase):
             'Order item without errors'
         )
         self.assertEqual(order.orders.first().total_quantity, 5)
-        self.assertEqual(order.orders.first().free_quantity, 3)
 
 
 class OrderUpdateFormTestCase(OrderFormTestCase):
@@ -491,7 +519,6 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
             'orders-0-order_item_type': 'B component',
             'orders-0-remark': 'Order item without errors',
             'orders-0-total_quantity': '5',
-            'orders-0-free_quantity': '3',
         }
         self.client.post(
             reverse_lazy('order:update', kwargs={'pk': self.order.id}),
@@ -499,7 +526,7 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
             follow=True
         )
         order = Order.objects.get(id=self.order.id)
-        self.assertEqual(order.creation_date, date(2016, 12, 12))
+        self.assertEqual(order.creation_date, date.today())
         self.assertEqual(order.delivery_date, date(2016, 12, 22))
         self.assertEqual(order.orders.latest('id').price, 5)
         self.assertEqual(order.orders.latest('id').billable_flag, True)
@@ -513,7 +540,6 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
             'Order item without errors'
         )
         self.assertEqual(order.orders.latest('id').total_quantity, 5)
-        self.assertEqual(order.orders.latest('id').free_quantity, 3)
 
 
 class DeleteOrderTestCase(OrderFormTestCase):

@@ -66,5 +66,3 @@ class OrderItemFactory(factory.DjangoModelFactory):
     remark = fake.sentence(nb_words=6, variable_nb_words=True)
 
     total_quantity = fake.random_digit()
-
-    free_quantity = fake.random_digit()
