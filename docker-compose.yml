@@ -8,21 +8,19 @@ services:
       MYSQL_DATABASE: feast
     volumes:
       - ./tools/mariadb:/var/lib/mysql
-
   web:
     restart: always
     build: .
+    volumes:
+      - /code/src/static
     depends_on:
       - db
-
   nginx:
     restart: always
     build: tools/nginx
     command: /bin/bash -c "nginx"
     ports:
       - "80:80"
-    volumes:
-      - /code/src/sous-chef/static:/usr/share/nginx/html
     volumes_from:
       - web
     depends_on:

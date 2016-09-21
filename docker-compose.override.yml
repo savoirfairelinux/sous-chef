@@ -4,13 +4,5 @@ services:
     command: python src/manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
-      - /code/src/sous-chef
-      - /code/src/sous-chef/static
-    expose:
-      - "8000"
     ports:
       - "8000:8000"
-
-  nginx:
-    volumes:
-      - ./code/src/sous-chef/static:/usr/share/nginx/html

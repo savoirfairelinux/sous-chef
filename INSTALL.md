@@ -94,3 +94,4 @@ On Windows, use the container IP address.
 1. ```TERM environment not set```: https://github.com/dockerfile/mariadb/issues/3
 2. ```listen tcp 0.0.0.0:8000: bind: address already in use``` : an another application already uses the 8000 port. Vagrant applications often use the same port for instance. Locate the application and shut it down, or select an other port.
 3. ```Web server is up and running, but no answer after Django initialization``` : restart your container.
+4. ```Static files fail to load when using Nginx server in development mode (docker-compose up)```: run ```docker-compose exec web python src/manage.py collectstatic```
