@@ -11,7 +11,7 @@ from sqlalchemy.sql import select
 from sqlalchemy import and_
 
 from member.apps import db_sa_session, db_sa_table
-from member.models import (Client, Member,
+from member.models import (Client, Member, Route,
                            RATE_TYPE_LOW_INCOME, RATE_TYPE_SOLIDARY,
                            Address, Option, Client_option, Restriction,
                            Client_avoid_ingredient, Client_avoid_component)
@@ -37,6 +37,9 @@ SIZE_CHOICES = (
     ('R', _('Regular')),
     ('L', _('Large')),
 )
+
+SIZE_CHOICES_REGULAR = SIZE_CHOICES[1][0]
+SIZE_CHOICES_LARGE = SIZE_CHOICES[2][0]
 
 ORDER_ITEM_TYPE_CHOICES = (
     ('', _('Order item type')),
@@ -227,6 +230,7 @@ class Order(models.Model):
         tinc = db_sa_table(Incompatibility)
         tcoming = db_sa_table(Component_ingredient)
         tcli = db_sa_table(Client)
+        trou = db_sa_table(Route)
         tmem = db_sa_table(Member)
         tadd = db_sa_table(Address)
         topt = db_sa_table(Option)
@@ -365,10 +369,9 @@ class Order(models.Model):
                    "ORDER_ID, ORDER_DELIV_DATE")
 
         # Day's Delivery List
-        # TODO add route filter, full address, order by postal code
         q_day_del_lis = select(
             [tcli.c.id.label('cid'), tmem.c.firstname, tmem.c.lastname,
-             tadd.c.street, tadd.c.postal_code,
+             trou.c.name.label('routename'),
              torditm.c.total_quantity, torditm.c.size,
              tmen.c.id, tmencom.c.id,
              tcom.c.id.label('component_id'),
@@ -377,7 +380,7 @@ class Order(models.Model):
             select_from(
                 tmem.
                 join(tcli, tcli.c.member_id == tmem.c.id).
-                join(tadd, tadd.c.id == tmem.c.address_id).
+                join(trou, trou.c.id == tcli.c.route_id).
                 join(tmen, tmen.c.date == delivery_date).
                 join(tord, tord.c.client_id == tcli.c.id).
                 join(torditm, torditm.c.order_id == tord.c.id).
@@ -388,11 +391,10 @@ class Order(models.Model):
                          tcom.c.component_group ==
                          torditm.c.component_group))).\
             where(tord.c.delivery_date == delivery_date).\
-            order_by(tadd.c.postal_code, tmem.c.lastname, tmem.c.firstname)
+            order_by(tmem.c.lastname, tmem.c.firstname)
         print_rows(q_day_del_lis,
                    "\n***** Delivery List ******\n CLIENT_ID,"
-                   " FIRSTNAME, LASTNAME, "
-                   "STREET, POSTAL_CODE, "
+                   " FIRSTNAME, LASTNAME, ROUTENAME, "
                    "OI_TOTAL_QUANTITY, OI_SIZE, "
                    "MENU_ID, MENU_COMPONENT_ID, "
                    "COMPONENT_ID, COMPONENT_GROUP, COMPONENT_NAME")
@@ -461,7 +463,7 @@ class Order(models.Model):
             kitchen_list[row.cid].preparation.append(row.food_prep)
         # END FOR
 
-        # Components summary for the day
+        # Components summary and data for all labels for the day
         rows = db_sa_session.execute(q_day_del_lis)
         for row in rows:
             check_for_new_client(kitchen_list, row)
@@ -473,6 +475,7 @@ class Order(models.Model):
                 MealComponent(id=row.component_id,
                               name=row.component_name,
                               qty=row.total_quantity)
+            kitchen_list[row.cid].routename = row.routename
         # END FOR
 
         # sort requirements list in each value
@@ -545,6 +548,7 @@ class KitchenItem(object):
 
         self.lastname = None
         self.firstname = None
+        self.routename = None
         self.meal_qty = 0
         self.meal_size = ''
         self.incompatible_ingredients = []
@@ -575,7 +579,7 @@ class KitchenItem(object):
                'preparation=' + repr(self.preparation) + ']')
 
 
-def print_rows(q, heading=""):  # DEBUG
+def print_rows(q, heading=""):  # USED FOR DEBUGGING; DO NOT REMOVE
     # print("\n-----------------------------------------------------\n",
     #       # q, "\n",
     #       heading)

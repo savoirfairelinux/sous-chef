@@ -33,6 +33,24 @@ class KitchenCountReportTestCase(TestCase):
         response = self.client.get('/delivery/kitchen_count/2015/05/21/')
         self.assertTrue(b'SUBTOTAL' not in response.content)
 
+    def test_labels_show_restrictions(self):
+        """An ingredient we know will clash must be in the labels"""
+        # generate orders today
+        self.today = datetime.date.today()
+        clients = Client.active.all()
+        numorders = Order.create_orders_on_defaults(
+            self.today, self.today, clients)
+        Menu.create_menu_and_components(
+            self.today,
+            ['Ginger pork',
+             'Green Salad', 'Fruit Salad',
+             'Day s Dessert', 'Day s Diabetic Dessert',
+             'Day s Pudding', 'Day s Compote'])
+
+        self.client.get('/delivery/kitchen_count/')
+        response = self.client.get('/delivery/viewMealLabels/')
+        self.assertTrue('ReportLab' in repr(response.content))
+
 
 class ChooseDayMainDishIngredientsTestCase(TestCase):
 
