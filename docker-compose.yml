@@ -1,16 +1,27 @@
 version: '2'
 services:
   db:
+    restart: always
     image: mariadb
     environment:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: feast
-  web:
-    build: .
-    command: python src/manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/code
-    ports:
-      - "8000:8000"
+      - ./tools/mariadb:/var/lib/mysql
+  web:
+    restart: always
+    build: .
+    volumes:
+      - /code/src/static
     depends_on:
       - db
+  nginx:
+    restart: always
+    build: tools/nginx
+    command: /bin/bash -c "nginx"
+    ports:
+      - "80:80"
+    volumes_from:
+      - web
+    depends_on:
+      - web
