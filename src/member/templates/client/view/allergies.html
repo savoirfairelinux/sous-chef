@@ -13,11 +13,19 @@
 {% block subcontent %}
 
 <div class="ui segment">
+    <h3 class="ui header">
+        {% trans 'Meal information' %}
+        <div class="sub header">{% trans "Meal information of the referent person" %}.</div>
+    </h3>
+    <a class="ui right floated small button" href="{% url 'member:member_update_dietary_restriction' pk=client.id %}">
+        <i class="icon edit"></i>{% trans "Edit" %}
+    </a>
+    <div class="ui divider"></div>
+
 
     <h3 class="ui header">
         {% trans 'Meal status' %}
     </h3>
-
     <div class="ui yellow label">{{client.get_status_display}}</div>
 
     <h3 class="ui header">
@@ -81,11 +89,13 @@
 <div class="ui segment">
 
     <h3 class="ui header">
-      {% trans "Meal Default" %}
-      <a href="{% url 'admin:member_client_change' client.id %}">
-        <i class="write grey icon"></i>
-      </a>
+        {% trans "Meal schedule" %}
+        <div class="sub header">{% trans "Meal default schedule of the referent person" %}.</div>
     </h3>
+    <a class="ui right floated small button" href="{% url 'member:member_update_dietary_restriction' pk=client.id %}">
+        <i class="icon edit"></i>{% trans "Edit" %}
+    </a>
+    <div class="ui divider"></div>
 
     {% include 'client/partials/prefs.html' %}
 

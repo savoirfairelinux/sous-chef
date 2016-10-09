@@ -1,4 +1,6 @@
 from django import template
+from meal.models import COMPONENT_GROUP_CHOICES
+
 
 register = template.Library()
 
@@ -19,13 +21,7 @@ def readable_prefs(value):
         return ''
 
     str = ''
-    for component in [
-            'main_dish',
-            'compote',
-            'dessert',
-            'fruit_salad',
-            'green_salad',
-            'pudding']:
-        str += '{} {}, '.format(value[component], component)
+    for component, label in COMPONENT_GROUP_CHOICES:
+        str += '{} {}, '.format(value.get(component, 0), label)
 
-    return str
+    return str[:-2]

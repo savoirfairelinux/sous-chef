@@ -54,10 +54,6 @@
 
     <div class="four wide column">
         {% include 'client/partials/menu.html' %}
-
-        <a class="ui basic fluid button" href="{% url 'member:member_update_basic_information' client_id=client.id %}">
-            {% trans "Edit" %}
-        </a>
     </div>
 
     <div class="twelve wide column">

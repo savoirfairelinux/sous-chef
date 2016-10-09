@@ -2,11 +2,8 @@
 {% load i18n %}
 
 <div class="ui middle aligned divided list">
-    {% for day, meal_schedule in client.meals_schedule.items %}
+    {% for day, meal_schedule in client.meals_schedule %}
     <div class="item">
-        <div class="right floated content">
-          <div class="ui button">{% if meal_schedule == None %} {% trans "Add" %} {% else %} {% trans "Change" %} {% endif %}</div>
-        </div>
         <i class="toggle {% if meal_schedule == None %} off {% else %} on grey {% endif %} big icon"></i>
         <div class="content">
           <a class="header">{{day|title}}</a>

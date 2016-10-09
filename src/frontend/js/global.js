@@ -14,10 +14,9 @@ $(function() {
     });
 
     $('.ui.accordion').accordion();
-    $('.ui.dropdown').dropdown();
+    $('.ui.dropdown').dropdown({transition: 'drop'});
 
     $('table').tablesort();
-    $('.ui.dropdown').dropdown({transition: 'drop'});
 
     $('.ui.calendar').calendar({
         type: 'date',
