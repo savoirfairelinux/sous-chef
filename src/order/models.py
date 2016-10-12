@@ -1,20 +1,18 @@
 import collections
+from datetime import date
+import re
 
-from django.db import models
+from django.db import models, connection
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django_filters import FilterSet, MethodFilter, ChoiceFilter
 from django.core.urlresolvers import reverse
 
-from datetime import date
-from sqlalchemy.sql import select
-from sqlalchemy import and_
-
-from member.apps import db_sa_session, db_sa_table
 from member.models import (Client, Member, Route,
                            RATE_TYPE_LOW_INCOME, RATE_TYPE_SOLIDARY,
                            Address, Option, Client_option, Restriction,
-                           Client_avoid_ingredient, Client_avoid_component)
+                           Client_avoid_ingredient, Client_avoid_component,
+                           OPTION_GROUP_CHOICES_PREPARATION)
 from meal.models import (Menu, Menu_component, Component,
                          Restricted_item, Ingredient,
                          Component_ingredient, Incompatibility,
@@ -146,13 +144,13 @@ class Order(models.Model):
     def create_orders_on_defaults(creation_date, delivery_date, clients):
         """Create orders and order items for one or many clients.
 
-        Parameters:
-          creation_date : date on which orders are created
-          delivery_date : date on which orders are to be delivered
-          clients : a list of one or many client objects
+        Args:
+            creation_date : date on which orders are created
+            delivery_date : date on which orders are to be delivered
+            clients : a list of one or many client objects
 
         Returns:
-          Number of orders created.
+            Number of orders created.
         """
 
         num_orders_created = 0
@@ -218,190 +216,25 @@ class Order(models.Model):
 
     @staticmethod
     def get_kitchen_items(delivery_date):
-        # get all client meal order specifics for delivery date
+        """Get all client meal order specifics for delivery date.
 
-        # Use SQLAlchemy Core for selects
-        # identifiers pointing directly to database tables
-        tcom = db_sa_table(Component)
-        tmen = db_sa_table(Menu)
-        tmencom = db_sa_table(Menu_component)
-        tresitm = db_sa_table(Restricted_item)
-        ting = db_sa_table(Ingredient)
-        tinc = db_sa_table(Incompatibility)
-        tcoming = db_sa_table(Component_ingredient)
-        tcli = db_sa_table(Client)
-        trou = db_sa_table(Route)
-        tmem = db_sa_table(Member)
-        tadd = db_sa_table(Address)
-        topt = db_sa_table(Option)
-        tcliopt = db_sa_table(Client_option)
-        tres = db_sa_table(Restriction)
-        tcliavoing = db_sa_table(Client_avoid_ingredient)
-        tcliavocom = db_sa_table(Client_avoid_component)
-        tord = db_sa_table(Order)
-        torditm = db_sa_table(Order_item)
+        For each client that has ordered a meal for 'delivery_date',
+        find all the information needed for the Kitchen Count Report
+        and the Meal Labels. This information is stored in KitchenItem
+        objects. (See KitchenItem for description of each attribute).
 
-        # Day's avoid ingredients clashes
-        q_day_avo_ing = select(
-            [tcli.c.id.label('cid'),
-             tmem.c.firstname, tmem.c.lastname,
-             tord.c.id, tord.c.delivery_date,
-             tmen.c.id, tmencom.c.id.label('menucompid'),
-             ting.c.name.label('ingredient'), tcom.c.name,
-             torditm.c.id, torditm.c.order_id.label('oiorderid')]).\
-            select_from(
-                tmem.
-                join(tcli, tcli.c.member_id == tmem.c.id).
-                join(tord, tord.c.client_id == tcli.c.id).
-                join(tmen, tmen.c.date == delivery_date).
-                join(tcliavoing, tcliavoing.c.client_id == tcli.c.id).
-                join(ting, ting.c.id == tcliavoing.c.ingredient_id).
-                outerjoin(tcoming, and_(tcoming.c.ingredient_id == ting.c.id,
-                                        tcoming.c.date == delivery_date)).
-                outerjoin(tcom, tcom.c.id == tcoming.c.component_id).
-                outerjoin(
-                    torditm,
-                    and_(torditm.c.component_group == tcom.c.component_group,
-                         torditm.c.order_id == tord.c.id)).
-                outerjoin(tmencom, and_(tmencom.c.component_id == tcom.c.id,
-                                        tmencom.c.menu_id == tmen.c.id))).\
-            where(tord.c.delivery_date == delivery_date).\
-            order_by(tcli.c.id)
-        print_rows(
-            q_day_avo_ing,
-            "\n***** Day's avoid ingredients clashes ****\nCLIENT_ID,"
-            "FIRSTNAME, LASTNAME, "
-            "ORDER_ID, ORDER_DELIV_DATE, "
-            "MENU_ID, MENU_COMPONENT_ID, "
-            "INGREDIENT_NAME, COMP_NAME, "
-            "ORDER_ITEM_ID, ORDER_ITEM_ORDER_ID")
+        Args:
+            delivery_date: A datetime.date object, the date on which
+                the meals will be delivered to the clients.
 
-        # Day's avoid component clashes
-        q_day_avo_com = select(
-            [tcli.c.id.label('cid'),
-             tmem.c.firstname, tmem.c.lastname,
-             tord.c.id, tord.c.delivery_date,
-             tmen.c.id, tmencom.c.id.label('menucompid'),
-             tcom.c.name.label('component'),
-             torditm.c.id, torditm.c.order_id.label('oiorderid')]).\
-            select_from(
-                tmem.
-                join(tcli, tcli.c.member_id == tmem.c.id).
-                join(tord, and_(tord.c.client_id == tcli.c.id,
-                                tord.c.delivery_date == delivery_date)).
-                join(tmen, tmen.c.date == delivery_date).
-                join(tcliavocom, tcliavocom.c.client_id == tcli.c.id).
-                join(tcom, tcom.c.id == tcliavocom.c.component_id).
-                outerjoin(
-                    torditm,
-                    and_(torditm.c.component_group == tcom.c.component_group,
-                         torditm.c.order_id == tord.c.id)).
-                outerjoin(tmencom, and_(tmencom.c.component_id == tcom.c.id,
-                                        tmencom.c.menu_id == tmen.c.id))).\
-            where(tord.c.delivery_date == delivery_date).\
-            order_by(tcli.c.id)
-        print_rows(q_day_avo_com,
-                   "\n***** Day's avoid component clashes ****\nCLIENT_ID,"
-                   "FIRSTNAME, LASTNAME, "
-                   "ORDER_ID, ORDER_DELIV_DATE, "
-                   "MENU_ID, MENU_COMPONENT_ID, "
-                   "COMP_NAME, "
-                   "ORDER_ITEM_ID, ORDER_ITEM_ORDER_ID")
-
-        # Day's restrictions
-        q_day_res = select(
-            [tcli.c.id.label('cid'),
-             tmem.c.firstname, tmem.c.lastname,
-             tord.c.id, tord.c.delivery_date,
-             tmen.c.id, tmencom.c.id.label('menucompid'),
-             tresitm.c.name.label('restricted_item'),
-             ting.c.name.label('ingredient'), tcom.c.name,
-             torditm.c.id, torditm.c.order_id.label('oiorderid')]).\
-            select_from(
-                tmem.
-                join(tcli, tcli.c.member_id == tmem.c.id).
-                join(tord, tord.c.client_id == tcli.c.id).
-                join(tmen, tmen.c.date == delivery_date).
-                join(tres, tres.c.client_id == tcli.c.id).
-                join(tresitm, tresitm.c.id == tres.c.restricted_item_id).
-                outerjoin(
-                    tinc,
-                    tinc.c.restricted_item_id == tres.c.restricted_item_id).
-                outerjoin(ting, tinc.c.ingredient_id == ting.c.id).
-                outerjoin(tcoming, and_(tcoming.c.ingredient_id == ting.c.id,
-                                        tcoming.c.date == delivery_date)).
-                outerjoin(tcom, tcoming.c.component_id == tcom.c.id).
-                outerjoin(
-                    torditm,
-                    and_(torditm.c.component_group == tcom.c.component_group,
-                         torditm.c.order_id == tord.c.id)).
-                outerjoin(tmencom, and_(tmencom.c.component_id == tcom.c.id,
-                                        tmencom.c.menu_id == tmen.c.id))).\
-            where(tord.c.delivery_date == delivery_date).\
-            order_by(tcli.c.id)
-        print_rows(q_day_res,
-                   "\n***** Day's restrictions ****\nCLIENT_ID,"
-                   "FIRSTNAME, LASTNAME, "
-                   "ORDER_ID, ORDER_DELIV_DATE, "
-                   "MENU_ID, MENU_COMPONENT_ID, "
-                   "RESTRICTED_ITEM, INGREDIENT_NAME, COMP_NAME, "
-                   "ORDER_ITEM_ID, ORDER_ITEM_ORDER_ID")
-
-        # Day's preparations
-        q_day_pre = select(
-            [tcli.c.id.label('cid'),
-             tmem.c.firstname, tmem.c.lastname,
-             topt.c.name.label('food_prep'),
-             tord.c.id, tord.c.delivery_date]).\
-            select_from(
-                tmem.
-                join(tcli, tcli.c.member_id == tmem.c.id).
-                join(tcliopt, tcliopt.c.client_id == tcli.c.id).
-                join(topt, topt.c.id == tcliopt.c.option_id).
-                join(tord, tord.c.client_id == tcli.c.id)).\
-            where(and_(tord.c.delivery_date == delivery_date,
-                       topt.c.option_group == 'preparation')).\
-            order_by(tmem.c.lastname, tmem.c.firstname)
-        print_rows(q_day_pre,
-                   "\n***** Day's preparations ****\nCLIENT_ID,"
-                   "FIRSTNAME, LASTNAME, "
-                   "FOOD_PREP, "
-                   "ORDER_ID, ORDER_DELIV_DATE")
-
-        # Day's Delivery List
-        q_day_del_lis = select(
-            [tcli.c.id.label('cid'), tmem.c.firstname, tmem.c.lastname,
-             trou.c.name.label('routename'),
-             torditm.c.total_quantity, torditm.c.size,
-             tmen.c.id, tmencom.c.id,
-             tcom.c.id.label('component_id'),
-             tcom.c.component_group,
-             tcom.c.name.label('component_name')]).\
-            select_from(
-                tmem.
-                join(tcli, tcli.c.member_id == tmem.c.id).
-                join(trou, trou.c.id == tcli.c.route_id).
-                join(tmen, tmen.c.date == delivery_date).
-                join(tord, tord.c.client_id == tcli.c.id).
-                join(torditm, torditm.c.order_id == tord.c.id).
-                join(tmencom, tmencom.c.menu_id == tmen.c.id).
-                join(
-                    tcom,
-                    and_(tcom.c.id == tmencom.c.component_id,
-                         tcom.c.component_group ==
-                         torditm.c.component_group))).\
-            where(tord.c.delivery_date == delivery_date).\
-            order_by(tmem.c.lastname, tmem.c.firstname)
-        print_rows(q_day_del_lis,
-                   "\n***** Delivery List ******\n CLIENT_ID,"
-                   " FIRSTNAME, LASTNAME, ROUTENAME, "
-                   "OI_TOTAL_QUANTITY, OI_SIZE, "
-                   "MENU_ID, MENU_COMPONENT_ID, "
-                   "COMPONENT_ID, COMPONENT_GROUP, COMPONENT_NAME")
-
+        Returns:
+            A dictionary where the key is an Integer 'client id' and
+            the value is a KitchenItem named tuple.
+        """
         kitchen_list = {}
-        rows = db_sa_session.execute(q_day_avo_ing)
-        for row in rows:
+
+        # Day's avoid ingredients clashes.
+        for row in day_avoid_ingredient(delivery_date):
             check_for_new_client(kitchen_list, row)
             if row.oiorderid and row.menucompid:
                 # found avoid ingredient clash
@@ -415,10 +248,9 @@ class Order(models.Model):
                 # should be a set
                 kitchen_list[row.cid].other_ingredients.append(
                     row.ingredient)
-        # END FOR
 
-        rows = db_sa_session.execute(q_day_avo_com)
-        for row in rows:
+        # Day's avoid component clashes.
+        for row in day_avoid_component(delivery_date):
             check_for_new_client(kitchen_list, row)
             if row.oiorderid and row.menucompid:
                 # found avoid component clash
@@ -432,10 +264,9 @@ class Order(models.Model):
                 # should be a set
                 kitchen_list[row.cid].other_components.append(
                     row.component)
-        # END FOR
 
-        rows = db_sa_session.execute(q_day_res)
-        for row in rows:
+        # Day's restrictions.
+        for row in day_restrictions(delivery_date):
             check_for_new_client(kitchen_list, row)
             if row.oiorderid and row.menucompid:
                 # found restriction clash
@@ -453,32 +284,30 @@ class Order(models.Model):
                 # remember restricted_item
                 kitchen_list[row.cid].restricted_items.append(
                     row.restricted_item)
-        # END FOR
 
-        rows = db_sa_session.execute(q_day_pre)
-        for row in rows:
+        # Day's preparations.
+        for row in day_preparations(delivery_date):
             check_for_new_client(kitchen_list, row)
             # should be a sorted set
             # found client with food preparation
             kitchen_list[row.cid].preparation.append(row.food_prep)
-        # END FOR
 
-        # Components summary and data for all labels for the day
-        rows = db_sa_session.execute(q_day_del_lis)
-        for row in rows:
+        # Day's Delivery Items, Components summary and Data for all labels.
+        for row in day_delivery_items(delivery_date):
             check_for_new_client(kitchen_list, row)
             if row.component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH:
-                kitchen_list[row.cid].meal_qty = \
-                    kitchen_list[row.cid].meal_qty + row.total_quantity
-                kitchen_list[row.cid].meal_size = row.size
+                kitchen_list[row.cid] = kitchen_list[row.cid]._replace(
+                    meal_qty=(kitchen_list[row.cid].meal_qty +
+                              row.total_quantity),
+                    meal_size=row.size)
             kitchen_list[row.cid].meal_components[row.component_group] = \
                 MealComponent(id=row.component_id,
                               name=row.component_name,
                               qty=row.total_quantity)
-            kitchen_list[row.cid].routename = row.routename
-        # END FOR
+            kitchen_list[row.cid] = kitchen_list[row.cid]._replace(
+                routename=row.routename)
 
-        # sort requirements list in each value
+        # Sort requirements list in each value.
         for value in kitchen_list.values():
             value.incompatible_ingredients.sort()
             value.incompatible_components.sort()
@@ -491,15 +320,30 @@ class Order(models.Model):
 
     @staticmethod
     def get_delivery_list(delivery_date, route_id):
-        # get all delivery order specifics for delivery date and route
+        """Get all delivery order specifics for delivery date and route.
+
+        For each client that has ordered a meal for 'delivery_date'
+        and that belongs to the route specified, find all the
+        information needed to generate the Route Sheet. This
+        information is stored in DeliveryClient objects. (See
+        DeliveryClient for the attributes).
+
+        Args:
+            delivery_date: A datetime.date object, the date on which
+                the meals will be delivered to the clients.
+            route_id: An integer, the is of the route for which the
+                delivery list must be produced.
+
+        Returns:
+            A dictionary where the key is an Integer 'client id' and
+            the value is a DeliveryClient object.
+        """
         orditms = Order_item.objects.\
             select_related('order__client__member__address').\
             filter(
                 order__delivery_date=delivery_date,
                 order__client__route__id=route_id).\
             order_by('order__client_id')
-
-        # print(orditms.query)  # DEBUG
 
         route_list = {}
         for oi in orditms:
@@ -535,99 +379,418 @@ class Order(models.Model):
 
         return route_list
 
-# get_kitchen_items helper classes and functions
-
-MealComponent = \
-    collections.namedtuple('MealComponent', ['id', 'name', 'qty'])
+# Order.get_kitchen_items helper functions.
 
 
-class KitchenItem(object):
-    # meal specifics for an order
+def named_tuple_fetchall(cursor):
+    """Fetch all rows from a database 'cursor', returning namedtuples.
 
-    def __init__(self):
+    Args:
+        cursor: A database cursor object on which a query was executed.
 
-        self.lastname = None
-        self.firstname = None
-        self.routename = None
-        self.meal_qty = 0
-        self.meal_size = ''
-        self.incompatible_ingredients = []
-        self.incompatible_components = []
-        self.other_ingredients = []
-        self.other_components = []
-        self.restricted_items = []
-        self.preparation = []
-        self.meal_components = {}
-        #  key is a component_group,
-        #  value is a MealComponent named tuple
-
-    def __str__(self):
-        return("[" +
-               'lastname=' + self.lastname + ', ' +
-               'firstname=' + self.firstname + ', ' +
-               'meal_qty=' + str(self.meal_qty) + ', ' +
-               'meal_size=' + str(self.meal_size) + ', ' +
-               'clash_ingre=' +
-               repr(self.incompatible_ingredients) + ', ' +
-               'clash_compo=' +
-               repr(self.incompatible_components) + ', ' +
-               'avoid_ingre=' + repr(self.other_ingredients) + ', ' +
-               'avoid_compo=' + repr(self.other_components) + ', ' +
-               'restr_items=' + repr(self.restricted_items) + ', ' +
-               'meal_components=' + repr(
-                   sorted(self.meal_components.items())) + ', ' +
-               'preparation=' + repr(self.preparation) + ']')
+    Returns:
+        A list of named tuples, each one being a row fetched from the cursor.
+        Each column of the cursor becomes an attribute of the named tuple.
+    """
+    desc = cursor.description
+    nt_row = collections.namedtuple('Row', [col[0] for col in desc])
+    return [nt_row(*row) for row in cursor.fetchall()]
 
 
-def print_rows(q, heading=""):  # USED FOR DEBUGGING; DO NOT REMOVE
+def sql_prep(query, valuesdict):
+    """Prepare SQL 'query' by matching its parameters with given 'values'.
+
+    Find parameters %(name)s in 'query' and replace them with a %s placeholder
+    then build an ordered list of corresponding values.
+
+    Args:
+        query: A string, the SQL query containing parameters like %(name)s.
+        valuesdict: A dictionary of parameter values : {'name': value, ...}.
+
+    Returns:
+        A tuple of two values, (the modified query string, a list of values to
+        pass to the query). For example :
+
+        >>> sql_prep('this is %(one)s a trial of %(two)s changes %(one)s end',
+                     {'one': 10, 'two': 'twenty'})
+        ('this is %s a trial of %s changes %s end', [10, 'twenty', 10])
+
+    Raises:
+        Exception: A parameter in the query does not have a matching value.
+    """
+    # Get all the substrings that match the regex
+    subs = [(m.start(), m.end(), m.group(0))
+            for m in re.finditer(r"%\(\w+\)s", query)]
+    # print("subs", subs)  # DEBUG
+    mod = []    # list of segments of new query
+    pos = 0     # start of non-matching text in old query
+    names = []  # parameter names found in old query
+    for sta, end, grp in subs:
+        mod.append(query[pos:sta])  # add text before match
+        mod.append("%s")            # new placeholder
+        pos = end                   # next non-matching text
+        names.append(grp[2:-2])     # extract name in %(name)s
+    mod.append(query[pos:])  # add tail of old query
+    values = []
+    for n in names:
+        val = valuesdict.get(n)
+        if val:
+            values.append(val)
+        else:
+            raise Exception(
+                "Query parameter '{}' not found in values".format(n))
+    return ''.join(mod), values
+
+
+def sql_exec(query, values, heading=''):
+    """Execute SQL 'query' passing to it the given 'values'.
+
+    Args:
+        query: A string, the SQL query containing parameters like %(name)s.
+        values: A dictionary of parameter values : {'name': value, ...}.
+        heading: A string that if we debug, will be printed once before
+            all the result rows.
+
+    Returns:
+        A list of named tuples, each one is a row returned by the database
+        as the result of the SQL query.
+    """
+    with connection.cursor() as cursor:
+        cursor.execute(*sql_prep(query, values))
+        rows = named_tuple_fetchall(cursor)
+    # UNCOMMENT THESE LINES FOR DEBUGGING; DO NOT REMOVE
     # print("\n-----------------------------------------------------\n",
-    #       # q, "\n",
-    #       heading)
-    # rows = db_sa_session.execute(q)
+    #       heading, "\n")
     # for row in rows:
     #     print(row)
-    pass
+    #
+    return rows
+
+
+def day_avoid_ingredient(delivery_date):
+    """ Get day's avoid ingredients clashes.
+
+    For each client that has ordered a meal for 'delivery_date', find all
+    the ingredients that he avoids and identify which of those
+    ingredients are included in the main dish for 'delivery_date'.
+    Note that the 'avoid ingredients' are the ones that the client specified
+    explicitly.
+
+    Args:
+        delivery_date: A datetime.date object, the date on which the meals will
+            be delivered to the clients.
+
+    Returns:
+        A list of named tuples, each one containing the columns specified
+        in the SELECT clause.
+    """
+    query = """
+    SELECT member_client.id AS cid,
+      member_member.firstname, member_member.lastname,
+      order_order.id AS oid,
+      order_order.delivery_date,
+      meal_menu.id AS menuid,
+      meal_menu_component.id AS menucompid,
+      meal_ingredient.name AS ingredient,
+      meal_component.name,
+      order_order_item.id AS oiid,
+      order_order_item.order_id AS oiorderid
+    FROM member_member
+      JOIN member_client ON member_client.member_id = member_member.id
+      JOIN order_order ON order_order.client_id = member_client.id
+      JOIN meal_menu ON meal_menu.date =                      %(delivery_date)s
+      JOIN member_client_avoid_ingredient ON
+        member_client_avoid_ingredient.client_id = member_client.id
+      JOIN meal_ingredient ON
+        meal_ingredient.id = member_client_avoid_ingredient.ingredient_id
+      LEFT OUTER JOIN meal_component_ingredient ON
+        meal_component_ingredient.ingredient_id = meal_ingredient.id AND
+          meal_component_ingredient.date =                    %(delivery_date)s
+      LEFT OUTER JOIN meal_component ON
+        meal_component.id = meal_component_ingredient.component_id
+      LEFT OUTER JOIN order_order_item ON
+        order_order_item.component_group = meal_component.component_group AND
+          order_order_item.order_id = order_order.id
+      LEFT OUTER JOIN meal_menu_component ON
+        meal_menu_component.component_id = meal_component.id AND
+          meal_menu_component.menu_id = meal_menu.id
+    WHERE order_order.delivery_date =                         %(delivery_date)s
+    ORDER BY member_client.id
+    """
+    values = {'delivery_date': delivery_date}
+    return sql_exec(query, values, "****** Avoid ingredients ******")
+
+
+def day_avoid_component(delivery_date):
+    """ Get day's avoid component clashes.
+
+    For each client that has ordered a meal for 'delivery_date', find all
+    the components that he avoids and identify which of those
+    components is the main dish for 'delivery_date'.
+
+    Args:
+        delivery_date: A datetime.date object, the date on which the meals will
+            be delivered to the clients.
+
+    Returns:
+        A list of named tuples, each one containing the columns specified
+        in the SELECT clause.
+    """
+    query = """
+    SELECT member_client.id AS cid,
+      member_member.firstname, member_member.lastname,
+      order_order.id AS oid,
+      order_order.delivery_date,
+      meal_menu.id AS menuid,
+      meal_menu_component.id AS menucompid,
+      meal_component.name AS component,
+      order_order_item.id AS oiid,
+      order_order_item.order_id AS oiorderid
+    FROM member_member
+      JOIN member_client ON member_client.member_id = member_member.id
+      JOIN order_order ON order_order.client_id = member_client.id AND
+        order_order.delivery_date =                           %(delivery_date)s
+      JOIN meal_menu ON meal_menu.date =                      %(delivery_date)s
+      JOIN member_client_avoid_component ON
+        member_client_avoid_component.client_id = member_client.id
+      JOIN meal_component ON
+        meal_component.id = member_client_avoid_component.component_id
+      LEFT OUTER JOIN order_order_item ON
+        order_order_item.component_group = meal_component.component_group AND
+          order_order_item.order_id = order_order.id
+      LEFT OUTER JOIN meal_menu_component ON
+        meal_menu_component.component_id = meal_component.id AND
+          meal_menu_component.menu_id = meal_menu.id
+    WHERE order_order.delivery_date =                         %(delivery_date)s
+    ORDER BY member_client.id
+    """
+    values = {'delivery_date': delivery_date}
+    return sql_exec(query, values, "****** Avoid components ******")
+
+
+def day_restrictions(delivery_date):
+    """ Get day's restrictions.
+
+    For each client that has ordered a meal for 'delivery_date', find all
+    the ingredients that correspond to the restricted items that he specified
+    and identify which of those ingredients are included in the main dish
+    for 'delivery_date'.
+
+    Args:
+        delivery_date: A datetime.date object, the date on which the meals will
+            be delivered to the clients.
+
+    Returns:
+        A list of named tuples, each one containing the columns specified
+        in the SELECT clause.
+    """
+    query = """
+    SELECT member_client.id AS cid,
+      member_member.firstname, member_member.lastname,
+      order_order.id AS oid,
+      order_order.delivery_date,
+      meal_menu.id AS menuid,
+      meal_menu_component.id AS menucompid,
+      meal_restricted_item.name AS restricted_item,
+      meal_ingredient.name AS ingredient,
+      meal_component.name,
+      order_order_item.id AS oiid,
+      order_order_item.order_id AS oiorderid
+    FROM member_member
+      JOIN member_client ON member_client.member_id = member_member.id
+      JOIN order_order ON order_order.client_id = member_client.id
+      JOIN meal_menu ON meal_menu.date =                      %(delivery_date)s
+      JOIN member_restriction ON
+        member_restriction.client_id = member_client.id
+      JOIN meal_restricted_item ON
+        meal_restricted_item.id = member_restriction.restricted_item_id
+      LEFT OUTER JOIN meal_incompatibility ON
+        meal_incompatibility.restricted_item_id =
+          member_restriction.restricted_item_id
+      LEFT OUTER JOIN meal_ingredient ON
+        meal_incompatibility.ingredient_id = meal_ingredient.id
+      LEFT OUTER JOIN meal_component_ingredient ON
+        meal_component_ingredient.ingredient_id = meal_ingredient.id AND
+          meal_component_ingredient.date =                    %(delivery_date)s
+      LEFT OUTER JOIN meal_component ON
+        meal_component_ingredient.component_id = meal_component.id
+      LEFT OUTER JOIN order_order_item ON
+       order_order_item.component_group = meal_component.component_group AND
+         order_order_item.order_id = order_order.id
+      LEFT OUTER JOIN meal_menu_component ON
+        meal_menu_component.component_id = meal_component.id AND
+          meal_menu_component.menu_id = meal_menu.id
+    WHERE order_order.delivery_date =                         %(delivery_date)s
+    ORDER BY member_client.id
+    """
+    values = {'delivery_date': delivery_date}
+    return sql_exec(query, values, "****** Restrictions ******")
+
+
+def day_preparations(delivery_date):
+    """ Get day's preparations.
+
+    For each client that has ordered a meal for 'delivery_date', find all
+    the food preparations that he specified.
+
+    Args:
+        delivery_date: A datetime.date object, the date on which the meals will
+            be delivered to the clients.
+
+    Returns:
+        A list of named tuples, each one containing the columns specified
+        in the SELECT clause.
+    """
+    query = """
+    SELECT member_client.id AS cid,
+      member_member.firstname, member_member.lastname,
+      member_option.name AS food_prep,
+      order_order.id AS oid,
+      order_order.delivery_date
+    FROM member_member
+      JOIN member_client ON member_client.member_id = member_member.id
+      JOIN member_client_option ON
+        member_client_option.client_id = member_client.id
+      JOIN member_option ON member_option.id = member_client_option.option_id
+      JOIN order_order ON order_order.client_id = member_client.id
+    WHERE order_order.delivery_date =                     %(delivery_date)s AND
+      member_option.option_group =                             %(option_group)s
+    ORDER BY member_member.lastname, member_member.firstname
+    """
+    values = {'delivery_date': delivery_date,
+              'option_group': OPTION_GROUP_CHOICES_PREPARATION}
+    return sql_exec(query, values, "****** Preparations ******")
+
+
+def day_delivery_items(delivery_date):
+    """ Get day's Delivery Items.
+
+    For each client that has ordered a meal for 'delivery_date', find his route
+    and all the details and quantities for the items that have to delivered.
+
+    Args:
+        delivery_date: A datetime.date object, the date on which the meals will
+            be delivered to the clients.
+
+    Returns:
+        A list of named tuples, each one containing the columns specified
+        in the SELECT clause.
+    """
+    query = """
+    SELECT member_client.id AS cid,
+      member_member.firstname, member_member.lastname,
+      member_route.name AS routename,
+      order_order_item.total_quantity, order_order_item.size,
+      meal_menu.id AS menuid,
+      meal_menu_component.id AS mencomid,
+      meal_component.id AS component_id, meal_component.component_group,
+      meal_component.name AS component_name
+    FROM member_member
+      JOIN member_client ON member_client.member_id = member_member.id
+      JOIN member_route ON member_route.id = member_client.route_id
+      JOIN meal_menu ON meal_menu.date =                      %(delivery_date)s
+      JOIN order_order ON order_order.client_id = member_client.id
+      JOIN order_order_item ON order_order_item.order_id = order_order.id
+      JOIN meal_menu_component ON meal_menu_component.menu_id = meal_menu.id
+      JOIN meal_component ON
+        meal_component.id = meal_menu_component.component_id AND
+          meal_component.component_group = order_order_item.component_group
+    WHERE order_order.delivery_date =                         %(delivery_date)s
+    ORDER BY member_member.lastname, member_member.firstname
+    """
+    values = {'delivery_date': delivery_date}
+    return sql_exec(query, values, "****** Delivery List ******")
+
+
+KitchenItem = collections.namedtuple(         # Meal specifics for an order.
+    'KitchenItem',
+    ['lastname',                     # Client's lastname
+     'firstname',                    # Client's firstname
+     'routename',                    # Name of Client's route (ex. 'Mile-end')
+     'meal_qty',                     # Quantity of main dish servings
+     'meal_size',                    # Size of main dish
+     'incompatible_ingredients',     # Ingredients in main dish that clash
+     'incompatible_components',      # Components that the client refuses
+     'other_ingredients',            # Other ingredients that client refuses
+     'other_components',             # Other components that client refuses
+     'restricted_items',             # All restricted items for the client
+     'preparation',                  # All food preparations for the client
+     'meal_components'])             # List of MealComponents objects
+
+
+MealComponent = collections.namedtuple(       # Component specifics for a meal.
+    'MealComponent',
+    ['id',                           # Component id
+     'name',                         # Component name (ex. 'Rice pudding')
+     'qty'])                         # Quantity of this component in the order
 
 
 def check_for_new_client(kitchen_list, row):
-    # add client in list when first found
+    """ Add client in list when first found.
+
+    Args:
+        kitchen_list: A dictionary where the key is an Integer 'client id'
+            and the value is a KitchenItem named tuple.
+        row: An object having an attribute 'cid' that represents
+            an Integer 'client id'.
+    """
     if not kitchen_list.get(row.cid):
         # found new client
-        kitchen_list[row.cid] = KitchenItem()
-        kitchen_list[row.cid].lastname = row.lastname
-        kitchen_list[row.cid].firstname = row.firstname
+        kitchen_list[row.cid] = KitchenItem(
+            lastname=row.lastname,
+            firstname=row.firstname,
+            routename=None,
+            meal_qty=0,
+            meal_size='',
+            incompatible_ingredients=[],
+            incompatible_components=[],
+            other_ingredients=[],
+            other_components=[],
+            restricted_items=[],
+            preparation=[],
+            meal_components={})
 
-# End kitchen items helpers
+# End Order.kitchen items helpers
 
 
-# get_delivery_items helper classes and functions
+# Order.get_delivery_list helper functions.
 
-# item contained in a delivery for a client
-DeliveryItem = \
-    collections.namedtuple(
-        'DeliveryItem',
-        ['component_group',
-         'total_quantity',
-         'order_item_type',
-         'remark',
-         'size'])
 
-# delivery specifics for a client's order
-DeliveryClient = \
-    collections.namedtuple(
-        'DeliveryClient',
-        ['firstname',
-         'lastname',
-         'number',
-         'street',
-         'apartment',
-         'phone',
-         'delivery_note',
-         'delivery_items'])  # list of DeliveryItem
+DeliveryClient = collections.namedtuple(  # Delivery details for client order.
+    'DeliveryClient',
+    ['firstname',
+     'lastname',
+     'number',
+     'street',
+     'apartment',
+     'phone',
+     'delivery_note',
+     'delivery_items'])  # list of DeliveryItem objects
+
+
+DeliveryItem = collections.namedtuple(    # Item contained in a delivery.
+    'DeliveryItem',
+    ['component_group',    # String if item is a meal component, else None
+     'total_quantity',     # Quantity of item to deliver
+     'order_item_type',    # Type of item to deliver (ex. dish, bill, grocery)
+     'remark',
+     'size'])              # Size of item if applicable
 
 
 def component_group_sorting(component):
-    # sorting sequence for component groups
+    """Sorting sequence for object according to their component_group.
+
+    The sequence is ordered such that the 'main dish' object is first,
+    then all the objects having a component_group such as 'dessert',
+    'green salad' etc. in alphabetical order, and finally objects
+    having an empty component_group.
+
+    Args:
+        component: A object having a 'component_group' attribute.
+
+    Returns:
+        A string, that can be used as a key to a sort function.
+    """
     if component.component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH:
         return '1'
     elif component.component_group != '':
@@ -635,7 +798,7 @@ def component_group_sorting(component):
     else:
         return '3'
 
-# End get_delivery_items helpers
+# End Order.get_delivery_list helpers
 
 
 class OrderFilter(FilterSet):

@@ -23,8 +23,6 @@ from django.db.models.functions import Lower
 
 from .apps import DeliveryConfig
 
-from sqlalchemy import func, or_, and_
-
 import labels  # package pylabels
 from reportlab.graphics import shapes
 
@@ -37,7 +35,6 @@ from meal.models import (
     Component, Ingredient,
     Menu, Menu_component,
     Component_ingredient)
-from member.apps import db_sa_session
 from member.models import Client, Route
 from datetime import date
 from . import tsp
@@ -191,8 +188,6 @@ class KitchenCount(generic.View):
         kitchen_list = Order.get_kitchen_items(date)
         component_lines, meal_lines = kcr_make_lines(kitchen_list, date)
         num_labels = kcr_make_labels(kitchen_list)
-        # release session for SQLAlchemy     TODO use signals instead
-        db_sa_session.remove()
         return render(request, 'kitchen_count.html',
                       {'component_lines': component_lines,
                        'meal_lines': meal_lines,

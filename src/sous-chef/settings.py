@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     'delivery',
     'formtools',
     'django_filters',
-    'aldjemy',
     'annoying',
     'leaflet',
     'note',

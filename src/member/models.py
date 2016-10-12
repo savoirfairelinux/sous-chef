@@ -59,6 +59,8 @@ OPTION_GROUP_CHOICES = (
     ('other order item', _('Other order item')),
 )
 
+OPTION_GROUP_CHOICES_PREPARATION = OPTION_GROUP_CHOICES[2][0]
+
 DAYS_OF_WEEK = (
     ('monday', _('Monday')),
     ('tuesday', _('Tuesday')),

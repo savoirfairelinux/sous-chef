@@ -2,7 +2,7 @@
 'To generate image : see http://www.plantuml.com/plantuml
 @startuml
 scale 1.0
-title SousChef Data Model (revised_data_model.uml, 2016-09-02 at 6:00)\n(this may be out of sync with the django models)\n
+title SousChef Data Model (revised_data_model.uml, 2016-09-21 at 20:00)\n(this may be out of sync with the django models)\n
 hide methods
 'hide fields
 skinparam shadowing false
@@ -75,21 +75,11 @@ class Address << (C,red) >> {
 
 class Billing << (C,purple) >> {
     id
-    client_id
     total_amount
     billing_month
     billing_year
-    created_date
+    created
     detail
-}
-
-class BillingSummary << (C,purple) >> {
-    id
-    total_order
-    detail
-    billing_year
-    billing_month
-    amount_total
 }
 
 class Client << (C,red) >> {
