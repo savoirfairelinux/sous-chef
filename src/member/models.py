@@ -249,6 +249,7 @@ class Route(models.Model):
 
     class Meta:
         verbose_name_plural = _('Routes')
+        ordering = ['name']
 
     # Information about options added to the meal
     name = models.CharField(
