@@ -597,26 +597,11 @@ class ClientWizard(NamedUrlSessionWizardView):
             ref_cell_phone = referent_information.cleaned_data.get(
                 "cell_phone", None)
             if ref_email:
-                ctc_email = Contact.objects.create(
-                    type=EMAIL,
-                    value=ref_email,
-                    member=referent,
-                )
-                ctc_email.save()
+                referent.add_contact_information(EMAIL, ref_email)
             if ref_work_phone:
-                ctc_work_phone = Contact.objects.create(
-                    type=WORK,
-                    value=ref_work_phone,
-                    member=referent,
-                )
-                ctc_work_phone.save()
+                referent.add_contact_information(WORK, ref_work_phone)
             if ref_cell_phone:
-                ctc_cell_phone = Contact.objects.create(
-                    type=CELL,
-                    value=ref_cell_phone,
-                    member=referent,
-                )
-                ctc_cell_phone.save()
+                referent.add_contact_information(CELL, ref_cell_phone)
 
         referencing = Referencing.objects.create(
             referent=referent,

@@ -798,8 +798,6 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "referent_information",
             "referent_information-firstname": "Same",
             "referent_information-lastname": "User",
-            # "referent_information-email": "same@user.com",
-            # "referent_information-work_phone": "514-514-5145 #514",
             "referent_information-work_information": "CLSC",
             "referent_information-date": "2012-06-06",
             "referent_information-referral_reason": "Testing referral reason",
