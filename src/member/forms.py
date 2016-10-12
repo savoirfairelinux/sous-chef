@@ -249,6 +249,24 @@ class MemberForm(forms.Form):
         required=False
     )
 
+    email = forms.CharField(
+        label='<i class="email icon"></i>',
+        widget=forms.TextInput(attrs={'placeholder': _('Email')}),
+        required=False,
+    )
+
+    work_phone = forms.CharField(
+        label='Work',
+        widget=forms.TextInput(attrs={'placeholder': _('Work phone')}),
+        required=False,
+    )
+
+    cell_phone = forms.CharField(
+        label='Cell',
+        widget=forms.TextInput(attrs={'placeholder': _('Cellular')}),
+        required=False,
+    )
+
     def clean(self):
         cleaned_data = super(MemberForm, self).clean()
 
