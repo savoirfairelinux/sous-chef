@@ -41,15 +41,11 @@ SIZE_CHOICES_REGULAR = SIZE_CHOICES[1][0]
 SIZE_CHOICES_LARGE = SIZE_CHOICES[2][0]
 
 ORDER_ITEM_TYPE_CHOICES = (
-    ('', _('Order item type')),
-    ('B component',
-     _('BILLABLE meal component (main dish, vegetable, side dish, seasonal)')),
-    ('B delivery',
-     _('BILLABLE delivery (general store item, ...)')),
-    ('N delivery',
-     _('NON BILLABLE delivery (ex. invitation card, ...)')),
-    ('N pickup',
-     _('NON BILLABLE pickup (payment)')),
+    ('meal_component',
+        _('Meal component (main dish, vegetable, side dish, seasonal)')),
+    ('delivery', _('Delivery (general store item, invitation, ...)')),
+    ('pickup', _('Pickup (payment)')),
+    ('visit', _('Visit')),
 )
 
 ORDER_ITEM_TYPE_CHOICES_COMPONENT = ORDER_ITEM_TYPE_CHOICES[1][0]

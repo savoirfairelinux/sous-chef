@@ -352,7 +352,6 @@ class OrderFormTestCase(TestCase):
             'orders-MIN_NUM_FORMS': 0,
             'orders-MAX_NUM_FORMS': 100,
             'client': client.id,
-            'creation_date': '2016-12-12',
             'delivery_date': '2016-12-22',
             'status': 'O',
             'orders-0-component': component.id,
@@ -360,7 +359,7 @@ class OrderFormTestCase(TestCase):
             'orders-0-price': '5',
             'orders-0-billable_flag': True,
             'orders-0-size': 'R',
-            'orders-0-order_item_type': 'B component',
+            'orders-0-order_item_type': 'meal_component',
             'orders-0-remark': 'Order item without errors',
             'orders-0-total_quantity': '5',
         }
@@ -424,14 +423,13 @@ class OrderCreateFormTestCase(OrderFormTestCase):
             'orders-MIN_NUM_FORMS': 0,
             'orders-MAX_NUM_FORMS': 100,
             'client': client.id,
-            'creation_date': '2016-12-12',
             'delivery_date': '2016-12-22',
             'status': 'O',
             'orders-0-component_group': 'main_dish',
             'orders-0-price': '5',
             'orders-0-billable_flag': True,
             'orders-0-size': 'R',
-            'orders-0-order_item_type': 'B component',
+            'orders-0-order_item_type': 'meal_component',
             'orders-0-remark': 'Order item without errors',
             'orders-0-total_quantity': '5',
         }
@@ -448,7 +446,8 @@ class OrderCreateFormTestCase(OrderFormTestCase):
         self.assertEqual(order.price, 5)
         self.assertEqual(order.orders.first().billable_flag, True)
         self.assertEqual(order.orders.first().size, 'R')
-        self.assertEqual(order.orders.first().order_item_type, 'B component')
+        self.assertEqual(order.orders.first().order_item_type,
+                         'meal_component')
         self.assertEqual(
             order.orders.first().remark,
             'Order item without errors'
@@ -508,7 +507,6 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
             'orders-MIN_NUM_FORMS': 0,
             'orders-MAX_NUM_FORMS': 100,
             'client': self.order.client.id,
-            'creation_date': '2016-12-12',
             'delivery_date': '2016-12-22',
             'status': 'O',
             'orders-0-id': self.order.orders.first().id,
@@ -516,7 +514,7 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
             'orders-0-price': '5',
             'orders-0-billable_flag': True,
             'orders-0-size': 'R',
-            'orders-0-order_item_type': 'B component',
+            'orders-0-order_item_type': 'meal_component',
             'orders-0-remark': 'Order item without errors',
             'orders-0-total_quantity': '5',
         }
@@ -533,7 +531,7 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
         self.assertEqual(order.orders.latest('id').size, 'R')
         self.assertEqual(
             order.orders.latest('id').order_item_type,
-            'B component'
+            'meal_component'
         )
         self.assertEqual(
             order.orders.latest('id').remark,
