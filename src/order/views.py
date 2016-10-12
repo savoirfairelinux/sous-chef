@@ -2,13 +2,24 @@ import csv
 from django.http import HttpResponse
 from django.views import generic
 from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
+from django.shortcuts import get_object_or_404, render
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView
 
-from order.models import Order, Order_item, OrderFilter, ORDER_STATUS
+from datetime import date, datetime
+
+from order.models import Order, Order_item, OrderFilter, OrderManager,  \
+    ORDER_STATUS
 from order.mixins import AjaxableResponseMixin
-from order.forms import CreateOrderItem, UpdateOrderItem
+from order.forms import CreateOrderItem, UpdateOrderItem, \
+    CreateOrdersBatchForm
+
+from meal.models import COMPONENT_GROUP_CHOICES
+
+from member.models import Client
 
 
 class OrderList(generic.ListView):
@@ -92,6 +103,54 @@ class CreateOrder(AjaxableResponseMixin, CreateWithInlinesView):
 
     def get_success_url(self):
         return self.object.get_absolute_url()
+
+
+class CreateOrdersBatch(generic.FormView):
+    form_class = CreateOrdersBatchForm
+    template_name = "order/create_batch.html"
+    success_url = reverse_lazy('order:createBatch')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CreateOrdersBatch, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateOrdersBatch, self).get_context_data(**kwargs)
+        # Define here any needed variable for template
+        context["meals"] = COMPONENT_GROUP_CHOICES
+        context["day"] = ('default', _('Default'))
+        return context
+
+    def form_valid(self, form):
+        # Get posted datas
+        client = form.cleaned_data['client']
+        clients = [client]
+        delivery_dates = form.cleaned_data['delivery_dates'].split('|')
+
+        # Place an order for each delivery date
+        counter = 0
+        for delivery_date in delivery_dates:
+            delivery_date = datetime.strptime(delivery_date, "%Y-%m-%d").date()
+            nbordate = Order.objects.auto_create_orders(delivery_date, clients)
+            if (nbordate == 0):
+                messages.add_message(
+                    self.request, messages.WARNING,
+                    _('No order placed for %(client)s on %(date)s. \
+                        Probably because there is already an order for \
+                        this client and day.') % {
+                        'client': client, 'date': delivery_date}
+                )
+            counter += nbordate
+
+        # Alert user on order placement
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _('%(n)s order(s) successfully placed for %(client)s.') % {
+                'n': counter, 'client': client}
+        )
+
+        response = super(CreateOrdersBatch, self).form_valid(form)
+        return response
 
 
 class UpdateOrder(AjaxableResponseMixin, UpdateWithInlinesView):
