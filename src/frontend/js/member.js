@@ -76,16 +76,6 @@ $(function() {
         });
     });
 
-    $('#dietary_restriction-delivery_type .dropdown').dropdown({
-        onChange: function(value, text, $selectedItem) {
-            if($selectedItem.data('value') == 'E') {
-                $('#form-delivery-schedule').hide();
-            } else {
-                $('#form-delivery-schedule').show();
-            }
-        }
-    });
-
     var same_as_client = $('#id_payment_information-same_as_client');
     // Initial state
     if (same_as_client && same_as_client.checked) {
@@ -131,7 +121,7 @@ $(function() {
         $(selector).show();
     }
     function showUiAccordionSelectedDays() {
-        var $selected = $('#id_dietary_restriction-delivery_schedule').val();
+        var $selected = $('#id_dietary_restriction-meals_schedule').val();
         if ($selected) {
           $selected.forEach(showOneAccordionElement);
         }
@@ -142,7 +132,7 @@ $(function() {
         });
     }
 
-    $('#id_dietary_restriction-delivery_schedule').change(function () {
+    $('#id_dietary_restriction-meals_schedule').change(function () {
         hideUiAccordionDays();
         showUiAccordionSelectedDays();
     });

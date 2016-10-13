@@ -368,9 +368,9 @@ $(function() {
     $('#dietary_restriction-delivery_type .dropdown').dropdown({
         onChange: function(value, text, $selectedItem) {
             if($selectedItem.data('value') == 'E') {
-                $('#form-delivery-schedule').hide();
+                $('#form-meals-schedule').hide();
             } else {
-                $('#form-delivery-schedule').show();
+                $('#form-meals-schedule').show();
             }
         }
     });
@@ -420,7 +420,7 @@ $(function() {
         $(selector).show();
     }
     function showUiAccordionSelectedDays() {
-        var $selected = $('#id_dietary_restriction-delivery_schedule').val();
+        var $selected = $('#id_dietary_restriction-meals_schedule').val();
         if ($selected) {
           $selected.forEach(showOneAccordionElement);
         }
@@ -431,7 +431,7 @@ $(function() {
         });
     }
 
-    $('#id_dietary_restriction-delivery_schedule').change(function () {
+    $('#id_dietary_restriction-meals_schedule').change(function () {
         hideUiAccordionDays();
         showUiAccordionSelectedDays();
     });
@@ -476,7 +476,6 @@ $(function() {
         var selector = '.ui.basic.modal.billing-' + billing_id;
         $(selector).modal('show');
     });
-
 
     $('#billing_delivery_date').calendar({
         type: 'month',
