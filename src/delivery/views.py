@@ -49,7 +49,7 @@ class Orderlist(generic.ListView):
     context_object_name = 'orders'
 
     def get_queryset(self):
-        queryset = Order.objects.get_orders_for_date()
+        queryset = Order.objects.get_shippable_orders()
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -430,9 +430,6 @@ def kcr_make_labels(kitchen_list):
 
     if sheet.label_count > 0:
         sheet.save(MEAL_LABELS_FILE)
-        print("SousChef Printed {} meal label(s) on {} page(s)"
-              " into file {}".format(
-                  sheet.label_count, sheet.page_count, MEAL_LABELS_FILE))
     return sheet.label_count
 
 # END Kitchen count report view, helper classes and functions
@@ -550,7 +547,7 @@ def dailyOrders(request):
     route_id = request.GET.get('route')
 
     # Load all orders for the day
-    orders = Order.objects.get_orders_for_date()
+    orders = Order.objects.get_shippable_orders()
 
     for order in orders:
         if order.client.route is not None:
@@ -616,11 +613,10 @@ def saveRoute(request):
 
 
 def refreshOrders(request):
-    creation_date = date.today()
     delivery_date = date.today()
     last_refresh_date = datetime.datetime.now()
     clients = Client.active.all()
-    Order.create_orders_on_defaults(creation_date, delivery_date, clients)
+    Order.objects.auto_create_orders(delivery_date, clients)
     LogEntry.objects.log_action(
         user_id=1, content_type_id=1,
         object_id="", object_repr="Generation of order for " + str(

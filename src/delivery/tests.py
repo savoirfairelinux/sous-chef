@@ -38,8 +38,8 @@ class KitchenCountReportTestCase(TestCase):
         # generate orders today
         self.today = datetime.date.today()
         clients = Client.active.all()
-        numorders = Order.create_orders_on_defaults(
-            self.today, self.today, clients)
+        numorders = Order.objects.auto_create_orders(
+            self.today, clients)
         Menu.create_menu_and_components(
             self.today,
             ['Ginger pork',
@@ -64,8 +64,7 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
         # This data set includes 'Pepper' available ingredient
         # create orders for today
         clients = Client.active.all()
-        Order.create_orders_on_defaults(
-            datetime.date.today(),
+        Order.objects.auto_create_orders(
             datetime.date.today(),
             clients)
 
@@ -135,8 +134,6 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
         """Change dish then go directly to Kitchen Count Report."""
         maindish = Component.objects.get(name='Coq au vin')
 
-        print(maindish.id)
-
         response = self.client.get(
             reverse_lazy('delivery:meal_id', args=[maindish.id]))
         req = {}
@@ -165,8 +162,8 @@ class DeliveryRouteSheetTestCase(TestCase):
         # generate orders today
         self.today = datetime.date.today()
         clients = Client.active.all()
-        numorders = Order.create_orders_on_defaults(
-            self.today, self.today, clients)
+        numorders = Order.objects.auto_create_orders(
+            self.today, clients)
         self.route_id = Route.objects.get(name='ndg').id
 
     def test_query(self):
@@ -191,8 +188,8 @@ class RouteSequencingTestCase(TestCase):
         # generate orders today
         self.today = datetime.date.today()
         clients = Client.active.all()
-        numorders = Order.create_orders_on_defaults(
-            self.today, self.today, clients)
+        numorders = Order.objects.auto_create_orders(
+            self.today, clients)
         self.route_id = Route.objects.get(name='ndg').id
 
     def test_get_orders(self):

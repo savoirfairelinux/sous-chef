@@ -78,7 +78,7 @@ class OrderDetail(generic.DetailView):
 
 class CreateOrder(AjaxableResponseMixin, CreateWithInlinesView):
     model = Order
-    fields = '__all__'
+    fields = ['client', 'delivery_date']
     inlines = [CreateOrderItem]
     template_name = 'create.html'
 
@@ -96,7 +96,7 @@ class CreateOrder(AjaxableResponseMixin, CreateWithInlinesView):
 
 class UpdateOrder(AjaxableResponseMixin, UpdateWithInlinesView):
     model = Order
-    fields = '__all__'
+    fields = ['client', 'delivery_date']
     inlines = [UpdateOrderItem]
     template_name = 'update.html'
 

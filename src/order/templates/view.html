@@ -44,7 +44,7 @@
         <th>{% trans "Component" %}</th>
         <th>{% trans "Description" %}</th>
         <th class="">{% trans 'Total Quantity' %}</th>
-        <th class="">{% trans 'Free Quantity' %}</th>
+        <th class="">{% trans 'Billable' %}</th>
         <th class="right aligned">{% trans 'Price' %}</th>
       </thead>
       <tbody>
@@ -53,7 +53,7 @@
             <td><strong>{{item.order_item_type}}</strong></td>
             <td>{{item.component_group}}</td>
             <td>{{item.total_quantity}}</td>
-            <td>{{item.free_quantity}}</td>
+            <td>{{item.billable_flag}}</td>
             <td class="right aligned"><i class="dollar icon"></i>{{item.price}}</td>
           </tr>
           {% endfor %}
