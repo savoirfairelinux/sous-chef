@@ -185,7 +185,8 @@ class Order(models.Model):
     status = models.CharField(
         max_length=1,
         choices=ORDER_STATUS,
-        verbose_name=_('order status')
+        verbose_name=_('order status'),
+        default=ORDER_STATUS_ORDERED
     )
 
     client = models.ForeignKey(
@@ -933,12 +934,15 @@ class Order_item(models.Model):
 
     remark = models.CharField(
         max_length=256,
-        verbose_name=_('remark')
+        verbose_name=_('remark'),
+        null=True,
+        blank=True,
     )
 
     total_quantity = models.IntegerField(
         verbose_name=_('total quantity'),
         null=True,
+        blank=True,
     )
 
     free_quantity = models.IntegerField(
@@ -952,6 +956,7 @@ class Order_item(models.Model):
         choices=COMPONENT_GROUP_CHOICES,
         verbose_name=_('component group'),
         null=True,
+        blank=True,
     )
 
     def __str__(self):
