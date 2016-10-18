@@ -75,8 +75,8 @@ python manage.py migrate
 # Create a user with administrator privileges
 python manage.py createsuperuser
 
-# Load the initial data set
-python3 manage.py loaddata routes client_options delivery_initial_data
+# Optional: Load the initial data set
+python3 manage.py loaddata sample_data
 
 ```
 

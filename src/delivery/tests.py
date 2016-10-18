@@ -11,7 +11,7 @@ from member.models import Client, Member, Route
 
 class KitchenCountReportTestCase(TestCase):
 
-    fixtures = ['delivery_route_data']
+    fixtures = ['sample_data']
 
     @classmethod
     def setUpTestData(cls):
@@ -54,7 +54,7 @@ class KitchenCountReportTestCase(TestCase):
 
 class ChooseDayMainDishIngredientsTestCase(TestCase):
 
-    fixtures = ['delivery_route_data']
+    fixtures = ['sample_data']
 
     @classmethod
     def setUpTestData(cls):
@@ -108,7 +108,7 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
 
     def test_restore_dish_recipe(self):
         """Restore dish ingredients to those of recipe."""
-        # dish : Ginger pork with added Pepper
+        # dish : Ginger pork with added Spinach
         response = self.client.get(reverse_lazy('delivery:meal'))
         maindish = Component.objects.get(name='Ginger pork')
         cis = Component_ingredient.objects.filter(
@@ -155,7 +155,7 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
 
 class DeliveryRouteSheetTestCase(TestCase):
 
-    fixtures = ['delivery_route_data']
+    fixtures = ['sample_data']
 
     def setUp(self):
         # This data set includes 'Blondin' client lastname
@@ -164,7 +164,7 @@ class DeliveryRouteSheetTestCase(TestCase):
         clients = Client.active.all()
         numorders = Order.objects.auto_create_orders(
             self.today, clients)
-        self.route_id = Route.objects.get(name='ndg').id
+        self.route_id = Route.objects.get(name='Centre Sud').id
 
     def test_query(self):
         """Sample route sheet query."""
@@ -175,13 +175,12 @@ class DeliveryRouteSheetTestCase(TestCase):
         """Sample route sheet page."""
         response = self.client.get(
             reverse_lazy('delivery:route_sheet_id', args=[self.route_id]))
-        # print("test route", response, response.content)
         self.assertTrue(b'Blondin' in response.content)
 
 
 class RouteSequencingTestCase(TestCase):
 
-    fixtures = ['delivery_route_data']
+    fixtures = ['sample_data']
 
     def setUp(self):
         # This data set includes 'Blondin' client lastname
@@ -190,7 +189,7 @@ class RouteSequencingTestCase(TestCase):
         clients = Client.active.all()
         numorders = Order.objects.auto_create_orders(
             self.today, clients)
-        self.route_id = Route.objects.get(name='ndg').id
+        self.route_id = Route.objects.get(name='Centre Sud').id
 
     def test_get_orders(self):
         """Route get orders."""

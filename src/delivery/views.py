@@ -144,9 +144,12 @@ class MealInformation(generic.View):
                 # take first sorted name of each other component group
                 for group, ignore in COMPONENT_GROUP_CHOICES:
                     if group != COMPONENT_GROUP_CHOICES_MAIN_DISH:
-                        compnames.append(
-                            Component.objects.order_by(Lower('name')).filter(
-                                component_group=group)[0].name)
+                        compname = Component.objects.order_by(
+                            Lower('name')).filter(
+                                component_group=group
+                            )
+                        if compname:
+                            compnames.append(compname[0].name)
                 Menu.create_menu_and_components(date, compnames)
                 return HttpResponseRedirect(
                     reverse_lazy("delivery:kitchen_count"))
