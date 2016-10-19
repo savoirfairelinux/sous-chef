@@ -97,6 +97,20 @@ class OrderManager(models.Manager):
             status="D",
         )
 
+    def get_client_prices(self, client):
+        # TODO Use Parameters Model in member to store unit prices
+        if client.rate_type == RATE_TYPE_LOW_INCOME:
+            main_price = MAIN_PRICE_LOW_INCOME
+            side_price = SIDE_PRICE_LOW_INCOME
+        elif client.rate_type == RATE_TYPE_SOLIDARY:
+            main_price = MAIN_PRICE_SOLIDARY
+            side_price = SIDE_PRICE_SOLIDARY
+        else:
+            main_price = MAIN_PRICE_DEFAULT
+            side_price = SIDE_PRICE_DEFAULT
+
+        return {'main': main_price, 'side': side_price}
+
     def auto_create_orders(self, delivery_date, clients):
         """
         Automatically creates orders and order items for the given delivery
@@ -132,15 +146,9 @@ class OrderManager(models.Manager):
                 created += 1
 
             # TODO Use Parameters Model in member to store unit prices
-            if client.rate_type == RATE_TYPE_LOW_INCOME:
-                main_price = MAIN_PRICE_LOW_INCOME
-                side_price = SIDE_PRICE_LOW_INCOME
-            elif client.rate_type == RATE_TYPE_SOLIDARY:
-                main_price = MAIN_PRICE_SOLIDARY
-                side_price = SIDE_PRICE_SOLIDARY
-            else:
-                main_price = MAIN_PRICE_DEFAULT
-                side_price = SIDE_PRICE_DEFAULT
+            prices = self.get_client_prices(client)
+            main_price = prices['main']
+            side_price = prices['side']
 
             for component_group, trans in COMPONENT_GROUP_CHOICES:
                 item_quantity, item_size = Client.get_meal_defaults(
@@ -165,6 +173,48 @@ class OrderManager(models.Manager):
                         order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
                         total_quantity=total_quantity)
         return created
+
+    def create_batch_orders(self, delivery_dates, client, items):
+        created = 0
+
+        # Calculate client prices (main and side)
+        prices = self.get_client_prices(client)
+
+        for delivery_date in delivery_dates:
+            delivery_date = datetime.strptime(delivery_date, "%Y-%m-%d").date()
+            try:
+                Order.objects.get(client=client, delivery_date=delivery_date)
+                # If an order is already created, skip order items creation
+                # (if want to replace, must be deleted first)
+            except Order.DoesNotExist:
+                # If no order for this client/date, create it and attach items
+                self.create_order(delivery_date, client, items, prices)
+                created += 1
+
+        return created
+
+    def create_order(self, delivery_date, client, items, prices):
+        order = Order.objects.create(client=client,
+                                     delivery_date=delivery_date)
+
+        for component_group, trans in COMPONENT_GROUP_CHOICES:
+            item_qty = items[component_group + '_default_quantity']
+            item_pri = prices['side']
+            item_siz = None
+
+            if (item_qty):
+                if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH):
+                    item_pri = prices['main']
+                    item_siz = items['size_default']
+
+                Order_item.objects.create(
+                    order=order,
+                    component_group=component_group,
+                    price=item_qty * item_pri,
+                    billable_flag=True,
+                    size=item_siz,
+                    order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
+                    total_quantity=item_qty)
 
 
 class Order(models.Model):

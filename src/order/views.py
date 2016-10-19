@@ -123,24 +123,14 @@ class CreateOrdersBatch(generic.FormView):
 
     def form_valid(self, form):
         # Get posted datas
+        del_dates = form.cleaned_data['delivery_dates'].split('|')
         client = form.cleaned_data['client']
-        clients = [client]
-        delivery_dates = form.cleaned_data['delivery_dates'].split('|')
+        items = form.cleaned_data
+        del items['delivery_dates']
+        del items['client']
 
-        # Place an order for each delivery date
-        counter = 0
-        for delivery_date in delivery_dates:
-            delivery_date = datetime.strptime(delivery_date, "%Y-%m-%d").date()
-            nbordate = Order.objects.auto_create_orders(delivery_date, clients)
-            if (nbordate == 0):
-                messages.add_message(
-                    self.request, messages.WARNING,
-                    _('No order placed for %(client)s on %(date)s. \
-                        Probably because there is already an order for \
-                        this client and day.') % {
-                        'client': client, 'date': delivery_date}
-                )
-            counter += nbordate
+        # Place orders using posted datas
+        counter = Order.objects.create_batch_orders(del_dates, client, items)
 
         # Alert user on order placement
         messages.add_message(
