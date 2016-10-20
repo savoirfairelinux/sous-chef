@@ -248,6 +248,42 @@ class OrderCreateOnDefaultsTestCase(TestCase):
         self.assertEqual(items.filter(component_group='compote').count(), 0)
 
 
+class OrderCreateBatchTestCase(TestCase):
+
+    fixtures = ['routes.json']
+
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Get an episodic client, three delivery dates and several order items.
+        """
+        cls.orditems = {
+            'main_dish_default_quantity': 1,
+            'size_default': 'L',
+            'dessert_default_quantity': 1,
+            'diabetic_default_quantity': None,
+            'fruit_salad_default_quantity': None,
+            'green_salad_default_quantity': 1,
+            'pudding_default_quantity': None,
+            'compote_default_quantity': None,
+        }
+        cls.episodic_client = ClientFactory.create_batch(
+            1, status=Client.ACTIVE, delivery_type='E')
+        # The delivery date must be a Friday, to match the meals defaults
+        cls.delivery_dates = ['2016-12-12', '2016-12-14', '2016-12-15']
+
+    def test_create_batch_orders(self):
+        """
+        Provide a client, 3 delivery dates and 3 order items.
+        """
+        counter = Order.objects.create_batch_orders(
+            self.delivery_dates, self.episodic_client[0], self.orditems)
+        self.assertEqual(counter, 3)
+        counter = Order.objects.create_batch_orders(
+            self.delivery_dates, self.episodic_client[0], self.orditems)
+        self.assertEqual(counter, 0)
+
+
 class OrderFormTestCase(TestCase):
 
     fixtures = ['routes.json']
