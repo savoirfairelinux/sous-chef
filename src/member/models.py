@@ -694,6 +694,19 @@ class Client(models.Model):
         #       self, component_group, days[day], quantity, size,
         #       self.meal_default_week)
 
+    def get_meals_prefs(self):
+        """
+        Returns a list of items defined per client.
+        """
+        option = Option.objects.get(name='meals_default')
+        try:
+            meals_prefs_opt = Client_option.objects.get(
+                client=self, option=option
+            )
+            return json.loads(meals_prefs_opt.value)
+        except Client_option.DoesNotExist:
+            return {}
+
 
 class ClientScheduledStatus(models.Model):
 
@@ -935,7 +948,7 @@ class Client_option(models.Model):
         related_name='+')
 
     value = models.CharField(
-        max_length=100,
+        max_length=255,
         null=True,
         verbose_name=_('value')
     )

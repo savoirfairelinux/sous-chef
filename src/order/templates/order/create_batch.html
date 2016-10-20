@@ -66,21 +66,3 @@
 </div>
 
 {% endblock %}
-
-{% block extrajs %}
-<script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="application/javascript"></script>
-<script src="{% static 'js/jquery-ui.multidatespicker-1.6.4.js' %}" type="application/javascript"></script>
-<script type="application/javascript">
-    // Init multidatepicker on input directly would be simpler,
-    // but a glitch would appear, so I init multidatespicker on an empty div#delivery_dates
-    // and link it to an HTML input#id_delivery_dates using altField option
-    // @see: https://github.com/dubrox/Multiple-Dates-Picker-for-jQuery-UI/issues/162
-    $('#delivery_dates').multiDatesPicker({
-        dateFormat: "yy-mm-dd",
-        separator: "|",
-        numberOfMonths: 3,
-        altField: '#id_delivery_dates'
-    });
-    $('#id_delivery_dates').hide();
-</script>
-{% endblock %}
