@@ -21,6 +21,7 @@ EMAIL = 'Email'
 GENDER_CHOICES = (
     ('F', _('Female')),
     ('M', _('Male')),
+    ('O', _('Other')),
 )
 
 CONTACT_TYPE_CHOICES = (
