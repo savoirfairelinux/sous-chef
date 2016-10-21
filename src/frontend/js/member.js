@@ -153,10 +153,20 @@ $(function() {
     }
 
     $("#form-meals-schedule select[multiple='multiple']").change(function () {
+
         hideUiAccordionDays();
         showUiAccordionSelectedDays();
     });
-    hideUiAccordionDays();
-    showUiAccordionSelectedDays();
+    var deliveryTypeSelect = $('#id_dietary_restriction-delivery_type, #id_delivery_type');
+    if (deliveryTypeSelect.val() == 'E') {
+        $('#form-meals-schedule').hide();
+        hideUiAccordionDays();
+        $('.ui.accordion.meals.default').show();
+    }
+    else {
+        $('#form-meals-schedule').show();
+        showUiAccordionSelectedDays();
+        $('.ui.accordion.meals.default').hide();
+    }
 
 });

@@ -347,6 +347,42 @@ class ClientOptionTestCase(TestCase):
         )
 
 
+class ClientEpisodicMealsPrefsTestCase(TestCase):
+
+    fixtures = ['routes']
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.clientTest = ClientFactory()
+        cls.posted_prefs = {
+            'delivery_type': 'E',
+            'size_default': 'L',
+            'main_dish_default_quantity': 1,
+            'dessert_default_quantity': 1,
+            'diabetic_default_quantity': 0,
+            'fruit_salad_default_quantity': 0,
+            'green_salad_default_quantity': 1,
+            'pudding_default_quantity': 0,
+            'compote_default_quantity': 0,
+        }
+
+    def test_episodic_meals_prefs(self):
+        """
+        A Client_option's string representation includes the name
+        of the client and the name of the option.
+        """
+        self.clientTest.set_meals_prefs(self.posted_prefs)
+        clientPrefs = self.clientTest.get_meals_prefs()
+        self.assertEqual(clientPrefs["maindish_s"], 'L')
+        self.assertEqual(clientPrefs["maindish_q"], 1)
+        self.assertEqual(clientPrefs["dst_q"], 1)
+        self.assertEqual(clientPrefs["diabdst_q"], 0)
+        self.assertEqual(clientPrefs["fruitsld_q"], 0)
+        self.assertEqual(clientPrefs["greensld_q"], 1)
+        self.assertEqual(clientPrefs["pudding_q"], 0)
+        self.assertEqual(clientPrefs["compot_q"], 0)
+
+
 class RestrictionTestCase(TestCase):
 
     @classmethod

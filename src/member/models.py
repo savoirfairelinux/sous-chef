@@ -698,14 +698,35 @@ class Client(models.Model):
         """
         Returns a list of items defined per client.
         """
-        option = Option.objects.get(name='meals_default')
         try:
+            option, created = Option.objects.get_or_create(
+                name='meals_default')
             meals_prefs_opt = Client_option.objects.get(
                 client=self, option=option
             )
             return json.loads(meals_prefs_opt.value)
         except Client_option.DoesNotExist:
             return {}
+
+    def set_meals_prefs(self, data):
+        if (data['delivery_type'] == 'E'):
+            option, created = Option.objects.get_or_create(
+                name='meals_default')
+            prefs = {
+                "maindish_q": data['main_dish_default_quantity'],
+                "maindish_s": data['size_default'],
+                "dst_q": data['dessert_default_quantity'],
+                "diabdst_q": data['diabetic_default_quantity'],
+                "fruitsld_q": data['fruit_salad_default_quantity'],
+                "greensld_q": data['green_salad_default_quantity'],
+                "pudding_q": data['pudding_default_quantity'],
+                "compot_q": data['compote_default_quantity'],
+            }
+            meals_prefs_opt = Client_option.objects.update_or_create(
+                client=self, option=option,
+                defaults={
+                    'value': json.dumps(prefs),
+                })
 
 
 class ClientScheduledStatus(models.Model):

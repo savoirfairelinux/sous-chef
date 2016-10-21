@@ -1,0 +1,32 @@
+{% load i18n %}
+{% load member_extras %}
+<div class="ui styled fluid accordion meals default">
+  <div class="title">
+    <i class="dropdown icon"></i>
+    {% trans 'Default' %}
+  </div>
+  <div class="content">
+    <table class="ui compact table">
+      <thead>
+        <tr>
+          <th>{% trans 'Size' %}</th>
+          <th>{% trans 'Component' %}</th>
+          <th>{% trans 'Quantity' %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for meal, Meal in meals %}
+        <tr>
+          {% if meal == "main_dish" %}
+          <td>{% size 'default' %}</td>
+          {% else %}
+          <td></td>
+          {% endif %}
+          <td>{{ Meal }}</td>
+          <td>{% cell meal 'default' %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
