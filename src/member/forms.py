@@ -71,7 +71,7 @@ class ClientBasicInformation (forms.Form):
 
 class ClientAddressInformation(forms.Form):
 
-    apartment = forms.IntegerField(
+    apartment = forms.CharField(
         label=_("Apt #"),
         widget=forms.TextInput(attrs={
             'placeholder': _('Apt #'),
