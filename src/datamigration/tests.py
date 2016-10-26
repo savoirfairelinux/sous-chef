@@ -47,11 +47,21 @@ class ImportMemberTestCase(TestCase):
         self.assertEquals(Client.contact.all().count(), 6)
 
     def test_import_member_routes(self):
-        self.assertEquals(Client.objects.filter(route__name='McGill').count(), 2)
-        self.assertEquals(Client.objects.filter(route__name='Westmount').count(), 2)
-        self.assertEquals(Client.objects.filter(route__name='Notre Dame de Grace').count(), 3)
-        self.assertEquals(Client.objects.filter(route__name='Côte-des-Neiges').count(), 2)
-        self.assertEquals(Client.objects.filter(route__name='Centre-Ville / Downtown').count(), 1)
+        self.assertEquals(
+            Client.objects.filter(
+                route__name='McGill').count(), 2)
+        self.assertEquals(
+            Client.objects.filter(
+                route__name='Westmount').count(), 2)
+        self.assertEquals(
+            Client.objects.filter(
+                route__name='Notre Dame de Grace').count(), 3)
+        self.assertEquals(
+            Client.objects.filter(
+                route__name='Côte-des-Neiges').count(), 2)
+        self.assertEquals(
+            Client.objects.filter(
+                route__name='Centre-Ville / Downtown').count(), 1)
 
 
 class ImportMemberAddressesTestCase(TestCase):
@@ -103,7 +113,6 @@ class ImportMemberRelationshipsTestCase(TestCase):
         It should import 10 clients.
         """
         call_command('importclients', file='mock_clients.csv')
-        call_command('importaddresses', file='mock_addresses.csv')
         call_command('importrelationships', file='mock_relationships.csv')
 
     def test_import_relationship(self):
@@ -120,5 +129,80 @@ class ImportMemberRelationshipsTestCase(TestCase):
         self.assertEquals(marie.client_referent.all().count(), 1)
         referencing = marie.client_referent.first()
         self.assertEquals(referencing.referent, marion)
-        self.assertEquals(referencing.work_information, 'CLSC St-Louis du Parc')
+        self.assertEquals(
+            referencing.work_information,
+            'CLSC St-Louis du Parc')
         self.assertEquals(referencing.referral_reason, 'Low mobility')
+
+
+class ImportMemberMealsTestCase(TestCase):
+
+    """
+    Test data importation.
+    """
+
+    fixtures = ['delivery_route_data.json']
+
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Load the mock data files.
+        It should import 10 clients.
+        """
+
+        cls.food_preparation_puree = Option.objects.get(name='Puree all')
+        cls.food_preparation_cut = Option.objects.get(name='Cut up meat')
+        call_command('importclients', file='mock_clients.csv')
+        call_command('importmeals', file='mock_meals.csv')
+
+    def test_import_meals_schedule(self):
+        dorothy = Client.objects.get(member__mid=94)
+        # Dorothy is not registered to receive any meals
+        self.assertEquals(
+            dorothy.simple_meals_schedule,
+            []
+        )
+
+        robert = Client.objects.get(member__mid=96)
+        # Robert is registered to receive a meal 3 times a week
+        self.assertEquals(
+            robert.simple_meals_schedule,
+            ["wednesday", "friday", "saturday"]
+        )
+
+        wednesday = robert.meals_schedule.get('wednesday')
+        self.assertEquals(wednesday.get('fruit_salad'), 0)
+        self.assertEquals(wednesday.get('green_salad'), 1)
+        self.assertEquals(wednesday.get('main_dish'), 1)
+        self.assertEquals(wednesday.get('size'), 'R')
+        self.assertEquals(wednesday.get('dessert'), 1)
+        self.assertEquals(wednesday.get('compote'), 0)
+        self.assertEquals(wednesday.get('pudding'), 0)
+
+    def test_import_meals_default(self):
+        robert = Client.objects.get(member__mid=96)
+        wednesday = robert.meals_schedule.get('wednesday')
+        self.assertEquals(wednesday.get('fruit_salad'), 0)
+        self.assertEquals(wednesday.get('green_salad'), 1)
+        self.assertEquals(wednesday.get('main_dish'), 1)
+        self.assertEquals(wednesday.get('size'), 'R')
+        self.assertEquals(wednesday.get('dessert'), 1)
+        self.assertEquals(wednesday.get('compote'), 0)
+        self.assertEquals(wednesday.get('pudding'), 0)
+
+    def test_import_food_preparation(self):
+        robert = Client.objects.get(member__mid=96)
+        self.assertEquals(robert.food_preparation.all().count(), 1)
+        self.assertEquals(robert.food_preparation.first(),
+            self.food_preparation_cut)
+        dorothy = Client.objects.get(member__mid=94)
+        self.assertEquals(dorothy.food_preparation.all().count(), 2)
+
+    def test_import_meal_labels(self):
+        marie = Client.objects.get(member__mid=93)
+        self.assertEquals(marie.notes.all().count(), 0)
+        dorothy = Client.objects.get(member__mid=94)
+
+    def test_import_ingredients(self):
+        marie = Client.objects.get(member__mid=93)
+        self.assertEquals(marie.ingredients_to_avoid.all().count(), 2)

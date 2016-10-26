@@ -1,29 +1,29 @@
 from django.core.management.base import BaseCommand
 from django.core.management import call_command
 from django.shortcuts import get_object_or_404
-from member.factories import ClientFactory, MemberFactory
 from member.models import Client, Member, Route
 import os
 import csv
 from sys import path
 from datetime import date
 
+
 class Command(BaseCommand):
     help = 'Data: import clients from given csv file.'
 
-    ROW_MID=0
-    ROW_FIRSTNAME=1
-    ROW_LASTNAME=2
-    ROW_BIRTHDATE=3
-    ROW_STATUS=4
-    ROW_CREATED=5
-    ROW_GENDER=6
-    ROW_LANG=7
-    ROW_PAYSCALE=8
-    ROW_ALERT=9
-    ROW_DELIVERY_NOTES=10
-    ROW_DELIVERY_TYPE=11
-    ROW_ROUTE=12
+    ROW_MID = 0
+    ROW_FIRSTNAME = 1
+    ROW_LASTNAME = 2
+    ROW_BIRTHDATE = 3
+    ROW_STATUS = 4
+    ROW_CREATED = 5
+    ROW_GENDER = 6
+    ROW_LANG = 7
+    ROW_PAYSCALE = 8
+    ROW_ALERT = 9
+    ROW_DELIVERY_NOTES = 10
+    ROW_DELIVERY_TYPE = 11
+    ROW_ROUTE = 12
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -50,7 +50,9 @@ class Command(BaseCommand):
             reader = csv.reader(f, delimiter=';')
             for row in reader:
 
-                row_created = row[self.ROW_CREATED] if row[self.ROW_CREATED] != '' else date.today()
+                row_created = row[
+                    self.ROW_CREATED] if row[
+                    self.ROW_CREATED] != '' else date.today()
 
                 member, created = Member.objects.update_or_create(
                     mid=row[self.ROW_MID],
@@ -86,13 +88,15 @@ class Command(BaseCommand):
 
                 self.stdout.write(
                     self.style.SUCCESS(
-                        '{} successfully {}.'.format(client, 'created' if created else 'updated')))
+                        '{} successfully {}.'.format(
+                            client,
+                            'created' if created else 'updated')))
 
                 # Override creation date
                 client.member.created_at = row_created
                 client.member.save()
 
-                # Add a note to store the label from the old system
+                
 
                 # Add Client option meals_schedule
-                client.set_meals_schedule([])
+                # client.set_meals_schedule([])

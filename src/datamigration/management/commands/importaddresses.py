@@ -11,13 +11,13 @@ from sys import path
 class Command(BaseCommand):
     help = 'Data: import clients from given csv file.'
 
-    ROW_MID=0
-    ROW_ADDRESS1=3
-    ROW_APARTMENT=4
-    ROW_CITY=5
-    ROW_POSTAL_CODE=6
-    ROW_PHONE=7
-    ROW_EMAIL=8
+    ROW_MID = 0
+    ROW_ADDRESS1 = 3
+    ROW_APARTMENT = 4
+    ROW_CITY = 5
+    ROW_POSTAL_CODE = 6
+    ROW_PHONE = 7
+    ROW_EMAIL = 8
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -37,7 +37,7 @@ class Command(BaseCommand):
             for row in reader:
                 try:
                     member = Member.objects.get(mid=row[self.ROW_MID])
-                    #if member.address is not None:
+                    # if member.address is not None:
                     #    member.address.delete()
                     address = Address.objects.create(
                         street=row[self.ROW_ADDRESS1],
@@ -66,4 +66,5 @@ class Command(BaseCommand):
                         )
 
                 except Member.DoesNotExist:
-                    self.stdout.write(self.style.WARNING('Non existing member'))
+                    self.stdout.write(
+                        self.style.WARNING('Non existing member'))

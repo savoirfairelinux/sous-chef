@@ -616,7 +616,7 @@ class Client(models.Model):
         except Client_option.DoesNotExist:
             pass
 
-        Client_option.objects.update_or_create(
+        option, created = Client_option.objects.update_or_create(
             id=id,
             defaults={
                 'client': self,
