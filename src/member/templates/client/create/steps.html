@@ -1,11 +1,11 @@
 {% if edit %}
 
 {% if wizard.steps.step1 == step  %}
-<a class="step active" href="{% url 'member:member_edit' client_id=client_id step=url %}">
+<a class="step active" href="{% url 'member:member_edit' pk=pk step=url %}">
 {% elif wizard.steps.step1 > step %}
-<a class="step link" href="{% url 'member:member_edit' client_id=client_id step=url %}">
+<a class="step link" href="{% url 'member:member_edit' pk=pk step=url %}">
 {% else %}
-<a class="step link" href="{% url 'member:member_edit' client_id=client_id step=url %}">
+<a class="step link" href="{% url 'member:member_edit' pk=pk step=url %}">
 {% endif %}
     <i class="{{icon}} icon"></i>
     <div class="content">

@@ -6,10 +6,13 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django_filters import FilterSet, MethodFilter, CharFilter, ChoiceFilter, \
-    BooleanFilter
+from django_filters import (
+    FilterSet, MethodFilter, CharFilter, ChoiceFilter, BooleanFilter
+)
 from annoying.fields import JSONField
-from meal.models import COMPONENT_GROUP_CHOICES_MAIN_DISH
+from meal.models import (
+    COMPONENT_GROUP_CHOICES, COMPONENT_GROUP_CHOICES_MAIN_DISH
+)
 from note.models import Note
 
 
@@ -569,17 +572,10 @@ class Client(models.Model):
         Returns a hierarchical dict representing the meals schedule.
         """
 
-        prefs = {}
+        prefs = []
         for day, str in DAYS_OF_WEEK:
             current = {}
-            for component in [
-                    'main_dish',
-                    'compote',
-                    'dessert',
-                    'fruit_salad',
-                    'green_salad',
-                    'pudding']:
-
+            for component, label in COMPONENT_GROUP_CHOICES:
                 item = self.meal_default_week.get(
                     component + '_' + day + '_quantity'
                 ) or 0
@@ -591,9 +587,9 @@ class Client(models.Model):
             current['size'] = size
 
             if day not in self.simple_meals_schedule:
-                prefs[day] = None
+                prefs.append((day, None))
             else:
-                prefs[day] = current
+                prefs.append((day, current))
 
         return prefs
 

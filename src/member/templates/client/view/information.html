@@ -15,10 +15,15 @@
     <h2 class="ui header">
         <div class="content">
             {% trans 'Basic information' %}
-            <div class="sub header">{% trans "Contact information of the client" %}.
+            <div class="sub header">
+                {% trans "Contact information of the client" %}.
             </div>
         </div>
     </h2>
+    <a class="ui right floated small button" href="{% url 'member:member_update_basic_information' pk=client.id %}">
+        <i class="icon edit"></i>{% trans "Edit" %}
+    </a>
+
     <div class="ui divider"></div>
 
 <div class="ui list">
@@ -36,30 +41,33 @@
 </div>
 </div>
 
-<div class="ui segment">
+
 {% if client.emergency_contact %}
+<div class="ui segment">
+    <h2 class="ui header">
+        <div class="content">
+            {% trans 'Emergency Contact' %}
+            <div class="sub header">{% trans "Information of the person to contact in case of an emergency" %}.</div>
+        </div>
+    </h2>
+    <a class="ui right floated small button" href="{% url 'member:member_update_emergency_contact' pk=client.id %}">
+        <i class="icon edit"></i>{% trans "Edit" %}
+    </a>
 
-<h2 class="ui header">
-    <div class="content">
-        {% trans 'Emergency Contact' %}
-        <div class="sub header">{% trans "Information of the person to contact in case of an emergency" %}.<a  href="{% url 'admin:member_member_change' client.emergency_contact.id %}">
-            <i class="write grey icon"></i>
-        </a></div>
+    <div class="ui divider"></div>
+
+    <div class="ui list">
+        <div class="item"><div class="header">{% trans 'First Name' %}</div>{{client.emergency_contact.firstname}}</div>
+        <div class="item"><div class="header">{% trans 'Last Name' %}</div>{{client.emergency_contact.lastname}}</div>
+        <div class="item"><div class="header">{% trans 'Relationship' %}</div>{{rclient.emergency_contact.relationship}}</div>
+        {% for contact in client.emergency_contact.member_contact.all %}
+        {% if contact.value is not empty %}
+            <div class="item"><div class="header">{{contact.type}}</div>{{contact.value}}</div>
+        {% endif %}
+        {% endfor %}
     </div>
-</h2>
-<div class="ui divider"></div>
-
-<div class="ui list">
-    <div class="item"><div class="header">{% trans 'First Name' %}</div>{{client.emergency_contact.firstname}}</div>
-    <div class="item"><div class="header">{% trans 'Last Name' %}</div>{{client.emergency_contact.lastname}}</div>
-    <div class="item"><div class="header">{% trans 'Relationship' %}</div>{{rclient.emergency_contact.relationship}}</div>
-    {% for contact in client.emergency_contact.member_contact.all %}
-    {% if contact.value is not empty %}
-        <div class="item"><div class="header">{{contact.type}}</div>{{contact.value}}</div>
-    {% endif %}
-    {% endfor %}
 </div>
 {% endif %}
-</div>
+
 
 {% endblock %}

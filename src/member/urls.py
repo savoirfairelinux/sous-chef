@@ -21,7 +21,9 @@ from member.views import (
     ClientUpdateBasicInformation,
     ClientUpdateAddressInformation,
     ClientUpdateReferentInformation,
+    ClientUpdatePaymentInformation,
     ClientUpdateDietaryRestriction,
+    ClientUpdateEmergencyContactInformation,
 )
 
 from member.forms import (
@@ -85,12 +87,14 @@ member_update_forms = (
     ('basic_information', ClientUpdateBasicInformation),
     ('address_information', ClientUpdateAddressInformation),
     ('referent_information', ClientUpdateReferentInformation),
-    ('dietary_restriction', ClientUpdateDietaryRestriction)
+    ('payment_information', ClientUpdatePaymentInformation),
+    ('dietary_restriction', ClientUpdateDietaryRestriction),
+    ('emergency_contact', ClientUpdateEmergencyContactInformation),
 )
 
 # Handle client update forms URL
 for k, v in member_update_forms:
     urlpatterns.append(
-        url(_(r'^(?P<client_id>\d+)/update/{}/$'.format(k)), v.as_view(),
+        url(_(r'^(?P<pk>\d+)/update/{}/$'.format(k)), v.as_view(),
             name='member_update_' + k)
     )

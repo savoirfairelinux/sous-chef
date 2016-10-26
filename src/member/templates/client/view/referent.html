@@ -14,11 +14,12 @@
     <h2 class="ui header">
         <div class="content">
             {% trans 'Referent' %}
-            <div class="sub header">{% trans "Contact information of the referent person" %}.<a  href="{% url 'admin:member_referencing_change' client.client_referent.first.id %}">
-                <i class="write grey icon"></i>
-            </a></div>
+            <div class="sub header">{% trans "Contact information of the referent person" %}.</div>
         </div>
     </h2>
+    <a class="ui right floated small button" href="{% url 'member:member_update_referent_information' pk=client.id %}">
+        <i class="icon edit"></i>{% trans "Edit" %}
+    </a>
     <div class="ui divider"></div>
 
 <div class="ui list">

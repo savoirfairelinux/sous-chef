@@ -5,8 +5,10 @@ from member.models import Member, Client, User, Address, Referencing
 from member.models import Contact, Option, Client_option, Restriction, Route
 from member.models import Client_avoid_ingredient, Client_avoid_component
 from member.models import ClientScheduledStatus
-from member.models import CELL, HOME, EMAIL
-from meal.models import Restricted_item, Ingredient, Component
+from member.models import CELL, HOME, EMAIL, DAYS_OF_WEEK
+from meal.models import (
+    Restricted_item, Ingredient, Component, COMPONENT_GROUP_CHOICES
+)
 from datetime import date
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -20,8 +22,56 @@ from django.utils.six import StringIO
 from order.factories import OrderFactory
 from member.forms import(
     ClientBasicInformation, ClientAddressInformation,
-    load_initial_data,
+    ClientReferentInformation, ClientPaymentInformation,
+    ClientRestrictionsInformation, ClientEmergencyContactInformation
 )
+
+
+def load_initial_data(client):
+    """
+    Load initial for the given client.
+    """
+    initial = {
+        'firstname': client.member.firstname,
+        'lastname': client.member.lastname,
+        'alert': client.alert,
+        'gender': client.gender,
+        'language': client.language,
+        'birthdate': client.birthdate,
+        'home_phone': client.member.home_phone,
+        'cell_phone': client.member.cell_phone,
+        'email': client.member.email,
+        'street': client.member.address.street,
+        'city': client.member.address.city,
+        'apartment': client.member.address.apartment,
+        'postal_code': client.member.address.postal_code,
+        'delivery_note': client.delivery_note,
+        'route':
+            client.route.id
+            if client.route is not None
+            else '',
+        'latitude': client.member.address.latitude,
+        'longitude': client.member.address.longitude,
+        'distance': client.member.address.distance,
+        'work_information':
+            client.client_referent.get().work_information
+            if client.client_referent.count()
+            else '',
+        'referral_reason':
+            client.client_referent.get().referral_reason
+            if client.client_referent.count()
+            else '',
+        'date':
+            client.client_referent.get().date
+            if client.client_referent.count()
+            else '',
+        'member': client.id,
+        'same_as_client': True,
+        'facturation': '',
+        'billing_payment_type': '',
+
+    }
+    return initial
 
 
 class MemberContact(TestCase):
@@ -1649,15 +1699,14 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
         self.assertEqual(scheduled_change.linked_scheduled_status, None)
 
 
-class ClientUpdateBasicInformation(TestCase):
+class ClientUpdateTestCase(TestCase):
 
     fixtures = ['routes.json']
 
-    """
-    Login as administrator.
-    """
-
     def login_as_admin(self):
+        """
+        Login as administrator.
+        """
         admin = User.objects.create_superuser(
             username='admin@example.com',
             email='admin@example.com',
@@ -1665,11 +1714,13 @@ class ClientUpdateBasicInformation(TestCase):
         )
         self.client.login(username=admin.username, password='test1234')
 
-    """
-    Test validation form.
-    """
+
+class ClientUpdateBasicInformation(ClientUpdateTestCase):
 
     def test_form_validation(self):
+        """
+        Test validation form.
+        """
         client = ClientFactory()
         form_data = {
             'firstname': 'John'
@@ -1679,11 +1730,10 @@ class ClientUpdateBasicInformation(TestCase):
         form = ClientBasicInformation(data=load_initial_data(client))
         self.assertTrue(form.is_valid())
 
-    """
-    Test the update basic information form.
-    """
-
     def test_update_basic_information(self):
+        """
+        Test the update basic information form.
+        """
         client = ClientFactory()
         # Load initial data related to the client
         data = load_initial_data(client)
@@ -1695,10 +1745,10 @@ class ClientUpdateBasicInformation(TestCase):
         self.login_as_admin()
 
         # Send the data to the form.
-        response = self.client.post(
+        self.client.post(
             reverse_lazy(
                 'member:member_update_basic_information',
-                kwargs={'client_id': client.id}
+                kwargs={'pk': client.id}
             ),
             data,
             follow=True
@@ -1715,27 +1765,12 @@ class ClientUpdateBasicInformation(TestCase):
         self.assertEqual(client.language, data.get('language'))
 
 
-class ClientUpdateAddressInformation(TestCase):
-
-    fixtures = ['routes.json']
-
-    """
-    Login as administrator.
-    """
-
-    def login_as_admin(self):
-        admin = User.objects.create_superuser(
-            username='admin@example.com',
-            email='admin@example.com',
-            password='test1234'
-        )
-        self.client.login(username=admin.username, password='test1234')
-
-    """
-    Test validation form.
-    """
+class ClientUpdateAddressInformation(ClientUpdateTestCase):
 
     def test_form_validation(self):
+        """
+        Test validation form.
+        """
         client = ClientFactory()
         form_data = {
             'street': '111 rue Roy',
@@ -1745,11 +1780,10 @@ class ClientUpdateAddressInformation(TestCase):
         form = ClientAddressInformation(data=load_initial_data(client))
         self.assertTrue(form.is_valid())
 
-    """
-    Test the update basic information form.
-    """
-
     def test_update_address_information(self):
+        """
+        Test the update basic information form.
+        """
         client = ClientFactory()
         # Load initial data related to the client
         data = load_initial_data(client)
@@ -1759,10 +1793,10 @@ class ClientUpdateAddressInformation(TestCase):
         self.login_as_admin()
 
         # Send the data to the form.
-        response = self.client.post(
+        self.client.post(
             reverse_lazy(
                 'member:member_update_address_information',
-                kwargs={'client_id': client.id}
+                kwargs={'pk': client.id}
             ),
             data,
             follow=True
@@ -1778,3 +1812,330 @@ class ClientUpdateAddressInformation(TestCase):
                          data.get('latitude'))
         self.assertEqual(str(client.member.address.longitude),
                          data.get('longitude'))
+
+
+class ClientUpdateReferentInformationTestCase(ClientUpdateTestCase):
+
+    def test_form_validation(self):
+        """
+        Test validation form.
+        """
+        client = ClientFactory()
+        data = load_initial_data(client)
+        data.update({
+            'firstname': None,
+            'lastname': None,
+            'street': None,
+            'city': None,
+            'apartment': None,
+            'postal_code': None,
+            'member': '[0] Not Valid',
+            'information': 'CLSC',
+            'date': '2012-12-12',
+            'referral_reason': 'Testing referral reason',
+        })
+        form = ClientReferentInformation(data=data)
+        self.assertFalse(form.is_valid())
+        data.update({
+            'firstname': None,
+            'lastname': None,
+            'street': None,
+            'city': None,
+            'apartment': None,
+            'postal_code': None,
+            'member': '[{}] {} {}'.format(
+                client.client_referent.first().referent.id,
+                client.client_referent.first().referent.firstname,
+                client.client_referent.first().referent.lastname
+            ),
+            'information': 'CLSC',
+            'date': '2012-12-12',
+            'referral_reason': 'Testing referral reason',
+        })
+        form = ClientReferentInformation(data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_update_referent_information(self):
+        """
+        Test the update basic information form.
+        """
+        client = ClientFactory()
+        referent = MemberFactory()
+        # Load initial data related to the client
+        data = load_initial_data(client)
+        # Update some data
+        data.update({
+            'firstname': None,
+            'lastname': None,
+            'street': None,
+            'city': None,
+            'apartment': None,
+            'postal_code': None,
+            'member': '[{}] {} {}'.format(
+                referent.id,
+                referent.firstname,
+                referent.lastname
+            ),
+            'information': 'CLSC',
+            'date': '2012-12-12',
+            'referral_reason': 'Testing referral reason',
+        })
+
+        # Login as admin
+        self.login_as_admin()
+
+        # Send the data to the form.
+        self.client.post(
+            reverse_lazy(
+                'member:member_update_referent_information',
+                kwargs={'pk': client.id}
+            ),
+            data,
+            follow=True
+        )
+
+        # Reload client data as it should have been changed in the database
+        client = Client.objects.get(id=client.id)
+        self.assertEqual(
+            client.client_referent.first().referent.id,
+            referent.id
+        )
+        self.assertEqual(
+            client.client_referent.first().referent.firstname,
+            referent.firstname
+        )
+        self.assertEqual(
+            client.client_referent.first().referent.lastname,
+            referent.lastname
+        )
+
+
+class ClientUpdatePaymentInformationTestCase(ClientUpdateTestCase):
+
+    def test_form_validation(self):
+        """
+        Test validation form.
+        """
+        client = ClientFactory()
+        data = load_initial_data(client)
+        data.update({
+            'firstname': None,
+            'lastname': None,
+            'street': None,
+            'city': None,
+            'apartment': None,
+            'postal_code': None,
+            'member': '[0] Not Valid'.format(
+                client.billing_member.id,
+                client.billing_member.firstname,
+                client.billing_member.lastname
+            ),
+            'same_as_client': False,
+            'billing_payment_type': 'check',
+            'facturation': 'default',
+        })
+        form = ClientPaymentInformation(data=data)
+        self.assertFalse(form.is_valid())
+        data.update({
+            'firstname': None,
+            'lastname': None,
+            'street': None,
+            'city': None,
+            'apartment': None,
+            'postal_code': None,
+            'member': '[{}] {} {}'.format(
+                client.member.id,
+                client.member.firstname,
+                client.member.lastname
+            ),
+            'same_as_client': True,
+            'billing_payment_type': 'check',
+            'facturation': 'default',
+        })
+        form = ClientPaymentInformation(data=data)
+
+        self.assertTrue(form.is_valid())
+
+    def test_update_payment_information(self):
+        """
+        Test the update basic information form.
+        """
+        client = ClientFactory()
+        payment = MemberFactory()
+        # Load initial data related to the client
+        data = load_initial_data(client)
+        # Update some data
+        data.update({
+            'firstname': None,
+            'lastname': None,
+            'street': None,
+            'city': None,
+            'apartment': '',
+            'postal_code': None,
+            'member': '[{}] {} {}'.format(
+                payment.id,
+                payment.firstname,
+                payment.lastname
+            ),
+            'same_as_client': False,
+            'billing_payment_type': 'check',
+            'facturation': 'default',
+        })
+
+        # Login as admin
+        self.login_as_admin()
+
+        # Send the data to the form.
+        self.client.post(
+            reverse_lazy(
+                'member:member_update_payment_information',
+                kwargs={'pk': client.id}
+            ),
+            data,
+            follow=True
+        )
+
+        # Reload client data as it should have been changed in the database
+        client = Client.objects.get(id=client.id)
+        self.assertEqual(client.billing_member.id, payment.id)
+        self.assertEqual(client.billing_member.firstname, payment.firstname)
+        self.assertEqual(client.billing_member.lastname, payment.lastname)
+
+
+class ClientUpdateDietaryRestrictionTestCase(ClientUpdateTestCase):
+
+    def test_form_validation(self):
+        """
+        Test validation form.
+        """
+        client = ClientFactory()
+        data = load_initial_data(client)
+        form = ClientRestrictionsInformation(data=data)
+        self.assertFalse(form.is_valid())
+
+        data.update({
+            'status': True if client.status == Client.ACTIVE else False,
+            'delivery_type': client.delivery_type,
+            'meals_schedule': ['monday']
+        })
+        day_count = 0
+        for day, v in DAYS_OF_WEEK:
+            for component, v in COMPONENT_GROUP_CHOICES:
+                meals_default = Client.get_meal_defaults(
+                    client, component, day_count)
+                data[component + '_' + day + '_quantity'] = meals_default[0]
+                if component == 'main_dish':
+                    data['size_' + day] = meals_default[1]
+            day_count += 1
+
+        form = ClientRestrictionsInformation(data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_update_dietary_restriction(self):
+        """
+        Test the update basic information form.
+        """
+        Option.objects.create(name='meals_schedule')
+        client = ClientFactory()
+        # Load initial data related to the client
+        data = load_initial_data(client)
+        # Update some data
+        data.update({
+            'status': "A",
+            'delivery_type': "O",
+            'meals_schedule': ["monday"],
+        })
+
+        # Login as admin
+        self.login_as_admin()
+
+        # Send the data to the form.
+        response = self.client.post(
+           reverse_lazy(
+               'member:member_update_dietary_restriction',
+               kwargs={'pk': client.id}
+           ),
+           data,
+           follow=True
+        )
+
+        # Reload client data as it should have been changed in the database
+        client = Client.objects.get(id=client.id)
+        self.assertEqual(client.status, 'A')
+        self.assertEqual(client.delivery_type, "O")
+
+
+class ClientUpdateReferentInformationTestCase(ClientUpdateTestCase):
+
+    def test_form_validation(self):
+        """
+        Test validation form.
+        """
+        client = ClientFactory()
+        data = load_initial_data(client)
+        data.update({
+            'firstname': None,
+            'lastname': None,
+            'member': '[0] Not Valid',
+        })
+        form = ClientEmergencyContactInformation(data=data)
+        self.assertFalse(form.is_valid())
+        data.update({
+            'firstname': None,
+            'lastname': None,
+            'member': '[{}] {} {}'.format(
+                client.emergency_contact.id,
+                client.emergency_contact.firstname,
+                client.emergency_contact.lastname
+            ),
+            'contact_type':
+                client.emergency_contact.member_contact.first().type,
+            'contact_value':
+                client.emergency_contact.member_contact.first().value,
+        })
+        form = ClientEmergencyContactInformation(data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_update_referent_information(self):
+        """
+        Test the update basic information form.
+        """
+        client = ClientFactory()
+        emergency = MemberFactory()
+        # Load initial data related to the client
+        data = load_initial_data(client)
+        # Update some data
+        data.update({
+            'firstname': None,
+            'lastname': None,
+            'member': '[{}] {} {}'.format(
+                emergency.id,
+                emergency.firstname,
+                emergency.lastname
+            ),
+            'contact_type':
+                client.emergency_contact.member_contact.first().type,
+            'contact_value':
+                client.emergency_contact.member_contact.first().value,
+        })
+
+        # Login as admin
+        self.login_as_admin()
+
+        # Send the data to the form.
+        self.client.post(
+            reverse_lazy(
+                'member:member_update_emergency_contact',
+                kwargs={'pk': client.id}
+            ),
+            data,
+            follow=True
+        )
+
+        # Reload client data as it should have been changed in the database
+        client = Client.objects.get(id=client.id)
+        self.assertEqual(client.emergency_contact.id, emergency.id)
+        self.assertEqual(
+            client.emergency_contact.firstname, emergency.firstname
+        )
+        self.assertEqual(client.emergency_contact.lastname, emergency.lastname)

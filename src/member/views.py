@@ -3,17 +3,27 @@
 
 import csv
 from datetime import date
-import json
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy, reverse
-from django.views import generic
-from django.utils.decorators import method_decorator
+from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
-from django.db.models import Q
-from member.forms import load_initial_data
+from django.views import generic
+from formtools.wizard.views import NamedUrlSessionWizardView
+from meal.models import COMPONENT_GROUP_CHOICES
+from member.forms import (
+    ClientScheduledStatusForm,
+    ClientBasicInformation,
+    ClientAddressInformation,
+    ClientReferentInformation,
+    ClientRestrictionsInformation,
+    ClientPaymentInformation,
+    ClientEmergencyContactInformation
+)
 from member.models import (
     Client,
     ClientScheduledStatus,
@@ -26,337 +36,12 @@ from member.models import (
     ClientFilter,
     ClientScheduledStatusFilter,
     DAYS_OF_WEEK,
-    Route,
     Client_avoid_ingredient,
     Client_avoid_component,
     HOME, WORK, CELL, EMAIL,
 )
-from member.forms import (
-    ClientScheduledStatusForm,
-    ClientBasicInformation,
-    ClientAddressInformation,
-    ClientReferentInformation,
-    ClientRestrictionsInformation,
-)
 from note.models import Note
 from order.mixins import AjaxableResponseMixin
-from meal.models import COMPONENT_GROUP_CHOICES
-from formtools.wizard.views import NamedUrlSessionWizardView
-
-
-class ClientUpdateBasicInformation(generic.edit.FormView):
-    template_name = 'client/update/basic_information.html'
-    form_class = ClientBasicInformation
-    success_url = reverse_lazy('member:list')
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(
-            ClientUpdateBasicInformation,
-            self).dispatch(
-            *args,
-            **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(
-            ClientUpdateBasicInformation,
-            self).get_context_data(
-            **kwargs)
-        context.update({
-            'client_id': self.kwargs['client_id'],
-            'current_step': 'basic_information'
-        })
-        return context
-
-    def get_initial(self):
-        initial = super(ClientUpdateBasicInformation, self).get_initial()
-        client = get_object_or_404(
-            Client, pk=self.kwargs.get('client_id')
-        )
-        initial = load_initial_data(client)
-        return initial
-
-    def form_valid(self, form):
-        # This method is called when valid form data has been POSTed.
-        # It should return an HttpResponse.
-        client = get_object_or_404(
-            Client, pk=self.kwargs.get('client_id')
-        )
-        self.save(form.cleaned_data, client)
-        messages.add_message(
-            self.request, messages.SUCCESS,
-            _("The client has been updated")
-        )
-        return super(ClientUpdateBasicInformation, self).form_valid(form)
-
-    def save(self, form, client):
-        """
-        Save the basic information step data.
-        """
-        client.member.firstname = form['firstname']
-        client.member.lastname = form['lastname']
-        client.member.save()
-
-        client.gender = form['gender']
-        client.birthdate = form['birthdate']
-        client.language = form['language']
-        client.alert = form['alert']
-        client.save()
-
-        # Save contact information
-        if client.member.home_phone != form['home_phone']:
-            client.member.add_contact_information(
-                HOME, form['home_phone'], True)
-        if client.member.cell_phone != form['cell_phone']:
-            client.member.add_contact_information(
-                CELL, form['cell_phone'], True)
-        if client.member.email != form['email']:
-            client.member.add_contact_information(
-                EMAIL, form['email'], True)
-
-
-class ClientUpdateAddressInformation(generic.edit.FormView):
-    template_name = 'client/update/address_information.html'
-    form_class = ClientAddressInformation
-    success_url = reverse_lazy('member:list')
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(
-            ClientUpdateAddressInformation,
-            self).dispatch(
-            *args,
-            **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(
-            ClientUpdateAddressInformation,
-            self).get_context_data(
-            **kwargs)
-        context.update({'current_step': 'address_information'})
-        context.update({'client_id': self.kwargs['client_id']})
-        return context
-
-    def get_initial(self):
-        initial = super(ClientUpdateAddressInformation, self).get_initial()
-        client = get_object_or_404(
-            Client, pk=self.kwargs.get('client_id')
-        )
-        initial = load_initial_data(client)
-        return initial
-
-    def form_valid(self, form):
-        # This method is called when valid form data has been POSTed.
-        # It should return an HttpResponse.
-        client = get_object_or_404(
-            Client, pk=self.kwargs.get('client_id')
-        )
-        self.save(form.cleaned_data, client)
-        messages.add_message(
-            self.request, messages.SUCCESS,
-            _("The client has been updated")
-        )
-        return super(ClientUpdateAddressInformation, self).form_valid(form)
-
-    def save(self, form, client):
-        """
-        Save the basic information step data.
-        """
-        client.member.address.street = form['street']
-        client.member.address.apartment = form['apartment']
-        client.member.address.city = form['city']
-        client.member.address.postal_code = form['postal_code']
-        client.member.address.latitude = form['latitude']
-        client.member.address.longitude = form['longitude']
-        client.member.address.save()
-
-        client.route = form['route']
-        client.delivery_note = form['delivery_note']
-        client.save()
-
-
-class ClientUpdateReferentInformation(generic.edit.FormView):
-    template_name = 'client/update/referent_information.html'
-    form_class = ClientReferentInformation
-    success_url = reverse_lazy('member:list')
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(
-            ClientUpdateReferentInformation,
-            self).dispatch(
-            *args,
-            **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(
-            ClientUpdateReferentInformation,
-            self).get_context_data(
-            **kwargs)
-        context.update({'current_step': 'referent_information'})
-        context.update({'client_id': self.kwargs['client_id']})
-        return context
-
-    def get_initial(self):
-        initial = super(ClientUpdateReferentInformation, self).get_initial()
-        client = get_object_or_404(
-            Client, pk=self.kwargs.get('client_id')
-        )
-        initial = load_initial_data(client)
-        return initial
-
-    def form_valid(self, form):
-        # This method is called when valid form data has been POSTed.
-        # It should return an HttpResponse.
-        client = get_object_or_404(
-            Client, pk=self.kwargs.get('client_id')
-        )
-        self.save(form.cleaned_data, client)
-        messages.add_message(
-            self.request, messages.SUCCESS,
-            _("The client has been updated")
-        )
-        return super(ClientUpdateReferentInformation, self).form_valid(form)
-
-    def save(self, form, client):
-        """
-        Save the basic information step data.
-        """
-        client.member.address.street = form['street']
-        client.member.address.apartment = form['apartment']
-        client.member.address.city = form['city']
-        client.member.address.postal_code = form['postal_code']
-        client.member.address.distance = form['distance']
-        client.member.address.latitude = form['latitude']
-        client.member.address.longitude = form['longitude']
-        client.member.address.save()
-
-        client.route = form['route']
-        client.delivery_note = form['delivery_note']
-        client.save()
-
-
-class ClientUpdateDietaryRestriction(generic.edit.FormView):
-    template_name = 'client/update/dietary_restriction.html'
-    form_class = ClientRestrictionsInformation
-    success_url = reverse_lazy('member:list')
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(
-            ClientUpdateDietaryRestriction,
-            self).dispatch(
-            *args,
-            **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(
-            ClientUpdateDietaryRestriction,
-            self).get_context_data(
-            **kwargs)
-        context.update({'current_step': 'dietary_restriction'})
-        context.update({'client_id': self.kwargs['client_id']})
-        context["weekday"] = DAYS_OF_WEEK
-        context["meals"] = COMPONENT_GROUP_CHOICES
-        return context
-
-    def get_initial(self):
-        initial = super(ClientUpdateDietaryRestriction, self).get_initial()
-        client = get_object_or_404(
-            Client, pk=self.kwargs.get('client_id')
-        )
-        initial = {
-            'status': True if client.status == Client.ACTIVE else False,
-            'delivery_type': client.delivery_type,
-            'meals_schedule': client.simple_meals_schedule,
-            'restrictions': client.restrictions.all,
-            'ingredient_to_avoid': client.ingredients_to_avoid.all,
-            'dish_to_avoid': client.components_to_avoid.all,
-            'food_preparation': client.food_preparation.all,
-
-        }
-
-        day_count = 0
-        for day, v in DAYS_OF_WEEK:
-            for component, v in COMPONENT_GROUP_CHOICES:
-                meals_default = Client.get_meal_defaults(
-                    client, component, day_count)
-                initial[component + '_' + day + '_quantity'] = meals_default[0]
-                if component == 'main_dish':
-                    initial['size_' + day] = meals_default[1]
-            day_count += 1
-
-        return initial
-
-    def form_valid(self, form):
-        # This method is called when valid form data has been POSTed.
-        # It should return an HttpResponse.
-        client = get_object_or_404(
-            Client, pk=self.kwargs.get('client_id')
-        )
-        self.save(form.cleaned_data, client)
-        messages.add_message(
-            self.request, messages.SUCCESS,
-            _("The client has been updated")
-        )
-        return super(ClientUpdateDietaryRestriction, self).form_valid(form)
-
-    def save(self, form, client):
-        """
-        Save the basic information step data.
-        """
-        # Save meals schedule as a Client option
-        client.set_meals_schedule(
-            form['meals_schedule']
-        )
-
-        # Save restricted items
-        client.restrictions.clear()
-        for restricted_item in form['restrictions']:
-            Restriction.objects.create(
-                client=client,
-                restricted_item=restricted_item
-            )
-
-        # client.food_preparation.delete()
-        # for food_preparation in form['food_preparation']:
-        #    Client_option.objects.create(
-        #        client=client,
-        #        option=food_preparation
-        #    )
-
-        # Save ingredients to avoid
-        client.ingredients_to_avoid.clear()
-        for ingredient_to_avoid in form['ingredient_to_avoid']:
-            Client_avoid_ingredient.objects.create(
-                client=client,
-                ingredient=ingredient_to_avoid
-            )
-
-        # Save components to avoid
-        client.components_to_avoid.clear()
-        for component_to_avoid in form['dish_to_avoid']:
-            Client_avoid_component.objects.create(
-                client=client,
-                component=component_to_avoid
-            )
-
-        # Save preferences
-        json = {}
-        for days, v in DAYS_OF_WEEK:
-            json['size_{}'.format(days)] = form['size_{}'.format(days)]
-
-            if json['size_{}'.format(days)] is "":
-                json['size_{}'.format(days)] = None
-
-            for meal in COMPONENT_GROUP_CHOICES:
-                json['{}_{}_quantity'.format(meal[0], days)] \
-                    = form[
-                    '{}_{}_quantity'.format(meal[0], days)
-                ]
-        client.meal_default_week = json
-
-        client.save()
 
 
 class ClientWizard(NamedUrlSessionWizardView):
@@ -369,9 +54,9 @@ class ClientWizard(NamedUrlSessionWizardView):
         context["weekday"] = DAYS_OF_WEEK
         context["meals"] = COMPONENT_GROUP_CHOICES
 
-        if 'client_id' in kwargs:
+        if 'pk' in kwargs:
             context.update({'edit': True})
-            context.update({'client_id': kwargs['client_id']})
+            context.update({'pk': kwargs['pk']})
 
         return context
 
@@ -380,9 +65,9 @@ class ClientWizard(NamedUrlSessionWizardView):
         Load initial data.
         """
         initial = {}
-        if 'client_id' in self.kwargs:
-            client_id = self.kwargs['client_id']
-            client = Client.objects.get(id=client_id)
+        if 'pk' in self.kwargs:
+            pk = self.kwargs['pk']
+            client = Client.objects.get(id=pk)
             initial = self.load_initial_data(step, client)
 
         return self.initial_dict.get(step, initial)
@@ -393,12 +78,12 @@ class ClientWizard(NamedUrlSessionWizardView):
         """
         # Use form_dict which allows us to access the wizard’s forms
         # based on their step names.
-        client_id = None
+        pk = None
         self.form_dict = form_dict
 
-        if 'client_id' in kwargs:
-            client_id = kwargs['client_id']
-        self.save(client_id)
+        if 'pk' in kwargs:
+            pk = kwargs['pk']
+        self.save(pk)
         messages.add_message(
             self.request, messages.SUCCESS,
             _("The client has been created")
@@ -868,14 +553,17 @@ def ExportCSV(self, queryset):
     return response
 
 
-class ClientInfoView(generic.DetailView):
+class ClientView(generic.DeleteView):
     # Display detail of one client
     model = Client
-    template_name = 'client/view/information.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(ClientInfoView, self).dispatch(*args, **kwargs)
+        return super(ClientView, self).dispatch(*args, **kwargs)
+
+
+class ClientInfoView(ClientView):
+    template_name = 'client/view/information.html'
 
     def get_context_data(self, **kwargs):
         context = super(ClientInfoView, self).get_context_data(**kwargs)
@@ -896,14 +584,8 @@ class ClientInfoView(generic.DetailView):
         return context
 
 
-class ClientReferentView(generic.DetailView):
-    # Display detail of one client
-    model = Client
+class ClientReferentView(ClientView):
     template_name = 'client/view/referent.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ClientReferentView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(ClientReferentView, self).get_context_data(**kwargs)
@@ -924,14 +606,8 @@ class ClientReferentView(generic.DetailView):
         return context
 
 
-class ClientAddressView(generic.DetailView):
-    # Display detail of one client
-    model = Client
+class ClientAddressView(ClientView):
     template_name = 'client/view/address.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ClientAddressView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(ClientAddressView, self).get_context_data(**kwargs)
@@ -951,14 +627,8 @@ class ClientAddressView(generic.DetailView):
         return context
 
 
-class ClientPaymentView(generic.DetailView):
-    # Display detail of one client
-    model = Client
+class ClientPaymentView(ClientView):
     template_name = 'client/view/payment.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ClientPaymentView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(ClientPaymentView, self).get_context_data(**kwargs)
@@ -979,14 +649,8 @@ class ClientPaymentView(generic.DetailView):
         return context
 
 
-class ClientAllergiesView(generic.DetailView):
-    # Display detail of one client
-    model = Client
+class ClientAllergiesView(ClientView):
     template_name = 'client/view/allergies.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ClientAllergiesView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(ClientAllergiesView, self).get_context_data(**kwargs)
@@ -1008,13 +672,8 @@ class ClientAllergiesView(generic.DetailView):
         return context
 
 
-class ClientStatusView(generic.DetailView):
-    model = Client
+class ClientStatusView(ClientView):
     template_name = 'client/view/status.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ClientStatusView, self).dispatch(*args, **kwargs)
 
     def get_default_ops_value(self):
         operation_status_value = self.request.GET.get(
@@ -1035,14 +694,8 @@ class ClientStatusView(generic.DetailView):
         return context
 
 
-class ClientNotesView(generic.DetailView):
-    # Display detail of one client
-    model = Client
+class ClientNotesView(ClientView):
     template_name = 'client/view/notes.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ClientNotesView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(ClientNotesView, self).get_context_data(**kwargs)
@@ -1070,24 +723,8 @@ def note_add(request):
     return render(request, 'notes/add.html', {'form': form})
 
 
-def parse_json(meals):
-    meal_default = []
-
-    for meal in meals:
-        if meals[meal] is not None:
-            meal_default.append(meal + ": " + str(meals[meal]))
-
-    return meal_default
-
-
-class ClientDetail(generic.DetailView):
-    # Display detail of one client
-    model = Client
+class ClientDetail(ClientView):
     template_name = 'client/view.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ClientDetail, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(ClientDetail, self).get_context_data(**kwargs)
@@ -1098,10 +735,17 @@ class ClientDetail(generic.DetailView):
             context['meal_default'] = []
         return context
 
+    def parse_json(meals):
+        meal_default = []
 
-class ClientOrderList(generic.DetailView):
-    # Display the list of clients
-    model = Client
+        for meal in meals:
+            if meals[meal] is not None:
+                meal_default.append(meal + ": " + str(meals[meal]))
+
+        return meal_default
+
+
+class ClientOrderList(ClientView):
     template_name = 'client/view/orders.html'
 
     def get_context_data(self, **kwargs):
@@ -1113,116 +757,476 @@ class ClientOrderList(generic.DetailView):
         return context
 
 
-class MemberUpdate(generic.UpdateView):
-    # Display the form to update a member
-    model = Member
-    template_name = "client/update.html"
+class ClientUpdateInformation(generic.edit.FormView):
+    template_name = 'client/update/steps.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        # Here you need to check if the client exist
-        # You can use for example get_object_or_404()
-        # note: self.kwargs["pk"] is the ID of the client given by the urls.py
+        return super(
+            ClientUpdateInformation,
+            self).dispatch(
+            *args,
+            **kwargs)
 
-        return super(MemberUpdate, self).dispatch(*args, **kwargs)
-
-    def get_success_url(self):
-        # Here you redirect to the next page
-        # You can use for example reverse_lazy()
-
-        return 0
-
-    def get_context_data(self, **kwargs):
-        context = super(MemberUpdate, self).get_context_data(**kwargs)
-
-        """
-        Here we need to add some variable of context to send to template :
-         1 - A string active_tab who can be:
-            'info'
-            'referent'
-            'address'
-            'payment'
-            'allergies'
-            'preferences'
-        """
-        context['myVariableOfContext'] = 0
-
-        return context
-
-
-class ClientAllergiesUpdate(generic.UpdateView):
-    # Display the form to update allergies of a client
-    model = Client
-    template_name = "client/update.html"
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        # Here you need to check if the client exist
-        # You can use for example get_object_or_404()
-        # note: self.kwargs["pk"] is the ID of the client given by the urls.py
-
-        return super(ClientAllergiesUpdate, self).dispatch(*args, **kwargs)
-
-    def get_success_url(self):
-        # Here you redirect to the next page
-        # You can use for example reverse_lazy()
-
-        return 0
-
-    def get_context_data(self, **kwargs):
-        context = super(ClientAllergiesUpdate, self).get_context_data(**kwargs)
-
-        """
-        Here we need to add some variable of context to send to template :
-         1 - A string active_tab who can be:
-            'info'
-            'referent'
-            'address'
-            'payment'
-            'allergies'
-            'preferences'
-        """
-        context['myVariableOfContext'] = 0
-
-        return context
-
-
-class ClientPreferencesUpdate(generic.UpdateView):
-    # Display the form to update preference of a client
-    model = Client
-    template_name = "client/update.html"
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        # Here you need to check if the client exist
-        # You can use for example get_object_or_404()
-        # note: self.kwargs["pk"] is the ID of the client given by the urls.py
-
-        return super(ClientPreferencesUpdate, self).dispatch(*args, **kwargs)
+    def get_initial(self):
+        client = get_object_or_404(
+            Client, pk=self.kwargs.get('pk')
+        )
+        initial = {
+            'firstname': client.member.firstname,
+            'lastname': client.member.lastname,
+            'alert': client.alert,
+            'gender': client.gender,
+            'language': client.language,
+            'birthdate': client.birthdate,
+            'home_phone': client.member.home_phone,
+            'cell_phone': client.member.cell_phone,
+            'email': client.member.email,
+            'street': client.member.address.street,
+            'city': client.member.address.city,
+            'apartment': client.member.address.apartment,
+            'postal_code': client.member.address.postal_code,
+            'delivery_note': client.delivery_note,
+            'route':
+                client.route.id
+                if client.route is not None
+                else '',
+            'latitude': client.member.address.latitude,
+            'longitude': client.member.address.longitude,
+            'distance': client.member.address.distance,
+            'work_information':
+                client.client_referent.first().work_information
+                if client.client_referent.count()
+                else '',
+            'referral_reason':
+                client.client_referent.first().referral_reason
+                if client.client_referent.count()
+                else '',
+            'date':
+                client.client_referent.first().date
+                if client.client_referent.count()
+                else '',
+        }
+        return initial
 
     def get_success_url(self):
-        # Here you redirect to the next page
-        # You can use for example reverse_lazy()
+        return reverse_lazy(
+            'member:client_information',
+            kwargs={'pk': self.kwargs.get('pk')}
+        )
 
-        return 0
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+        client = get_object_or_404(
+            Client, pk=self.kwargs.get('pk')
+        )
+        self.save(form.cleaned_data, client)
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _("The client has been updated")
+        )
+        return super(ClientUpdateInformation, self).form_valid(form)
+
+
+class ClientUpdateBasicInformation(ClientUpdateInformation):
+    form_class = ClientBasicInformation
 
     def get_context_data(self, **kwargs):
-        context = super(ClientPreferencesUpdate, self).\
-            get_context_data(**kwargs)
-
-        """
-        Here we need to add some variable of context to send to template :
-         1 - A string active_tab who can be:
-            'info'
-            'referent'
-            'address'
-            'payment'
-            'allergies'
-            'preferences'
-        """
-        context['myVariableOfContext'] = 0
-
+        context = super(
+            ClientUpdateBasicInformation,
+            self).get_context_data(
+            **kwargs)
+        context.update({
+            'pk': self.kwargs['pk'],
+            'current_step': 'basic_information'
+        })
+        context["step_template"] = 'client/partials/forms/' \
+                                   'basic_information.html'
         return context
+
+    def save(self, form, client):
+        """
+        Save the basic information step data.
+        """
+        client.member.firstname = form['firstname']
+        client.member.lastname = form['lastname']
+        client.member.save()
+
+        client.gender = form['gender']
+        client.birthdate = form['birthdate']
+        client.language = form['language']
+        client.alert = form['alert']
+        client.save()
+
+        # Save contact information
+        if client.member.home_phone != form['home_phone']:
+            client.member.add_contact_information(
+                HOME, form['home_phone'], True)
+        if client.member.cell_phone != form['cell_phone']:
+            client.member.add_contact_information(
+                CELL, form['cell_phone'], True)
+        if client.member.email != form['email']:
+            client.member.add_contact_information(
+                EMAIL, form['email'], True)
+
+
+class ClientUpdateAddressInformation(ClientUpdateInformation):
+    form_class = ClientAddressInformation
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            ClientUpdateAddressInformation,
+            self).get_context_data(
+            **kwargs)
+        context.update({
+            'current_step': 'address_information',
+            'pk': self.kwargs['pk']
+        })
+        context["step_template"] = 'client/partials/forms/' \
+                                   'address_information.html'
+        return context
+
+    def save(self, form, client):
+        """
+        Save the basic information step data.
+        """
+        client.member.address.street = form['street']
+        client.member.address.apartment = form['apartment']
+        client.member.address.city = form['city']
+        client.member.address.postal_code = form['postal_code']
+        client.member.address.latitude = form['latitude']
+        client.member.address.longitude = form['longitude']
+        client.member.address.save()
+
+        client.route = form['route']
+        client.delivery_note = form['delivery_note']
+        client.save()
+
+
+class ClientUpdateReferentInformation(ClientUpdateInformation):
+    form_class = ClientReferentInformation
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            ClientUpdateReferentInformation,
+            self).get_context_data(
+            **kwargs)
+        context.update({'current_step': 'referent_information'})
+        context.update({'pk': self.kwargs['pk']})
+        context["step_template"] = 'client/partials/forms/' \
+                                   'referent_information.html'
+        return context
+
+    def get_initial(self):
+        initial = super(ClientUpdateReferentInformation, self).get_initial()
+        client = get_object_or_404(
+            Client, pk=self.kwargs.get('pk')
+        )
+        initial.update({
+            'firstname': None,
+            'lastname': None,
+            'street': None,
+            'city': None,
+            'apartment': None,
+            'postal_code': None,
+            'member': '[{}] {} {}'.format(
+                client.client_referent.first().referent.id,
+                client.client_referent.first().referent.firstname,
+                client.client_referent.first().referent.lastname
+            ),
+        })
+        return initial
+
+    def save(self, referent_information, client):
+        """
+        Save the basic information step data.
+        """
+        e_referent = referent_information.get('member')
+        if e_referent:
+            e_referent_id = e_referent.split(' ')[0] \
+                .replace('[', '') \
+                .replace(']', '')
+            referent = Member.objects.get(pk=e_referent_id)
+        else:
+            referent = Member.objects.create(
+                firstname=referent_information.get("firstname"),
+                lastname=referent_information.get("lastname"),
+            )
+            referent.save()
+
+        # TODO: Find out if a client can really be refered by more
+        # that one person in the system.
+        # Before save a new referencing, remove the existing ones.
+        Referencing.objects.filter(client=client).delete()
+
+        referencing, updated = Referencing.objects.update_or_create(
+            referent=referent,
+            client=client,
+            referral_reason=referent_information.get(
+                "referral_reason"
+            ),
+            work_information=referent_information.get(
+                'work_information'
+            ),
+            date=referent_information.get(
+                'date'
+            ),
+        )
+        referencing.save()
+
+
+class ClientUpdatePaymentInformation(ClientUpdateInformation):
+    form_class = ClientPaymentInformation
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            ClientUpdatePaymentInformation,
+            self).get_context_data(
+            **kwargs)
+        context.update({
+            'current_step': 'payment_information',
+            'pk': self.kwargs['pk'],
+        })
+        context["step_template"] = 'client/partials/forms/' \
+                                   'payment_information.html'
+        return context
+
+    def get_initial(self):
+        initial = super(ClientUpdatePaymentInformation, self).get_initial()
+        client = get_object_or_404(
+            Client, pk=self.kwargs.get('pk')
+        )
+        initial.update({
+            'firstname': None,
+            'lastname': None,
+            'street': None,
+            'city': None,
+            'apartment': None,
+            'postal_code': None,
+            'member': '[{}] {} {}'.format(
+                client.billing_member.id,
+                client.billing_member.firstname,
+                client.billing_member.lastname
+            ),
+            'same_as_client': client.member == client.billing_member,
+            'facturation': client.rate_type,
+            'billing_payment_type': client.billing_payment_type,
+        })
+
+        return initial
+
+    def save(self, payment_information, client):
+        """
+        Save the basic information step data.
+        """
+        member = client.member
+
+        if payment_information.get('same_as_client'):
+            billing_member = member
+
+        else:
+            e_b_member = payment_information.get('member')
+            if e_b_member:
+                e_b_member_id = e_b_member.split(' ')[0]. \
+                    replace('[', '').replace(']', '')
+                billing_member = Member.objects.get(pk=e_b_member_id)
+            else:
+                billing_address = Address.objects.create(
+                    number=payment_information.get('number'),
+                    street=payment_information.get('street'),
+                    apartment=payment_information.get('apartment'),
+                    floor=payment_information.get('floor'),
+                    city=payment_information.get('city'),
+                    postal_code=payment_information.get('postal_code'),
+                )
+                billing_address.save()
+
+                billing_member = Member.objects.create(
+                    firstname=payment_information.get('firstname'),
+                    lastname=payment_information.get('lastname'),
+                    address=billing_address,
+                )
+                billing_member.save()
+        client.billing_member = billing_member
+        client.rate_type = payment_information.get('facturation')
+        client.billing_payment_type = payment_information.get(
+            'billing_payment_type'
+        )
+        client.save()
+
+
+class ClientUpdateDietaryRestriction(ClientUpdateInformation):
+    form_class = ClientRestrictionsInformation
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            ClientUpdateDietaryRestriction,
+            self).get_context_data(
+            **kwargs)
+        context.update({'current_step': 'dietary_restriction'})
+        context.update({'pk': self.kwargs['pk']})
+        context["weekday"] = DAYS_OF_WEEK
+        context["meals"] = COMPONENT_GROUP_CHOICES
+        context["step_template"] = 'client/partials/forms/' \
+                                   'dietary_restriction.html'
+        return context
+
+    def get_initial(self):
+        initial = super(ClientUpdateDietaryRestriction, self).get_initial()
+        client = get_object_or_404(
+            Client, pk=self.kwargs.get('pk')
+        )
+        initial.update({
+            'status': True if client.status == Client.ACTIVE else False,
+            'delivery_type': client.delivery_type,
+            'meals_schedule': client.simple_meals_schedule,
+            'restrictions': client.restrictions.all,
+            'ingredient_to_avoid': client.ingredients_to_avoid.all,
+            'dish_to_avoid': client.components_to_avoid.all,
+            'food_preparation': client.food_preparation.all,
+        })
+        day_count = 0
+        for day, v in DAYS_OF_WEEK:
+            for component, v in COMPONENT_GROUP_CHOICES:
+                meals_default = Client.get_meal_defaults(
+                    client, component, day_count)
+                initial[component + '_' + day + '_quantity'] = meals_default[0]
+                if component == 'main_dish':
+                    initial['size_' + day] = meals_default[1]
+            day_count += 1
+
+        return initial
+
+    def save(self, form, client):
+        """
+        Save the basic information step data.
+        """
+        # Save meals schedule as a Client option
+        client.set_meals_schedule(
+            form['meals_schedule']
+        )
+
+        # Save restricted items
+        client.restrictions.clear()
+        for restricted_item in form['restrictions']:
+            Restriction.objects.create(
+                client=client,
+                restricted_item=restricted_item
+            )
+
+        for food_preparation in client.food_preparation:
+            Client_option.objects.filter(
+                client=client,
+                option=food_preparation
+            ).delete()
+        for food_preparation in form['food_preparation']:
+            Client_option.objects.create(
+                client=client,
+                option=food_preparation
+            )
+
+        # Save ingredients to avoid
+        client.ingredients_to_avoid.clear()
+        for ingredient_to_avoid in form['ingredient_to_avoid']:
+            Client_avoid_ingredient.objects.create(
+                client=client,
+                ingredient=ingredient_to_avoid
+            )
+
+        # Save components to avoid
+        client.components_to_avoid.clear()
+        for component_to_avoid in form['dish_to_avoid']:
+            Client_avoid_component.objects.create(
+                client=client,
+                component=component_to_avoid
+            )
+
+        # Save preferences
+        json = {}
+        for days, v in DAYS_OF_WEEK:
+            json['size_{}'.format(days)] = form['size_{}'.format(days)]
+
+            if json['size_{}'.format(days)] is "":
+                json['size_{}'.format(days)] = None
+
+            for meal in COMPONENT_GROUP_CHOICES:
+                json['{}_{}_quantity'.format(meal[0], days)] \
+                    = form[
+                    '{}_{}_quantity'.format(meal[0], days)
+                ]
+        client.delivery_type = form['delivery_type']
+        client.meal_default_week = json
+        client.status = Client.ACTIVE if form.get('status') else Client.PENDING
+        client.save()
+
+
+class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
+    form_class = ClientEmergencyContactInformation
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            ClientUpdateEmergencyContactInformation,
+            self).get_context_data(
+            **kwargs)
+        context.update({'current_step': 'emergency_contact'})
+        context.update({'pk': self.kwargs['pk']})
+        context["step_template"] = 'client/partials/forms/' \
+                                   'emergency_contact.html'
+        return context
+
+    def get_initial(self):
+        initial = super(ClientUpdateEmergencyContactInformation,
+                        self).get_initial()
+        client = get_object_or_404(
+            Client, pk=self.kwargs.get('pk')
+        )
+        initial.update({
+            'firstname': None,
+            'lastname': None,
+            'member': '[{}] {} {}'.format(
+                client.emergency_contact.id,
+                client.emergency_contact.firstname,
+                client.emergency_contact.lastname
+            ),
+            'contact_type':
+                client.emergency_contact.member_contact.first().type,
+            'contact_value':
+                client.emergency_contact.member_contact.first().value,
+        })
+        return initial
+
+    def save(self, emergency_contact, client):
+        """
+        Save the basic information step data.
+        """
+        e_emergency_member = emergency_contact.get('member')
+        if e_emergency_member:
+            e_emergency_member_id = e_emergency_member.split(' ')[0] \
+                .replace('[', '') \
+                .replace(']', '')
+            emergency = Member.objects.get(pk=e_emergency_member_id)
+        else:
+            emergency = Member.objects.create(
+                firstname=emergency_contact.get("firstname"),
+                lastname=emergency_contact.get('lastname'),
+            )
+            emergency.save()
+
+        # Remove old emergency_contact
+        Contact.objects.filter(member=client.emergency_contact).delete()
+        # Add new emergency_contact
+        client_emergency_contact = Contact.objects.create(
+            type=emergency_contact.get("contact_type"),
+            value=emergency_contact.get(
+                "contact_value"
+            ),
+            member=emergency,
+        )
+        client_emergency_contact.save()
+
+        client.emergency_contact = emergency
+        client.save()
 
 
 class SearchMembers(generic.View):
@@ -1254,7 +1258,7 @@ class SearchMembers(generic.View):
 
 
 def geolocateAddress(request):
-            # do something with the your data
+    # do something with the your data
     if request.method == 'POST':
         lat = request.POST['lat']
         long = request.POST['long']
