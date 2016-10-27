@@ -435,7 +435,7 @@ $(function() {
         }
     }
     function hideUiAccordionDays() {
-        $('.ui.accordion.meals').each(function () {
+        $('.ui.accordion.meals').not('.default').each(function () {
           $(this).hide();
         });
     }
@@ -446,6 +446,20 @@ $(function() {
         showUiAccordionSelectedDays();
     });
     var deliveryTypeSelect = $('#id_dietary_restriction-delivery_type, #id_delivery_type');
+    deliveryTypeSelect.change(function () {
+        if ($(this).val() == 'E') {
+            console.log('episodic');
+            $('#form-meals-schedule').hide();
+            hideUiAccordionDays();
+            $('.ui.accordion.meals.default').show();
+        }
+        else {
+            console.log('ongoing');
+            $('#form-meals-schedule').show();
+            showUiAccordionSelectedDays();
+            $('.ui.accordion.meals.default').hide();
+        }
+    });
     if (deliveryTypeSelect.val() == 'E') {
         $('#form-meals-schedule').hide();
         hideUiAccordionDays();

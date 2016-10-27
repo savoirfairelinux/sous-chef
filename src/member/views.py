@@ -332,7 +332,7 @@ class ClientWizard(NamedUrlSessionWizardView):
         )
 
         # Save episodic prefs form client
-        client.set_meals_prefs(form)
+        client.set_meals_prefs(preferences)
 
         # Save restricted items
         for restricted_item in preferences.get('restrictions'):
@@ -1108,14 +1108,14 @@ class ClientUpdateDietaryRestriction(ClientUpdateInformation):
 
         prefs = client.get_meals_prefs()
         if (bool(prefs)):
-        initial['size_default'] = prefs['maindish_s']
-        initial['main_dish_default_quantity'] = prefs['maindish_q']
-        initial['dessert_default_quantity'] = prefs['dst_q']
-        initial['diabetic_default_quantity'] = prefs['diabdst_q']
-        initial['fruit_salad_default_quantity'] = prefs['fruitsld_q']
-        initial['green_salad_default_quantity'] = prefs['greensld_q']
-        initial['pudding_default_quantity'] = prefs['pudding_q']
-        initial['compote_default_quantity'] = prefs['compot_q']
+            initial['size_default'] = prefs['maindish_s']
+            initial['main_dish_default_quantity'] = prefs['maindish_q']
+            initial['dessert_default_quantity'] = prefs['dst_q']
+            initial['diabetic_default_quantity'] = prefs['diabdst_q']
+            initial['fruit_salad_default_quantity'] = prefs['fruitsld_q']
+            initial['green_salad_default_quantity'] = prefs['greensld_q']
+            initial['pudding_default_quantity'] = prefs['pudding_q']
+            initial['compote_default_quantity'] = prefs['compot_q']
 
         return initial
 
