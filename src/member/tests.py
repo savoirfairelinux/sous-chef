@@ -629,7 +629,8 @@ class FormTestCase(TestCase):
             "emergency_contact-firstname": "Emergency",
             "emergency_contact-lastname": "User",
             "emergency_contact-contact_type": "Home phone",
-            "emergency_contact-contact_value": "555-444-5555"
+            "emergency_contact-contact_value": "555-444-5555",
+            "emergency_contact-relationship": "friend",
         }
 
         stepsdata = [
@@ -762,6 +763,12 @@ class FormTestCase(TestCase):
             "555-444-5555"
         )
 
+        # test_emergency_contact_relationship:
+        self.assertEqual(
+            client.emergency_contact_relationship,
+            "friend"
+        )
+
         # Test meals schedule
         self.assertEqual(client.simple_meals_schedule, ['monday', 'wednesday'])
 
@@ -879,7 +886,8 @@ class FormTestCase(TestCase):
             "emergency_contact-firstname": "Same",
             "emergency_contact-lastname": "User",
             "emergency_contact-contact_type": "Home phone",
-            "emergency_contact-contact_value": "514-868-8686"
+            "emergency_contact-contact_value": "514-868-8686",
+            "emergency_contact-relationship": "friend"
         }
 
         stepsdata = [
@@ -1011,6 +1019,12 @@ class FormTestCase(TestCase):
         self.assertEqual(
             client.emergency_contact.member_contact.first().value,
             "514-868-8686"
+        )
+
+        # test_emergency_contact_relationship:
+        self.assertEqual(
+            client.emergency_contact_relationship,
+            "friend"
         )
 
     def _test_client_detail_view_same_members(self, client):
@@ -1452,7 +1466,8 @@ class FormTestCase(TestCase):
             "emergency_contact-firstname": "Emergency",
             "emergency_contact-lastname": "User",
             "emergency_contact-contact_type": "Home phone",
-            "emergency_contact-contact_value": "555-444-5555"
+            "emergency_contact-contact_value": "555-444-5555",
+            "emergency_contact-relationship": "friend"
         }
 
         # Send the data to the form.
@@ -1469,6 +1484,7 @@ class FormTestCase(TestCase):
         self.assertTrue(b'Required information' not in response.content)
         self.assertTrue(b'contact_type' not in response.content)
         self.assertTrue(b'contact_value' not in response.content)
+        self.assertTrue(b'relationship' not in response.content)
         self.assertTrue(b'Clients' in response.content)
         self.assertRedirects(response, reverse('member:list'))
 
@@ -2092,6 +2108,7 @@ class ClientUpdateReferentInformationTestCase(ClientUpdateTestCase):
                 client.emergency_contact.member_contact.first().type,
             'contact_value':
                 client.emergency_contact.member_contact.first().value,
+            'relationship': None,
         })
         form = ClientEmergencyContactInformation(data=data)
         self.assertTrue(form.is_valid())

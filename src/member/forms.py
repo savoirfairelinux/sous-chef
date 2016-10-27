@@ -391,6 +391,14 @@ class ClientEmergencyContactInformation(MemberForm):
 
     contact_value = forms.CharField(label=_("Contact"))
 
+    relationship = forms.CharField(
+        label=_("Relationship"),
+        widget=forms.TextInput(
+            attrs={'placeholder': _('Parents, friends, ...')}
+        ),
+        required=False
+    )
+
 
 class ClientScheduledStatusForm(forms.ModelForm):
 
