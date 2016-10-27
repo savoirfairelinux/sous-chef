@@ -238,6 +238,504 @@
 !function(t){t.tablesort=function(e,s){var i=this;this.$table=e,this.$thead=this.$table.find("thead"),this.settings=t.extend({},t.tablesort.defaults,s),this.$sortCells=this.$thead.length>0?this.$thead.find("th:not(.no-sort)"):this.$table.find("th:not(.no-sort)"),this.$sortCells.bind("click.tablesort",function(){i.sort(t(this))}),this.index=null,this.$th=null,this.direction=null},t.tablesort.prototype={sort:function(e,s){var i=new Date,n=this,o=this.$table,l=this.$thead.length>0?o.find("tbody tr"):o.find("tr").has("td"),a=o.find("tr td:nth-of-type("+(e.index()+1)+")"),r=e.data().sortBy,d=[],h=a.map(function(s,i){return r?"function"==typeof r?r(t(e),t(i),n):r:null!=t(this).data().sortValue?t(this).data().sortValue:t(this).text()});0!==h.length&&("asc"!==s&&"desc"!==s?this.direction="asc"===this.direction?"desc":"asc":this.direction=s,s="asc"==this.direction?1:-1,n.$table.trigger("tablesort:start",[n]),n.log("Sorting by "+this.index+" "+this.direction),n.$table.css("display"),setTimeout(function(){n.$sortCells.removeClass(n.settings.asc+" "+n.settings.desc);for(var r=0,c=h.length;c>r;r++)d.push({index:r,cell:a[r],row:l[r],value:h[r]});d.sort(function(t,e){return t.value>e.value?1*s:t.value<e.value?-1*s:0}),t.each(d,function(t,e){o.append(e.row)}),e.addClass(n.settings[n.direction]),n.log("Sort finished in "+((new Date).getTime()-i.getTime())+"ms"),n.$table.trigger("tablesort:complete",[n]),n.$table.css("display")},h.length>2e3?200:10))},log:function(e){(t.tablesort.DEBUG||this.settings.debug)&&console&&console.log&&console.log("[tablesort] "+e)},destroy:function(){return this.$sortCells.unbind("click.tablesort"),this.$table.data("tablesort",null),null}},t.tablesort.DEBUG=!1,t.tablesort.defaults={debug:t.tablesort.DEBUG,asc:"sorted ascending",desc:"sorted descending"},t.fn.tablesort=function(e){var s,i;return this.each(function(){s=t(this),i=s.data("tablesort"),i&&i.destroy(),s.data("tablesort",new t.tablesort(s,e))})}}(window.Zepto||window.jQuery);
 !function(e,t,a,n){e.fn.calendar=function(t){var r,o=e(this),i=o.selector||"",l=(new Date).getTime(),u=[],s=arguments[0],d="string"==typeof s,p=[].slice.call(arguments,1);return o.each(function(){var o,c,f=e.isPlainObject(t)?e.extend(!0,{},e.fn.calendar.settings,t):e.extend({},e.fn.calendar.settings),m=f.className,g=f.namespace,h=f.selector,y=f.formatter,v=f.parser,D=f.metadata,b=f.error,C="."+g,M="module-"+g,w=e(this),x=w.find(h.input),k=w.find(h.popup),T=w.find(h.activator),H=this,I=w.data(M),N=!1,F=!1;c={initialize:function(){c.debug("Initializing calendar for",H),o=c.get.isTouch(),c.setup.popup(),c.setup.inline(),c.setup.input(),c.setup.date(),c.create.calendar(),c.bind.events(),c.instantiate()},instantiate:function(){c.verbose("Storing instance of calendar"),I=c,w.data(M,I)},destroy:function(){c.verbose("Destroying previous calendar for",H),w.removeData(M),c.unbind.events()},setup:{popup:function(){if(!f.inline&&(T.length||(T=w.children().first(),T.length))){if(e.fn.popup===n)return void c.error(b.popup);k.length||(k=e("<div/>").addClass(m.popup).prependTo(T.parent())),k.addClass(m.calendar);var t=f.onVisible,a=f.onHidden;x.length||(k.attr("tabindex","0"),t=function(){return c.focus(),f.onVisible.apply(k,arguments)},a=function(){return c.blur(),f.onHidden.apply(k,arguments)});var r=function(){return c.set.focusDate(c.get.date()),c.set.mode(f.startMode),f.onShow.apply(k,arguments)},o=f.on||(x.length?"focus":"click"),i=e.extend({},f.popupOptions,{popup:k,on:o,hoverable:"hover"===o,onShow:r,onVisible:t,onHide:f.onHide,onHidden:a});c.popup(i)}},inline:function(){(!T.length||f.inline)&&(k=e("<div/>").addClass(m.calendar).appendTo(w),x.length||k.attr("tabindex","0"))},input:function(){f.touchReadonly&&x.length&&o&&x.prop("readonly",!0)},date:function(){if(x.length){var e=x.val(),t=v.date(e,f);c.set.date(t,f.formatInput,!1)}}},create:{calendar:function(){var t,a,n,r,o,i=c.get.mode(),l=new Date,u=c.get.date(),s=c.get.focusDate(),d=s||u||f.initialDate||l;d=c.helper.dateInRange(d),s||(s=d,c.set.focusDate(s,!1,!1));var p=d.getMinutes(),g=d.getHours(),h=d.getDate(),v=d.getMonth(),b=d.getFullYear(),C="year"===i,M="month"===i,w="day"===i,x="hour"===i,T="minute"===i,H="time"===f.type,I=w?7:x?4:3,N=7===I?"seven":4===I?"four":"three",F=w||x?6:4,O=(new Date(b,v,1).getDay()-f.firstDayOfWeek%7+7)%7;if(!f.constantHeight&&w){var E=new Date(b,v+1,0).getDate()+O;F=Math.ceil(E/7)}var R=C?10:M?1:0,Y=w?1:0,A=x||T?1:0,S=x||T?h:1,V=new Date(b-R,v-Y,S-A,g),P=new Date(b+R,v+Y,S+A,g),j=C?new Date(10*Math.ceil(b/10)-9,0,0):M?new Date(b,0,0):w?new Date(b,v,0):new Date(b,v,h,-1),q=C?new Date(10*Math.ceil(b/10)+1,0,1):M?new Date(b+1,0,1):w?new Date(b,v+1,1):new Date(b,v,h+1),J=e("<table/>").addClass(m.table).addClass(N+" column").addClass(i);if(!H){var K=e("<thead/>").appendTo(J);r=e("<tr/>").appendTo(K),o=e("<th/>").attr("colspan",""+I).appendTo(r);var W=e("<span/>").addClass(m.link).appendTo(o);W.text(y.header(d,i,f));var z=M?f.disableYear?"day":"year":w?f.disableMonth?"year":"month":"day";W.data(D.mode,z);var L=e("<span/>").addClass(m.prev).appendTo(o);L.data(D.focusDate,V),L.toggleClass(m.disabledCell,!c.helper.isDateInRange(j,i)),e("<i/>").addClass(m.prevIcon).appendTo(L);var B=e("<span/>").addClass(m.next).appendTo(o);if(B.data(D.focusDate,P),B.toggleClass(m.disabledCell,!c.helper.isDateInRange(q,i)),e("<i/>").addClass(m.nextIcon).appendTo(B),w)for(r=e("<tr/>").appendTo(K),t=0;I>t;t++)o=e("<th/>").appendTo(r),o.text(y.dayColumnHeader((t+f.firstDayOfWeek)%7,f))}var U=e("<tbody/>").appendTo(J);for(t=C?10*Math.ceil(b/10)-9:w?1-O:0,a=0;F>a;a++)for(r=e("<tr/>").appendTo(U),n=0;I>n;n++,t++){var Q=C?new Date(t,v,1,g,p):M?new Date(b,t,1,g,p):w?new Date(b,v,t,g,p):x?new Date(b,v,h,t):new Date(b,v,h,g,5*t),Z=C?t:M?f.text.monthsShort[t]:w?Q.getDate():y.time(Q,f,!0);o=e("<td/>").addClass(m.cell).appendTo(r),o.text(Z),o.data(D.date,Q);var G=w&&Q.getMonth()!==v||!c.helper.isDateInRange(Q,i),X=c.helper.dateEqual(Q,u,i);o.toggleClass(m.disabledCell,G),o.toggleClass(m.activeCell,X),x||T||o.toggleClass(m.todayCell,c.helper.dateEqual(Q,l,i)),c.helper.dateEqual(Q,s,i)&&c.set.focusDate(Q,!1,!1)}if(f.today){var $=e("<tr/>").appendTo(U),_=e("<td/>").attr("colspan",""+I).addClass(m.today).appendTo($);_.text(y.today(f)),_.data(D.date,l)}c.update.focus(!1,J),k.empty(),J.appendTo(k)}},update:{focus:function(t,a){a=a||k;var n=c.get.mode(),r=c.get.date(),i=c.get.focusDate(),l=c.get.startDate(),u=c.get.endDate(),s=(t?i:null)||r||(o?null:i);a.find("td").each(function(){var t=e(this),a=t.data(D.date);if(a){var r=t.hasClass(m.disabledCell),d=t.hasClass(m.activeCell),p=c.helper.dateEqual(a,i,n),f=s?!!l&&c.helper.isDateInRange(a,n,l,s)||!!u&&c.helper.isDateInRange(a,n,s,u):!1;t.toggleClass(m.focusCell,p&&(!o||N)),t.toggleClass(m.rangeCell,f&&!d&&!r)}})}},refresh:function(){c.create.calendar()},bind:{events:function(){k.on("mousedown"+C,c.event.mousedown),k.on("touchstart"+C,c.event.mousedown),k.on("mouseup"+C,c.event.mouseup),k.on("touchend"+C,c.event.mouseup),k.on("mouseover"+C,c.event.mouseover),x.length?(x.on("input"+C,c.event.inputChange),x.on("focus"+C,c.event.inputFocus),x.on("blur"+C,c.event.inputBlur),x.on("click"+C,c.event.inputClick),x.on("keydown"+C,c.event.keydown)):k.on("keydown"+C,c.event.keydown)}},unbind:{events:function(){k.off(C),x.length&&x.off(C)}},event:{mouseover:function(t){var a=e(t.target),n=a.data(D.date),r=1===t.buttons;n&&c.set.focusDate(n,!1,!0,r)},mousedown:function(t){x.length&&t.preventDefault(),N=t.type.indexOf("touch")>=0;var a=e(t.target),n=a.data(D.date);n&&c.set.focusDate(n,!1,!0,!0)},mouseup:function(t){c.focus(),t.preventDefault(),t.stopPropagation(),N=!1;var a=e(t.target),n=a.parent();(n.data(D.date)||n.data(D.focusDate)||n.data(D.mode))&&(a=n);var r=a.data(D.date),o=a.data(D.focusDate),i=a.data(D.mode);if(r){var l=a.hasClass(m.today);c.selectDate(r,l)}else o?c.set.focusDate(o):i&&c.set.mode(i)},keydown:function(e){if((27===e.keyCode||9===e.keyCode)&&c.popup("hide"),c.popup("is visible"))if(37===e.keyCode||38===e.keyCode||39===e.keyCode||40===e.keyCode){var t=c.get.mode(),a="day"===t?7:"hour"===t?4:3,n=37===e.keyCode?-1:38===e.keyCode?-a:39==e.keyCode?1:a;n*="minute"===t?5:1;var r=c.get.focusDate()||c.get.date()||new Date,o=r.getFullYear()+("year"===t?n:0),i=r.getMonth()+("month"===t?n:0),l=r.getDate()+("day"===t?n:0),u=r.getHours()+("hour"===t?n:0),s=r.getMinutes()+("minute"===t?n:0),d=new Date(o,i,l,u,s);"time"===f.type&&(d=c.helper.mergeDateTime(r,d)),c.helper.isDateInRange(d,t)&&c.set.focusDate(d)}else if(13===e.keyCode){var p=c.get.focusDate();p&&c.selectDate(p)}(38===e.keyCode||40===e.keyCode)&&(e.preventDefault(),c.popup("show"))},inputChange:function(){var e=x.val(),t=v.date(e,f);c.set.date(t,!1)},inputFocus:function(){k.addClass(m.active)},inputBlur:function(){if(k.removeClass(m.active),f.formatInput){var e=c.get.date(),t=y.datetime(e,f);x.val(t)}},inputClick:function(){c.popup("show")}},get:{date:function(){return w.data(D.date)||null},focusDate:function(){return w.data(D.focusDate)||null},startDate:function(){var e=c.get.calendarModule(f.startCalendar);return(e?e.get.date():w.data(D.startDate))||null},endDate:function(){var e=c.get.calendarModule(f.endCalendar);return(e?e.get.date():w.data(D.endDate))||null},mode:function(){var t=w.data(D.mode)||f.startMode,a=c.get.validModes();return e.inArray(t,a)>=0?t:"time"===f.type?"hour":"month"===f.type?"month":"year"===f.type?"year":"day"},validModes:function(){var e=[];return"time"!==f.type&&(f.disableYear&&"year"!==f.type||e.push("year"),(!f.disableMonth&&"year"!==f.type||"month"===f.type)&&e.push("month"),f.type.indexOf("date")>=0&&e.push("day")),f.type.indexOf("time")>=0&&(e.push("hour"),f.disableMinute||e.push("minute")),e},isTouch:function(){try{return a.createEvent("TouchEvent"),!0}catch(e){return!1}},calendarModule:function(t){return t?(t instanceof e||(t=w.parent().children(t).first()),t.data(M)):null}},set:{date:function(e,t,a){t=t!==!1,a=a!==!1,e=c.helper.sanitiseDate(e),e=c.helper.dateInRange(e);var r=y.datetime(e,f);if(a&&f.onChange.call(H,e,r)===!1)return!1;var o=c.get.endDate();o&&e&&e>o&&c.set.endDate(n),c.set.dataKeyValue(D.date,e),c.set.focusDate(e),t&&x.length&&x.val(r)},startDate:function(e,t){e=c.helper.sanitiseDate(e);var a=c.get.calendarModule(f.startCalendar);a&&a.set.date(e),c.set.dataKeyValue(D.startDate,e,t)},endDate:function(e,t){e=c.helper.sanitiseDate(e);var a=c.get.calendarModule(f.endCalendar);a&&a.set.date(e),c.set.dataKeyValue(D.endDate,e,t)},focusDate:function(e,t,a,n){e=c.helper.sanitiseDate(e),e=c.helper.dateInRange(e);var r=c.set.dataKeyValue(D.focusDate,e,t);a=a!==!1&&r&&t===!1||F!=n,F=n,a&&c.update.focus(n)},mode:function(e,t){c.set.dataKeyValue(D.mode,e,t)},dataKeyValue:function(e,t,a){var n=w.data(e),r=n===t||t>=n&&n>=t;return t?w.data(e,t):w.removeData(e),a=a!==!1&&!r,a&&c.create.calendar(),!r}},selectDate:function(e,t){var a=c.get.mode(),n=t||"minute"===a||f.disableMinute&&"hour"===a||"date"===f.type&&"day"===a||"month"===f.type&&"month"===a||"year"===f.type&&"year"===a;if(n){var r=c.set.date(e)===!1;if(!r&&f.closable){c.popup("hide");var o=c.get.calendarModule(f.endCalendar);o&&(o.popup("show"),o.focus())}}else{var i="year"===a?f.disableMonth?"day":"month":"month"===a?"day":"day"===a?"hour":"minute";c.set.mode(i),"hour"===a||"day"===a&&c.get.date()?c.set.date(e):c.set.focusDate(e)}},changeDate:function(e){c.set.date(e)},clear:function(){c.set.date(n)},popup:function(){return T.popup.apply(T,arguments)},focus:function(){x.length?x.focus():k.focus()},blur:function(){x.length?x.blur():k.blur()},helper:{sanitiseDate:function(e){return e?(e instanceof Date||(e=v.date(""+e)),isNaN(e.getTime())?n:e):n},dateDiff:function(e,t,a){a=a||"day";var n="time"===f.type,r="year"===a,o=r||"month"===a,i="minute"===a,l=i||"hour"===a;return e=new Date(n?2e3:e.getFullYear(),n?0:r?0:e.getMonth(),n?1:o?1:e.getDate(),l?e.getHours():0,i?Math.floor(e.getMinutes()/5):0),t=new Date(n?2e3:t.getFullYear(),n?0:r?0:t.getMonth(),n?1:o?1:t.getDate(),l?t.getHours():0,i?Math.floor(t.getMinutes()/5):0),t.getTime()-e.getTime()},dateEqual:function(e,t,a){return!!e&&!!t&&0===c.helper.dateDiff(e,t,a)},isDateInRange:function(e,t,a,n){if(!a&&!n){var r=c.get.startDate();a=r&&f.minDate?Math.max(r,f.minDate):r||f.minDate,n=f.maxDate}return!(!e||a&&c.helper.dateDiff(e,a,t)>0||n&&c.helper.dateDiff(n,e,t)>0)},dateInRange:function(e,t,a){if(!t&&!a){var n=c.get.startDate();t=n&&f.minDate?Math.max(n,f.minDate):n||f.minDate,a=f.maxDate}var r="time"===f.type;return e?t&&c.helper.dateDiff(e,t,"minute")>0?r?c.helper.mergeDateTime(e,t):t:a&&c.helper.dateDiff(a,e,"minute")>0?r?c.helper.mergeDateTime(e,a):a:e:e},mergeDateTime:function(e,t){return e&&t?new Date(e.getFullYear(),e.getMonth(),e.getDate(),t.getHours(),t.getMinutes()):t}},setting:function(t,a){if(c.debug("Changing setting",t,a),e.isPlainObject(t))e.extend(!0,f,t);else{if(a===n)return f[t];f[t]=a}},internal:function(t,a){if(e.isPlainObject(t))e.extend(!0,c,t);else{if(a===n)return c[t];c[t]=a}},debug:function(){f.debug&&(f.performance?c.performance.log(arguments):(c.debug=Function.prototype.bind.call(console.info,console,f.name+":"),c.debug.apply(console,arguments)))},verbose:function(){f.verbose&&f.debug&&(f.performance?c.performance.log(arguments):(c.verbose=Function.prototype.bind.call(console.info,console,f.name+":"),c.verbose.apply(console,arguments)))},error:function(){c.error=Function.prototype.bind.call(console.error,console,f.name+":"),c.error.apply(console,arguments)},performance:{log:function(e){var t,a,n;f.performance&&(t=(new Date).getTime(),n=l||t,a=t-n,l=t,u.push({Name:e[0],Arguments:[].slice.call(e,1)||"",Element:H,"Execution Time":a})),clearTimeout(c.performance.timer),c.performance.timer=setTimeout(c.performance.display,500)},display:function(){var t=f.name+":",a=0;l=!1,clearTimeout(c.performance.timer),e.each(u,function(e,t){a+=t["Execution Time"]}),t+=" "+a+"ms",i&&(t+=" '"+i+"'"),(console.group!==n||console.table!==n)&&u.length>0&&(console.groupCollapsed(t),console.table?console.table(u):e.each(u,function(e,t){console.log(t.Name+": "+t["Execution Time"]+"ms")}),console.groupEnd()),u=[]}},invoke:function(t,a,o){var i,l,u,s=I;return a=a||p,o=H||o,"string"==typeof t&&s!==n&&(t=t.split(/[\. ]/),i=t.length-1,e.each(t,function(a,r){var o=a!=i?r+t[a+1].charAt(0).toUpperCase()+t[a+1].slice(1):t;if(e.isPlainObject(s[o])&&a!=i)s=s[o];else{if(s[o]!==n)return l=s[o],!1;if(!e.isPlainObject(s[r])||a==i)return s[r]!==n?(l=s[r],!1):(c.error(b.method,t),!1);s=s[r]}})),e.isFunction(l)?u=l.apply(o,a):l!==n&&(u=l),e.isArray(r)?r.push(u):r!==n?r=[r,u]:u!==n&&(r=u),l}},d?(I===n&&c.initialize(),c.invoke(s)):(I!==n&&I.invoke("destroy"),c.initialize())}),r!==n?r:o},e.fn.calendar.settings={name:"Calendar",namespace:"calendar",debug:!1,verbose:!1,performance:!1,type:"datetime",firstDayOfWeek:0,constantHeight:!0,today:!1,closable:!0,monthFirst:!0,touchReadonly:!0,inline:!1,on:null,initialDate:null,startMode:!1,minDate:null,maxDate:null,ampm:!0,disableYear:!1,disableMonth:!1,disableMinute:!1,formatInput:!0,startCalendar:null,endCalendar:null,popupOptions:{position:"bottom left",lastResort:"bottom left",prefer:"opposite",hideOnScroll:!1},text:{days:["S","M","T","W","T","F","S"],months:["January","February","March","April","May","June","July","August","September","October","November","December"],monthsShort:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],today:"Today",now:"Now",am:"AM",pm:"PM"},formatter:{header:function(e,t,a){return"year"===t?a.formatter.yearHeader(e,a):"month"===t?a.formatter.monthHeader(e,a):"day"===t?a.formatter.dayHeader(e,a):"hour"===t?a.formatter.hourHeader(e,a):a.formatter.minuteHeader(e,a)},yearHeader:function(e,t){var a=10*Math.ceil(e.getFullYear()/10);return a-9+" - "+(a+2)},monthHeader:function(e,t){return e.getFullYear()},dayHeader:function(e,t){var a=t.text.months[e.getMonth()],n=e.getFullYear();return a+" "+n},hourHeader:function(e,t){return t.formatter.date(e,t)},minuteHeader:function(e,t){return t.formatter.date(e,t)},dayColumnHeader:function(e,t){return t.text.days[e]},datetime:function(e,t){if(!e)return"";var a="time"===t.type?"":t.formatter.date(e,t),n=t.type.indexOf("time")<0?"":t.formatter.time(e,t,!1),r="datetime"===t.type?" ":"";return a+r+n},date:function(e,t){if(!e)return"";var a=e.getDate(),n=t.text.months[e.getMonth()],r=e.getFullYear();return"year"===t.type?r:"month"===t.type?n+" "+r:(t.monthFirst?n+" "+a:a+" "+n)+", "+r},time:function(e,t,a){if(!e)return"";var n=e.getHours(),r=e.getMinutes(),o="";return t.ampm&&(o=" "+(12>n?t.text.am:t.text.pm),n=0===n?12:n>12?n-12:n),n+":"+(10>r?"0":"")+r+o},today:function(e){return"date"===e.type?e.text.today:e.text.now}},parser:{date:function(t,a){if(!t)return null;if(t=(""+t).trim().toLowerCase(),0===t.length)return null;var r,o,i,l=-1,u=-1,s=-1,d=-1,p=-1,c=n,f="time"===a.type,m=a.type.indexOf("time")<0,g=t.split(a.regExp.dateWords),h=t.split(a.regExp.dateNumbers);if(!m)for(c=e.inArray(a.text.am.toLowerCase(),g)>=0?!0:e.inArray(a.text.pm.toLowerCase(),g)>=0?!1:n,r=0;r<h.length;r++){var y=h[r];if(y.indexOf(":")>=0){if(0>u||0>l){var v=y.split(":");for(i=0;i<Math.min(2,v.length);i++)o=parseInt(v[i]),isNaN(o)&&(o=0),0===i?u=o%24:l=o%60}h.splice(r,1)}}if(!f){for(r=0;r<g.length;r++){var D=g[r];if(!(D.length<=0)){for(D=D.substring(0,Math.min(D.length,3)),o=0;o<a.text.months.length;o++){var b=a.text.months[o];if(b=b.substring(0,Math.min(D.length,Math.min(b.length,3))).toLowerCase(),b===D){d=o+1;break}}if(d>=0)break}}for(r=0;r<h.length;r++)if(o=parseInt(h[r]),!isNaN(o)&&o>59){p=o,h.splice(r,1);break}if(0>d)for(r=0;r<h.length;r++)if(i=r>1||a.monthFirst?r:1===r?0:1,o=parseInt(h[i]),!isNaN(o)&&o>=1&&12>=o){d=o,h.splice(i,1);break}for(r=0;r<h.length;r++)if(o=parseInt(h[r]),!isNaN(o)&&o>=1&&31>=o){s=o,h.splice(r,1);break}if(0>p)for(r=h.length-1;r>=0;r--)if(o=parseInt(h[r]),!isNaN(o)){99>o&&(o+=2e3),p=o,h.splice(r,1);break}}if(!m){if(0>u)for(r=0;r<h.length;r++)if(o=parseInt(h[r]),!isNaN(o)&&o>=0&&23>=o){u=o,h.splice(r,1);break}if(0>l)for(r=0;r<h.length;r++)if(o=parseInt(h[r]),!isNaN(o)&&o>=0&&59>=o){l=o,h.splice(r,1);break}}if(0>l&&0>u&&0>s&&0>d&&0>p)return null;0>l&&(l=0),0>u&&(u=0),0>s&&(s=1),0>d&&(d=1),0>p&&(p=(new Date).getFullYear()),c!==n&&(c?12===u&&(u=0):12>u&&(u+=12));var C=new Date(p,d-1,s,u,l);return(C.getMonth()!==d-1||C.getFullYear()!==p)&&(C=new Date(p,d,0,u,l)),isNaN(C.getTime())?null:C}},onChange:function(e,t){return!0},onShow:function(){},onVisible:function(){},onHide:function(){},onHidden:function(){},selector:{popup:".ui.popup",input:"input",activator:"input"},regExp:{dateWords:/[^A-Za-z\u00C0-\u024F]+/g,dateNumbers:/[^\d:]+/g},error:{popup:"UI Popup, a required component is not included in this page",method:"The method you called is not defined."},className:{calendar:"calendar",active:"active",popup:"ui popup",table:"ui celled center aligned unstackable table",prev:"prev link",next:"next link",prevIcon:"chevron left icon",nextIcon:"chevron right icon",link:"link",cell:"link",disabledCell:"disabled",activeCell:"active",rangeCell:"range",focusCell:"focus",todayCell:"today",today:"today link"},metadata:{date:"date",focusDate:"focusDate",startDate:"startDate",endDate:"endDate",mode:"mode"}}}(jQuery,window,document);
 
+/*
+ * MultiDatesPicker v1.6.4
+ * http://multidatespickr.sourceforge.net/
+ * 
+ * Copyright 2014, Luca Lauretta
+ * Dual licensed under the MIT or GPL version 2 licenses.
+ */
+(function( $ ){
+	$.extend($.ui, { multiDatesPicker: { version: "1.6.4" } });
+	
+	$.fn.multiDatesPicker = function(method) {
+		var mdp_arguments = arguments;
+		var ret = this;
+		var today_date = new Date();
+		var day_zero = new Date(0);
+		var mdp_events = {};
+		
+		function removeDate(date, type) {
+			if(!type) type = 'picked';
+			date = dateConvert.call(this, date);
+			for(var i = 0; i < this.multiDatesPicker.dates[type].length; i++)
+				if(!methods.compareDates(this.multiDatesPicker.dates[type][i], date))
+					return this.multiDatesPicker.dates[type].splice(i, 1).pop();
+		}
+		function removeIndex(index, type) {
+			if(!type) type = 'picked';
+			return this.multiDatesPicker.dates[type].splice(index, 1).pop();
+		}
+		function addDate(date, type, no_sort) {
+			if(!type) type = 'picked';
+			date = dateConvert.call(this, date);
+			
+			// @todo: use jQuery UI datepicker method instead
+			date.setHours(0);
+			date.setMinutes(0);
+			date.setSeconds(0);
+			date.setMilliseconds(0);
+			
+			if (methods.gotDate.call(this, date, type) === false) {
+				this.multiDatesPicker.dates[type].push(date);
+				if(!no_sort) this.multiDatesPicker.dates[type].sort(methods.compareDates);
+			} 
+		}
+		function sortDates(type) {
+			if(!type) type = 'picked';
+			this.multiDatesPicker.dates[type].sort(methods.compareDates);
+		}
+		function dateConvert(date, desired_type, date_format) {
+			if(!desired_type) desired_type = 'object';/*
+			if(!date_format && (typeof date == 'string')) {
+				date_format = $(this).datepicker('option', 'dateFormat');
+				if(!date_format) date_format = $.datepicker._defaults.dateFormat;
+			}
+			*/
+			return methods.dateConvert.call(this, date, desired_type, date_format);
+		}
+		
+		var methods = {
+			init : function( options ) {
+				var $this = $(this);
+				this.multiDatesPicker.changed = false;
+				
+				var mdp_events = {
+					beforeShow: function(input, inst) {
+						this.multiDatesPicker.changed = false;
+						if(this.multiDatesPicker.originalBeforeShow) 
+							this.multiDatesPicker.originalBeforeShow.call(this, input, inst);
+					},
+					onSelect : function(dateText, inst) {
+						var $this = $(this);
+						this.multiDatesPicker.changed = true;
+						
+						if (dateText) {
+							$this.multiDatesPicker('toggleDate', dateText);
+							this.multiDatesPicker.changed = true;
+							// @todo: this will be optimized when I'll move methods to the singleton.
+						}
+						
+						if (this.multiDatesPicker.mode == 'normal' && this.multiDatesPicker.pickableRange) {
+							if(this.multiDatesPicker.dates.picked.length > 0) {
+								var min_date = this.multiDatesPicker.dates.picked[0],
+									max_date = new Date(min_date.getTime());
+								
+								methods.sumDays(max_date, this.multiDatesPicker.pickableRange-1);
+									
+								// counts the number of disabled dates in the range
+								if(this.multiDatesPicker.adjustRangeToDisabled) {
+									var c_disabled, 
+										disabled = this.multiDatesPicker.dates.disabled.slice(0);
+									do {
+										c_disabled = 0;
+										for(var i = 0; i < disabled.length; i++) {
+											if(disabled[i].getTime() <= max_date.getTime()) {
+												if((min_date.getTime() <= disabled[i].getTime()) && (disabled[i].getTime() <= max_date.getTime()) ) {
+													c_disabled++;
+												}
+												disabled.splice(i, 1);
+												i--;
+											}
+										}
+										max_date.setDate(max_date.getDate() + c_disabled);
+									} while(c_disabled != 0);
+								}
+								
+								if(this.multiDatesPicker.maxDate && (max_date > this.multiDatesPicker.maxDate))
+									max_date = this.multiDatesPicker.maxDate;
+								
+								$this
+									.datepicker("option", "minDate", min_date)
+									.datepicker("option", "maxDate", max_date);
+							} else {
+								$this
+									.datepicker("option", "minDate", this.multiDatesPicker.minDate)
+									.datepicker("option", "maxDate", this.multiDatesPicker.maxDate);
+							}
+						}
+						
+						if(this.multiDatesPicker.originalOnSelect && dateText)
+							this.multiDatesPicker.originalOnSelect.call(this, dateText, inst);
+						
+					},
+					beforeShowDay : function(date) {
+						var $this = $(this),
+							gotThisDate = $this.multiDatesPicker('gotDate', date) !== false,
+							isDisabledCalendar = $this.datepicker('option', 'disabled'),
+							isDisabledDate = $this.multiDatesPicker('gotDate', date, 'disabled') !== false,
+							areAllSelected = this.multiDatesPicker.maxPicks <= this.multiDatesPicker.dates.picked.length;
+						
+						var bsdReturn = [true, '', null];
+						if(this.multiDatesPicker.originalBeforeShowDay)
+							bsdReturn = this.multiDatesPicker.originalBeforeShowDay.call(this, date);
+						
+						bsdReturn[1] = gotThisDate ? 'ui-state-highlight '+bsdReturn[1] : bsdReturn[1];
+						bsdReturn[0] = bsdReturn[0] && !(isDisabledCalendar || isDisabledDate || (areAllSelected && !bsdReturn[1]));
+						return bsdReturn;
+					}
+				};
+				
+				// value have to be extracted before datepicker is initiated
+				if($this.val()) var inputDates = $this.val()
+				
+				if(options) {
+					// value have to be extracted before datepicker is initiated
+					//if(options.altField) var inputDates = $(options.altField).val();
+					if(options.separator) this.multiDatesPicker.separator = options.separator;
+					if(!this.multiDatesPicker.separator) this.multiDatesPicker.separator = ', ';
+					
+					this.multiDatesPicker.originalBeforeShow = options.beforeShow;
+					this.multiDatesPicker.originalOnSelect = options.onSelect;
+					this.multiDatesPicker.originalBeforeShowDay = options.beforeShowDay;
+					this.multiDatesPicker.originalOnClose = options.onClose;
+					
+					// datepicker init
+					$this.datepicker(options);
+					
+					this.multiDatesPicker.minDate = $.datepicker._determineDate(this, options.minDate, null);
+					this.multiDatesPicker.maxDate = $.datepicker._determineDate(this, options.maxDate, null);
+					if(options.addDates) methods.addDates.call(this, options.addDates);
+					 
+					if(options.addDisabledDates)
+						methods.addDates.call(this, options.addDisabledDates, 'disabled');
+					
+					methods.setMode.call(this, options);
+				} else {
+					$this.datepicker();
+				}
+				$this.datepicker('option', mdp_events);
+				
+				// adds any dates found in the input or alt field
+				if(inputDates) $this.multiDatesPicker('value', inputDates);
+				
+				// generates the new string of added dates
+				var inputs_values = $this.multiDatesPicker('value');
+				
+				// fills the input field back with all the dates in the calendar
+				$this.val(inputs_values);
+				
+				// Fixes the altField filled with defaultDate by default
+				var altFieldOption = $this.datepicker('option', 'altField');
+				if (altFieldOption) $(altFieldOption).val(inputs_values);
+				
+				// Updates the calendar view
+				$this.datepicker('refresh');
+			},
+			compareDates : function(date1, date2) {
+				date1 = dateConvert.call(this, date1);
+				date2 = dateConvert.call(this, date2);
+				// return > 0 means date1 is later than date2 
+				// return == 0 means date1 is the same day as date2 
+				// return < 0 means date1 is earlier than date2 
+				var diff = date1.getFullYear() - date2.getFullYear();
+				if(!diff) {
+					diff = date1.getMonth() - date2.getMonth();
+					if(!diff) 
+						diff = date1.getDate() - date2.getDate();
+				}
+				return diff;
+			},
+			sumDays : function( date, n_days ) {
+				var origDateType = typeof date;
+				obj_date = dateConvert.call(this, date);
+				obj_date.setDate(obj_date.getDate() + n_days);
+				return dateConvert.call(this, obj_date, origDateType);
+			},
+			dateConvert : function( date, desired_format, dateFormat ) {
+				var from_format = typeof date;
+				var $this = $(this);
+				
+				if(from_format == desired_format) {
+					if(from_format == 'object') {
+						try {
+							date.getTime();
+						} catch (e) {
+							$.error('Received date is in a non supported format!');
+							return false;
+						}
+					}
+					return date;
+				}
+				
+				if(typeof date == 'undefined') date = new Date(0);
+				
+				if(desired_format != 'string' && desired_format != 'object' && desired_format != 'number')
+					$.error('Date format "'+ desired_format +'" not supported!');
+				
+				if(!dateFormat) {
+					// thanks to bibendus83 -> http://sourceforge.net/tracker/index.php?func=detail&aid=3213174&group_id=358205&atid=1495382
+					var dp_dateFormat = $this.datepicker('option', 'dateFormat');
+					if (dp_dateFormat) {
+						dateFormat = dp_dateFormat;
+					} else {
+						dateFormat = $.datepicker._defaults.dateFormat;
+					}
+				}
+				
+				// converts to object as a neutral format
+				switch(from_format) {
+					case 'object': break;
+					case 'string': date = $.datepicker.parseDate(dateFormat, date); break;
+					case 'number': date = new Date(date); break;
+					default: $.error('Conversion from "'+ desired_format +'" format not allowed on jQuery.multiDatesPicker');
+				}
+				// then converts to the desired format
+				switch(desired_format) {
+					case 'object': return date;
+					case 'string': return $.datepicker.formatDate(dateFormat, date);
+					case 'number': return date.getTime();
+					default: $.error('Conversion to "'+ desired_format +'" format not allowed on jQuery.multiDatesPicker');
+				}
+				return false;
+			},
+			gotDate : function( date, type ) {
+				if(!type) type = 'picked';
+				for(var i = 0; i < this.multiDatesPicker.dates[type].length; i++) {
+					if(methods.compareDates.call(this, this.multiDatesPicker.dates[type][i], date) === 0) {
+						return i;
+					}
+				}
+				return false;
+			},
+			value : function( value ) {
+				if(value && typeof value == 'string') {
+					methods.addDates.call(this, value.split(this.multiDatesPicker.separator));
+				} else {
+					var dates = methods.getDates.call(this, 'string');
+					return dates.length
+						? dates.join(this.multiDatesPicker.separator)
+						: "";
+				}
+			},
+			getDates : function( format, type ) {
+				if(!format) format = 'string';
+				if(!type) type = 'picked';
+				switch (format) {
+					case 'object':
+						return this.multiDatesPicker.dates[type];
+					case 'string':
+					case 'number':
+						var o_dates = new Array();
+						for(var i in this.multiDatesPicker.dates[type])
+							o_dates.push(
+								dateConvert.call(
+									this, 
+									this.multiDatesPicker.dates[type][i], 
+									format
+								)
+							);
+						return o_dates;
+					
+					default: $.error('Format "'+format+'" not supported!');
+				}
+			},
+			addDates : function( dates, type ) {
+				if(dates.length > 0) {
+					if(!type) type = 'picked';
+					switch(typeof dates) {
+						case 'object':
+						case 'array':
+							if(dates.length) {
+								for(var i = 0; i < dates.length; i++)
+									addDate.call(this, dates[i], type, true);
+								sortDates.call(this, type);
+								break;
+							} // else does the same as 'string'
+						case 'string':
+						case 'number':
+							addDate.call(this, dates, type);
+							break;
+						default: 
+							$.error('Date format "'+ typeof dates +'" not allowed on jQuery.multiDatesPicker');
+					}
+					//$(this).datepicker('refresh');
+				} else {
+					$.error('Empty array of dates received.');
+				}
+			},
+			removeDates : function( dates, type ) {
+				if(!type) type = 'picked';
+				var removed = [];
+				if (Object.prototype.toString.call(dates) === '[object Array]') {
+					for(var i in dates.sort(function(a,b){return b-a})) {
+						removed.push(removeDate.call(this, dates[i], type));
+					}
+				} else {
+					removed.push(removeDate.call(this, dates, type));
+				}
+				return removed;
+			},
+			removeIndexes : function( indexes, type ) {
+				if(!type) type = 'picked';
+				var removed = [];
+				if (Object.prototype.toString.call(indexes) === '[object Array]') {
+					for(var i in indexes.sort(function(a,b){return b-a})) {
+						removed.push(removeIndex.call(this, indexes[i], type));
+					}
+				} else {
+					removed.push(removeIndex.call(this, indexes, type));
+				}
+				return removed;
+			},
+			resetDates : function ( type ) {
+				if(!type) type = 'picked';
+				this.multiDatesPicker.dates[type] = [];
+			},
+			toggleDate : function( date, type ) {
+				if(!type) type = 'picked';
+				
+				switch(this.multiDatesPicker.mode) {
+					case 'daysRange':
+						this.multiDatesPicker.dates[type] = []; // deletes all picked/disabled dates
+						var end = this.multiDatesPicker.autoselectRange[1];
+						var begin = this.multiDatesPicker.autoselectRange[0];
+						if(end < begin) { // switch
+							end = this.multiDatesPicker.autoselectRange[0];
+							begin = this.multiDatesPicker.autoselectRange[1];
+						}
+						for(var i = begin; i < end; i++) 
+							methods.addDates.call(this, methods.sumDays.call(this,date, i), type);
+						break;
+					default:
+						if(methods.gotDate.call(this, date) === false) // adds dates
+							methods.addDates.call(this, date, type);
+						else // removes dates
+							methods.removeDates.call(this, date, type);
+						break;
+				}
+			}, 
+			setMode : function( options ) {
+				var $this = $(this);
+				if(options.mode) this.multiDatesPicker.mode = options.mode;
+				
+				switch(this.multiDatesPicker.mode) {
+					case 'normal':
+						for(option in options)
+							switch(option) {
+								case 'maxPicks':
+								case 'minPicks':
+								case 'pickableRange':
+								case 'adjustRangeToDisabled':
+									this.multiDatesPicker[option] = options[option];
+									break;
+								//default: $.error('Option ' + option + ' ignored for mode "'.options.mode.'".');
+							}
+					break;
+					case 'daysRange':
+					case 'weeksRange':
+						var mandatory = 1;
+						for(option in options)
+							switch(option) {
+								case 'autoselectRange':
+									mandatory--;
+								case 'pickableRange':
+								case 'adjustRangeToDisabled':
+									this.multiDatesPicker[option] = options[option];
+									break;
+								//default: $.error('Option ' + option + ' does not exist for setMode on jQuery.multiDatesPicker');
+							}
+						if(mandatory > 0) $.error('Some mandatory options not specified!');
+					break;
+				}
+				
+				/*
+				if(options.pickableRange) {
+					$this.datepicker("option", "maxDate", options.pickableRange);
+					$this.datepicker("option", "minDate", this.multiDatesPicker.minDate);
+				}
+				*/
+				
+				if(mdp_events.onSelect)
+					mdp_events.onSelect();
+			},
+			destroy: function(){
+				this.multiDatesPicker = null;
+				$(this).datepicker('destroy');
+			}
+		};
+		
+		this.each(function() {
+			var $this = $(this);
+			if (!this.multiDatesPicker) {
+				this.multiDatesPicker = {
+					dates: {
+						picked: [],
+						disabled: []
+					},
+					mode: 'normal',
+					adjustRangeToDisabled: true
+				};
+			}
+			
+			if(methods[method]) {
+				var exec_result = methods[method].apply(this, Array.prototype.slice.call(mdp_arguments, 1));
+				switch(method) {
+					case 'removeDates':
+					case 'removeIndexes':
+					case 'resetDates':
+					case 'toggleDate':
+					case 'addDates':
+						var altField = $this.datepicker('option', 'altField');
+						// @todo: should use altFormat for altField
+						var dates_string = methods.value.call(this);
+						if (altField !== undefined && altField != "") {
+							$(altField).val(dates_string);
+						}
+						$this.val(dates_string);
+						
+						$.datepicker._refreshDatepicker(this);
+				}
+				switch(method) {
+					case 'removeDates':
+					case 'getDates':
+					case 'gotDate':
+					case 'sumDays':
+					case 'compareDates':
+					case 'dateConvert':
+					case 'value':
+						ret = exec_result;
+				}
+				return exec_result;
+			} else if( typeof method === 'object' || ! method ) {
+				return methods.init.apply(this, mdp_arguments);
+			} else {
+				$.error('Method ' +  method + ' does not exist on jQuery.multiDatesPicker');
+			}
+			return false;
+		}); 
+		
+		return ret;
+	};
+
+	var PROP_NAME = 'multiDatesPicker';
+	var dpuuid = new Date().getTime();
+	var instActive;
+
+	$.multiDatesPicker = {version: false};
+	//$.multiDatesPicker = new MultiDatesPicker(); // singleton instance
+	$.multiDatesPicker.initialized = false;
+	$.multiDatesPicker.uuid = new Date().getTime();
+	$.multiDatesPicker.version = $.ui.multiDatesPicker.version;
+	
+	// allows MDP not to hide everytime a date is picked
+	$.multiDatesPicker._hideDatepicker = $.datepicker._hideDatepicker;
+	$.datepicker._hideDatepicker = function(){
+		var target = this._curInst.input[0];
+		var mdp = target.multiDatesPicker;
+		if(!mdp || (this._curInst.inline === false && !mdp.changed)) {
+			return $.multiDatesPicker._hideDatepicker.apply(this, arguments);
+		} else {
+			mdp.changed = false;
+			$.datepicker._refreshDatepicker(target);
+			return;
+		}
+	};
+
+	// Workaround for #4055
+	// Add another global to avoid noConflict issues with inline event handlers
+	window['DP_jQuery_' + dpuuid] = $;
+})( jQuery );
 $(function() {
 
     // Javascript of the sous-chef application.

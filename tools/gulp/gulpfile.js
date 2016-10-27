@@ -56,6 +56,7 @@ gulp.task('scripts', function() {
     return gulp.src([
         SRC_JS + '/vendor/jquery/**/*.js',
         SRC_JS + '/vendor/calendar/**/*.js',
+        SRC_JS + '/vendor/multidatespicker/*.js',
         SRC_JS + '/global.js',
         SRC_JS + '/delivery.js',
         SRC_JS + '/member.js',

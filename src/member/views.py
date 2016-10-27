@@ -1128,6 +1128,9 @@ class ClientUpdateDietaryRestriction(ClientUpdateInformation):
             form['meals_schedule']
         )
 
+        # Save episodic prefs form client
+        client.set_meals_prefs(form)
+
         # Save restricted items
         client.restrictions.clear()
         for restricted_item in form['restrictions']:
