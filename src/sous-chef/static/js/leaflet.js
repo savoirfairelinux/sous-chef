@@ -6082,8 +6082,6 @@ function main_map_init (map, options) {
 
         // simplify waypoint into a list of member id in the map order
         $.each(wp, function(key,value) {
-            console.log(value);
-            console.log(value.options);
             if (typeof value.options.id !== "undefined") {
                 data.members.push({
                     "id" : value.options.id

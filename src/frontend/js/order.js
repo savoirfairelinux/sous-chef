@@ -33,7 +33,8 @@ $(function() {
     $('#delivery_dates').multiDatesPicker({
         dateFormat: "yy-mm-dd",
         separator: "|",
-        numberOfMonths: 3,
+        minDate: 0,
+        numberOfMonths: 2,
         altField: '#id_delivery_dates'
     });
     $('#id_delivery_dates').hide();
@@ -41,7 +42,6 @@ $(function() {
     $('#id_client').change(function() {
         $.get('/member/client/' + $(this).val() + '/meals/preferences', function(data) {
             if (!$.isEmptyObject(data)) {
-                console.log(data);
                 $('#id_main_dish_default_quantity').val(data['maindish_q']);
                 $('#id_size_default').dropdown('set selected', data['maindish_s']);
                 $('#id_dessert_default_quantity').val(data['dst_q']);

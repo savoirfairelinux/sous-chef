@@ -846,7 +846,6 @@ $(function() {
                          success: function (xhr, ajaxOptions, thrownError) {
                              if ( $(xhr).find('.errorlist').length > 0 ) {
                                  $('.ui.modal.status').html(xhr);
-                                 console.log('show modal..')
                                  $('.ui.modal.status').modal("show");
                              } else {
                                  location.reload();
@@ -946,13 +945,11 @@ $(function() {
     var deliveryTypeSelect = $('#id_dietary_restriction-delivery_type, #id_delivery_type');
     deliveryTypeSelect.change(function () {
         if ($(this).val() == 'E') {
-            console.log('episodic');
             $('#form-meals-schedule').hide();
             hideUiAccordionDays();
             $('.ui.accordion.meals.default').show();
         }
         else {
-            console.log('ongoing');
             $('#form-meals-schedule').show();
             showUiAccordionSelectedDays();
             $('.ui.accordion.meals.default').hide();
@@ -1006,7 +1003,8 @@ $(function() {
     $('#delivery_dates').multiDatesPicker({
         dateFormat: "yy-mm-dd",
         separator: "|",
-        numberOfMonths: 3,
+        minDate: 0,
+        numberOfMonths: 2,
         altField: '#id_delivery_dates'
     });
     $('#id_delivery_dates').hide();
@@ -1014,7 +1012,6 @@ $(function() {
     $('#id_client').change(function() {
         $.get('/member/client/' + $(this).val() + '/meals/preferences', function(data) {
             if (!$.isEmptyObject(data)) {
-                console.log(data);
                 $('#id_main_dish_default_quantity').val(data['maindish_q']);
                 $('#id_size_default').dropdown('set selected', data['maindish_s']);
                 $('#id_dessert_default_quantity').val(data['dst_q']);

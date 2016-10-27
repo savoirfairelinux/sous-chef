@@ -722,7 +722,7 @@ class Client(models.Model):
                 "pudding_q": data['pudding_default_quantity'],
                 "compot_q": data['compote_default_quantity'],
             }
-            meals_prefs_opt = Client_option.objects.update_or_create(
+            Client_option.objects.update_or_create(
                 client=self, option=option,
                 defaults={
                     'value': json.dumps(prefs),

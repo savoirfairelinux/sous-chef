@@ -60,7 +60,6 @@ $(function() {
                          success: function (xhr, ajaxOptions, thrownError) {
                              if ( $(xhr).find('.errorlist').length > 0 ) {
                                  $('.ui.modal.status').html(xhr);
-                                 console.log('show modal..')
                                  $('.ui.modal.status').modal("show");
                              } else {
                                  location.reload();
@@ -160,13 +159,11 @@ $(function() {
     var deliveryTypeSelect = $('#id_dietary_restriction-delivery_type, #id_delivery_type');
     deliveryTypeSelect.change(function () {
         if ($(this).val() == 'E') {
-            console.log('episodic');
             $('#form-meals-schedule').hide();
             hideUiAccordionDays();
             $('.ui.accordion.meals.default').show();
         }
         else {
-            console.log('ongoing');
             $('#form-meals-schedule').show();
             showUiAccordionSelectedDays();
             $('.ui.accordion.meals.default').hide();
