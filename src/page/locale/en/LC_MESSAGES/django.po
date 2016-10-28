@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-14 23:27+0000\n"
+"POT-Creation-Date: 2016-10-27 20:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,53 +29,39 @@ msgstr ""
 msgid "Homepage"
 msgstr ""
 
-#: page/templates/pages/home.html:12
-msgid "Dashboard"
-msgstr ""
-
-#: page/templates/pages/home.html:14
-msgid "Overview"
-msgstr ""
-
-#: page/templates/pages/home.html:28
+#: page/templates/pages/home.html:20
 msgid "Clients"
 msgstr ""
 
-#: page/templates/pages/home.html:36
+#: page/templates/pages/home.html:28
 msgid "Active clients"
 msgstr ""
 
-#: page/templates/pages/home.html:41
+#: page/templates/pages/home.html:33
 msgid "clients are"
 msgstr ""
 
-#: page/templates/pages/home.html:41
+#: page/templates/pages/home.html:33
 msgid "pending"
 msgstr ""
 
-#: page/templates/pages/home.html:48 page/templates/pages/home.html:56
+#: page/templates/pages/home.html:40
+msgid "Delivered this month"
+msgstr ""
+
+#: page/templates/pages/home.html:48
 msgid "Orders"
 msgstr ""
 
-#: page/templates/pages/home.html:64
-#, python-format
-msgid "95%% delivered"
-msgstr ""
-
-#: page/templates/pages/home.html:70
-#, python-format
-msgid "5%% not charged"
-msgstr ""
-
-#: page/templates/pages/home.html:76 page/templates/pages/home.html:96
+#: page/templates/pages/home.html:53 page/templates/pages/home.html:73
 msgid "Footer"
 msgstr ""
 
-#: page/templates/pages/home.html:83
+#: page/templates/pages/home.html:60
 msgid "Any Header"
 msgstr ""
 
-#: page/templates/pages/home.html:91
+#: page/templates/pages/home.html:68
 msgid "Downloads"
 msgstr ""
 

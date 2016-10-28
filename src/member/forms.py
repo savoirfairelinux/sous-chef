@@ -394,7 +394,7 @@ class ClientEmergencyContactInformation(MemberForm):
     relationship = forms.CharField(
         label=_("Relationship"),
         widget=forms.TextInput(
-            attrs={'placeholder': _('Parents, friends, ...')}
+            attrs={'placeholder': _('Parent, friend, ...')}
         ),
         required=False
     )

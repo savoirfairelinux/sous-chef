@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-14 23:27+0000\n"
+"POT-Creation-Date: 2016-10-27 20:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Mathieu Perreault <mathieu.perreault@gmail.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -19,138 +19,144 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: order/models.py:26
+#: order/models.py:24
 msgid "Ordered"
 msgstr "Prête"
 
-#: order/models.py:27
+#: order/models.py:25
 msgid "Delivered"
 msgstr "Livrée"
 
-#: order/models.py:28
+#: order/models.py:26
 msgid "No Charge"
 msgstr "Non Facturée"
 
-#: order/models.py:29
+#: order/models.py:27
+msgid "Cancelled"
+msgstr ""
+
+#: order/models.py:28
 msgid "Billed"
 msgstr "Facturée"
 
-#: order/models.py:30
+#: order/models.py:29
 msgid "Paid"
 msgstr "Payée"
 
-#: order/models.py:36
+#: order/models.py:35
 msgid "Serving size"
 msgstr "Taille du repas"
 
-#: order/models.py:37
+#: order/models.py:36
 msgid "Regular"
 msgstr "Standard"
 
-#: order/models.py:38
+#: order/models.py:37
 msgid "Large"
 msgstr "Grand"
 
-#: order/models.py:42
-msgid "Order item type"
-msgstr "Type d'éléments de commande"
-
-#: order/models.py:44
-msgid "BILLABLE meal component (main dish, vegetable, side dish, seasonal)"
+#: order/models.py:45
+#, fuzzy
+#| msgid "BILLABLE meal component (main dish, vegetable, side dish, seasonal)"
+msgid "Meal component (main dish, vegetable, side dish, seasonal)"
 msgstr "FACTURABLE - Composant de repas (principal, légumes, à-côtés...)"
 
 #: order/models.py:46
-msgid "BILLABLE delivery (general store item, ...)"
+#, fuzzy
+#| msgid "BILLABLE delivery (general store item, ...)"
+msgid "Delivery (general store item, invitation, ...)"
 msgstr "FACTURABLE - Livraison (par ex. item général)"
 
-#: order/models.py:48
-msgid "NON BILLABLE delivery (ex. invitation card, ...)"
-msgstr "NON FACTURABLE - Livraison (par ex. carte d'invitation)"
-
-#: order/models.py:50
-msgid "NON BILLABLE pickup (payment)"
+#: order/models.py:47
+#, fuzzy
+#| msgid "NON BILLABLE pickup (payment)"
+msgid "Pickup (payment)"
 msgstr "NON FACTURABLE - Ramassage (par ex. paiement)"
 
-#: order/models.py:96
+#: order/models.py:48
+msgid "Visit"
+msgstr ""
+
+#: order/models.py:173
 msgid "orders"
 msgstr "commandes"
 
-#: order/models.py:100
+#: order/models.py:177
 msgid "creation date"
 msgstr "date de création"
 
-#: order/models.py:104
+#: order/models.py:182
 msgid "delivery date"
 msgstr "date de livraison"
 
-#: order/models.py:110
+#: order/models.py:188
 msgid "order status"
 msgstr "statut de la commande"
 
-#: order/models.py:115
+#: order/models.py:194
 msgid "client"
 msgstr "client"
 
-#: order/models.py:640
+#: order/models.py:842
 msgid "Search by name"
 msgstr "Chercher par nom"
 
-#: order/models.py:680
+#: order/models.py:904
 msgid "order items"
 msgstr "éléments de la commande"
 
-#: order/models.py:684
+#: order/models.py:908
 msgid "order"
 msgstr "commande"
 
-#: order/models.py:691
+#: order/models.py:915
 msgid "price"
 msgstr "prix"
 
-#: order/models.py:695
+#: order/models.py:919
 msgid "billable flag"
 msgstr "facturable"
 
-#: order/models.py:699
+#: order/models.py:923
 msgid "size"
 msgstr "taille"
 
-#: order/models.py:706
+#: order/models.py:930
 msgid "order item type"
 msgstr "type d'éléments de commande"
 
-#: order/models.py:713
+#: order/models.py:937
 msgid "remark"
 msgstr "remarque"
 
-#: order/models.py:717
+#: order/models.py:943
 msgid "total quantity"
 msgstr "quantité"
 
-#: order/models.py:722
+#: order/models.py:949
 msgid "free quantity"
 msgstr "quantité gratuite"
 
-#: order/models.py:729
+#: order/models.py:957
 msgid "component group"
 msgstr "groupe de composant"
 
-#: order/templates/_form.html:5 order/templates/_form.html:61
+#: order/templates/_form.html:5 order/templates/_form.html:49
 #: order/templates/update.html:18
 msgid "Required information missing"
 msgstr "Information requise manquante"
 
-#: order/templates/_form.html:6 order/templates/_form.html:62
+#: order/templates/_form.html:6 order/templates/_form.html:50
 #: order/templates/update.html:19
 msgid ""
 "Please review the form to make sure that all required fields are filled."
 msgstr "S'il vous plaît vous assurer que les champs requis sont remplis."
 
-#: order/templates/_form.html:17
+#: order/templates/_form.html:18
 msgid "Select a client"
 msgstr "Sélectionnez un client"
 
-#: order/templates/_form.html:68
+#: order/templates/_form.html:56
 #, fuzzy
 #| msgid "order items"
 msgid "Order item"
@@ -186,7 +192,7 @@ msgstr "Commandes"
 msgid "New Order"
 msgstr "Nouvelle commande"
 
-#: order/templates/create.html:18
+#: order/templates/create.html:17
 #, fuzzy
 #| msgid "^create/$"
 msgid "Create"
@@ -305,8 +311,10 @@ msgid "Total Quantity"
 msgstr "Quantité totale"
 
 #: order/templates/view.html:47
-msgid "Free Quantity"
-msgstr "Quantité gratuite"
+#, fuzzy
+#| msgid "Billed"
+msgid "Billable"
+msgstr "Facturée"
 
 #: order/templates/view.html:63
 msgid "Total"
@@ -339,3 +347,12 @@ msgstr "^update/(?P<pk>\\d+)/status$"
 #: order/urls.py:21
 msgid "^delete/(?P<pk>\\d+)/$"
 msgstr "^delete/(?P<pk>\\d+)/$"
+
+#~ msgid "Order item type"
+#~ msgstr "Type d'éléments de commande"
+
+#~ msgid "NON BILLABLE delivery (ex. invitation card, ...)"
+#~ msgstr "NON FACTURABLE - Livraison (par ex. carte d'invitation)"
+
+#~ msgid "Free Quantity"
+#~ msgstr "Quantité gratuite"
