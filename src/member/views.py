@@ -118,6 +118,7 @@ class ClientWizard(NamedUrlSessionWizardView):
             'same_as_client': True,
             'facturation': '',
             'billing_payment_type': '',
+            'emergency_contact_relationship': '',
         }
         return initial
 
@@ -153,6 +154,8 @@ class ClientWizard(NamedUrlSessionWizardView):
             'payment_information'].cleaned_data
         dietary_restriction = self.form_dict[
             'dietary_restriction'].cleaned_data
+        emergency_information = self.form_dict[
+            'emergency_contact'].cleaned_data
 
         member, created = Member.objects.update_or_create(
             id=id,
@@ -207,6 +210,8 @@ class ClientWizard(NamedUrlSessionWizardView):
                 'meal_default_week': self.save_json(dietary_restriction),
                 'route': address_information.get('route'),
                 'delivery_note': address_information.get('delivery_note'),
+                'emergency_contact_relationship':
+                    emergency_information.get('relationship'),
             }
         )
 
@@ -1217,6 +1222,8 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
                 client.emergency_contact.member_contact.first().type,
             'contact_value':
                 client.emergency_contact.member_contact.first().value,
+            'relationship':
+                client.emergency_contact_relationship
         })
         return initial
 
@@ -1250,6 +1257,9 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
         client_emergency_contact.save()
 
         client.emergency_contact = emergency
+        client.emergency_contact_relationship = emergency_contact.get(
+            "relationship"
+        )
         client.save()
 
 

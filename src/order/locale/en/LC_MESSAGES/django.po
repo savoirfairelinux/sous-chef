@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-14 23:27+0000\n"
+"POT-Creation-Date: 2016-10-27 20:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,138 +17,138 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: order/models.py:26
+#: order/models.py:24
 msgid "Ordered"
 msgstr ""
 
-#: order/models.py:27
+#: order/models.py:25
 msgid "Delivered"
 msgstr ""
 
-#: order/models.py:28
+#: order/models.py:26
 msgid "No Charge"
 msgstr ""
 
-#: order/models.py:29
+#: order/models.py:27
+msgid "Cancelled"
+msgstr ""
+
+#: order/models.py:28
 msgid "Billed"
 msgstr ""
 
-#: order/models.py:30
+#: order/models.py:29
 msgid "Paid"
 msgstr ""
 
-#: order/models.py:36
+#: order/models.py:35
 msgid "Serving size"
 msgstr ""
 
-#: order/models.py:37
+#: order/models.py:36
 msgid "Regular"
 msgstr ""
 
-#: order/models.py:38
+#: order/models.py:37
 msgid "Large"
 msgstr ""
 
-#: order/models.py:42
-msgid "Order item type"
-msgstr ""
-
-#: order/models.py:44
-msgid "BILLABLE meal component (main dish, vegetable, side dish, seasonal)"
+#: order/models.py:45
+msgid "Meal component (main dish, vegetable, side dish, seasonal)"
 msgstr ""
 
 #: order/models.py:46
-msgid "BILLABLE delivery (general store item, ...)"
+msgid "Delivery (general store item, invitation, ...)"
+msgstr ""
+
+#: order/models.py:47
+msgid "Pickup (payment)"
 msgstr ""
 
 #: order/models.py:48
-msgid "NON BILLABLE delivery (ex. invitation card, ...)"
+msgid "Visit"
 msgstr ""
 
-#: order/models.py:50
-msgid "NON BILLABLE pickup (payment)"
-msgstr ""
-
-#: order/models.py:96
+#: order/models.py:173
 msgid "orders"
 msgstr ""
 
-#: order/models.py:100
+#: order/models.py:177
 msgid "creation date"
 msgstr ""
 
-#: order/models.py:104
+#: order/models.py:182
 msgid "delivery date"
 msgstr ""
 
-#: order/models.py:110
+#: order/models.py:188
 msgid "order status"
 msgstr ""
 
-#: order/models.py:115
+#: order/models.py:194
 msgid "client"
 msgstr ""
 
-#: order/models.py:640
+#: order/models.py:842
 msgid "Search by name"
 msgstr ""
 
-#: order/models.py:680
+#: order/models.py:904
 msgid "order items"
 msgstr ""
 
-#: order/models.py:684
+#: order/models.py:908
 msgid "order"
 msgstr ""
 
-#: order/models.py:691
+#: order/models.py:915
 msgid "price"
 msgstr ""
 
-#: order/models.py:695
+#: order/models.py:919
 msgid "billable flag"
 msgstr ""
 
-#: order/models.py:699
+#: order/models.py:923
 msgid "size"
 msgstr ""
 
-#: order/models.py:706
+#: order/models.py:930
 msgid "order item type"
 msgstr ""
 
-#: order/models.py:713
+#: order/models.py:937
 msgid "remark"
 msgstr ""
 
-#: order/models.py:717
+#: order/models.py:943
 msgid "total quantity"
 msgstr ""
 
-#: order/models.py:722
+#: order/models.py:949
 msgid "free quantity"
 msgstr ""
 
-#: order/models.py:729
+#: order/models.py:957
 msgid "component group"
 msgstr ""
 
-#: order/templates/_form.html:5 order/templates/_form.html:61
+#: order/templates/_form.html:5 order/templates/_form.html:49
 #: order/templates/update.html:18
 msgid "Required information missing"
 msgstr ""
 
-#: order/templates/_form.html:6 order/templates/_form.html:62
+#: order/templates/_form.html:6 order/templates/_form.html:50
 #: order/templates/update.html:19
 msgid ""
 "Please review the form to make sure that all required fields are filled."
 msgstr ""
 
-#: order/templates/_form.html:17
+#: order/templates/_form.html:18
 msgid "Select a client"
 msgstr ""
 
-#: order/templates/_form.html:68
+#: order/templates/_form.html:56
 msgid "Order item"
 msgstr ""
 
@@ -178,7 +178,7 @@ msgstr ""
 msgid "New Order"
 msgstr ""
 
-#: order/templates/create.html:18
+#: order/templates/create.html:17
 msgid "Create"
 msgstr ""
 
@@ -283,7 +283,7 @@ msgid "Total Quantity"
 msgstr ""
 
 #: order/templates/view.html:47
-msgid "Free Quantity"
+msgid "Billable"
 msgstr ""
 
 #: order/templates/view.html:63

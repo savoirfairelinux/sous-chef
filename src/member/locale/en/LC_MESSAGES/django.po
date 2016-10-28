@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-14 23:27+0000\n"
+"POT-Creation-Date: 2016-10-27 20:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,10 +18,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: member/forms.py:18 member/forms.py:235 member/forms.py:237
-#: member/templates/client/view/information.html:25
-#: member/templates/client/view/information.html:53
-#: member/templates/client/view/payment.html:23
-#: member/templates/client/view/referent.html:26
+#: member/templates/client/view/information.html:30
+#: member/templates/client/view/information.html:60
+#: member/templates/client/view/payment.html:28
+#: member/templates/client/view/referent.html:27
 msgid "First Name"
 msgstr ""
 
@@ -30,10 +30,10 @@ msgid "First name"
 msgstr ""
 
 #: member/forms.py:24 member/forms.py:244 member/forms.py:246
-#: member/templates/client/view/information.html:26
-#: member/templates/client/view/information.html:54
-#: member/templates/client/view/payment.html:24
-#: member/templates/client/view/referent.html:27
+#: member/templates/client/view/information.html:31
+#: member/templates/client/view/information.html:61
+#: member/templates/client/view/payment.html:31
+#: member/templates/client/view/referent.html:28
 msgid "Last Name"
 msgstr ""
 
@@ -45,11 +45,11 @@ msgstr ""
 msgid "Preferred language"
 msgstr ""
 
-#: member/forms.py:40 member/templates/client/view/information.html:30
+#: member/forms.py:40 member/templates/client/view/information.html:35
 msgid "Birthday"
 msgstr ""
 
-#: member/forms.py:46
+#: member/forms.py:46 member/forms.py:254
 msgid "Email"
 msgstr ""
 
@@ -57,7 +57,7 @@ msgstr ""
 msgid "Home phone"
 msgstr ""
 
-#: member/forms.py:58
+#: member/forms.py:58 member/forms.py:266
 msgid "Cellular"
 msgstr ""
 
@@ -70,8 +70,8 @@ msgstr ""
 msgid "Your message here ..."
 msgstr ""
 
-#: member/forms.py:75 member/forms.py:77 member/forms.py:328
-#: member/forms.py:329
+#: member/forms.py:75 member/forms.py:77 member/forms.py:346
+#: member/forms.py:347
 msgid "Apt #"
 msgstr ""
 
@@ -91,7 +91,7 @@ msgstr ""
 msgid "Montreal"
 msgstr ""
 
-#: member/forms.py:103 member/forms.py:339
+#: member/forms.py:103 member/forms.py:357
 msgid "Postal Code"
 msgstr ""
 
@@ -116,8 +116,8 @@ msgstr ""
 msgid "Route"
 msgstr ""
 
-#: member/forms.py:139 member/models.py:455
-#: member/templates/client/view/information.html:35
+#: member/forms.py:139 member/models.py:471
+#: member/templates/client/view/information.html:40
 msgid "Delivery Note"
 msgstr ""
 
@@ -125,7 +125,7 @@ msgstr ""
 msgid "Delivery Note here ..."
 msgstr ""
 
-#: member/forms.py:170 member/models.py:349
+#: member/forms.py:170 member/models.py:365
 msgid "Active"
 msgstr ""
 
@@ -141,11 +141,11 @@ msgstr ""
 msgid "Schedule"
 msgstr ""
 
-#: member/forms.py:191 member/templates/client/view/allergies.html:24
+#: member/forms.py:191 member/templates/client/view/allergies.html:32
 msgid "Restrictions"
 msgstr ""
 
-#: member/forms.py:198 member/models.py:58
+#: member/forms.py:198 member/models.py:62
 msgid "Preparation"
 msgstr ""
 
@@ -161,373 +161,389 @@ msgstr ""
 msgid "Member"
 msgstr ""
 
-#: member/forms.py:264
+#: member/forms.py:260
+msgid "Work phone"
+msgstr ""
+
+#: member/forms.py:282
 msgid "This field is required unless you add a new member."
 msgstr ""
 
-#: member/forms.py:267
+#: member/forms.py:285
 msgid "This field is required unless you chose an existing member."
 msgstr ""
 
-#: member/forms.py:277
+#: member/forms.py:295
 msgid "Not a valid member, please chose an existing member."
 msgstr ""
 
-#: member/forms.py:286 member/models.py:871
+#: member/forms.py:304 member/models.py:881
 msgid "Work information"
 msgstr ""
 
-#: member/forms.py:288
+#: member/forms.py:306
 msgid "Hotel-Dieu, St-Anne Hospital, ..."
 msgstr ""
 
-#: member/forms.py:293 member/templates/client/view/referent.html:30
+#: member/forms.py:311 member/templates/client/view/referent.html:31
 msgid "Referral Reason"
 msgstr ""
 
-#: member/forms.py:298 member/templates/client/view/referent.html:29
+#: member/forms.py:316 member/templates/client/view/referent.html:30
 msgid "Referral Date"
 msgstr ""
 
-#: member/forms.py:306
+#: member/forms.py:324
 msgid "Billing Type"
 msgstr ""
 
-#: member/forms.py:312
+#: member/forms.py:330
 msgid "Same As Client"
 msgstr ""
 
-#: member/forms.py:314
+#: member/forms.py:332
 msgid ""
 "If checked, the personal information             of the client will be used "
 "as billing information."
 msgstr ""
 
-#: member/forms.py:320 member/models.py:371
+#: member/forms.py:338 member/models.py:387
 msgid "Payment Type"
 msgstr ""
 
-#: member/forms.py:325
+#: member/forms.py:343
 msgid "Street Number"
 msgstr ""
 
-#: member/forms.py:333
+#: member/forms.py:351
 msgid "Floor"
 msgstr ""
 
-#: member/forms.py:335
+#: member/forms.py:353
 msgid "Street Name"
 msgstr ""
 
-#: member/forms.py:337
+#: member/forms.py:355
 msgid "City Name"
 msgstr ""
 
-#: member/forms.py:352
+#: member/forms.py:370
 msgid ""
 "This member has not a valid address, please add a valid address to this "
 "member, so it can be used for the billing."
 msgstr ""
 
-#: member/forms.py:357
+#: member/forms.py:375
 msgid "This field is required"
 msgstr ""
 
-#: member/forms.py:369
+#: member/forms.py:387
 msgid "Contact Type"
 msgstr ""
 
-#: member/forms.py:374
+#: member/forms.py:392
 msgid "Contact"
 msgstr ""
 
-#: member/models.py:22
+#: member/forms.py:395 member/templates/client/view/information.html:62
+msgid "Relationship"
+msgstr ""
+
+#: member/forms.py:397
+msgid "Parents, friends, ..."
+msgstr ""
+
+#: member/models.py:25
 msgid "Female"
 msgstr ""
 
-#: member/models.py:23
+#: member/models.py:26
 msgid "Male"
 msgstr ""
 
-#: member/models.py:34
+#: member/models.py:27
+msgid "Other"
+msgstr ""
+
+#: member/models.py:38
 msgid "Default"
 msgstr ""
 
-#: member/models.py:35
+#: member/models.py:39
 msgid "Low income"
 msgstr ""
 
-#: member/models.py:36
+#: member/models.py:40
 msgid "Solidary"
 msgstr ""
 
-#: member/models.py:43
+#: member/models.py:47
 msgid "Check"
 msgstr ""
 
-#: member/models.py:44
+#: member/models.py:48
 msgid "Cash"
 msgstr ""
 
-#: member/models.py:45
+#: member/models.py:49
 msgid "Debit card"
 msgstr ""
 
-#: member/models.py:46
+#: member/models.py:50
 msgid "Credit card"
 msgstr ""
 
-#: member/models.py:47
+#: member/models.py:51
 msgid "EFT"
 msgstr ""
 
-#: member/models.py:51
+#: member/models.py:55
 msgid "Ongoing"
 msgstr ""
 
-#: member/models.py:52
+#: member/models.py:56
 msgid "Episodic"
 msgstr ""
 
-#: member/models.py:56
+#: member/models.py:60
 msgid "Main dish size"
 msgstr ""
 
-#: member/models.py:57
+#: member/models.py:61
 msgid "Dish"
 msgstr ""
 
-#: member/models.py:59
+#: member/models.py:63
 msgid "Other order item"
 msgstr ""
 
-#: member/models.py:63
+#: member/models.py:69
 msgid "Monday"
 msgstr ""
 
-#: member/models.py:64
+#: member/models.py:70
 msgid "Tuesday"
 msgstr ""
 
-#: member/models.py:65
+#: member/models.py:71
 msgid "Wednesday"
 msgstr ""
 
-#: member/models.py:66
+#: member/models.py:72
 msgid "Thursday"
 msgstr ""
 
-#: member/models.py:67
+#: member/models.py:73
 msgid "Friday"
 msgstr ""
 
-#: member/models.py:68
+#: member/models.py:74
 msgid "Saturday"
 msgstr ""
 
-#: member/models.py:69
+#: member/models.py:75
 msgid "Sunday"
 msgstr ""
 
-#: member/models.py:76
+#: member/models.py:82
 msgid "members"
 msgstr ""
 
-#: member/models.py:81
+#: member/models.py:87
 msgid "firstname"
 msgstr ""
 
-#: member/models.py:86
+#: member/models.py:92
 msgid "lastname"
 msgstr ""
 
-#: member/models.py:91
+#: member/models.py:97
 msgid "address"
 msgstr ""
 
-#: member/models.py:155
+#: member/models.py:161
 msgid "addresses"
 msgstr ""
 
-#: member/models.py:159
+#: member/models.py:165
 msgid "street number"
 msgstr ""
 
-#: member/models.py:166
+#: member/models.py:172
 msgid "street"
 msgstr ""
 
-#: member/models.py:172
+#: member/models.py:178
 msgid "apartment"
 msgstr ""
 
-#: member/models.py:178
+#: member/models.py:184
 msgid "floor"
 msgstr ""
 
-#: member/models.py:185
+#: member/models.py:191
 msgid "city"
 msgstr ""
 
-#: member/models.py:191
+#: member/models.py:197
 msgid "postal code"
 msgstr ""
 
-#: member/models.py:222
+#: member/models.py:228
 msgid "contacts"
 msgstr ""
 
-#: member/models.py:228
+#: member/models.py:234
 msgid "contact type"
 msgstr ""
 
-#: member/models.py:233 member/models.py:930
+#: member/models.py:239 member/models.py:940
 msgid "value"
 msgstr ""
 
-#: member/models.py:238 member/models.py:386
+#: member/models.py:244 member/models.py:402
 msgid "member"
 msgstr ""
 
-#: member/models.py:249
+#: member/models.py:255
 msgid "Routes"
 msgstr ""
 
-#: member/models.py:254 member/models.py:897
+#: member/models.py:261 member/models.py:907
 msgid "name"
 msgstr ""
 
-#: member/models.py:258 member/models.py:901
+#: member/models.py:265 member/models.py:911
 msgid "description"
 msgstr ""
 
-#: member/models.py:348
+#: member/models.py:364
 msgid "Pending"
 msgstr ""
 
-#: member/models.py:350
+#: member/models.py:366
 msgid "Paused"
 msgstr ""
 
-#: member/models.py:351
+#: member/models.py:367
 msgid "Stop: no contact"
 msgstr ""
 
-#: member/models.py:352
+#: member/models.py:368
 msgid "Stop: contact"
 msgstr ""
 
-#: member/models.py:353
+#: member/models.py:369
 msgid "Deceased"
 msgstr ""
 
-#: member/models.py:357
+#: member/models.py:373
 msgid "English"
 msgstr ""
 
-#: member/models.py:358
+#: member/models.py:374
 msgid "French"
 msgstr ""
 
-#: member/models.py:362
+#: member/models.py:378
 msgid "clients"
 msgstr ""
 
-#: member/models.py:367
+#: member/models.py:383
 msgid "billing member"
 msgstr ""
 
-#: member/models.py:378
+#: member/models.py:394
 msgid "rate type"
 msgstr ""
 
-#: member/models.py:391
+#: member/models.py:407
 msgid "emergency contact"
 msgstr ""
 
-#: member/models.py:398
+#: member/models.py:414
 msgid "emergency contact relationship"
 msgstr ""
 
-#: member/models.py:416
+#: member/models.py:432
 msgid "alert client"
 msgstr ""
 
-#: member/models.py:445 member/templates/client/list.html:56
+#: member/models.py:461 member/templates/client/list.html:56
 msgid "route"
 msgstr ""
 
-#: member/models.py:694
+#: member/models.py:704
 msgid "Start"
 msgstr ""
 
-#: member/models.py:695
+#: member/models.py:705
 msgid "End"
 msgstr ""
 
-#: member/models.py:703
+#: member/models.py:713
 msgid "To be processed"
 msgstr ""
 
-#: member/models.py:704
+#: member/models.py:714
 msgid "Processed"
 msgstr ""
 
-#: member/models.py:705
+#: member/models.py:715
 msgid "Error"
 msgstr ""
 
-#: member/models.py:803
+#: member/models.py:813
 msgid "All"
 msgstr ""
 
-#: member/models.py:816
+#: member/models.py:826
 msgid "Search by name"
 msgstr ""
 
-#: member/models.py:857
+#: member/models.py:867
 msgid "referents"
 msgstr ""
 
-#: member/models.py:860
+#: member/models.py:870
 msgid "referent"
 msgstr ""
 
-#: member/models.py:863 member/models.py:919 member/models.py:947
-#: member/models.py:964 member/models.py:981
+#: member/models.py:873 member/models.py:929 member/models.py:957
+#: member/models.py:974 member/models.py:991
 msgid "client"
 msgstr ""
 
-#: member/models.py:867
-#: member/templates/client/partials/forms/referent_information.html:46
+#: member/models.py:877
+#: member/templates/client/partials/forms/referent_information.html:69
 msgid "Referral reason"
 msgstr ""
 
-#: member/models.py:877
+#: member/models.py:887
 msgid "Referral date"
 msgstr ""
 
-#: member/models.py:892
+#: member/models.py:902
 msgid "options"
 msgstr ""
 
-#: member/models.py:909
+#: member/models.py:919
 msgid "option group"
 msgstr ""
 
-#: member/models.py:924
+#: member/models.py:934
 msgid "option"
 msgstr ""
 
-#: member/models.py:952
+#: member/models.py:962
 msgid "restricted item"
 msgstr ""
 
-#: member/models.py:969
+#: member/models.py:979
 msgid "ingredient"
 msgstr ""
 
-#: member/models.py:986
+#: member/models.py:996
 msgid "component"
 msgstr ""
 
@@ -541,10 +557,6 @@ msgstr ""
 
 #: member/templates/client/base.html:45
 msgid "Important notice"
-msgstr ""
-
-#: member/templates/client/base.html:59
-msgid "Edit"
 msgstr ""
 
 #: member/templates/client/create/form.html:18
@@ -589,8 +601,8 @@ msgstr ""
 #: member/templates/client/create/form.html:45
 #: member/templates/client/partials/forms/address_information.html:2
 #: member/templates/client/update/base.html:37
-#: member/templates/client/view/information.html:34
-#: member/templates/client/view/payment.html:27
+#: member/templates/client/view/information.html:39
+#: member/templates/client/view/payment.html:41
 #: member/templates/client/view/summary.html:14
 msgid "Address"
 msgstr ""
@@ -603,58 +615,65 @@ msgstr ""
 #: member/templates/client/create/form.html:46
 #: member/templates/client/partials/forms/referent_information.html:2
 #: member/templates/client/partials/menu.html:8
+#: member/templates/client/update/base.html:38
 #: member/templates/client/view/referent.html:16
 msgid "Referent"
 msgstr ""
 
 #: member/templates/client/create/form.html:46
+#: member/templates/client/update/base.html:38
 msgid "Referent contact information"
 msgstr ""
 
 #: member/templates/client/create/form.html:47
+#: member/templates/client/update/base.html:39
 msgid "Payment"
 msgstr ""
 
 #: member/templates/client/create/form.html:47
+#: member/templates/client/update/base.html:39
 msgid "Payment method, card, ..."
 msgstr ""
 
 #: member/templates/client/create/form.html:48
 #: member/templates/client/partials/menu.html:15
-#: member/templates/client/update/base.html:38
+#: member/templates/client/update/base.html:40
 msgid "Preferences"
 msgstr ""
 
 #: member/templates/client/create/form.html:48
-#: member/templates/client/update/base.html:38
+#: member/templates/client/update/base.html:40
 msgid "Deliveries, restrictions, ..."
 msgstr ""
 
 #: member/templates/client/create/form.html:49
+#: member/templates/client/update/base.html:41
 msgid "Emergency"
 msgstr ""
 
 #: member/templates/client/create/form.html:49
+#: member/templates/client/update/base.html:41
 msgid "Emergency contact information"
 msgstr ""
 
 #: member/templates/client/create/form.html:57
-#: member/templates/client/update/base.html:47
+#: member/templates/client/update/base.html:50
 msgid "Required information missing"
 msgstr ""
 
 #: member/templates/client/create/form.html:58
-#: member/templates/client/update/base.html:48
+#: member/templates/client/update/base.html:51
 msgid ""
 "Please review the form to make sure that all required fields are filled."
 msgstr ""
 
 #: member/templates/client/create/form.html:69
+#: member/templates/client/update/base.html:59
 msgid "Back"
 msgstr ""
 
 #: member/templates/client/create/form.html:74
-#: member/templates/client/update/base.html:57
+#: member/templates/client/update/base.html:60
 msgid "Save"
 msgstr ""
 
@@ -775,7 +794,7 @@ msgid "This message will be hightlighted on the client record."
 msgstr ""
 
 #: member/templates/client/partials/forms/dietary_restriction.html:2
-#: member/templates/client/view/allergies.html:18
+#: member/templates/client/view/allergies.html:27
 msgid "Meal status"
 msgstr ""
 
@@ -790,6 +809,10 @@ msgstr ""
 
 #: member/templates/client/partials/forms/emergency_contact.html:16
 msgid "Create new emergency contact"
+msgstr ""
+
+#: member/templates/client/partials/forms/emergency_contact.html:52
+msgid "Contact relationship"
 msgstr ""
 
 #: member/templates/client/partials/forms/meal_defaults.html:16
@@ -823,7 +846,7 @@ msgstr ""
 msgid "Create new referent member"
 msgstr ""
 
-#: member/templates/client/partials/forms/referent_information.html:60
+#: member/templates/client/partials/forms/referent_information.html:83
 msgid "Please describe the referral reason(s)"
 msgstr ""
 
@@ -854,14 +877,6 @@ msgstr ""
 #: member/templates/client/partials/menu.html:23
 #: member/templates/client/view/orders.html:18
 msgid "Orders"
-msgstr ""
-
-#: member/templates/client/partials/prefs.html:8
-msgid "Add"
-msgstr ""
-
-#: member/templates/client/partials/prefs.html:8
-msgid "Change"
 msgstr ""
 
 #: member/templates/client/update/base.html:14
@@ -899,66 +914,83 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: member/templates/client/view/allergies.html:33
+#: member/templates/client/view/allergies.html:17
+msgid "Meal information"
+msgstr ""
+
+#: member/templates/client/view/allergies.html:18
+msgid "Meal information of the referent person"
+msgstr ""
+
+#: member/templates/client/view/allergies.html:21
+#: member/templates/client/view/allergies.html:96
+#: member/templates/client/view/information.html:24
+#: member/templates/client/view/information.html:54
+#: member/templates/client/view/payment.html:23
+#: member/templates/client/view/referent.html:21
+msgid "Edit"
+msgstr ""
+
+#: member/templates/client/view/allergies.html:41
 msgid "Yipee! No restriction"
 msgstr ""
 
-#: member/templates/client/view/allergies.html:38
+#: member/templates/client/view/allergies.html:46
 msgid "Food preparation"
 msgstr ""
 
-#: member/templates/client/view/allergies.html:47
+#: member/templates/client/view/allergies.html:55
 msgid "Nope! Nothing specific"
 msgstr ""
 
-#: member/templates/client/view/allergies.html:52
+#: member/templates/client/view/allergies.html:60
 msgid "Ingredients to avoid"
 msgstr ""
 
-#: member/templates/client/view/allergies.html:61
-#: member/templates/client/view/allergies.html:75
+#: member/templates/client/view/allergies.html:69
+#: member/templates/client/view/allergies.html:83
 msgid "Yeah! Likes everything"
 msgstr ""
 
-#: member/templates/client/view/allergies.html:66
+#: member/templates/client/view/allergies.html:74
 msgid "Dish(es) to avoid"
 msgstr ""
 
-#: member/templates/client/view/allergies.html:84
-msgid "Meal Default"
+#: member/templates/client/view/allergies.html:92
+msgid "Meal schedule"
+msgstr ""
+
+#: member/templates/client/view/allergies.html:93
+msgid "Meal default schedule of the referent person"
 msgstr ""
 
 #: member/templates/client/view/information.html:17
 msgid "Basic information"
 msgstr ""
 
-#: member/templates/client/view/information.html:18
+#: member/templates/client/view/information.html:19
 msgid "Contact information of the client"
 msgstr ""
 
-#: member/templates/client/view/information.html:27
+#: member/templates/client/view/information.html:32
 msgid "Gender"
 msgstr ""
 
-#: member/templates/client/view/information.html:28
+#: member/templates/client/view/information.html:33
 #: member/templates/client/view/summary.html:28
 msgid "Language"
 msgstr ""
 
-#: member/templates/client/view/information.html:29
+#: member/templates/client/view/information.html:34
 msgid "Delivery Type"
 msgstr ""
 
-#: member/templates/client/view/information.html:44
+#: member/templates/client/view/information.html:49
 msgid "Emergency Contact"
 msgstr ""
 
-#: member/templates/client/view/information.html:45
+#: member/templates/client/view/information.html:50
 msgid "Information of the person to contact in case of an emergency"
-msgstr ""
-
-#: member/templates/client/view/information.html:55
-msgid "Relationship"
 msgstr ""
 
 #: member/templates/client/view/notes.html:17
@@ -1022,11 +1054,11 @@ msgstr ""
 msgid "Billing and payment information"
 msgstr ""
 
-#: member/templates/client/view/payment.html:25
+#: member/templates/client/view/payment.html:34
 msgid "Payment method"
 msgstr ""
 
-#: member/templates/client/view/payment.html:26
+#: member/templates/client/view/payment.html:37
 msgid "Rate type"
 msgstr ""
 
@@ -1034,7 +1066,7 @@ msgstr ""
 msgid "Contact information of the referent person"
 msgstr ""
 
-#: member/templates/client/view/referent.html:28
+#: member/templates/client/view/referent.html:29
 msgid "Workplace information"
 msgstr ""
 
@@ -1082,58 +1114,70 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: member/urls.py:54
+#: member/urls.py:56
 msgid "^view/(?P<pk>\\d+)/$"
 msgstr ""
 
-#: member/urls.py:55
+#: member/urls.py:57
 msgid "^view/(?P<pk>\\d+)/orders$"
 msgstr ""
 
-#: member/urls.py:57
+#: member/urls.py:59
 msgid "^view/(?P<pk>\\d+)/information$"
 msgstr ""
 
-#: member/urls.py:59
+#: member/urls.py:61
 msgid "^view/(?P<pk>\\d+)/referent$"
 msgstr ""
 
-#: member/urls.py:61
+#: member/urls.py:63
 msgid "^view/(?P<pk>\\d+)/billing$"
 msgstr ""
 
-#: member/urls.py:63
+#: member/urls.py:65
 msgid "^view/(?P<pk>\\d+)/preferences$"
 msgstr ""
 
-#: member/urls.py:65
+#: member/urls.py:67
 msgid "^view/(?P<pk>\\d+)/notes$"
 msgstr ""
 
-#: member/urls.py:67
+#: member/urls.py:69
 msgid "^geolocateAddress/$"
 msgstr ""
 
-#: member/urls.py:68
+#: member/urls.py:70
 msgid "^view/(?P<pk>\\d+)/status$"
 msgstr ""
 
-#: member/urls.py:72
+#: member/urls.py:74
 msgid "^restriction/(?P<pk>\\d+)/delete/$"
 msgstr ""
 
-#: member/urls.py:74
+#: member/urls.py:76
 msgid "^client_option/(?P<pk>\\d+)/delete/$"
 msgstr ""
 
-#: member/urls.py:76
+#: member/urls.py:78
 msgid "^ingredient_to_avoid/(?P<pk>\\d+)/delete/$"
 msgstr ""
 
-#: member/urls.py:78
+#: member/urls.py:80
 msgid "^component_to_avoid/(?P<pk>\\d+)/delete/$"
 msgstr ""
 
-#: member/urls.py:94
-msgid "^(?P<client_id>\\d+)/update/{}/$"
+#: member/urls.py:98
+msgid "^(?P<pk>\\d+)/update/{}/$"
+msgstr ""
+
+#: member/views.py:89
+msgid "The client has been created"
+msgstr ""
+
+#: member/views.py:832
+msgid "The client has been updated"
+msgstr ""
+
+#: member/views.py:1332
+msgid "The status has been changed"
 msgstr ""

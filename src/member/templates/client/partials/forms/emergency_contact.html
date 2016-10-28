@@ -49,4 +49,8 @@
       {{form.contact_value}}
     </div>
   </div>
+  <label>{% trans 'Contact relationship' %}</label>
+  <div class="field {% if form.relationship.errors %} error {% endif %}">
+      {{form.relationship}}
+  </div>
 </div>

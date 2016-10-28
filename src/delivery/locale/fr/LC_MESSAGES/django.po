@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-16 00:20+0000\n"
+"POT-Creation-Date: 2016-10-27 20:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Mathieu Perreault <mathieu.perreault@gmail.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -48,7 +48,7 @@ msgid "Restore recipe"
 msgstr "Restaurer la recette"
 
 #: delivery/templates/ingredients.html:76
-#: delivery/templates/kitchen_count.html:77 delivery/templates/routes.html:50
+#: delivery/templates/kitchen_count.html:82 delivery/templates/routes.html:50
 msgid "Back"
 msgstr "Précédent"
 
@@ -68,73 +68,81 @@ msgstr "Inventaire des repas"
 msgid "Print the Report"
 msgstr "Imprimer l'inventaire des repas"
 
-#: delivery/templates/kitchen_count.html:27
-#: delivery/templates/kitchen_count.html:53
+#: delivery/templates/kitchen_count.html:22
+msgid "Download Labels"
+msgstr ""
+
+#: delivery/templates/kitchen_count.html:24
+msgid "No Labels Found"
+msgstr ""
+
+#: delivery/templates/kitchen_count.html:32
+#: delivery/templates/kitchen_count.html:58
 msgid "Component"
 msgstr "Composant"
 
-#: delivery/templates/kitchen_count.html:28
-#: delivery/templates/kitchen_count.html:29
+#: delivery/templates/kitchen_count.html:33
+#: delivery/templates/kitchen_count.html:34
 msgid "TOTAL"
 msgstr "TOTAL"
 
-#: delivery/templates/kitchen_count.html:28
+#: delivery/templates/kitchen_count.html:33
 #: delivery/templates/route_sheet.html:22
 msgid "Regular"
 msgstr "Régulier"
 
-#: delivery/templates/kitchen_count.html:29
+#: delivery/templates/kitchen_count.html:34
 #: delivery/templates/route_sheet.html:23
 msgid "Large"
 msgstr "Large"
 
-#: delivery/templates/kitchen_count.html:30
+#: delivery/templates/kitchen_count.html:35
 msgid "Dish today"
 msgstr "Plat du jour"
 
-#: delivery/templates/kitchen_count.html:31
+#: delivery/templates/kitchen_count.html:36
 msgid "Ingredients today"
 msgstr "Ingrédients du jour"
 
-#: delivery/templates/kitchen_count.html:50
+#: delivery/templates/kitchen_count.html:55
 #: delivery/templates/review_orders.html:76
 #: delivery/templates/route_sheet.html:40
 msgid "Client"
 msgstr "Client"
 
-#: delivery/templates/kitchen_count.html:51
-#: delivery/templates/kitchen_count.html:52
+#: delivery/templates/kitchen_count.html:56
+#: delivery/templates/kitchen_count.html:57
 #: delivery/templates/route_sheet.html:43
 msgid "Qty"
 msgstr "Qte"
 
-#: delivery/templates/kitchen_count.html:51
+#: delivery/templates/kitchen_count.html:56
 msgid "Reg"
 msgstr "Rég"
 
-#: delivery/templates/kitchen_count.html:52
+#: delivery/templates/kitchen_count.html:57
 msgid "Lge"
 msgstr "Lrg"
 
-#: delivery/templates/kitchen_count.html:53
-#: delivery/templates/kitchen_count.html:54
+#: delivery/templates/kitchen_count.html:58
+#: delivery/templates/kitchen_count.html:59
 msgid "Clashing"
 msgstr "En conflit"
 
-#: delivery/templates/kitchen_count.html:54
+#: delivery/templates/kitchen_count.html:59
 #: delivery/templates/kitchen_count_steps.html:12
 msgid "Ingredients"
 msgstr "Ingrédients"
 
-#: delivery/templates/kitchen_count.html:55
+#: delivery/templates/kitchen_count.html:60
 msgid "Preparation"
 msgstr "Préparation"
 
-#: delivery/templates/kitchen_count.html:56
+#: delivery/templates/kitchen_count.html:61
 msgid "Restrictions"
 msgstr "Restrictions"
 
-#: delivery/templates/kitchen_count.html:78
+#: delivery/templates/kitchen_count.html:83
 msgid "Next: Organize Routes"
 msgstr "Suivant: Organiser les itinéraires"
 
@@ -282,17 +290,21 @@ msgid "^kitchen_count/(?P<year>\\d{4})/(?P<month>\\d{2})/(?P<day>\\d+)/$"
 msgstr "^kitchen_count/(?P<year>\\d{4})/(?P<month>\\d{2})/(?P<day>\\d+)/$"
 
 #: delivery/urls.py:17
+msgid "^viewMealLabels/$"
+msgstr ""
+
+#: delivery/urls.py:18
 msgid "^route_sheet/(?P<id>\\d+)/$"
 msgstr "^route_sheet/(?P<id>\\d+)/$"
 
-#: delivery/urls.py:19
+#: delivery/urls.py:20
 msgid "^getDailyOrders/$"
 msgstr "^getDailyOrders/$"
 
-#: delivery/urls.py:20
+#: delivery/urls.py:21
 msgid "^refresh_orders/$"
 msgstr "^refresh_orders/$"
 
-#: delivery/urls.py:21
+#: delivery/urls.py:22
 msgid "^saveRoute/$"
 msgstr "^saveRoute/$"
