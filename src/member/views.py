@@ -331,6 +331,9 @@ class ClientWizard(NamedUrlSessionWizardView):
             preferences.get('meals_schedule')
         )
 
+        # Save episodic prefs form client
+        client.set_meals_prefs(preferences)
+
         # Save restricted items
         for restricted_item in preferences.get('restrictions'):
             Restriction.objects.create(
@@ -707,6 +710,13 @@ class ClientNotesView(ClientView):
         context['filter'] = uf
 
         return context
+
+
+def clientMealsPrefsAsJSON(request, pk):
+    # Display detail of one client
+    client = get_object_or_404(Client, pk=pk)
+    prefs = client.get_meals_prefs()
+    return JsonResponse(prefs)
 
 
 def note_add(request):
@@ -1096,6 +1106,17 @@ class ClientUpdateDietaryRestriction(ClientUpdateInformation):
                     initial['size_' + day] = meals_default[1]
             day_count += 1
 
+        prefs = client.get_meals_prefs()
+        if (bool(prefs)):
+            initial['size_default'] = prefs['maindish_s']
+            initial['main_dish_default_quantity'] = prefs['maindish_q']
+            initial['dessert_default_quantity'] = prefs['dst_q']
+            initial['diabetic_default_quantity'] = prefs['diabdst_q']
+            initial['fruit_salad_default_quantity'] = prefs['fruitsld_q']
+            initial['green_salad_default_quantity'] = prefs['greensld_q']
+            initial['pudding_default_quantity'] = prefs['pudding_q']
+            initial['compote_default_quantity'] = prefs['compot_q']
+
         return initial
 
     def save(self, form, client):
@@ -1106,6 +1127,9 @@ class ClientUpdateDietaryRestriction(ClientUpdateInformation):
         client.set_meals_schedule(
             form['meals_schedule']
         )
+
+        # Save episodic prefs form client
+        client.set_meals_prefs(form)
 
         # Save restricted items
         client.restrictions.clear()

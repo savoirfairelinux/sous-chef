@@ -60,7 +60,6 @@ $(function() {
                          success: function (xhr, ajaxOptions, thrownError) {
                              if ( $(xhr).find('.errorlist').length > 0 ) {
                                  $('.ui.modal.status').html(xhr);
-                                 console.log('show modal..')
                                  $('.ui.modal.status').modal("show");
                              } else {
                                  location.reload();
@@ -147,16 +146,38 @@ $(function() {
         }
     }
     function hideUiAccordionDays() {
-        $('.ui.accordion.meals').each(function () {
+        $('.ui.accordion.meals').not('.default').each(function () {
           $(this).hide();
         });
     }
 
     $("#form-meals-schedule select[multiple='multiple']").change(function () {
+
         hideUiAccordionDays();
         showUiAccordionSelectedDays();
     });
-    hideUiAccordionDays();
-    showUiAccordionSelectedDays();
+    var deliveryTypeSelect = $('#id_dietary_restriction-delivery_type, #id_delivery_type');
+    deliveryTypeSelect.change(function () {
+        if ($(this).val() == 'E') {
+            $('#form-meals-schedule').hide();
+            hideUiAccordionDays();
+            $('.ui.accordion.meals.default').show();
+        }
+        else {
+            $('#form-meals-schedule').show();
+            showUiAccordionSelectedDays();
+            $('.ui.accordion.meals.default').hide();
+        }
+    });
+    if (deliveryTypeSelect.val() == 'E') {
+        $('#form-meals-schedule').hide();
+        hideUiAccordionDays();
+        $('.ui.accordion.meals.default').show();
+    }
+    else {
+        $('#form-meals-schedule').show();
+        showUiAccordionSelectedDays();
+        $('.ui.accordion.meals.default').hide();
+    }
 
 });

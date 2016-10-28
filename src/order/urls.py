@@ -5,13 +5,19 @@ from order.views import (
     OrderList,
     OrderDetail,
     CreateOrder,
+    CreateOrdersBatch,
     UpdateOrder,
     UpdateOrderStatus,
     DeleteOrder)
+
 urlpatterns = [
     url(_(r'^list/$'), OrderList.as_view(), name='list'),
     url(_(r'^view/(?P<pk>\d+)/$'), OrderDetail.as_view(), name='view'),
     url(_(r'^create/$'), CreateOrder.as_view(), name='create'),
+    # Multiple orders as once
+    url(_(r'^create/batch$'),
+        CreateOrdersBatch.as_view(), name='createBatch'),
+
     url(_(r'^update/(?P<pk>\d+)/$'), UpdateOrder.as_view(), name='update'),
     url(
         _(r'^update/(?P<pk>\d+)/status$'),

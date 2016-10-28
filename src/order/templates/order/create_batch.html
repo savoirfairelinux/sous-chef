@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load static %}
+{% load member_extras %}
+
+{% block title %} {% trans 'Place multiple orders for a client' %} {% endblock %}
+
+{% block extrahead %}
+<link href="http://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">{% trans 'Place multiple orders' %}</h2>
+</div>
+
+<div class="sixteen wide column">
+
+    <form action="" method="post" class="ui form">
+        {% csrf_token %}
+        <div class="thirteen wide field">
+            <label for="{{ form.client.id_for_label }}">{% trans 'Client' %}</label>
+            {{ form.client }}
+        </div>
+
+        <div class="thirteen wide field">
+            <label for="{{ form.delivery_dates.id_for_label }}">{% trans 'Delivery dates' %}</label>
+            <div id="delivery_dates"></div>{{ form.delivery_dates }}
+        </div>
+
+        <div class="thirteen wide field ui styled meals {{ day.0 }}">
+            <label>{% trans 'Order items' %}</label>
+
+            <div class="content">
+                <table class="ui compact table">
+                    <thead>
+                        <tr>
+                            <th>{% trans 'Size' %}</th>
+                            <th>{% trans 'Component' %}</th>
+                            <th>{% trans 'Quantity' %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for meal, Meal in meals %}
+                        <tr>
+                            <td>
+                                {% if meal == "main_dish" %}
+                                {% size day.0 %}
+                                {% endif %}
+                            </td>
+                            <td>{{ Meal }}</td>
+                            <td>{% cell meal day.0 %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="wide field">
+            <button class="ui button" type="submit">{% trans 'Place orders' %}</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
