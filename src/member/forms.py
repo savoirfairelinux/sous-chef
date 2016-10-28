@@ -1,6 +1,12 @@
+import re
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
+from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import smart_text
+from localflavor.ca.forms import (
+    CAPhoneNumberField, CAPostalCodeField
+)
 from meal.models import Ingredient, Component, COMPONENT_GROUP_CHOICES, \
     Restricted_item
 from order.models import SIZE_CHOICES
@@ -9,6 +15,24 @@ from member.models import (
     GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE,
     DAYS_OF_WEEK, Route, ClientScheduledStatus
 )
+
+
+class CAPhoneNumberExtField(CAPhoneNumberField):
+    """Canadian phone number form field."""
+
+    def clean(self, value):
+        phone_re = re.compile(
+            r'^(?:1-?)?(\d{3})[-\.]?(\d{3})[-\.]?(\d{4})#?(\d*)$'
+        )
+        try:
+            return super(CAPhoneNumberExtField, self).clean(value)
+        except forms.ValidationError as error:
+            value = re.sub('(\(|\)|\s+)', '', smart_text(value))
+            m = phone_re.search(value)
+            if m:
+                return '%s-%s-%s #%s' % (m.group(1), m.group(2),
+                                         m.group(3), m.group(4))
+            raise error
 
 
 class ClientBasicInformation (forms.Form):
@@ -41,19 +65,20 @@ class ClientBasicInformation (forms.Form):
         widget=forms.TextInput(attrs={'class': 'ui calendar'})
     )
 
-    email = forms.CharField(
+    email = forms.EmailField(
+        max_length=100,
         label='<i class="email icon"></i>',
         widget=forms.TextInput(attrs={'placeholder': _('Email')}),
         required=False,
     )
 
-    home_phone = forms.CharField(
+    home_phone = CAPhoneNumberExtField(
         label='Home',
         widget=forms.TextInput(attrs={'placeholder': _('Home phone')}),
         required=False,
     )
 
-    cell_phone = forms.CharField(
+    cell_phone = CAPhoneNumberExtField(
         label='Cell',
         widget=forms.TextInput(attrs={'placeholder': _('Cellular')}),
         required=False,
@@ -98,8 +123,8 @@ class ClientAddressInformation(forms.Form):
         })
     )
 
-    postal_code = forms.CharField(
-        max_length=6,
+    postal_code = CAPostalCodeField(
+        max_length=7,
         label=_("Postal Code"),
         widget=forms.TextInput(attrs={
             'placeholder': _('H2R 2Y5'),
@@ -249,19 +274,19 @@ class MemberForm(forms.Form):
         required=False
     )
 
-    email = forms.CharField(
+    email = forms.EmailField(
         label='<i class="email icon"></i>',
         widget=forms.TextInput(attrs={'placeholder': _('Email')}),
         required=False,
     )
 
-    work_phone = forms.CharField(
+    work_phone = CAPhoneNumberExtField(
         label='Work',
         widget=forms.TextInput(attrs={'placeholder': _('Work phone')}),
         required=False,
     )
 
-    cell_phone = forms.CharField(
+    cell_phone = CAPhoneNumberExtField(
         label='Cell',
         widget=forms.TextInput(attrs={'placeholder': _('Cellular')}),
         required=False,
@@ -342,7 +367,7 @@ class ClientPaymentInformation(MemberForm):
 
     number = forms.IntegerField(label=_("Street Number"), required=False)
 
-    apartment = forms.IntegerField(
+    apartment = forms.CharField(
         label=_("Apt #"),
         widget=forms.TextInput(attrs={'placeholder': _('Apt #')}),
         required=False
@@ -354,7 +379,7 @@ class ClientPaymentInformation(MemberForm):
 
     city = forms.CharField(label=_("City Name"), required=False)
 
-    postal_code = forms.CharField(label=_("Postal Code"), required=False)
+    postal_code = CAPostalCodeField(label=_("Postal Code"), required=False)
 
     def clean(self):
         cleaned_data = super(ClientPaymentInformation, self).clean()
@@ -388,8 +413,9 @@ class ClientEmergencyContactInformation(MemberForm):
         choices=CONTACT_TYPE_CHOICES,
         widget=forms.Select(attrs={'class': 'ui dropdown'})
     )
-
-    contact_value = forms.CharField(label=_("Contact"))
+    # max_length come from models.Contact.value
+    contact_value_kwargs = {'label': _("Contact"), 'max_length': 50}
+    contact_value = forms.CharField(**contact_value_kwargs)
 
     relationship = forms.CharField(
         label=_("Relationship"),
@@ -398,6 +424,19 @@ class ClientEmergencyContactInformation(MemberForm):
         ),
         required=False
     )
+
+    def clean_contact_value(self):
+        try:
+            contact_type = self.cleaned_data['contact_type']
+            contact_value = self.cleaned_data['contact_value']
+        except KeyError as ke:
+            raise forms.ValidationError(ke.message)
+        if contact_type == 'Email':
+            field = forms.EmailField(**self.contact_value_kwargs)
+        else:
+            # CAPhoneNumberField is not a CharField (no max_length)
+            field = CAPhoneNumberExtField()
+        return field.clean(contact_value)
 
 
 class ClientScheduledStatusForm(forms.ModelForm):

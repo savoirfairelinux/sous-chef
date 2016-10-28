@@ -615,7 +615,7 @@ class FormTestCase(TestCase):
             "address_information-street": "555 rue clark",
             "address_information-apartment": "222",
             "address_information-city": "montreal",
-            "address_information-postal_code": "H3C2C2",
+            "address_information-postal_code": "H3C 2C2",
             "address_information-route": self.route.id,
             "address_information-latitude": 45.5343077,
             "address_information-longitude": -73.620735,
@@ -645,7 +645,7 @@ class FormTestCase(TestCase):
             "payment_information-street": "111 rue clark",
             "payment_information-apartement": "222",
             "payment_information-city": "Montreal",
-            "payment_information-postal_code": "H2C3G4",
+            "payment_information-postal_code": "H2C 3G4",
             "wizard_goto_step": "",
         }
 
@@ -713,7 +713,7 @@ class FormTestCase(TestCase):
 
         # test_client_address:
         self.assertEqual(member.address.street, "555 rue clark")
-        self.assertEqual(member.address.postal_code, "H3C2C2")
+        self.assertEqual(member.address.postal_code, "H3C 2C2")
         self.assertEqual(member.address.apartment, "222")
         self.assertEqual(member.address.city, "montreal")
 
@@ -781,7 +781,7 @@ class FormTestCase(TestCase):
         #  test_billing_address:
         self.assertEqual(client.billing_member.address.city, "Montreal")
         self.assertEqual(client.billing_member.address.street, "111 rue clark")
-        self.assertEqual(client.billing_member.address.postal_code, "H2C3G4")
+        self.assertEqual(client.billing_member.address.postal_code, "H2C 3G4")
 
         #  test_billing_rate_type:
         self.assertEqual(client.rate_type, 'default')
@@ -857,7 +857,7 @@ class FormTestCase(TestCase):
         self.assertTrue(b"Testing" in response.content)
         self.assertTrue(b"Home phone" in response.content)
         self.assertTrue(b"555 rue clark" in response.content)
-        self.assertTrue(b"H3C2C2" in response.content)
+        self.assertTrue(b"H3C 2C2" in response.content)
         self.assertTrue(b"montreal" in response.content)
         self.assertTrue(b"Testing alert message" in response.content)
         self.assertTrue(b"555-444-5555" in response.content)
@@ -969,7 +969,7 @@ class FormTestCase(TestCase):
 
         # test_client_address:
         self.assertEqual(member.address.street, "8686 rue clark")
-        self.assertEqual(member.address.postal_code, "H8C6C8")
+        self.assertEqual(member.address.postal_code, "H8C 6C8")
         self.assertEqual(member.address.apartment, "86")
         self.assertEqual(member.address.city, "Montreal")
 
@@ -1035,11 +1035,12 @@ class FormTestCase(TestCase):
 
         #  test_billing_address:
         self.assertEqual(client.billing_member.address.city, "Montreal")
+
         self.assertEqual(
             client.billing_member.address.street,
             "8686 rue clark"
         )
-        self.assertEqual(client.billing_member.address.postal_code, "H8C6C8")
+        self.assertEqual(client.billing_member.address.postal_code, "H8C 6C8")
 
         #  test_billing_rate_type:
         self.assertEqual(client.rate_type, 'default')
@@ -1074,7 +1075,7 @@ class FormTestCase(TestCase):
         self.assertTrue(b"Same" in response.content)
         self.assertTrue(b"Home phone" in response.content)
         self.assertTrue(b"8686 rue clark" in response.content)
-        self.assertTrue(b"H8C6C8" in response.content)
+        self.assertTrue(b"H8C 6C8" in response.content)
         self.assertTrue(b"Montreal" in response.content)
         self.assertTrue(b"Testing alert message" in response.content)
         self.assertTrue(b"514-868-8686" in response.content)
@@ -1831,7 +1832,7 @@ class ClientUpdateAddressInformation(ClientUpdateTestCase):
         """
         client = ClientFactory()
         form_data = {
-            'street': '111 rue Roy',
+            'street': '111 rue Roy'
         }
         form = ClientAddressInformation(data=form_data)
         self.assertFalse(form.is_valid())
@@ -1908,7 +1909,7 @@ class ClientUpdateReferentInformationTestCase(ClientUpdateTestCase):
             ),
             'information': 'CLSC',
             'date': '2012-12-12',
-            'referral_reason': 'Testing referral reason',
+            'referral_reason': 'Testing referral reason'
         })
         form = ClientReferentInformation(data=data)
         self.assertTrue(form.is_valid())
@@ -2029,7 +2030,7 @@ class ClientUpdatePaymentInformationTestCase(ClientUpdateTestCase):
             'street': None,
             'city': None,
             'apartment': '',
-            'postal_code': None,
+            'postal_code': 'H2R2N3',
             'member': '[{}] {} {}'.format(
                 payment.id,
                 payment.firstname,
@@ -2052,7 +2053,6 @@ class ClientUpdatePaymentInformationTestCase(ClientUpdateTestCase):
             data,
             follow=True
         )
-
         # Reload client data as it should have been changed in the database
         client = Client.objects.get(id=client.id)
         self.assertEqual(client.billing_member.id, payment.id)

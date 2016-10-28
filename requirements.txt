@@ -11,3 +11,4 @@ django-extra-views==0.8.0
 transifex-client>=0.12.2
 django-template-i18n-lint>=1.2.1
 pylabels==1.2.1
+django-localflavor==1.3

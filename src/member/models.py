@@ -151,6 +151,9 @@ class Member(models.Model):
         updated. Otherwise, it should create a new one.
         """
         created = False
+        if value is None:
+            value = ''
+
         if force_update or value is not '':
             contact, created = Contact.objects.update_or_create(
                 member=self, type=type,
@@ -200,7 +203,7 @@ class Address(models.Model):
 
     # Montreal postal code look like H3E 1C2
     postal_code = models.CharField(
-        max_length=6,
+        max_length=7,
         verbose_name=_('postal code')
     )
 
