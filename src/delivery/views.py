@@ -1,42 +1,33 @@
-import datetime
-import types
-import json
 import collections
-import textwrap
+import datetime
+from datetime import date
 import os
+import textwrap
+import types
 
 from django.conf import settings
-from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.views import generic
 from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.decorators import login_required
-from delivery.models import Delivery
-from member.models import Member, Route
 from django.http import JsonResponse
 from django.core.urlresolvers import reverse_lazy
-from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
-from django.contrib.contenttypes.models import ContentType
+from django.contrib.admin.models import LogEntry, ADDITION
 from django.db.models.functions import Lower
-
-from .apps import DeliveryConfig
 
 import labels  # package pylabels
 from reportlab.graphics import shapes
 
-from .models import Delivery
-from .forms import DishIngredientsForm
-from order.models import (
-    Order, component_group_sorting, SIZE_CHOICES_REGULAR, SIZE_CHOICES_LARGE)
+from delivery.models import Delivery
 from meal.models import (
     COMPONENT_GROUP_CHOICES, COMPONENT_GROUP_CHOICES_MAIN_DISH,
-    Component, Ingredient,
+    Component,
     Menu, Menu_component,
     Component_ingredient)
 from member.models import Client, Route
-from datetime import date
+from order.models import (
+    Order, component_group_sorting, SIZE_CHOICES_REGULAR, SIZE_CHOICES_LARGE)
+from .models import Delivery
+from .forms import DishIngredientsForm
 from . import tsp
 
 MEAL_LABELS_FILE = os.path.join(settings.BASE_DIR, "meallabels.pdf")
@@ -406,7 +397,8 @@ def kcr_make_labels(kitchen_list):
                                 fontSize=8,
                                 textAnchor="end"))
 
-        special = obj.preparation or []
+        special = []
+        special.extend(obj.preparation)
         special.extend(["No " + item for item in obj.incompatible_ingredients])
         special.extend(["No " + item for item in obj.other_ingredients])
         special.extend(["No " + item for item in obj.restricted_items])
@@ -575,7 +567,7 @@ def dailyOrders(request):
     # Euclidean plane). This should still give good results.
 
     node_to_waypoint = {}
-    nodes = [tsp.Node(None, 45.516564,  -73.575145)]  # Santropol
+    nodes = [tsp.Node(None, 45.516564, -73.575145)]  # Santropol
     for waypoint in data:
         node = tsp.Node(waypoint['id'], float(waypoint['latitude']),
                         float(waypoint['longitude']))
@@ -593,26 +585,6 @@ def dailyOrders(request):
     waypoints = {'waypoints': data}
 
     return JsonResponse(waypoints, safe=False)
-
-
-@csrf_exempt
-def saveRoute(request):
-    # print("saveRoute1", "request", request, "request.body=", request.body)
-    data = json.loads(request.body.decode('utf-8'))
-    # print("saveRoute2", "data=", data)
-    member_ids = [member['id'] for member in data['members']]
-    route_id = data['route'][0]['id']
-    route_client_ids = \
-        [Client.objects.get(member__id=member_id).id
-         for member_id in member_ids]
-    # print("saveRoute3", "route_id=", route_id,
-    #       "route_client_ids=", route_client_ids)
-    route = Route.objects.get(id=route_id)
-    route.set_client_sequence(datetime.date.today(), route_client_ids)
-    route.save()
-    # To do print roadmap according the list of members received
-
-    return JsonResponse('OK', safe=False)
 
 
 def refreshOrders(request):
