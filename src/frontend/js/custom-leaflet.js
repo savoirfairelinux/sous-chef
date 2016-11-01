@@ -171,31 +171,6 @@ function main_map_init (map, options) {
        printMapAndItinerary();
     });
 
-    $("#btnsave").click(function(){
-        var wp = control.getWaypoints();
-        var data ={ members: [] };
-
-        // simplify waypoint into a list of member id in the map order
-        $.each(wp, function(key,value) {
-            if (typeof value.options.id !== "undefined") {
-                data.members.push({
-                    "id" : value.options.id
-                });
-            }
-        });
-
-        // Post simple list of members to server
-        $.ajax("../saveRoute/", {
-          data : JSON.stringify(data),
-          contentType : 'application/json; charset=utf-8',
-          type : 'POST',
-          dataType: "json",
-          success: function(result) {
-              alert("Route Saved");
-          }
-        });
-    });
-
      // during init
     $('.ui.dropdown').dropdown({
         onChange: function(routeId) {
@@ -203,6 +178,14 @@ function main_map_init (map, options) {
         }
     });
 
+
+    // Go to delivery route sheet using selected route id
+    $("#btnnext").click(function(){
+        var routeid = $("#routeselect").val();
+        var urlmask = "/delivery/route_sheet/999/".replace(/999/, routeid);
+        // console.log("urlmask=", urlmask)
+        window.location.replace(urlmask);
+    });
 
     // Add sortable on the route controler
     Sortable.create(document.querySelector('.leaflet-routing-geocoders'), {

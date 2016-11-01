@@ -196,14 +196,3 @@ class RouteSequencingTestCase(TestCase):
         response = self.client.get(
             '/delivery/getDailyOrders/?route='+str(self.route_id))
         self.assertTrue(b'Blondin' in response.content)
-
-    def test_save_route(self):
-        """Route save sequence."""
-        dic = {"route": [{"id": "4"}],
-               "members": [{"id": 864}, {"id": 867}, {"id": 868},
-                           {"id": 869}, {"id": 861}, {"id": 862}, {"id": 863}]}
-        response = self.client.post(
-            '/delivery/saveRoute/',
-            json.dumps(dic),
-            content_type="application/json")
-        self.assertTrue(b'OK' in response.content)
