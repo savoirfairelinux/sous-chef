@@ -333,22 +333,6 @@ class Order(models.Model):
                 kitchen_list[row.cid].other_ingredients.append(
                     row.ingredient)
 
-        # Day's avoid component clashes.
-        for row in day_avoid_component(delivery_date):
-            check_for_new_client(kitchen_list, row)
-            if row.oiorderid and row.menucompid:
-                # found avoid component clash
-                # should be a set
-                kitchen_list[row.cid].incompatible_components.append(
-                    row.component)
-            # we Know that it is not incommpatible
-            elif (row.component not in
-                  kitchen_list[row.cid].incompatible_components):
-                # found new other avoid component that does not clash today
-                # should be a set
-                kitchen_list[row.cid].other_components.append(
-                    row.component)
-
         # Day's restrictions.
         for row in day_restrictions(delivery_date):
             check_for_new_client(kitchen_list, row)
@@ -394,9 +378,7 @@ class Order(models.Model):
         # Sort requirements list in each value.
         for value in kitchen_list.values():
             value.incompatible_ingredients.sort()
-            value.incompatible_components.sort()
             value.other_ingredients.sort()
-            value.other_components.sort()
             value.restricted_items.sort()
             value.preparation.sort()
 
@@ -605,53 +587,6 @@ def day_avoid_ingredient(delivery_date):
     return sql_exec(query, values, "****** Avoid ingredients ******")
 
 
-def day_avoid_component(delivery_date):
-    """ Get day's avoid component clashes.
-
-    For each client that has ordered a meal for 'delivery_date', find all
-    the components that he avoids and identify which of those
-    components is the main dish for 'delivery_date'.
-
-    Args:
-        delivery_date: A datetime.date object, the date on which the meals will
-            be delivered to the clients.
-
-    Returns:
-        A list of named tuples, each one containing the columns specified
-        in the SELECT clause.
-    """
-    query = """
-    SELECT member_client.id AS cid,
-      member_member.firstname, member_member.lastname,
-      order_order.id AS oid,
-      order_order.delivery_date,
-      meal_menu.id AS menuid,
-      meal_menu_component.id AS menucompid,
-      meal_component.name AS component,
-      order_order_item.id AS oiid,
-      order_order_item.order_id AS oiorderid
-    FROM member_member
-      JOIN member_client ON member_client.member_id = member_member.id
-      JOIN order_order ON order_order.client_id = member_client.id AND
-        order_order.delivery_date =                           %(delivery_date)s
-      JOIN meal_menu ON meal_menu.date =                      %(delivery_date)s
-      JOIN member_client_avoid_component ON
-        member_client_avoid_component.client_id = member_client.id
-      JOIN meal_component ON
-        meal_component.id = member_client_avoid_component.component_id
-      LEFT OUTER JOIN order_order_item ON
-        order_order_item.component_group = meal_component.component_group AND
-          order_order_item.order_id = order_order.id
-      LEFT OUTER JOIN meal_menu_component ON
-        meal_menu_component.component_id = meal_component.id AND
-          meal_menu_component.menu_id = meal_menu.id
-    WHERE order_order.delivery_date =                         %(delivery_date)s
-    ORDER BY member_client.id
-    """
-    values = {'delivery_date': delivery_date}
-    return sql_exec(query, values, "****** Avoid components ******")
-
-
 def day_restrictions(delivery_date):
     """ Get day's restrictions.
 
@@ -794,9 +729,7 @@ KitchenItem = collections.namedtuple(         # Meal specifics for an order.
      'meal_qty',                     # Quantity of main dish servings
      'meal_size',                    # Size of main dish
      'incompatible_ingredients',     # Ingredients in main dish that clash
-     'incompatible_components',      # Components that the client refuses
      'other_ingredients',            # Other ingredients that client refuses
-     'other_components',             # Other components that client refuses
      'restricted_items',             # All restricted items for the client
      'preparation',                  # All food preparations for the client
      'meal_components'])             # List of MealComponents objects
@@ -810,7 +743,9 @@ MealComponent = collections.namedtuple(       # Component specifics for a meal.
 
 
 def check_for_new_client(kitchen_list, row):
-    """ Add client in list when first found.
+    """ Add KitchenItem entry when client is found the first time.
+
+    Modifies kitchen_list by adding an entry.
 
     Args:
         kitchen_list: A dictionary where the key is an Integer 'client id'
@@ -827,9 +762,7 @@ def check_for_new_client(kitchen_list, row):
             meal_qty=0,
             meal_size='',
             incompatible_ingredients=[],
-            incompatible_components=[],
             other_ingredients=[],
-            other_components=[],
             restricted_items=[],
             preparation=[],
             meal_components={})

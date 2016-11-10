@@ -25,7 +25,30 @@ class KitchenCountReportTestCase(TestCase):
 
     def test_clashing_ingredient(self):
         """An ingredient we know will clash must be in the page"""
-        response = self.client.get('/delivery/kitchen_count/2016/05/21/')
+        self.today = datetime.date.today()
+        # create orders today
+        clients = Client.active.all()
+        numorders = Order.objects.auto_create_orders(
+            self.today, clients)
+        # main dish and its ingredients today
+        main_dishes = Component.objects.filter(name='Ginger pork')
+        main_dish = main_dishes[0]
+        dish_ingredients = Component.get_recipe_ingredients(
+            main_dish.id)
+        for ing in dish_ingredients:
+            ci = Component_ingredient(
+                component=main_dish,
+                ingredient=ing,
+                date=self.today)
+            ci.save()
+        # menu today
+        Menu.create_menu_and_components(
+            self.today,
+            ['Ginger pork',
+             'Green Salad', 'Fruit Salad',
+             'Day s Dessert', 'Day s Diabetic Dessert',
+             'Day s Pudding', 'Day s Compote'])
+        response = self.client.get('/delivery/kitchen_count/')
         self.assertTrue(b'Ground porc' in response.content)
 
     def test_no_components(self):
