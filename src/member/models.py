@@ -44,9 +44,8 @@ RATE_TYPE_LOW_INCOME = RATE_TYPE[1][0]
 RATE_TYPE_SOLIDARY = RATE_TYPE[2][0]
 
 PAYMENT_TYPE = (
-    ('check', _('Check')),
+    ('cheque', _('Cheque')),
     ('cash', _('Cash')),
-    ('debit', _('Debit card')),
     ('credit', _('Credit card')),
     ('eft', _('EFT')),
 )
