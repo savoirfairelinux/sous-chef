@@ -80,6 +80,15 @@ python3 manage.py loaddata sample_data
 
 ```
 
+## Generate Django assets using gulp
+
+### Run gulp from the web service
+
+```
+$> docker-compose exec web sh -c "cd tools/gulp && gulp"
+```
+
+
 ## Connection to application
 
 
