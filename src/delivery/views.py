@@ -172,7 +172,7 @@ class KitchenCount(generic.View):
 
     def get(self, request, **kwargs):
         # Display kitchen count report for given delivery date
-        #   or for today by default
+        #   or for today by default; generate meal labels
         if 'year' in kwargs and 'month' in kwargs and 'day' in kwargs:
             date = datetime.date(
                 int(kwargs['year']), int(kwargs['month']), int(kwargs['day']))
@@ -188,44 +188,70 @@ class KitchenCount(generic.View):
                        'num_labels': num_labels})
 
 
-class Component_line(types.SimpleNamespace):
-    # line to display component count summary
-
-    def __init__(self,
-                 component_group='', rqty=0, lqty=0,
-                 name='', ingredients=''):
-        self.__dict__.update(
-            {k: v for k, v in locals().items() if k != 'self'})
-
-
-class Meal_line(types.SimpleNamespace):
-    # line to display client meal specifics
-
-    def __init__(self,
-                 client='', rqty='', lqty='', comp_clash='',
-                 ingr_clash='', preparation='', rest_comp='',
-                 rest_ingr='', rest_item=''):
-        self.__dict__.update(
-            {k: v for k, v in locals().items() if k != 'self'})
+component_line_fields = [          # Component summary Line on Kitchen Count.
+    # field name       default value
+    'component_group', '',    # ex. main dish, dessert etc
+    'rqty',            0,     # Quantity of regular size main dishes
+    'lqty',            0,     # Quantity of large size main dishes
+    'name',            '',    # String : component name
+    'ingredients'      '']    # String : today's ingredients in main dish
+ComponentLine = collections.namedtuple(
+    'ComponentLine', component_line_fields[0::2])
 
 
-def meal_line(v):
-    # factory for Meal_line
-    return Meal_line(
-        client=v.lastname + ', ' + v.firstname[0:2] + '.',
-        rqty=str(v.meal_qty) if v.meal_size == SIZE_CHOICES_REGULAR else '',
-        lqty=str(v.meal_qty) if v.meal_size == SIZE_CHOICES_LARGE else '',
-        comp_clash=', '.join(v.incompatible_components),
-        ingr_clash=', '.join(v.incompatible_ingredients),
-        preparation=', '.join(v.preparation),
-        rest_comp=', '.join(v.other_components),
-        rest_ingr=', '.join(v.other_ingredients),
-        rest_item=', '.join(v.restricted_items))
+meal_line_fields = [               # Special Meal Line on Kitchen Count.
+    # field name       default value
+    'client',          '',     # String : Lastname and abbreviated first name
+    'rqty',            '',     # String : Quantity of regular size main dishes
+    'lqty',            '',     # String : Quantity of large size main dishes
+    'ingr_clash',      '',     # String : Ingredients that clash
+    'preparation',     '',     # String : Meal preparations
+    'rest_ingr',       '',     # String : Other ingredients to avoid
+    'rest_item',       '',     # String : Restricted items
+    'span',            None]   # Number of lines to "rowspan" in table
+MealLine = collections.namedtuple(
+    'MealLine', meal_line_fields[0::2])
+
+
+def meal_line(kititm):
+    """Builds a line for the main section of the Kitchen Count Report.
+
+    Given a client's special requirements, assemble the fields of a line
+    that will be displayed / printed in the Kitchen Count Report.
+
+    Args:
+        kititm : A KitchenItem object (see order/models)
+
+    Returns:
+        A MealLine object
+    """
+    return MealLine(
+        client=kititm.lastname + ', ' + kititm.firstname[0:2] + '.',
+        rqty=(str(kititm.meal_qty)
+              if kititm.meal_size == SIZE_CHOICES_REGULAR else ''),
+        lqty=(str(kititm.meal_qty)
+              if kititm.meal_size == SIZE_CHOICES_LARGE else ''),
+        ingr_clash=', '.join(kititm.incompatible_ingredients),
+        preparation=', '.join(kititm.preparation),
+        rest_ingr=', '.join(kititm.other_ingredients),
+        rest_item=', '.join(kititm.restricted_items),
+        span=None)
 
 
 def kcr_cumulate(regular, large, meal):
-    # count cumulative meal quantities by size
+    """Count cumulative meal quantities by size.
 
+    Based on the size and on the number of servings of the 'meal',
+    calculate the new cumulative quantities by size.
+
+    Args:
+        regular : carried over quantity of regular size main dishes.
+        large : carried over quantity of large size main dishes.
+        meal : MealLine object
+
+    Returns:
+        A tuple of the new cumulative quantities : (regular, large)
+    """
     if meal.meal_size == SIZE_CHOICES_REGULAR:
         regular = regular + meal.meal_qty
     else:
@@ -233,23 +259,35 @@ def kcr_cumulate(regular, large, meal):
     return (regular, large)
 
 
-def kcr_total_line(lines, label, regular, large):
-    # add line to display subtotal or total quantities by size
-    if regular or large:
-        lines.append(
-            Meal_line(client=label, rqty=str(regular), lqty=str(large)))
-
-
 def kcr_make_lines(kitchen_list, date):
-    # generate all the lines for the kitchen count report
+    """Generate the sections and lines for the kitchen count report.
+
+    Count all the dishes that have to be prepared and identify all the
+    special client requirements such as disliked ingredients,
+    restrictions and necessary food preparation.
+
+    Args: kitchen_list : A dictionary of KitchenItem objects (see
+              order/models) which contain detailed information about
+              all the meals that have to be prepared for the day and
+              the client requirements and restrictions.
+          date : A date.datetime object giving the date on which the
+              meals will be delivered.
+
+    Returns:
+        A tuple. First value is the component (dishes) summary lines. The
+          second value is the special meals lines.
+    """
+    # Build component summary
     component_lines = {}
     for k, item in kitchen_list.items():
         for component_group, meal_component \
                 in item.meal_components.items():
             component_lines.setdefault(
                 component_group,
-                Component_line(
+                ComponentLine(
                     component_group=component_group,
+                    rqty=0,
+                    lqty=0,
                     name=meal_component.name,
                     ingredients=", ".join(
                         [ing.name for ing in
@@ -257,13 +295,18 @@ def kcr_make_lines(kitchen_list, date):
                              meal_component.id, date)])))
             if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH and
                     item.meal_size == SIZE_CHOICES_LARGE):
-                component_lines[component_group].lqty += \
-                    meal_component.qty
+                component_lines[component_group] = \
+                    component_lines[component_group]._replace(
+                        lqty=(component_lines[component_group].lqty +
+                              meal_component.qty))
             else:
-                component_lines[component_group].rqty += \
-                    meal_component.qty
+                component_lines[component_group] = \
+                    component_lines[component_group]._replace(
+                        rqty=(component_lines[component_group].rqty +
+                              meal_component.qty))
         # END FOR
     # END FOR
+    # Sort component summary
     items = component_lines.items()
     if items:
         component_lines_sorted = \
@@ -275,28 +318,18 @@ def kcr_make_lines(kitchen_list, date):
     else:
         component_lines_sorted = []
 
+    # Build special meal lines
+
     meal_lines = []
     rtotal, ltotal = (0, 0)
-
-    # part 1 Components clashes (and other columns)
-    rsubtotal, lsubtotal = (0, 0)
-    for v in sorted(
-            [val for val in kitchen_list.values() if
-             val.incompatible_components],
-            key=lambda x: x.lastname + x.firstname):
-        meal_lines.append(meal_line(v))
-        rsubtotal, lsubtotal = kcr_cumulate(rsubtotal, lsubtotal, v)
-    # END FOR
-    kcr_total_line(meal_lines, 'SUBTOTAL', rsubtotal, lsubtotal)
-    rtotal, ltotal = (rtotal + rsubtotal, ltotal + lsubtotal)
-
-    # part 2 Ingredients clashes , no components clashes (and other columns)
+    # part 1 Ingredients clashes (and other columns)
     rsubtotal, lsubtotal = (0, 0)
     clients = iter(sorted(
         [(ke, val) for ke, val in kitchen_list.items() if
-         (val.incompatible_ingredients and
-          not val.incompatible_components)],
+         val.incompatible_ingredients],
         key=lambda x: x[1].incompatible_ingredients))
+    # first line of a combination of ingredients
+    line_start = len(meal_lines)
     k, v = next(clients, (0, 0))
     while k > 0:
         combination = v.incompatible_ingredients
@@ -304,62 +337,63 @@ def kcr_make_lines(kitchen_list, date):
         rsubtotal, lsubtotal = kcr_cumulate(rsubtotal, lsubtotal, v)
         k, v = next(clients, (0, 0))
         if k == 0 or combination != v.incompatible_ingredients:
-            kcr_total_line(meal_lines, 'SUBTOTAL', rsubtotal, lsubtotal)
+            meal_lines.append(MealLine(*meal_line_fields[1::2])._replace(
+                client='SUBTOTAL', rqty=str(rsubtotal), lqty=str(lsubtotal)))
             rtotal, ltotal = (rtotal + rsubtotal, ltotal + lsubtotal)
             rsubtotal, lsubtotal = (0, 0)
+            # last line of this combination of ingredients
+            line_end = len(meal_lines)
+            # set rowspan to total number of lines for this combination
+            meal_lines[line_start] = meal_lines[line_start]._replace(
+                span=str(line_end - line_start))
+            # hide ingredients for lines following the first
+            for j in range(line_start + 1, line_end):
+                meal_lines[j] = meal_lines[j]._replace(span='-1')
+            # Add a blank line as separator
+            meal_lines.append(MealLine(*meal_line_fields[1::2]))
+            # first line of next combination of ingredients
+            line_start = len(meal_lines)
     # END WHILE
 
-    # part 3 No clashes but preparation (and other columns)
+    # part 2 No clashes but preparation (and other columns)
     rsubtotal, lsubtotal = (0, 0)
     for v in sorted(
             [val for val in kitchen_list.values() if
              (not val.incompatible_ingredients and
-              not val.incompatible_components and
               val.preparation)],
             key=lambda x: x.lastname + x.firstname):
         meal_lines.append(meal_line(v))
         rsubtotal, lsubtotal = kcr_cumulate(rsubtotal, lsubtotal, v)
+        # Add a blank line as separator
+        meal_lines.append(MealLine(*meal_line_fields[1::2]))
     # END FOR
-    kcr_total_line(meal_lines, 'SUBTOTAL', rsubtotal, lsubtotal)
+    if rsubtotal or lsubtotal:
+        meal_lines.append(MealLine(*meal_line_fields[1::2])._replace(
+            client='SUBTOTAL', rqty=str(rsubtotal), lqty=str(lsubtotal)))
     rtotal, ltotal = (rtotal + rsubtotal, ltotal + lsubtotal)
-    kcr_total_line(meal_lines, 'TOTAL SPECIALS', rtotal, ltotal)
-
-    rsubtotal, lsubtotal = (0, 0)
-    # part 4 No clashes nor preparation but other restrictions (NOT PRINTED)
-    for v in sorted(
-            [val for val in kitchen_list.values() if
-             (not val.incompatible_ingredients and
-              not val.incompatible_components and
-              not val.preparation and
-              (val.other_components or
-               val.other_ingredients or
-               val.restricted_items))],
-            key=lambda x: x.lastname + x.firstname):
-        meal_lines.append(meal_line(v))
-        rsubtotal, lsubtotal = kcr_cumulate(rsubtotal, lsubtotal, v)
-    # END FOR
-
-    # part 5 All columns empty (NOT PRINTED)
-    for v in sorted(
-            [val for val in kitchen_list.values() if
-             (not val.incompatible_ingredients and
-              not val.incompatible_components and
-              not val.preparation and
-              not val.other_components and
-              not val.other_ingredients and
-              not val.restricted_items)],
-            key=lambda x: x.lastname + x.firstname):
-        meal_lines.append(meal_line(v))
-        rsubtotal, lsubtotal = kcr_cumulate(rsubtotal, lsubtotal, v)
-    # END FOR
-    kcr_total_line(meal_lines, 'SUBTOTAL', rsubtotal, lsubtotal)
+    meal_lines.append(MealLine(*meal_line_fields[1::2])._replace(
+        rqty=str(rtotal), lqty=str(ltotal), ingr_clash='TOTAL SPECIALS'))
 
     return (component_lines_sorted, meal_lines)
 
 
 def kcr_make_labels(kitchen_list):
-    # see https://github.com/bcbnz/pylabels
+    """Generate Meal Labels sheets as a PDF file.
 
+    Generate a label for each main dish serving to be delivered. The
+    sheet format is "Avery 5162" 8,5 X 11 inches, 2 cols X 7 lines.
+
+    Uses pylabels package - see https://github.com/bcbnz/pylabels
+    and ReportLab
+
+    Args: kitchen_list : A dictionary of KitchenItem objects (see
+              order/models) which contain detailed information about
+              all the meals that have to be prepared for the day and
+              the client requirements and restrictions.
+
+    Returns:
+        An integer : The number of labels generated.
+    """
     # dimensions are in millimeters; 1 inch = 25.4 mm
     specs = labels.Specification(
         sheet_width=8.5 * 25.4, sheet_height=11 * 25.4,
@@ -412,6 +446,7 @@ def kcr_make_labels(kitchen_list):
                                     fontName="Helvetica",
                                     fontSize=9))
             position -= 10
+    # END DEF
 
     sheet = labels.Sheet(specs, draw_label, border=True)
 
@@ -433,6 +468,7 @@ def kcr_make_labels(kitchen_list):
 
 
 class MealLabels(generic.View):
+
     def get(self, request, **kwargs):
         try:
             f = open(MEAL_LABELS_FILE, "rb")

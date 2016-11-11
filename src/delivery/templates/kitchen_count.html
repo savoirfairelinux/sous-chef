@@ -49,30 +49,30 @@
   </tbody>
 </table>
 
-<table class="ui very compact celled  table">
+<table class="ui very compact celled structured table">
   <thead>
    <tr class="top center aligned">
-    <th class="">{% trans 'Client' %}</th>
+    <th class="">{% trans 'Clashing' %} - {% trans 'Ingredients' %}</th>
     <th class="">{% trans 'Qty' %} - {% trans 'Reg' %}</th>
     <th class="">{% trans 'Qty' %} - {% trans 'Lge' %}</th>
-    <th class="">{% trans 'Clashing' %} - {% trans 'Component' %}</th>
-    <th class="">{% trans 'Clashing' %} - {% trans 'Ingredients' %}</th>
+    <th class="">{% trans 'Client' %}</th>
     <th class="">{% trans 'Preparation' %}</th>
     <th class="">{% trans 'Restrictions' %}</th>
    </tr>
   </thead>
   <tbody>
     {% for obj in meal_lines %}
-      <tr{% if obj.client == "SUBTOTAL" or obj.client == "TOTAL SPECIALS" %} class="positive"{% endif %}>
-        <td><strong>{{obj.client}}</strong></td>
-        <td class="center aligned">{{obj.rqty}}</td>
-        <td class="center aligned">{{obj.lqty}}</td>
-        <td>{{obj.comp_clash}}</td>
-        <td>{{obj.ingr_clash}}</td>
-        <td>{{obj.preparation}}</td>
-        <td>{% if obj.rest_comp %} {{obj.rest_comp}}; {% endif %}
-            {% if obj.rest_ingr %} {{obj.rest_ingr}}; {% endif %}
-            {{obj.rest_item}}</td>
+      <tr{% if obj.client == "" and obj.ingr_clash == "" %} class="active"{% endif %}>
+        {% if not obj.span %}
+              <td><strong>{{obj.ingr_clash}}</strong></td>
+        {% elif obj.span != "-1" %}
+              <th rowspan={{obj.span}}>{% firstof obj.ingr_clash "&nbsp;" %}</th>
+        {% endif %}
+        <td class="center aligned">{% firstof obj.rqty "&nbsp;" %}</td>
+        <td class="center aligned">{% firstof obj.lqty "&nbsp;" %}</td>
+        <td>{% firstof obj.client "&nbsp;" %}</td>
+        <td>{% firstof obj.preparation "&nbsp;" %}</td>
+        <td>{{obj.rest_ingr}}{% if obj.rest_ingr %} ; {% endif %} <strong>{% firstof obj.rest_item "&nbsp;" %}</strong></td>
       </tr>
     {% endfor %}
   </tbody>
