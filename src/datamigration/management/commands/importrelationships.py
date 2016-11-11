@@ -50,7 +50,8 @@ class Command(BaseCommand):
 
                     if row[self.ROW_FIRSTNAME] is not '':
 
-                        relationship, created = Member.objects.update_or_create(
+                        relationship, created = Member.objects.update_or_create
+                        (
                             rid=row[
                                 self.ROW_RID], defaults={
                                 "firstname": row[
@@ -59,19 +60,27 @@ class Command(BaseCommand):
 
                         if row[self.ROW_EMERGENCY] == '1':
                             self.stdout.write(
-                                self.style.SUCCESS('Added an emergency Relationship.'))
+                                self.style.SUCCESS(
+                                    'Added an emergency Relationship.'
+                                ))
                             client.emergency_contact = relationship
                             client.emergency_contact_relationship = row[
                                 self.ROW_RELATIONSHIP]
                         if row[self.ROW_BILLTO] == '1':
                             self.stdout.write(
-                                self.style.SUCCESS('Added a blling Relationship.'))
+                                self.style.SUCCESS(
+                                    'Added a blling Relationship.'
+                                ))
                             client.billing_member = relationship
                         if row[self.ROW_REFERENT] == '1':
                             referencing = Referencing.objects.create(
-                                referent=relationship, client=client, referral_reason=row[
-                                    self.ROW_REASON], work_information=row[
-                                    self.ROW_WORK_INFORMATION], date=date.today(), )
+                                referent=relationship,
+                                client=client,
+                                referral_reason=row[self.ROW_REASON],
+                                work_information=row[
+                                    self.ROW_WORK_INFORMATION
+                                ],
+                                date=date.today(), )
 
                         client.save()
 

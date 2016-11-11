@@ -608,7 +608,8 @@ class Client(models.Model):
         """
         id = None
         try:
-            option, created = Option.objects.get_or_create(name='meals_schedule')
+            option, created = Option.objects.get_or_create(
+                name='meals_schedule')
             meals_schedule_option = Client_option.objects.get(
                 client=self, option=option
             )

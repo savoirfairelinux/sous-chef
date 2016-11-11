@@ -2,7 +2,8 @@ from django.core.management.base import BaseCommand
 from django.core.management import call_command
 from django.shortcuts import get_object_or_404
 from member.factories import ClientFactory, MemberFactory
-from member.models import Client, Member, Route, Address, Contact, Referencing, Option, Client_option, Client_avoid_ingredient
+from member.models import Client, Member, Route, Address, Contact, Referencing
+from member.models import Option, Client_option, Client_avoid_ingredient
 from note.models import Note
 from meal.models import Ingredient
 import os
@@ -22,10 +23,10 @@ class Command(BaseCommand):
     ROW_THU = 4
     ROW_FRI = 5
     ROW_SAT = 6
-    ROW_FOOD_PREP_PUREE=7
-    ROW_FOOD_PREP_CUT=8
-    ROW_MLABEL=9
-    ROW_ING_BEEF=10
+    ROW_FOOD_PREP_PUREE = 7
+    ROW_FOOD_PREP_CUT = 8
+    ROW_MLABEL = 9
+    ROW_ING_BEEF = 10
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -39,7 +40,6 @@ class Command(BaseCommand):
             file = 'mock_meals.csv'
         else:
             file = 'clients_meals.csv'
-
 
         food_prep_puree = Option.objects.get(
             name='Puree all'

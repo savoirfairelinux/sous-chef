@@ -96,7 +96,5 @@ class Command(BaseCommand):
                 client.member.created_at = row_created
                 client.member.save()
 
-                
-
                 # Add Client option meals_schedule
                 # client.set_meals_schedule([])

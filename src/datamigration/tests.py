@@ -194,7 +194,7 @@ class ImportMemberMealsTestCase(TestCase):
         robert = Client.objects.get(member__mid=96)
         self.assertEquals(robert.food_preparation.all().count(), 1)
         self.assertEquals(robert.food_preparation.first(),
-            self.food_preparation_cut)
+                          self.food_preparation_cut)
         dorothy = Client.objects.get(member__mid=94)
         self.assertEquals(dorothy.food_preparation.all().count(), 2)
 
