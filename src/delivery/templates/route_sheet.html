@@ -57,7 +57,7 @@
         <td class="left aligned">{{obj.delivery_note}}</td>
         <td>
           {% for item in obj.delivery_items %}
-            {{item.component_group}} {{item.remark}}<br>
+            {{item.component_group}} {% if item.remark %}{{item.remark}}{% endif %}<br>
           {% endfor %}
         </td>
         <td class="center aligned">
