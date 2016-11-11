@@ -39,7 +39,6 @@ function getRouteWaypoints(routeId) {
 
     // Ajax call to get waypoint according route
     $.get( "../getDailyOrders/?route="+routeId+"&mode=euclidean", function(data ) {
-
         var deliveryPoints = L.Routing.Waypoint.extend({ member:"", address:""});
         // create an array of waypoint from ajax call
         for(var i in data.waypoints)
@@ -171,6 +170,10 @@ function main_map_init (map, options) {
        printMapAndItinerary();
     });
 
+    routeId = $('#route_map').attr('data-route');
+    console.log(routeId);
+    getWaypoints(routeId);
+
      // during init
     $('.ui.dropdown').dropdown({
         onChange: function(routeId) {
@@ -229,7 +232,8 @@ function main_map_init (map, options) {
         }
     });
 
-    getRouteWaypoints(1);
+
+    //getWaypoints(1);
 }
 
     //:::  This routine calculates the distance between two points (given the     :::

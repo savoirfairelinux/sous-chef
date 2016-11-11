@@ -70,7 +70,23 @@ class OrderManager(models.Manager):
         if delivery_date is None:
             delivery_date = date.today()
         return self.get_queryset().filter(
-            delivery_date=delivery_date, status=ORDER_STATUS_ORDERED)
+            delivery_date=delivery_date,
+            status=ORDER_STATUS_ORDERED,
+            client__route=1)
+
+    def get_shippable_orders_by_route(self, route_id):
+        """
+        Return the orders ready to be delivered for a given route.
+        It is assumed here that the delivery date is today.
+        A shippable order must be created in the database, and its ORDER_STATUS
+        must be 'O' (Ordered).
+        """
+        delivery_date = date.today()
+        return self.get_queryset().filter(
+            delivery_date=delivery_date,
+            status=ORDER_STATUS_ORDERED,
+            client__route=route_id)
+
 
     def get_billable_orders(self, year, month):
         """

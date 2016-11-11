@@ -155,6 +155,18 @@ class MealInformation(generic.View):
             {'date': date,
              'form': form})
 
+class RouteInformation(generic.ListView):
+    # Display all the route information for a given day
+    model = Delivery
+    template_name = "route.html"
+
+    def get_context_data(self, **kwargs):
+
+        context = super(RouteInformation, self).get_context_data(**kwargs)
+        context['routes'] = Route.objects.all()
+
+        return context
+
 
 class RoutesInformation(generic.ListView):
     # Display all the route information for a given day
@@ -164,9 +176,27 @@ class RoutesInformation(generic.ListView):
     def get_context_data(self, **kwargs):
 
         context = super(RoutesInformation, self).get_context_data(**kwargs)
-        context['routes'] = Route.objects.all()
+        routes = Route.objects.all()
+        orders = []
+        for route in routes:
+            orders.append((route, Order.objects.get_shippable_orders_by_route(route.id).count()))
+        context['routes'] = orders
 
         return context
+
+
+class OrganizeRoute(generic.ListView):
+    # Display all the route information for a given day
+    model = Delivery
+    template_name = "organize_route.html"
+
+    def get_context_data(self, **kwargs):
+
+        context = super(OrganizeRoute, self).get_context_data(**kwargs)
+        context['route'] = Route.objects.get(id=self.kwargs['id'])
+
+        return context
+
 
 
 # Kitchen count report view, helper classes and functions

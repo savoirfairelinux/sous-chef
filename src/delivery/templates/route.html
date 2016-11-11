@@ -23,29 +23,30 @@
     </div>
 </div>
 
+<select id="routeselect" class="ui dropdown">
+    {% for route in routes %}
+    <option value="{{ route.id }}">{{ route.name }}</option>
+    {% endfor %}
+</select>
+
+<button id='btnprint' class="ui primary labeled icon right floated  button">
+    <i class="print icon"></i>
+    {% trans "Print" %}
+</button>
+
 <div class="row">
-    <div class="sixteen wide column">
-      <div class="ui middle aligned divided list">
-          {% for route, orders in routes %}
-          <div class="item">
-            <div class="right floated content">
-              <a href="{% url 'delivery:organize_route' id=route.id %}" class="ui compact labeled icon button"><i class="marker icon"></i>{% trans 'Organize' %}</a>
-              <a href="{% url 'delivery:route_sheet_id' id=route.id %}" class="ui compact labeled icon button"><i class="print icon"></i>{% trans 'Route sheet' %}</a>
-            </div>
-            <i class="large location arrow icon"></i>
-            <div class="content">
-              <div class="header">{{ route.name }}</div>
-              <div class="description">
-                  <i class="bicycle icon"></i>
-                  <div class="ui circular label">{{ orders }}</div>   <i class="checkmark green icon"></i></div>
-            </div>
-          </div>
-          {% endfor %}
-      </div>
+  <div class="twelve wide column">
+    {% leaflet_map "main" callback="main_map_init" %}
+  </div>
+  <div class="four wide column">
+    <div class="controls"></div>
   </div>
 </div>
 
 <a class="big ui right floated button" href="{% url 'delivery:kitchen_count' %}">{% trans "Back" %}</a>
+<button id='btnnext' class="big ui yellow right floated button">
+    {% trans "Next: Delivery Route Sheet" %}
+</button>
 
 {% endblock %}
 
