@@ -371,6 +371,7 @@ class Client(models.Model):
     LANGUAGES = (
         ('en', _('English')),
         ('fr', _('French')),
+        ('al', _('Allophone')),
     )
 
     class Meta:
