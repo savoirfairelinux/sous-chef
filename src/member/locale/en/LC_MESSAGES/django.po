@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-27 20:41+0000\n"
+"POT-Creation-Date: 2016-11-11 16:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,7 +111,7 @@ msgstr ""
 msgid "Distance from Santropol"
 msgstr ""
 
-#: member/forms.py:132 member/templates/client/list.html:89
+#: member/forms.py:132 member/templates/client/list.html:92
 #: member/templates/client/partials/filters.html:16
 msgid "Route"
 msgstr ""
@@ -469,7 +469,7 @@ msgstr ""
 msgid "alert client"
 msgstr ""
 
-#: member/models.py:461 member/templates/client/list.html:56
+#: member/models.py:460
 msgid "route"
 msgstr ""
 
@@ -697,28 +697,29 @@ msgstr ""
 msgid "Or"
 msgstr ""
 
-#: member/templates/client/list.html:52 member/templates/client/list.html:96
+#: member/templates/client/list.html:52 member/templates/client/list.html:99
 #: member/templates/client/view/summary.html:36
 msgid "years old"
 msgstr ""
 
-#: member/templates/client/list.html:55
-msgid "is an"
-msgstr ""
-
 #: member/templates/client/list.html:56
-msgid "client on the"
+#, python-format
+msgid ""
+"\n"
+"                    %(member_firstname)s is an <strong>%(delivery_type)s</"
+"strong> client on the <strong>%(route)s</strong> route.\n"
+"                "
 msgstr ""
 
-#: member/templates/client/list.html:57
+#: member/templates/client/list.html:60
 msgid "This client is currently"
 msgstr ""
 
-#: member/templates/client/list.html:77 member/templates/client/list.html:114
+#: member/templates/client/list.html:80 member/templates/client/list.html:117
 msgid "Sorry, no result found."
 msgstr ""
 
-#: member/templates/client/list.html:86
+#: member/templates/client/list.html:89
 #: member/templates/client/partials/filters.html:7
 #: member/templates/client/partials/forms/basic_information.html:4
 #: member/templates/client/partials/forms/emergency_contact.html:27
@@ -727,24 +728,24 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: member/templates/client/list.html:87
+#: member/templates/client/list.html:90
 #: member/templates/client/partials/filters.html:22
 #: member/templates/client/partials/menu.html:11
 #: member/templates/client/view/orders.html:28
 msgid "Status"
 msgstr ""
 
-#: member/templates/client/list.html:88
+#: member/templates/client/list.html:91
 #: member/templates/client/partials/filters.html:28
 #: member/templates/client/partials/forms/dietary_restriction.html:13
 msgid "Delivery"
 msgstr ""
 
-#: member/templates/client/list.html:90
+#: member/templates/client/list.html:93
 msgid "Last update"
 msgstr ""
 
-#: member/templates/client/list.html:128
+#: member/templates/client/list.html:131
 msgid "of"
 msgstr ""
 
