@@ -56,7 +56,6 @@ gulp.task('scripts', function() {
     return gulp.src([
         SRC_JS + '/vendor/jquery/**/*.js',
         SRC_JS + '/vendor/calendar/**/*.js',
-        SRC_JS + '/vendor/multidatespicker/*.js',
         SRC_JS + '/global.js',
         SRC_JS + '/delivery.js',
         SRC_JS + '/member.js',
@@ -87,7 +86,20 @@ gulp.task('scripts-leaflet', function() {
         .pipe(gulp.dest(DST_JS));
 });
 
-gulp.task('js-watch', ['scripts-leaflet', 'scripts'], browsersync.reload);
+gulp.task('scripts-multidatespicker', function() {
+    return gulp.src([
+        SRC_JS + '/vendor/multidatespicker/*.js',
+        SRC_JS + '/multidatespicker.js',
+    ])
+        .pipe(concat('multidatespicker.js'))
+        .pipe(gulp.dest(DST_JS))
+        .pipe(uglify())
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(gulp.dest(DST_JS));
+});
+
+gulp.task('js-watch', ['scripts-multidatespicker', 'scripts-leaflet', 'scripts'],
+browsersync.reload);
 
 gulp.task('images', function() {
     return gulp.src([SRC_IMG + '/**/*'])
@@ -102,7 +114,8 @@ gulp.task('images', function() {
 gulp.task('images-watch', ['images'], browsersync.reload);
 
 gulp.task('default', function() {
-    gulp.start('styles', 'scripts-leaflet', 'scripts', 'images');
+    gulp.start('styles', 'scripts-multidatespicker', 'scripts-leaflet', 'scripts',
+    'images');
 });
 
 gulp.task('watch', ['default'], function() {
@@ -122,6 +135,7 @@ gulp.task('validate', function () {
         SRC_JS + '/order.js',
         SRC_JS + '/page.js',
         SRC_JS + '/global.js',
+        SRC_JS + '/multidatespicker.js',
     ])
         .pipe(debug())
         .pipe(validate())

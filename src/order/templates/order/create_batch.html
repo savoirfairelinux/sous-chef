@@ -66,3 +66,12 @@
 </div>
 
 {% endblock %}
+
+{% block extrajs %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js" type="application/javascript"></script>
+    {% if debug %}
+        <script src="{% static 'js/multidatespicker.js' %}" type="application/javascript"></script>
+    {% else %}
+        <script src="{% static 'js/multidatespicker.min.js' %}" type="application/javascript"></script>
+    {% endif %}
+{% endblock %}

@@ -16,8 +16,6 @@ $(function() {
     $('.ui.accordion').accordion();
     $('.ui.dropdown').dropdown({transition: 'drop'});
 
-    $('table').tablesort();
-
     $('.ui.calendar').calendar({
         type: 'date',
         formatter: {
