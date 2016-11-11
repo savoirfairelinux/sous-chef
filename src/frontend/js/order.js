@@ -27,7 +27,7 @@ $(function() {
     $('#id_delivery_dates').hide();
 
     $('#id_client').change(function() {
-        $.get('/member/client/' + $(this).val() + '/meals/preferences', function(data) {
+        $.get($(this).attr('data-url'), function(data) {
             if (!$.isEmptyObject(data)) {
                 $('#id_main_dish_default_quantity').val(data['maindish_q']);
                 $('#id_size_default').dropdown('set selected', data['maindish_s']);
@@ -50,5 +50,5 @@ $(function() {
             }
         });
     });
-    // --
+
 });

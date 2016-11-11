@@ -108,7 +108,7 @@ class CreateOrder(AjaxableResponseMixin, CreateWithInlinesView):
 class CreateOrdersBatch(generic.FormView):
     form_class = CreateOrdersBatchForm
     template_name = "order/create_batch.html"
-    success_url = reverse_lazy('order:createBatch')
+    success_url = reverse_lazy('order:create_batch')
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
