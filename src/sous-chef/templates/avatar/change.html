@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n avatar_tags %}
+
+{% block title %}{% trans "Avatar" %}{% endblock %}
+
+{% block content %}
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">{% trans "Avatars" %}</h1>
+</div>
+
+<div class="ui padded basic segment">
+<p>Your current avatar :</p>
+{% avatar user 80 class="ui tiny left floated circular image" id="user_avatar" %}
+</br>
+{% if not avatars %}
+    <p>{% trans "You haven't uploaded an avatar yet. Please upload one now." %}</p>
+{% else %}
+    <form method="POST" action="{% url 'avatar_change' %}">
+        <ul>
+            {{ primary_avatar_form.as_ul }}
+        </ul>
+        <p>{% csrf_token %}<input type="submit" value="{% trans "Choose new Default" %}" class="ui yellow button"/></p>
+    </form>
+{% endif %}
+<form enctype="multipart/form-data" method="POST" action="{% url 'avatar_add' %}">
+    {{ upload_avatar_form.as_p }}
+    <p>{% csrf_token %}<input type="submit" value="{% trans "Upload New Image" %}" class="ui yellow button"/></p>
+</form>
+
+<a href="{% url 'avatar_delete' %}">Delete your avatars</a>
+</div>
+{% endblock %}

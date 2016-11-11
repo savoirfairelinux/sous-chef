@@ -58,5 +58,11 @@ urlpatterns = [
         include('note.urls', namespace="note")
     ),
     url(
-        r'^billing/', include('billing.urls', namespace="billing"))
+        r'^billing/',
+        include('billing.urls', namespace="billing")
+    ),
+    url(
+        r'^avatar/',
+        include('avatar.urls')
+        ),
 ]

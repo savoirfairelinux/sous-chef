@@ -1,5 +1,6 @@
 {% load staticfiles i18n %}
 {% load admin_urls %}
+{% load avatar_tags %}
 
 <div class="item">
     <a href="{% url 'home' %}">
@@ -8,7 +9,8 @@
 </div>
 {% if request.user %}
 <div class="item loggedin-user">
-    <img class="ui tiny left floated circular image" src="{% static 'images/joe.jpg' %}">
+    {% avatar user 80 class="ui tiny left floated circular image" id="user_avatar" %}
+    <a href="{% url 'avatar_change' %}">Change your avatar</a>
     <h4 class="ui header name">
         {{ request.user.first_name }} <span class="sub-name">({{ request.user.username }})</span>
     </h4>

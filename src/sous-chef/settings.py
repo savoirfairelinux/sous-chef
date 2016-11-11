@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'note',
     'billing',
     'datamigration',
+    'avatar',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -179,3 +180,10 @@ STATICFILES_DIRS = (
     BASE_DIR + '/sous-chef/static/',
 )
 STATIC_URL = '/static/'
+
+# Avatar files
+AVATAR_STORAGE_DIR = STATIC_ROOT + '/avatars/'
+AVATAR_PROVIDERS = (
+    'avatar.providers.GravatarAvatarProvider',
+    'avatar.providers.DefaultAvatarProvider',
+)
