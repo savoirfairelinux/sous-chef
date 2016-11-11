@@ -80,6 +80,14 @@ class Member(models.Model):
     class Meta:
         verbose_name_plural = _('members')
 
+    mid = models.IntegerField(
+        null=True
+    )
+
+    rid = models.IntegerField(
+        null=True
+    )
+
     # Member information
     firstname = models.CharField(
         max_length=50,
@@ -571,7 +579,6 @@ class Client(models.Model):
         """
         Returns a hierarchical dict representing the meals schedule.
         """
-
         prefs = []
         for day, str in DAYS_OF_WEEK:
             current = {}
@@ -599,16 +606,18 @@ class Client(models.Model):
         @param schedule
             A python list of days.
         """
-        option = Option.objects.get(name='meals_schedule')
         id = None
         try:
+            option, created = Option.objects.get_or_create(
+                name='meals_schedule')
             meals_schedule_option = Client_option.objects.get(
                 client=self, option=option
             )
             id = meals_schedule_option.id
         except Client_option.DoesNotExist:
             pass
-        Client_option.objects.update_or_create(
+
+        option, created = Client_option.objects.update_or_create(
             id=id,
             defaults={
                 'client': self,

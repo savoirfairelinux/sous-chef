@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'leaflet',
     'note',
     'billing',
-
+    'datamigration',
 ]
 
 MIDDLEWARE_CLASSES = [

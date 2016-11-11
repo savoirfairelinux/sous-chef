@@ -2103,12 +2103,12 @@ class ClientUpdateDietaryRestrictionTestCase(ClientUpdateTestCase):
 
         # Send the data to the form.
         response = self.client.post(
-           reverse_lazy(
-               'member:member_update_dietary_restriction',
-               kwargs={'pk': client.id}
-           ),
-           data,
-           follow=True
+            reverse_lazy(
+                'member:member_update_dietary_restriction',
+                kwargs={'pk': client.id}
+            ),
+            data,
+            follow=True
         )
 
         # Reload client data as it should have been changed in the database
