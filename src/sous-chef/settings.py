@@ -182,7 +182,9 @@ STATICFILES_DIRS = (
 STATIC_URL = '/static/'
 
 # Avatar files
-AVATAR_STORAGE_DIR = STATIC_ROOT + '/avatars/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+AVATAR_STORAGE_DIR = 'avatars/'
 AVATAR_PROVIDERS = (
     'avatar.providers.GravatarAvatarProvider',
     'avatar.providers.DefaultAvatarProvider',
