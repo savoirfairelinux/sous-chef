@@ -11,12 +11,14 @@
     {% url 'avatar_change' as avatar_change_url %}
     <p>{% blocktrans %}You have no avatars to delete. Please <a href="{{ avatar_change_url }}">upload one</a> now.{% endblocktrans %}</p>
 {% else %}
-    <form method="POST" action="{% url 'avatar_delete' %}">
-        <ul>
-            {{ delete_avatar_form.as_ul }}
-        </ul>
-        <p>{% csrf_token %}<input type="submit" value="{% trans "Delete These" %}" /></p>
-    </form>
+    <div class="list-avatars">
+      <form method="POST" action="{% url 'avatar_delete' %}">
+          <ul>
+              {{ delete_avatar_form.as_ul }}
+          </ul>
+          <p>{% csrf_token %}<input type="submit" value="{% trans "Delete these" %}" class="ui red button"/></p>
+      </form>
+    </div>
 {% endif %}
 </div>
 {% endblock %}
