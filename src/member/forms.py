@@ -383,13 +383,23 @@ class ClientPaymentInformation(MemberForm):
 
 class ClientEmergencyContactInformation(MemberForm):
 
-    contact_type = forms.ChoiceField(
-        label=_("Contact Type"),
-        choices=CONTACT_TYPE_CHOICES,
-        widget=forms.Select(attrs={'class': 'ui dropdown'})
+    email = forms.CharField(
+        label='<i class="email icon"></i>',
+        widget=forms.TextInput(attrs={'placeholder': _('Email')}),
+        required=False,
     )
 
-    contact_value = forms.CharField(label=_("Contact"))
+    home_phone = forms.CharField(
+        label='Home',
+        widget=forms.TextInput(attrs={'placeholder': _('Home phone')}),
+        required=False,
+    )
+
+    cell_phone = forms.CharField(
+        label='Cell',
+        widget=forms.TextInput(attrs={'placeholder': _('Cellular')}),
+        required=False,
+    )
 
     relationship = forms.CharField(
         label=_("Relationship"),

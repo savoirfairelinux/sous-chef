@@ -270,15 +270,34 @@ class ClientWizard(NamedUrlSessionWizardView):
             )
             emergency.save()
 
-        client_emergency_contact = Contact.objects.create(
-            type=emergency_contact.cleaned_data.get("contact_type"),
+        client_emergency_contact_home_phone = Contact.objects.create(
+            type="Home",
             value=emergency_contact.cleaned_data.get(
-                "contact_value"
+                "home_phone"
             ),
 
             member=emergency,
         )
-        client_emergency_contact.save()
+
+        client_emergency_contact_email = Contact.objects.create(
+            type="Email",
+            value=emergency_contact.cleaned_data.get(
+                "email"
+            ),
+
+            member=emergency,
+        )
+
+        client_emergency_contact_cell = Contact.objects.create(
+            type="Email",
+            value=emergency_contact.cleaned_data.get(
+                "cell_phone"
+            ),
+
+            member=emergency,
+        )
+        client_emergency_contact_home_phone.save()
+
         return emergency
 
     def save_referent_information(self, client, billing_member, emergency):
@@ -1218,10 +1237,12 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
                 client.emergency_contact.firstname,
                 client.emergency_contact.lastname
             ),
-            'contact_type':
+            'contact_email':
                 client.emergency_contact.member_contact.first().type,
-            'contact_value':
-                client.emergency_contact.member_contact.first().value,
+            'contact_home_phone':
+                client.emergency_contact.member_contact.first().type,
+            'contact_cell_phone':
+                client.emergency_contact.member_contact.first().type,
             'relationship':
                 client.emergency_contact_relationship
         })
@@ -1247,10 +1268,10 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
         # Remove old emergency_contact
         Contact.objects.filter(member=client.emergency_contact).delete()
         # Add new emergency_contact
-        client_emergency_contact = Contact.objects.create(
-            type=emergency_contact.get("contact_type"),
+        client_emergency_contact_home_phone = Contact.objects.create(
+            type="home_phone",
             value=emergency_contact.get(
-                "contact_value"
+                "contact_home_phone"
             ),
             member=emergency,
         )
