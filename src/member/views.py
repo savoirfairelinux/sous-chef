@@ -1210,6 +1210,7 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
         client = get_object_or_404(
             Client, pk=self.kwargs.get('pk')
         )
+        member_contact = client.emergency_contact.member_contact.first()
         initial.update({
             'firstname': None,
             'lastname': None,
@@ -1218,10 +1219,8 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
                 client.emergency_contact.firstname,
                 client.emergency_contact.lastname
             ),
-            'contact_type':
-                client.emergency_contact.member_contact.first().type,
-            'contact_value':
-                client.emergency_contact.member_contact.first().value,
+            'contact_type': member_contact.type if member_contact else None,
+            'contact_value': member_contact.value if member_contact else None,
             'relationship':
                 client.emergency_contact_relationship
         })
