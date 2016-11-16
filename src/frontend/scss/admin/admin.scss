@@ -286,3 +286,15 @@ ul.doughnut-legend {
 .list-avatars  li  {
   list-style:none;
 }
+
+.list-avatars img {
+    background-repeat: no-repeat;
+    background-position: 50%;
+    border-radius: 50%;
+    width: 80px;
+}
+
+.list-avatars label {
+    font-weight: bold;
+    font-size: medium;
+}

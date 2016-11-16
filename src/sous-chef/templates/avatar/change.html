@@ -11,15 +11,9 @@
 <div class="ui padded basic segment">
   <div class="ui grid">
     <div class="two column row">
-        <div class="column">
-          <p>{% trans "Your current avatar:" %}</p>
-          {% avatar user 80 class="ui tiny left floated circular image" id="user_avatar" %}
-        </div>
-    </div>
-    <div class="two column row">
         {% if not avatars %}
           <div class="column">
-              <p>{% trans "You haven't uploaded an avatar yet. Please upload one now." %}</p>
+              <p><label>{% trans "You haven't uploaded an avatar yet. Please upload one now." %}</label></p>
           </div>
         {% else %}
           <div class="column">
@@ -28,7 +22,12 @@
                     <ul>
                         {{ primary_avatar_form.as_ul }}
                     </ul>
-                    <p>{% csrf_token %}<input type="submit" value="{% trans "Save selected avatar" %}" class="ui green button"/></p>
+                    <p>{% csrf_token %}
+                      <button type="submit" class="ui green button">
+                        <i class="save icon"></i>
+                        {% trans "Save selected avatar" %}
+                      </button>
+                      </p>
                 </form>
               </div>
           </div>
@@ -36,16 +35,19 @@
         <div class="column">
           <form enctype="multipart/form-data" method="POST" action="{% url 'avatar_add' %}">
               {{ upload_avatar_form.as_p }}
-              <p>{% csrf_token %}<input type="submit" value="{% trans "Upload New Image" %}" class="ui yellow button"/></p>
+              <p>{% csrf_token %}
+                <button type="submit" class="ui yellow button">
+                  <i class="add icon"></i>
+                  {% trans "Upload New Image" %}
+                </button>
+              </p>
+              {% if avatars %}
+                <p>
+                  <a href="{% url 'avatar_delete' %}" class="ui red button"><i class="remove icon"></i>{% trans "Delete your avatars" %}</a>
+                </p>
+              {% endif %}
           </form>
         </div>
-      </div>
-      <div class="two column row">
-        {% if avatars %}
-          <div class="column">
-            <a href="{% url 'avatar_delete' %}">{% trans "Delete your avatars" %}</a>
-          </div>
-        {% endif %}
       </div>
   </div>
 </div>
