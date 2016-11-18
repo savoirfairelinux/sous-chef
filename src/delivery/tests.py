@@ -196,6 +196,13 @@ class DeliveryRouteSheetTestCase(TestCase):
 
     def test_sheet(self):
         """Sample route sheet page."""
+        member = Member.objects.filter(lastname='Blondin')[0]
+        dic = {"route": [{"id": self.route_id}],
+               "members": [{"id": member.id}]}
+        response = self.client.post(
+            '/delivery/saveRoute/',
+            json.dumps(dic),
+            content_type="application/json")
         response = self.client.get(
             reverse_lazy('delivery:route_sheet_id', args=[self.route_id]))
         self.assertTrue(b'Blondin' in response.content)
@@ -206,16 +213,58 @@ class RouteSequencingTestCase(TestCase):
     fixtures = ['sample_data']
 
     def setUp(self):
-        # This data set includes 'Blondin' client lastname
+        # This data set includes 'Dallaire' and 'Taylor' client lastnames
         # generate orders today
         self.today = datetime.date.today()
         clients = Client.active.all()
         numorders = Order.objects.auto_create_orders(
             self.today, clients)
-        self.route_id = Route.objects.get(name='Centre Sud').id
+        self.route_id = Route.objects.get(name='Mile-End').id
 
-    def test_get_orders(self):
-        """Route get orders."""
+    def test_get_orders_euclidean(self):
+        """Route get orders with Euclidean optimized sequence."""
         response = self.client.get(
-            '/delivery/getDailyOrders/?route='+str(self.route_id))
+            '/delivery/getDailyOrders/?route=' +
+            str(self.route_id) + '&mode=euclidean')
+        self.assertTrue(b'Dallaire' in response.content)
+
+    def test_save_route(self):
+        """Route save sequence."""
+        dic = {"route": [{"id": "4"}],
+               "members": [{"id": 864}, {"id": 867}, {"id": 868},
+                           {"id": 869}, {"id": 861}, {"id": 862}, {"id": 863}]}
+        response = self.client.post(
+            '/delivery/saveRoute/',
+            json.dumps(dic),
+            content_type="application/json")
+        self.assertTrue(b'OK' in response.content)
+
+    def test_save_route_and_retrieve(self):
+        """Route sequence save then retrieve."""
+        mem_dal = Member.objects.filter(lastname='Dallaire')[0]
+        mem_tay = Member.objects.filter(lastname='Taylor')[0]
+        dic = {"route": [{"id": self.route_id}],
+               "members": [{"id": mem_dal.id}, {"id": mem_tay.id}]}
+        response = self.client.post(
+            '/delivery/saveRoute/',
+            json.dumps(dic),
+            content_type="application/json")
+        response = self.client.get(
+            '/delivery/getDailyOrders/?route=' +
+            str(self.route_id) + '&mode=retrieve')
+        self.assertTrue(b'Dallaire' in response.content)
+
+    def test_route_sequence_not_saved(self):
+        """Attempt retrieving a route sequence that was not saved."""
+        route_id_none = Route.objects.get(name='Centre Sud').id
+        response = self.client.get(
+            '/delivery/getDailyOrders/?route=' +
+            str(route_id_none) + '&mode=retrieve')
         self.assertTrue(b'Blondin' in response.content)
+
+    def test_get_orders_unknown_mode(self):
+        """Route get orders with unknown transportation mode."""
+        with self.assertRaises(Exception) as cm:
+            response = self.client.get(
+                '/delivery/getDailyOrders/?route=' +
+                str(self.route_id) + '&mode=swimming')

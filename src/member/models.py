@@ -274,8 +274,8 @@ class Route(models.Model):
         null=True,
     )
 
-    # ordered client ids for each weekday's delivery
-    #   saved by visual route sequencing page
+    # ordered client ids for the current delivery
+    #   saved by Organize Routes sequencing page
     client_id_sequence = JSONField(
         blank=True, null=True
     )
@@ -284,25 +284,16 @@ class Route(models.Model):
         return self.name
 
     def set_client_sequence(self, date, route_client_ids):
-        # reset in case it was corrupted by user in the admin
-        try:
-            sequence = self.client_id_sequence
-        except:
-            sequence = {}
-        if not isinstance(sequence, dict):
-            sequence = {}
-        # print("set client sequence 1 seq, ids", sequence, route_client_ids)
-        # weekday : Monday is 0, Sunday is 6
-        sequence[str(date.weekday())] = route_client_ids
-        # print("set client sequence 2", sequence)
-        self.client_id_sequence = sequence
+        # save sequence of points for a delivery route
+        self.client_id_sequence = {date.strftime('%Y-%m-%d'): route_client_ids}
 
-    def get_client_sequence(self, date):
-        sequence = self.client_id_sequence
-        if isinstance(sequence, dict):
-            return sequence.get(str(date.weekday()), None)
+    def get_client_sequence(self):
+        # retrieve sequence of points for a delivery route
+        if self.client_id_sequence:
+            # ['date on which sequence was stored', [client_id, ...]]
+            return list(self.client_id_sequence.items())[0]
         else:
-            return None
+            return (None, None)
 
 
 class ClientManager(models.Manager):

@@ -32,13 +32,13 @@ function printMapAndItinerary() {
     printContainer.remove();
 }
 
-function getWaypoints(routeId) {
+function getRouteWaypoints(routeId) {
     var waypoints = [];
     // Reset current waypoints
     control.setWaypoints(waypoints);
 
     // Ajax call to get waypoint according route
-    $.get( "../getDailyOrders/?route="+routeId, function(data ) {
+    $.get( "../getDailyOrders/?route="+routeId+"&mode=euclidean", function(data ) {
 
         var deliveryPoints = L.Routing.Waypoint.extend({ member:"", address:""});
         // create an array of waypoint from ajax call
@@ -174,18 +174,40 @@ function main_map_init (map, options) {
      // during init
     $('.ui.dropdown').dropdown({
         onChange: function(routeId) {
-            getWaypoints(routeId);
+            getRouteWaypoints(routeId);
         }
     });
 
 
-    // Go to delivery route sheet using selected route id
+    // Save current sequence for current route and
+    //   go to delivery route sheet using selected route id
     $("#btnnext").click(function(){
+        var wp = control.getWaypoints();
+        var data ={ route: [], members: [] };
         var routeid = $("#routeselect").val();
+        data.route.push({"id" : routeid});
         var urlmask = "/delivery/route_sheet/999/".replace(/999/, routeid);
-        // console.log("urlmask=", urlmask)
-        window.location.replace(urlmask);
+        // simplify waypoint into a list of member id in the map order
+        $.each(wp, function(key,value) {
+            if (typeof value.options.id !== "undefined") {
+                data.members.push({
+                    "id" : value.options.id
+                });
+            }
+        });
+        // Post simple list of members to server
+        $.ajax("../saveRoute/", {
+          data : JSON.stringify(data),
+          contentType : 'application/json; charset=utf-8',
+          type : 'POST',
+          dataType: "json",
+          success: function(result) {
+              // alert("Route Saved, going to Route Sheet");
+              window.location.replace(urlmask);
+          }
+        });
     });
+
 
     // Add sortable on the route controler
     Sortable.create(document.querySelector('.leaflet-routing-geocoders'), {
@@ -207,7 +229,7 @@ function main_map_init (map, options) {
         }
     });
 
-    getWaypoints(1);
+    getRouteWaypoints(1);
 }
 
     //:::  This routine calculates the distance between two points (given the     :::
