@@ -1,6 +1,7 @@
 import collections
 import datetime
 from datetime import date
+import json
 import os
 import textwrap
 import types
@@ -8,6 +9,7 @@ import types
 from django.conf import settings
 from django.shortcuts import render
 from django.views import generic
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.http import JsonResponse
 from django.core.urlresolvers import reverse_lazy
@@ -31,6 +33,7 @@ from .forms import DishIngredientsForm
 from . import tsp
 
 MEAL_LABELS_FILE = os.path.join(settings.BASE_DIR, "meallabels.pdf")
+DELIVERY_STARTING_POINT_LAT_LONG = (45.516564, -73.575145)  # Santropol Roulant
 
 
 class Orderlist(generic.ListView):
@@ -491,11 +494,10 @@ class DeliveryRouteSheet(generic.View):
         date = datetime.date.today()
 
         route = Route.objects.get(id=route_id)
-        route_client_ids = route.get_client_sequence(date)
-        # print("delivery route sheet", "route_client_ids", route_client_ids)
+        # date_stored is not used here
+        date_stored, route_client_ids = route.get_client_sequence()
         route_list = Order.get_delivery_list(date, route_id)
         route_list = sort_sequence_ids(route_list, route_client_ids)
-        # TODO sort route_list using sequence from leaflet
         summary_lines, detail_lines = drs_make_lines(route_list, date)
         return render(request, 'route_sheet.html',
                       {'route': route,
@@ -549,34 +551,112 @@ def drs_make_lines(route_list, date):
     return summary_lines_sorted, list(route_list.values())
 
 
-def sort_sequence_ids(dic, seq):
-    # sort items in dictionary according to sequence of keys
-    # dic : dictionary for which some keys are not items in sequence
-    # seq : list of keys that may not all be entries in dic
+def sort_sequence_ids(unordered_dic, seq):
+    """Sort items in a dictionary according to a sequence of keys.
 
-    # build an ordered dictionary from seq skipping keys not in dic
+    Build an ordered dictionary using ordering of keys in 'seq' but
+    ignoring the keys in 'seq' that are not in 'unordered_dic'.
+
+    Args:
+        unordered_dic : dictionary for which some keys may be absent from 'seq'
+        seq : list of keys that may not all be entries in 'dic'
+
+    Returns:
+        A ordered dictionary : collections.OrderedDict()
+    """
     od = collections.OrderedDict()
     if seq:
         for k in seq:
-            if dic.get(k):
+            if unordered_dic.get(k):
                 od[k] = None
-    # place all values in dic into ordered dict;
-    #   keys not in seq will be at the end.
-    for k, val in dic.items():
+    # place all values from unordered_dic into ordered dict;
+    #   keys not in seq will be added at the end.
+    for k, val in unordered_dic.items():
         od[k] = val
-    # print("sort_sequence_ids",
-    #       "dic.items()", dic.items(),
-    #       "seq", seq,
-    #       "od.items()", od.items())
     return od
 
 # END Delivery route sheet view, helper classes and functions
 
 
+def calculateRoutePointsEuclidean(data):
+    """Find shortest path for points on route assuming 2D plane.
+
+    Since the
+    https://www.mapbox.com/api-documentation/#retrieve-a-duration-matrix
+    endpoint is not yet available, we solve an approximation of the
+    problem by assuming the world is flat and has no obstacles (2D
+    Euclidean plane). This should still give good results.
+
+    Args:
+        data : A list of waypoints for leaflet.js
+
+    Returns:
+        An optimized list of waypoints.
+    """
+    node_to_waypoint = {}
+    nodes = [tsp.Node(None,
+                      DELIVERY_STARTING_POINT_LAT_LONG[0],
+                      DELIVERY_STARTING_POINT_LAT_LONG[1])]
+    for waypoint in data:
+        node = tsp.Node(waypoint['id'], float(waypoint['latitude']),
+                        float(waypoint['longitude']))
+        node_to_waypoint[node] = waypoint
+        nodes.append(node)
+    # Optimize waypoints by solving the Travelling Salesman Problem
+    nodes = tsp.solve(nodes)
+    # Guard against starting point which is not in node_to_waypoint
+    return [node_to_waypoint[node] for
+            node in nodes if node in node_to_waypoint]
+
+
+def retrieveRoutePoints(route_id, data):
+    """Attempt to sort a route according to previously saved points.
+
+    If we find a sequence of client ids saved for the route having 'route_id',
+    sort the list of waypoints in 'data' accordingly.
+
+    Args:
+        route_id : The id of a delivery route.
+        data : A list of waypoints for leaflet.js
+
+    Returns:
+        A list of waypoints.
+    """
+    route = Route.objects.get(id=route_id)
+    # date_stored is not used here
+    date_stored, route_client_ids = route.get_client_sequence()
+    if route_client_ids:
+        # sort waypoints according to previously saved route
+        member_ids = \
+            [Client.objects.get(id=cid).member.id
+             for cid in route_client_ids]
+        unsorted_dic = {waypoint['id']: waypoint for waypoint in data}
+        sorted_dic = sort_sequence_ids(unsorted_dic, member_ids)
+        return list(sorted_dic.values())
+    else:
+        # no saved route found, return unsorted points
+        return data
+
+
 def dailyOrders(request):
+    """Get the sequence of points for a delivery route.
+
+    Args:
+        request : an http request having parameters 'route' and 'mode'.
+
+    Returns:
+        A json response containing waypoints for leaflet.js.
+    """
     data = []
     route_id = request.GET.get('route')
-
+    # mode is one of :
+    #   'euclidean' to calculate shortest path of points assuming
+    #      a 2D euclidean plane for the TSP algorithm
+    #   'retrieve' to sort points according to previously saved sequence
+    #   'cycling' : shortest path using mapbox durations NOT YET IMPLEMENTED
+    #   'driving' : shortest path using mapbox durations NOT YET IMPLEMENTED
+    #   'walking' : shortest path using mapbox durations NOT YET IMPLEMENTED
+    mode = request.GET.get('mode')
     # Load all orders for the day
     orders = Order.objects.get_shippable_orders()
 
@@ -591,36 +671,48 @@ def dailyOrders(request):
                     'member': "{} {}".format(
                         order.client.member.firstname,
                         order.client.member.lastname),
-                    'address': order.client.member.address.street
+                    'address': "{} {}".format(
+                        order.client.member.address.number,
+                        order.client.member.address.street)
                     }
-                # print("waypoint=", waypoint)
                 data.append(waypoint)
 
-    # Since the
-    # https://www.mapbox.com/api-documentation/#retrieve-a-duration-matrix
-    # endpoint is not yet available, we solve an approximation of the
-    # problem by assuming the world is flat and has no obstacles (2D
-    # Euclidean plane). This should still give good results.
-
-    node_to_waypoint = {}
-    nodes = [tsp.Node(None, 45.516564, -73.575145)]  # Santropol
-    for waypoint in data:
-        node = tsp.Node(waypoint['id'], float(waypoint['latitude']),
-                        float(waypoint['longitude']))
-        node_to_waypoint[node] = waypoint
-        nodes.append(node)
-
-    nodes = tsp.solve(nodes)
-
-    data = []
-    for node in nodes:
-        # Guard against Santropol which is not in node_to_waypoint
-        if node in node_to_waypoint:
-            data.append(node_to_waypoint[node])
+    if mode == 'euclidean':
+        data = calculateRoutePointsEuclidean(data)
+    elif mode == 'retrieve':
+        data = retrieveRoutePoints(route_id, data)
+    else:
+        # unknown mode
+        raise Exception(
+            "delivery dailyOrders mode '{}' unknown".format(mode))
 
     waypoints = {'waypoints': data}
 
     return JsonResponse(waypoints, safe=False)
+
+
+@csrf_exempt
+def saveRoute(request):
+    """Save the sequence of points for a delivery route.
+
+    Saves a sequence of client ids for the delivery route.
+
+    Args:
+        request : an http request having parameters 'members' and 'route'.
+
+    Returns:
+        A json response confirming success.
+    """
+    data = json.loads(request.body.decode('utf-8'))
+    member_ids = [member['id'] for member in data['members']]
+    route_id = data['route'][0]['id']
+    route_client_ids = \
+        [Client.objects.get(member__id=member_id).id
+         for member_id in member_ids]
+    route = Route.objects.get(id=route_id)
+    route.set_client_sequence(datetime.date.today(), route_client_ids)
+    route.save()
+    return JsonResponse('OK', safe=False)
 
 
 def refreshOrders(request):
