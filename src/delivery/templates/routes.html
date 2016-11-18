@@ -29,15 +29,20 @@
           {% for route, orders in routes %}
           <div class="item">
             <div class="right floated content">
-              <a href="{% url 'delivery:organize_route' id=route.id %}" class="ui compact labeled icon button"><i class="marker icon"></i>{% trans 'Organize' %}</a>
-              <a href="{% url 'delivery:route_sheet_id' id=route.id %}" class="ui compact labeled icon button"><i class="print icon"></i>{% trans 'Route sheet' %}</a>
+              <a href="{% url 'delivery:organize_route' id=route.id %}" class="ui compact labeled {% if orders == 0 %} disabled {% endif %} icon button" title="{% trans 'Organize the route' %}">
+                  <i class="marker icon"></i>{% trans 'Organize' %}
+              </a>
+              <a href="{% url 'delivery:route_sheet_id' id=route.id %}" class="ui compact labeled {% if orders == 0 %} disabled {% endif %} icon button" title="{% trans 'Print the route sheet' %}">
+                  <i class="print icon"></i>{% trans 'Route sheet' %}
+              </a>
             </div>
             <i class="large location arrow icon"></i>
             <div class="content">
               <div class="header">{{ route.name }}</div>
               <div class="description">
-                  <i class="bicycle icon"></i>
-                  <div class="ui circular label">{{ orders }}</div>   <i class="checkmark green icon"></i></div>
+                  <i class="bicycle icon" title="{% trans 'Cycling map' %}"></i>
+                  <div class="ui circular label" title="{% trans 'Number of orders on this route' %}">{{ orders }} {% if orders > 1 %}stops{% else %}stop{% endif %}</div>
+              </div>
             </div>
           </div>
           {% endfor %}

@@ -64,11 +64,11 @@ class OrderManagerTestCase(TestCase):
     def setUpTestData(cls):
         cls.route = Route.objects.get(id=1)
         cls.orders = OrderFactory.create_batch(
-            10, delivery_date=date.today(), status='O', client__route=cls.route)
+            10, delivery_date=date.today(),
+            status='O', client__route=cls.route)
         cls.past_order = OrderFactory(
             delivery_date=date(2015, 7, 15), status='O'
         )
-
 
     def test_get_shippable_orders(self):
         """
@@ -79,6 +79,7 @@ class OrderManagerTestCase(TestCase):
         orders = Order.objects.get_shippable_orders()
         self.assertEqual(len(orders), len(self.orders))
         past_order = Order.objects.get_shippable_orders(date(2015, 7, 15))
+        print(past_order)
         self.assertEqual(len(past_order), 1)
 
     def test_get_shippable_orders_by_route(self):

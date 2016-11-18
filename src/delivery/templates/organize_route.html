@@ -24,25 +24,20 @@
 </div>
 
 <div class="row">
-    <div class="sixteen wide column">
-  </div>
-</div>
-
-<button id='btnprint' class="ui primary labeled icon right floated  button">
-    <i class="print icon"></i>
-    {% trans "Directions" %}
-</button>
-
-<div class="row">
-  <div class="twelve wide column" id="route_map" data-route="{{ route.id }}">
+  <div class="thirteen wide column" id="route_map" data-route="{{ route.id }}">
     {% leaflet_map "main" callback="main_map_init" %}
   </div>
-  <div class="four wide column">
+  <div class="two wide column">
     <div class="controls"></div>
   </div>
 </div>
 
-<a class="big ui right floated button" href="{% url 'delivery:routes' %}">{% trans "Back" %}</a>
+<a href="{% url 'delivery:route_sheet_id' id=route.id %}" class="ui big labeled icon button" title="{% trans 'Print the route sheet' %}">
+  <i class="print icon"></i>{% trans 'Route sheet' %}
+</a>
+<a href="{% url 'delivery:routes' %}" class="ui big labeled {% if orders == 0 %} disabled {% endif %} icon button" title="{% trans 'View routes list' %}">
+  <i class="list icon"></i>{% trans 'View routes' %}
+</a>
 
 {% endblock %}
 

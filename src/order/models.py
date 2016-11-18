@@ -71,8 +71,7 @@ class OrderManager(models.Manager):
             delivery_date = date.today()
         return self.get_queryset().filter(
             delivery_date=delivery_date,
-            status=ORDER_STATUS_ORDERED,
-            client__route=1)
+            status=ORDER_STATUS_ORDERED)
 
     def get_shippable_orders_by_route(self, route_id):
         """
@@ -86,7 +85,6 @@ class OrderManager(models.Manager):
             delivery_date=delivery_date,
             status=ORDER_STATUS_ORDERED,
             client__route=route_id)
-
 
     def get_billable_orders(self, year, month):
         """

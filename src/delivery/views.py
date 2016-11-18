@@ -141,7 +141,7 @@ class MealInformation(generic.View):
                         compname = Component.objects.order_by(
                             Lower('name')).filter(
                                 component_group=group
-                            )
+                        )
                         if compname:
                             compnames.append(compname[0].name)
                 Menu.create_menu_and_components(date, compnames)
@@ -154,6 +154,7 @@ class MealInformation(generic.View):
             'ingredients.html',
             {'date': date,
              'form': form})
+
 
 class RouteInformation(generic.ListView):
     # Display all the route information for a given day
@@ -179,7 +180,10 @@ class RoutesInformation(generic.ListView):
         routes = Route.objects.all()
         orders = []
         for route in routes:
-            orders.append((route, Order.objects.get_shippable_orders_by_route(route.id).count()))
+            orders.append(
+                (route,
+                 Order.objects.get_shippable_orders_by_route(
+                     route.id).count()))
         context['routes'] = orders
 
         return context
@@ -196,7 +200,6 @@ class OrganizeRoute(generic.ListView):
         context['route'] = Route.objects.get(id=self.kwargs['id'])
 
         return context
-
 
 
 # Kitchen count report view, helper classes and functions
@@ -224,9 +227,9 @@ class KitchenCount(generic.View):
 component_line_fields = [          # Component summary Line on Kitchen Count.
     # field name       default value
     'component_group', '',    # ex. main dish, dessert etc
-    'rqty',            0,     # Quantity of regular size main dishes
-    'lqty',            0,     # Quantity of large size main dishes
-    'name',            '',    # String : component name
+    'rqty', 0,     # Quantity of regular size main dishes
+    'lqty', 0,     # Quantity of large size main dishes
+    'name', '',    # String : component name
     'ingredients'      '']    # String : today's ingredients in main dish
 ComponentLine = collections.namedtuple(
     'ComponentLine', component_line_fields[0::2])
@@ -234,14 +237,14 @@ ComponentLine = collections.namedtuple(
 
 meal_line_fields = [               # Special Meal Line on Kitchen Count.
     # field name       default value
-    'client',          '',     # String : Lastname and abbreviated first name
-    'rqty',            '',     # String : Quantity of regular size main dishes
-    'lqty',            '',     # String : Quantity of large size main dishes
-    'ingr_clash',      '',     # String : Ingredients that clash
-    'preparation',     '',     # String : Meal preparations
-    'rest_ingr',       '',     # String : Other ingredients to avoid
-    'rest_item',       '',     # String : Restricted items
-    'span',            None]   # Number of lines to "rowspan" in table
+    'client', '',     # String : Lastname and abbreviated first name
+    'rqty', '',     # String : Quantity of regular size main dishes
+    'lqty', '',     # String : Quantity of large size main dishes
+    'ingr_clash', '',     # String : Ingredients that clash
+    'preparation', '',     # String : Meal preparations
+    'rest_ingr', '',     # String : Other ingredients to avoid
+    'rest_item', '',     # String : Restricted items
+    'span', None]   # Number of lines to "rowspan" in table
 MealLine = collections.namedtuple(
     'MealLine', meal_line_fields[0::2])
 
@@ -442,7 +445,7 @@ def kcr_make_labels(kitchen_list):
                                 obj.lastname + ", " + obj.firstname[0:2] + ".",
                                 fontName="Helvetica-Bold",
                                 fontSize=12))
-        label.add(shapes.String(width-2, height * 0.8,
+        label.add(shapes.String(width - 2, height * 0.8,
                                 "{}".format(datetime.date.today().
                                             strftime("%a, %b-%d")),
                                 fontName="Helvetica",
@@ -458,7 +461,7 @@ def kcr_make_labels(kitchen_list):
                                     "(" + str(j) + " of " + str(qty) + ")",
                                     fontName="Helvetica",
                                     fontSize=10))
-        label.add(shapes.String(width-3, height * 0.65,
+        label.add(shapes.String(width - 3, height * 0.65,
                                 obj.routename,
                                 fontName="Helvetica-Oblique",
                                 fontSize=8,
@@ -702,7 +705,7 @@ def dailyOrders(request):
                         order.client.member.firstname,
                         order.client.member.lastname),
                     'address': order.client.member.address.street
-                    }
+                }
                 data.append(waypoint)
 
     if mode == 'euclidean':

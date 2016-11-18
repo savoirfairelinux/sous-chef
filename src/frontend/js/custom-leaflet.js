@@ -171,8 +171,7 @@ function main_map_init (map, options) {
     });
 
     routeId = $('#route_map').attr('data-route');
-    console.log(routeId);
-    getWaypoints(routeId);
+    getRouteWaypoints(routeId);
 
      // during init
     $('.ui.dropdown').dropdown({
@@ -187,9 +186,8 @@ function main_map_init (map, options) {
     $("#btnnext").click(function(){
         var wp = control.getWaypoints();
         var data ={ route: [], members: [] };
-        var routeid = $("#routeselect").val();
-        data.route.push({"id" : routeid});
-        var urlmask = "/delivery/route_sheet/999/".replace(/999/, routeid);
+        data.route.push({"id" : routeId});
+        var urlmask = "/delivery/route_sheet/999/".replace(/999/, routeId);
         // simplify waypoint into a list of member id in the map order
         $.each(wp, function(key,value) {
             if (typeof value.options.id !== "undefined") {
@@ -205,7 +203,6 @@ function main_map_init (map, options) {
           type : 'POST',
           dataType: "json",
           success: function(result) {
-              // alert("Route Saved, going to Route Sheet");
               window.location.replace(urlmask);
           }
         });
@@ -221,6 +218,7 @@ function main_map_init (map, options) {
                newI = e.newIndex,
                wps = control.getWaypoints(),
                wp = wps[oldI];
+               console.log(wp);
 
            if (oldI === newI || newI === undefined) {
                return;
@@ -229,13 +227,39 @@ function main_map_init (map, options) {
            wps.splice(oldI, 1);
            wps.splice(newI, 0, wp);
            control.setWaypoints(wps);
+
+           // Save the route
+           save_route(control);
         }
     });
-
-
-    //getWaypoints(1);
 }
 
+function save_route(control) {
+    var wp = control.getWaypoints();
+    var data = { route: [], members: [] };
+    routeId = $('#route_map').attr('data-route');
+    data.route.push({"id" : routeId});
+    var urlmask = "/delivery/route_sheet/999/".replace(/999/, routeId);
+    // simplify waypoint into a list of member id in the map order
+    $.each(wp, function(key,value) {
+        if (typeof value.options.id !== "undefined") {
+            data.members.push({
+                "id" : value.options.id
+            });
+        }
+    });
+    // Post simple list of members to server
+    $.ajax("../saveRoute/", {
+      data : JSON.stringify(data),
+      contentType : 'application/json; charset=utf-8',
+      type : 'POST',
+      dataType: "json",
+      success: function(result) {
+          // window.location.replace(urlmask);
+       }
+   });
+
+}
     //:::  This routine calculates the distance between two points (given the     :::
     //:::  latitude/longitude of those points).                                   :::
     //:::  Passed to function:                                                    :::

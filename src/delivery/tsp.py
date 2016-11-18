@@ -2,6 +2,7 @@ import itertools
 
 
 class Node:
+
     def __init__(self, id, latitude, longitude):
         self.id = id
         self.latitude = latitude
@@ -16,6 +17,7 @@ class Node:
 
 
 class Solution:
+
     def __init__(self, tour, value):
         self.tour = tour
         self.value = value
