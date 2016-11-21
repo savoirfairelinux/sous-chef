@@ -16,7 +16,7 @@ urlpatterns = [
     url(_(r'^create/$'), CreateOrder.as_view(), name='create'),
     # Multiple orders as once
     url(_(r'^create/batch$'),
-        CreateOrdersBatch.as_view(), name='createBatch'),
+        CreateOrdersBatch.as_view(), name='create_batch'),
 
     url(_(r'^update/(?P<pk>\d+)/$'), UpdateOrder.as_view(), name='update'),
     url(
