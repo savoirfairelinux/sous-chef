@@ -199,10 +199,9 @@ class DeliveryRouteSheetTestCase(TestCase):
         member = Member.objects.filter(lastname='Blondin')[0]
         dic = {"route": [{"id": self.route_id}],
                "members": [{"id": member.id}]}
-        response = self.client.post(
-            '/delivery/saveRoute/',
-            json.dumps(dic),
-            content_type="application/json")
+        response = self.client.post(reverse_lazy('delivery:save_route'),
+                                    json.dumps(dic),
+                                    content_type="application/json")
         response = self.client.get(
             reverse_lazy('delivery:route_sheet_id', args=[self.route_id]))
         self.assertTrue(b'Blondin' in response.content)
@@ -233,10 +232,9 @@ class RouteSequencingTestCase(TestCase):
         dic = {"route": [{"id": "4"}],
                "members": [{"id": 864}, {"id": 867}, {"id": 868},
                            {"id": 869}, {"id": 861}, {"id": 862}, {"id": 863}]}
-        response = self.client.post(
-            '/delivery/saveRoute/',
-            json.dumps(dic),
-            content_type="application/json")
+        response = self.client.post(reverse_lazy('delivery:save_route'),
+                                    json.dumps(dic),
+                                    content_type="application/json")
         self.assertTrue(b'OK' in response.content)
 
     def test_save_route_and_retrieve(self):
@@ -245,10 +243,9 @@ class RouteSequencingTestCase(TestCase):
         mem_tay = Member.objects.filter(lastname='Taylor')[0]
         dic = {"route": [{"id": self.route_id}],
                "members": [{"id": mem_dal.id}, {"id": mem_tay.id}]}
-        response = self.client.post(
-            '/delivery/saveRoute/',
-            json.dumps(dic),
-            content_type="application/json")
+        response = self.client.post(reverse_lazy('delivery:save_route'),
+                                    json.dumps(dic),
+                                    content_type="application/json")
         response = self.client.get(
             '/delivery/getDailyOrders/?route=' +
             str(self.route_id) + '&mode=retrieve')

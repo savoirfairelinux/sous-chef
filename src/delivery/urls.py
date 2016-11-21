@@ -22,5 +22,5 @@ urlpatterns = [
         DeliveryRouteSheet.as_view(), name='route_sheet_id'),
     url(_(r'^getDailyOrders/$'), dailyOrders, name='dailyOrders'),
     url(_(r'^refresh_orders/$'), refreshOrders, name='refresh_orders'),
-    url(_(r'^saveRoute/$'), saveRoute, name='saveRoute'),
+    url(_(r'^save_route/$'), saveRoute, name='save_route'),
 ]

@@ -173,42 +173,6 @@ function main_map_init (map, options) {
     routeId = $('#route_map').attr('data-route');
     getRouteWaypoints(routeId);
 
-     // during init
-    $('.ui.dropdown').dropdown({
-        onChange: function(routeId) {
-            getRouteWaypoints(routeId);
-        }
-    });
-
-
-    // Save current sequence for current route and
-    //   go to delivery route sheet using selected route id
-    $("#btnnext").click(function(){
-        var wp = control.getWaypoints();
-        var data ={ route: [], members: [] };
-        data.route.push({"id" : routeId});
-        var urlmask = "/delivery/route_sheet/999/".replace(/999/, routeId);
-        // simplify waypoint into a list of member id in the map order
-        $.each(wp, function(key,value) {
-            if (typeof value.options.id !== "undefined") {
-                data.members.push({
-                    "id" : value.options.id
-                });
-            }
-        });
-        // Post simple list of members to server
-        $.ajax("../saveRoute/", {
-          data : JSON.stringify(data),
-          contentType : 'application/json; charset=utf-8',
-          type : 'POST',
-          dataType: "json",
-          success: function(result) {
-              window.location.replace(urlmask);
-          }
-        });
-    });
-
-
     // Add sortable on the route controler
     Sortable.create(document.querySelector('.leaflet-routing-geocoders'), {
         handle: '.geocoder-handle',
@@ -238,8 +202,8 @@ function save_route(control) {
     var wp = control.getWaypoints();
     var data = { route: [], members: [] };
     routeId = $('#route_map').attr('data-route');
+    save_url = $('#route_map').attr('data-save-url');
     data.route.push({"id" : routeId});
-    var urlmask = "/delivery/route_sheet/999/".replace(/999/, routeId);
     // simplify waypoint into a list of member id in the map order
     $.each(wp, function(key,value) {
         if (typeof value.options.id !== "undefined") {
@@ -249,14 +213,13 @@ function save_route(control) {
         }
     });
     // Post simple list of members to server
-    $.ajax("../saveRoute/", {
+    $.ajax(save_url, {
       data : JSON.stringify(data),
       contentType : 'application/json; charset=utf-8',
       type : 'POST',
       dataType: "json",
       success: function(result) {
-          // window.location.replace(urlmask);
-       }
+      }
    });
 
 }

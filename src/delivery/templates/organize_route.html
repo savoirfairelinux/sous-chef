@@ -3,12 +3,11 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% trans 'Routes Information' %} {% endblock %}
+{% block title %}{% trans "Organize the delivery route" %}: {{ route.name }} {% endblock %}
 
 {% block extrahead %}
     {% load leaflet_tags %}
     {% leaflet_css %}
-
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet">
 {% endblock %}
 
@@ -24,10 +23,12 @@
 </div>
 
 <div class="row">
-  <div class="thirteen wide column" id="route_map" data-route="{{ route.id }}">
+  <div class="thirteen wide column" id="route_map"
+        data-route="{{ route.id }}"
+        data-save-url="{% url 'delivery:save_route' %}">
     {% leaflet_map "main" callback="main_map_init" %}
   </div>
-  <div class="two wide column">
+  <div class="three wide column">
     <div class="controls"></div>
   </div>
 </div>
