@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<div class="ui five ordered steps">
+<div class="ui four ordered steps">
   <a class="{% if step == 'orders' %} active{% endif %} step" href="{% url 'delivery:order' %}">
     <div class="content">
       <div class="title">{% trans 'Review Orders' %}</div>
@@ -19,16 +19,10 @@
       <div class="description">{% trans 'Print the kitchen count.' %}</div>
     </div>
   </a>
-  <a class="{% if step == 'routes' %} active{% endif %} step" href="{% url 'delivery:route' %}">
+  <a class="{% if step == 'routes' %} active{% endif %} step" href="{% url 'delivery:routes' %}">
     <div class="content">
       <div class="title">{% trans 'Routes' %}</div>
       <div class="description">{% trans 'Organize delivery routes.' %}</div>
     </div>
   </a>
-  <div class="{% if step == 'delivery_sheet' %} active{% endif %} step">
-    <div class="content">
-      <div class="title">{% trans 'Route sheet' %}</div>
-      <div class="description">{% trans 'Print route sheet for deliveries.' %}</div>
-    </div>
-  </div>
 </div>

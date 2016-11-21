@@ -17,36 +17,40 @@
 {% include 'kitchen_count_steps.html' with step='routes' %}
 
 <div class="ui secondary pointing fluid menu">
-    <h1 class="ui header">{% trans "Organize Routes" %}</h1>
+    <h1 class="ui header">{% trans "Delivery routes" %}</h1>
     <div class="right menu">
       <div class="ui item"><h3><i class="calendar icon"></i>{% now "j F Y" %}</h3></div>
     </div>
 </div>
 
-<select id="routeselect" class="ui dropdown">
-    {% for route in routes %}
-    <option value="{{ route.id }}">{{ route.name }}</option>
-    {% endfor %}
-</select>
-
-<button id='btnprint' class="ui primary labeled icon right floated  button">
-    <i class="print icon"></i>
-    {% trans "Print" %}
-</button>
-
 <div class="row">
-  <div class="twelve wide column">
-    {% leaflet_map "main" callback="main_map_init" %}
-  </div>
-  <div class="four wide column">
-    <div class="controls"></div>
+    <div class="sixteen wide column">
+      <div class="ui middle aligned divided list">
+          {% for route, orders in routes %}
+          <div class="item">
+            <div class="right floated content">
+              <a href="{% url 'delivery:organize_route' id=route.id %}" class="ui compact labeled {% if orders == 0 %} disabled {% endif %} icon button" title="{% trans 'Organize the route' %}">
+                  <i class="marker icon"></i>{% trans 'Organize' %}
+              </a>
+              <a href="{% url 'delivery:route_sheet_id' id=route.id %}" class="ui compact labeled {% if orders == 0 %} disabled {% endif %} icon button" title="{% trans 'Print the route sheet' %}">
+                  <i class="print icon"></i>{% trans 'Route sheet' %}
+              </a>
+            </div>
+            <i class="large location arrow icon"></i>
+            <div class="content">
+              <div class="header">{{ route.name }}</div>
+              <div class="description">
+                  <i class="bicycle icon" title="{% trans 'Cycling map' %}"></i>
+                  <div class="ui circular label" title="{% trans 'Number of orders on this route' %}">{{ orders }} {% if orders > 1 %}stops{% else %}stop{% endif %}</div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+      </div>
   </div>
 </div>
 
 <a class="big ui right floated button" href="{% url 'delivery:kitchen_count' %}">{% trans "Back" %}</a>
-<button id='btnnext' class="big ui yellow right floated button">
-    {% trans "Next: Delivery Route Sheet" %}
-</button>
 
 {% endblock %}
 

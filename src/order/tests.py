@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext as _
 
-from member.models import Client, Address, Member
+from member.models import Client, Address, Member, Route
 from member.factories import RouteFactory, ClientFactory
 from meal.factories import ComponentFactory
 from order.models import Order, Order_item, MAIN_PRICE_DEFAULT
@@ -62,8 +62,10 @@ class OrderManagerTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
+        cls.route = Route.objects.get(id=1)
         cls.orders = OrderFactory.create_batch(
-            10, delivery_date=date.today(), status='O')
+            10, delivery_date=date.today(),
+            status='O', client__route=cls.route)
         cls.past_order = OrderFactory(
             delivery_date=date(2015, 7, 15), status='O'
         )
@@ -78,6 +80,15 @@ class OrderManagerTestCase(TestCase):
         self.assertEqual(len(orders), len(self.orders))
         past_order = Order.objects.get_shippable_orders(date(2015, 7, 15))
         self.assertEqual(len(past_order), 1)
+
+    def test_get_shippable_orders_by_route(self):
+        """
+        Should return all shippable orders for the given route.
+        A shippable order must be created in the database, and its ORDER_STATUS
+        must be 'O' (Ordered).
+        """
+        orders = Order.objects.get_shippable_orders_by_route(self.route.id)
+        self.assertEqual(len(orders), len(self.orders))
 
     def test_order_str_includes_date(self):
         delivery_date = date.today()
