@@ -4,16 +4,7 @@
 
 {% block title %}{% trans 'Billing' %}{% endblock %}
 
-{% block extrajs %}
-  <script src="{% static 'js/calendar.min.js' %}" type="application/javascript"></script>
-  <script type="text/javascript">
-
-
-</script>
-
-{% endblock %}
 {% block content %}
-
 
 <div class="ui secondary pointing fluid menu">
   <h1 class="ui header">{% trans 'Billing' %}</h1>
@@ -26,14 +17,19 @@
   </div>
 </div>
 
+<div class="ui active inverted dimmer" style="display:none;">
+    <div class="ui indeterminate massive text loader">Preparing billing</div>
+</div>
+
 <div class="ui mobile reversed equal width grid">
-  <div class="column">
+
+    <div class="column">
 
     <form action="" method="get" class="ui form">
 
         <div class="inline fields">
             <div class="field">
-                <label>{% trans "Period" %}</label>
+                <label>{% trans "Preview a period, then create a billing:" %}</label>
                 <div class="field">
                     <div class="ui calendar" id="billing_delivery_date">
                         <div class="ui input left icon">
@@ -46,7 +42,9 @@
             <div class="field">
                 <label></label>
                 <div class="field">
-                    <button class="ui yellow button" type="submit">{% trans "Search" %}</button>
+                    <button class="ui yellow button" type="submit">{% trans "1. Preview" %}</button>
+                    <a class="ui button" id="create_billing"
+                      href="{% url 'billing:create' %}?{{request.META.QUERY_STRING}}" title="{% trans "Create Billing" %}">{% trans "2. Create Billing" %}</a>
                 </div>
             </div>
         </div>

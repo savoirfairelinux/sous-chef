@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
+from django.utils.translation import ugettext_lazy as _
+from django.contrib import messages
 from billing.models import (
     Billing, calculate_amount_total, BillingFilter
 )
@@ -49,7 +51,13 @@ class BillingCreate(generic.CreateView):
         if year is '' or month is '':
             return HttpResponseRedirect(reverse_lazy('billing:list'))
 
-        Billing.objects.billing_create_new(year, month)
+        billing = Billing.objects.billing_create_new(year, month)
+
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _("The billing with the identifier #%s \
+            has been successfully created." % billing.id)
+        )
         return HttpResponseRedirect(reverse_lazy('billing:list'))
 
 

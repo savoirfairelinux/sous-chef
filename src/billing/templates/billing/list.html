@@ -47,6 +47,9 @@
 {% if billings %}
 <table class="ui very basic stripped celled table">
   <thead>
+      <th class="">{% trans "Billing ID" %}
+          <i class="help-text question grey icon link" data-content="{% trans 'Billing\'s unique identifier.' %}"></i>
+      </th>
     <th class="">{% trans "Billing Period" %}
         <i class="help-text question grey icon link" data-content="{% trans 'A billing period represents a month and includes all orders delivered during the period.' %}"></i>
     </th>
@@ -61,6 +64,7 @@
   <tbody>
     {% for billing in billings %}
       <tr>
+          <td><i class="hashtag icon"></i>{{billing.id}}</td>
         <td><i class="calendar icon"></i><strong>{{billing.billing_period|date:"F Y"}}</strong></td>
         <td class="center aligned"><i class="dollar icon"></i>{{billing.total_amount}}</td>
         <td class="center aligned">{{billing.orders.all.count}}</td>

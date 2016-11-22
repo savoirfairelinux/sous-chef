@@ -22,4 +22,8 @@ $(function() {
     });
 
     $('.add.icon').popup();
+
+    $("#create_billing").click(function(e){
+        $(".ui.dimmer").show();
+    });
 });
