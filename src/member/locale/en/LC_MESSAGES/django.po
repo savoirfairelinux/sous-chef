@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 22:36+0000\n"
+"POT-Creation-Date: 2016-11-22 23:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -581,7 +581,7 @@ msgid "No information will be saved until all the steps are completed."
 msgstr ""
 
 #: member/templates/client/create/form.html:28
-msgid "Save as soon as you\\"
+msgid "Save as soon as you are ready."
 msgstr ""
 
 #: member/templates/client/create/form.html:38
@@ -1043,21 +1043,27 @@ msgid "Order"
 msgstr ""
 
 #: member/templates/client/view/orders.html:28
-#: member/templates/client/view/orders.html:31
-#: member/templates/client/view/orders.html:37
-msgid "Order\\"
+msgid "A unique identifier for the order."
 msgstr ""
 
 #: member/templates/client/view/orders.html:30
 msgid "Delivery Date"
 msgstr ""
 
+#: member/templates/client/view/orders.html:31
+msgid "The delivery date planned for the order."
+msgstr ""
+
 #: member/templates/client/view/orders.html:34
-msgid "Use the Status filter to filter this view."
+msgid "The order status"
 msgstr ""
 
 #: member/templates/client/view/orders.html:36
 msgid "Amount"
+msgstr ""
+
+#: member/templates/client/view/orders.html:37
+msgid "Total amount in $CAD."
 msgstr ""
 
 #: member/templates/client/view/orders.html:39

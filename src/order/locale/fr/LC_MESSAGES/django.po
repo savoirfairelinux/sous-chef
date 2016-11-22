@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 22:36+0000\n"
+"POT-Creation-Date: 2016-11-22 23:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -215,20 +215,23 @@ msgstr "ou"
 msgid "Order"
 msgstr "Commande"
 
-#: order/templates/list.html:33 order/templates/list.html:39
-#: order/templates/list.html:45
-#, fuzzy
-#| msgid "Order"
-msgid "Order\\"
-msgstr "Commande"
+#: order/templates/list.html:33
+msgid "A unique identifier for the order."
+msgstr ""
 
 #: order/templates/list.html:36
-msgid "Quickly access the client\\"
+msgid "Quickly access the client file."
 msgstr ""
 
 #: order/templates/list.html:38
 msgid "Delivery Date"
 msgstr "Date de Livraison"
+
+#: order/templates/list.html:39
+#, fuzzy
+#| msgid "Order items attached to the order"
+msgid "The delivery date planned for the order."
+msgstr "Articles de la commande"
 
 #: order/templates/list.html:41 order/templates/order/partials/filters.html:16
 msgid "Status"
@@ -241,6 +244,10 @@ msgstr ""
 #: order/templates/list.html:44
 msgid "Amount"
 msgstr "Montant"
+
+#: order/templates/list.html:45
+msgid "Total amount in $CAD."
+msgstr ""
 
 #: order/templates/list.html:47
 msgid "Actions"
@@ -402,6 +409,11 @@ msgstr ""
 #, python-format
 msgid "%(n)s order(s) successfully placed for %(client)s."
 msgstr ""
+
+#, fuzzy
+#~| msgid "Order"
+#~ msgid "Order\\"
+#~ msgstr "Commande"
 
 #~ msgid "Order item type"
 #~ msgstr "Type d'éléments de commande"
