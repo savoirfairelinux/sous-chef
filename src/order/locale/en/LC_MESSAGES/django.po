@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-27 20:41+0000\n"
+"POT-Creation-Date: 2016-11-22 22:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: order/forms.py:67 order/templates/_order_info.html:7
+#: order/templates/list.html:35 order/templates/order/create_batch.html:24
+msgid "Client"
+msgstr ""
+
+#: order/forms.py:74 order/templates/order/create_batch.html:29
+msgid "Delivery dates"
+msgstr ""
 
 #: order/models.py:24
 msgid "Ordered"
@@ -69,23 +78,23 @@ msgstr ""
 msgid "Visit"
 msgstr ""
 
-#: order/models.py:173
+#: order/models.py:239
 msgid "orders"
 msgstr ""
 
-#: order/models.py:177
+#: order/models.py:244
 msgid "creation date"
 msgstr ""
 
-#: order/models.py:182
+#: order/models.py:249
 msgid "delivery date"
 msgstr ""
 
-#: order/models.py:188
+#: order/models.py:255
 msgid "order status"
 msgstr ""
 
-#: order/models.py:194
+#: order/models.py:261
 msgid "client"
 msgstr ""
 
@@ -152,10 +161,6 @@ msgstr ""
 msgid "Order item"
 msgstr ""
 
-#: order/templates/_order_info.html:7 order/templates/list.html:30
-msgid "Client"
-msgstr ""
-
 #: order/templates/_order_info.html:14 order/templates/view.html:48
 msgid "Price"
 msgstr ""
@@ -187,35 +192,80 @@ msgid "New order"
 msgstr ""
 
 #: order/templates/list.html:19
+msgid "Multiple orders"
+msgstr ""
+
+#: order/templates/list.html:22
 msgid "Or"
 msgstr ""
 
-#: order/templates/list.html:29 order/templates/view.html:10
+#: order/templates/list.html:32 order/templates/view.html:10
 msgid "Order"
 msgstr ""
 
-#: order/templates/list.html:31
+#: order/templates/list.html:33 order/templates/list.html:39
+#: order/templates/list.html:45
+msgid "Order\\"
+msgstr ""
+
+#: order/templates/list.html:36
+msgid "Quickly access the client\\"
+msgstr ""
+
+#: order/templates/list.html:38
 msgid "Delivery Date"
 msgstr ""
 
-#: order/templates/list.html:32 order/templates/order/partials/filters.html:16
+#: order/templates/list.html:41 order/templates/order/partials/filters.html:16
 msgid "Status"
 msgstr ""
 
-#: order/templates/list.html:33
+#: order/templates/list.html:42
+msgid "Use the Status filter to filter this view."
+msgstr ""
+
+#: order/templates/list.html:44
 msgid "Amount"
 msgstr ""
 
-#: order/templates/list.html:34
+#: order/templates/list.html:47
 msgid "Actions"
 msgstr ""
 
-#: order/templates/list.html:73
+#: order/templates/list.html:86
 msgid "of"
 msgstr ""
 
-#: order/templates/list.html:86
+#: order/templates/list.html:99
 msgid "Sorry, no result found"
+msgstr ""
+
+#: order/templates/order/create_batch.html:7
+msgid "Place multiple orders for a client"
+msgstr ""
+
+#: order/templates/order/create_batch.html:16
+msgid "Place multiple orders"
+msgstr ""
+
+#: order/templates/order/create_batch.html:34
+msgid "Order items"
+msgstr ""
+
+#: order/templates/order/create_batch.html:40
+msgid "Size"
+msgstr ""
+
+#: order/templates/order/create_batch.html:41 order/templates/view.html:44
+msgid "Component"
+msgstr ""
+
+#: order/templates/order/create_batch.html:42
+msgid "Quantity"
+msgstr ""
+
+#: order/templates/order/create_batch.html:63
+msgid "Place orders"
 msgstr ""
 
 #: order/templates/order/partials/filters.html:7
@@ -270,10 +320,6 @@ msgstr ""
 msgid "Order items attached to the order"
 msgstr ""
 
-#: order/templates/view.html:44
-msgid "Component"
-msgstr ""
-
 #: order/templates/view.html:45
 msgid "Description"
 msgstr ""
@@ -294,26 +340,39 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: order/urls.py:12
+#: order/urls.py:14
 msgid "^list/$"
 msgstr ""
 
-#: order/urls.py:13
+#: order/urls.py:15
 msgid "^view/(?P<pk>\\d+)/$"
 msgstr ""
 
-#: order/urls.py:14
+#: order/urls.py:16
 msgid "^create/$"
 msgstr ""
 
-#: order/urls.py:15
-msgid "^update/(?P<pk>\\d+)/$"
-msgstr ""
-
-#: order/urls.py:17
-msgid "^update/(?P<pk>\\d+)/status$"
+#: order/urls.py:18
+msgid "^create/batch$"
 msgstr ""
 
 #: order/urls.py:21
+msgid "^update/(?P<pk>\\d+)/$"
+msgstr ""
+
+#: order/urls.py:23
+msgid "^update/(?P<pk>\\d+)/status$"
+msgstr ""
+
+#: order/urls.py:27
 msgid "^delete/(?P<pk>\\d+)/$"
+msgstr ""
+
+#: order/views.py:121
+msgid "Default"
+msgstr ""
+
+#: order/views.py:138
+#, python-format
+msgid "%(n)s order(s) successfully placed for %(client)s."
 msgstr ""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-27 20:41+0000\n"
+"POT-Creation-Date: 2016-11-22 22:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: savoirfairelinux <support@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -19,74 +19,97 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: billing/models.py:55
+#: billing/models.py:60
 msgid "total_amount"
 msgstr ""
 
-#: billing/models.py:87
+#: billing/models.py:92
 msgid "Search by name"
 msgstr "Recherche par nom"
 
-#: billing/templates/billing/add.html:5 billing/templates/billing/add.html:19
+#: billing/templates/billing/add.html:5 billing/templates/billing/add.html:10
 #: billing/templates/billing/list.html:5
 #: billing/templates/billing/list.html:10
 #: billing/templates/billing/view.html:5
 msgid "Billing"
 msgstr "Facturation"
 
-#: billing/templates/billing/add.html:36
-msgid "Period"
+#: billing/templates/billing/add.html:32
+msgid "Preview a period, then create a billing:"
 msgstr ""
 
-#: billing/templates/billing/add.html:49
-#: billing/templates/billing/list.html:40
-#, fuzzy
-#| msgid "Search by name"
-msgid "Search"
-msgstr "Recherche par nom"
-
-#: billing/templates/billing/add.html:67
-#: billing/templates/billing/view.html:27
-msgid "Order"
+#: billing/templates/billing/add.html:45
+msgid "1. Preview"
 msgstr ""
 
-#: billing/templates/billing/add.html:68
-#: billing/templates/billing/view.html:28
-msgid "Client"
-msgstr "Client"
-
-#: billing/templates/billing/add.html:69
-#: billing/templates/billing/view.html:29
-msgid "Delivery Date"
-msgstr ""
-
-#: billing/templates/billing/add.html:70
-msgid "Status"
-msgstr ""
-
-#: billing/templates/billing/add.html:71
-#: billing/templates/billing/list.html:51
-#: billing/templates/billing/view.html:30
-msgid "Amount"
-msgstr "Montant"
-
-#: billing/templates/billing/add.html:72
-#: billing/templates/billing/list.html:53
-msgid "Actions"
-msgstr "Actions"
-
-#: billing/templates/billing/add.html:97
+#: billing/templates/billing/add.html:47
+#: billing/templates/billing/add.html:100
 #, fuzzy
 #| msgid "Billing"
 msgid "Create Billing"
 msgstr "Facturation"
 
-#: billing/templates/billing/add.html:114
+#: billing/templates/billing/add.html:47
+#, fuzzy
+#| msgid "Billing"
+msgid "2. Create Billing"
+msgstr "Facturation"
+
+#: billing/templates/billing/add.html:60
+#: billing/templates/billing/view.html:24
+msgid "Order"
+msgstr ""
+
+#: billing/templates/billing/add.html:61 billing/templates/billing/add.html:67
+#: billing/templates/billing/add.html:73
+#: billing/templates/billing/view.html:25
+#: billing/templates/billing/view.html:31
+#: billing/templates/billing/view.html:37
+msgid "Order\\"
+msgstr ""
+
+#: billing/templates/billing/add.html:63
+#: billing/templates/billing/view.html:27
+msgid "Client"
+msgstr "Client"
+
+#: billing/templates/billing/add.html:64
+#: billing/templates/billing/view.html:28
+msgid "Quickly access the client\\"
+msgstr ""
+
+#: billing/templates/billing/add.html:66
+#: billing/templates/billing/view.html:30
+msgid "Delivery Date"
+msgstr ""
+
+#: billing/templates/billing/add.html:69
+#: billing/templates/billing/view.html:33
+msgid "Status"
+msgstr ""
+
+#: billing/templates/billing/add.html:70
+msgid "Display only Ordered orders."
+msgstr ""
+
+#: billing/templates/billing/add.html:72
+#: billing/templates/billing/list.html:56
+#: billing/templates/billing/view.html:36
+msgid "Amount"
+msgstr "Montant"
+
+#: billing/templates/billing/add.html:75
+#: billing/templates/billing/list.html:62
+#: billing/templates/billing/view.html:39
+msgid "Actions"
+msgstr "Actions"
+
+#: billing/templates/billing/add.html:117
 msgid "of"
 msgstr ""
 
-#: billing/templates/billing/add.html:127
-#: billing/templates/billing/list.html:73
+#: billing/templates/billing/add.html:130
+#: billing/templates/billing/list.html:83
 msgid "Sorry, no result found"
 msgstr ""
 
@@ -109,7 +132,7 @@ msgid "Yes"
 msgstr ""
 
 #: billing/templates/billing/list.html:27
-#: billing/templates/billing/list.html:50
+#: billing/templates/billing/list.html:53
 #, fuzzy
 #| msgid "Billing"
 msgid "Billing Period"
@@ -119,8 +142,40 @@ msgstr "Facturation"
 msgid "Reset"
 msgstr ""
 
-#: billing/templates/billing/list.html:52
-msgid "Orders count"
+#: billing/templates/billing/list.html:40
+#, fuzzy
+#| msgid "Search by name"
+msgid "Search"
+msgstr "Recherche par nom"
+
+#: billing/templates/billing/list.html:50
+#, fuzzy
+#| msgid "Billing"
+msgid "Billing ID"
+msgstr "Facturation"
+
+#: billing/templates/billing/list.html:51
+#, fuzzy
+#| msgid "Billing"
+msgid "Billing\\"
+msgstr "Facturation"
+
+#: billing/templates/billing/list.html:54
+msgid ""
+"A billing period represents a month and includes all orders delivered during "
+"the period."
+msgstr ""
+
+#: billing/templates/billing/list.html:57
+msgid "Total amount in $CAD delivered for the period."
+msgstr ""
+
+#: billing/templates/billing/list.html:59
+msgid "Orders"
+msgstr ""
+
+#: billing/templates/billing/list.html:60
+msgid "Number of orders delivered included in the period."
 msgstr ""
 
 #: billing/templates/billing/partials/statistics.html:6
@@ -129,12 +184,6 @@ msgid "Delivered orders"
 msgstr ""
 
 #: billing/templates/billing/partials/statistics.html:17
-#, fuzzy
-#| msgid "Client"
-msgid "Clients"
-msgstr "Client"
-
-#: billing/templates/billing/partials/statistics.html:25
 msgid "Revenues"
 msgstr ""
 
@@ -144,13 +193,29 @@ msgstr ""
 msgid "Billing Details"
 msgstr "Facturation"
 
-#: billing/templates/billing/view.html:21
+#: billing/templates/billing/view.html:19
 msgid "Print"
 msgstr ""
 
-#: billing/templates/billing/view.html:45
+#: billing/templates/billing/view.html:34
+msgid "Display only included orders."
+msgstr ""
+
+#: billing/templates/billing/view.html:57
 msgid "Total"
 msgstr ""
+
+#: billing/views.py:58
+#, python-format
+msgid ""
+"The billing with the identifier #%s             has been successfully "
+"created."
+msgstr ""
+
+#, fuzzy
+#~| msgid "Client"
+#~ msgid "Clients"
+#~ msgstr "Client"
 
 #~ msgid "Date"
 #~ msgstr "Date"
