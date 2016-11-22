@@ -42,7 +42,7 @@
                 <div class="ui yellow  inverted dashboard center aligned segment">
                   <div class="ui dashboard statistic">
                     <div class="value">
-                      {{ billable_orders.count }}
+                      {{ billable_orders_month }}
                     </div>
                     <div class="label">
                       {% trans "Orders" %}
@@ -50,7 +50,11 @@
                   </div>
                 </div>
                 <div class="ui segment">
-                  <p>{% trans "Footer" %}</p>
+                    <p><em>
+                        {% blocktrans with count=billable_orders_year %}
+                           {{ count }} orders delivered this year.
+                        {% endblocktrans %}
+                  </em></p>
                 </div>
               </div>
             </div>
