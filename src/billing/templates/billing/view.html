@@ -12,8 +12,6 @@
     </div>
 </div>
 
-
-
 <div class="ui basic segment no-print">
     <div class="ui row">
         {% include 'billing/partials/statistics.html' with orders=billing.orders.all %}
@@ -23,20 +21,34 @@
 
 <table class="ui very basic stripped celled table">
   <thead>
-    <tr>
-      <th class="center aligned">{% trans "Order" %}</th>
-      <th>{% trans "Client" %}</th>
-      <th>{% trans "Delivery Date" %}</th>
-      <th class="right aligned">{% trans "Amount" %}</th>
-    </tr>
+    <th class="">{% trans 'Order' %}
+            <i class="help-text question grey icon link" data-content="{% trans 'Order\'s unique identifier.' %}"></i>
+    </th>
+    <th class="">{% trans 'Client' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Quickly access the client\'s file.' %}"></i>
+    </th>
+    <th class="">{% trans 'Delivery Date' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Order\'s delivery date.' %}"></i>
+    </th>
+    <th class="center aligned">{% trans 'Status' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Display only included orders.' %}"></i>
+    </th>
+    <th class="center aligned">{% trans 'Amount' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Order\'s total amount.' %}"></i>
+    </th>
+    <th class="">{% trans 'Actions' %}</th>
   </thead>
   <tbody>
     {% for order in billing.orders.all %}
     <tr>
-      <td class="center aligned"><a href="{% url 'order:view' pk=order.id %}">#{{order.id}}</a></td>
+      <td><i class="hashtag icon"></i>{{order.id}}</td>
       <td><a href="{% url 'member:view' pk=order.client.id %}">{{order.client}}
       <td>{{order.delivery_date}}</td>
-      <td class="right aligned"><i class="dollar icon"></i>{{order.price}}</td>
+      <td class="center aligned">{{order.get_status_display}}</td>
+      <td class="center aligned"><i class="dollar icon"></i>{{order.price}}</td>
+      <td>
+        <a class="ui basic icon button"  href="{% url 'order:view' pk=order.id %}"><i class="icon unhide"></i></a>
+      </td>
     </tr>
     {% endfor %}
   </tbody>
