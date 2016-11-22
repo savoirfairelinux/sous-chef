@@ -52,8 +52,11 @@
             <span class="category">{{ obj.age }} {% trans "years old" %}</span>
         </div>
         <div class="description">
-            <p>{{ obj.member.firstname }} {% trans "is an" %} <strong>{{ obj.get_delivery_type_display }}</strong>
-                {% trans "client on the" %} <strong>{{ obj.route }}</strong> {% trans "route" %}.</p>
+            <p>
+                {% blocktrans with member_firstname=obj.member.firstname delivery_type=obj.get_delivery_type_display route=obj.route %}
+                    {{ member_firstname }} is an <strong>{{ delivery_type }}</strong> client on the <strong>{{ route }}</strong> route.
+                {% endblocktrans %}
+            </p>
                 <p>{% trans "This client is currently" %} <strong>{{ obj.get_status_display }}</strong>.</p>
             </div>
         </div>
