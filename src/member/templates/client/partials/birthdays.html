@@ -7,7 +7,7 @@
           <tbody>
               {% for client in birthday %}
               <tr>
-                  <td><a href="{% url 'member:view' id=client.id %}">{{ client }}</a></td>
+                  <td><a href="{% url 'member:client_information' pk=client.id %}">{{ client }}</a></td>
                   <td>{{ client.age }}</td>
               </tr>
               {% endfor %}
