@@ -57,6 +57,7 @@ class BillingAdd(generic.ListView):
     model = Order
     template_name = "billing/add.html"
     context_object_name = "orders"
+    paginate_by = 20
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -67,6 +68,21 @@ class BillingAdd(generic.ListView):
         uf = DeliveredOrdersByMonth(
             self.request.GET, queryset=self.get_queryset())
         context['filter'] = uf
+        text = ''
+        count = 0
+        for getVariable in self.request.GET:
+            if getVariable == "page":
+                continue
+            for getValue in self.request.GET.getlist(getVariable):
+                if count == 0:
+                    text += "?" + getVariable + "=" + getValue
+                else:
+                    text += "&" + getVariable + "=" + getValue
+                count += 1
+
+        text = text + "?" if count == 0 else text + "&"
+        context['get'] = text
+
         return context
 
     def get_queryset(self):
