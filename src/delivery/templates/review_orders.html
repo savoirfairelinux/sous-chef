@@ -71,22 +71,34 @@
 
 <table class="ui very basic stripped celled table">
   <thead>
-    <th class="sorted descending center aligned">{% trans "Order" %}</th>
-    <th class="">{% trans 'Client' %}</th>
-    <th class="">{% trans 'Delivery Date' %}</th>
-    <th class="">{% trans 'Route' %}</th>
-    <th class="">{% trans 'Status' %}</th>
-    <th class="center aligned">{% trans 'Amount' %}</th>
+    <th class="">{% trans 'Order' %}
+            <i class="help-text question grey icon link" data-content="{% trans 'Order\'s unique identifier.' %}"></i>
+    </th>
+    <th class="">{% trans 'Client' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Quickly access the client\'s file.' %}"></i>
+    </th>
+    <th class="">{% trans 'Delivery Date' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Order\'s delivery date.' %}"></i>
+    </th>
+    <th class="">{% trans 'Route' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Order\'s route.' %}"></i>
+    </th>
+    <th class="center aligned">{% trans 'Status' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Display only Ordered orders.' %}"></i>
+    </th>
+    <th class="center aligned">{% trans 'Amount' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Order\'s total amount.' %}"></i>
+    </th>
     <th class=""></th>
   </thead>
   <tbody>
     {% for order in orders %}
       <tr {% if not order.client.is_geolocalized %}class="warning"{% endif %}>
-        <td class="center aligned"><strong>#{{order.id}}</strong></td>
+        <td class="center aligned"><strong><i class="hashtag icon"></i>{{order.id}}</strong></td>
         <td><a href="{% url 'member:client_information' pk=order.client.id %}">{{order.client.member}}</a></td>
         <td>{{order.delivery_date}}</td>
         <td>{{order.client.route}}</td>
-        <td>{{order.get_status_display}}</td>
+        <td class="center aligned">{{order.get_status_display}}</td>
         <td class="center aligned"><i class="dollar icon"></i>{{order.price}}</td>
         <td><button class="ui button"  onclick="location.href='{% url 'order:view' pk=order.id %}';" value="{% trans "View Order" %}" >{% trans "View Order" %}</button></td>
       </tr>
