@@ -18,9 +18,11 @@ class BillingManager(models.Manager):
         # Get all billable orders for the given period
         billable_orders = Order.objects.get_billable_orders(year, month)
 
+        total_amount = calculate_amount_total(billable_orders)
+
         # Create the Billing object
         billing = Billing.objects.create(
-            total_amount=calculate_amount_total(billable_orders),
+            total_amount=total_amount,
             billing_month=month,
             billing_year=year,
             created=datetime.today(),
@@ -53,7 +55,7 @@ class Billing(models.Model):
 
     total_amount = models.DecimalField(
         verbose_name=_('total_amount'),
-        max_digits=6,
+        max_digits=8,
         decimal_places=2
     )
 
