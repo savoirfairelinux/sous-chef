@@ -1,6 +1,7 @@
 from django.test import TestCase
 from member.models import Member, Client, Address, Referencing
 from member.models import Contact, Option, Client_option, Restriction, Route
+from order.models import Order
 from datetime import date
 from django.core.management import call_command
 
@@ -141,7 +142,7 @@ class ImportMemberMealsTestCase(TestCase):
     Test data importation.
     """
 
-    fixtures = ['delivery_route_data.json']
+    fixtures = ['sample_data.json']
 
     @classmethod
     def setUpTestData(cls):
@@ -206,3 +207,47 @@ class ImportMemberMealsTestCase(TestCase):
     def test_import_ingredients(self):
         marie = Client.objects.get(member__mid=93)
         self.assertEquals(marie.ingredients_to_avoid.all().count(), 2)
+
+
+class ImportMemberOrdersTestCase(TestCase):
+
+    """
+    Test data importation.
+    """
+
+    fixtures = ['sample_data.json']
+
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Load the mock data files.
+        It should import 10 clients.
+        """
+
+        call_command('importclients', file='mock_clients.csv')
+        call_command('importorders', file='mock_orders.csv')
+
+    def test_import_orders(self):
+        dorothy = Client.objects.get(member__mid=94)
+        orders = Order.objects.get_billable_orders_client(11, 2016, dorothy)
+        # Dorothy must have one billable order
+        self.assertEquals(
+            orders.count(),
+            1
+        )
+        self.assertEqual(orders.first().status, 'D')
+        self.assertEqual(orders.first().delivery_date, date(2016,11,11))
+
+    def test_import_order_items(self):
+        dorothy = Client.objects.get(member__mid=94)
+        order = Order.objects.get_billable_orders_client(
+            11, 2016, dorothy
+        ).first()
+        items = order.orders
+        main_dish = items.get(component_group='main_dish')
+        self.assertEqual(main_dish.total_quantity, 2)
+        self.assertEqual(main_dish.size, 'L')
+        diabetic_dessert = items.get(component_group='diabetic')
+        self.assertEqual(diabetic_dessert.total_quantity, 1)
+        dessert = items.get(component_group='dessert')
+        self.assertEqual(dessert.total_quantity, 1)

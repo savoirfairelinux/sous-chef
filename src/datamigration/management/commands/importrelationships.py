@@ -50,10 +50,8 @@ class Command(BaseCommand):
 
                     if row[self.ROW_FIRSTNAME] is not '':
 
-                        relationship, created = Member.objects.update_or_create
-                        (
-                            rid=row[
-                                self.ROW_RID], defaults={
+                        relationship, created = Member.objects.update_or_create(
+                            rid=row[self.ROW_RID], defaults={
                                 "firstname": row[
                                     self.ROW_FIRSTNAME], "lastname": row[
                                     self.ROW_LASTNAME], })
