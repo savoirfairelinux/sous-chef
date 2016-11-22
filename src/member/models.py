@@ -375,6 +375,7 @@ class Client(models.Model):
 
     class Meta:
         verbose_name_plural = _('clients')
+        ordering = ["-member__created_at"]
 
     billing_member = models.ForeignKey(
         'member.Member',

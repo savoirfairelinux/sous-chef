@@ -230,11 +230,14 @@ class OrderManager(models.Manager):
                     order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
                     total_quantity=item_qty)
 
+        return order
+
 
 class Order(models.Model):
 
     class Meta:
         verbose_name_plural = _('orders')
+        ordering = ['-delivery_date']
 
     # Order information
     creation_date = models.DateField(
