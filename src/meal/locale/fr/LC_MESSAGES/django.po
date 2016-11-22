@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 22:06+0000\n"
+"POT-Creation-Date: 2016-11-22 22:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: savoirfairelinux <support@savoirfairelinux.com>, 2016\n"
+"Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
 "teams/63058/fr/)\n"
 "Language: fr\n"
@@ -29,7 +29,7 @@ msgstr "Dessert"
 
 #: meal/models.py:7
 msgid "Diabetic Dessert"
-msgstr "Dessert diabétique"
+msgstr "Dessert pour diabétique"
 
 #: meal/models.py:8
 msgid "Fruit Salad"
@@ -125,15 +125,15 @@ msgstr "composants"
 
 #: meal/models.py:87
 msgid "component group"
-msgstr "group de composants"
+msgstr "groupe d'article"
 
 #: meal/models.py:112 meal/models.py:269
 msgid "component"
-msgstr "composant"
+msgstr "Article"
 
 #: meal/models.py:117 meal/models.py:180
 msgid "ingredient"
-msgstr ""
+msgstr "ingrédient"
 
 #: meal/models.py:121 meal/models.py:194
 msgid "date"
@@ -141,15 +141,15 @@ msgstr "date"
 
 #: meal/models.py:141
 msgid "restricted items"
-msgstr "items avec restrictions"
+msgstr "Aliment avec restrictions"
 
 #: meal/models.py:159
 msgid "restricted item group"
-msgstr "groupe d'items avec restrictions"
+msgstr "groupe d'aliment avec restrictions"
 
 #: meal/models.py:175
 msgid "restricted item"
-msgstr "item avec restriction"
+msgstr "Aliment avec restriction"
 
 #: meal/models.py:191
 msgid "menus"

@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 22:06+0000\n"
+"POT-Creation-Date: 2016-11-22 22:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: savoirfairelinux <support@savoirfairelinux.com>, 2016\n"
+"Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
 "teams/63058/fr/)\n"
 "Language: fr\n"
@@ -21,7 +21,7 @@ msgstr ""
 
 #: billing/models.py:60
 msgid "total_amount"
-msgstr ""
+msgstr "total_amount"
 
 #: billing/models.py:92
 msgid "Search by name"
@@ -50,15 +50,15 @@ msgid "Create Billing"
 msgstr "Facturation"
 
 #: billing/templates/billing/add.html:47
-#, fuzzy
-#| msgid "Billing"
 msgid "2. Create Billing"
-msgstr "Facturation"
+msgstr ""
 
 #: billing/templates/billing/add.html:60
 #: billing/templates/billing/view.html:24
+#, fuzzy
+#| msgid "order id"
 msgid "Order"
-msgstr ""
+msgstr "# de commande"
 
 #: billing/templates/billing/add.html:61 billing/templates/billing/add.html:67
 #: billing/templates/billing/add.html:73
@@ -111,7 +111,7 @@ msgstr ""
 #: billing/templates/billing/add.html:130
 #: billing/templates/billing/list.html:83
 msgid "Sorry, no result found"
-msgstr ""
+msgstr "Désolé, aucun résultat trouvé."
 
 #: billing/templates/billing/billing_confirm_delete.html:6
 #, fuzzy
@@ -140,13 +140,11 @@ msgstr "Facturation"
 
 #: billing/templates/billing/list.html:39
 msgid "Reset"
-msgstr ""
+msgstr "Réinitialiser"
 
 #: billing/templates/billing/list.html:40
-#, fuzzy
-#| msgid "Search by name"
 msgid "Search"
-msgstr "Recherche par nom"
+msgstr "Recherche"
 
 #: billing/templates/billing/list.html:50
 #, fuzzy
@@ -212,10 +210,23 @@ msgid ""
 "created."
 msgstr ""
 
-#, fuzzy
-#~| msgid "Client"
-#~ msgid "Clients"
-#~ msgstr "Client"
+#~ msgid "Name"
+#~ msgstr "Nom"
+
+#~ msgid "Period"
+#~ msgstr "Période"
 
 #~ msgid "Date"
 #~ msgstr "Date"
+
+#~ msgid "client name"
+#~ msgstr "Nom du client"
+
+#~ msgid "order date"
+#~ msgstr "Date de commande"
+
+#~ msgid "order status"
+#~ msgstr "Statut de la commande"
+
+#~ msgid "price"
+#~ msgstr "Prix"

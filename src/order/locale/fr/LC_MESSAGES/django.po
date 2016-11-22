@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 22:06+0000\n"
+"POT-Creation-Date: 2016-11-22 22:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Mathieu Perreault <mathieu.perreault@gmail.com>, 2016\n"
+"Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
 "teams/63058/fr/)\n"
 "Language: fr\n"
@@ -32,7 +32,7 @@ msgstr "Date de livraison"
 
 #: order/models.py:24
 msgid "Ordered"
-msgstr "Prête"
+msgstr "Commandée"
 
 #: order/models.py:25
 msgid "Delivered"
@@ -40,11 +40,13 @@ msgstr "Livrée"
 
 #: order/models.py:26
 msgid "No Charge"
-msgstr "Non Facturée"
+msgstr "Gratuit"
 
 #: order/models.py:27
+#, fuzzy
+#| msgid "Cancel"
 msgid "Cancelled"
-msgstr ""
+msgstr "Annuler"
 
 #: order/models.py:28
 msgid "Billed"
@@ -76,13 +78,13 @@ msgstr "FACTURABLE - Composant de repas (principal, légumes, à-côtés...)"
 #, fuzzy
 #| msgid "BILLABLE delivery (general store item, ...)"
 msgid "Delivery (general store item, invitation, ...)"
-msgstr "FACTURABLE - Livraison (par ex. item général)"
+msgstr "FACTURABLE - Livraison (Ex: article en magasin)"
 
 #: order/models.py:47
 #, fuzzy
 #| msgid "NON BILLABLE pickup (payment)"
 msgid "Pickup (payment)"
-msgstr "NON FACTURABLE - Ramassage (par ex. paiement)"
+msgstr "NON FACTURABLE - Ramassage (ex: paiement)"
 
 #: order/models.py:48
 msgid "Visit"
@@ -150,7 +152,7 @@ msgstr "quantité gratuite"
 
 #: order/models.py:957
 msgid "component group"
-msgstr "groupe de composant"
+msgstr "groupe d'article"
 
 #: order/templates/_form.html:5 order/templates/_form.html:49
 #: order/templates/update.html:18
@@ -161,15 +163,13 @@ msgstr "Information requise manquante"
 #: order/templates/update.html:19
 msgid ""
 "Please review the form to make sure that all required fields are filled."
-msgstr "S'il vous plaît vous assurer que les champs requis sont remplis."
+msgstr "Merci de vérifier que les champs requis sont remplis."
 
 #: order/templates/_form.html:18
 msgid "Select a client"
-msgstr "Sélectionnez un client"
+msgstr "Sélectionner un client"
 
 #: order/templates/_form.html:56
-#, fuzzy
-#| msgid "order items"
 msgid "Order item"
 msgstr "éléments de la commande"
 
@@ -183,10 +183,8 @@ msgid "Delivery date"
 msgstr "Date de livraison"
 
 #: order/templates/_order_info.html:28
-#, fuzzy
-#| msgid "creation date"
 msgid "Creation date"
-msgstr "date de création"
+msgstr "Date de création"
 
 #: order/templates/create.html:6 order/templates/list.html:6
 #: order/templates/list.html:11 order/templates/update.html:6
@@ -194,16 +192,12 @@ msgid "Orders"
 msgstr "Commandes"
 
 #: order/templates/create.html:11
-#, fuzzy
-#| msgid "New order"
 msgid "New Order"
 msgstr "Nouvelle commande"
 
 #: order/templates/create.html:17
-#, fuzzy
-#| msgid "^create/$"
 msgid "Create"
-msgstr "^create/$"
+msgstr "Créer"
 
 #: order/templates/list.html:16
 msgid "New order"
@@ -218,17 +212,15 @@ msgid "Or"
 msgstr "ou"
 
 #: order/templates/list.html:32 order/templates/view.html:10
-#, fuzzy
-#| msgid "Orders"
 msgid "Order"
-msgstr "Commandes"
+msgstr "Commande"
 
 #: order/templates/list.html:33 order/templates/list.html:39
 #: order/templates/list.html:45
 #, fuzzy
-#| msgid "Orders"
+#| msgid "Order"
 msgid "Order\\"
-msgstr "Commandes"
+msgstr "Commande"
 
 #: order/templates/list.html:36
 msgid "Quickly access the client\\"
@@ -260,7 +252,7 @@ msgstr ""
 
 #: order/templates/list.html:99
 msgid "Sorry, no result found"
-msgstr ""
+msgstr "Désolé, aucun résultat trouvé."
 
 #: order/templates/order/create_batch.html:7
 msgid "Place multiple orders for a client"
@@ -272,7 +264,7 @@ msgstr ""
 
 #: order/templates/order/create_batch.html:34
 #, fuzzy
-#| msgid "order items"
+#| msgid "Order item"
 msgid "Order items"
 msgstr "éléments de la commande"
 
@@ -281,10 +273,8 @@ msgid "Size"
 msgstr ""
 
 #: order/templates/order/create_batch.html:41 order/templates/view.html:44
-#, fuzzy
-#| msgid "component group"
 msgid "Component"
-msgstr "groupe de composant"
+msgstr "Type d'article"
 
 #: order/templates/order/create_batch.html:42
 #, fuzzy
@@ -311,56 +301,50 @@ msgid "Search"
 msgstr "Recherche"
 
 #: order/templates/order_confirm_delete.html:6
-#, fuzzy
-#| msgid "View Order"
 msgid "Delete Order"
-msgstr "Voir Commande"
+msgstr "Supprimer commande"
 
 #: order/templates/order_confirm_delete.html:9
 msgid "This order will be deleted and all the info will be lost, are you sure?"
 msgstr ""
-"Cette commande va être effacée, ainsi que ses informations. Êtes-vous "
-"sûr(er) ?"
+"Cette commande et toutes les informations vont être effacées. Êtes-vous "
+"sûr(e) ?"
 
 #: order/templates/order_confirm_delete.html:13
 msgid "No"
-msgstr ""
+msgstr "Non"
 
 #: order/templates/order_confirm_delete.html:14
 msgid "Yes"
-msgstr ""
+msgstr "Oui"
 
 #: order/templates/update.html:11
-#, fuzzy
-#| msgid "View Order"
 msgid "Update Order"
-msgstr "Voir Commande"
+msgstr "Mettre à jour la commande"
 
 #: order/templates/update.html:24
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #: order/templates/update.html:25 order/templates/view.html:74
 msgid "Update"
-msgstr ""
+msgstr "Mettre à jour"
 
 #: order/templates/view.html:5
 msgid "View Order"
 msgstr "Voir Commande"
 
 #: order/templates/view.html:35
-#, fuzzy
-#| msgid "Ordered"
 msgid "Order detail"
-msgstr "Prête"
+msgstr "Détails de la commande"
 
 #: order/templates/view.html:37
 msgid "Order items attached to the order"
-msgstr ""
+msgstr "Articles de la commande"
 
 #: order/templates/view.html:45
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #: order/templates/view.html:46
 msgid "Total Quantity"
@@ -374,11 +358,11 @@ msgstr "Facturée"
 
 #: order/templates/view.html:63
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: order/templates/view.html:73
 msgid "Delete"
-msgstr ""
+msgstr "Supprimer"
 
 #: order/urls.py:14
 msgid "^list/$"
@@ -423,4 +407,4 @@ msgstr ""
 #~ msgstr "Type d'éléments de commande"
 
 #~ msgid "NON BILLABLE delivery (ex. invitation card, ...)"
-#~ msgstr "NON FACTURABLE - Livraison (par ex. carte d'invitation)"
+#~ msgstr "NON FACTURABLE - Livraison (ex: carte d'invitation)"

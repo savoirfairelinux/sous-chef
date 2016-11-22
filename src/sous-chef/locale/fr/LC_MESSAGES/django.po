@@ -8,8 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 22:06+0000\n"
+"POT-Creation-Date: 2016-11-22 22:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
 "teams/63058/fr/)\n"
 "Language: fr\n"
@@ -20,43 +21,43 @@ msgstr ""
 
 #: sous-chef/templates/404.html:4 sous-chef/templates/404.html:6
 msgid "Page not found"
-msgstr "La page demandée est introuvable"
+msgstr ""
 
 #: sous-chef/templates/404.html:7
 msgid "We couldn't find the page you are looking for."
-msgstr "Nous n'avons pas réussi à trouver la page demandée."
+msgstr ""
 
 #: sous-chef/templates/404.html:10
 msgid "Go back from where you came from"
-msgstr "Retournez d'où vous venez"
+msgstr ""
 
 #: sous-chef/templates/404.html:11 sous-chef/templates/404.html:14
 msgid "Go back to homepage"
-msgstr "Retournez à la page d'accueil"
+msgstr ""
 
 #: sous-chef/templates/base.html:9 sous-chef/templates/splash.html:9
 msgid "Sous-Chef"
-msgstr ""
+msgstr "Sous-Chef"
 
 #: sous-chef/templates/base.html:58
 msgid "with"
-msgstr ""
+msgstr "avec"
 
 #: sous-chef/templates/base.html:58
 msgid "in Montreal"
-msgstr ""
+msgstr "a Montréal"
 
 #: sous-chef/templates/dashboard/statistics.html:10
 msgid "Active clients"
-msgstr ""
+msgstr "Clients actifs"
 
 #: sous-chef/templates/dashboard/statistics.html:15
 msgid "One"
-msgstr ""
+msgstr "Un"
 
 #: sous-chef/templates/dashboard/statistics.html:16
 msgid "Hundred"
-msgstr ""
+msgstr "Cent"
 
 #: sous-chef/templates/dashboard/statistics.html:19
 msgid "Meals a day"
@@ -64,52 +65,52 @@ msgstr ""
 
 #: sous-chef/templates/dashboard/statistics.html:27
 msgid "Routes"
-msgstr ""
+msgstr "Itinéraires"
 
 #: sous-chef/templates/dashboard/statistics.html:36
 msgid "Volunteers"
-msgstr ""
+msgstr "Bénévoles"
 
 #: sous-chef/templates/system/_button_export.html:4
 msgid "Export to CSV"
-msgstr ""
+msgstr "Exporter en CSV"
 
 #: sous-chef/templates/system/_button_export.html:4
 msgid "Export"
-msgstr ""
+msgstr "Exporter"
 
 #: sous-chef/templates/system/breadcrumb.html:4
 msgid "Home"
-msgstr ""
+msgstr "Accueil"
 
 #: sous-chef/templates/system/menu.html:6
 msgid "Logo Sous-Chef"
-msgstr ""
+msgstr "Logo Sous-Chef"
 
 #: sous-chef/templates/system/menu.html:21
 msgid "Clients"
-msgstr ""
+msgstr "Clients"
 
 #: sous-chef/templates/system/menu.html:33
 msgid "Orders"
-msgstr ""
+msgstr "Commandes"
 
 #: sous-chef/templates/system/menu.html:36
 msgid "Staff Notes"
-msgstr ""
+msgstr "Notes d'équipe"
 
 #: sous-chef/templates/system/menu.html:43
 msgid "Kitchen Count"
-msgstr ""
+msgstr "Inventaire des repas"
 
 #: sous-chef/templates/system/menu.html:44
 msgid "Billing"
-msgstr ""
+msgstr "Facturation"
 
 #: sous-chef/templates/system/menu.html:45
 msgid "Admin"
-msgstr ""
+msgstr "Admin"
 
 #: sous-chef/templates/system/menu.html:46
 msgid "Logout"
-msgstr ""
+msgstr "Se déconnecter"

@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 22:06+0000\n"
+"POT-Creation-Date: 2016-11-22 22:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Mathieu Perreault <mathieu.perreault@gmail.com>, 2016\n"
+"Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
 "teams/63058/fr/)\n"
 "Language: fr\n"
@@ -93,7 +93,7 @@ msgstr "Régulier"
 #: delivery/templates/kitchen_count.html:34
 #: delivery/templates/route_sheet.html:23
 msgid "Large"
-msgstr "Large"
+msgstr "Grand"
 
 #: delivery/templates/kitchen_count.html:35
 msgid "Dish today"
@@ -171,13 +171,13 @@ msgstr "Itinéraires"
 
 #: delivery/templates/kitchen_count_steps.html:25
 msgid "Organize delivery routes."
-msgstr "Organiser les itinéraires pour la livraison."
+msgstr "Organiser les itinéraires de livraison."
 
 #: delivery/templates/organize_route.html:6
 #, fuzzy
 #| msgid "Organize delivery routes."
 msgid "Organize the delivery route"
-msgstr "Organiser les itinéraires pour la livraison."
+msgstr "Organiser les itinéraires de livraison."
 
 #: delivery/templates/organize_route.html:19
 #, fuzzy
@@ -205,7 +205,7 @@ msgstr ""
 #, fuzzy
 #| msgid "View Order"
 msgid "View routes"
-msgstr "Voir la command"
+msgstr "Voir la commande"
 
 #: delivery/templates/review_orders.html:6
 #: delivery/templates/review_orders.html:65
@@ -255,7 +255,7 @@ msgstr "Montant"
 
 #: delivery/templates/review_orders.html:103
 msgid "View Order"
-msgstr "Voir la command"
+msgstr "Voir la commande"
 
 #: delivery/templates/review_orders.html:111
 msgid "orders today"
@@ -279,7 +279,7 @@ msgstr "Note"
 
 #: delivery/templates/route_sheet.html:42
 msgid "Item"
-msgstr "Item"
+msgstr "Article"
 
 #: delivery/templates/route_sheet.html:53
 msgid "Apt"
@@ -299,7 +299,7 @@ msgstr "Organiser les itinéraires"
 
 #: delivery/templates/routes.html:6
 msgid "Routes Information"
-msgstr "Plans de livraison"
+msgstr "Information de l'itinéraire"
 
 #: delivery/templates/routes.html:20
 #, fuzzy

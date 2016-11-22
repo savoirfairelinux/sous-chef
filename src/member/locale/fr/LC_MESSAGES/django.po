@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 22:06+0000\n"
+"POT-Creation-Date: 2016-11-22 22:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: savoirfairelinux <support@savoirfairelinux.com>, 2016\n"
+"Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
 "teams/63058/fr/)\n"
 "Language: fr\n"
@@ -53,15 +53,15 @@ msgstr "Date de naissance"
 
 #: member/forms.py:46 member/forms.py:254
 msgid "Email"
-msgstr ""
+msgstr "Courriel"
 
 #: member/forms.py:52
 msgid "Home phone"
-msgstr ""
+msgstr "Téléphone au domicile"
 
 #: member/forms.py:58 member/forms.py:266
 msgid "Cellular"
-msgstr ""
+msgstr "Cellulaire"
 
 #: member/forms.py:63
 #: member/templates/client/partials/forms/basic_information.html:64
@@ -103,11 +103,11 @@ msgstr "H2R 2Y5"
 
 #: member/forms.py:111
 msgid "Latitude"
-msgstr ""
+msgstr "Latitude"
 
 #: member/forms.py:118
 msgid "Longitude"
-msgstr ""
+msgstr "Longitude"
 
 #: member/forms.py:125
 msgid "Distance from Santropol"
@@ -146,7 +146,7 @@ msgstr "Type"
 
 #: member/forms.py:183
 msgid "Schedule"
-msgstr "Jours de Livraison"
+msgstr "Calendrier"
 
 #: member/forms.py:191 member/templates/client/view/allergies.html:32
 msgid "Restrictions"
@@ -169,8 +169,10 @@ msgid "Member"
 msgstr "Membre"
 
 #: member/forms.py:260
+#, fuzzy
+#| msgid "Home phone"
 msgid "Work phone"
-msgstr ""
+msgstr "Téléphone au domicile"
 
 #: member/forms.py:282
 msgid "This field is required unless you add a new member."
@@ -223,7 +225,7 @@ msgstr "Type de Paiement"
 
 #: member/forms.py:343
 msgid "Street Number"
-msgstr "Numéro"
+msgstr "Numéro de rue"
 
 #: member/forms.py:351
 msgid "Floor"
@@ -255,7 +257,7 @@ msgstr "Type de contact"
 
 #: member/forms.py:392
 msgid "Contact"
-msgstr ""
+msgstr "Contact"
 
 #: member/forms.py:395 member/templates/client/view/information.html:62
 msgid "Relationship"
@@ -452,8 +454,10 @@ msgid "French"
 msgstr "Français"
 
 #: member/models.py:373
+#, fuzzy
+#| msgid "Home phone"
 msgid "Allophone"
-msgstr ""
+msgstr "Téléphone au domicile"
 
 #: member/models.py:377
 msgid "clients"
@@ -558,10 +562,8 @@ msgid "component"
 msgstr "composant"
 
 #: member/templates/client/base.html:6
-#, fuzzy
-#| msgid "Clients"
 msgid "Client"
-msgstr "Clients"
+msgstr "Client"
 
 #: member/templates/client/base.html:16
 #, python-format
@@ -573,7 +575,7 @@ msgstr ""
 
 #: member/templates/client/base.html:49
 msgid "Important notice"
-msgstr ""
+msgstr "Remarque importante"
 
 #: member/templates/client/create/form.html:18
 msgid "Edit existing client"
@@ -581,11 +583,11 @@ msgstr "Modifier un client existant"
 
 #: member/templates/client/create/form.html:18
 msgid "Create a new client "
-msgstr ""
+msgstr "Créer un nouveau client"
 
 #: member/templates/client/create/form.html:24
 msgid "Notice"
-msgstr ""
+msgstr "Remarque"
 
 #: member/templates/client/create/form.html:26
 msgid "No information will be saved until all the steps are completed."
@@ -603,7 +605,7 @@ msgstr "Modifier le Client"
 
 #: member/templates/client/create/form.html:38
 msgid "New Client"
-msgstr ""
+msgstr "Nouveau client"
 
 #: member/templates/client/create/form.html:44
 #: member/templates/client/partials/menu.html:6
@@ -720,7 +722,7 @@ msgstr "Ou"
 #: member/templates/client/list.html:52 member/templates/client/list.html:99
 #: member/templates/client/view/summary.html:36
 msgid "years old"
-msgstr ""
+msgstr "âge"
 
 #: member/templates/client/list.html:56
 #, python-format
@@ -732,10 +734,8 @@ msgid ""
 msgstr ""
 
 #: member/templates/client/list.html:60
-#, fuzzy
-#| msgid "This field is required"
 msgid "This client is currently"
-msgstr "Ce champ est requis"
+msgstr "Le statut du client est"
 
 #: member/templates/client/list.html:80 member/templates/client/list.html:117
 msgid "Sorry, no result found."
@@ -796,7 +796,7 @@ msgstr "Localiser"
 
 #: member/templates/client/partials/forms/address_information.html:50
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #: member/templates/client/partials/forms/address_information.html:60
 msgid "Delivery Route"
@@ -814,7 +814,7 @@ msgstr "Information de contact"
 
 #: member/templates/client/partials/forms/basic_information.html:67
 msgid "This message will be hightlighted on the client record."
-msgstr ""
+msgstr "Ce message sera affiché sur la fiche client."
 
 #: member/templates/client/partials/forms/dietary_restriction.html:2
 #: member/templates/client/view/allergies.html:27
@@ -883,7 +883,7 @@ msgstr "Veuillez décrire les raisons pour lesquelles le client est référé"
 #: member/templates/client/view/notes.html:8
 #: member/templates/client/view/status.html:8
 msgid "Information"
-msgstr "Informations"
+msgstr "Information"
 
 #: member/templates/client/partials/menu.html:9
 msgid "Add a referent"
@@ -909,18 +909,16 @@ msgstr "Commandes"
 
 #: member/templates/client/update/base.html:14
 #: member/templates/client/update/base.html:30
-#, fuzzy
-#| msgid "Edit Client"
 msgid "Update Client"
-msgstr "Modifier le Client"
+msgstr "Mise à jour du client"
 
 #: member/templates/client/update/base.html:20
 msgid "Tip"
-msgstr ""
+msgstr "Astuce"
 
 #: member/templates/client/update/base.html:21
 msgid "In update mode, each step can be saved individually"
-msgstr ""
+msgstr "Pour la mise à jour, chaque étape peut être enregistré séparément"
 
 #: member/templates/client/update/status.html:3
 msgid "Status modification"
@@ -931,6 +929,8 @@ msgid ""
 "If you want to schedule a status modification, feel free to fill one or two "
 "of theses date fields."
 msgstr ""
+"Pour planifier une modification de statut, veuillez de remplir les champs de "
+"dates ci-dessous"
 
 #: member/templates/client/update/status.html:33
 msgid "End date"
@@ -938,11 +938,11 @@ msgstr "Date de fin"
 
 #: member/templates/client/update/status.html:45
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #: member/templates/client/update/status.html:46
 msgid "OK"
-msgstr ""
+msgstr "Ok"
 
 #: member/templates/client/view/allergies.html:17
 #, fuzzy
@@ -952,9 +952,9 @@ msgstr "Informations de base"
 
 #: member/templates/client/view/allergies.html:18
 #, fuzzy
-#| msgid "Contact information"
+#| msgid "Contact information of the referent person"
 msgid "Meal information of the referent person"
-msgstr "Information de contact"
+msgstr "Coordonnées de la personne référente"
 
 #: member/templates/client/view/allergies.html:21
 #: member/templates/client/view/allergies.html:96
@@ -963,13 +963,11 @@ msgstr "Information de contact"
 #: member/templates/client/view/payment.html:23
 #: member/templates/client/view/referent.html:21
 msgid "Edit"
-msgstr ""
+msgstr "Éditer"
 
 #: member/templates/client/view/allergies.html:41
-#, fuzzy
-#| msgid "Restrictions"
 msgid "Yipee! No restriction"
-msgstr "Restrictions"
+msgstr "Parfait! Aucune restriction"
 
 #: member/templates/client/view/allergies.html:46
 msgid "Food preparation"
@@ -977,7 +975,7 @@ msgstr "Préparation de la nourriture"
 
 #: member/templates/client/view/allergies.html:55
 msgid "Nope! Nothing specific"
-msgstr ""
+msgstr "Rien à signaler!"
 
 #: member/templates/client/view/allergies.html:60
 msgid "Ingredients to avoid"
@@ -986,7 +984,7 @@ msgstr "Ingrédients à éviter"
 #: member/templates/client/view/allergies.html:69
 #: member/templates/client/view/allergies.html:83
 msgid "Yeah! Likes everything"
-msgstr ""
+msgstr "Parfait! Aucune restriction"
 
 #: member/templates/client/view/allergies.html:74
 msgid "Dish(es) to avoid"
@@ -996,23 +994,21 @@ msgstr "Plats à éviter"
 #, fuzzy
 #| msgid "Schedule"
 msgid "Meal schedule"
-msgstr "Jours de Livraison"
+msgstr "Calendrier"
 
 #: member/templates/client/view/allergies.html:93
 #, fuzzy
-#| msgid "Contact information"
+#| msgid "Contact information of the referent person"
 msgid "Meal default schedule of the referent person"
-msgstr "Information de contact"
+msgstr "Coordonnées de la personne référente"
 
 #: member/templates/client/view/information.html:17
 msgid "Basic information"
 msgstr "Informations de base"
 
 #: member/templates/client/view/information.html:19
-#, fuzzy
-#| msgid "Contact information"
 msgid "Contact information of the client"
-msgstr "Information de contact"
+msgstr "Coordonnées du client"
 
 #: member/templates/client/view/information.html:32
 msgid "Gender"
@@ -1033,7 +1029,7 @@ msgstr "Contact d'Urgence"
 
 #: member/templates/client/view/information.html:50
 msgid "Information of the person to contact in case of an emergency"
-msgstr ""
+msgstr "Information sur la personne contact en cas d'urgence"
 
 #: member/templates/client/view/notes.html:17
 msgid "Staff Notes"
@@ -1041,7 +1037,7 @@ msgstr "Notes du Staff"
 
 #: member/templates/client/view/notes.html:19
 msgid "Notes added to"
-msgstr ""
+msgstr "Notes ajoutées à"
 
 #: member/templates/client/view/notes.html:19
 msgid "s file"
@@ -1049,11 +1045,11 @@ msgstr ""
 
 #: member/templates/client/view/notes.html:31
 msgid "Priority"
-msgstr ""
+msgstr "Priorité"
 
 #: member/templates/client/view/notes.html:38
 msgid "Is read"
-msgstr ""
+msgstr "Lu"
 
 #: member/templates/client/view/notes.html:68
 msgid "Done/Read"
@@ -1064,28 +1060,24 @@ msgid "New"
 msgstr "Nouveau"
 
 #: member/templates/client/view/orders.html:8
-#, fuzzy
-#| msgid "Orders"
 msgid "Orders list"
-msgstr "Commandes"
+msgstr "Liste des commandes"
 
 #: member/templates/client/view/orders.html:19
 msgid "List of all orders from"
-msgstr ""
+msgstr "Liste de toutes les commandes depuis"
 
 #: member/templates/client/view/orders.html:27
-#, fuzzy
-#| msgid "Orders"
 msgid "Order"
-msgstr "Commandes"
+msgstr "Commande"
 
 #: member/templates/client/view/orders.html:28
 #: member/templates/client/view/orders.html:31
 #: member/templates/client/view/orders.html:37
 #, fuzzy
-#| msgid "Orders"
+#| msgid "Order"
 msgid "Order\\"
-msgstr "Commandes"
+msgstr "Commande"
 
 #: member/templates/client/view/orders.html:30
 msgid "Delivery Date"
@@ -1105,14 +1097,10 @@ msgstr "Actions"
 
 #: member/templates/client/view/payment.html:8
 #: member/templates/client/view/referent.html:8
-#, fuzzy
-#| msgid "Referent contact information"
 msgid "Referent information"
 msgstr "Informations du référent"
 
 #: member/templates/client/view/payment.html:18
-#, fuzzy
-#| msgid "Billing information"
 msgid "Billing and payment information"
 msgstr "Information de facturation"
 
@@ -1125,10 +1113,8 @@ msgid "Rate type"
 msgstr "Type de taux"
 
 #: member/templates/client/view/referent.html:17
-#, fuzzy
-#| msgid "Contact information"
 msgid "Contact information of the referent person"
-msgstr "Information de contact"
+msgstr "Coordonnées de la personne référente"
 
 #: member/templates/client/view/referent.html:29
 msgid "Workplace information"
@@ -1171,8 +1157,6 @@ msgid "No status modification."
 msgstr "Aucun changement de statut."
 
 #: member/templates/client/view/summary.html:7
-#, fuzzy
-#| msgid "Delivery Type"
 msgid "Delivery type"
 msgstr "Type de Livraison"
 
@@ -1238,9 +1222,9 @@ msgstr ""
 
 #: member/views.py:89
 #, fuzzy
-#| msgid "This field is required"
+#| msgid "This client is currently"
 msgid "The client has been created"
-msgstr "Ce champ est requis"
+msgstr "Le statut du client est"
 
 #: member/views.py:842
 msgid "The client has been updated"
@@ -1256,21 +1240,17 @@ msgstr ""
 #~ msgid "Debit card"
 #~ msgstr "Carte de débit"
 
-#, fuzzy
-#~| msgid "Clients"
 #~ msgid "Client since"
-#~ msgstr "Clients"
+#~ msgstr "Client depuis"
 
-#, fuzzy
-#~| msgid "Address"
+#~ msgid "is an"
+#~ msgstr "est un"
+
 #~ msgid "Add"
-#~ msgstr "Adresse"
+#~ msgstr "Ajouter"
 
-#~ msgid "#"
-#~ msgstr "#"
+#~ msgid "Change"
+#~ msgstr "Modifier"
 
-#~ msgid "Street Address"
-#~ msgstr "Adresse Civile"
-
-#~ msgid "Meals default"
-#~ msgstr "Préférences par défaut"
+#~ msgid "Meal Default"
+#~ msgstr "Repas par défaut"

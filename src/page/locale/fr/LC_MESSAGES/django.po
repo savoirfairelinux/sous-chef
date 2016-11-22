@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 22:06+0000\n"
+"POT-Creation-Date: 2016-11-22 22:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: savoirfairelinux <support@savoirfairelinux.com>, 2016\n"
+"Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
 "teams/63058/fr/)\n"
 "Language: fr\n"
@@ -29,23 +29,23 @@ msgstr ""
 
 #: page/templates/pages/home.html:7
 msgid "Homepage"
-msgstr ""
+msgstr "Page d’accueil"
 
 #: page/templates/pages/home.html:20
 msgid "Clients"
-msgstr ""
+msgstr "Clients"
 
 #: page/templates/pages/home.html:28
 msgid "Active clients"
-msgstr ""
+msgstr "Clients actifs"
 
 #: page/templates/pages/home.html:33
 msgid "clients are"
-msgstr ""
+msgstr "Clients sont"
 
 #: page/templates/pages/home.html:33
 msgid "pending"
-msgstr ""
+msgstr "En attente"
 
 #: page/templates/pages/home.html:40
 msgid "Delivered this month"
@@ -53,7 +53,7 @@ msgstr ""
 
 #: page/templates/pages/home.html:48
 msgid "Orders"
-msgstr ""
+msgstr "Commandes"
 
 #: page/templates/pages/home.html:54
 #, python-format
@@ -69,24 +69,27 @@ msgstr ""
 
 #: page/templates/pages/home.html:72
 msgid "Downloads"
-msgstr ""
+msgstr "Téléchargements"
 
 #: page/templates/pages/home.html:77
 msgid "Footer"
-msgstr ""
+msgstr "Pied de page"
 
 #: page/templates/registration/login.html:8
 #: page/templates/registration/login.html:37
 msgid "Login"
-msgstr ""
+msgstr "Identifiant"
 
 #: page/templates/registration/login.html:14
 msgid "Log-in to your account"
-msgstr ""
+msgstr "Se connecter à son compte"
 
 #: page/templates/registration/login.html:48
 msgid "Connect"
-msgstr ""
+msgstr "Connexion"
 
 #~ msgid "Dashboard"
 #~ msgstr "Tableau de bord"
+
+#~ msgid "Overview"
+#~ msgstr "Vue d'ensemble"
