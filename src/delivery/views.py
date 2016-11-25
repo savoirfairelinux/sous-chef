@@ -217,7 +217,15 @@ class KitchenCount(generic.View):
 
         kitchen_list = Order.get_kitchen_items(date)
         component_lines, meal_lines = kcr_make_lines(kitchen_list, date)
-        num_labels = kcr_make_labels(kitchen_list)
+        if component_lines:
+            # we have orders today
+            num_labels = kcr_make_labels(
+                kitchen_list,                         # KitchenItems
+                component_lines[0].name,              # main dish name
+                component_lines[0].ingredients)       # main dish ingredients
+        else:
+            # no orders today
+            num_labels = 0
         return render(request, 'kitchen_count.html',
                       {'component_lines': component_lines,
                        'meal_lines': meal_lines,
@@ -413,7 +421,81 @@ def kcr_make_lines(kitchen_list, date):
     return (component_lines_sorted, meal_lines)
 
 
-def kcr_make_labels(kitchen_list):
+meal_label_fields = [                         # Contents for Meal Labels.
+    # field name, default value
+    'sortkey', '',          # key for sorting
+    'type', 2,              # Number : section for sorting
+    'route', '',            # String : Route name
+    'name', '',             # String : Last + First abbreviated
+    #                         String : Delivery date
+    'date', "{}".format(datetime.date.today().strftime("%a, %b-%d")),
+    'size', '',             # String : Regular or Large
+    'box', 1,               # Number : serving number
+    'qty', 1,               # Number : quantity of servings
+    'main_dish_name', '',   # String
+    'main_dish_ingredient_lines', [],     # List of strings
+    'requirement_lines', []]     # List of strings
+MealLabel = collections.namedtuple(
+    'MealLabel', meal_label_fields[0::2])
+
+
+def draw_label(label, width, height, data):
+    """Draw a single Meal Label on the sheet.
+
+    Callback function that is used by the labels generator.
+
+    Args:
+        label : Object passed by pylabels.
+        width : Single label width in font points.
+        height : Single label height in font points.
+        data : A MealLabel namedtuple.
+    """
+    # dimensions are in font points
+    vertic_pos = height * 0.85
+    horiz_margin = 3
+    if data.name:
+        label.add(shapes.String(
+            horiz_margin, vertic_pos, data.name,
+            fontName="Helvetica-Bold", fontSize=12))
+    if data.date:
+        label.add(shapes.String(
+            width - horiz_margin, vertic_pos, data.date,
+            fontName="Helvetica", fontSize=10, textAnchor="end"))
+    vertic_pos -= 12
+    if data.size:
+        label.add(shapes.String(
+            horiz_margin, vertic_pos, data.size,
+            fontName="Helvetica", fontSize=10))
+    if data.qty > 1:
+        label.add(shapes.String(
+            width * 0.5, vertic_pos,
+            "(" + str(data.box) + " of " + str(data.qty) + ")",
+            fontName="Helvetica", fontSize=10))
+    if data.route:
+        label.add(shapes.String(
+            width - horiz_margin - 1, vertic_pos, data.route,
+            fontName="Helvetica-Oblique", fontSize=8, textAnchor="end"))
+    vertic_pos -= 10
+    if data.main_dish_name:
+        label.add(shapes.String(
+            horiz_margin, vertic_pos, data.main_dish_name,
+            fontName="Helvetica-Bold", fontSize=10))
+    vertic_pos -= 12
+    if data.requirement_lines:
+        for line in data.requirement_lines:
+            label.add(shapes.String(
+                horiz_margin, vertic_pos, line,
+                fontName="Helvetica", fontSize=9))
+            vertic_pos -= 10
+    if data.main_dish_ingredient_lines:
+        for line in data.main_dish_ingredient_lines:
+            label.add(shapes.String(
+                horiz_margin, vertic_pos, line,
+                fontName="Helvetica", fontSize=8))
+            vertic_pos -= 10
+
+
+def kcr_make_labels(kitchen_list, main_dish_name, main_dish_ingredients):
     """Generate Meal Labels sheets as a PDF file.
 
     Generate a label for each main dish serving to be delivered. The
@@ -422,77 +504,112 @@ def kcr_make_labels(kitchen_list):
     Uses pylabels package - see https://github.com/bcbnz/pylabels
     and ReportLab
 
-    Args: kitchen_list : A dictionary of KitchenItem objects (see
-              order/models) which contain detailed information about
-              all the meals that have to be prepared for the day and
-              the client requirements and restrictions.
+    Args:
+        kitchen_list : A dictionary of KitchenItem objects (see
+            order/models) which contain detailed information about
+            all the meals that have to be prepared for the day and
+            the client requirements and restrictions.
+        main_dish_name : A string being the name of today's main dish.
+        main_dish_ingredient : A string being the comma separated list
+            of all the ingredients in today's main dish.
 
     Returns:
         An integer : The number of labels generated.
     """
     # dimensions are in millimeters; 1 inch = 25.4 mm
+    # Sheet format is Avery 5162 : 2 columns * 7 rows
+    sheet_height = 11.0 * 25.4
+    sheet_width = 8.5 * 25.4
+    vertic_margin = 21.0
+    horiz_margin = 4.0
+    columns = 2
+    rows = 7
+    gutter = 3.0 / 16.0 * 25.4
     specs = labels.Specification(
-        sheet_width=8.5 * 25.4, sheet_height=11 * 25.4,
-        columns=2, rows=7,
-        label_width=4 * 25.4, label_height=1.33 * 25.4,
-        top_margin=20, bottom_margin=20,
-        corner_radius=2)
-
-    def draw_label(label, width, height, data):
-        # callback function
-        obj, j, qty = data
-        label.add(shapes.String(2, height * 0.8,
-                                obj.lastname + ", " + obj.firstname[0:2] + ".",
-                                fontName="Helvetica-Bold",
-                                fontSize=12))
-        label.add(shapes.String(width - 2, height * 0.8,
-                                "{}".format(datetime.date.today().
-                                            strftime("%a, %b-%d")),
-                                fontName="Helvetica",
-                                fontSize=10,
-                                textAnchor="end"))
-        if obj.meal_size == SIZE_CHOICES_LARGE:
-            label.add(shapes.String(2, height * 0.65,
-                                    "LARGE",
-                                    fontName="Helvetica",
-                                    fontSize=10))
-        if qty > 1:
-            label.add(shapes.String(width * 0.5, height * 0.65,
-                                    "(" + str(j) + " of " + str(qty) + ")",
-                                    fontName="Helvetica",
-                                    fontSize=10))
-        label.add(shapes.String(width - 3, height * 0.65,
-                                obj.routename,
-                                fontName="Helvetica-Oblique",
-                                fontSize=8,
-                                textAnchor="end"))
-
-        special = []
-        special.extend(obj.preparation)
-        special.extend(["No " + item for item in obj.incompatible_ingredients])
-        special.extend(["No " + item for item in obj.other_ingredients])
-        special.extend(["No " + item for item in obj.restricted_items])
-        special = textwrap.wrap(
-            ' / '.join(special), width=68,
-            break_long_words=False, break_on_hyphens=False)
-        position = height * 0.45
-        for line in special:
-            label.add(shapes.String(2, position,
-                                    line,
-                                    fontName="Helvetica",
-                                    fontSize=9))
-            position -= 10
-    # END DEF
+        sheet_width=sheet_width,
+        sheet_height=sheet_height,
+        columns=columns,
+        rows=rows,
+        column_gap=gutter,
+        label_width=(sheet_width - 2.0 * horiz_margin - gutter) / columns,
+        label_height=(sheet_height - 2.0 * vertic_margin) / rows,
+        top_margin=vertic_margin,
+        bottom_margin=vertic_margin,
+        left_margin=horiz_margin,
+        right_margin=horiz_margin,
+        corner_radius=1.5)
 
     sheet = labels.Sheet(specs, draw_label, border=True)
 
-    # obj is a KitchenItem instance (see order/models.py)
-    for obj in sorted(
-            list(kitchen_list.values()),
-            key=lambda x: x.lastname + x.firstname):
-        qty = obj.meal_qty
-        for j in range(1, qty + 1):
-            sheet.add_label((obj, j, qty))
+    meal_labels = []
+    for kititm in kitchen_list.values():
+        meal_label = MealLabel(*meal_label_fields[1::2])
+        if (kititm.incompatible_ingredients or kititm.preparation or
+                kititm.meal_size == SIZE_CHOICES_LARGE):
+            # Specials
+            #
+            requirements = []
+            requirements.extend(kititm.preparation)
+            #
+            if kititm.incompatible_ingredients:
+                requirements.extend(
+                    ["No " + item for item in kititm.avoid_ingredients])
+                requirements.extend(
+                    ["No " + item for item in kititm.restricted_items])
+                meal_label = meal_label._replace(
+                    main_dish_name='_________________________________________')
+            else:
+                meal_label = meal_label._replace(
+                    main_dish_name=main_dish_name,
+                    main_dish_ingredient_lines=textwrap.wrap(
+                        'INGREDIENTS : {}'.format(main_dish_ingredients),
+                        width=74,
+                        break_long_words=False, break_on_hyphens=False))
+            if kititm.meal_size == SIZE_CHOICES_LARGE:
+                meal_label = meal_label._replace(size='LARGE')
+            if requirements:
+                meal_label = meal_label._replace(
+                    type='1',
+                    main_dish_name='SPECIAL : {}'.format(
+                        meal_label.main_dish_name))
+            meal_label = meal_label._replace(
+                route=kititm.routename,
+                name=kititm.lastname + ", " + kititm.firstname[0:2] + ".",
+                requirement_lines=textwrap.wrap(
+                    ' / '.join(requirements), width=68,
+                    break_long_words=False, break_on_hyphens=False))
+            if kititm.meal_qty > 1:
+                for j in range(1, kititm.meal_qty + 1):
+                    meal_label = meal_label._replace(
+                        box=j, qty=kititm.meal_qty)
+                    meal_labels.append(meal_label)
+            else:
+                meal_labels.append(meal_label)
+        else:
+            # Non specials
+            meal_label = meal_label._replace(
+                type='3',
+                main_dish_name=main_dish_name,
+                main_dish_ingredient_lines=textwrap.wrap(
+                    'INGREDIENTS : {}'.format(main_dish_ingredients), width=74,
+                    break_long_words=False, break_on_hyphens=False))
+            meal_labels.append(meal_label)
+    # find max lengths of fields to sort on
+    routew = 0
+    namew = 0
+    for label in meal_labels:
+        routew = max(routew, len(label.route))
+        namew = max(namew, len(label.name))
+    # generate sorting key
+    meal_labels = [
+        label._replace(
+            sortkey='{typ}{rou:{rouw}}{nam:{namw}}{box}'.format(
+                typ=label.type, rou=label.route, rouw=routew,
+                nam=label.name, namw=namew, box=label.box))
+        for label in meal_labels]
+    # generate labels into PDF
+    for label in sorted(meal_labels, key=lambda x: x.sortkey):
+        sheet.add_label(label)
 
     if sheet.label_count > 0:
         sheet.save(MEAL_LABELS_FILE)

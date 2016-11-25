@@ -349,6 +349,11 @@ class Order(models.Model):
                 # should be a set
                 kitchen_list[row.cid].other_ingredients.append(
                     row.ingredient)
+            if (row.ingredient not in
+                    kitchen_list[row.cid].avoid_ingredients):
+                # remember ingredient to avoid
+                kitchen_list[row.cid].avoid_ingredients.append(
+                    row.ingredient)
 
         # Day's restrictions.
         for row in day_restrictions(delivery_date):
@@ -747,6 +752,7 @@ KitchenItem = collections.namedtuple(         # Meal specifics for an order.
      'meal_size',                    # Size of main dish
      'incompatible_ingredients',     # Ingredients in main dish that clash
      'other_ingredients',            # Other ingredients that client refuses
+     'avoid_ingredients',            # All ingredients to avoid for the client
      'restricted_items',             # All restricted items for the client
      'preparation',                  # All food preparations for the client
      'meal_components'])             # List of MealComponents objects
@@ -780,6 +786,7 @@ def check_for_new_client(kitchen_list, row):
             meal_size='',
             incompatible_ingredients=[],
             other_ingredients=[],
+            avoid_ingredients=[],
             restricted_items=[],
             preparation=[],
             meal_components={})
