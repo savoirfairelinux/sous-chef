@@ -13,6 +13,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.http import JsonResponse
 from django.core.urlresolvers import reverse_lazy
+from django.utils.translation import ugettext_lazy as _
+from django.contrib import messages
 from django.contrib.admin.models import LogEntry, ADDITION
 from django.db.models.functions import Lower
 from django.contrib.auth.decorators import login_required
@@ -904,10 +906,10 @@ def refreshOrders(request):
     delivery_date = date.today()
     last_refresh_date = datetime.datetime.now()
     clients = Client.active.all()
-    Order.objects.auto_create_orders(delivery_date, clients)
+    created = Order.objects.auto_create_orders(delivery_date, clients)
     LogEntry.objects.log_action(
         user_id=1, content_type_id=1,
-        object_id="", object_repr="Generation of order for " + str(
+        object_id="", object_repr="Generation of orders for " + str(
             datetime.datetime.now().strftime('%Y-%m-%d %H:%M')),
         action_flag=ADDITION,
     )
