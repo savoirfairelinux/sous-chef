@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="ui secondary pointing fluid menu">
-    <h1 class="ui header">{% trans "Avatars" %}</h1>
+    <h1 class="ui header">{% trans "Delete avatars" %}</h1>
 </div>
 <div class="ui padded basic segment">
 <p>{% trans "Please select the avatars that you would like to delete." %}</p>
@@ -11,19 +11,21 @@
     {% url 'avatar_change' as avatar_change_url %}
     <p>{% blocktrans %}You have no avatars to delete. Please <a href="{{ avatar_change_url }}">upload one</a> now.{% endblocktrans %}</p>
 {% else %}
-    <div class="list-avatars">
+
       <form method="POST" action="{% url 'avatar_delete' %}">
+        <div class="list-avatars">
           <ul>
               {{ delete_avatar_form.as_ul }}
           </ul>
-          <p>{% csrf_token %}
+        </div>
+        <p>{% csrf_token %}
             <button type="submit" class="ui red button">
               <i class="remove icon"></i>
               {% trans "Delete selected avatars" %}
             </button>
-          </p>
+        </p>
       </form>
-    </div>
+
 {% endif %}
 </div>
 {% endblock %}

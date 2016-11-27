@@ -5,33 +5,35 @@
 
 {% block content %}
 <div class="ui secondary pointing fluid menu">
-    <h1 class="ui header">{% trans "Avatars" %}</h1>
+    <h1 class="ui header">{% trans "Change your avatar" %}</h1>
 </div>
 
 <div class="ui padded basic segment">
-  <div class="ui grid">
-    <div class="two column row">
+    <div class="ui two column middle aligned very relaxed stackable grid">
         {% if not avatars %}
           <div class="column">
               <p><label>{% trans "You haven't uploaded an avatar yet. Please upload one now." %}</label></p>
           </div>
         {% else %}
           <div class="column">
+            <form method="POST" action="{% url 'avatar_change' %}">
               <div class="list-avatars">
-                <form method="POST" action="{% url 'avatar_change' %}">
                     <ul>
                         {{ primary_avatar_form.as_ul }}
                     </ul>
-                    <p>{% csrf_token %}
-                      <button type="submit" class="ui green button">
-                        <i class="save icon"></i>
-                        {% trans "Save selected avatar" %}
-                      </button>
-                      </p>
-                </form>
               </div>
+              <p>{% csrf_token %}
+                  <button type="submit" class="ui green button">
+                    <i class="save icon"></i>
+                    {% trans "Save selected avatar" %}
+                  </button>
+              </p>
+            </form>
           </div>
         {% endif %}
+        <div class="ui vertical divider">
+          {% trans "Or" %}
+        </div>
         <div class="column">
           <form enctype="multipart/form-data" method="POST" action="{% url 'avatar_add' %}">
               {{ upload_avatar_form.as_p }}
@@ -41,14 +43,14 @@
                   {% trans "Upload New Image" %}
                 </button>
               </p>
-              {% if avatars %}
-                <p>
-                  <a href="{% url 'avatar_delete' %}" class="ui red button"><i class="remove icon"></i>{% trans "Delete your avatars" %}</a>
-                </p>
-              {% endif %}
           </form>
         </div>
       </div>
-  </div>
+      {% if avatars %}
+        <div class="ui section divider"></div>
+        <p>
+          <a href="{% url 'avatar_delete' %}" class="ui red">{% trans "Go delete your avatars" %}</a>
+        </p>
+      {% endif %}
 </div>
 {% endblock %}
