@@ -1,10 +1,12 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 
+METHODS = ('GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS')
+
 
 class TestMixin(object):
 
-    def assertRedirectsWithAllMethods(self, url, methods=('GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS'), **kwargs):
+    def assertRedirectsWithAllMethods(self, url, methods=METHODS, **kwargs):
         """
         Test a URL with all HTTP methods.
         """
