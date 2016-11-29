@@ -1,15 +1,18 @@
 import datetime
 import json
+import importlib
 
 from django.test import TestCase
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 
 from meal.models import Menu, Component, Component_ingredient, Ingredient
 from order.models import Order
 from member.models import Client, Member, Route
 
+SousChefTestMixin = importlib.import_module('sous-chef.tests').TestMixin
 
-class KitchenCountReportTestCase(TestCase):
+
+class KitchenCountReportTestCase(SousChefTestMixin, TestCase):
 
     fixtures = ['sample_data']
 
@@ -22,6 +25,9 @@ class KitchenCountReportTestCase(TestCase):
              'Green Salad', 'Fruit Salad',
              'Day s Dessert', 'Day s Diabetic Dessert',
              'Day s Pudding', 'Day s Compote'])
+
+    def setUp(self):
+        self.force_login()
 
     def test_clashing_ingredient(self):
         """An ingredient we know will clash must be in the page"""
@@ -75,7 +81,7 @@ class KitchenCountReportTestCase(TestCase):
         self.assertTrue('ReportLab' in repr(response.content))
 
 
-class ChooseDayMainDishIngredientsTestCase(TestCase):
+class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
 
     fixtures = ['sample_data']
 
@@ -90,6 +96,9 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
         Order.objects.auto_create_orders(
             datetime.date.today(),
             clients)
+
+    def setUp(self):
+        self.force_login()
 
     def test_known_ingredients(self):
         """Two ingredients we know must be in the page"""
@@ -176,7 +185,7 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
         self.assertTrue(b'Select a valid choice.' in response.content)
 
 
-class DeliveryRouteSheetTestCase(TestCase):
+class DeliveryRouteSheetTestCase(SousChefTestMixin, TestCase):
 
     fixtures = ['sample_data']
 
@@ -188,6 +197,7 @@ class DeliveryRouteSheetTestCase(TestCase):
         numorders = Order.objects.auto_create_orders(
             self.today, clients)
         self.route_id = Route.objects.get(name='Centre Sud').id
+        self.force_login()
 
     def test_query(self):
         """Sample route sheet query."""
@@ -207,11 +217,12 @@ class DeliveryRouteSheetTestCase(TestCase):
         self.assertTrue(b'Blondin' in response.content)
 
 
-class RouteSequencingTestCase(TestCase):
+class RouteSequencingTestCase(SousChefTestMixin, TestCase):
 
     fixtures = ['sample_data']
 
     def setUp(self):
+        self.force_login()
         # This data set includes 'Dallaire' and 'Taylor' client lastnames
         # generate orders today
         self.today = datetime.date.today()
@@ -265,3 +276,30 @@ class RouteSequencingTestCase(TestCase):
             response = self.client.get(
                 '/delivery/getDailyOrders/?route=' +
                 str(self.route_id) + '&mode=swimming')
+
+
+class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
+
+    fixtures = ['sample_data']
+
+    def test_anonymous_user_gets_redirect_to_login_page(self):
+        check = self.assertRedirectsWithAllMethods
+        check(reverse('delivery:order'))
+        check(reverse('delivery:meal'))
+        meal = Component.objects.first()
+        meal_id = meal.id
+        check(reverse('delivery:meal_id', kwargs={'id': meal_id}))
+        check(reverse('delivery:route'))
+        check(reverse('delivery:routes'))
+        check(reverse('delivery:organize_route', kwargs={'id': 1}))
+        check(reverse('delivery:kitchen_count'))
+        check(reverse('delivery:kitchen_count_date', kwargs={
+            'year': 2016,
+            'month': 11,
+            'day': 30
+        }))
+        check(reverse('delivery:mealLabels'))
+        check(reverse('delivery:route_sheet_id', kwargs={'id': 1}))
+        check(reverse('delivery:dailyOrders'))
+        check(reverse('delivery:refresh_orders'))
+        check(reverse('delivery:save_route'))
