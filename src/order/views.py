@@ -5,17 +5,17 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404, render
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView
 
 from datetime import date, datetime
 
 from order.models import Order, Order_item, OrderFilter, OrderManager,  \
-    ORDER_STATUS
+    ORDER_STATUS, OrderStatusChange
 from order.mixins import AjaxableResponseMixin
 from order.forms import CreateOrderItem, UpdateOrderItem, \
-    CreateOrdersBatchForm
+    CreateOrdersBatchForm, OrderStatusChangeForm
 
 from meal.models import COMPONENT_GROUP_CHOICES
 
@@ -157,13 +157,49 @@ class UpdateOrder(AjaxableResponseMixin, UpdateWithInlinesView):
         return self.object.get_absolute_url()
 
 
-class UpdateOrderStatus(AjaxableResponseMixin, generic.UpdateView):
-    model = Order
-    fields = ['status']
+class UpdateOrderStatus(generic.CreateView):
+    model = OrderStatusChange
+    form_class = OrderStatusChangeForm
+    template_name = "order_update_status.html"
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(UpdateOrderStatus, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateOrderStatus, self).get_context_data(**kwargs)
+        context['order'] = get_object_or_404(
+            Order, pk=self.kwargs.get('pk')
+        )
+        context['order_status'] = ORDER_STATUS
+        context['order_no_charge'] = 'N'
+        context['order_no_charge_reasons'] = (
+            _('Restrictions mistake'),
+            _('Delivery mistake'),
+            _('Really unhappy client')
+        )
+        return context
+
+    def get_initial(self):
+        order = get_object_or_404(Order, pk=self.kwargs.get('pk'))
+        return {
+            'order': self.kwargs.get('pk'),
+            'status_from': order.status,
+            'status_to': self.request.GET.get('status'),
+        }
+
+    def form_valid(self, form):
+        response = super(UpdateOrderStatus, self).form_valid(form)
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _("The status has been changed")
+        )
+        return response
+
+    def get_success_url(self):
+        return reverse(
+            'order:view', kwargs={'pk': self.kwargs.get('pk')}
+        )
 
 
 class DeleteOrder(generic.DeleteView):

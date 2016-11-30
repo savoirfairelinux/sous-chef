@@ -9,18 +9,74 @@ $(function() {
         $(selector).modal('show');
     });
 
+    function updateOtherFieldStatus() {
+        var value = $('input[name=reason_select]:checked', '#change-status-form').val();
+        //console.log(value);
+        if (value !== 'other') {
+            $('#reason_other_field textarea').attr('disabled', 'disabled');
+        } else {
+            $('#reason_other_field textarea').removeAttr('disabled');
+        }
+    }
+
+    function addReasonSelectListener() {
+        $('#reason_select_group input').on('change', updateOtherFieldStatus);
+    }
+
     $('.ui.dropdown.order.status .menu > .item').click(function () {
         $('.ui.dropdown.order.status').addClass('loading');
-        $.ajax({
-            url: $('.ui.dropdown.order.status').attr('data-url'),
-            type: "POST",
-            data: {
-                'status': $(this).data('value'),
-                'csrfmiddlewaretoken': $('.ui.dropdown.order.status').attr('data-csrf-token'),
-            },
-            success: function(response) {
-                $('.ui.dropdown.order.status').removeClass('loading');
-            }
+        var value = $(this).data('value');
+        var modalCtntURL = $('.ui.dropdown.status').attr('data-url');
+        $.get(modalCtntURL, {status:value}, function(data, modalCtntURL){
+            $('.ui.dropdown.order.status').removeClass('loading');
+            $('.ui.modal.status').html(data).modal("setting", {
+                closable: false,
+                // Inside modal init
+                onVisible: function () {
+                    // Enable dropdown
+                    $('.ui.status_to.dropdown').dropdown();
+                    addReasonSelectListener();
+                    updateOtherFieldStatus();
+                },
+                // When approvind modal, submit form
+                onApprove: function($element, modalCtntURL) {
+                    //console.log($('#change-status-form').serialize());
+                    var origdata = $('#change-status-form').serializeArray();
+                    var origdata_o = {};
+                    $.each(origdata, function (idx, ele) {
+                        origdata_o[ele.name] = ele.value;  // build object
+                    });
+                    if (origdata_o.reason_select !== 'other') {
+                        origdata_o.reason = origdata_o.reason_select;
+                    }
+                    delete origdata_o.reason_select;
+                    var data = $.param(origdata_o);
+                    //console.log(data);
+
+                    $.ajax({
+                         type: 'POST',
+                         url: $('.ui.dropdown.status').attr('data-url'),
+                         data: data,
+                         success: function (xhr, ajaxOptions, thrownError) {
+                             if ( $(xhr).find('.errorlist').length > 0 ) {
+                                 $('.ui.modal.status').html(xhr);
+                                 $('.ui.status_to.dropdown').dropdown();
+                                 addReasonSelectListener();
+                                 updateOtherFieldStatus();
+                             } else {
+                                 $('.ui.modal.status').modal("hide");
+                                 location.reload();
+                             }
+                         },
+                     });
+                    return false; // don't hide modal until we have the response
+                },
+                // When denying modal, restore default value for status dropdown
+                onDeny: function($element) {
+                    $('.ui.modal.status').modal("hide");
+                    location.reload();
+                }
+            }).modal('setting', 'autofocus', false).modal("show");
         });
     });
 

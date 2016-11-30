@@ -5,8 +5,10 @@ import re
 from django.db import models, connection
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 from django_filters import FilterSet, MethodFilter, ChoiceFilter
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError
 
 from member.models import (Client, Member, Route,
                            RATE_TYPE_LOW_INCOME, RATE_TYPE_SOLIDARY,
@@ -972,3 +974,60 @@ class Order_item(models.Model):
             format(str(self.order.delivery_date),
                    self.order_item_type,
                    self.component_group)
+
+
+class OrderStatusChange(models.Model):
+
+    class Meta:
+        ordering = ['change_time']
+
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        related_name="status_changes"
+    )
+
+    status_from = models.CharField(
+        max_length=1,
+        choices=ORDER_STATUS
+    )
+
+    status_to = models.CharField(
+        max_length=1,
+        choices=ORDER_STATUS
+    )
+
+    reason = models.CharField(
+        max_length=200,
+        blank=True,
+        default=''
+    )
+
+    change_time = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return "Order #{} status update: from {} to {}, on {}".format(
+            self.order.pk,
+            self.get_status_from_display(),
+            self.get_status_to_display(),
+            self.change_time
+        )
+
+    def clean(self):
+        """
+        Make sure this is valid in regards to Order.
+        """
+        if self.order.status != self.status_from:
+            raise ValidationError(
+                _("Invalid order status update."),
+                code='status_from_incorrect'
+            )
+
+    def save(self, *a, **k):
+        """ Process a scheduled change when saving."""
+        self.full_clean()  # we defined clean method so we need to override
+        super(OrderStatusChange, self).save(*a, **k)
+        self.order.status = self.status_to
+        self.order.save()

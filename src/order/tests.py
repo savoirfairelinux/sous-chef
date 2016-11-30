@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import random
 import urllib.parse
 import random
@@ -7,11 +9,13 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext as _
+from django.core.exceptions import ValidationError
 
 from member.models import Client, Address, Member, Route
 from member.factories import RouteFactory, ClientFactory
 from meal.factories import ComponentFactory
-from order.models import Order, Order_item, MAIN_PRICE_DEFAULT
+from order.models import Order, Order_item, MAIN_PRICE_DEFAULT, \
+    OrderStatusChange
 from order.factories import OrderFactory
 
 
@@ -432,6 +436,92 @@ class OrderListTestCase(TestCase):
         )
 
 
+class OrderStatusChangeTestCase(OrderItemTestCase):
+
+    def setUp(self):
+        order = self.order
+        order.status = 'B'
+        order.save()
+
+    def test_valid_creation_changes_order_status(self):
+        order = self.order
+        osc = OrderStatusChange(
+            order=order,
+            status_from='B',
+            status_to='D'
+        )
+        osc.save()
+        order.refresh_from_db()
+        self.assertEqual(order.status, 'D')
+
+    def test_invalid_creation_wrong_status_from(self):
+        order = self.order
+        with self.assertRaises(ValidationError) as context:
+            osc = OrderStatusChange(
+                order=order,
+                status_from='D',
+                status_to='N'
+            )
+            osc.save()
+
+    def test_reason_field_bilingual(self):
+        order = self.order
+        reason = "ôn pàrlé «frânçaîs» èù£¤¢¼½¾³²±"
+        osc = OrderStatusChange.objects.create(
+            order=order,
+            status_from='B',
+            status_to='D',
+            reason=reason
+        )
+        osc.refresh_from_db()
+        self.assertEqual(osc.reason, reason)
+
+
+class OrderStatusChangeViewTestCase(SousChefTestMixin, OrderItemTestCase):
+
+    def setUp(self):
+        order = self.order
+        order.status = 'B'
+        order.save()
+        self.force_login()
+
+    def test_get_page(self):
+        response = self.client.get(
+            reverse('order:update_status', kwargs={'pk': self.order.id})
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_status(self):
+        data = {
+            'order': self.order.pk,
+            'status_to': 'D',
+            'status_from': 'B'
+        }
+        response = self.client.post(
+            reverse('order:update_status', kwargs={'pk': self.order.id}),
+            data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+        )
+        self.assertEqual(response.status_code, 302)  # create successful
+        self.order.refresh_from_db()
+        self.assertEqual(self.order.status, 'D')
+
+    def test_no_charge_requires_a_reason(self):
+        data = {
+            'order': self.order.pk,
+            'status_to': 'N',
+            'status_from': 'B'
+        }
+        response = self.client.post(
+            reverse('order:update_status', kwargs={'pk': self.order.id}),
+            data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+        )
+        self.assertTrue(b"errorlist" in response.content)
+        self.order.refresh_from_db()
+        self.assertEqual(self.order.status, 'B')
+
+
 class OrderCreateFormTestCase(OrderFormTestCase):
 
     def test_access_to_create_form(self):
@@ -536,16 +626,6 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
         self._test_order_without_errors(route, client)
         self._test_order_item_with_errors(route, client)
         self._test_order_item_without_errors(route, client, component)
-
-    def test_update_status_ajax(self):
-        data = {'status': 'D'}  # Delivery
-        response = self.client.post(
-            reverse('order:update_status', kwargs={'pk': self.order.id}),
-            data,
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
-        )
-        self.assertTrue(response.status_code, 200)
-        self.assertTrue(b'"pk":' in response.content)
 
     def test_update_form_save_data(self):
         data = {
