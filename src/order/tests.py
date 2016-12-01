@@ -502,7 +502,8 @@ class OrderStatusChangeViewTestCase(OrderItemTestCase):
             data,
             HTTP_X_REQUESTED_WITH='XMLHttpRequest',
         )
-        self.assertEqual(response.status_code, 302)  # create successful
+        # create successful. Returns json
+        self.assertEqual(response.status_code, 200)
         self.order.refresh_from_db()
         self.assertEqual(self.order.status, 'D')
 

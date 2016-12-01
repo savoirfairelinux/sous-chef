@@ -1,5 +1,5 @@
 import csv
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views import generic
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
@@ -13,7 +13,7 @@ from datetime import date, datetime
 
 from order.models import Order, Order_item, OrderFilter, OrderManager,  \
     ORDER_STATUS, OrderStatusChange
-from order.mixins import AjaxableResponseMixin
+from order.mixins import AjaxableResponseMixin, FormValidAjaxableResponseMixin
 from order.forms import CreateOrderItem, UpdateOrderItem, \
     CreateOrdersBatchForm, OrderStatusChangeForm
 
@@ -157,7 +157,7 @@ class UpdateOrder(AjaxableResponseMixin, UpdateWithInlinesView):
         return self.object.get_absolute_url()
 
 
-class UpdateOrderStatus(generic.CreateView):
+class UpdateOrderStatus(FormValidAjaxableResponseMixin, generic.CreateView):
     model = OrderStatusChange
     form_class = OrderStatusChangeForm
     template_name = "order_update_status.html"
