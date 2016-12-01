@@ -724,20 +724,6 @@ def clientMealsPrefsAsJSON(request, pk):
     return JsonResponse(prefs)
 
 
-def note_add(request):
-    if request.method == "POST":
-        form = NoteForm(request.POST)
-        if form.is_valid():
-            model_instance = form.save(commit=False)
-            model_instance.author = request.user
-            model_instance.save()
-            return render(request, 'notes/add.html', {'form': form})
-    else:
-        form = NoteForm()
-
-    return render(request, 'notes/add.html', {'form': form})
-
-
 class ClientDetail(ClientView):
     template_name = 'client/view.html'
 

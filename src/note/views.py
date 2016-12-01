@@ -1,7 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.utils.decorators import method_decorator
+from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 from note.models import Note, NoteFilter
 from note.forms import NoteForm
@@ -61,8 +64,26 @@ class ClientNoteList(generic.ListView):
         return context
 
 
-def NoteAdd(request):
-    pass
+class NoteAdd(generic.CreateView):
+    model = Note
+    form_class = NoteForm
+    template_name = 'notes_add.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(NoteAdd, self).dispatch(*args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        response = super(NoteAdd, self).form_valid(form)
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _("The note has been created.")
+        )
+        return response
+
+    def get_success_url(self):
+        return reverse('note:note_list')
 
 
 def mark_as_read(request, id):
