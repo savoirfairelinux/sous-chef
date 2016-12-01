@@ -1,5 +1,6 @@
 import datetime
 import json
+import importlib
 from django.test import TestCase, Client
 from member.models import Member, Client, User, Address, Referencing
 from member.models import Contact, Option, Client_option, Restriction, Route
@@ -25,6 +26,8 @@ from member.forms import(
     ClientReferentInformation, ClientPaymentInformation,
     ClientRestrictionsInformation, ClientEmergencyContactInformation
 )
+
+SousChefTestMixin = importlib.import_module('sous-chef.tests').TestMixin
 
 
 def load_initial_data(client):
@@ -1525,7 +1528,7 @@ class FormTestCase(TestCase):
         self.assertRedirects(response, reverse('member:list'))
 
 
-class MemberSearchTestCase(TestCase):
+class MemberSearchTestCase(SousChefTestMixin, TestCase):
 
     @classmethod
     def setUpTestData(cls):
@@ -1533,6 +1536,9 @@ class MemberSearchTestCase(TestCase):
             firstname='Katrina', lastname='Heide')
         Contact.objects.create(
             type='Home phone', value='514-456-7890', member=member)
+
+    def setUp(self):
+        self.force_login()
 
     def test_search_member_by_firstname(self):
         """
@@ -2192,3 +2198,69 @@ class ClientUpdateReferentInformationTestCase(ClientUpdateTestCase):
             client.emergency_contact.firstname, emergency.firstname
         )
         self.assertEqual(client.emergency_contact.lastname, emergency.lastname)
+
+
+class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
+
+    fixtures = ['routes.json']
+
+    def test_anonymous_user_gets_redirect_to_login_page(self):
+        check = self.assertRedirectsWithAllMethods
+        check(reverse('member:member_step'))
+        check(reverse('member:member_step', kwargs={
+            'step': 'basic_information'
+        }))
+        check(reverse('member:member_step', kwargs={
+            'step': 'address_information'
+        }))
+        check(reverse('member:member_step', kwargs={
+            'step': 'referent_information'
+        }))
+        check(reverse('member:member_step', kwargs={
+            'step': 'payment_information'
+        }))
+        check(reverse('member:member_step', kwargs={
+            'step': 'dietary_restriction'
+        }))
+        check(reverse('member:member_step', kwargs={
+            'step': 'emergency_contact'
+        }))
+        check(reverse('member:list'))
+        check(reverse('member:search'))
+        check(reverse('member:view', kwargs={'pk': 1}))
+        check(reverse('member:list_orders', kwargs={'pk': 1}))
+        check(reverse('member:client_information', kwargs={'pk': 1}))
+        check(reverse('member:client_referent', kwargs={'pk': 1}))
+        check(reverse('member:client_payment', kwargs={'pk': 1}))
+        check(reverse('member:client_allergies', kwargs={'pk': 1}))
+        check(reverse('member:client_notes', kwargs={'pk': 1}))
+        check(reverse('member:geolocateAddress'))
+        check(reverse('member:client_status', kwargs={'pk': 1}))
+        check(reverse('member:clientStatusScheduler', kwargs={'pk': 1}))
+        check(reverse('member:restriction_delete', kwargs={'pk': 1}))
+        check(reverse('member:client_option_delete', kwargs={'pk': 1}))
+        check(reverse('member:ingredient_to_avoid_delete', kwargs={'pk': 1}))
+        check(reverse('member:component_to_avoid_delete', kwargs={'pk': 1}))
+        check(reverse('member:client_meals_pref', kwargs={'pk': 1}))
+        check(reverse('member:member_update_basic_information', kwargs={
+            'pk': 1
+        }))
+        check(reverse('member:member_update_address_information', kwargs={
+            'pk': 1
+        }))
+
+        check(reverse('member:member_update_referent_information', kwargs={
+            'pk': 1
+        }))
+
+        check(reverse('member:member_update_payment_information', kwargs={
+            'pk': 1
+        }))
+
+        check(reverse('member:member_update_dietary_restriction', kwargs={
+            'pk': 1
+        }))
+
+        check(reverse('member:member_update_emergency_contact', kwargs={
+            'pk': 1
+        }))

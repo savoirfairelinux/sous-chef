@@ -1,3 +1,4 @@
+import importlib
 from django.test import TestCase
 from note.models import Note
 from note.factories import NoteFactory
@@ -5,6 +6,8 @@ from django.contrib.auth.models import User
 from member.factories import ClientFactory
 from django.core.urlresolvers import reverse
 from django.utils import timezone
+
+SousChefTestMixin = importlib.import_module('sous-chef.tests').TestMixin
 
 
 class NoteTestCase(TestCase):
@@ -78,3 +81,15 @@ class NoteAddTestCase(NoteTestCase):
         self.assertEqual(note.author, self.admin)
         self.assertEqual(note.is_read, False)
         self.assertTrue(time_1 <= note.date <= time_2)
+
+
+class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
+
+    fixtures = ['routes.json']
+
+    def test_anonymous_user_gets_redirect_to_login_page(self):
+        check = self.assertRedirectsWithAllMethods
+        check(reverse('note:note_list'))
+        check(reverse('note:read', kwargs={'id': 1}))
+        check(reverse('note:unread', kwargs={'id': 1}))
+        check(reverse('note:note_add'))

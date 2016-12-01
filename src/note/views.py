@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
@@ -39,7 +40,7 @@ class NoteList(generic.ListView):
         return context
 
 
-class ClientNoteList(generic.ListView):
+class ClientNoteList(LoginRequiredMixin, generic.ListView):
     # Display detail of one client
     model = Note
     template_name = 'notes_client_list.html'
@@ -99,12 +100,14 @@ class ClientNoteListAdd(NoteAdd):
         return reverse('member:client_notes', kwargs={'pk': self.kwargs['pk']})
 
 
+@login_required
 def mark_as_read(request, id):
     note = get_object_or_404(Note, pk=id)
     note.mark_as_read()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+@login_required
 def mark_as_unread(request, id):
     note = get_object_or_404(Note, pk=id)
     note.mark_as_unread()
