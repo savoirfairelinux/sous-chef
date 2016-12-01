@@ -477,13 +477,13 @@ class OrderStatusChangeTestCase(OrderItemTestCase):
         self.assertEqual(osc.reason, reason)
 
 
-class OrderStatusChangeViewTestCase(SousChefTestMixin, OrderItemTestCase):
+class OrderStatusChangeViewTestCase(OrderItemTestCase):
 
     def setUp(self):
         order = self.order
         order.status = 'B'
         order.save()
-        self.force_login()
+        self.client.force_login(self.admin)
 
     def test_get_page(self):
         response = self.client.get(
