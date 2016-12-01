@@ -83,6 +83,24 @@ class NoteAddTestCase(NoteTestCase):
         self.assertTrue(time_1 <= note.date <= time_2)
 
 
+class ClientNoteAddTestCase(NoteTestCase):
+
+    def setUp(self):
+        self.client.force_login(self.admin)
+
+    def test_get_with_client_pk(self):
+        client = ClientFactory()
+        response = self.client.get(reverse(
+            'member:client_notes_add',
+            kwargs={'pk': client.pk}
+        ))
+        self.assertEqual(response.status_code, 200)
+        content = str(response.content, encoding=response.charset)
+        self.assertIn(str(client.pk), content)
+        self.assertIn(client.member.firstname, content)
+        self.assertIn(client.member.lastname, content)
+
+
 class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
 
     fixtures = ['routes.json']
