@@ -41,6 +41,7 @@ from member.models import (
     HOME, WORK, CELL, EMAIL,
 )
 from note.models import Note
+from note.views import NoteAdd
 from order.mixins import AjaxableResponseMixin
 
 

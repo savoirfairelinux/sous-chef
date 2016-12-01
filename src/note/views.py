@@ -86,6 +86,19 @@ class NoteAdd(generic.CreateView):
         return reverse('note:note_list')
 
 
+class ClientNoteListAdd(NoteAdd):
+    """
+    Reuses things from note.
+    """
+    def get_context_data(self, **kwargs):
+        context = super(ClientNoteListAdd, self).get_context_data(**kwargs)
+        context['client'] = get_object_or_404(Client, id=self.kwargs['pk'])
+        return context
+
+    def get_success_url(self):
+        return reverse('member:client_notes', kwargs={'pk': self.kwargs['pk']})
+
+
 def mark_as_read(request, id):
     note = get_object_or_404(Note, pk=id)
     note.mark_as_read()
