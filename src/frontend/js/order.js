@@ -11,7 +11,6 @@ $(function() {
 
     function updateOtherFieldStatus() {
         var value = $('input[name=reason_select]:checked', '#change-status-form').val();
-        //console.log(value);
         if (value !== 'other') {
             $('#reason_other_field textarea').attr('disabled', 'disabled');
         } else {
@@ -40,7 +39,6 @@ $(function() {
                 },
                 // When approvind modal, submit form
                 onApprove: function($element, modalCtntURL) {
-                    //console.log($('#change-status-form').serialize());
                     var origdata = $('#change-status-form').serializeArray();
                     var origdata_o = {};
                     $.each(origdata, function (idx, ele) {
@@ -51,7 +49,6 @@ $(function() {
                     }
                     delete origdata_o.reason_select;
                     var data = $.param(origdata_o);
-                    //console.log(data);
 
                     $.ajax({
                          type: 'POST',
