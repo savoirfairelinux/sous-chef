@@ -5,6 +5,7 @@ import csv
 from datetime import date
 
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.db.models import Q
@@ -13,6 +14,7 @@ from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
+from django.contrib.auth.decorators import login_required
 from formtools.wizard.views import NamedUrlSessionWizardView
 from meal.models import COMPONENT_GROUP_CHOICES
 from member.forms import (
@@ -44,7 +46,7 @@ from note.models import Note
 from order.mixins import AjaxableResponseMixin
 
 
-class ClientWizard(NamedUrlSessionWizardView):
+class ClientWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
 
     template_name = 'client/create/form.html'
 
@@ -561,7 +563,7 @@ def ExportCSV(self, queryset):
     return response
 
 
-class ClientView(generic.DeleteView):
+class ClientView(LoginRequiredMixin, generic.DeleteView):
     # Display detail of one client
     model = Client
 
@@ -717,6 +719,7 @@ class ClientNotesView(ClientView):
         return context
 
 
+@login_required
 def clientMealsPrefsAsJSON(request, pk):
     # Display detail of one client
     client = get_object_or_404(Client, pk=pk)
@@ -724,6 +727,7 @@ def clientMealsPrefsAsJSON(request, pk):
     return JsonResponse(prefs)
 
 
+@login_required
 def note_add(request):
     if request.method == "POST":
         form = NoteForm(request.POST)
@@ -1262,7 +1266,7 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
         client.save()
 
 
-class SearchMembers(generic.View):
+class SearchMembers(LoginRequiredMixin, generic.View):
 
     def get(self, request):
         if request.is_ajax():
@@ -1290,6 +1294,7 @@ class SearchMembers(generic.View):
         return JsonResponse(data)
 
 
+@login_required
 def geolocateAddress(request):
     # do something with the your data
     if request.method == 'POST':
@@ -1362,21 +1367,21 @@ class ClientStatusScheduler(AjaxableResponseMixin, generic.CreateView):
         )
 
 
-class DeleteRestriction(generic.DeleteView):
+class DeleteRestriction(LoginRequiredMixin, generic.DeleteView):
     model = Restriction
     success_url = reverse_lazy('member:list')
 
 
-class DeleteClientOption(generic.DeleteView):
+class DeleteClientOption(LoginRequiredMixin, generic.DeleteView):
     model = Client_option
     success_url = reverse_lazy('member:list')
 
 
-class DeleteIngredientToAvoid(generic.DeleteView):
+class DeleteIngredientToAvoid(LoginRequiredMixin, generic.DeleteView):
     model = Client_avoid_ingredient
     success_url = reverse_lazy('member:list')
 
 
-class DeleteComponentToAvoid(generic.DeleteView):
+class DeleteComponentToAvoid(LoginRequiredMixin, generic.DeleteView):
     model = Client_avoid_component
     success_url = reverse_lazy('member:list')

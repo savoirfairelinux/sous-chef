@@ -1,6 +1,7 @@
 import random
 import urllib.parse
 import random
+import importlib
 from datetime import date
 
 from django.test import TestCase
@@ -13,6 +14,8 @@ from member.factories import RouteFactory, ClientFactory
 from meal.factories import ComponentFactory
 from order.models import Order, Order_item, MAIN_PRICE_DEFAULT
 from order.factories import OrderFactory
+
+SousChefTestMixin = importlib.import_module('sous-chef.tests').TestMixin
 
 
 class OrderTestCase(TestCase):
@@ -421,15 +424,7 @@ class OrderFormTestCase(TestCase):
 
 
 class OrderListTestCase(TestCase):
-
-    def test_anonymous_user_gets_redirected_to_login_page(self):
-        self.client.logout()
-        response = self.client.get(reverse('order:list'))
-        self.assertRedirects(
-            response,
-            reverse('page:login') + '?next=' + reverse('order:list'),
-            status_code=302
-        )
+    pass
 
 
 class OrderCreateFormTestCase(OrderFormTestCase):
@@ -442,15 +437,6 @@ class OrderCreateFormTestCase(OrderFormTestCase):
             ), follow=True
         )
         self.assertEqual(response.status_code, 200)
-
-    def test_anonymous_user_gets_redirected_to_login_page(self):
-        self.client.logout()
-        response = self.client.get(reverse('order:create'))
-        self.assertRedirects(
-            response,
-            reverse('page:login') + '?next=' + reverse('order:create'),
-            status_code=302
-        )
 
     def test_create_form_validate_data(self):
         """Test all the step of the form with and without wrong data"""
@@ -513,19 +499,6 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
             ), follow=True
         )
         self.assertEqual(response.status_code, 200)
-
-    def test_anonymous_user_gets_redirected_to_login_page(self):
-        self.client.logout()
-        response = self.client.get(reverse('order:update',
-                                           kwargs={'pk': self.order.id}))
-        self.assertRedirects(
-            response,
-            reverse('page:login') + '?next=' + reverse('order:update',
-                                                       kwargs={
-                                                           'pk': self.order.id
-                                                       }),
-            status_code=302
-        )
 
     def test_update_form_validate_data(self):
         """Test all the step of the form with and without wrong data"""
@@ -596,17 +569,6 @@ class DeleteOrderTestCase(OrderFormTestCase):
         )
         self.assertContains(response, 'Delete Order #{}'.format(self.order.id))
 
-    def test_anonymous_user_gets_redirected_to_login_page(self):
-        self.client.logout()
-        response = self.client.get(reverse('order:delete',
-                                           args={self.order.id}))
-        self.assertRedirects(
-            response,
-            reverse('page:login') + '?next=' + reverse('order:delete',
-                                                       args={self.order.id}),
-            status_code=302
-        )
-
     def test_delete_order(self):
         # The template will POST with a 'next' parameter, which is the URL to
         # follow on success.
@@ -618,3 +580,16 @@ class DeleteOrderTestCase(OrderFormTestCase):
         )
         self.assertRedirects(response, reverse('order:list') + next_value,
                              status_code=302)
+
+
+class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
+
+    def test_anonymous_user_gets_redirect_to_login_page(self):
+        check = self.assertRedirectsWithAllMethods
+        check(reverse('order:list'))
+        check(reverse('order:view', kwargs={'pk': 1}))
+        check(reverse('order:create'))
+        check(reverse('order:create_batch'))
+        check(reverse('order:update', kwargs={'pk': 1}))
+        check(reverse('order:update_status', kwargs={'pk': 1}))
+        check(reverse('order:delete', kwargs={'pk': 1}))

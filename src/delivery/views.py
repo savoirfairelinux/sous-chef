@@ -15,6 +15,8 @@ from django.http import JsonResponse
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.admin.models import LogEntry, ADDITION
 from django.db.models.functions import Lower
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 import labels  # package pylabels
 from reportlab.graphics import shapes
@@ -36,7 +38,7 @@ MEAL_LABELS_FILE = os.path.join(settings.BASE_DIR, "meallabels.pdf")
 DELIVERY_STARTING_POINT_LAT_LONG = (45.516564, -73.575145)  # Santropol Roulant
 
 
-class Orderlist(generic.ListView):
+class Orderlist(LoginRequiredMixin, generic.ListView):
     # Display all the order on a given day
     model = Delivery
     template_name = 'review_orders.html'
@@ -56,7 +58,7 @@ class Orderlist(generic.ListView):
         return context
 
 
-class MealInformation(generic.View):
+class MealInformation(LoginRequiredMixin, generic.View):
     # Choose today's main dish and its ingredients
 
     def get(self, request, **kwargs):
@@ -156,7 +158,7 @@ class MealInformation(generic.View):
              'form': form})
 
 
-class RouteInformation(generic.ListView):
+class RouteInformation(LoginRequiredMixin, generic.ListView):
     # Display all the route information for a given day
     model = Delivery
     template_name = "route.html"
@@ -169,7 +171,7 @@ class RouteInformation(generic.ListView):
         return context
 
 
-class RoutesInformation(generic.ListView):
+class RoutesInformation(LoginRequiredMixin, generic.ListView):
     # Display all the route information for a given day
     model = Delivery
     template_name = "routes.html"
@@ -189,7 +191,7 @@ class RoutesInformation(generic.ListView):
         return context
 
 
-class OrganizeRoute(generic.ListView):
+class OrganizeRoute(LoginRequiredMixin, generic.ListView):
     # Display all the route information for a given day
     model = Delivery
     template_name = "organize_route.html"
@@ -204,7 +206,7 @@ class OrganizeRoute(generic.ListView):
 
 # Kitchen count report view, helper classes and functions
 
-class KitchenCount(generic.View):
+class KitchenCount(LoginRequiredMixin, generic.View):
 
     def get(self, request, **kwargs):
         # Display kitchen count report for given delivery date
@@ -620,7 +622,7 @@ def kcr_make_labels(kitchen_list, main_dish_name, main_dish_ingredients):
 # Delivery route sheet view, helper classes and functions
 
 
-class MealLabels(generic.View):
+class MealLabels(LoginRequiredMixin, generic.View):
 
     def get(self, request, **kwargs):
         try:
@@ -636,7 +638,7 @@ class MealLabels(generic.View):
         return response
 
 
-class DeliveryRouteSheet(generic.View):
+class DeliveryRouteSheet(LoginRequiredMixin, generic.View):
 
     def get(self, request, **kwargs):
         # Display today's delivery sheet for given route
@@ -788,6 +790,7 @@ def retrieveRoutePoints(route_id, data):
         return data
 
 
+@login_required
 def dailyOrders(request):
     """Get the sequence of points for a delivery route.
 
@@ -840,6 +843,7 @@ def dailyOrders(request):
 
 
 @csrf_exempt
+@login_required
 def saveRoute(request):
     """Save the sequence of points for a delivery route.
 
@@ -863,6 +867,7 @@ def saveRoute(request):
     return JsonResponse('OK', safe=False)
 
 
+@login_required
 def refreshOrders(request):
     delivery_date = date.today()
     last_refresh_date = datetime.datetime.now()
