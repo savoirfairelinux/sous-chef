@@ -871,7 +871,6 @@ def saveRoute(request):
 def refreshOrders(request):
     delivery_date = date.today()
     last_refresh_date = datetime.datetime.now()
-    clients = Client.active.all()
     clients = Client.ongoing.all()
     created = Order.objects.auto_create_orders(delivery_date, clients)
     LogEntry.objects.log_action(
