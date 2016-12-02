@@ -9,9 +9,11 @@ COMPONENT_GROUP_CHOICES = (
     ('green_salad', _('Green Salad')),
     ('pudding', _('Pudding')),
     ('compote', _('Compote')),
+    ('sides', _('Sides')),
 )
 
 COMPONENT_GROUP_CHOICES_MAIN_DISH = COMPONENT_GROUP_CHOICES[0][0]
+COMPONENT_GROUP_CHOICES_SIDES = COMPONENT_GROUP_CHOICES[7][0]
 
 INGREDIENT_GROUP_CHOICES = (
     ('meat', _('Meat')),

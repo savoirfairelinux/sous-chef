@@ -19,7 +19,8 @@ from meal.models import (Menu, Menu_component, Component,
                          Restricted_item, Ingredient,
                          Component_ingredient, Incompatibility,
                          COMPONENT_GROUP_CHOICES,
-                         COMPONENT_GROUP_CHOICES_MAIN_DISH)
+                         COMPONENT_GROUP_CHOICES_MAIN_DISH,
+                         COMPONENT_GROUP_CHOICES_SIDES)
 
 
 ORDER_STATUS = (
@@ -214,23 +215,24 @@ class OrderManager(models.Manager):
                                      delivery_date=delivery_date)
 
         for component_group, trans in COMPONENT_GROUP_CHOICES:
-            item_qty = items[component_group + '_default_quantity']
-            item_pri = prices['side']
-            item_siz = None
+            if component_group != COMPONENT_GROUP_CHOICES_SIDES:
+                item_qty = items[component_group + '_default_quantity']
+                item_pri = prices['side']
+                item_siz = None
 
-            if (item_qty):
-                if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH):
-                    item_pri = prices['main']
-                    item_siz = items['size_default']
+                if (item_qty):
+                    if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH):
+                        item_pri = prices['main']
+                        item_siz = items['size_default']
 
-                Order_item.objects.create(
-                    order=order,
-                    component_group=component_group,
-                    price=item_qty * item_pri,
-                    billable_flag=True,
-                    size=item_siz,
-                    order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
-                    total_quantity=item_qty)
+                    Order_item.objects.create(
+                        order=order,
+                        component_group=component_group,
+                        price=item_qty * item_pri,
+                        billable_flag=True,
+                        size=item_siz,
+                        order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
+                        total_quantity=item_qty)
 
         return order
 
