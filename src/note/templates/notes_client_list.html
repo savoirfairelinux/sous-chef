@@ -46,7 +46,9 @@
         <div class="field">
             <a href="{{ request.path }}?display={{ display }}" class="ui button">{% trans "Reset" %}</a>
             <button class="ui yellow button" type="submit">{% trans "Search" %}</button>
-            <a href="{% url 'member:client_notes_add' client.pk %}" class="ui primary button">{% trans "Add a Note" %}</a>
+            <a href="{% url 'member:client_notes_add' client.pk %}" class="ui button">
+              <i class="add icon"></i>{% trans "New Note" %}
+            </a>
         </div>
     </form>
 
