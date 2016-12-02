@@ -55,9 +55,10 @@
                 <div class="ui pink big button orders" data-url="{% url 'delivery:refresh_orders'%}">
                     <i class="refresh icon"></i> {% trans 'Generate orders' %}
                 </div>
-                <a class="ui basic left pointing pink label">
+                <a class="ui basic left pointing pink label orders-count" data-order-count={{orders.count}}>
                     {% blocktrans with count=orders.count  %}
-                        {{ count }} today
+                        <span>{{ count }}</span>
+                        &nbsp;today
                     {% endblocktrans %}
                 </a>
             </div>
@@ -102,21 +103,19 @@
         <td>{{order.client.route}}</td>
         <td class="center aligned">{{order.get_status_display}}</td>
         <td class="center aligned"><i class="dollar icon"></i>{{order.price}}</td>
-        <td><button class="ui button"  onclick="location.href='{% url 'order:view' pk=order.id %}';" value="{% trans "View Order" %}" >{% trans "View Order" %}</button></td>
+        <td>
+            <a class="ui basic icon button"  href="{% url 'order:view' pk=order.id %}"><i class="icon unhide"></i></a>
+            <a class="ui basic icon button"  href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i></a>
+            <a class="ui basic icon button order-delete" href="#" data-order-id="{{order.id}}"><i class="icon trash"></i></a>
+        </td>
       </tr>
-        {% endfor %}
+      {% include 'review_order_confirm_delete.html' %}
+      {% endfor %}
   </tbody>
-  <tfoot>
-      <tr>
-          <th></th>
-          <th colspan="5">
-              <em>{{orders.count}} {% trans "orders today" %}</em>
-          </th>
-        </tr>
-  </tfoot>
 </table>
 
 <a class="big ui yellow right floated button" href="{% url 'delivery:meal' %}">{% trans "OK, I'm ready" %}</a>
 
 </div>
+
 {% endblock %}

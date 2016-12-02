@@ -144,6 +144,7 @@ class OrderManager(models.Manager):
           Number of orders created.
         """
         created = 0
+        orders = []
         day = delivery_date.weekday()  # Monday is 0, Sunday is 6
         for client in clients:
             # No main_dish means no delivery this day
@@ -163,6 +164,7 @@ class OrderManager(models.Manager):
                                              delivery_date=delivery_date,
                                              status=ORDER_STATUS_ORDERED)
                 created += 1
+                orders.append(order)
 
             # TODO Use Parameters Model in member to store unit prices
             prices = self.get_client_prices(client)
@@ -191,7 +193,7 @@ class OrderManager(models.Manager):
                         size=item_size,
                         order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
                         total_quantity=total_quantity)
-        return created
+        return orders
 
     def create_batch_orders(self, delivery_dates, client, items):
         created = 0

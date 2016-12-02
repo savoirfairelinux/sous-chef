@@ -903,14 +903,33 @@ def saveRoute(request):
 
 @login_required
 def refreshOrders(request):
+    data = []
     delivery_date = date.today()
     last_refresh_date = datetime.datetime.now()
     clients = Client.ongoing.all()
-    created = Order.objects.auto_create_orders(delivery_date, clients)
+    orders = Order.objects.auto_create_orders(delivery_date, clients)
     LogEntry.objects.log_action(
         user_id=1, content_type_id=1,
         object_id="", object_repr="Generation of orders for " + str(
-            datetime.datetime.now().strftime('%Y-%m-%d %H:%M')),
+            datetime.datetime.now().strftime('%m %d %Y %H:%M')),
         action_flag=ADDITION,
     )
-    return HttpResponseRedirect(reverse_lazy("delivery:order"))
+
+    for order in orders:
+        order_data = {
+            'id': order.id,
+            'order_view_url': reverse_lazy(
+                "order:view", kwargs={'pk': order.id}),
+            'order_update_url': reverse_lazy(
+                "order:update", kwargs={'pk': order.id}),
+            'client_id': order.client.id,
+            'client_name': str(order.client),
+            'client_url': reverse_lazy(
+                "member:client_information", kwargs={'pk': order.client.id}),
+            'delivery_date': order.delivery_date.strftime('%-d %B %Y'),
+            'route': order.client.route.name,
+            'status': order.get_status_display(),
+            'price': order.price,
+        }
+        data.append(order_data)
+    return JsonResponse(data, safe=False)
