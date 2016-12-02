@@ -15,7 +15,7 @@ class DishIngredientsForm(forms.Form):
     )
 
     ingredients = forms.ModelMultipleChoiceField(
-        label=_('Select Main Dish Ingredients:'),
+        label=_('Select main dish ingredients:'),
         queryset=Ingredient.objects.order_by(Lower('name')).all(),
         widget=forms.SelectMultiple(
             attrs={'class': 'ui fluid search dropdown'}),
@@ -23,7 +23,7 @@ class DishIngredientsForm(forms.Form):
     )
 
     sides_ingredients = forms.ModelMultipleChoiceField(
-        label=_('Select Sides Ingredients:'),
+        label=_('Select sides ingredients:'),
         queryset=Ingredient.objects.order_by(Lower('name')).all(),
         widget=forms.SelectMultiple(
             attrs={'class': 'ui fluid search dropdown'}),
