@@ -4,6 +4,7 @@ import random
 import urllib.parse
 import random
 import importlib
+from unittest.mock import patch
 from datetime import date
 
 from django.test import TestCase
@@ -11,6 +12,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
+from django.core.management import call_command
 
 from member.models import Client, Address, Member, Route
 from member.factories import RouteFactory, ClientFactory
@@ -674,3 +676,64 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
         check(reverse('order:update', kwargs={'pk': 1}))
         check(reverse('order:update_status', kwargs={'pk': 1}))
         check(reverse('order:delete', kwargs={'pk': 1}))
+
+
+class CommandsTestCase(TestCase):
+    "Test custom manage.py commands"
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.admin = User.objects.create_superuser(
+            username='admin@example.com',
+            email='admin@example.com',
+            password='test',
+            pk=1  # command will log
+        )
+        r = RouteFactory()
+
+        cls.active_clients = ClientFactory.create_batch(
+            10, status=Client.ACTIVE
+        )
+        cls.other_clients = (
+            ClientFactory(status=Client.PENDING),
+            ClientFactory(status=Client.PAUSED),
+            ClientFactory(status=Client.STOPNOCONTACT),
+            ClientFactory(status=Client.STOPCONTACT),
+            ClientFactory(status=Client.DECEASED)
+        )
+
+    # mock function for testing purpose.
+    # always return a positive result.
+    @patch.object(Client, 'get_meal_defaults', lambda a, b, c: (1, 'L'))
+    def test_generateorders_1day(self):
+        "Generate one day's orders"
+
+        args = ["2016-11-22"]
+        opts = {}
+        call_command('generateorders', *args, **opts)
+        self.assertEqual(
+            Order.objects.all().count(),
+            len(self.active_clients)
+        )
+
+    # mock function for testing purpose.
+    # always return a positive result.
+    @patch.object(Client, 'get_meal_defaults', lambda a, b, c: (1, 'L'))
+    def test_generateorders_10day_norepeat(self):
+        "Generate 10 days' orders"
+
+        args = ["2016-11-22"]
+        opts = {'days': 7}
+        call_command('generateorders', *args, **opts)
+        self.assertEqual(
+            Order.objects.all().count(),
+            len(self.active_clients) * 7
+        )
+
+        args = ["2016-11-25"]
+        opts = {'days': 7}
+        call_command('generateorders', *args, **opts)
+        self.assertEqual(
+            Order.objects.all().count(),
+            len(self.active_clients) * 10
+        )
