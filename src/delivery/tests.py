@@ -117,6 +117,7 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
         req['_next'] = 'Next: Print Kitchen Count'
         req['maindish'] = str(maindish.id)
         req['ingredients'] = ing_ids
+        req['sides_ingredients'] = [Ingredient.objects.all().first().id]
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         response = self.client.get(reverse_lazy('delivery:kitchen_count'))
         self.assertTrue(b'Ginger pork' in response.content)
@@ -132,6 +133,7 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
         req['_next'] = 'Next: Print Kitchen Count'
         req['maindish'] = str(maindish.id)
         req['ingredients'] = ing_ids
+        req['sides_ingredients'] = [Ingredient.objects.all().first().id]
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         response = self.client.get(reverse_lazy('delivery:kitchen_count'))
         self.assertTrue(b'Ginger pork' in response.content)
@@ -151,11 +153,13 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
         req['_next'] = 'Next: Print Kitchen Count'
         req['maindish'] = str(maindish.id)
         req['ingredients'] = ing_ids
+        req['sides_ingredients'] = [Ingredient.objects.all().first().id]
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         # restore recipe
         req = {}
         req['_restore'] = 'Restore recipe'
         req['maindish'] = str(maindish.id)
+        req['sides_ingredients'] = [Ingredient.objects.all().first().id]
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         # check that we have Ginger pork with no Pepper in Kitchen count
         response = self.client.get(reverse_lazy('delivery:kitchen_count'))
@@ -171,6 +175,7 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
         req = {}
         req['_next'] = 'Next: Print Kitchen Count'
         req['maindish'] = str(maindish.id)
+        req['sides_ingredients'] = [Ingredient.objects.all().first().id]
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         response = self.client.get(reverse_lazy('delivery:kitchen_count'))
         self.assertTrue(b'Coq au vin' in response.content)

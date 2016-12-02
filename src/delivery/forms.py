@@ -15,9 +15,24 @@ class DishIngredientsForm(forms.Form):
     )
 
     ingredients = forms.ModelMultipleChoiceField(
-        label=_('Select Ingredients:'),
+        label=_('Select Main Dish Ingredients:'),
         queryset=Ingredient.objects.order_by(Lower('name')).all(),
         widget=forms.SelectMultiple(
             attrs={'class': 'ui fluid search dropdown'}),
         required=False,
     )
+
+    sides_ingredients = forms.ModelMultipleChoiceField(
+        label=_('Select Sides Ingredients:'),
+        queryset=Ingredient.objects.order_by(Lower('name')).all(),
+        widget=forms.SelectMultiple(
+            attrs={'class': 'ui fluid search dropdown'}),
+        required=False,
+    )
+
+    def clean_sides_ingredients(self):
+        data = self.cleaned_data['sides_ingredients']
+        if not data:
+            raise forms.ValidationError(
+                _("Please choose some Sides ingredients"))
+        return data

@@ -51,7 +51,6 @@
 <form class="ui form" action="{% url 'delivery:meal' %}" method="post">
     <div class="ui stackable relaxed grid container">
         <div class="six wide column">
-
             {{form.errors}}
             <div class="ui row">
                 {% csrf_token %}
@@ -61,6 +60,7 @@
                 </div>
             </div>
         </div>
+
         <div class="ten wide column">
             <div class="field ingredients selection">
                 <label>{{ form.ingredients.label }}</label>
@@ -68,6 +68,13 @@
             </div>
             <div class="ui field">
                 <input class="ui button" type="submit" value="{% trans "Restore recipe" %}" name="_restore" />
+            </div>
+        </div>
+
+        <div class="ten wide column">
+            <div class="field sides_ingredients selection">
+                <label>{{ form.sides_ingredients.label }}</label>
+                {{ form.sides_ingredients }}
             </div>
         </div>
 

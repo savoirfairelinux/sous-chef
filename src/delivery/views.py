@@ -23,7 +23,9 @@ from reportlab.graphics import shapes
 
 from delivery.models import Delivery
 from meal.models import (
-    COMPONENT_GROUP_CHOICES, COMPONENT_GROUP_CHOICES_MAIN_DISH,
+    COMPONENT_GROUP_CHOICES,
+    COMPONENT_GROUP_CHOICES_MAIN_DISH,
+    COMPONENT_GROUP_CHOICES_SIDES,
     Component,
     Menu, Menu_component,
     Component_ingredient)
@@ -34,7 +36,7 @@ from .models import Delivery
 from .forms import DishIngredientsForm
 from . import tsp
 
-MEAL_LABELS_FILE = os.path.join(settings.BASE_DIR, "meallabels.pdf")
+MEAL_LABELS_FILE = os.path.join(settings.BASE_DIR, "meal_labels.pdf")
 DELIVERY_STARTING_POINT_LAT_LONG = (45.516564, -73.575145)  # Santropol Roulant
 
 
@@ -85,18 +87,30 @@ class MealInformation(LoginRequiredMixin, generic.View):
                 # take first main dish
                 main_dish = main_dishes[0]
 
-        # see if existing chosen ingredients for the dish
+        # see if existing chosen ingredients for the main dish
         dish_ingredients = Component.get_day_ingredients(
             main_dish.id, date)
         if not dish_ingredients:
-            # get recipe ingredients for the dish
+            # get recipe ingredients for the main dish
             dish_ingredients = Component.get_recipe_ingredients(
                 main_dish.id)
+        # see if existing chosen ingredients for the sides
+        # FIXME use a manager in meal / models to get sides component
+        try:
+            sides_component = Component.objects.get(
+                component_group=COMPONENT_GROUP_CHOICES_SIDES)
+        except Component.DoesNotExist:
+            raise Exception(
+                "The database must contain exactly one component " +
+                "having 'Component group' = 'Sides' ")
+        sides_ingredients = Component.get_day_ingredients(
+            sides_component.id, date)
 
         form = DishIngredientsForm(
             initial={
                 'maindish': main_dish.id,
-                'ingredients': dish_ingredients})
+                'ingredients': dish_ingredients,
+                'sides_ingredients': sides_ingredients})
 
         return render(
             request,
@@ -105,7 +119,7 @@ class MealInformation(LoginRequiredMixin, generic.View):
              'date': str(date)})
 
     def post(self, request):
-        # Choose ingredients in today's main dish
+        # Choose ingredients in today's main dish and in Sides
 
         # print("Pick Ingredients POST request=", request.POST)  # For testing
         date = datetime.date.today()
@@ -123,10 +137,22 @@ class MealInformation(LoginRequiredMixin, generic.View):
             # forward to kitchen count
             if form.is_valid():
                 ingredients = form.cleaned_data['ingredients']
+                sides_ingredients = form.cleaned_data['sides_ingredients']
                 component = form.cleaned_data['maindish']
-                # delete existing ingredients for the date + dish
+                # delete existing main dish ingredients for the date
                 Component_ingredient.objects.filter(
                     component=component, date=date).delete()
+                # delete existing sides ingredients for the date
+                # FIXME use a manager in meal / models to get sides component
+                try:
+                    sides_component = Component.objects.get(
+                        component_group=COMPONENT_GROUP_CHOICES_SIDES)
+                except Component.DoesNotExist:
+                    raise Exception(
+                        "The database must contain exactly one component " +
+                        "having 'Component group' = 'Sides' ")
+                Component_ingredient.objects.filter(
+                    component=sides_component, date=date).delete()
                 # add revised ingredients for the date + dish
                 for ing in ingredients:
                     ci = Component_ingredient(
@@ -134,7 +160,13 @@ class MealInformation(LoginRequiredMixin, generic.View):
                         ingredient=ing,
                         date=date)
                     ci.save()
-                # END FOR
+                # add revised ingredients for the date + sides
+                for ing in sides_ingredients:
+                    ci = Component_ingredient(
+                        component=sides_component,
+                        ingredient=ing,
+                        date=date)
+                    ci.save()
                 # Create menu and its components for today
                 compnames = [component.name]  # main dish
                 # take first sorted name of each other component group
