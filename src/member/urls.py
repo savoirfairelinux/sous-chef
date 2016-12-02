@@ -33,7 +33,7 @@ from member.forms import (
     ClientRestrictionsInformation, ClientEmergencyContactInformation
 )
 
-from note.views import ClientNoteList
+from note.views import ClientNoteList, ClientNoteListAdd
 
 create_member_forms = (
     ('basic_information', ClientBasicInformation),
@@ -67,6 +67,8 @@ urlpatterns = [
         ClientAllergiesView.as_view(), name='client_allergies'),
     url(_(r'^view/(?P<pk>\d+)/notes$'),
         ClientNoteList.as_view(), name='client_notes'),
+    url(_(r'^view/(?P<pk>\d+)/notes/add$'),
+        ClientNoteListAdd.as_view(), name='client_notes_add'),
     url(_(r'^geolocateAddress/$'), geolocateAddress, name='geolocateAddress'),
     url(_(r'^view/(?P<pk>\d+)/status$'),
         ClientStatusView.as_view(), name='client_status'),

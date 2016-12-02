@@ -9,7 +9,7 @@ from extra_views import InlineFormSet
 from member.models import Client
 
 from meal.models import COMPONENT_GROUP_CHOICES
-from order.models import Order_item, SIZE_CHOICES
+from order.models import Order_item, SIZE_CHOICES, OrderStatusChange
 
 
 class CreateOrderItem(InlineFormSet):
@@ -74,3 +74,33 @@ class CreateOrdersBatchForm(forms.Form):
         label=_('Delivery dates'),
         max_length=200
     )
+
+
+class OrderStatusChangeForm(forms.ModelForm):
+
+    class Meta:
+        model = OrderStatusChange
+        fields = [
+            'order', 'status_from', 'status_to', 'reason'
+        ]
+        widgets = {
+            'status_to': forms.Select(
+                attrs={'class': 'ui status_to dropdown disabled'}
+            ),
+            'reason': forms.Textarea(attrs={'rows': 2}),
+        }
+
+    def clean(self):
+        cleaned_data = super(OrderStatusChangeForm, self).clean()
+        status_to = cleaned_data.get('status_to')
+        reason = cleaned_data.get('reason')
+
+        if status_to == 'N' and not reason:  # No Charge without reason
+            self.add_error(
+                'reason',
+                forms.ValidationError(
+                    _('A reason is required for No Charge order.'),
+                    code='no_charge_reason_required'
+                )
+            )
+        return cleaned_data

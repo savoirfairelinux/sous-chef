@@ -5,6 +5,7 @@ from note.factories import NoteFactory
 from django.contrib.auth.models import User
 from member.factories import ClientFactory
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 
 SousChefTestMixin = importlib.import_module('sous-chef.tests').TestMixin
 
@@ -57,6 +58,47 @@ class NoteTestCase(TestCase):
             reverse('page:login') + '?next=/note/',
             status_code=302
         )
+
+
+class NoteAddTestCase(NoteTestCase):
+
+    def setUp(self):
+        self.client.force_login(self.admin)
+
+    def test_create_set_fields(self):
+        """
+        Test if author, date, is_read are correctly set.
+        """
+        time_1 = timezone.now()
+        response = self.client.post(reverse('note:note_add'), {
+            'note': "test note TEST_PHRASE",
+            "client": ClientFactory().pk,
+            "priority": 'normal'
+        }, follow=False)
+        time_2 = timezone.now()
+        self.assertEqual(response.status_code, 302)  # successful creation
+        note = Note.objects.get(note__contains="TEST_PHRASE")
+        self.assertEqual(note.author, self.admin)
+        self.assertEqual(note.is_read, False)
+        self.assertTrue(time_1 <= note.date <= time_2)
+
+
+class ClientNoteAddTestCase(NoteTestCase):
+
+    def setUp(self):
+        self.client.force_login(self.admin)
+
+    def test_get_with_client_pk(self):
+        client = ClientFactory()
+        response = self.client.get(reverse(
+            'member:client_notes_add',
+            kwargs={'pk': client.pk}
+        ))
+        self.assertEqual(response.status_code, 200)
+        content = str(response.content, encoding=response.charset)
+        self.assertIn(str(client.pk), content)
+        self.assertIn(client.member.firstname, content)
+        self.assertIn(client.member.lastname, content)
 
 
 class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
