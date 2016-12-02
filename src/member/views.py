@@ -44,6 +44,7 @@ from member.models import (
 )
 from note.models import Note
 from order.mixins import FormValidAjaxableResponseMixin
+from note.views import NoteAdd
 
 
 class ClientWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
@@ -725,21 +726,6 @@ def clientMealsPrefsAsJSON(request, pk):
     client = get_object_or_404(Client, pk=pk)
     prefs = client.get_meals_prefs()
     return JsonResponse(prefs)
-
-
-@login_required
-def note_add(request):
-    if request.method == "POST":
-        form = NoteForm(request.POST)
-        if form.is_valid():
-            model_instance = form.save(commit=False)
-            model_instance.author = request.user
-            model_instance.save()
-            return render(request, 'notes/add.html', {'form': form})
-    else:
-        form = NoteForm()
-
-    return render(request, 'notes/add.html', {'form': form})
 
 
 class ClientDetail(ClientView):

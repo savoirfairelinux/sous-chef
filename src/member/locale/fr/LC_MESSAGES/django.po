@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 23:01+0000\n"
+"POT-Creation-Date: 2016-12-01 22:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -1051,11 +1051,15 @@ msgstr "Priorité"
 msgid "Is read"
 msgstr "Lu"
 
-#: member/templates/client/view/notes.html:68
+#: member/templates/client/view/notes.html:49
+msgid "Add a Note"
+msgstr ""
+
+#: member/templates/client/view/notes.html:69
 msgid "Done/Read"
 msgstr "Fait/Lu"
 
-#: member/templates/client/view/notes.html:71
+#: member/templates/client/view/notes.html:72
 msgid "New"
 msgstr "Nouveau"
 
@@ -1199,44 +1203,48 @@ msgid "^view/(?P<pk>\\d+)/notes$"
 msgstr ""
 
 #: member/urls.py:70
+msgid "^view/(?P<pk>\\d+)/notes/add$"
+msgstr ""
+
+#: member/urls.py:72
 msgid "^geolocateAddress/$"
 msgstr ""
 
-#: member/urls.py:71
+#: member/urls.py:73
 msgid "^view/(?P<pk>\\d+)/status$"
 msgstr ""
 
-#: member/urls.py:75
+#: member/urls.py:77
 msgid "^restriction/(?P<pk>\\d+)/delete/$"
 msgstr ""
 
-#: member/urls.py:77
+#: member/urls.py:79
 msgid "^client_option/(?P<pk>\\d+)/delete/$"
 msgstr ""
 
-#: member/urls.py:79
+#: member/urls.py:81
 msgid "^ingredient_to_avoid/(?P<pk>\\d+)/delete/$"
 msgstr ""
 
-#: member/urls.py:81
+#: member/urls.py:83
 msgid "^component_to_avoid/(?P<pk>\\d+)/delete/$"
 msgstr ""
 
-#: member/urls.py:102
+#: member/urls.py:104
 msgid "^(?P<pk>\\d+)/update/{}/$"
 msgstr ""
 
-#: member/views.py:89
+#: member/views.py:92
 #, fuzzy
 #| msgid "This client is currently"
 msgid "The client has been created"
 msgstr "Le statut du client est"
 
-#: member/views.py:842
+#: member/views.py:832
 msgid "The client has been updated"
 msgstr ""
 
-#: member/views.py:1355
+#: member/views.py:1346
 msgid "The status has been changed"
 msgstr ""
 
