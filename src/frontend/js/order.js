@@ -70,8 +70,8 @@ $(function() {
                 },
                 // When denying modal, restore default value for status dropdown
                 onDeny: function($element) {
+                    $('.ui.dropdown.status').dropdown('restore defaults');
                     $('.ui.modal.status').modal("hide");
-                    location.reload();
                 }
             }).modal('setting', 'autofocus', false).modal("show");
         });

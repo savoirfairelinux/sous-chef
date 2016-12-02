@@ -60,18 +60,21 @@ $(function() {
                          success: function (xhr, ajaxOptions, thrownError) {
                              if ( $(xhr).find('.errorlist').length > 0 ) {
                                  $('.ui.modal.status').html(xhr);
-                                 $('.ui.modal.status').modal("show");
+                                 $('.ui.status_to.dropdown').dropdown();
                              } else {
+                                 $('.ui.modal.status').modal("hide");
                                  location.reload();
                              }
                          },
                      });
+                    return false; // don't hide modal until we have the response
                 },
                 // When denying modal, restore default value for status dropdown
                 onDeny: function($element) {
                     $('.ui.dropdown.status').dropdown('restore defaults');
+                    $('.ui.modal.status').modal("hide");
                 }
-            }).modal("show");
+            }).modal('setting', 'autofocus', false).modal("show");
         });
     });
 

@@ -43,8 +43,8 @@ from member.models import (
     HOME, WORK, CELL, EMAIL,
 )
 from note.models import Note
+from order.mixins import FormValidAjaxableResponseMixin
 from note.views import NoteAdd
-from order.mixins import AjaxableResponseMixin
 
 
 class ClientWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
@@ -1291,7 +1291,10 @@ def geolocateAddress(request):
     return JsonResponse({'latitude': lat, 'longtitude': long})
 
 
-class ClientStatusScheduler(AjaxableResponseMixin, generic.CreateView):
+class ClientStatusScheduler(
+        FormValidAjaxableResponseMixin,
+        generic.CreateView
+):
     model = ClientScheduledStatus
     form_class = ClientScheduledStatusForm
     template_name = "client/update/status.html"
