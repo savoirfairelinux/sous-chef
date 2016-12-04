@@ -156,7 +156,9 @@ class OrderManager(models.Manager):
             try:
                 # If an order is already created, skip order items creation
                 # (if want to replace, must be deleted first)
-                Order.objects.get(client=client, delivery_date=delivery_date)
+                order = Order.objects.get(client=client,
+                                          delivery_date=delivery_date)
+                orders.append(order)
                 continue
             except Order.DoesNotExist:
                 order = Order.objects.create(client=client,
