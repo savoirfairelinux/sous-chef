@@ -9,12 +9,10 @@ $(function() {
 
     $('.button.orders').click(function(){
         $('.button.orders i').addClass('loading');
-        var url =
         $.ajax({
             type: 'GET',
             url: $(this).attr('data-url'),
             success: function (xhr, ajaxOptions, thrownError) {
-                console.log(xhr);
                 $("#generated-orders").html(xhr)
                 var count = $("#generated-orders tbody tr").length;
                 $('.orders-count span').html(count);
