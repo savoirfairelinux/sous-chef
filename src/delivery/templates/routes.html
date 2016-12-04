@@ -33,15 +33,15 @@
                   <i class="marker icon"></i>{% trans 'Organize' %}
               </a>
               <a href="{% url 'delivery:route_sheet_id' id=route.id %}" class="ui compact labeled {% if orders == 0 %} disabled {% endif %} icon button" title="{% trans 'Print the route sheet' %}">
-                  <i class="print icon"></i>{% trans 'Route sheet' %}
+                  <i class="list layout icon"></i>{% trans 'Route sheet' %}
               </a>
             </div>
             <i class="large location arrow icon"></i>
             <div class="content">
               <div class="header">{{ route.name }}</div>
               <div class="description">
-                  <i class="bicycle icon" title="{% trans 'Cycling map' %}"></i>
-                  <div class="ui circular label" title="{% trans 'Number of orders on this route' %}">{{ orders }} {% if orders > 1 %}stops{% else %}stop{% endif %}</div>
+                  <i class="bicycle circular icon" title="{% trans 'Cycling map' %}"></i>
+                  <div class="ui circular pink basic label" title="{% trans 'Number of orders on this route' %}">{{ orders }}</div>
               </div>
             </div>
           </div>

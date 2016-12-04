@@ -22,6 +22,12 @@
     </div>
 </div>
 
+<div class="ui basic segment no-print">
+    <a href="javascript:window.print()" class="ui labeled icon right pink basic big button" title="{% trans 'Print the map and directions' %}">
+        <i class="print icon"></i>{% trans 'Map and Directions' %}
+    </a>
+</div>
+
 <div class="row">
   <div class="thirteen wide column" id="route_map"
         data-route="{{ route.id }}"
@@ -34,10 +40,10 @@
 </div>
 
 <a href="{% url 'delivery:route_sheet_id' id=route.id %}" class="ui big labeled icon button" title="{% trans 'Print the route sheet' %}">
-  <i class="print icon"></i>{% trans 'Route sheet' %}
+  <i class="list layout icon"></i>{% trans 'Route sheet' %}
 </a>
 <a href="{% url 'delivery:routes' %}" class="ui big labeled {% if orders == 0 %} disabled {% endif %} icon button" title="{% trans 'View routes list' %}">
-  <i class="list icon"></i>{% trans 'View routes' %}
+  <i class="chevron left icon"></i>{% trans 'View routes' %}
 </a>
 
 {% endblock %}
