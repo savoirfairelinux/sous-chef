@@ -1,0 +1,45 @@
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load static %}
+
+<table id="generated-orders" class="ui very basic stripped compact celled table">
+  <thead>
+    <th class="">{% trans 'Order' %}
+            <i class="help-text question grey icon link" data-content="{% trans 'A unique identifier for the order.' %}"></i>
+    </th>
+    <th class="">{% trans 'Client' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Quickly access the client file.' %}"></i>
+    </th>
+    <th class="">{% trans 'Delivery Date' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'The delivery date planned for the order.' %}"></i>
+    </th>
+    <th class="">{% trans 'Route' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'The delivery route.' %}"></i>
+    </th>
+    <th class="center aligned">{% trans 'Status' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Display only Ordered orders.' %}"></i>
+    </th>
+    <th class="center aligned">{% trans 'Amount' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Total amount in $CAD.' %}"></i>
+    </th>
+    <th class=""></th>
+  </thead>
+  <tbody>
+    {% for order in orders %}
+      <tr {% if not order.client.is_geolocalized %}class="warning"{% endif %}>
+        <td class="center aligned"><strong><i class="hashtag icon"></i>{{order.id}}</strong></td>
+        <td><a href="{% url 'member:client_information' pk=order.client.id %}">{{order.client.member}}</a></td>
+        <td>{{order.delivery_date}}</td>
+        <td>{{order.client.route}}</td>
+        <td class="center aligned">{{order.get_status_display}}</td>
+        <td class="center aligned"><i class="dollar icon"></i>{{order.price}}</td>
+        <td>
+            <a class="ui basic icon button"  href="{% url 'order:view' pk=order.id %}"><i class="icon unhide"></i></a>
+            <a class="ui basic icon button"  href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i></a>
+            <a class="ui basic icon button order-delete" href="#" data-order-id="{{order.id}}"><i class="icon trash"></i></a>
+        </td>
+      </tr>
+      {% include 'review_order_confirm_delete.html' %}
+      {% endfor %}
+  </tbody>
+</table>
