@@ -712,10 +712,13 @@ class CommandsTestCase(TestCase):
             password='test',
             pk=1  # command will log
         )
-        r = RouteFactory()
+        RouteFactory()
 
-        cls.active_clients = ClientFactory.create_batch(
-            10, status=Client.ACTIVE
+        cls.ongoing_clients = ClientFactory.create_batch(
+            10, status=Client.ACTIVE, delivery_type='O'
+        )
+        cls.episodic_clients = ClientFactory.create_batch(
+            10, status=Client.ACTIVE, delivery_type='E'
         )
         cls.other_clients = (
             ClientFactory(status=Client.PENDING),
@@ -729,28 +732,28 @@ class CommandsTestCase(TestCase):
     # always return a positive result.
     @patch.object(Client, 'get_meal_defaults', lambda a, b, c: (1, 'L'))
     def test_generateorders_1day(self):
-        "Generate one day's orders"
+        """Generate one day's orders"""
 
         args = ["2016-11-22"]
         opts = {}
         call_command('generateorders', *args, **opts)
         self.assertEqual(
             Order.objects.all().count(),
-            len(self.active_clients)
+            len(self.ongoing_clients)
         )
 
     # mock function for testing purpose.
     # always return a positive result.
     @patch.object(Client, 'get_meal_defaults', lambda a, b, c: (1, 'L'))
     def test_generateorders_10day_norepeat(self):
-        "Generate 10 days' orders"
+        """Generate 10 days' orders"""
 
         args = ["2016-11-22"]
         opts = {'days': 7}
         call_command('generateorders', *args, **opts)
         self.assertEqual(
             Order.objects.all().count(),
-            len(self.active_clients) * 7
+            len(self.ongoing_clients) * 7
         )
 
         args = ["2016-11-25"]
@@ -758,5 +761,5 @@ class CommandsTestCase(TestCase):
         call_command('generateorders', *args, **opts)
         self.assertEqual(
             Order.objects.all().count(),
-            len(self.active_clients) * 10
+            len(self.ongoing_clients) * 10
         )

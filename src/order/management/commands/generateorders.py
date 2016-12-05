@@ -30,8 +30,8 @@ class Command(BaseCommand):
         ).date()
         days = options['days']
 
-        # Only active clients can receive orders
-        clients = Client.active.all()
+        # Only active ongoing clients can receive orders
+        clients = Client.ongoing.all()
 
         for i in range(days):
             # Create the orders
