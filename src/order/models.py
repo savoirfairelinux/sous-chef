@@ -191,24 +191,41 @@ class OrderManager(models.Manager):
                         total_quantity=total_quantity)
         return created
 
-    def create_batch_orders(self, delivery_dates, client, items):
-        created = 0
+    def create_batch_orders(self, delivery_dates, client, items,
+                            return_created_orders=False):
+        created_orders = []
+        messages = []
 
         # Calculate client prices (main and side)
         prices = self.get_client_prices(client)
 
-        for delivery_date in delivery_dates:
-            delivery_date = datetime.strptime(delivery_date, "%Y-%m-%d").date()
+        for delivery_date_str in delivery_dates:
+            delivery_date = datetime.strptime(
+                delivery_date_str, "%Y-%m-%d"
+            ).date()
             try:
                 Order.objects.get(client=client, delivery_date=delivery_date)
                 # If an order is already created, skip order items creation
                 # (if want to replace, must be deleted first)
             except Order.DoesNotExist:
                 # If no order for this client/date, create it and attach items
-                self.create_order(delivery_date, client, items, prices)
-                created += 1
+                individual_items = {}
+                for key, value in items.items():
+                    if delivery_date_str in key:
+                        replaced_key = key.replace(
+                            delivery_date_str,
+                            'default'
+                        )
+                        individual_items[replaced_key] = value
+                order = self.create_order(
+                    delivery_date, client, individual_items, prices
+                )
+                created_orders.append(order)
 
-        return created
+        if not return_created_orders:
+            return len(created_orders)   # LXYANG: TO BE DEPRECATED
+        else:
+            return created_orders
 
     def create_order(self, delivery_date, client, items, prices):
         order = Order.objects.create(client=client,
@@ -219,7 +236,6 @@ class OrderManager(models.Manager):
                 item_qty = items[component_group + '_default_quantity']
                 item_pri = prices['side']
                 item_siz = None
-
                 if (item_qty):
                     if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH):
                         item_pri = prices['main']

@@ -567,29 +567,59 @@ class Client(models.Model):
             return None
 
     @property
-    def meals_schedule(self):
+    def meals_default(self):
         """
-        Returns a hierarchical dict representing the meals schedule.
+        Returns a list of tuple ((weekday, meal default), ...).
+
+        Consider a meal default "not properly configured" if:
+        (1) if all numeric fields are 0;
+        (2) OR any numeric field is None;
+        (2) OR if size is None
+        and thus set it to None.
+
+        Intended to be used for Episodic clients.
         """
-        prefs = []
+        defaults = []
         for day, str in DAYS_OF_WEEK:
             current = {}
+            numeric_fields = []
             for component, label in COMPONENT_GROUP_CHOICES:
                 item = self.meal_default_week.get(
                     component + '_' + day + '_quantity'
-                ) or 0
+                )
                 current[component] = item
+                numeric_fields.append(item)
 
             size = self.meal_default_week.get(
                 'size_' + day
-            ) or ''
+            )
             current['size'] = size
 
+            not_properly_configured = (
+                all(map(lambda x: x == 0, numeric_fields)) or
+                any(map(lambda x: x is None, numeric_fields)) or
+                size is None
+            )
+            if not_properly_configured:
+                current = None
+            defaults.append((day, current))
+
+        return defaults
+
+    @property
+    def meals_schedule(self):
+        """
+        Returns a list of tuple ((weekday, meal default), ...).
+
+        Intended to be used for Ongoing clients.
+        """
+        defaults = self.meals_default
+        prefs = []
+        for day, meal_schedule in defaults:
             if day not in self.simple_meals_schedule:
                 prefs.append((day, None))
             else:
-                prefs.append((day, current))
-
+                prefs.append((day, meal_schedule))
         return prefs
 
     def set_meals_schedule(self, schedule):

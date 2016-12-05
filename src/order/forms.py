@@ -45,28 +45,36 @@ class BatchFormClientSelect(forms.Select):
 class CreateOrdersBatchForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
+        if 'delivery_dates' in kwargs:
+            delivery_dates = kwargs['delivery_dates']
+            del kwargs['delivery_dates']
+        else:
+            delivery_dates = None
         super(CreateOrdersBatchForm, self).__init__(*args, **kwargs)
 
-        self.fields['size_{}'.format('default')] = forms.ChoiceField(
-            choices=SIZE_CHOICES,
-            widget=forms.Select(attrs={'class': 'ui dropdown'}),
-            required=False
-        )
+        if delivery_dates:
+            for d in delivery_dates:
+                self.fields['size_{}'.format(d)] = forms.ChoiceField(
+                    choices=SIZE_CHOICES,
+                    widget=forms.Select(attrs={'class': 'ui dropdown'}),
+                    required=True
+                )
 
-        for meal, placeholder in COMPONENT_GROUP_CHOICES:
-            self.fields['{}_{}_quantity'.format(meal, 'default')] = \
-                forms.IntegerField(
-                    widget=forms.TextInput(
-                        attrs={'placeholder': placeholder}
-                    ),
-                    required=False
-            )
+                for meal, placeholder in COMPONENT_GROUP_CHOICES:
+                    self.fields[
+                        '{}_{}_quantity'.format(meal, d)
+                    ] = forms.IntegerField(
+                        widget=forms.TextInput(
+                            attrs={'placeholder': placeholder}
+                        ),
+                        required=True
+                    )
 
     client = forms.ModelChoiceField(
         required=True,
         label=_('Client'),
         widget=BatchFormClientSelect(attrs={'class': 'ui search dropdown'}),
-        queryset=Client.objects.all(),
+        queryset=Client.active.all(),
     )
 
     delivery_dates = forms.CharField(
@@ -74,6 +82,20 @@ class CreateOrdersBatchForm(forms.Form):
         label=_('Delivery dates'),
         max_length=200
     )
+
+    is_submit = forms.IntegerField(
+        required=True,
+        label=_('Is form submit')
+    )
+
+    def clean_is_submit(self):
+        is_submit = self.cleaned_data['is_submit']
+        if is_submit is not 1:
+            # prevents form submit and force a form refresh
+            raise forms.ValidationError(
+                _("This field must be 1 to submit the form.")
+            )
+        return is_submit
 
 
 class OrderStatusChangeForm(forms.ModelForm):

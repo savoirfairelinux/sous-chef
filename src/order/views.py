@@ -1,4 +1,5 @@
 import csv
+import json
 from django.http import HttpResponse, JsonResponse
 from django.views import generic
 from django.utils.decorators import method_decorator
@@ -19,7 +20,7 @@ from order.forms import CreateOrderItem, UpdateOrderItem, \
 
 from meal.models import COMPONENT_GROUP_CHOICES
 
-from member.models import Client
+from member.models import Client, DAYS_OF_WEEK
 
 
 class OrderList(generic.ListView):
@@ -106,7 +107,6 @@ class CreateOrder(AjaxableResponseMixin, CreateWithInlinesView):
 
 
 class CreateOrdersBatch(generic.FormView):
-    form_class = CreateOrdersBatchForm
     template_name = "order/create_batch.html"
     success_url = reverse_lazy('order:create_batch')
 
@@ -114,12 +114,103 @@ class CreateOrdersBatch(generic.FormView):
     def dispatch(self, *args, **kwargs):
         return super(CreateOrdersBatch, self).dispatch(*args, **kwargs)
 
+    def get_form(self, *args, **kwargs):
+        k = self.get_form_kwargs()  # kwargs to initialize the form
+        if self.request.method == "POST" and \
+           self.request.POST.get('delivery_dates'):
+            k['delivery_dates'] = self.request.POST[
+                'delivery_dates'
+            ].split('|')
+
+        return CreateOrdersBatchForm(**k)
+
     def get_context_data(self, **kwargs):
         context = super(CreateOrdersBatch, self).get_context_data(**kwargs)
         # Define here any needed variable for template
         context["meals"] = COMPONENT_GROUP_CHOICES
-        context["day"] = ('default', _('Default'))
+
+        # delivery_dates
+        if self.request.method == "POST" and \
+           self.request.POST.get('delivery_dates'):
+            context[
+                'delivery_dates_list'
+            ] = self.request.POST['delivery_dates'].split('|')
+        else:
+            context['delivery_dates_list'] = []
+
+        # inactive accordion dates
+        if self.request.method == "POST" and \
+           self.request.POST.get('accordions_inactive'):
+            context[
+                'accordions_inactive'
+            ] = self.request.POST['accordions_inactive'].split('|')
+        else:
+            context['accordions_inactive'] = []
+
+        if self.request.method == "POST" and \
+           self.request.POST.get('client'):
+            c = Client.objects.get(pk=self.request.POST['client'])
+            if c.delivery_type == 'E':  # episodic
+                meals_default_dict = dict(c.meals_default)
+            else:
+                meals_default_dict = dict(c.meals_schedule)
+            context['client'] = c
+        else:
+            meals_default_dict = dict(
+                map(
+                    lambda x: (x[0], None),
+                    DAYS_OF_WEEK
+                ),
+            )
+        context['delivery_dates_lookup'] = {}
+        DAYS_OF_WEEK_DICT = dict(DAYS_OF_WEEK)
+        for dd in context['delivery_dates_list']:
+            # sunday = 0, saturday = 6
+            day = ("sunday", "monday", "tuesday", "wednesday",
+                   "thursday", "friday", "saturday")[
+                       int(datetime.strptime(dd, '%Y-%m-%d').strftime('%w'))
+                   ]
+            dic = {}
+            dic['day'] = day
+            dic['day_readable'] = DAYS_OF_WEEK_DICT[day]
+            if not meals_default_dict[day]:  # None or {}
+                # system default
+                dic['default_type'] = 'system'
+                dic['default_json'] = json.dumps({
+                    'size': 'R',
+                    'main_dish': 1,
+                    'dessert': 1,
+                    'diabetic': 0,
+                    'fruit_salad': 0,
+                    'green_salad': 0,
+                    'pudding': 0,
+                    'compote': 0,
+                    'sides': 0
+                })
+            else:
+                # client default
+                dic['default_type'] = 'client'
+                dic['default_json'] = json.dumps(meals_default_dict[day])
+
+            context['delivery_dates_lookup'][dd] = dic
+
         return context
+
+    def form_invalid(self, form, **kwargs):
+        # open accordions if there's an invalid field in it.
+        context = self.get_context_data(**kwargs)
+        context['form'] = form
+        for field in form.errors.keys():
+            try:
+                # next() - find first occurence
+                invalid_date = next(
+                    date for date in context['accordions_inactive']
+                    if date in field
+                )
+                context['accordions_inactive'].remove(invalid_date)
+            except StopIteration:
+                pass
+        return self.render_to_response(context)
 
     def form_valid(self, form):
         # Get posted datas
@@ -130,14 +221,41 @@ class CreateOrdersBatch(generic.FormView):
         del items['client']
 
         # Place orders using posted datas
-        counter = Order.objects.create_batch_orders(del_dates, client, items)
+        created_orders = Order.objects.create_batch_orders(
+            del_dates, client, items, return_created_orders=True
+        )
+
+        # check created and uncreated dates
+        created_dates = []
+        for order in created_orders:
+            d = order.delivery_date.strftime('%Y-%m-%d')
+            created_dates.append(d)
+        uncreated_dates = []
+        for d in del_dates:
+            if d not in created_dates:
+                uncreated_dates.append(d)
 
         # Alert user on order placement
-        messages.add_message(
-            self.request, messages.SUCCESS,
-            _('%(n)s order(s) successfully placed for %(client)s.') % {
-                'n': counter, 'client': client}
-        )
+        if created_dates:
+            messages.add_message(
+                self.request, messages.SUCCESS,
+                _('%(n)s order(s) successfully placed '
+                  'for %(client)s on %(dates)s.') % {
+                      'n': len(created_dates),
+                      'client': client,
+                      'dates': ', '.join(created_dates)
+                  }
+            )
+        if uncreated_dates:
+            messages.add_message(
+                self.request, messages.WARNING,
+                _('%(n)s existing order(s) skipped '
+                  'for %(client)s on %(dates)s.') % {
+                      'n': len(uncreated_dates),
+                      'client': client,
+                      'dates': ', '.join(uncreated_dates)
+                  }
+            )
 
         response = super(CreateOrdersBatch, self).form_valid(form)
         return response

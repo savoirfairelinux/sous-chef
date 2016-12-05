@@ -1,5 +1,6 @@
 from django import template
 from meal.models import COMPONENT_GROUP_CHOICES
+from django.utils.translation import ugettext_lazy as _
 
 
 register = template.Library()
@@ -18,10 +19,17 @@ def dish_size(context, day):
 @register.filter
 def readable_prefs(value):
     if value is None:
-        return ''
+        return _("Not properly configured.")
 
     str = ''
     for component, label in COMPONENT_GROUP_CHOICES:
-        str += '{} {}, '.format(value.get(component, 0), label)
+        count = value.get(component)
+        if count:  # more than 0
+            str += '{} {}, '.format(count, label)
 
     return str[:-2]
+
+
+@register.filter
+def get_item(o, key):
+    return o[key]
