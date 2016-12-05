@@ -3,7 +3,7 @@ from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import smart_text
+from member.formsfield import CAPhoneNumberExtField
 from localflavor.ca.forms import (
     CAPhoneNumberField, CAPostalCodeField
 )
@@ -15,24 +15,6 @@ from member.models import (
     GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE,
     DAYS_OF_WEEK, Route, ClientScheduledStatus
 )
-
-
-class CAPhoneNumberExtField(CAPhoneNumberField):
-    """Canadian phone number form field."""
-
-    def clean(self, value):
-        phone_re = re.compile(
-            r'^(?:1-?)?(\d{3})[-\.]?(\d{3})[-\.]?(\d{4})#?(\d*)$'
-        )
-        try:
-            return super(CAPhoneNumberExtField, self).clean(value)
-        except forms.ValidationError as error:
-            value = re.sub('(\(|\)|\s+)', '', smart_text(value))
-            m = phone_re.search(value)
-            if m:
-                return '%s-%s-%s #%s' % (m.group(1), m.group(2),
-                                         m.group(3), m.group(4))
-            raise error
 
 
 class ClientBasicInformation (forms.Form):

@@ -960,6 +960,7 @@ class FormTestCase(TestCase):
         self.assertEqual(member.lastname, "User")
 
         # test_home_phone_member:
+        self.assertEquals(member.home_phone, '514-868-8686')
         self.assertTrue(member.home_phone.startswith('514'))
         self.assertEquals(member.email, 'test@example.com')
         self.assertEquals(member.cell_phone, '438-000-0000')

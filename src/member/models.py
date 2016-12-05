@@ -1,6 +1,8 @@
 import datetime
 import math
 import json
+from member.formsfield import CAPhoneNumberExtField
+from django.forms import ValidationError
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -119,6 +121,15 @@ class Member(models.Model):
     @property
     def home_phone(self):
         try:
+            val_orig = self.member_contact.filter(type=HOME).first().value
+            f = CAPhoneNumberExtField()
+            val_clean = f.clean(val_orig)
+            if val_orig != val_clean:
+                self.member_contact.filter(type=HOME).first().value = val_clean
+                self.add_contact_information(HOME, val_clean, True)
+                return val_clean
+            return val_orig
+        except ValidationError as error:
             return self.member_contact.filter(type=HOME).first().value
         except:
             return ""
@@ -126,14 +137,32 @@ class Member(models.Model):
     @property
     def cell_phone(self):
         try:
-            return self.member_contact.all().filter(type=CELL).first().value
+            val_orig = self.member_contact.filter(type=CELL).first().value
+            f = CAPhoneNumberExtField()
+            val_clean = f.clean(val_orig)
+            if val_orig != val_clean:
+                self.member_contact.filter(type=CELL).first().value = val_clean
+                self.add_contact_information(CELL, val_clean, True)
+                return val_clean
+            return val_orig
+        except ValidationError as error:
+            return self.member_contact.filter(type=CELL).first().value
         except:
             return ""
 
     @property
     def work_phone(self):
         try:
-            return self.member_contact.all().filter(type=WORK).first().value
+            val_orig = self.member_contact.filter(type=WORK).first().value
+            f = CAPhoneNumberExtField()
+            val_clean = f.clean(val_orig)
+            if val_orig != val_clean:
+                self.member_contact.filter(type=WORK).first().value = val_clean
+                self.add_contact_information(WORK, val_clean, True)
+                return val_clean
+            return val_orig
+        except ValidationError as error:
+            return self.member_contact.filter(type=WORK).first().value
         except:
             return ""
 
@@ -254,6 +283,17 @@ class Contact(models.Model):
         verbose_name=_('member'),
         related_name='member_contact',
     )
+
+    def display_value(self):
+        if self.type in (HOME, WORK, CELL):
+            try:
+                f = CAPhoneNumberExtField()
+                return f.clean(self.value)
+            except ValidationError as error:
+                return self.value
+            except:
+                return ""
+        return self.value
 
     def __str__(self):
         return "{} {}".format(self.member.firstname, self.member.lastname)

@@ -34,7 +34,7 @@
     <div class="item"><div class="header">{% trans 'Delivery Type' %}</div>{{client.get_delivery_type_display}}</div>
     <div class="item"><div class="header">{% trans 'Birthday' %}</div>{{client.birthdate}}</div>
     {% for contact in client.member.member_contact.all %}
-        <div class="item"><div class="header">{{contact.type}}</div>{{contact.value}}</div>
+        <div class="item"><div class="header">{{contact.type}}</div>{{contact.display_value}}</div>
     {% endfor %}
     <div class="item"><div class="header"><i class="icon home"></i>{% trans "Address" %}</div>{{client.member.address.street}}, {{client.member.address.city}}, {{client.member.address.postal_code}}</div>
     <div class="item"><div class="header">{% trans "Delivery Note" %}</div>{{client.delivery_note}}</div>
@@ -62,7 +62,7 @@
         <div class="item"><div class="header">{% trans 'Relationship' %}</div>{{client.emergency_contact_relationship}}</div>
         {% for contact in client.emergency_contact.member_contact.all %}
         {% if contact.value is not empty %}
-            <div class="item"><div class="header">{{contact.type}}</div>{{contact.value}}</div>
+            <div class="item"><div class="header">{{contact.type}}</div>{{contact.display_value}}</div>
         {% endif %}
         {% endfor %}
     </div>
