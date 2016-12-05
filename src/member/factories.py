@@ -19,7 +19,7 @@ class AddressFactory (factory.DjangoModelFactory):
     street = factory.Faker('street_address')
     apartment = factory.Faker('random_number')
     city = 'Montreal'
-    postal_code = factory.Faker('postalcode')
+    postal_code = factory.Faker('postalcode', locale="en_CA")
     latitude = "75.048439"
     longitude = "40.232434"
 
@@ -125,7 +125,7 @@ class ContactFactory (factory.DjangoModelFactory):
         model = Contact
 
     type = 'Home phone'
-    value = factory.Faker('phone_number')
+    value = factory.Sequence(lambda n: '514-555-%04d' % n)
     member = factory.SubFactory(MemberFactory)
 
 

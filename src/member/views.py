@@ -273,15 +273,15 @@ class ClientWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
             )
             emergency.save()
 
-        client_emergency_contact = Contact.objects.create(
-            type=emergency_contact.cleaned_data.get("contact_type"),
-            value=emergency_contact.cleaned_data.get(
-                "contact_value"
-            ),
-
-            member=emergency,
-        )
-        client_emergency_contact.save()
+        if emergency_contact.cleaned_data.get("contact_value") is not None:
+            client_emergency_contact = Contact.objects.create(
+                type=emergency_contact.cleaned_data.get("contact_type"),
+                value=emergency_contact.cleaned_data.get(
+                    "contact_value"
+                ),
+                member=emergency,
+            )
+            client_emergency_contact.save()
         return emergency
 
     def save_referent_information(self, client, billing_member, emergency):
@@ -931,6 +931,7 @@ class ClientUpdateReferentInformation(ClientUpdateInformation):
         initial.update({
             'firstname': None,
             'lastname': None,
+            'number': None,
             'street': None,
             'city': None,
             'apartment': None,
@@ -1026,7 +1027,6 @@ class ClientUpdatePaymentInformation(ClientUpdateInformation):
         Save the basic information step data.
         """
         member = client.member
-
         if payment_information.get('same_as_client'):
             billing_member = member
 

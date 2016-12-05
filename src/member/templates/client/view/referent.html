@@ -30,7 +30,7 @@
     <div class="item"><div class="header">{% trans 'Referral Date' %}</div>{{referent.date}}</div>
     <div class="item"><div class="header">{% trans 'Referral Reason' %}</div>{{referent.referral_reason}}</div>
     {% for contact in referent.referent.member_contact.all %}
-    <div class="item"><div class="header">{{contact.type}}</div>{{contact.value}}</div>
+    <div class="item"><div class="header">{{contact.type}}</div>{{contact.display_value}}</div>
     {% endfor %}
 {% endfor %}
 </div>
