@@ -7,4 +7,12 @@ $(function() {
         window.location.replace($url+value);
     });
 
+    $('.button.orders').click(function(){
+        $('.button.orders i').addClass('loading');
+        var url = $(this).attr('data-url');
+        $.get(url, function( data ) {
+            window.location.reload();
+        });
+    });
+
 });
