@@ -74,9 +74,20 @@ class OrderManagerTestCase(TestCase):
         cls.route = Route.objects.get(id=1)
         cls.orders = OrderFactory.create_batch(
             10, delivery_date=date.today(),
-            status='O', client__route=cls.route)
+            status='O',
+            client__route=cls.route,
+            client__status=Client.ACTIVE
+        )
+        cls.paused_orders = OrderFactory.create_batch(
+            10, delivery_date=date.today(),
+            status='O',
+            client__route=cls.route,
+            client__status=Client.PAUSED
+        )
         cls.past_order = OrderFactory(
-            delivery_date=date(2015, 7, 15), status='O'
+            delivery_date=date(2015, 7, 15),
+            status='O',
+            client__status=Client.ACTIVE
         )
 
     def test_get_shippable_orders(self):
@@ -105,6 +116,18 @@ class OrderManagerTestCase(TestCase):
         orders = Order.objects.get_shippable_orders(
             delivery_date=delivery_date)
         self.assertTrue(str(delivery_date) in str(orders[0]))
+
+    def test_get_shippable_orders_active_client_only(self):
+        """
+        Should return all shippable orders for the given date.
+        A shippable order must be created in the database, and its ORDER_STATUS
+        must be 'O' (Ordered) and the client status must be client.ACTIVE
+        """
+        client = self.orders[0].client
+        client.status = client.PAUSED
+        client.save()
+        new_orders = Order.objects.get_shippable_orders()
+        self.assertNotEqual(len(self.orders), len(new_orders))
 
 
 class OrderItemTestCase(TestCase):
