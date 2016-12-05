@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-01 22:07+0000\n"
+"POT-Creation-Date: 2016-12-05 22:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -182,7 +182,7 @@ msgstr ""
 msgid "Not a valid member, please chose an existing member."
 msgstr ""
 
-#: member/forms.py:304 member/models.py:916
+#: member/forms.py:304 member/models.py:946
 msgid "Work information"
 msgstr ""
 
@@ -394,7 +394,7 @@ msgstr ""
 msgid "contact type"
 msgstr ""
 
-#: member/models.py:246 member/models.py:975
+#: member/models.py:246 member/models.py:1005
 msgid "value"
 msgstr ""
 
@@ -406,11 +406,11 @@ msgstr ""
 msgid "Routes"
 msgstr ""
 
-#: member/models.py:268 member/models.py:942
+#: member/models.py:268 member/models.py:972
 msgid "name"
 msgstr ""
 
-#: member/models.py:272 member/models.py:946
+#: member/models.py:272 member/models.py:976
 msgid "description"
 msgstr ""
 
@@ -474,77 +474,77 @@ msgstr ""
 msgid "route"
 msgstr ""
 
-#: member/models.py:739
+#: member/models.py:769
 msgid "Start"
 msgstr ""
 
-#: member/models.py:740
+#: member/models.py:770
 msgid "End"
 msgstr ""
 
-#: member/models.py:748
+#: member/models.py:778
 msgid "To be processed"
 msgstr ""
 
-#: member/models.py:749
+#: member/models.py:779
 msgid "Processed"
 msgstr ""
 
-#: member/models.py:750
+#: member/models.py:780
 msgid "Error"
 msgstr ""
 
-#: member/models.py:848
+#: member/models.py:878
 msgid "All"
 msgstr ""
 
-#: member/models.py:861
+#: member/models.py:891
 msgid "Search by name"
 msgstr ""
 
-#: member/models.py:902
+#: member/models.py:932
 msgid "referents"
 msgstr ""
 
-#: member/models.py:905
+#: member/models.py:935
 msgid "referent"
 msgstr ""
 
-#: member/models.py:908 member/models.py:964 member/models.py:992
-#: member/models.py:1009 member/models.py:1026
+#: member/models.py:938 member/models.py:994 member/models.py:1022
+#: member/models.py:1039 member/models.py:1056
 msgid "client"
 msgstr ""
 
-#: member/models.py:912
+#: member/models.py:942
 #: member/templates/client/partials/forms/referent_information.html:69
 msgid "Referral reason"
 msgstr ""
 
-#: member/models.py:922
+#: member/models.py:952
 msgid "Referral date"
 msgstr ""
 
-#: member/models.py:937
+#: member/models.py:967
 msgid "options"
 msgstr ""
 
-#: member/models.py:954
+#: member/models.py:984
 msgid "option group"
 msgstr ""
 
-#: member/models.py:969
+#: member/models.py:999
 msgid "option"
 msgstr ""
 
-#: member/models.py:997
+#: member/models.py:1027
 msgid "restricted item"
 msgstr ""
 
-#: member/models.py:1014
+#: member/models.py:1044
 msgid "ingredient"
 msgstr ""
 
-#: member/models.py:1031
+#: member/models.py:1061
 msgid "component"
 msgstr ""
 
@@ -888,6 +888,10 @@ msgstr ""
 msgid "Orders"
 msgstr ""
 
+#: member/templates/client/partials/prefs.html:14
+msgid "Not scheduled."
+msgstr ""
+
 #: member/templates/client/update/base.html:14
 #: member/templates/client/update/base.html:30
 msgid "Update Client"
@@ -1022,15 +1026,15 @@ msgstr ""
 msgid "Is read"
 msgstr ""
 
-#: member/templates/client/view/notes.html:49
-msgid "Add a Note"
+#: member/templates/client/view/notes.html:50
+msgid "New Note"
 msgstr ""
 
-#: member/templates/client/view/notes.html:69
+#: member/templates/client/view/notes.html:71
 msgid "Done/Read"
 msgstr ""
 
-#: member/templates/client/view/notes.html:72
+#: member/templates/client/view/notes.html:74
 msgid "New"
 msgstr ""
 
@@ -1143,6 +1147,10 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
+#: member/templatetags/member_extras.py:22
+msgid "Not properly configured."
+msgstr ""
+
 #: member/urls.py:57
 msgid "^view/(?P<pk>\\d+)/$"
 msgstr ""
@@ -1211,6 +1219,6 @@ msgstr ""
 msgid "The client has been updated"
 msgstr ""
 
-#: member/views.py:1346
+#: member/views.py:1349
 msgid "The status has been changed"
 msgstr ""
