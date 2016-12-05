@@ -15,6 +15,14 @@
     </div>
 </div>
 
+<div class="ui basic segment no-print">
+    <a href="javascript:window.print()" class="ui labeled icon right basic pink big button" title="{% trans 'Print the route sheet.' %}">
+        <i class="print icon"></i>{% trans 'Route Sheet' %}
+    </a>
+</div>
+
+<div class="ui row"></div>
+
 <table class="ui three column very basic celled table">
   <thead>
    <tr class="top aligned">
@@ -75,7 +83,7 @@
   <i class="marker icon"></i>{% trans 'Organize' %}
 </a>
 <a href="{% url 'delivery:routes' %}" class="ui big labeled {% if orders == 0 %} disabled {% endif %} icon button" title="{% trans 'View routes list' %}">
-  <i class="list icon"></i>{% trans 'View routes' %}
+  <i class="chevron left icon"></i>{% trans 'View routes' %}
 </a>
 
 </div>
