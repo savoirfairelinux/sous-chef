@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-05 22:03+0000\n"
+"POT-Creation-Date: 2016-12-06 15:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -889,7 +889,7 @@ msgid "Orders"
 msgstr ""
 
 #: member/templates/client/partials/prefs.html:14
-msgid "Not scheduled."
+msgid "No delivery."
 msgstr ""
 
 #: member/templates/client/update/base.html:14
@@ -1147,8 +1147,14 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: member/templatetags/member_extras.py:22
-msgid "Not properly configured."
+#: member/templatetags/member_extras.py:34
+#, python-format
+msgid "%(count)s %(size)s %(component_label)s, "
+msgstr ""
+
+#: member/templatetags/member_extras.py:39
+#, python-format
+msgid "%(count)s %(component_label)s, "
 msgstr ""
 
 #: member/urls.py:57

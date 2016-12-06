@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-05 22:03+0000\n"
+"POT-Creation-Date: 2016-12-06 15:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -293,37 +293,28 @@ msgstr ""
 msgid "Order items"
 msgstr "éléments de la commande"
 
-#: order/templates/order/create_batch.html:52
-#, python-format
-msgid "Load %(firstname)s %(lastname)s's default on %(weekday)s"
-msgstr ""
-
-#: order/templates/order/create_batch.html:54
-msgid "Load system default"
-msgstr ""
-
-#: order/templates/order/create_batch.html:60
+#: order/templates/order/create_batch.html:53
 msgid "Size"
 msgstr ""
 
-#: order/templates/order/create_batch.html:61 order/templates/view.html:46
+#: order/templates/order/create_batch.html:54 order/templates/view.html:46
 msgid "Component"
 msgstr "Type d'article"
 
-#: order/templates/order/create_batch.html:62
+#: order/templates/order/create_batch.html:55
 #, fuzzy
 #| msgid "Free Quantity"
 msgid "Quantity"
 msgstr "Quantité gratuite"
 
+#: order/templates/order/create_batch.html:92
 #: order/templates/order/create_batch.html:99
-#: order/templates/order/create_batch.html:106
 #, fuzzy
 #| msgid "orders"
 msgid "Place orders"
 msgstr "commandes"
 
-#: order/templates/order/create_batch.html:103
+#: order/templates/order/create_batch.html:96
 msgid "Please select one or multiple delivery dates."
 msgstr ""
 
@@ -453,33 +444,33 @@ msgstr "^update/(?P<pk>\\d+)/status$"
 msgid "^delete/(?P<pk>\\d+)/$"
 msgstr "^delete/(?P<pk>\\d+)/$"
 
-#: order/views.py:242
+#: order/views.py:229
 #, python-format
 msgid "%(n)s order(s) successfully placed for %(client)s on %(dates)s."
 msgstr ""
 
-#: order/views.py:252
+#: order/views.py:239
 #, python-format
 msgid "%(n)s existing order(s) skipped for %(client)s on %(dates)s."
 msgstr ""
 
-#: order/views.py:295
+#: order/views.py:282
 msgid "Restrictions mistake"
 msgstr ""
 
-#: order/views.py:296
+#: order/views.py:283
 #, fuzzy
 #| msgid "Delivery date"
 msgid "Delivery mistake"
 msgstr "Date de livraison"
 
-#: order/views.py:297
+#: order/views.py:284
 #, fuzzy
 #| msgid "Select a client"
 msgid "Really unhappy client"
 msgstr "Sélectionner un client"
 
-#: order/views.py:313
+#: order/views.py:300
 msgid "The status has been changed"
 msgstr ""
 

@@ -30,26 +30,32 @@ $(function() {
     });
     $('.ui.accordion.meals').show();
 
-    // register button event listeners
-    $('#form_create_batch button.load-client-default').click(function () {
-        try {
-            var client_meals_default = $(this).data('client-meals-default');  // auto JSON
-        } catch (e) {
-            var client_meals_default = {};
-        }
-        var date = $(this).data('date');
-        // fill in data
-        $.each(client_meals_default, function (key, value) {
-            var selector = "#id_"+key+"_"+date+"_quantity";
-            $(selector).val(value);
-            dismissFieldError($(selector));
+    // fill in defaults
+    (function fillInDefaults() {
+        $("#form_create_batch .accordion[id^='date-']").each(function (idx, elem) {
+            try {
+                var client_meals_default = $(elem).data('client-meals-default');  // auto JSON
+            } catch (e) {
+                return;
+            }
+            var date = $(elem).attr('id').slice(5);
+            // fill in data
+            $.each(client_meals_default, function (key, value) {
+                var selector = "#id_"+key+"_"+date+"_quantity";
+                if (!$(selector).val()) {
+                    $(selector).val(value);
+                    dismissFieldError($(selector));
+                }
+            });
+            if (client_meals_default.hasOwnProperty('size')) {
+                var selector = "#id_size_"+date;
+                if (!$(selector).dropdown('get value')[0]) {
+                    $(selector).dropdown('set selected', client_meals_default.size);
+                    dismissFieldError($(selector));
+                }
+            };
         });
-        if (client_meals_default.hasOwnProperty('size')) {
-            var selector = "#id_size_"+date;
-            $(selector).dropdown('set selected', client_meals_default.size);  ///TODO LXYANG this doesn't work
-            dismissFieldError($(selector));
-        };
-    });
+    })();
 
     function dismissFieldError(elem) {
         $(elem).closest('.error').removeClass('error');

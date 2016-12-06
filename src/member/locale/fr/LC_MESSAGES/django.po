@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-05 22:03+0000\n"
+"POT-Creation-Date: 2016-12-06 15:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -909,9 +909,9 @@ msgstr "Commandes"
 
 #: member/templates/client/partials/prefs.html:14
 #, fuzzy
-#| msgid "Schedule"
-msgid "Not scheduled."
-msgstr "Calendrier"
+#| msgid "Delivery"
+msgid "No delivery."
+msgstr "Livraison"
 
 #: member/templates/client/update/base.html:14
 #: member/templates/client/update/base.html:30
@@ -1182,8 +1182,14 @@ msgstr "Type de Livraison"
 msgid "Home"
 msgstr "Domicile"
 
-#: member/templatetags/member_extras.py:22
-msgid "Not properly configured."
+#: member/templatetags/member_extras.py:34
+#, python-format
+msgid "%(count)s %(size)s %(component_label)s, "
+msgstr ""
+
+#: member/templatetags/member_extras.py:39
+#, python-format
+msgid "%(count)s %(component_label)s, "
 msgstr ""
 
 #: member/urls.py:57
@@ -1259,6 +1265,11 @@ msgstr ""
 #: member/views.py:1349
 msgid "The status has been changed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Schedule"
+#~ msgid "Not scheduled."
+#~ msgstr "Calendrier"
 
 #, fuzzy
 #~| msgid "Order"

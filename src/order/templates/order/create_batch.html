@@ -34,25 +34,18 @@
             <div id="delivery_dates"></div>{{ form.delivery_dates }}
         </div>
 
-        {% if delivery_dates_list %}
+        {% if delivery_dates %}
         <div class="thirteen wide field ui styled meals">
             <label>{% trans 'Order items' %}</label>
 
             <div class="content" id="order_create_batch_items">
-              {% for date in delivery_dates_list %}
-              <div class="ui styled fluid accordion meals" id="date-{{ date }}">
+              {% for date, default_json in delivery_dates %}
+              <div class="ui styled fluid accordion meals" id="date-{{ date }}" data-client-meals-default="{{ default_json }}">
                 <div class="title">
                   <i class="dropdown icon"></i>
                   {{ date }}
                 </div>
                 <div class="content {% if date not in accordions_inactive %}active{% endif %}">
-                  {% with delivery_dates_lookup|get_item:date as delivery_info %}
-                      {% if delivery_info.default_type == 'client' %}
-                  <button type="button" class="ui button load-client-default" data-client-meals-default="{{ delivery_info.default_json }}" data-date="{{ date }}">{% blocktrans with firstname=client.member.firstname lastname=client.member.lastname weekday=delivery_info.day_readable %}Load {{firstname}} {{lastname}}'s default on {{weekday}}{% endblocktrans %}</button>
-                      {% else %}
-                  <button type="button" class="ui button load-client-default" data-client-meals-default="{{ delivery_info.default_json }}" data-date="{{ date }}">{% trans "Load system default" %}</button>
-                      {% endif %}
-                  {% endwith %}
                   <table class="ui compact table">
                     <thead>
                       <tr>

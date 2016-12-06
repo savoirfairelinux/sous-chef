@@ -19,7 +19,7 @@ from order.forms import CreateOrderItem, UpdateOrderItem, \
     CreateOrdersBatchForm, OrderStatusChangeForm
 
 from meal.models import COMPONENT_GROUP_CHOICES
-
+from meal.settings import COMPONENT_SYSTEM_DEFAULT
 from member.models import Client, DAYS_OF_WEEK
 
 
@@ -132,11 +132,9 @@ class CreateOrdersBatch(generic.FormView):
         # delivery_dates
         if self.request.method == "POST" and \
            self.request.POST.get('delivery_dates'):
-            context[
-                'delivery_dates_list'
-            ] = self.request.POST['delivery_dates'].split('|')
+            delivery_dates = self.request.POST['delivery_dates'].split('|')
         else:
-            context['delivery_dates_list'] = []
+            delivery_dates = []
 
         # inactive accordion dates
         if self.request.method == "POST" and \
@@ -162,37 +160,26 @@ class CreateOrdersBatch(generic.FormView):
                     DAYS_OF_WEEK
                 ),
             )
-        context['delivery_dates_lookup'] = {}
+        context['delivery_dates'] = []
         DAYS_OF_WEEK_DICT = dict(DAYS_OF_WEEK)
-        for dd in context['delivery_dates_list']:
+        for date in delivery_dates:
             # sunday = 0, saturday = 6
-            day = ("sunday", "monday", "tuesday", "wednesday",
-                   "thursday", "friday", "saturday")[
-                       int(datetime.strptime(dd, '%Y-%m-%d').strftime('%w'))
-                   ]
-            dic = {}
-            dic['day'] = day
-            dic['day_readable'] = DAYS_OF_WEEK_DICT[day]
+            day = ("sunday", "monday", "tuesday", "wednesday", "thursday",
+                   "friday", "saturday")[int(
+                       datetime.strptime(date, '%Y-%m-%d').strftime('%w')
+                   )]
             if not meals_default_dict[day]:  # None or {}
                 # system default
-                dic['default_type'] = 'system'
-                dic['default_json'] = json.dumps({
-                    'size': 'R',
-                    'main_dish': 1,
-                    'dessert': 1,
-                    'diabetic': 0,
-                    'fruit_salad': 0,
-                    'green_salad': 0,
-                    'pudding': 0,
-                    'compote': 0,
-                    'sides': 0
-                })
+                default_json = json.dumps(
+                    COMPONENT_SYSTEM_DEFAULT
+                )
             else:
                 # client default
-                dic['default_type'] = 'client'
-                dic['default_json'] = json.dumps(meals_default_dict[day])
+                default_json = json.dumps(meals_default_dict[day])
 
-            context['delivery_dates_lookup'][dd] = dic
+            context['delivery_dates'].append(
+                (date, default_json)
+            )
 
         return context
 
@@ -239,22 +226,22 @@ class CreateOrdersBatch(generic.FormView):
         if created_dates:
             messages.add_message(
                 self.request, messages.SUCCESS,
-                _('%(n)s order(s) successfully placed '
-                  'for %(client)s on %(dates)s.') % {
-                      'n': len(created_dates),
-                      'client': client,
-                      'dates': ', '.join(created_dates)
-                  }
+                (_('%(n)s order(s) successfully placed '
+                   'for %(client)s on %(dates)s.') % {
+                       'n': len(created_dates),
+                       'client': client,
+                       'dates': ', '.join(created_dates)
+                })
             )
         if uncreated_dates:
             messages.add_message(
                 self.request, messages.WARNING,
-                _('%(n)s existing order(s) skipped '
-                  'for %(client)s on %(dates)s.') % {
-                      'n': len(uncreated_dates),
-                      'client': client,
-                      'dates': ', '.join(uncreated_dates)
-                  }
+                (_('%(n)s existing order(s) skipped '
+                   'for %(client)s on %(dates)s.') % {
+                       'n': len(uncreated_dates),
+                       'client': client,
+                       'dates': ', '.join(uncreated_dates)
+                })
             )
 
         response = super(CreateOrdersBatch, self).form_valid(form)
