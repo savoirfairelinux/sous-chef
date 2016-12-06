@@ -109,6 +109,10 @@
 
 {% block extrajs %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js" type="application/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js" type="application/javascript"></script>
+    <script type="application/javascript">
+      $.datepicker.setDefaults( $.datepicker.regional[ "{{ LANGUAGE_CODE }}" ] );
+    </script>
     {% if debug %}
         <script src="{% static 'js/multidatespicker.js' %}" type="application/javascript"></script>
     {% else %}
