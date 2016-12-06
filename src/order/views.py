@@ -177,8 +177,10 @@ class CreateOrdersBatch(generic.FormView):
                 # client default
                 default_json = json.dumps(meals_default_dict[day])
 
+            date_obj = datetime.strptime(date, '%Y-%m-%d')
+
             context['delivery_dates'].append(
-                (date, default_json)
+                (date, date_obj, default_json)
             )
 
         return context

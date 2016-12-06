@@ -170,6 +170,9 @@ LOCALE_PATHS = (
     'note/locale',
 )
 
+FORMAT_MODULE_PATH = (
+    'sous-chef.formats',
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
+{% load l10n %}
 {% load static %}
 {% load member_extras %}
 
@@ -39,11 +40,11 @@
             <label>{% trans 'Order items' %}</label>
 
             <div class="content" id="order_create_batch_items">
-              {% for date, default_json in delivery_dates %}
+              {% for date, date_obj, default_json in delivery_dates %}
               <div class="ui styled fluid accordion meals" id="date-{{ date }}" data-client-meals-default="{{ default_json }}">
                 <div class="title">
                   <i class="dropdown icon"></i>
-                  {{ date }}
+                  {{ date_obj|date:"DATE_FORMAT"|capfirst }}
                 </div>
                 <div class="content {% if date not in accordions_inactive %}active{% endif %}">
                   <table class="ui compact table">
