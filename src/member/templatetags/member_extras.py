@@ -31,12 +31,12 @@ def readable_prefs(value):
                 size = value['size']
                 size_s = 'Large' if size == 'L' else 'Regular'
                 outputs.append(
-                    _('%(count)s %(size)s %(component_label)s, ') %
+                    _('%(count)s %(size)s %(component_label)s') %
                     {'count': count, 'size': size_s, 'component_label': label}
                 )
             else:
                 outputs.append(
-                    _('%(count)s %(component_label)s, ') %
+                    _('%(count)s %(component_label)s') %
                     {'count': count, 'component_label': label}
                 )
 
