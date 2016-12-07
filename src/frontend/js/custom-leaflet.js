@@ -38,7 +38,7 @@ function getRouteWaypoints(routeId) {
     control.setWaypoints(waypoints);
 
     // Ajax call to get waypoint according route
-    $.get( "../getDailyOrders/?route="+routeId+"&mode=euclidean", function(data ) {
+    $.get( "../getDailyOrders/?route="+routeId+"&mode=euclidean&if_exist_then_retrieve=true", function(data ) {
         var deliveryPoints = L.Routing.Waypoint.extend({ member:"", address:""});
         // create an array of waypoint from ajax call
         for(var i in data.waypoints)
