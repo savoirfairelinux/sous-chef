@@ -264,16 +264,17 @@ class RouteSequencingTestCase(SousChefTestMixin, TestCase):
                                     content_type="application/json")
         response = self.client.get(
             '/delivery/getDailyOrders/?route=' +
-            str(self.route_id) + '&mode=retrieve')
+            str(self.route_id) + '&if_exist_then_retrieve=true')
         self.assertTrue(b'Dallaire' in response.content)
 
     def test_route_sequence_not_saved(self):
         """Attempt retrieving a route sequence that was not saved."""
         route_id_none = Route.objects.get(name='Centre Sud').id
-        response = self.client.get(
-            '/delivery/getDailyOrders/?route=' +
-            str(route_id_none) + '&mode=retrieve')
-        self.assertTrue(b'Blondin' in response.content)
+        with self.assertRaises(Exception) as cm:
+            response = self.client.get(
+                '/delivery/getDailyOrders/?route=' +
+                str(route_id_none) + '&if_exist_then_retrieve=true')
+        self.assertIn('unknown', str(cm.exception))
 
     def test_get_orders_unknown_mode(self):
         """Route get orders with unknown transportation mode."""
