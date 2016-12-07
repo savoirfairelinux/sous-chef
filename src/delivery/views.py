@@ -10,6 +10,7 @@ from django.conf import settings
 from django.shortcuts import render
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.cache import never_cache
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.http import JsonResponse
 from django.core.urlresolvers import reverse_lazy
@@ -818,10 +819,11 @@ def retrieveRoutePoints(route_id, data):
         sorted_dic = sort_sequence_ids(unsorted_dic, member_ids)
         return list(sorted_dic.values())
     else:
-        # no saved route found, return unsorted points
-        return data
+        # no saved route found, return none
+        return None
 
 
+@never_cache
 @login_required
 def dailyOrders(request):
     """Get the sequence of points for a delivery route.
@@ -837,33 +839,37 @@ def dailyOrders(request):
     # mode is one of :
     #   'euclidean' to calculate shortest path of points assuming
     #      a 2D euclidean plane for the TSP algorithm
-    #   'retrieve' to sort points according to previously saved sequence
     #   'cycling' : shortest path using mapbox durations NOT YET IMPLEMENTED
     #   'driving' : shortest path using mapbox durations NOT YET IMPLEMENTED
     #   'walking' : shortest path using mapbox durations NOT YET IMPLEMENTED
     mode = request.GET.get('mode')
+    # if_exist_then_retrieve : if it is set, try retrieving previously saved
+    #   if not previously saved, calculate it using "mode"
+    if_exist_then_retrieve = request.GET.get('if_exist_then_retrieve')
     # Load all orders for the day
-    orders = Order.objects.get_shippable_orders()
+    orders = Order.objects.get_shippable_orders_by_route(route_id)
 
     for order in orders:
-        if order.client.route is not None:
-            if order.client.route.id == int(route_id):
-                waypoint = {
-                    'id': order.client.member.id,
-                    'latitude': order.client.member.address.latitude,
-                    'longitude': order.client.member.address.longitude,
-                    'distance': order.client.member.address.distance,
-                    'member': "{} {}".format(
-                        order.client.member.firstname,
-                        order.client.member.lastname),
-                    'address': order.client.member.address.street
-                }
-                data.append(waypoint)
+        waypoint = {
+            'id': order.client.member.id,
+            'latitude': order.client.member.address.latitude,
+            'longitude': order.client.member.address.longitude,
+            'distance': order.client.member.address.distance,
+            'member': "{} {}".format(
+                order.client.member.firstname,
+                order.client.member.lastname),
+            'address': order.client.member.address.street
+        }
+        data.append(waypoint)
 
+    if if_exist_then_retrieve:
+        retrieved = retrieveRoutePoints(route_id, data)
+        if retrieved is not None:
+            return JsonResponse({'waypoints': retrieved}, safe=False)
+
+    # don't retrieve or nothing retrieved
     if mode == 'euclidean':
         data = calculateRoutePointsEuclidean(data)
-    elif mode == 'retrieve':
-        data = retrieveRoutePoints(route_id, data)
     else:
         # unknown mode
         raise Exception(
