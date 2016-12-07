@@ -26,6 +26,7 @@
   </thead>
   <tbody>
     {% for order in orders %}
+      {% if order.status == 'O' %}
       <tr {% if not order.client.is_geolocalized %}class="error"{% endif %}>
         <td class="center aligned"><strong><i class="hashtag icon"></i>{{order.id}}</strong></td>
         <td><a href="{% url 'member:client_information' pk=order.client.id %}">{{order.client.member}}</a>
@@ -43,6 +44,7 @@
             <a class="ui basic icon button" title="{% trans 'Change the details of the order.' %}" href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i></a>
         </td>
       </tr>
+    {% endif %}
     {% endfor %}
   </tbody>
 </table>
