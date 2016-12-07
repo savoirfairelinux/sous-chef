@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-30 22:25+0000\n"
+"POT-Creation-Date: 2016-12-06 15:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,136 +17,144 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: order/forms.py:67 order/templates/_order_info.html:7
-#: order/templates/list.html:35 order/templates/order/create_batch.html:24
+#: order/forms.py:75 order/templates/_order_info.html:7
+#: order/templates/list.html:35 order/templates/order/create_batch.html:28
 msgid "Client"
 msgstr ""
 
-#: order/forms.py:74 order/templates/order/create_batch.html:29
+#: order/forms.py:82 order/templates/order/create_batch.html:34
 msgid "Delivery dates"
 msgstr ""
 
-#: order/forms.py:102
+#: order/forms.py:88
+msgid "Is form submit"
+msgstr ""
+
+#: order/forms.py:96
+msgid "This field must be 1 to submit the form."
+msgstr ""
+
+#: order/forms.py:124
 msgid "A reason is required for No Charge order."
 msgstr ""
 
-#: order/models.py:26
+#: order/models.py:27
 msgid "Ordered"
 msgstr ""
 
-#: order/models.py:27
+#: order/models.py:28
 msgid "Delivered"
 msgstr ""
 
-#: order/models.py:28
+#: order/models.py:29
 msgid "No Charge"
 msgstr ""
 
-#: order/models.py:29
+#: order/models.py:30
 msgid "Cancelled"
 msgstr ""
 
-#: order/models.py:30
+#: order/models.py:31
 msgid "Billed"
 msgstr ""
 
-#: order/models.py:31
+#: order/models.py:32
 msgid "Paid"
 msgstr ""
 
-#: order/models.py:37
+#: order/models.py:38
 msgid "Serving size"
 msgstr ""
 
-#: order/models.py:38
+#: order/models.py:39
 msgid "Regular"
 msgstr ""
 
-#: order/models.py:39
+#: order/models.py:40
 msgid "Large"
 msgstr ""
 
-#: order/models.py:47
+#: order/models.py:48
 msgid "Meal component (main dish, vegetable, side dish, seasonal)"
 msgstr ""
 
-#: order/models.py:48
+#: order/models.py:49
 msgid "Delivery (general store item, invitation, ...)"
 msgstr ""
 
-#: order/models.py:49
+#: order/models.py:50
 msgid "Pickup (payment)"
 msgstr ""
 
-#: order/models.py:50
+#: order/models.py:51
 msgid "Visit"
 msgstr ""
 
-#: order/models.py:241
+#: order/models.py:259
 msgid "orders"
 msgstr ""
 
-#: order/models.py:246
+#: order/models.py:264
 msgid "creation date"
 msgstr ""
 
-#: order/models.py:251
+#: order/models.py:269
 msgid "delivery date"
 msgstr ""
 
-#: order/models.py:257
+#: order/models.py:275
 msgid "order status"
 msgstr ""
 
-#: order/models.py:263
+#: order/models.py:281
 msgid "client"
 msgstr ""
 
-#: order/models.py:851
+#: order/models.py:869
 msgid "Search by name"
 msgstr ""
 
-#: order/models.py:913
+#: order/models.py:931
 msgid "order items"
 msgstr ""
 
-#: order/models.py:917
+#: order/models.py:935
 msgid "order"
 msgstr ""
 
-#: order/models.py:924
+#: order/models.py:942
 msgid "price"
 msgstr ""
 
-#: order/models.py:928
+#: order/models.py:946
 msgid "billable flag"
 msgstr ""
 
-#: order/models.py:932
+#: order/models.py:950
 msgid "size"
 msgstr ""
 
-#: order/models.py:939
+#: order/models.py:957
 msgid "order item type"
 msgstr ""
 
-#: order/models.py:946
+#: order/models.py:964
 msgid "remark"
 msgstr ""
 
-#: order/models.py:952
+#: order/models.py:970
 msgid "total quantity"
 msgstr ""
 
-#: order/models.py:958
+#: order/models.py:976
 msgid "free quantity"
 msgstr ""
 
-#: order/models.py:966
+#: order/models.py:984
 msgid "component group"
 msgstr ""
 
-#: order/models.py:1024
+#: order/models.py:1042
 msgid "Invalid order status update."
 msgstr ""
 
@@ -259,28 +267,33 @@ msgstr ""
 msgid "Place multiple orders for a client"
 msgstr ""
 
-#: order/templates/order/create_batch.html:16
+#: order/templates/order/create_batch.html:20
 msgid "Place multiple orders"
 msgstr ""
 
-#: order/templates/order/create_batch.html:34
+#: order/templates/order/create_batch.html:40
 msgid "Order items"
 msgstr ""
 
-#: order/templates/order/create_batch.html:40
+#: order/templates/order/create_batch.html:53
 msgid "Size"
 msgstr ""
 
-#: order/templates/order/create_batch.html:41 order/templates/view.html:46
+#: order/templates/order/create_batch.html:54 order/templates/view.html:46
 msgid "Component"
 msgstr ""
 
-#: order/templates/order/create_batch.html:42
+#: order/templates/order/create_batch.html:55
 msgid "Quantity"
 msgstr ""
 
-#: order/templates/order/create_batch.html:63
+#: order/templates/order/create_batch.html:92
+#: order/templates/order/create_batch.html:99
 msgid "Place orders"
+msgstr ""
+
+#: order/templates/order/create_batch.html:96
+msgid "Please select one or multiple delivery dates."
 msgstr ""
 
 #: order/templates/order/partials/filters.html:7
@@ -403,27 +416,28 @@ msgstr ""
 msgid "^delete/(?P<pk>\\d+)/$"
 msgstr ""
 
-#: order/views.py:121
-msgid "Default"
-msgstr ""
-
-#: order/views.py:138
+#: order/views.py:229
 #, python-format
-msgid "%(n)s order(s) successfully placed for %(client)s."
+msgid "%(n)s order(s) successfully placed for %(client)s on %(dates)s."
 msgstr ""
 
-#: order/views.py:177
+#: order/views.py:239
+#, python-format
+msgid "%(n)s existing order(s) skipped for %(client)s on %(dates)s."
+msgstr ""
+
+#: order/views.py:282
 msgid "Restrictions mistake"
 msgstr ""
 
-#: order/views.py:178
+#: order/views.py:283
 msgid "Delivery mistake"
 msgstr ""
 
-#: order/views.py:179
+#: order/views.py:284
 msgid "Really unhappy client"
 msgstr ""
 
-#: order/views.py:195
+#: order/views.py:300
 msgid "The status has been changed"
 msgstr ""

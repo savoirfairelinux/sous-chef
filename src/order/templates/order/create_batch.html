@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
+{% load l10n %}
 {% load static %}
 {% load member_extras %}
 
@@ -8,7 +9,10 @@
 
 {% block extrahead %}
 <link href="http://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet">
+{% comment %} Wash out jquery UI css on other semantic UI elements by importing it again. {% endcomment %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.6/semantic.min.css" rel="stylesheet">
 {% endblock %}
+
 
 {% block content %}
 
@@ -18,11 +22,12 @@
 
 <div class="sixteen wide column">
 
-    <form action="" method="post" class="ui form">
+    <form action="" method="post" class="ui form {% if form.errors %}error{% endif %}" novalidate id="form_create_batch">
         {% csrf_token %}
-        <div class="thirteen wide field">
+        <div class="thirteen wide field {% if form.client.errors %}error{% endif %}" id="id_client">
             <label for="{{ form.client.id_for_label }}">{% trans 'Client' %}</label>
             {{ form.client }}
+            {{ form.client.errors }}
         </div>
 
         <div class="thirteen wide field">
@@ -30,38 +35,73 @@
             <div id="delivery_dates"></div>{{ form.delivery_dates }}
         </div>
 
-        <div class="thirteen wide field ui styled meals {{ day.0 }}">
+        {% if delivery_dates %}
+        <div class="thirteen wide field ui styled meals">
             <label>{% trans 'Order items' %}</label>
 
-            <div class="content">
-                <table class="ui compact table">
+            <div class="content" id="order_create_batch_items">
+              {% for date, date_obj, default_json in delivery_dates %}
+              <div class="ui styled fluid accordion meals" id="date-{{ date }}" data-client-meals-default="{{ default_json }}">
+                <div class="title">
+                  <i class="dropdown icon"></i>
+                  {{ date_obj|date:"DATE_FORMAT"|capfirst }}
+                </div>
+                <div class="content {% if date not in accordions_inactive %}active{% endif %}">
+                  <table class="ui compact table">
                     <thead>
-                        <tr>
-                            <th>{% trans 'Size' %}</th>
-                            <th>{% trans 'Component' %}</th>
-                            <th>{% trans 'Quantity' %}</th>
-                        </tr>
+                      <tr>
+                        <th>{% trans 'Size' %}</th>
+                        <th>{% trans 'Component' %}</th>
+                        <th>{% trans 'Quantity' %}</th>
+                      </tr>
                     </thead>
                     <tbody>
-                        {% for meal, Meal in meals %}
-                        <tr>
-                            <td>
-                                {% if meal == "main_dish" %}
-                                {% size day.0 %}
-                                {% endif %}
-                            </td>
-                            <td>{{ Meal }}</td>
-                            <td>{% cell meal day.0 %}</td>
-                        </tr>
-                        {% endfor %}
+                      {% for meal, Meal in meals %}
+                      <tr>
+                        <td>
+                          {% if meal == "main_dish" %}
+                            {% with "size_"|add:date as field_name %}
+                              {% with form|get_item:field_name as field %}
+                              <div class="field {% if field.errors %}error{% endif %}">
+                              {{ field }}
+                              </div>
+                              {% endwith %}
+                            {% endwith %}
+                          {% endif %}
+                        </td>
+                        <td>{{ Meal }}</td>
+                        <td>
+                            {% with meal|add:"_"|add:date|add:"_quantity" as field_name %}
+                              {% with form|get_item:field_name as field %}
+                              <div class="field {% if field.errors %}error{% endif %}">
+                              {{ field }}
+                              </div>
+                              {% endwith %}
+                            {% endwith %}
+                        </td>
+                      </tr>
+                      {% endfor %}
                     </tbody>
-                </table>
+                  </table>
+                </div>
+              </div>
+              {% endfor %}
             </div>
         </div>
-
         <div class="wide field">
-            <button class="ui button" type="submit">{% trans 'Place orders' %}</button>
+            <button class="ui button primary" type="submit">{% trans 'Place orders' %}</button>
         </div>
+        {% else %}
+        <div class="ui message">
+          {% trans 'Please select one or multiple delivery dates.' %}
+        </div>
+        <div class="wide field">
+            <button class="ui button primary" disabled="disabled" type="submit">{% trans 'Place orders' %}</button>
+        </div>
+        {% endif %}
+
+        <input type="hidden" name="is_submit" value="1" id="id_is_submit">
+        <input type="hidden" name="accordions_inactive" value="" id="id_accordions_active">
     </form>
 </div>
 
@@ -69,9 +109,16 @@
 
 {% block extrajs %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js" type="application/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js" type="application/javascript"></script>
+    <script type="application/javascript">
+      $.datepicker.setDefaults( $.datepicker.regional[ "{{ LANGUAGE_CODE }}" ] );
+    </script>
     {% if debug %}
         <script src="{% static 'js/multidatespicker.js' %}" type="application/javascript"></script>
     {% else %}
         <script src="{% static 'js/multidatespicker.min.js' %}" type="application/javascript"></script>
     {% endif %}
+
+{% comment %} Wash out jquery UI js on other semantic UI elements by importing it again. {% endcomment %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.6/semantic.min.js" type="application/javascript"></script>
 {% endblock %}

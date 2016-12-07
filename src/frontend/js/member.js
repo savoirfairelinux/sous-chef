@@ -80,9 +80,10 @@ $(function() {
 
     if($('#dietary_restriction-delivery_type select').val() == 'E') {
         $('#form-meals-schedule').hide();
-        hideUiAccordionDays();
+        showAllAccordionElements();
     } else {
         $('#form-meals-schedule').show();
+        hideUiAccordionDays();
         showUiAccordionSelectedDays();
     }
 
@@ -90,9 +91,10 @@ $(function() {
         'setting', 'onChange', function(value, text, $selectedItem) {
             if($selectedItem.data('value') == 'E') {
                 $('#form-meals-schedule').hide();
-                hideUiAccordionDays();
+                showAllAccordionElements();
             } else {
                 $('#form-meals-schedule').show();
+                hideUiAccordionDays();
                 showUiAccordionSelectedDays();
             }
         }
@@ -142,6 +144,11 @@ $(function() {
         selector = '.ui.accordion.meals.' + element;
         $(selector).show();
     }
+    function showAllAccordionElements() {
+        $('.ui.accordion.meals').not('.default').each(function () {
+          $(this).show();
+        });
+    }
     function showUiAccordionSelectedDays() {
         var $selected = $("#form-meals-schedule select[multiple='multiple']").val();
         if ($selected) {
@@ -155,7 +162,6 @@ $(function() {
     }
 
     $("#form-meals-schedule select[multiple='multiple']").change(function () {
-
         hideUiAccordionDays();
         showUiAccordionSelectedDays();
     });
@@ -163,22 +169,24 @@ $(function() {
     deliveryTypeSelect.change(function () {
         if ($(this).val() == 'E') {
             $('#form-meals-schedule').hide();
-            hideUiAccordionDays();
-            $('.ui.accordion.meals.default').show();
+            showAllAccordionElements();
+            $('.ui.accordion.meals.default').hide();
         }
         else {
             $('#form-meals-schedule').show();
+            hideUiAccordionDays();
             showUiAccordionSelectedDays();
             $('.ui.accordion.meals.default').hide();
         }
     });
     if (deliveryTypeSelect.val() == 'E') {
         $('#form-meals-schedule').hide();
-        hideUiAccordionDays();
-        $('.ui.accordion.meals.default').show();
+        showAllAccordionElements();
+        $('.ui.accordion.meals.default').hide();
     }
     else {
         $('#form-meals-schedule').show();
+        hideUiAccordionDays();
         showUiAccordionSelectedDays();
         $('.ui.accordion.meals.default').hide();
     }
