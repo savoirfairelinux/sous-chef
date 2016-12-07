@@ -11,6 +11,7 @@ from django.utils.decorators import method_decorator
 from django.core.urlresolvers import reverse_lazy
 from order.models import Order
 from django.http import HttpResponseRedirect
+from member.models import Client
 
 
 class BillingList(generic.ListView):
@@ -98,18 +99,55 @@ class BillingAdd(generic.ListView):
         return uf.qs
 
 
-class BillingView(generic.DetailView):
-    # Display detail of billing
+class BillingSummaryView(generic.DetailView):
+    # Display summary of billing
     model = Billing
     template_name = "billing/view.html"
     context_object_name = "billing"
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(BillingView, self).dispatch(*args, **kwargs)
+        return super(BillingSummaryView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(BillingView, self).get_context_data(**kwargs)
+        context = super(BillingSummaryView, self).get_context_data(**kwargs)
+
+        # generate a summary
+        billing = self.object
+        context['billing_summary'] = billing.summary.items()
+
+        return context
+
+
+class BillingOrdersView(generic.DetailView):
+    # Display orders detail of billing
+    model = Billing
+    template_name = "billing/view_orders.html"
+    context_object_name = "billing"
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(BillingOrdersView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(BillingOrdersView, self).get_context_data(**kwargs)
+
+        if self.request.GET.get('client'):
+            # has ?client=client_id
+            client_id = int(self.request.GET['client'])
+            orders = self.object.orders.filter(client__id=client_id)
+            context['orders'] = orders
+            context['client'] = Client.objects.get(id=client_id)
+        else:
+            context['orders'] = self.object.orders.all()
+
+        context['total_amount'] = sum(
+            map(lambda o: o.price, context['orders'])
+        )
+        context['clients'] = list(set(map(
+            lambda o: o.client,
+            self.object.orders.all()
+        )))
         return context
 
 
