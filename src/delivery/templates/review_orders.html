@@ -48,88 +48,31 @@
 
     </div>
 
-
-    <div class="ten wide column">
-
+    <div class="sixteen wide center aligned column">
         <div class="ui row">
-            <a class="ui big button orders" href="{% url 'delivery:refresh_orders' %}"><i data-content="Ole" class="ui refresh icon"></i>Generate orders</a>
-
-        </div><div class="ui row"></div>
-
-    </div>
-
-    <div class="six wide column">
-        <div class="ui pink horizontal statistic">
-            <div class="value">
-                {{ orders.count }}
-            </div>
-            <div class="label">
-                {% trans 'Orders' %}
+            <div class="ui labeled button" tabindex="0">
+                <div class="ui pink big button orders" data-url="{% url 'delivery:refresh_orders'%}">
+                    <i class="refresh icon"></i> {% trans 'Generate orders' %}
+                </div>
+                <a class="ui basic left pointing pink label orders-count" data-order-count={{orders.count}}>
+                    {% blocktrans with count=orders.count  %}
+                        <span>{{ count }}</span>
+                        &nbsp;today
+                    {% endblocktrans %}
+                </a>
             </div>
         </div>
     </div>
-</div>
 
+    <h4 class="ui horizontal divider header">
+        <i class="unhide icon"></i>
+        {% trans 'Review' %}
+    </h4>
 
-<table class="ui very basic stripped celled table">
-  <thead>
-    <th class="">{% trans 'Order' %}
-            <i class="help-text question grey icon link" data-content="{% trans 'Order\'s unique identifier.' %}"></i>
-    </th>
-    <th class="">{% trans 'Client' %}
-        <i class="help-text question grey icon link" data-content="{% trans 'Quickly access the client\'s file.' %}"></i>
-    </th>
-    <th class="">{% trans 'Delivery Date' %}
-        <i class="help-text question grey icon link" data-content="{% trans 'Order\'s delivery date.' %}"></i>
-    </th>
-    <th class="">{% trans 'Route' %}
-        <i class="help-text question grey icon link" data-content="{% trans 'Order\'s route.' %}"></i>
-    </th>
-    <th class="center aligned">{% trans 'Status' %}
-        <i class="help-text question grey icon link" data-content="{% trans 'Display only Ordered orders.' %}"></i>
-    </th>
-    <th class="center aligned">{% trans 'Amount' %}
-        <i class="help-text question grey icon link" data-content="{% trans 'Order\'s total amount.' %}"></i>
-    </th>
-    <th class=""></th>
-  </thead>
-  <tbody>
-    {% for order in orders %}
-      <tr {% if not order.client.is_geolocalized %}class="warning"{% endif %}>
-        <td class="center aligned"><strong><i class="hashtag icon"></i>{{order.id}}</strong></td>
-        <td><a href="{% url 'member:client_information' pk=order.client.id %}">{{order.client.member}}</a></td>
-        <td>{{order.delivery_date}}</td>
-        <td>{{order.client.route}}</td>
-        <td class="center aligned">{{order.get_status_display}}</td>
-        <td class="center aligned"><i class="dollar icon"></i>{{order.price}}</td>
-        <td><button class="ui button"  onclick="location.href='{% url 'order:view' pk=order.id %}';" value="{% trans "View Order" %}" >{% trans "View Order" %}</button></td>
-      </tr>
-        {% endfor %}
-  </tbody>
-  <tfoot>
-      <tr>
-          <th></th>
-          <th colspan="5">
-              <em>{{orders.count}} {% trans "orders today" %}</em>
-          </th>
-        </tr>
-  </tfoot>
-</table>
+{% include 'partials/generated_orders.html' %}
 
 <a class="big ui yellow right floated button" href="{% url 'delivery:meal' %}">{% trans "OK, I'm ready" %}</a>
 
-{% endblock %}
-
-{% block extrajs %}
-
-<script type="text/javascript">
-    $('.orders.button')
-        .popup({
-            position : 'left center',
-            target   : '.ui.statistic',
-            title    : 'Orders number for today',
-        })
-    ;
-</script>
+</div>
 
 {% endblock %}

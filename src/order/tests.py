@@ -241,8 +241,6 @@ class OrderCreateOnDefaultsTestCase(TestCase):
             status=Client.ACTIVE,
             delivery_type='O',
             meal_default_week=meals_default)
-        cls.episodic_clients = ClientFactory.create_batch(
-            6, status=Client.ACTIVE, delivery_type='E')
         # The delivery date must be a Friday, to match the meals defaults
         cls.delivery_date = date(2016, 7, 15)
 
@@ -250,9 +248,9 @@ class OrderCreateOnDefaultsTestCase(TestCase):
         """
         One order per active ongoing client must have been created.
         """
-        count = Order.objects.auto_create_orders(
+        created_orders = Order.objects.auto_create_orders(
             self.delivery_date, self.ongoing_clients)
-        self.assertEqual(count, len(self.ongoing_clients))
+        self.assertEqual(len(created_orders), len(self.ongoing_clients))
         created = Order.objects.filter(delivery_date=self.delivery_date)
         self.assertEqual(created.count(), len(self.ongoing_clients))
 
