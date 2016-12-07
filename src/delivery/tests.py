@@ -262,10 +262,16 @@ class RouteSequencingTestCase(SousChefTestMixin, TestCase):
         response = self.client.post(reverse_lazy('delivery:save_route'),
                                     json.dumps(dic),
                                     content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(b'OK' in response.content)
         response = self.client.get(
             '/delivery/getDailyOrders/?route=' +
             str(self.route_id) + '&if_exist_then_retrieve=true')
-        self.assertTrue(b'Dallaire' in response.content)
+        self.assertEqual(response.status_code, 200)
+        content = response.content.decode(response.charset)
+        waypoints = json.loads(content)['waypoints']
+        self.assertEqual(waypoints[0]['id'], mem_dal.id)
+        self.assertEqual(waypoints[1]['id'], mem_tay.id)
 
     def test_route_sequence_not_saved(self):
         """Attempt retrieving a route sequence that was not saved."""
