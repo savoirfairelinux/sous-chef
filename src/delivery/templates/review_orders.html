@@ -71,7 +71,9 @@
 
 {% include 'partials/generated_orders.html' %}
 
-<a class="big ui yellow right floated button" href="{% url 'delivery:meal' %}">{% trans "OK, I'm ready" %}</a>
+<a class="ui labeled icon right yellow big button" href="{% url 'delivery:meal' %}">
+    <i class="chevron right icon"></i>{% trans "OK, I'm ready" %}
+</a>
 
 </div>
 
