@@ -16,29 +16,40 @@
     <div class="ui row">
         {% include 'billing/partials/statistics.html' with orders=billing.orders.all %}
     </div>
-    <a href="javascript:window.print()" class="ui labeled icon right big button"><i class="print icon"></i>{% trans 'Print' %}</a>
+    <a href="?print=yes" target="_blank" class="ui labeled icon right big button"><i class="print icon"></i>{% trans 'Print' %}</a>
 </div>
 
-<table class="ui very basic stripped celled table">
+<table class="ui very basic compact celled table">
   <thead>
-    <th class="">{% trans 'Client' %}
-        <i class="help-text question grey icon link" data-content="{% trans 'Quickly access the client file.' %}"></i>
-    </th>
-    <th class="">{% trans 'Total Orders' %}
-        <i class="help-text question grey icon link" data-content="{% trans 'Number of orders in total in this billing period.' %}"></i>
-    </th>
-    <th class="">{% trans 'Total Main Dishes' %}
-        <i class="help-text question grey icon link" data-content="{% trans 'Number of main dishes in total in this billing period.' %}"></i>
-    </th>
-    <th class="">{% trans 'Total Amount' %}
-        <i class="help-text question grey icon link" data-content="{% trans 'Total amount in this billing period.' %}"></i>
-    </th>
-    <th class="">{% trans 'Actions' %}</th>
+    <tr>
+      <th class="">{% trans 'Client' %}
+        <i class="help-text question grey icon link no-print" data-content="{% trans 'Quickly access the client file.' %}"></i>
+      </th>
+      <th class="">{% trans 'Total Orders' %}
+        <i class="help-text question grey icon link no-print" data-content="{% trans 'Number of orders in total in this billing period.' %}"></i>
+      </th>
+      <th class="">{% trans 'Total Main Dishes' %}
+        <i class="help-text question grey icon link no-print" data-content="{% trans 'Number of main dishes in total in this billing period.' %}"></i>
+      </th>
+      <th class="">{% trans 'Total Amount' %}
+        <i class="help-text question grey icon link no-print" data-content="{% trans 'Total amount in this billing period.' %}"></i>
+      </th>
+      <th class="no-print">{% trans 'Actions' %}</th>
+    </tr>
   </thead>
+  <tfoot>
+    <tr>
+      <th colspan="3">{% trans "Total" %}</th>
+      <th class="left aligned"><i class="dollar icon"></i>{{ billing.total_amount }}</th>
+      <th class="no-print">
+        <a class="ui icon button"  href="{% url 'billing:view_orders' pk=billing.id %}">{% trans 'View Orders' %}</a>
+      </th>
+    </tr>
+  </tfoot>
   <tbody>
     {% for client, client_summary in billing_summary %}
     <tr>
-      <td><a href="{% url 'member:client_information' pk=client.id %}">{{client}}</td>
+      <td><a href="{% url 'member:client_information' pk=client.id %}">{{client}}</a></td>
       <td>{{client_summary.total_orders}}</td>
       <td>
         {% with client_summary.total_main_dishes as tmd %}
@@ -52,20 +63,11 @@
         {% endwith %}
       </td>
       <td class=""><i class="dollar icon"></i>{{client_summary.total_amount}}</td>
-      <td>
+      <td class="no-print">
         <a class="ui icon button"  href="{% url 'billing:view_orders' pk=billing.id %}?client={{ client.id }}">{% trans 'View Orders' %}</a>
       </td>
     </tr>
     {% endfor %}
   </tbody>
-  <tfoot>
-      <tr>
-          <th colspan="3">{% trans "Total" %}</th>
-          <th class="left aligned"><i class="dollar icon"></i>{{ billing.total_amount }}</th>
-          <th>
-            <a class="ui icon button"  href="{% url 'billing:view_orders' pk=billing.id %}">{% trans 'View Orders' %}</a>
-          </th>
-      </tr>
-  </tfoot>
 </table>
 {% endblock %}

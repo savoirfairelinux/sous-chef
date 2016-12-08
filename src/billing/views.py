@@ -109,6 +109,13 @@ class BillingSummaryView(generic.DetailView):
     def dispatch(self, *args, **kwargs):
         return super(BillingSummaryView, self).dispatch(*args, **kwargs)
 
+    def get_template_names(self):
+        if self.request.method == "GET" and \
+           self.request.GET.get('print'):
+            return ['billing/print_summary.html']
+        else:
+            return super(BillingSummaryView, self).get_template_names()
+
     def get_context_data(self, **kwargs):
         context = super(BillingSummaryView, self).get_context_data(**kwargs)
 
