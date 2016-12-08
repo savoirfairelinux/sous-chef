@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 23:01+0000\n"
+"POT-Creation-Date: 2016-12-08 15:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,18 +17,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: billing/models.py:60
+#: billing/models.py:61
 msgid "total_amount"
 msgstr ""
 
-#: billing/models.py:92
+#: billing/models.py:123
 msgid "Search by name"
 msgstr ""
 
 #: billing/templates/billing/add.html:5 billing/templates/billing/add.html:10
 #: billing/templates/billing/list.html:5
 #: billing/templates/billing/list.html:10
-#: billing/templates/billing/view.html:5
 msgid "Billing"
 msgstr ""
 
@@ -50,7 +49,7 @@ msgid "2. Create Billing"
 msgstr ""
 
 #: billing/templates/billing/add.html:60
-#: billing/templates/billing/view.html:24
+#: billing/templates/billing/view_orders.html:44
 msgid "Order"
 msgstr ""
 
@@ -60,7 +59,8 @@ msgid "Order\\"
 msgstr ""
 
 #: billing/templates/billing/add.html:63
-#: billing/templates/billing/view.html:27
+#: billing/templates/billing/view.html:24
+#: billing/templates/billing/view_orders.html:47
 msgid "Client"
 msgstr ""
 
@@ -69,12 +69,12 @@ msgid "Quickly access the client\\"
 msgstr ""
 
 #: billing/templates/billing/add.html:66
-#: billing/templates/billing/view.html:30
+#: billing/templates/billing/view_orders.html:50
 msgid "Delivery Date"
 msgstr ""
 
 #: billing/templates/billing/add.html:69
-#: billing/templates/billing/view.html:33
+#: billing/templates/billing/view_orders.html:53
 msgid "Status"
 msgstr ""
 
@@ -84,13 +84,14 @@ msgstr ""
 
 #: billing/templates/billing/add.html:72
 #: billing/templates/billing/list.html:56
-#: billing/templates/billing/view.html:36
+#: billing/templates/billing/view_orders.html:56
 msgid "Amount"
 msgstr ""
 
 #: billing/templates/billing/add.html:75
 #: billing/templates/billing/list.html:62
-#: billing/templates/billing/view.html:39
+#: billing/templates/billing/view.html:36
+#: billing/templates/billing/view_orders.html:59
 msgid "Actions"
 msgstr ""
 
@@ -127,6 +128,7 @@ msgid "Billing Period"
 msgstr ""
 
 #: billing/templates/billing/list.html:39
+#: billing/templates/billing/view_orders.html:30
 msgid "Reset"
 msgstr ""
 
@@ -169,39 +171,100 @@ msgstr ""
 msgid "Revenues"
 msgstr ""
 
-#: billing/templates/billing/view.html:9
-msgid "Billing Details"
+#: billing/templates/billing/view.html:5 billing/templates/billing/view.html:9
+msgid "Billing Summary"
 msgstr ""
 
 #: billing/templates/billing/view.html:19
+#: billing/templates/billing/view_orders.html:37
 msgid "Print"
 msgstr ""
 
 #: billing/templates/billing/view.html:25
-msgid "A unique identifier for the order."
-msgstr ""
-
-#: billing/templates/billing/view.html:28
+#: billing/templates/billing/view_orders.html:48
 msgid "Quickly access the client file."
 msgstr ""
 
+#: billing/templates/billing/view.html:27
+msgid "Total Orders"
+msgstr ""
+
+#: billing/templates/billing/view.html:28
+msgid "Number of orders in total in this billing period."
+msgstr ""
+
+#: billing/templates/billing/view.html:30
+msgid "Total Main Dishes"
+msgstr ""
+
 #: billing/templates/billing/view.html:31
-msgid "The delivery date planned for the order."
+msgid "Number of main dishes in total in this billing period."
+msgstr ""
+
+#: billing/templates/billing/view.html:33
+msgid "Total Amount"
 msgstr ""
 
 #: billing/templates/billing/view.html:34
-msgid "Display only included orders."
+msgid "Total amount in this billing period."
 msgstr ""
 
-#: billing/templates/billing/view.html:37
-msgid "Total amount in $CAD."
+#: billing/templates/billing/view.html:46
+msgid "Regular"
 msgstr ""
 
-#: billing/templates/billing/view.html:57
+#: billing/templates/billing/view.html:48
+msgid "and"
+msgstr ""
+
+#: billing/templates/billing/view.html:50
+msgid "Large"
+msgstr ""
+
+#: billing/templates/billing/view.html:56
+#: billing/templates/billing/view.html:66
+msgid "View Orders"
+msgstr ""
+
+#: billing/templates/billing/view.html:63
+#: billing/templates/billing/view_orders.html:77
 msgid "Total"
 msgstr ""
 
-#: billing/views.py:58
+#: billing/templates/billing/view_orders.html:5
+#: billing/templates/billing/view_orders.html:9
+msgid "Billing Order Details"
+msgstr ""
+
+#: billing/templates/billing/view_orders.html:17
+msgid "Client Name"
+msgstr ""
+
+#: billing/templates/billing/view_orders.html:29
+msgid "Apply Filter"
+msgstr ""
+
+#: billing/templates/billing/view_orders.html:36
+msgid "Back to summary"
+msgstr ""
+
+#: billing/templates/billing/view_orders.html:45
+msgid "A unique identifier for the order."
+msgstr ""
+
+#: billing/templates/billing/view_orders.html:51
+msgid "The delivery date planned for the order."
+msgstr ""
+
+#: billing/templates/billing/view_orders.html:54
+msgid "Display only included orders."
+msgstr ""
+
+#: billing/templates/billing/view_orders.html:57
+msgid "Total amount in $CAD."
+msgstr ""
+
+#: billing/views.py:59
 #, python-format
 msgid ""
 "The billing with the identifier #%s             has been successfully "
