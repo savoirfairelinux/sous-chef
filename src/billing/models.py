@@ -1,6 +1,6 @@
 import collections
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Sum
 from member.models import Client
 from order.models import Order, Order_item
 from datetime import datetime, date
@@ -107,10 +107,14 @@ class Billing(models.Model):
                 'total_main_dishes': {
                     'R': Order_item.objects.filter(
                         order__in=orders, size='R', component_group='main_dish'
-                    ).count(),
+                    ).aggregate(
+                        total_regular=Sum('total_quantity')
+                    )['total_regular'],
                     'L': Order_item.objects.filter(
                         order__in=orders, size='L', component_group='main_dish'
-                    ).count(),
+                    ).aggregate(
+                        total_large=Sum('total_quantity')
+                    )['total_large']
                 },
                 'total_amount': sum(map(lambda o: o.price, orders))
             }
