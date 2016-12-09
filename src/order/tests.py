@@ -305,44 +305,220 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
             'dessert_2016-12-12_quantity': 1,
             'diabetic_2016-12-12_quantity': None,
             'fruit_salad_2016-12-12_quantity': None,
-            'green_salad_2016-12-12_quantity': 1,
-            'pudding_2016-12-12_quantity': None,
+            'green_salad_2016-12-12_quantity': None,
+            'pudding_2016-12-12_quantity': 1,
             'compote_2016-12-12_quantity': None,
-            'main_dish_2016-12-14_quantity': 1,
-            'size_2016-12-14': 'L',
+
+            'main_dish_2016-12-14_quantity': 2,
+            'size_2016-12-14': 'R',
             'dessert_2016-12-14_quantity': 1,
             'diabetic_2016-12-14_quantity': None,
             'fruit_salad_2016-12-14_quantity': None,
             'green_salad_2016-12-14_quantity': 1,
             'pudding_2016-12-14_quantity': None,
             'compote_2016-12-14_quantity': None,
+            'delivery_2016-12-14': True,
+
             'main_dish_2016-12-15_quantity': 1,
             'size_2016-12-15': 'L',
             'dessert_2016-12-15_quantity': 1,
             'diabetic_2016-12-15_quantity': None,
             'fruit_salad_2016-12-15_quantity': None,
-            'green_salad_2016-12-15_quantity': 1,
+            'green_salad_2016-12-15_quantity': 2,
             'pudding_2016-12-15_quantity': None,
-            'compote_2016-12-15_quantity': None,
+            'compote_2016-12-15_quantity': 3,
+            'pickup_2016-12-15': True,
+
+            'main_dish_2016-12-16_quantity': None,
+            'size_2016-12-16': None,
+            'dessert_2016-12-16_quantity': None,
+            'diabetic_2016-12-16_quantity': None,
+            'fruit_salad_2016-12-16_quantity': None,
+            'green_salad_2016-12-16_quantity': None,
+            'pudding_2016-12-16_quantity': None,
+            'compote_2016-12-16_quantity': None,
+            'visit_2016-12-16': True
         }
         cls.episodic_client = ClientFactory.create_batch(
             2, status=Client.ACTIVE, delivery_type='E')
         # The delivery date must be a Friday, to match the meals defaults
-        cls.delivery_dates = ['2016-12-12', '2016-12-14', '2016-12-15']
+        cls.delivery_dates = ['2016-12-12', '2016-12-14',
+                              '2016-12-15', '2016-12-16']
 
     def setUp(self):
         self.force_login()
 
     def test_create_batch_orders(self):
         """
-        Provide a client, 3 delivery dates and 3 order items.
+        Provide a client, 4 delivery dates.
         """
+        client = self.episodic_client[0]
         counter = Order.objects.create_batch_orders(
             self.delivery_dates, self.episodic_client[0], self.orditems)
-        self.assertEqual(counter, 3)
+        self.assertEqual(counter, 4)
         counter = Order.objects.create_batch_orders(
             self.delivery_dates, self.episodic_client[0], self.orditems)
         self.assertEqual(counter, 0)
+
+        # check items
+        # 2016-12-12
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-12'
+            ).count(), 3
+        )
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-12',
+                order_item_type='meal_component',
+                component_group='main_dish',
+                size='L',
+                total_quantity=1
+            ).count(), 1
+        )
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-12',
+                order_item_type='meal_component',
+                component_group='dessert',
+                size__isnull=True,
+                total_quantity=1
+            ).count(), 1
+        )
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-12',
+                order_item_type='meal_component',
+                component_group='pudding',
+                size__isnull=True,
+                total_quantity=1
+            ).count(), 1
+        )
+        # 2016-12-14
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-14'
+            ).count(), 4
+        )
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-14',
+                order_item_type='meal_component',
+                component_group='main_dish',
+                size='R',
+                total_quantity=2
+            ).count(), 1
+        )
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-14',
+                order_item_type='meal_component',
+                component_group='dessert',
+                size__isnull=True,
+                total_quantity=1
+            ).count(), 1
+        )
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-14',
+                order_item_type='meal_component',
+                component_group='green_salad',
+                size__isnull=True,
+                total_quantity=1
+            ).count(), 1
+        )
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-14',
+                order_item_type='delivery',
+                component_group__isnull=True,
+                size__isnull=True,
+                total_quantity__isnull=True
+            ).count(), 1
+        )
+        # 2016-12-15
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-15'
+            ).count(), 5
+        )
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-15',
+                order_item_type='meal_component',
+                component_group='main_dish',
+                size='L',
+                total_quantity=1
+            ).count(), 1
+        )
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-15',
+                order_item_type='meal_component',
+                component_group='dessert',
+                size__isnull=True,
+                total_quantity=1
+            ).count(), 1
+        )
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-15',
+                order_item_type='meal_component',
+                component_group='green_salad',
+                size__isnull=True,
+                total_quantity=2
+            ).count(), 1
+        )
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-15',
+                order_item_type='meal_component',
+                component_group='compote',
+                size__isnull=True,
+                total_quantity=3
+            ).count(), 1
+        )
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-15',
+                order_item_type='pickup',
+                component_group__isnull=True,
+                size__isnull=True,
+                total_quantity__isnull=True
+            ).count(), 1
+        )
+        # 2016-12-16
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-16'
+            ).count(), 1
+        )
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=client,
+                order__delivery_date='2016-12-16',
+                order_item_type='visit',
+                component_group__isnull=True,
+                size__isnull=True,
+                total_quantity__isnull=True
+            ).count(), 1
+        )
 
     def test_view_get(self):
         response = self.client.get(reverse('order:create_batch'))

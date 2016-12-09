@@ -52,10 +52,14 @@
       <tbody>
           {% for item in order.orders.all %}
           <tr>
+            {% if item.order_item_type == 'meal_component' or item.component_group %}
             <td><strong>{{item.order_item_type}}</strong></td>
             <td>{{item.component_group}}</td>
             <td>{{item.total_quantity}}</td>
             <td>{{item.billable_flag}}</td>
+            {% else %}
+            <td colspan="4"><strong>{{item.order_item_type}}</strong></td>
+            {% endif %}
             <td class="right aligned"><i class="dollar icon"></i>{{item.price}}</td>
           </tr>
           {% endfor %}

@@ -51,7 +51,7 @@ ORDER_ITEM_TYPE_CHOICES = (
     ('visit', _('Visit')),
 )
 
-ORDER_ITEM_TYPE_CHOICES_COMPONENT = ORDER_ITEM_TYPE_CHOICES[1][0]
+ORDER_ITEM_TYPE_CHOICES_COMPONENT = ORDER_ITEM_TYPE_CHOICES[0][0]
 
 MAIN_PRICE_DEFAULT = 8.00  # TODO use decimal ?
 SIDE_PRICE_DEFAULT = 1.00
@@ -141,7 +141,7 @@ class OrderManager(models.Manager):
           clients : a list of one or many client objects
 
         Returns:
-          Number of orders created.
+          Created orders.
         """
         created = 0
         orders = []
