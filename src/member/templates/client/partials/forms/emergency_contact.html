@@ -33,6 +33,28 @@
             {{form.lastname}}
           </div>
         </div>
+
+        <label>{% trans 'Contact information' %}</label>
+        <div class="three fields">
+          <div class="field {% if form.email.errors %} error {% endif %}">
+            <div class="ui left icon input">
+              <i class="at grey icon"></i>
+              {{ form.email }}
+            </div>
+          </div>
+          <div class="field {% if form.work_phone.errors %} error {% endif %}">
+            <div class="ui left icon input">
+              <i class="building icon"></i>
+              {{ form.work_phone }}
+            </div>
+          </div>
+          <div class="field {% if form.cell_phone.errors %} error {% endif %}">
+            <div class="ui left icon input">
+              <i class="call icon"></i>
+              {{ form.cell_phone }}
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -40,27 +62,6 @@
 </div>
 
 <div class="field">
-  <label>{% trans 'Contact information' %}</label>
-  <div class="three fields">
-    <div class="field">
-      <div class="ui left icon input">
-        <i class="at grey icon"></i>
-        {{ form.email }}
-      </div>
-    </div>
-    <div class="field">
-      <div class="ui left icon input">
-        <i class="building icon"></i>
-        {{ form.work_phone }}
-      </div>
-    </div>
-    <div class="field">
-      <div class="ui left icon input">
-        <i class="call icon"></i>
-        {{ form.cell_phone }}
-      </div>
-    </div>
-  </div>
   <label>{% trans 'Contact relationship' %}</label>
   <div class="field {% if form.relationship.errors %} error {% endif %}">
       {{form.relationship}}

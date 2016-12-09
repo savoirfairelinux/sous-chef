@@ -75,6 +75,17 @@ class ClientBasicInformation (forms.Form):
         })
     )
 
+    def clean(self):
+        if not (self.cleaned_data.get('email') or
+                self.cleaned_data.get('home_phone') or
+                self.cleaned_data.get('cell_phone')):
+            msg = _('At least one contact information is required.')
+            self.add_error('email', msg)
+            self.add_error('home_phone', msg)
+            self.add_error('cell_phone', msg)
+
+        return self.cleaned_data
+
 
 class ClientAddressInformation(forms.Form):
 
@@ -399,13 +410,34 @@ class ClientEmergencyContactInformation(MemberForm):
     )
 
     def clean(self):
-        if not (self.cleaned_data.get('email') or
-                self.cleaned_data.get('work_phone') or
-                self.cleaned_data.get('cell_phone')):
-            msg = _('At least one emergency contact is required.')
-            self.add_error('email', msg)
-            self.add_error('work_phone', msg)
-            self.add_error('cell_phone', msg)
+        member = self.cleaned_data.get('member')
+        if member:
+            member_id = member.split(' ')[0].replace('[', '').replace(']', '')
+            try:
+                Member.objects.get(pk=member_id)
+            except ObjectDoesNotExist:
+                msg = _('Not a valid member, please chose an existing member.')
+                self.add_error('member', msg)
+        else:
+            if not self.cleaned_data.get('firstname'):
+                msg = _(
+                    'This field is required unless '
+                    'you chose an existing member.'
+                )
+                self.add_error('firstname', msg)
+            if not self.cleaned_data.get('firstname'):
+                msg = _(
+                    'This field is required unless '
+                    'you chose an existing member.'
+                )
+                self.add_error('lastname', msg)
+            if not (self.cleaned_data.get('email') or
+                    self.cleaned_data.get('work_phone') or
+                    self.cleaned_data.get('cell_phone')):
+                msg = _('At least one emergency contact is required.')
+                self.add_error('email', msg)
+                self.add_error('work_phone', msg)
+                self.add_error('cell_phone', msg)
 
         return self.cleaned_data
 
