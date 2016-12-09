@@ -918,5 +918,6 @@ def refreshOrders(request):
             datetime.datetime.now().strftime('%m %d %Y %H:%M')),
         action_flag=ADDITION,
     )
+    orders.sort(key=lambda o: (o.client.route.pk, o.pk))
     context = {'orders': orders}
     return render(request, 'partials/generated_orders.html', context)
