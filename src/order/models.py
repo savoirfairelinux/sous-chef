@@ -967,6 +967,7 @@ class Order_item(models.Model):
         verbose_name=_('size'),
         max_length=1,
         null=True,
+        blank=True,
         choices=SIZE_CHOICES,
     )
 
