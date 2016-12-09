@@ -390,15 +390,6 @@ class ClientPaymentInformation(MemberForm):
 
 class ClientEmergencyContactInformation(MemberForm):
 
-    contact_type = forms.ChoiceField(
-        label=_("Contact Type"),
-        choices=CONTACT_TYPE_CHOICES,
-        widget=forms.Select(attrs={'class': 'ui dropdown'})
-    )
-    # max_length come from models.Contact.value
-    contact_value_kwargs = {'label': _("Contact"), 'max_length': 50}
-    contact_value = forms.CharField(**contact_value_kwargs)
-
     relationship = forms.CharField(
         label=_("Relationship"),
         widget=forms.TextInput(
@@ -407,18 +398,16 @@ class ClientEmergencyContactInformation(MemberForm):
         required=False
     )
 
-    def clean_contact_value(self):
-        try:
-            contact_type = self.cleaned_data['contact_type']
-            contact_value = self.cleaned_data['contact_value']
-        except KeyError as ke:
-            raise forms.ValidationError(ke.message)
-        if contact_type == 'Email':
-            field = forms.EmailField(**self.contact_value_kwargs)
-        else:
-            # CAPhoneNumberField is not a CharField (no max_length)
-            field = CAPhoneNumberExtField()
-        return field.clean(contact_value)
+    def clean(self):
+        if not (self.cleaned_data.get('email') or
+                self.cleaned_data.get('work_phone') or
+                self.cleaned_data.get('cell_phone')):
+            msg = _('At least one emergency contact is required.')
+            self.add_error('email', msg)
+            self.add_error('work_phone', msg)
+            self.add_error('cell_phone', msg)
+
+        return self.cleaned_data
 
 
 class ClientScheduledStatusForm(forms.ModelForm):

@@ -41,12 +41,24 @@
 
 <div class="field">
   <label>{% trans 'Contact information' %}</label>
-  <div class="two fields">
+  <div class="three fields">
     <div class="field">
-      {{form.contact_type}}
+      <div class="ui left icon input">
+        <i class="at grey icon"></i>
+        {{ form.email }}
+      </div>
     </div>
-    <div class="field {% if form.contact_value.errors %} error {% endif %}">
-      {{form.contact_value}}
+    <div class="field">
+      <div class="ui left icon input">
+        <i class="building icon"></i>
+        {{ form.work_phone }}
+      </div>
+    </div>
+    <div class="field">
+      <div class="ui left icon input">
+        <i class="call icon"></i>
+        {{ form.cell_phone }}
+      </div>
     </div>
   </div>
   <label>{% trans 'Contact relationship' %}</label>
