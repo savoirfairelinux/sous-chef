@@ -14,7 +14,10 @@ $(function() {
     });
 
     $('.ui.accordion').accordion();
-    $('.ui.dropdown').dropdown({transition: 'drop'});
+    $('.ui.dropdown').dropdown({
+        transition: 'drop',
+        fullTextSearch: 'exact'
+    });
 
     $('.ui.calendar').calendar({
         type: 'date',
