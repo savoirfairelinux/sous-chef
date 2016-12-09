@@ -1010,6 +1010,24 @@ class Order_item(models.Model):
                    self.order_item_type,
                    self.component_group)
 
+    def get_billable_flag_display(self):
+        if self.billable_flag:
+            return _('Yes')
+        else:
+            return _('No')
+
+    def get_order_item_type_display(self):
+        if self.order_item_type == 'meal_component':
+            return _("Meal component")
+        elif self.order_item_type == 'delivery':
+            return _("Delivery")
+        elif self.order_item_type == 'pickup':
+            return _("Pickup")
+        elif self.order_item_type == 'visit':
+            return _("Visit")
+        else:
+            return dict(ORDER_ITEM_TYPE_CHOICES)[self.order_item_type]
+
 
 class OrderStatusChange(models.Model):
 
