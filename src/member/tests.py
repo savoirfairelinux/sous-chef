@@ -667,8 +667,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "emergency_contact",
             "emergency_contact-firstname": "Emergency",
             "emergency_contact-lastname": "User",
-            "emergency_contact-contact_type": "Home phone",
-            "emergency_contact-contact_value": "555-444-5555",
+            "emergency_contact-work_phone": "555-444-5555",
             "emergency_contact-relationship": "friend",
         }
 
@@ -793,7 +792,7 @@ class FormTestCase(TestCase):
         #  test_emergency_contact_type:
         self.assertEqual(
             client.emergency_contact.member_contact.first().type,
-            "Home phone"
+            "Work phone"
         )
 
         #  test_emergency_contact_value:
@@ -924,8 +923,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "emergency_contact",
             "emergency_contact-firstname": "Same",
             "emergency_contact-lastname": "User",
-            "emergency_contact-contact_type": "Home phone",
-            "emergency_contact-contact_value": "514-868-8686",
+            "emergency_contact-cell_phone": "514-868-8686",
             "emergency_contact-relationship": "friend"
         }
 
@@ -1133,6 +1131,10 @@ class FormTestCase(TestCase):
         self.assertTrue(b'lastname' in error_response.content)
         self.assertTrue(b'birthdate' in error_response.content)
         self.assertTrue(b'This field is required' in error_response.content)
+        self.assertIn(
+            b'At least one contact information is required',
+            error_response.content
+        )
 
     def _test_basic_information_without_errors(self):
         # Data for the basic_information step without errors.
@@ -1471,7 +1473,7 @@ class FormTestCase(TestCase):
         self.assertTrue(b'Delivery' not in response.content)
         self.assertTrue(b'Food preference' not in response.content)
         # HTML from the next step
-        self.assertTrue(b'contact_type' in response.content)
+        self.assertTrue(b'relationship' in response.content)
 
     def _test_step_emergency_contact_with_errors(self):
         # Data for the address_information step with errors.
@@ -1479,8 +1481,10 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "emergency_contact",
             "emergency_contact-firstname": "",
             "emergency_contact-lastname": "",
-            "emergency_contact-contact_type": "Home phone",
-            "emergency_contact-contact_value": ""
+            "emergency_contact-home_phone": "",
+            "emergency_contact-work_phone": "",
+            "emergency_contact-cell_phone": "",
+            "emergency_contact-email": "",
         }
 
         # Send the data to the form.
@@ -1495,8 +1499,7 @@ class FormTestCase(TestCase):
 
         # The response is the next step of the form with no errors messages.
         self.assertTrue(b'Required information' in response_error.content)
-        self.assertTrue(b'contact_type' in response_error.content)
-        self.assertTrue(b'contact_value' in response_error.content)
+        self.assertTrue(b'relationship' in response_error.content)
 
     def _test_step_emergency_contact_without_errors(self):
         # Data for the address_information step without errors.
@@ -1506,8 +1509,7 @@ class FormTestCase(TestCase):
             "emergency_contact-member": "[{}] First Member".format(pk),
             "emergency_contact-firstname": "Emergency",
             "emergency_contact-lastname": "User",
-            "emergency_contact-contact_type": "Home phone",
-            "emergency_contact-contact_value": "555-444-5555",
+            "emergency_contact-work_phone": "514-222-3333",
             "emergency_contact-relationship": "friend"
         }
 
@@ -2124,9 +2126,9 @@ class ClientUpdateDietaryRestrictionTestCase(ClientUpdateTestCase):
         self.assertEqual(client.delivery_type, "O")
 
 
-class ClientUpdateReferentInformationTestCase(ClientUpdateTestCase):
+class ClientUpdateEmergencyInformationTestCase(ClientUpdateTestCase):
 
-    def test_form_validation(self):
+    def test_form_validation_existing_member(self):
         """
         Test validation form.
         """
@@ -2147,21 +2149,65 @@ class ClientUpdateReferentInformationTestCase(ClientUpdateTestCase):
                 client.emergency_contact.firstname,
                 client.emergency_contact.lastname
             ),
-            'contact_type':
-                client.emergency_contact.member_contact.first().type,
-            'contact_value':
-                client.emergency_contact.member_contact.first().value,
             'relationship': None,
+        })
+
+        form = ClientEmergencyContactInformation(data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_form_validation_new_emergency_member(self):
+        """
+        Test validation form.
+        """
+        client = ClientFactory()
+        data = load_initial_data(client)
+        data.update({
+            'firstname': None,
+            'lastname': None,
+            'member': None,
+        })
+        form = ClientEmergencyContactInformation(data=data)
+        self.assertFalse(form.is_valid())
+
+        data.update({
+            'firstname': 'test',
+            'lastname': 'test',
+        })
+        form = ClientEmergencyContactInformation(data=data)
+        self.assertFalse(form.is_valid())
+
+        data.update({
+            'cell_phone': '514-122-3333'
         })
         form = ClientEmergencyContactInformation(data=data)
         self.assertTrue(form.is_valid())
 
-    def test_update_referent_information(self):
+        data['cell_phone'] = None
+        data.update({
+            'work_phone': '514-122-3333'
+        })
+        form = ClientEmergencyContactInformation(data=data)
+        self.assertTrue(form.is_valid())
+
+        data['work_phone'] = None
+        data.update({
+            'email': 'invalid email'
+        })
+        form = ClientEmergencyContactInformation(data=data)
+        self.assertFalse(form.is_valid())
+
+        data.update({
+            'email': 'valid@email.com'
+        })
+        form = ClientEmergencyContactInformation(data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_update_emergency_information(self):
         """
         Test the update basic information form.
         """
         client = ClientFactory()
-        emergency = MemberFactory()
+        emergency = MemberFactory()  # new emergency
         # Load initial data related to the client
         data = load_initial_data(client)
         # Update some data
@@ -2172,11 +2218,7 @@ class ClientUpdateReferentInformationTestCase(ClientUpdateTestCase):
                 emergency.id,
                 emergency.firstname,
                 emergency.lastname
-            ),
-            'contact_type':
-                client.emergency_contact.member_contact.first().type,
-            'contact_value':
-                client.emergency_contact.member_contact.first().value,
+            )
         })
 
         # Login as admin

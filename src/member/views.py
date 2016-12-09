@@ -272,16 +272,19 @@ class ClientWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
                 lastname=emergency_contact.cleaned_data.get('lastname'),
             )
             emergency.save()
+            emgc_email = emergency_contact.cleaned_data.get(
+                "email", None)
+            emgc_work_phone = emergency_contact.cleaned_data.get(
+                "work_phone", None)
+            emgc_cell_phone = emergency_contact.cleaned_data.get(
+                "cell_phone", None)
+            if emgc_email:
+                emergency.add_contact_information(EMAIL, emgc_email)
+            if emgc_work_phone:
+                emergency.add_contact_information(WORK, emgc_work_phone)
+            if emgc_cell_phone:
+                emergency.add_contact_information(CELL, emgc_cell_phone)
 
-        if emergency_contact.cleaned_data.get("contact_value") is not None:
-            client_emergency_contact = Contact.objects.create(
-                type=emergency_contact.cleaned_data.get("contact_type"),
-                value=emergency_contact.cleaned_data.get(
-                    "contact_value"
-                ),
-                member=emergency,
-            )
-            client_emergency_contact.save()
         return emergency
 
     def save_referent_information(self, client, billing_member, emergency):
@@ -1233,17 +1236,31 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
             )
             emergency.save()
 
-        # Remove old emergency_contact
-        Contact.objects.filter(member=client.emergency_contact).delete()
-        # Add new emergency_contact
-        client_emergency_contact = Contact.objects.create(
-            type=emergency_contact.get("contact_type"),
-            value=emergency_contact.get(
-                "contact_value"
-            ),
-            member=emergency,
-        )
-        client_emergency_contact.save()
+            # save emergency contact
+            if emergency_contact.get('work_phone'):
+                Contact.objects.create(
+                    type=WORK,
+                    value=emergency_contact.get('work_phone'),
+                    member=emergency
+                )
+            elif emergency_contact.get('cell_phone'):
+                Contact.objects.create(
+                    type=CELL,
+                    value=emergency_contact.get('cell_phone'),
+                    member=emergency
+                )
+            elif emergency_contact.get('home_phone'):
+                Contact.objects.create(
+                    type=HOME,
+                    value=emergency_contact.get('home_phone'),
+                    member=emergency
+                )
+            elif emergency_contact.get('email'):
+                Contact.objects.create(
+                    type=EMAIL,
+                    value=emergency_contact.get('email'),
+                    member=emergency
+                )
 
         client.emergency_contact = emergency
         client.emergency_contact_relationship = emergency_contact.get(
