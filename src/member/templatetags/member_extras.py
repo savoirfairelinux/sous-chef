@@ -46,3 +46,8 @@ def readable_prefs(value):
 @register.filter
 def get_item(o, key):
     return o[key]
+
+
+@register.filter(name='alter_field_class')
+def alter_field_class(field, css):
+    return field.as_widget(attrs={"class": css})

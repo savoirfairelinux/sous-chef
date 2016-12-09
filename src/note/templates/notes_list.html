@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
-
+{% load member_extras %}
 {% block title %}{% trans "Staff Notes" %}{% endblock %}
 
 {% block content %}
@@ -42,13 +42,13 @@
           <div class="field">
             <label>{% trans "Priority" %}</label>
             <div class="field">
-              {{ filter.form.priority }}
+              {{ filter.form.priority|alter_field_class:'ui dropdown' }}
             </div>
           </div>
           <div class="field">
             <label>{% trans "Is read" %}</label>
             <div class="field">
-              {{ filter.form.is_read }}
+              {{ filter.form.is_read|alter_field_class:'ui dropdown' }}
             </div>
           </div>
         </div>

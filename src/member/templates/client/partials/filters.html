@@ -1,5 +1,5 @@
 {% load i18n %}
-
+{% load member_extras %}
 <form action="" method="get" class="ui form">
 
     <div class="inline fields">
@@ -15,19 +15,19 @@
         <div class="field">
             <label>{% trans 'Route' %}</label>
             <div class="field">
-                {{ filter.form.route }}
+                {{ filter.form.route|alter_field_class:'ui dropdown' }}
             </div>
         </div>
         <div class="field">
             <label>{% trans 'Status' %}</label>
             <div class="field">
-                {{ filter.form.status }}
+                {{ filter.form.status|alter_field_class:'ui dropdown' }}
             </div>
         </div>
         <div class="field">
             <label>{% trans 'Delivery' %}</label>
             <div class="field">
-                {{ filter.form.delivery_type }}
+                {{ filter.form.delivery_type|alter_field_class:'ui dropdown' }}
             </div>
         </div>
         <input id="id_display" name="display" type="text" value="{{display}}" style="display:none">
