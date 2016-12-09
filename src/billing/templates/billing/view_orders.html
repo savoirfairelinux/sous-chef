@@ -1,0 +1,83 @@
+{% extends "base_billing.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans 'Billing Order Details' %} ({{billing.billing_period|date:"F Y"}}){% endblock %}
+{% block content %}
+
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">{% trans "Billing Order Details" %}</h1>
+    <div class="right menu">
+      <div class="ui item"><h3><i class="calendar icon"></i>{{billing.billing_period|date:"F Y"}}</h3></div>
+    </div>
+</div>
+
+<form action="" method="get" class="ui form">
+  <div class="inline fields">
+    <label>{% trans 'Client Name' %}</label>
+    <div class="field">
+      <select class="ui search dropdown" name="client" id="id_select_client">
+        <option value="" {% if not client %}selected{% endif %}>-----------</option>
+        {% for c in clients %}
+        <option value="{{ c.id }}" {% if client.id == c.id %}selected{% endif %}>
+          {{ c.member.firstname }} {{ c.member.lastname }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field no-print">
+      <button class="ui yellow button" type="submit">{% trans 'Apply Filter' %}</button>
+      <a href="{% url 'billing:view_orders' pk=billing.id %}" class="ui basic button">{% trans 'Reset' %}</a>
+    </div>
+  </div>
+</form>
+
+<div class="ui basic row segment no-print">
+    <a href="{% url 'billing:view' pk=billing.id %}" class="ui labeled icon right big button"><i class="arrow left icon"></i>{% trans 'Back to summary' %}</a>
+    <a href="javascript:window.print()" class="ui labeled icon right big button"><i class="print icon"></i>{% trans 'Print' %}</a>
+</div>
+
+
+
+<table class="ui very basic stripped celled table">
+  <thead>
+    <th class="">{% trans 'Order' %}
+            <i class="help-text question grey icon link" data-content="{% trans 'A unique identifier for the order.' %}"></i>
+    </th>
+    <th class="">{% trans 'Client' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Quickly access the client file.' %}"></i>
+    </th>
+    <th class="">{% trans 'Delivery Date' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'The delivery date planned for the order.' %}"></i>
+    </th>
+    <th class="center aligned">{% trans 'Status' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Display only included orders.' %}"></i>
+    </th>
+    <th class="center aligned">{% trans 'Amount' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Total amount in $CAD.' %}"></i>
+    </th>
+    <th class="">{% trans 'Actions' %}</th>
+  </thead>
+  <tbody>
+    {% for order in orders.all %}
+    <tr>
+      <td><i class="hashtag icon"></i>{{order.id}}</td>
+      <td><a href="{% url 'member:client_information' pk=order.client.id %}">{{order.client}}
+      <td>{{order.delivery_date}}</td>
+      <td class="center aligned">{{order.get_status_display}}</td>
+      <td class="center aligned"><i class="dollar icon"></i>{{order.price}}</td>
+      <td>
+        <a class="ui basic icon button"  href="{% url 'order:view' pk=order.id %}"><i class="icon unhide"></i></a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+      <tr>
+          <th colspan="4">{% trans "Total" %}</th>
+          <th class="center aligned"><i class="dollar icon"></i>{{ total_amount }}</th>
+          <th></th>
+      </tr>
+  </tfoot>
+</table>
+{% endblock %}
