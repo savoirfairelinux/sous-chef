@@ -117,7 +117,8 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
         req['_next'] = 'Next: Print Kitchen Count'
         req['maindish'] = str(maindish.id)
         req['ingredients'] = ing_ids
-        req['sides_ingredients'] = [Ingredient.objects.all().first().id]
+        req['sides_ingredients'] = [
+            Ingredient.objects.filter(name='zucchini').first().id]
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         response = self.client.get(reverse_lazy('delivery:kitchen_count'))
         self.assertTrue(b'Ginger pork' in response.content)
@@ -133,7 +134,8 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
         req['_next'] = 'Next: Print Kitchen Count'
         req['maindish'] = str(maindish.id)
         req['ingredients'] = ing_ids
-        req['sides_ingredients'] = [Ingredient.objects.all().first().id]
+        req['sides_ingredients'] = [
+            Ingredient.objects.filter(name='Onions').first().id]
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         response = self.client.get(reverse_lazy('delivery:kitchen_count'))
         self.assertTrue(b'Ginger pork' in response.content)
