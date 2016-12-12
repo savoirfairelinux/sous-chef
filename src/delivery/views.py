@@ -4,7 +4,6 @@ from datetime import date
 import json
 import os
 import textwrap
-import types
 
 from django.conf import settings
 from django.shortcuts import render
@@ -14,17 +13,15 @@ from django.views.decorators.cache import never_cache
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.http import JsonResponse
 from django.core.urlresolvers import reverse_lazy
-from django.utils.translation import ugettext_lazy as _
-from django.contrib import messages
 from django.contrib.admin.models import LogEntry, ADDITION
 from django.db.models.functions import Lower
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django_filters.views import FilterView
 
 import labels  # package pylabels
 from reportlab.graphics import shapes
 
-from delivery.models import Delivery
 from meal.models import (
     COMPONENT_GROUP_CHOICES,
     COMPONENT_GROUP_CHOICES_MAIN_DISH,
@@ -36,6 +33,7 @@ from member.models import Client, Route
 from order.models import (
     Order, component_group_sorting, SIZE_CHOICES_REGULAR, SIZE_CHOICES_LARGE)
 from .models import Delivery
+from .filters import KitchenCountOrderFilter
 from .forms import DishIngredientsForm
 from . import tsp
 
@@ -43,15 +41,15 @@ MEAL_LABELS_FILE = os.path.join(settings.BASE_DIR, "meal_labels.pdf")
 DELIVERY_STARTING_POINT_LAT_LONG = (45.516564, -73.575145)  # Santropol Roulant
 
 
-class Orderlist(LoginRequiredMixin, generic.ListView):
+class Orderlist(LoginRequiredMixin, FilterView):
     # Display all the order on a given day
-    model = Delivery
+    filterset_class = KitchenCountOrderFilter
+    model = Order
     template_name = 'review_orders.html'
     context_object_name = 'orders'
 
     def get_queryset(self):
-        queryset = Order.objects.get_shippable_orders()
-        return queryset
+        return Order.objects.get_shippable_orders()
 
     def get_context_data(self, **kwargs):
         context = super(Orderlist, self).get_context_data(**kwargs)

@@ -2,12 +2,17 @@ import datetime
 import json
 import importlib
 
+from django.db.models import Q
+from django.test import RequestFactory
 from django.test import TestCase
 from django.core.urlresolvers import reverse_lazy, reverse
+from django.utils import timezone as tz
 
 from meal.models import Menu, Component, Component_ingredient, Ingredient
 from order.models import Order
 from member.models import Client, Member, Route
+
+from .filters import KitchenCountOrderFilter
 
 SousChefTestMixin = importlib.import_module('sous-chef.tests').TestMixin
 
@@ -315,3 +320,53 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
         check(reverse('delivery:dailyOrders'))
         check(reverse('delivery:refresh_orders'))
         check(reverse('delivery:save_route'))
+
+
+class OrderlistViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['sample_data']
+
+    def setUp(self):
+        super(OrderlistViewTestCase, self).setUp()
+        self.force_login()
+
+    def test_can_filter_orders_by_client_names(self):
+        # Setup
+        Order.objects.all().update(delivery_date=tz.now())
+        url = reverse('delivery:order')
+        # Run
+        response = self.client.get(url, {'client_name': 'john'})
+        # Check
+        self.assertEqual(
+            set(response.context['orders']),
+            set(Order.objects.filter(
+                Q(client__member__firstname__icontains='john') |
+                Q(client__member__lastname__icontains='john')
+            )))
+
+
+class KitchenCountOrderFilterTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['sample_data']
+
+    def setUp(self):
+        super(KitchenCountOrderFilterTestCase, self).setUp()
+        self.factory = RequestFactory()
+
+    def test_can_filter_orders_by_client_names(self):
+        # Setup
+        queryset = Order.objects.all()
+        request_1 = self.factory.get('/')
+        request_2 = self.factory.get('/', {'client_name': 'john doe'})
+        # Run
+        filterset_1 = KitchenCountOrderFilter(request_1.GET, queryset)
+        filterset_2 = KitchenCountOrderFilter(request_2.GET, queryset)
+        # Check
+        self.assertEqual(filterset_1.qs.count(), queryset.count())
+        self.assertTrue(filterset_2.qs.count())
+        self.assertEqual(
+            set(filterset_2.qs),
+            set(Order.objects.filter(
+                Q(client__member__firstname__icontains='john') |
+                Q(client__member__firstname__icontains='doe') |
+                Q(client__member__lastname__icontains='john') |
+                Q(client__member__lastname__icontains='doe')
+            )))
