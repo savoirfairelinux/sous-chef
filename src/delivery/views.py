@@ -642,12 +642,20 @@ def kcr_make_labels(kitchen_list, main_dish_name, main_dish_ingredients):
                     width=65,
                     break_long_words=False, break_on_hyphens=False))
         other_restrictions = []
-        other_restrictions.extend(
-            sorted(list(set(kititm.avoid_ingredients) -
-                        set(kititm.sides_clashes))))
-        other_restrictions.extend(
-            sorted(list(set(kititm.restricted_items) -
-                        set(kititm.sides_clashes))))
+        if kititm.sides_clashes:
+            other_restrictions.extend(
+                sorted(list(set(kititm.avoid_ingredients) -
+                            set(kititm.sides_clashes))))
+            other_restrictions.extend(
+                sorted(list(set(kititm.restricted_items) -
+                            set(kititm.sides_clashes))))
+        else:
+            other_restrictions.extend(
+                sorted(list(set(kititm.avoid_ingredients) -
+                            set(kititm.incompatible_ingredients))))
+            other_restrictions.extend(
+                sorted(list(set(kititm.restricted_items) -
+                            set(kititm.incompatible_ingredients))))
         if other_restrictions:
             meal_label = meal_label._replace(
                 other_restrictions=textwrap.wrap(
