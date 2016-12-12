@@ -26,7 +26,6 @@ class Command(BaseCommand):
     ROW_DESSERT = 8
     ROW_PUDDING = 9
 
-
     def add_arguments(self, parser):
         parser.add_argument(
             '--file',
@@ -49,12 +48,18 @@ class Command(BaseCommand):
                     delivery_date = row[self.ROW_DATE]
                     prices = Order.objects.get_client_prices(client)
                     items = {
-                        'main_dish_default_quantity': int(row[self.ROW_MAIN_DISH_QUANTITY]),
-                        'dessert_default_quantity': int(row[self.ROW_DESSERT]),
-                        'diabetic_default_quantity': int(row[self.ROW_DIABETIC_DESSERT]),
-                        'fruit_salad_default_quantity': int(row[self.ROW_FRUIT_SALAD]),
-                        'green_salad_default_quantity': int(row[self.ROW_GREEN_SALAD]),
-                        'pudding_default_quantity': int(row[self.ROW_PUDDING]),
+                        'main_dish_default_quantity':
+                            int(row[self.ROW_MAIN_DISH_QUANTITY]),
+                        'dessert_default_quantity':
+                            int(row[self.ROW_DESSERT]),
+                        'diabetic_default_quantity':
+                            int(row[self.ROW_DIABETIC_DESSERT]),
+                        'fruit_salad_default_quantity':
+                            int(row[self.ROW_FRUIT_SALAD]),
+                        'green_salad_default_quantity':
+                            int(row[self.ROW_GREEN_SALAD]),
+                        'pudding_default_quantity':
+                            int(row[self.ROW_PUDDING]),
                         'compote_default_quantity': 0,
                         'size_default': row[self.ROW_SIZE],
                     }

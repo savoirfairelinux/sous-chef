@@ -104,13 +104,6 @@ class Command(BaseCommand):
                         )
                         note.save()
 
-                    # Ingredients to avoid
-                    for ingredient in beef:
-                        Client_avoid_ingredient.objects.create(
-                            client=client,
-                            ingredient=ingredient
-                        )
-
                 except Member.DoesNotExist:
                     self.stdout.write(
                         self.style.WARNING('Non existing member'))

@@ -89,7 +89,7 @@ class ImportMemberAddressesTestCase(TestCase):
         self.assertEquals(dorothy.address.apartment, 'Apt.ABC')
         self.assertEquals(dorothy.address.postal_code, 'H3G1K9')
         self.assertEquals(dorothy.address.city, 'Montreal')
-        self.assertEquals(dorothy.home_phone, '5146666666')
+        self.assertEquals(dorothy.home_phone, '514-666-6666')
         self.assertEquals(dorothy.email, 'ddavis@example.org')
 
     def test_ut8_charset(self):
@@ -171,7 +171,8 @@ class ImportMemberMealsTestCase(TestCase):
             ["wednesday", "friday", "saturday"]
         )
 
-        wednesday = robert.meals_schedule.get('wednesday')
+        print(robert.meals_schedule)
+        wednesday = robert.meals_schedule['wednesday']
         self.assertEquals(wednesday.get('fruit_salad'), 0)
         self.assertEquals(wednesday.get('green_salad'), 1)
         self.assertEquals(wednesday.get('main_dish'), 1)
@@ -182,7 +183,7 @@ class ImportMemberMealsTestCase(TestCase):
 
     def test_import_meals_default(self):
         robert = Client.objects.get(member__mid=96)
-        wednesday = robert.meals_schedule.get('wednesday')
+        wednesday = robert.meals_schedule['wednesday']
         self.assertEquals(wednesday.get('fruit_salad'), 0)
         self.assertEquals(wednesday.get('green_salad'), 1)
         self.assertEquals(wednesday.get('main_dish'), 1)
@@ -203,10 +204,6 @@ class ImportMemberMealsTestCase(TestCase):
         marie = Client.objects.get(member__mid=93)
         self.assertEquals(marie.notes.all().count(), 0)
         dorothy = Client.objects.get(member__mid=94)
-
-    def test_import_ingredients(self):
-        marie = Client.objects.get(member__mid=93)
-        self.assertEquals(marie.ingredients_to_avoid.all().count(), 2)
 
 
 class ImportMemberOrdersTestCase(TestCase):
@@ -236,7 +233,7 @@ class ImportMemberOrdersTestCase(TestCase):
             1
         )
         self.assertEqual(orders.first().status, 'D')
-        self.assertEqual(orders.first().delivery_date, date(2016,11,11))
+        self.assertEqual(orders.first().delivery_date, date(2016, 11, 11))
 
     def test_import_order_items(self):
         dorothy = Client.objects.get(member__mid=94)
