@@ -284,10 +284,9 @@ meal_line_fields = [               # Special Meal Line on Kitchen Count.
     'rqty', '',     # String : Quantity of regular size main dishes
     'lqty', '',     # String : Quantity of large size main dishes
     'ingr_clash', '',     # String : Ingredients that clash
-    'preparation', '',     # String : Meal preparations
     'rest_ingr', '',     # String : Other ingredients to avoid
     'rest_item', '',     # String : Restricted items
-    'span', None]   # Number of lines to "rowspan" in table
+    'span', '1']   # Number of lines to "rowspan" in table
 MealLine = collections.namedtuple(
     'MealLine', meal_line_fields[0::2])
 
@@ -310,11 +309,12 @@ def meal_line(kititm):
               if kititm.meal_size == SIZE_CHOICES_REGULAR else ''),
         lqty=(str(kititm.meal_qty)
               if kititm.meal_size == SIZE_CHOICES_LARGE else ''),
-        ingr_clash=', '.join(kititm.incompatible_ingredients),
-        preparation=', '.join(kititm.preparation),
-        rest_ingr=', '.join(kititm.other_ingredients),
+        ingr_clash='',
+        rest_ingr=', '.join(
+            sorted(list(set(kititm.avoid_ingredients) -
+                        set(kititm.incompatible_ingredients)))),
         rest_item=', '.join(kititm.restricted_items),
-        span=None)
+        span='1')
 
 
 def kcr_cumulate(regular, large, meal):
@@ -342,8 +342,8 @@ def kcr_make_lines(kitchen_list, date):
     """Generate the sections and lines for the kitchen count report.
 
     Count all the dishes that have to be prepared and identify all the
-    special client requirements such as disliked ingredients,
-    restrictions and necessary food preparation.
+    special client requirements such as disliked ingredients and
+    restrictions.
 
     Args: kitchen_list : A dictionary of KitchenItem objects (see
               order/models) which contain detailed information about
@@ -367,11 +367,16 @@ def kcr_make_lines(kitchen_list, date):
                     component_group=component_group,
                     rqty=0,
                     lqty=0,
-                    name=meal_component.name,
-                    ingredients=", ".join(
-                        [ing.name for ing in
-                         Component.get_day_ingredients(
-                             meal_component.id, date)])))
+                    name='',
+                    ingredients=''))
+            if component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH:
+                component_lines[component_group] = \
+                    component_lines[component_group]._replace(
+                        name=meal_component.name,
+                        ingredients=", ".join(
+                            [ing.name for ing in
+                             Component.get_day_ingredients(
+                                 meal_component.id, date)]))
             if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH and
                     item.meal_size == SIZE_CHOICES_LARGE):
                 component_lines[component_group] = \
@@ -401,30 +406,37 @@ def kcr_make_lines(kitchen_list, date):
 
     meal_lines = []
     rtotal, ltotal = (0, 0)
-    # part 1 Ingredients clashes (and other columns)
+    # Ingredients clashes (and other columns)
     rsubtotal, lsubtotal = (0, 0)
     clients = iter(sorted(
         [(ke, val) for ke, val in kitchen_list.items() if
          val.incompatible_ingredients],
         key=lambda x: x[1].incompatible_ingredients))
+
     # first line of a combination of ingredients
-    line_start = len(meal_lines)
-    k, v = next(clients, (0, 0))
+    line_start = 0
+    rsubtotal, lsubtotal = (0, 0)
+    k, v = next(clients, (0, 0))  # has end sentinel
     while k > 0:
+        if rsubtotal == 0 and lsubtotal == 0:
+            # add line for subtotal at top of combination
+            meal_lines.append(MealLine(*meal_line_fields[1::2]))
         combination = v.incompatible_ingredients
         meal_lines.append(meal_line(v))
         rsubtotal, lsubtotal = kcr_cumulate(rsubtotal, lsubtotal, v)
         k, v = next(clients, (0, 0))
         if k == 0 or combination != v.incompatible_ingredients:
-            meal_lines.append(MealLine(*meal_line_fields[1::2])._replace(
-                client='SUBTOTAL', rqty=str(rsubtotal), lqty=str(lsubtotal)))
-            rtotal, ltotal = (rtotal + rsubtotal, ltotal + lsubtotal)
-            rsubtotal, lsubtotal = (0, 0)
             # last line of this combination of ingredients
             line_end = len(meal_lines)
             # set rowspan to total number of lines for this combination
             meal_lines[line_start] = meal_lines[line_start]._replace(
+                client='SUBTOTAL',
+                rqty=str(rsubtotal),
+                lqty=str(lsubtotal),
+                ingr_clash=', '.join(combination),
                 span=str(line_end - line_start))
+            rtotal, ltotal = (rtotal + rsubtotal, ltotal + lsubtotal)
+            rsubtotal, lsubtotal = (0, 0)
             # hide ingredients for lines following the first
             for j in range(line_start + 1, line_end):
                 meal_lines[j] = meal_lines[j]._replace(span='-1')
@@ -434,22 +446,6 @@ def kcr_make_lines(kitchen_list, date):
             line_start = len(meal_lines)
     # END WHILE
 
-    # part 2 No clashes but preparation (and other columns)
-    rsubtotal, lsubtotal = (0, 0)
-    for v in sorted(
-            [val for val in kitchen_list.values() if
-             (not val.incompatible_ingredients and
-              val.preparation)],
-            key=lambda x: x.lastname + x.firstname):
-        meal_lines.append(meal_line(v))
-        rsubtotal, lsubtotal = kcr_cumulate(rsubtotal, lsubtotal, v)
-        # Add a blank line as separator
-        meal_lines.append(MealLine(*meal_line_fields[1::2]))
-    # END FOR
-    if rsubtotal or lsubtotal:
-        meal_lines.append(MealLine(*meal_line_fields[1::2])._replace(
-            client='SUBTOTAL', rqty=str(rsubtotal), lqty=str(lsubtotal)))
-    rtotal, ltotal = (rtotal + rsubtotal, ltotal + lsubtotal)
     meal_lines.append(MealLine(*meal_line_fields[1::2])._replace(
         rqty=str(rtotal), lqty=str(ltotal), ingr_clash='TOTAL SPECIALS'))
 
@@ -459,16 +455,14 @@ def kcr_make_lines(kitchen_list, date):
 meal_label_fields = [                         # Contents for Meal Labels.
     # field name, default value
     'sortkey', '',          # key for sorting
-    'type', 2,              # Number : section for sorting
     'route', '',            # String : Route name
     'name', '',             # String : Last + First abbreviated
     #                         String : Delivery date
     'date', "{}".format(datetime.date.today().strftime("%a, %b-%d")),
     'size', '',             # String : Regular or Large
-    'box', 1,               # Number : serving number
-    'qty', 1,               # Number : quantity of servings
     'main_dish_name', '',   # String
     'main_dish_ingredient_lines', [],     # List of strings
+    'dish_clashes', [],     # List of strings
     'requirement_lines', []]     # List of strings
 MealLabel = collections.namedtuple(
     'MealLabel', meal_label_fields[0::2])
@@ -501,11 +495,6 @@ def draw_label(label, width, height, data):
         label.add(shapes.String(
             horiz_margin, vertic_pos, data.size,
             fontName="Helvetica", fontSize=10))
-    if data.qty > 1:
-        label.add(shapes.String(
-            width * 0.5, vertic_pos,
-            "(" + str(data.box) + " of " + str(data.qty) + ")",
-            fontName="Helvetica", fontSize=10))
     if data.route:
         label.add(shapes.String(
             width - horiz_margin - 1, vertic_pos, data.route,
@@ -516,6 +505,12 @@ def draw_label(label, width, height, data):
             horiz_margin, vertic_pos, data.main_dish_name,
             fontName="Helvetica-Bold", fontSize=10))
     vertic_pos -= 12
+    if data.dish_clashes:
+        for line in data.dish_clashes:
+            label.add(shapes.String(
+                horiz_margin, vertic_pos, line,
+                fontName="Helvetica", fontSize=9))
+            vertic_pos -= 10
     if data.requirement_lines:
         for line in data.requirement_lines:
             label.add(shapes.String(
@@ -579,56 +574,57 @@ def kcr_make_labels(kitchen_list, main_dish_name, main_dish_ingredients):
     meal_labels = []
     for kititm in kitchen_list.values():
         meal_label = MealLabel(*meal_label_fields[1::2])
-        if (kititm.incompatible_ingredients or kititm.preparation or
-                kititm.meal_size == SIZE_CHOICES_LARGE):
-            # Specials
-            #
-            requirements = []
-            requirements.extend(kititm.preparation)
-            #
-            if kititm.incompatible_ingredients:
-                requirements.extend(
-                    ["No " + item for item in kititm.avoid_ingredients])
-                requirements.extend(
-                    ["No " + item for item in kititm.restricted_items])
-                meal_label = meal_label._replace(
-                    main_dish_name='_________________________________________')
-            else:
-                meal_label = meal_label._replace(
-                    main_dish_name=main_dish_name,
-                    main_dish_ingredient_lines=textwrap.wrap(
-                        'INGREDIENTS : {}'.format(main_dish_ingredients),
-                        width=74,
-                        break_long_words=False, break_on_hyphens=False))
-            if kititm.meal_size == SIZE_CHOICES_LARGE:
-                meal_label = meal_label._replace(size='LARGE')
-            if requirements:
-                meal_label = meal_label._replace(
-                    type='1',
-                    main_dish_name='SPECIAL : {}'.format(
-                        meal_label.main_dish_name))
+        meal_label = meal_label._replace(
+            route=kititm.routename,
+            main_dish_name=main_dish_name,
+            name=kititm.lastname + ", " + kititm.firstname[0:2] + ".")
+        if kititm.meal_size == SIZE_CHOICES_LARGE:
+            meal_label = meal_label._replace(size='LARGE')
+        if kititm.incompatible_ingredients:
             meal_label = meal_label._replace(
-                route=kititm.routename,
-                name=kititm.lastname + ", " + kititm.firstname[0:2] + ".",
-                requirement_lines=textwrap.wrap(
-                    ' / '.join(requirements), width=68,
+                main_dish_name='SPECIAL _____________________________________',
+                dish_clashes=textwrap.wrap(
+                    'DISH_CLASHES= ' +
+                    ' , '.join(kititm.incompatible_ingredients), width=55,
                     break_long_words=False, break_on_hyphens=False))
-            if kititm.meal_qty > 1:
-                for j in range(1, kititm.meal_qty + 1):
-                    meal_label = meal_label._replace(
-                        box=j, qty=kititm.meal_qty)
-                    meal_labels.append(meal_label)
-            else:
-                meal_labels.append(meal_label)
         else:
             # Non specials
             meal_label = meal_label._replace(
-                type='3',
                 main_dish_name=main_dish_name,
                 main_dish_ingredient_lines=textwrap.wrap(
                     'INGREDIENTS : {}'.format(main_dish_ingredients), width=74,
                     break_long_words=False, break_on_hyphens=False))
-            meal_labels.append(meal_label)
+
+        requirements = ''
+        if kititm.sides_clashes:
+            requirements += (
+                'SIDES_CLASHES= ' + ' , '.join(kititm.sides_clashes))
+        if kititm.preparation:
+            if requirements:
+                requirements += ' / '
+            requirements += (
+                'PREPARATION= ' + ' , '.join(kititm.preparation))
+        other_restrictions = []
+        other_restrictions.extend(
+            sorted(list(set(kititm.avoid_ingredients) -
+                        (set(kititm.incompatible_ingredients) |
+                         set(kititm.sides_clashes)))))
+        other_restrictions.extend(
+            sorted(list(set(kititm.restricted_items) -
+                        (set(kititm.incompatible_ingredients) |
+                         set(kititm.sides_clashes)))))
+        if other_restrictions:
+            if requirements:
+                requirements += ' / '
+            requirements += (
+                'OTHER_RESTRICTIONS= ' + ' , '.join(other_restrictions))
+        if requirements:
+            meal_label = meal_label._replace(
+                requirement_lines=textwrap.wrap(
+                    requirements, width=55,
+                    break_long_words=False, break_on_hyphens=False))
+        meal_labels.append(meal_label)
+
     # find max lengths of fields to sort on
     routew = 0
     namew = 0
@@ -638,9 +634,9 @@ def kcr_make_labels(kitchen_list, main_dish_name, main_dish_ingredients):
     # generate sorting key
     meal_labels = [
         label._replace(
-            sortkey='{typ}{rou:{rouw}}{nam:{namw}}{box}'.format(
-                typ=label.type, rou=label.route, rouw=routew,
-                nam=label.name, namw=namew, box=label.box))
+            sortkey='{rou:{rouw}}{nam:{namw}}'.format(
+                rou=label.route, rouw=routew,
+                nam=label.name, namw=namew))
         for label in meal_labels]
     # generate labels into PDF
     for label in sorted(meal_labels, key=lambda x: x.sortkey):
