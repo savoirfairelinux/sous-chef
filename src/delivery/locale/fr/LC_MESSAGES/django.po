@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-13 15:09+0000\n"
+"POT-Creation-Date: 2016-12-13 21:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -115,11 +115,13 @@ msgstr "TOTAL"
 
 #: delivery/templates/kitchen_count.html:39
 #: delivery/templates/route_sheet.html:30
+#: delivery/templates/routes_print.html:32
 msgid "Regular"
 msgstr "Régulier"
 
 #: delivery/templates/kitchen_count.html:40
 #: delivery/templates/route_sheet.html:31
+#: delivery/templates/routes_print.html:33
 msgid "Large"
 msgstr "Grand"
 
@@ -143,6 +145,7 @@ msgstr "Ingrédients"
 #: delivery/templates/kitchen_count.html:62
 #: delivery/templates/kitchen_count.html:63
 #: delivery/templates/route_sheet.html:51
+#: delivery/templates/routes_print.html:54
 msgid "Qty"
 msgstr "Qte"
 
@@ -157,6 +160,7 @@ msgstr "Lrg"
 #: delivery/templates/kitchen_count.html:64
 #: delivery/templates/partials/generated_orders.html:10
 #: delivery/templates/route_sheet.html:48
+#: delivery/templates/routes_print.html:51
 msgid "Client"
 msgstr "Client"
 
@@ -365,18 +369,22 @@ msgid "Route Sheet"
 msgstr "Feuille d'itinéraires"
 
 #: delivery/templates/route_sheet.html:29
+#: delivery/templates/routes_print.html:31
 msgid "Dish"
 msgstr "Plat"
 
 #: delivery/templates/route_sheet.html:49
+#: delivery/templates/routes_print.html:52
 msgid "Note"
 msgstr "Note"
 
 #: delivery/templates/route_sheet.html:50
+#: delivery/templates/routes_print.html:53
 msgid "Item"
 msgstr "Article"
 
 #: delivery/templates/route_sheet.html:61
+#: delivery/templates/routes_print.html:64
 msgid "Apt"
 msgstr "App"
 
@@ -392,7 +400,8 @@ msgstr "Organiser les itinéraires"
 msgid "Organize"
 msgstr "Organiser les itinéraires"
 
-#: delivery/templates/routes.html:6
+#: delivery/templates/routes.html:6 delivery/templates/routes_print.html:7
+#: delivery/templates/routes_print.html:21
 msgid "Routes Information"
 msgstr "Information de l'itinéraire"
 
@@ -421,6 +430,10 @@ msgstr ""
 #: delivery/templates/routes.html:52
 msgid "Number of orders on this route"
 msgstr ""
+
+#: delivery/templates/routes_print.html:22
+msgid "Print"
+msgstr "Imprimer"
 
 #: delivery/urls.py:10
 msgid "^order/$"
@@ -497,9 +510,6 @@ msgstr "^saveRoute/$"
 
 #~ msgid "Print route sheet for deliveries."
 #~ msgstr "Imprimer la feuille d'itinéraires"
-
-#~ msgid "Print"
-#~ msgstr "Imprimer"
 
 #~ msgid "Save"
 #~ msgstr "Sauvegarder"

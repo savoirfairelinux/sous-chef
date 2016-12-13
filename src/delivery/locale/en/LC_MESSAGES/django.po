@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-13 15:09+0000\n"
+"POT-Creation-Date: 2016-12-13 21:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -107,11 +107,13 @@ msgstr ""
 
 #: delivery/templates/kitchen_count.html:39
 #: delivery/templates/route_sheet.html:30
+#: delivery/templates/routes_print.html:32
 msgid "Regular"
 msgstr ""
 
 #: delivery/templates/kitchen_count.html:40
 #: delivery/templates/route_sheet.html:31
+#: delivery/templates/routes_print.html:33
 msgid "Large"
 msgstr ""
 
@@ -135,6 +137,7 @@ msgstr ""
 #: delivery/templates/kitchen_count.html:62
 #: delivery/templates/kitchen_count.html:63
 #: delivery/templates/route_sheet.html:51
+#: delivery/templates/routes_print.html:54
 msgid "Qty"
 msgstr ""
 
@@ -149,6 +152,7 @@ msgstr ""
 #: delivery/templates/kitchen_count.html:64
 #: delivery/templates/partials/generated_orders.html:10
 #: delivery/templates/route_sheet.html:48
+#: delivery/templates/routes_print.html:51
 msgid "Client"
 msgstr ""
 
@@ -339,18 +343,22 @@ msgid "Route Sheet"
 msgstr ""
 
 #: delivery/templates/route_sheet.html:29
+#: delivery/templates/routes_print.html:31
 msgid "Dish"
 msgstr ""
 
 #: delivery/templates/route_sheet.html:49
+#: delivery/templates/routes_print.html:52
 msgid "Note"
 msgstr ""
 
 #: delivery/templates/route_sheet.html:50
+#: delivery/templates/routes_print.html:53
 msgid "Item"
 msgstr ""
 
 #: delivery/templates/route_sheet.html:61
+#: delivery/templates/routes_print.html:64
 msgid "Apt"
 msgstr ""
 
@@ -362,7 +370,8 @@ msgstr ""
 msgid "Organize"
 msgstr ""
 
-#: delivery/templates/routes.html:6
+#: delivery/templates/routes.html:6 delivery/templates/routes_print.html:7
+#: delivery/templates/routes_print.html:21
 msgid "Routes Information"
 msgstr ""
 
@@ -384,6 +393,10 @@ msgstr ""
 
 #: delivery/templates/routes.html:52
 msgid "Number of orders on this route"
+msgstr ""
+
+#: delivery/templates/routes_print.html:22
+msgid "Print"
 msgstr ""
 
 #: delivery/urls.py:10
