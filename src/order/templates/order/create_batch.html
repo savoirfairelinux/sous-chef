@@ -5,7 +5,7 @@
 {% load static %}
 {% load member_extras %}
 
-{% block title %} {% trans 'Place multiple orders for a client' %} {% endblock %}
+{% block title %} {% trans 'Place orders' %} {% endblock %}
 
 {% block extrahead %}
 <link href="http://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet">
@@ -17,7 +17,7 @@
 {% block content %}
 
 <div class="ui secondary pointing fluid menu">
-    <h2 class="ui header">{% trans 'Place multiple orders' %}</h2>
+    <h2 class="ui header">{% trans 'Place orders' %}</h2>
 </div>
 
 <div class="sixteen wide column">
@@ -47,7 +47,7 @@
                   {{ date_obj|date:"DATE_FORMAT"|capfirst }}
                 </div>
                 <div class="content {% if date not in accordions_inactive %}active{% endif %}">
-                  <table class="ui compact table">
+                  <table class="ui compact single line table">
                     <thead>
                       <tr>
                         <th>{% trans 'Size' %}</th>
@@ -83,6 +83,47 @@
                       {% endfor %}
                     </tbody>
                   </table>
+
+                  <div class="ui stackable three column grid">
+                    <div class="column">
+                      {% with "delivery_"|add:date as field_name %}
+                      {% with form|get_item:field_name as field %}
+                      <div class="field {% if field.errors %}error{% endif %}">
+                        <div class="ui toggle checkbox">
+                          {{ field }}
+                          <label>{% trans "Delivery" %}</label>
+                        </div>
+                      </div>
+                      {% endwith %}
+                      {% endwith %}
+                    </div>
+
+                    <div class="column">
+                      {% with "pickup_"|add:date as field_name %}
+                      {% with form|get_item:field_name as field %}
+                      <div class="field {% if field.errors %}error{% endif %}">
+                        <div class="ui toggle checkbox">
+                          {{ field }}
+                          <label>{% trans "Pickup" %}</label>
+                        </div>
+                      </div>
+                      {% endwith %}
+                      {% endwith %}
+                    </div>
+
+                    <div class="column">
+                      {% with "visit_"|add:date as field_name %}
+                      {% with form|get_item:field_name as field %}
+                      <div class="field {% if field.errors %}error{% endif %}">
+                        <div class="ui toggle checkbox">
+                          {{ field }}
+                          <label>{% trans "Visit" %}</label>
+                        </div>
+                      </div>
+                      {% endwith %}
+                      {% endwith %}
+                    </div>
+                  </div>
                 </div>
               </div>
               {% endfor %}

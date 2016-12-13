@@ -9,7 +9,8 @@ from extra_views import InlineFormSet
 from member.models import Client
 
 from meal.models import COMPONENT_GROUP_CHOICES
-from order.models import Order_item, SIZE_CHOICES, OrderStatusChange
+from order.models import Order_item, SIZE_CHOICES, OrderStatusChange, \
+    ORDER_ITEM_TYPE_CHOICES
 
 
 class CreateOrderItem(InlineFormSet):
@@ -56,8 +57,17 @@ class CreateOrdersBatchForm(forms.Form):
             for d in delivery_dates:
                 self.fields['size_{}'.format(d)] = forms.ChoiceField(
                     choices=SIZE_CHOICES,
-                    widget=forms.Select(attrs={'class': 'ui dropdown'}),
+                    widget=forms.Select(attrs={'class': ''}),
                     required=True
+                )
+                self.fields['delivery_{}'.format(d)] = forms.BooleanField(
+                    required=False
+                )
+                self.fields['pickup_{}'.format(d)] = forms.BooleanField(
+                    required=False
+                )
+                self.fields['visit_{}'.format(d)] = forms.BooleanField(
+                    required=False
                 )
 
                 for meal, placeholder in COMPONENT_GROUP_CHOICES:

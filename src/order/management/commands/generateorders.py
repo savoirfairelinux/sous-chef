@@ -36,7 +36,7 @@ class Command(BaseCommand):
         for i in range(days):
             # Create the orders
             delivery_date = start_date + timedelta(days=i)
-            numorders = Order.objects.auto_create_orders(
+            orders = Order.objects.auto_create_orders(
                 delivery_date, clients
             )
             # Log the execution
@@ -47,5 +47,5 @@ class Command(BaseCommand):
                 action_flag=ADDITION,
             )
             print("{0} orders created on {1}: to be delivered on {2}.".format(
-                numorders, start_date, delivery_date
+                len(orders), start_date, delivery_date
             ))

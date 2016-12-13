@@ -51,7 +51,7 @@ ORDER_ITEM_TYPE_CHOICES = (
     ('visit', _('Visit')),
 )
 
-ORDER_ITEM_TYPE_CHOICES_COMPONENT = ORDER_ITEM_TYPE_CHOICES[1][0]
+ORDER_ITEM_TYPE_CHOICES_COMPONENT = ORDER_ITEM_TYPE_CHOICES[0][0]
 
 MAIN_PRICE_DEFAULT = 8.00  # TODO use decimal ?
 SIDE_PRICE_DEFAULT = 1.00
@@ -141,7 +141,7 @@ class OrderManager(models.Manager):
           clients : a list of one or many client objects
 
         Returns:
-          Number of orders created.
+          Created orders.
         """
         created = 0
         orders = []
@@ -209,11 +209,13 @@ class OrderManager(models.Manager):
             delivery_date = datetime.strptime(
                 delivery_date_str, "%Y-%m-%d"
             ).date()
-            try:
-                Order.objects.get(client=client, delivery_date=delivery_date)
+            if Order.objects.filter(
+                    client=client, delivery_date=delivery_date
+            ).exists():
                 # If an order is already created, skip order items creation
                 # (if want to replace, must be deleted first)
-            except Order.DoesNotExist:
+                pass
+            else:
                 # If no order for this client/date, create it and attach items
                 individual_items = {}
                 for key, value in items.items():
@@ -236,7 +238,6 @@ class OrderManager(models.Manager):
     def create_order(self, delivery_date, client, items, prices):
         order = Order.objects.create(client=client,
                                      delivery_date=delivery_date)
-
         for component_group, trans in COMPONENT_GROUP_CHOICES:
             if component_group != COMPONENT_GROUP_CHOICES_SIDES:
                 item_qty = items[component_group + '_default_quantity']
@@ -255,6 +256,16 @@ class OrderManager(models.Manager):
                         size=item_siz,
                         order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
                         total_quantity=item_qty)
+
+        for order_item_type, trans in ORDER_ITEM_TYPE_CHOICES:
+            if order_item_type != ORDER_ITEM_TYPE_CHOICES_COMPONENT:
+                additional = items.get('{0}_default'.format(order_item_type))
+                if additional:
+                    Order_item.objects.create(
+                        order=order,
+                        price=0,
+                        billable_flag=False,
+                        order_item_type=order_item_type)
 
         return order
 
@@ -974,6 +985,7 @@ class Order_item(models.Model):
         verbose_name=_('size'),
         max_length=1,
         null=True,
+        blank=True,
         choices=SIZE_CHOICES,
     )
 
@@ -1016,6 +1028,24 @@ class Order_item(models.Model):
             format(str(self.order.delivery_date),
                    self.order_item_type,
                    self.component_group)
+
+    def get_billable_flag_display(self):
+        if self.billable_flag:
+            return _('Yes')
+        else:
+            return _('No')
+
+    def get_order_item_type_display(self):
+        if self.order_item_type == 'meal_component':
+            return _("Meal component")
+        elif self.order_item_type == 'delivery':
+            return _("Delivery")
+        elif self.order_item_type == 'pickup':
+            return _("Pickup")
+        elif self.order_item_type == 'visit':
+            return _("Visit")
+        else:
+            return dict(ORDER_ITEM_TYPE_CHOICES)[self.order_item_type]
 
 
 class OrderStatusChange(models.Model):

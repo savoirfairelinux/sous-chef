@@ -41,7 +41,7 @@
         </div>
     </h2>
     <div class="ui divider"></div>
-    <table class="ui celled padded table">
+    <table class="ui celled padded single line table">
       <thead>
         <th>{% trans "Component" %}</th>
         <th>{% trans "Description" %}</th>
@@ -52,10 +52,14 @@
       <tbody>
           {% for item in order.orders.all %}
           <tr>
-            <td><strong>{{item.order_item_type}}</strong></td>
-            <td>{{item.component_group}}</td>
+            {% if item.order_item_type == 'meal_component' or item.component_group %}
+            <td><strong>{{item.get_order_item_type_display}}</strong></td>
+            <td>{{item.get_component_group_display}}</td>
             <td>{{item.total_quantity}}</td>
-            <td>{{item.billable_flag}}</td>
+            <td>{{item.get_billable_flag_display}}</td>
+            {% else %}
+            <td colspan="4"><strong>{{item.get_order_item_type_display}}</strong></td>
+            {% endif %}
             <td class="right aligned"><i class="dollar icon"></i>{{item.price}}</td>
           </tr>
           {% endfor %}
