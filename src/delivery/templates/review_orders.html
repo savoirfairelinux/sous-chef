@@ -69,11 +69,32 @@
         {% trans 'Review' %}
     </h4>
 
-{% include 'partials/generated_orders.html' %}
+    <div class="sixteen wide column">
+        <form action="" method="get" class="ui form">
+            <div class="inline fields">
+                <div class="field">
+                    <label for="{{ filter.form.client_name.auto_id }}">{% trans 'Client name' %}</label>
+                    <div class="field">
+                        <div class="ui large left icon input">
+                            <i class="users icon"></i>
+                            {{ filter.form.client_name }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field padded">
+                <a href="{% url 'delivery:order' %}" class="ui basic button">{% trans 'Reset' %}</a>
+                <button class="ui yellow button" type="submit">{% trans 'Search' %}</button>
+            </div>
+        </form>
+        {% include 'partials/generated_orders.html' %}
+    </div>
 
-<a class="ui labeled icon right yellow big button" href="{% url 'delivery:meal' %}">
-    <i class="chevron right icon"></i>{% trans "OK, I'm ready" %}
-</a>
+    <div class="sixteen wide column">
+        <a class="ui labeled icon right yellow big button" href="{% url 'delivery:meal' %}">
+            <i class="chevron right icon"></i>{% trans "OK, I'm ready" %}
+        </a>
+    </div>
 
 </div>
 

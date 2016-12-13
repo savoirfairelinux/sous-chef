@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load member_extras %}
 
 <form action="" method="get" class="ui form">
 
@@ -15,7 +16,7 @@
         <div class="field">
             <label>{% trans 'Status' %}</label>
             <div class="field">
-                {{ filter.form.status }}
+                {{ filter.form.status|alter_field_class:'ui dropdown' }}
             </div>
         </div>
         <div class="field">
