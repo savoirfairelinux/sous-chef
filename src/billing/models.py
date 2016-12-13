@@ -109,12 +109,12 @@ class Billing(models.Model):
                         order__in=orders, size='R', component_group='main_dish'
                     ).aggregate(
                         total_regular=Sum('total_quantity')
-                    )['total_regular'],
+                    )['total_regular'] or 0,
                     'L': Order_item.objects.filter(
                         order__in=orders, size='L', component_group='main_dish'
                     ).aggregate(
                         total_large=Sum('total_quantity')
-                    )['total_large']
+                    )['total_large'] or 0
                 },
                 'total_amount': sum(map(lambda o: o.price, orders))
             }

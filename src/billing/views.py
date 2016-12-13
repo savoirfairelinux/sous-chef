@@ -123,7 +123,21 @@ class BillingSummaryView(generic.DetailView):
 
         # generate a summary
         billing = self.object
-        context['billing_summary'] = billing.summary.items()
+        context['billing_summary'] = list(billing.summary.items())
+        # sort by client lastname
+        context['billing_summary'].sort(
+            key=lambda tup: (tup[0].member.lastname, tup[0].member.firstname)
+        )
+        # tfoot
+        context['billing_total'] = {
+            'orders': billing.orders.all().count(),
+            'main_dishes': sum(map(
+                lambda t: t[1]['total_main_dishes']['R'] +
+                t[1]['total_main_dishes']['L'],
+                context['billing_summary']
+            )),
+            'amount': billing.total_amount
+        }
 
         # Throw a warning if there's any main_dish order with size=None.
         q = Order_item.objects.filter(
