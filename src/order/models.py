@@ -2,7 +2,7 @@ import collections
 from datetime import date, datetime
 import re
 
-from django.db import models, connection
+from django.db import models, connection, transaction
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
@@ -235,27 +235,69 @@ class OrderManager(models.Manager):
         else:
             return created_orders
 
+    @transaction.atomic
     def create_order(self, delivery_date, client, items, prices):
+        """
+        Create an order for given date, client, items and prices.
+        items should be formatted as (example):
+            {
+                'main_dish_default_quantity': 1,
+                'size_default': 'R',
+                'dessert_default_quantity': 1,
+                'compost_default_quantity': 1,
+                'delivery_default': True
+                ...
+            }
+        Every main dish comes with a free side dish. (thus not billable)
+        """
         order = Order.objects.create(client=client,
                                      delivery_date=delivery_date)
+        free_side_dishes = items.get('main_dish_default_quantity') or 0
+
         for component_group, trans in COMPONENT_GROUP_CHOICES:
             if component_group != COMPONENT_GROUP_CHOICES_SIDES:
-                item_qty = items[component_group + '_default_quantity']
-                item_pri = prices['side']
-                item_siz = None
-                if (item_qty):
-                    if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH):
-                        item_pri = prices['main']
-                        item_siz = items['size_default']
+                item_qty = items.get(
+                    component_group + '_default_quantity'
+                ) or 0
+                if item_qty == 0:
+                    continue
 
+                common_kwargs = {
+                    'order': order,
+                    'component_group': component_group,
+                    'order_item_type': ORDER_ITEM_TYPE_CHOICES_COMPONENT
+                }
+
+                if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH):
+                    # main dish
                     Order_item.objects.create(
-                        order=order,
-                        component_group=component_group,
-                        price=item_qty * item_pri,
+                        size=items['size_default'],
+                        total_quantity=item_qty,
+                        price=item_qty * prices['main'],
                         billable_flag=True,
-                        size=item_siz,
-                        order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
-                        total_quantity=item_qty)
+                        **common_kwargs)
+                else:
+                    # side dish: deduct+billable
+                    deduct = min(free_side_dishes, item_qty)
+                    free_side_dishes -= deduct
+                    if deduct > 0:
+                        # free side dishes
+                        Order_item.objects.create(
+                            size=None,
+                            total_quantity=deduct,
+                            price=deduct * prices['side'],
+                            billable_flag=False,
+                            **common_kwargs)
+
+                    billable = item_qty - deduct
+                    if billable > 0:
+                        # billable side dishes
+                        Order_item.objects.create(
+                            size=None,
+                            total_quantity=billable,
+                            price=billable * prices['side'],
+                            billable_flag=True,
+                            **common_kwargs)
 
         for order_item_type, trans in ORDER_ITEM_TYPE_CHOICES:
             if order_item_type != ORDER_ITEM_TYPE_CHOICES_COMPONENT:

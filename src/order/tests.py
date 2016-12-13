@@ -14,12 +14,14 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
 from django.core.management import call_command
+from django.db.models import Q, Sum
 
 from member.models import Client, Address, Member, Route
 from member.factories import RouteFactory, ClientFactory
 from meal.factories import ComponentFactory
 from order.models import Order, Order_item, MAIN_PRICE_DEFAULT, \
-    OrderStatusChange
+    OrderStatusChange, COMPONENT_GROUP_CHOICES_MAIN_DISH, \
+    ORDER_ITEM_TYPE_CHOICES_COMPONENT
 from order.factories import OrderFactory
 
 SousChefTestMixin = importlib.import_module('sous-chef.tests').TestMixin
@@ -217,7 +219,7 @@ class OrderItemTestCase(TestCase):
         self.assertTrue(str(delivery_date) in str(order_item))
 
 
-class OrderCreateOnDefaultsTestCase(TestCase):
+class OrderAutoCreateOnDefaultsTestCase(TestCase):
 
     fixtures = ['routes.json']
 
@@ -288,6 +290,78 @@ class OrderCreateOnDefaultsTestCase(TestCase):
         fruit_salad_item = items.filter(component_group='fruit_salad').get()
         self.assertEqual(fruit_salad_item.total_quantity, 1)
         self.assertEqual(items.filter(component_group='compote').count(), 0)
+
+
+class OrderManualCreateTestCase(SousChefTestMixin, TestCase):
+
+    fixtures = ['routes.json']
+
+    @classmethod
+    def setUpTestData(cls):
+        """
+        Set up client.
+        """
+        # cls.client clashes with Django testcase
+        cls.sc_client = ClientFactory(
+            status=Client.ACTIVE,
+            delivery_type='E',
+            rate_type='default'
+        )
+        cls.delivery_date = date(2016, 7, 15)
+
+    def test_create_order(self):
+        """
+        Check created order items.
+        """
+        order = Order.objects.create_order(
+            delivery_date=self.delivery_date,
+            client=self.sc_client,
+            prices={'main': 10.0, 'side': 1.0},
+            items={
+                'main_dish_default_quantity': 3,
+                'size_default': 'R',
+                'dessert_default_quantity': 1,
+                'diabetic_default_quantity': 2,
+                'fruit_salad_default_quantity': 4,
+                'green_salad_default_quantity': 0,
+                'pudding_default_quantity': 0,
+                'compote_default_quantity': 0,
+                'delivery_default': True
+            })
+
+        # check main dish
+        main_dish = order.orders.get(
+            component_group=COMPONENT_GROUP_CHOICES_MAIN_DISH
+        )
+        self.assertEqual(main_dish.total_quantity, 3)
+        self.assertEqual(main_dish.size, 'R')
+        self.assertEqual(main_dish.price, 30.0)
+        self.assertTrue(main_dish.billable_flag)
+
+        # check sides
+        sides = order.orders.filter(
+            ~Q(component_group=COMPONENT_GROUP_CHOICES_MAIN_DISH) &
+            Q(size__isnull=True)
+        ).aggregate(quantity=Sum('total_quantity'))
+        self.assertEqual(sides['quantity'], 7)  # 1 + 2 + 4
+
+        billable_sides = order.orders.filter(
+            ~Q(component_group=COMPONENT_GROUP_CHOICES_MAIN_DISH) &
+            Q(billable_flag=True)
+        ).aggregate(quantity=Sum('total_quantity'))
+        self.assertEqual(billable_sides['quantity'], 4)  # 7 - 3
+
+        free_sides = order.orders.filter(
+            ~Q(component_group=COMPONENT_GROUP_CHOICES_MAIN_DISH) &
+            Q(billable_flag=False)
+        ).aggregate(quantity=Sum('total_quantity'))
+        self.assertEqual(free_sides['quantity'], 3)
+
+        # check other item
+        other = order.orders.filter(
+            ~Q(order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT)
+        )
+        self.assertEqual(other.count(), 1)
 
 
 class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
