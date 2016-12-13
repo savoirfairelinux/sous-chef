@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Q
 from django.views import generic
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
@@ -9,7 +10,7 @@ from order.models import DeliveredOrdersByMonth
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.urlresolvers import reverse_lazy
-from order.models import Order
+from order.models import Order, Order_item
 from django.http import HttpResponseRedirect
 from member.models import Client
 
@@ -123,6 +124,30 @@ class BillingSummaryView(generic.DetailView):
         billing = self.object
         context['billing_summary'] = billing.summary.items()
 
+        # Throw a warning if there's any main_dish order with size=None.
+        q = Order_item.objects.filter(
+            Q(order__in=billing.orders.all()) &
+            (Q(size__isnull=True) | Q(size='')) &
+            Q(component_group='main_dish')
+        )
+        if q.exists():
+            size_none_orders_info = list(q.values_list(
+                'id',
+                'order__client__member__firstname',
+                'order__client__member__lastname'
+            ))
+            formatted_str = ', '.join(map(
+                lambda tup: '#{0} ({1} {2})'.format(*tup),
+                size_none_orders_info
+            ))
+            messages.add_message(
+                self.request, messages.WARNING,
+                (_('Warning: the main dish size(s) of Order(s) %(order_id)s '
+                   'are not set and have been excluded in '
+                   '"Total Main Dishes" column.') % {
+                       'order_id': formatted_str
+                })
+            )
         return context
 
 
