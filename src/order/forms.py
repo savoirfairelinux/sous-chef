@@ -8,7 +8,7 @@ from extra_views import InlineFormSet
 
 from member.models import Client
 
-from meal.models import COMPONENT_GROUP_CHOICES
+from meal.models import COMPONENT_GROUP_CHOICES, COMPONENT_GROUP_CHOICES_SIDES
 from order.models import Order_item, SIZE_CHOICES, OrderStatusChange, \
     ORDER_ITEM_TYPE_CHOICES
 
@@ -71,6 +71,8 @@ class CreateOrdersBatchForm(forms.Form):
                 )
 
                 for meal, placeholder in COMPONENT_GROUP_CHOICES:
+                    if meal is COMPONENT_GROUP_CHOICES_SIDES:
+                        continue  # don't put "sides" on the form
                     self.fields[
                         '{}_{}_quantity'.format(meal, d)
                     ] = forms.IntegerField(
