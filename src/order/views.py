@@ -18,7 +18,7 @@ from order.mixins import AjaxableResponseMixin, FormValidAjaxableResponseMixin
 from order.forms import CreateOrderItem, UpdateOrderItem, \
     CreateOrdersBatchForm, OrderStatusChangeForm
 
-from meal.models import COMPONENT_GROUP_CHOICES
+from meal.models import COMPONENT_GROUP_CHOICES, COMPONENT_GROUP_CHOICES_SIDES
 from meal.settings import COMPONENT_SYSTEM_DEFAULT
 from member.models import Client, DAYS_OF_WEEK
 
@@ -127,7 +127,10 @@ class CreateOrdersBatch(generic.FormView):
     def get_context_data(self, **kwargs):
         context = super(CreateOrdersBatch, self).get_context_data(**kwargs)
         # Define here any needed variable for template
-        context["meals"] = COMPONENT_GROUP_CHOICES
+        context["meals"] = filter(
+            lambda tup: tup[0] != COMPONENT_GROUP_CHOICES_SIDES,
+            COMPONENT_GROUP_CHOICES
+        )
 
         # delivery_dates
         if self.request.method == "POST" and \

@@ -537,7 +537,6 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
             'green_salad_2016-12-12_quantity': 1,
             'pudding_2016-12-12_quantity': 0,
             'compote_2016-12-12_quantity': 0,
-            'sides_2016-12-12_quantity': 0,
             'main_dish_2016-12-14_quantity': 1,
             'size_2016-12-14': 'L',
             'dessert_2016-12-14_quantity': 1,
@@ -545,8 +544,7 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
             'fruit_salad_2016-12-14_quantity': 0,
             'green_salad_2016-12-14_quantity': 1,
             'pudding_2016-12-14_quantity': 0,
-            'compote_2016-12-14_quantity': 0,
-            'sides_2016-12-14_quantity': 0
+            'compote_2016-12-14_quantity': 0
         })
         self.assertEqual(response.status_code, 302)  # form submit redirect
         created_orders = Order.objects.filter(
@@ -574,7 +572,6 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
             'green_salad_2016-12-12_quantity': 1,
             'pudding_2016-12-12_quantity': 0,
             'compote_2016-12-12_quantity': 0,
-            'sides_2016-12-12_quantity': 0,
             'main_dish_2016-12-14_quantity': 1,
             'size_2016-12-14': 'L',
             'dessert_2016-12-14_quantity': 1,
@@ -582,8 +579,7 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
             'fruit_salad_2016-12-14_quantity': 0,
             'green_salad_2016-12-14_quantity': 1,
             'pudding_2016-12-14_quantity': 0,
-            'compote_2016-12-14_quantity': 0,
-            'sides_2016-12-14_quantity': 0
+            'compote_2016-12-14_quantity': 0
         })
         self.assertEqual(response.status_code, 200)  # stay on form page
         created_orders = Order.objects.filter(
@@ -606,8 +602,6 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
             'fruit_salad_2016-12-12_quantity': 0,
             'green_salad_2016-12-12_quantity': 1,
             'pudding_2016-12-12_quantity': 0,
-            'compote_2016-12-12_quantity': 0,
-            'sides_2016-12-12_quantity': 0,
             'main_dish_2016-12-14_quantity': 1,
             'size_2016-12-14': 'L',
             'dessert_2016-12-14_quantity': 1,
@@ -616,7 +610,7 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
             'green_salad_2016-12-14_quantity': 1,
             'pudding_2016-12-14_quantity': 0,
             'compote_2016-12-14_quantity': 0
-            # lacks: sides_2016-12-12_quantity
+            # lacks: compote_2016-12-12_quantity
         })
         self.assertEqual(response.status_code, 200)  # stay on form page
         created_orders = Order.objects.filter(
@@ -639,8 +633,7 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
             'fruit_salad_2016-12-12_quantity': 0,
             'green_salad_2016-12-12_quantity': 1,
             'pudding_2016-12-12_quantity': 0,
-            'compote_2016-12-12_quantity': 0,
-            'sides_2016-12-12_quantity': 0
+            'compote_2016-12-12_quantity': 0
         })
         self.assertEqual(response.status_code, 200)  # stay on form page
         created_orders = Order.objects.filter(
@@ -661,8 +654,7 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
             'fruit_salad_2016-12-12_quantity': 0,
             'green_salad_2016-12-12_quantity': 1,
             'pudding_2016-12-12_quantity': 0,
-            'compote_2016-12-12_quantity': 0,
-            'sides_2016-12-12_quantity': 0
+            'compote_2016-12-12_quantity': 0
         })
         self.assertEqual(response.status_code, 200)  # stay on form page
         created_orders = Order.objects.filter(
