@@ -269,11 +269,14 @@ class OrderManager(models.Manager):
                 }
 
                 if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH):
+                    price = item_qty * prices['main']
+                    if items['size_default'] == 'L':
+                        price += item_qty * prices['side']
                     # main dish
                     Order_item.objects.create(
                         size=items['size_default'],
                         total_quantity=item_qty,
-                        price=item_qty * prices['main'],
+                        price=price,
                         billable_flag=True,
                         **common_kwargs)
                 else:

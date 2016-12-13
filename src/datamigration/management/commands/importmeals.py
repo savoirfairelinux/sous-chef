@@ -50,7 +50,6 @@ class Command(BaseCommand):
 
         ingredients = Ingredient.objects.all()
         beef = Ingredient.objects.all().filter(name__icontains='beef')
-        print(beef)
 
         with open(file) as f:
             reader = csv.reader(f, delimiter=';')
