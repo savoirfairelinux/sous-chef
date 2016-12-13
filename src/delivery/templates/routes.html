@@ -24,6 +24,14 @@
 </div>
 
 <div class="row">
+    <div class="column">
+        <a href="javascript:window.print()" class="ui tiny labeled icon right basic pink button" title="{% trans 'Print the route sheets' %}">
+            <i class="print icon"></i>{% trans 'Route Sheets' %}
+        </a>
+    </div>
+</div>
+
+<div class="row">
     <div class="sixteen wide column">
       <div class="ui middle aligned divided list">
           {% for route, orders in routes %}
