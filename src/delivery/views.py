@@ -49,7 +49,10 @@ class Orderlist(LoginRequiredMixin, FilterView):
     context_object_name = 'orders'
 
     def get_queryset(self):
-        return Order.objects.get_shippable_orders()
+        queryset = Order.objects.get_shippable_orders().order_by(
+            'client__route__pk', 'pk'
+        )
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(Orderlist, self).get_context_data(**kwargs)
@@ -916,5 +919,6 @@ def refreshOrders(request):
             datetime.datetime.now().strftime('%m %d %Y %H:%M')),
         action_flag=ADDITION,
     )
+    orders.sort(key=lambda o: (o.client.route.pk, o.pk))
     context = {'orders': orders}
     return render(request, 'partials/generated_orders.html', context)
