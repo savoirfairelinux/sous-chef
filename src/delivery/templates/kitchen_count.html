@@ -58,27 +58,31 @@
 <table class="ui very compact celled structured table">
   <thead>
    <tr class="top center aligned">
-    <th class="">{% trans 'Clashing' %} - {% trans 'Ingredients' %}</th>
+    <th class="">{% trans 'Clashing ingredients' %}</th>
     <th class="">{% trans 'Qty' %} - {% trans 'Reg' %}</th>
     <th class="">{% trans 'Qty' %} - {% trans 'Lge' %}</th>
     <th class="">{% trans 'Client' %}</th>
-    <th class="">{% trans 'Preparation' %}</th>
     <th class="">{% trans 'Restrictions' %}</th>
    </tr>
   </thead>
   <tbody>
     {% for obj in meal_lines %}
       <tr{% if obj.client == "" and obj.ingr_clash == "" %} class="active"{% endif %}>
-        {% if not obj.span %}
-              <td><strong>{{obj.ingr_clash}}</strong></td>
+        {% if obj.span == "1" %}
+            <td><strong>{{obj.ingr_clash}}</strong></td>
         {% elif obj.span != "-1" %}
-              <th rowspan={{obj.span}}>{% firstof obj.ingr_clash "&nbsp;" %}</th>
+              <td rowspan={{obj.span}}>{{obj.ingr_clash}}</td>
         {% endif %}
-        <td class="center aligned">{% firstof obj.rqty "&nbsp;" %}</td>
-        <td class="center aligned">{% firstof obj.lqty "&nbsp;" %}</td>
-        <td>{% firstof obj.client "&nbsp;" %}</td>
-        <td>{% firstof obj.preparation "&nbsp;" %}</td>
-        <td>{{obj.rest_ingr}}{% if obj.rest_ingr %} ; {% endif %} <strong>{% firstof obj.rest_item "&nbsp;" %}</strong></td>
+        {% if obj.client == "SUBTOTAL" %}
+            <td class="center aligned"><strong>{{obj.rqty}}</strong></td>
+            <td class="center aligned"><strong>{{obj.lqty}}</strong></td>
+            <td><strong>{{obj.client}}</strong></td>
+        {% else %}
+            <td class="center aligned">{{obj.rqty}}</td>
+            <td class="center aligned">{{obj.lqty}}</td>
+            <td>{{obj.client}}</td>
+        {% endif %}
+        <td>{{obj.rest_ingr}}{% if obj.rest_ingr %} ; {% endif %} <strong>{{obj.rest_item}}</strong></td>
       </tr>
     {% endfor %}
   </tbody>
