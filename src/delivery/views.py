@@ -50,7 +50,9 @@ class Orderlist(LoginRequiredMixin, generic.ListView):
     context_object_name = 'orders'
 
     def get_queryset(self):
-        queryset = Order.objects.get_shippable_orders()
+        queryset = Order.objects.get_shippable_orders().order_by(
+            'client__route__pk', 'pk'
+        )
         return queryset
 
     def get_context_data(self, **kwargs):

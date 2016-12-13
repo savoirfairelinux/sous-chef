@@ -75,9 +75,7 @@ class OrderManager(models.Manager):
         return self.get_queryset().filter(
             delivery_date=delivery_date,
             status=ORDER_STATUS_ORDERED,
-            client__status=Client.ACTIVE).order_by(
-                'client__route__pk', 'pk'
-            )
+            client__status=Client.ACTIVE)
 
     def get_shippable_orders_by_route(self, route_id):
         """
