@@ -309,9 +309,10 @@ class OrderManualCreateTestCase(SousChefTestMixin, TestCase):
         )
         cls.delivery_date = date(2016, 7, 15)
 
-    def test_create_order(self):
+    def test_create_order__maindish_smaller_than_sidedish(self):
         """
         Check created order items.
+        Main_dish_quantity < side_dish_quantity
         """
         order = Order.objects.create_order(
             delivery_date=self.delivery_date,
@@ -356,6 +357,64 @@ class OrderManualCreateTestCase(SousChefTestMixin, TestCase):
             Q(billable_flag=False)
         ).aggregate(quantity=Sum('total_quantity'))
         self.assertEqual(free_sides['quantity'], 3)
+
+        # check other item
+        other = order.orders.filter(
+            ~Q(order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT)
+        )
+        self.assertEqual(other.count(), 1)
+
+    def test_create_order__maindish_greater_than_sidedish(self):
+        """
+        Check created order items.
+        Main_dish_quantity > side_dish_quantity
+        """
+        order = Order.objects.create_order(
+            delivery_date=self.delivery_date,
+            client=self.sc_client,
+            prices={'main': 10.0, 'side': 1.0},
+            items={
+                'main_dish_default_quantity': 10,
+                'size_default': 'R',
+                'dessert_default_quantity': 1,
+                'diabetic_default_quantity': 2,
+                'fruit_salad_default_quantity': 4,
+                'green_salad_default_quantity': 0,
+                'pudding_default_quantity': 0,
+                'compote_default_quantity': 0,
+                'delivery_default': True
+            })
+
+        # check main dish
+        main_dish = order.orders.get(
+            component_group=COMPONENT_GROUP_CHOICES_MAIN_DISH
+        )
+        self.assertEqual(main_dish.total_quantity, 10)
+        self.assertEqual(main_dish.size, 'R')
+        self.assertEqual(main_dish.price, 100.0)
+        self.assertTrue(main_dish.billable_flag)
+
+        # check sides
+        sides = order.orders.filter(
+            ~Q(component_group=COMPONENT_GROUP_CHOICES_MAIN_DISH) &
+            Q(size__isnull=True)
+        ).aggregate(quantity=Sum('total_quantity'))
+        self.assertEqual(sides['quantity'], 7)  # 1 + 2 + 4
+
+        billable_sides = order.orders.filter(
+            ~Q(component_group=COMPONENT_GROUP_CHOICES_MAIN_DISH) &
+            Q(billable_flag=True)
+        ).aggregate(quantity=Sum('total_quantity'))
+        self.assertEqual(
+            billable_sides['quantity'],
+            None  # 7 - 10 -> 0, filter empty, thus None
+        )
+
+        free_sides = order.orders.filter(
+            ~Q(component_group=COMPONENT_GROUP_CHOICES_MAIN_DISH) &
+            Q(billable_flag=False)
+        ).aggregate(quantity=Sum('total_quantity'))
+        self.assertEqual(free_sides['quantity'], 7)
 
         # check other item
         other = order.orders.filter(
