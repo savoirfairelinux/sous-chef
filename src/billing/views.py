@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Q
 from django.views import generic
+from django.utils.translation import string_concat
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from billing.models import (
@@ -132,21 +133,33 @@ class BillingSummaryView(generic.DetailView):
         )
         if q.exists():
             size_none_orders_info = list(q.values_list(
-                'id',
+                'order__id',
                 'order__client__member__firstname',
                 'order__client__member__lastname'
             ))
-            formatted_str = ', '.join(map(
-                lambda tup: '#{0} ({1} {2})'.format(*tup),
-                size_none_orders_info
-            ))
+            formatted_htmls = ['<ul class="ui list">']
+            for i, f, l in size_none_orders_info:
+                formatted_htmls.append(
+                    '<li><a href="{0}" target="_blank">'
+                    '#{1} ({2} {3})'
+                    '</a></li>'.format(
+                        Order(id=i).get_absolute_url(),
+                        i,
+                        f,
+                        l
+                    )
+                )
+            formatted_htmls.append('</ul>')
+            formatted_html = ''.join(formatted_htmls)
             messages.add_message(
                 self.request, messages.WARNING,
-                (_('Warning: the main dish size(s) of Order(s) %(order_id)s '
-                   'are not set and have been excluded in '
-                   '"Total Main Dishes" column.') % {
-                       'order_id': formatted_str
-                })
+                string_concat(
+                    _('Warning: the order(s) below have not set a "size" '
+                      'for main dish and thus have been excluded in '
+                      '"Total Main Dishes" column.'),
+                    '<br/>',
+                    formatted_html
+                )
             )
         return context
 
