@@ -1,6 +1,12 @@
+import re
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
+from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from member.formsfield import CAPhoneNumberExtField
+from localflavor.ca.forms import (
+    CAPhoneNumberField, CAPostalCodeField
+)
 from meal.models import Ingredient, Component, COMPONENT_GROUP_CHOICES, \
     Restricted_item
 from order.models import SIZE_CHOICES
@@ -41,19 +47,20 @@ class ClientBasicInformation (forms.Form):
         widget=forms.TextInput(attrs={'class': 'ui calendar'})
     )
 
-    email = forms.CharField(
+    email = forms.EmailField(
+        max_length=100,
         label='<i class="email icon"></i>',
         widget=forms.TextInput(attrs={'placeholder': _('Email')}),
         required=False,
     )
 
-    home_phone = forms.CharField(
+    home_phone = CAPhoneNumberExtField(
         label='Home',
         widget=forms.TextInput(attrs={'placeholder': _('Home phone')}),
         required=False,
     )
 
-    cell_phone = forms.CharField(
+    cell_phone = CAPhoneNumberExtField(
         label='Cell',
         widget=forms.TextInput(attrs={'placeholder': _('Cellular')}),
         required=False,
@@ -67,6 +74,17 @@ class ClientBasicInformation (forms.Form):
             'placeholder': _('Your message here ...')
         })
     )
+
+    def clean(self):
+        if not (self.cleaned_data.get('email') or
+                self.cleaned_data.get('home_phone') or
+                self.cleaned_data.get('cell_phone')):
+            msg = _('At least one contact information is required.')
+            self.add_error('email', msg)
+            self.add_error('home_phone', msg)
+            self.add_error('cell_phone', msg)
+
+        return self.cleaned_data
 
 
 class ClientAddressInformation(forms.Form):
@@ -98,8 +116,8 @@ class ClientAddressInformation(forms.Form):
         })
     )
 
-    postal_code = forms.CharField(
-        max_length=6,
+    postal_code = CAPostalCodeField(
+        max_length=7,
         label=_("Postal Code"),
         widget=forms.TextInput(attrs={
             'placeholder': _('H2R 2Y5'),
@@ -249,19 +267,19 @@ class MemberForm(forms.Form):
         required=False
     )
 
-    email = forms.CharField(
+    email = forms.EmailField(
         label='<i class="email icon"></i>',
         widget=forms.TextInput(attrs={'placeholder': _('Email')}),
         required=False,
     )
 
-    work_phone = forms.CharField(
+    work_phone = CAPhoneNumberExtField(
         label='Work',
         widget=forms.TextInput(attrs={'placeholder': _('Work phone')}),
         required=False,
     )
 
-    cell_phone = forms.CharField(
+    cell_phone = CAPhoneNumberExtField(
         label='Cell',
         widget=forms.TextInput(attrs={'placeholder': _('Cellular')}),
         required=False,
@@ -342,7 +360,7 @@ class ClientPaymentInformation(MemberForm):
 
     number = forms.IntegerField(label=_("Street Number"), required=False)
 
-    apartment = forms.IntegerField(
+    apartment = forms.CharField(
         label=_("Apt #"),
         widget=forms.TextInput(attrs={'placeholder': _('Apt #')}),
         required=False
@@ -354,7 +372,7 @@ class ClientPaymentInformation(MemberForm):
 
     city = forms.CharField(label=_("City Name"), required=False)
 
-    postal_code = forms.CharField(label=_("Postal Code"), required=False)
+    postal_code = CAPostalCodeField(label=_("Postal Code"), required=False)
 
     def clean(self):
         cleaned_data = super(ClientPaymentInformation, self).clean()
@@ -383,14 +401,6 @@ class ClientPaymentInformation(MemberForm):
 
 class ClientEmergencyContactInformation(MemberForm):
 
-    contact_type = forms.ChoiceField(
-        label=_("Contact Type"),
-        choices=CONTACT_TYPE_CHOICES,
-        widget=forms.Select(attrs={'class': 'ui dropdown'})
-    )
-
-    contact_value = forms.CharField(label=_("Contact"))
-
     relationship = forms.CharField(
         label=_("Relationship"),
         widget=forms.TextInput(
@@ -398,6 +408,38 @@ class ClientEmergencyContactInformation(MemberForm):
         ),
         required=False
     )
+
+    def clean(self):
+        member = self.cleaned_data.get('member')
+        if member:
+            member_id = member.split(' ')[0].replace('[', '').replace(']', '')
+            try:
+                Member.objects.get(pk=member_id)
+            except ObjectDoesNotExist:
+                msg = _('Not a valid member, please chose an existing member.')
+                self.add_error('member', msg)
+        else:
+            if not self.cleaned_data.get('firstname'):
+                msg = _(
+                    'This field is required unless '
+                    'you chose an existing member.'
+                )
+                self.add_error('firstname', msg)
+            if not self.cleaned_data.get('firstname'):
+                msg = _(
+                    'This field is required unless '
+                    'you chose an existing member.'
+                )
+                self.add_error('lastname', msg)
+            if not (self.cleaned_data.get('email') or
+                    self.cleaned_data.get('work_phone') or
+                    self.cleaned_data.get('cell_phone')):
+                msg = _('At least one emergency contact is required.')
+                self.add_error('email', msg)
+                self.add_error('work_phone', msg)
+                self.add_error('cell_phone', msg)
+
+        return self.cleaned_data
 
 
 class ClientScheduledStatusForm(forms.ModelForm):

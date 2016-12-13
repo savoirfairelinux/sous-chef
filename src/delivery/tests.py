@@ -1,15 +1,23 @@
 import datetime
 import json
+import importlib
 
+from django.db.models import Q
+from django.test import RequestFactory
 from django.test import TestCase
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
+from django.utils import timezone as tz
 
 from meal.models import Menu, Component, Component_ingredient, Ingredient
 from order.models import Order
 from member.models import Client, Member, Route
 
+from .filters import KitchenCountOrderFilter
 
-class KitchenCountReportTestCase(TestCase):
+SousChefTestMixin = importlib.import_module('sous-chef.tests').TestMixin
+
+
+class KitchenCountReportTestCase(SousChefTestMixin, TestCase):
 
     fixtures = ['sample_data']
 
@@ -22,6 +30,9 @@ class KitchenCountReportTestCase(TestCase):
              'Green Salad', 'Fruit Salad',
              'Day s Dessert', 'Day s Diabetic Dessert',
              'Day s Pudding', 'Day s Compote'])
+
+    def setUp(self):
+        self.force_login()
 
     def test_clashing_ingredient(self):
         """An ingredient we know will clash must be in the page"""
@@ -75,7 +86,7 @@ class KitchenCountReportTestCase(TestCase):
         self.assertTrue('ReportLab' in repr(response.content))
 
 
-class ChooseDayMainDishIngredientsTestCase(TestCase):
+class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
 
     fixtures = ['sample_data']
 
@@ -90,6 +101,9 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
         Order.objects.auto_create_orders(
             datetime.date.today(),
             clients)
+
+    def setUp(self):
+        self.force_login()
 
     def test_known_ingredients(self):
         """Two ingredients we know must be in the page"""
@@ -108,6 +122,7 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
         req['_next'] = 'Next: Print Kitchen Count'
         req['maindish'] = str(maindish.id)
         req['ingredients'] = ing_ids
+        req['sides_ingredients'] = [Ingredient.objects.all().first().id]
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         response = self.client.get(reverse_lazy('delivery:kitchen_count'))
         self.assertTrue(b'Ginger pork' in response.content)
@@ -123,6 +138,7 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
         req['_next'] = 'Next: Print Kitchen Count'
         req['maindish'] = str(maindish.id)
         req['ingredients'] = ing_ids
+        req['sides_ingredients'] = [Ingredient.objects.all().first().id]
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         response = self.client.get(reverse_lazy('delivery:kitchen_count'))
         self.assertTrue(b'Ginger pork' in response.content)
@@ -142,11 +158,13 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
         req['_next'] = 'Next: Print Kitchen Count'
         req['maindish'] = str(maindish.id)
         req['ingredients'] = ing_ids
+        req['sides_ingredients'] = [Ingredient.objects.all().first().id]
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         # restore recipe
         req = {}
         req['_restore'] = 'Restore recipe'
         req['maindish'] = str(maindish.id)
+        req['sides_ingredients'] = [Ingredient.objects.all().first().id]
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         # check that we have Ginger pork with no Pepper in Kitchen count
         response = self.client.get(reverse_lazy('delivery:kitchen_count'))
@@ -162,6 +180,7 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
         req = {}
         req['_next'] = 'Next: Print Kitchen Count'
         req['maindish'] = str(maindish.id)
+        req['sides_ingredients'] = [Ingredient.objects.all().first().id]
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         response = self.client.get(reverse_lazy('delivery:kitchen_count'))
         self.assertTrue(b'Coq au vin' in response.content)
@@ -176,7 +195,7 @@ class ChooseDayMainDishIngredientsTestCase(TestCase):
         self.assertTrue(b'Select a valid choice.' in response.content)
 
 
-class DeliveryRouteSheetTestCase(TestCase):
+class DeliveryRouteSheetTestCase(SousChefTestMixin, TestCase):
 
     fixtures = ['sample_data']
 
@@ -188,6 +207,7 @@ class DeliveryRouteSheetTestCase(TestCase):
         numorders = Order.objects.auto_create_orders(
             self.today, clients)
         self.route_id = Route.objects.get(name='Centre Sud').id
+        self.force_login()
 
     def test_query(self):
         """Sample route sheet query."""
@@ -196,26 +216,157 @@ class DeliveryRouteSheetTestCase(TestCase):
 
     def test_sheet(self):
         """Sample route sheet page."""
+        member = Member.objects.filter(lastname='Blondin')[0]
+        dic = {"route": [{"id": self.route_id}],
+               "members": [{"id": member.id}]}
+        response = self.client.post(reverse_lazy('delivery:save_route'),
+                                    json.dumps(dic),
+                                    content_type="application/json")
         response = self.client.get(
             reverse_lazy('delivery:route_sheet_id', args=[self.route_id]))
         self.assertTrue(b'Blondin' in response.content)
 
 
-class RouteSequencingTestCase(TestCase):
+class RouteSequencingTestCase(SousChefTestMixin, TestCase):
 
     fixtures = ['sample_data']
 
     def setUp(self):
-        # This data set includes 'Blondin' client lastname
+        self.force_login()
+        # This data set includes 'Dallaire' and 'Taylor' client lastnames
         # generate orders today
         self.today = datetime.date.today()
         clients = Client.active.all()
         numorders = Order.objects.auto_create_orders(
             self.today, clients)
-        self.route_id = Route.objects.get(name='Centre Sud').id
+        self.route_id = Route.objects.get(name='Mile-End').id
 
-    def test_get_orders(self):
-        """Route get orders."""
+    def test_get_orders_euclidean(self):
+        """Route get orders with Euclidean optimized sequence."""
         response = self.client.get(
-            '/delivery/getDailyOrders/?route='+str(self.route_id))
-        self.assertTrue(b'Blondin' in response.content)
+            '/delivery/getDailyOrders/?route=' +
+            str(self.route_id) + '&mode=euclidean')
+        self.assertTrue(b'Dallaire' in response.content)
+
+    def test_save_route(self):
+        """Route save sequence."""
+        dic = {"route": [{"id": "4"}],
+               "members": [{"id": 864}, {"id": 867}, {"id": 868},
+                           {"id": 869}, {"id": 861}, {"id": 862}, {"id": 863}]}
+        response = self.client.post(reverse_lazy('delivery:save_route'),
+                                    json.dumps(dic),
+                                    content_type="application/json")
+        self.assertTrue(b'OK' in response.content)
+
+    def test_save_route_and_retrieve(self):
+        """Route sequence save then retrieve."""
+        mem_dal = Member.objects.filter(lastname='Dallaire')[0]
+        mem_tay = Member.objects.filter(lastname='Taylor')[0]
+        dic = {"route": [{"id": self.route_id}],
+               "members": [{"id": mem_dal.id}, {"id": mem_tay.id}]}
+        response = self.client.post(reverse_lazy('delivery:save_route'),
+                                    json.dumps(dic),
+                                    content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(b'OK' in response.content)
+        response = self.client.get(
+            '/delivery/getDailyOrders/?route=' +
+            str(self.route_id) + '&if_exist_then_retrieve=true')
+        self.assertEqual(response.status_code, 200)
+        content = response.content.decode(response.charset)
+        waypoints = json.loads(content)['waypoints']
+        self.assertEqual(waypoints[0]['id'], mem_dal.id)
+        self.assertEqual(waypoints[1]['id'], mem_tay.id)
+
+    def test_route_sequence_not_saved(self):
+        """Attempt retrieving a route sequence that was not saved."""
+        route_id_none = Route.objects.get(name='Centre Sud').id
+        with self.assertRaises(Exception) as cm:
+            response = self.client.get(
+                '/delivery/getDailyOrders/?route=' +
+                str(route_id_none) + '&if_exist_then_retrieve=true')
+        self.assertIn('unknown', str(cm.exception))
+
+    def test_get_orders_unknown_mode(self):
+        """Route get orders with unknown transportation mode."""
+        with self.assertRaises(Exception) as cm:
+            response = self.client.get(
+                '/delivery/getDailyOrders/?route=' +
+                str(self.route_id) + '&mode=swimming')
+
+
+class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
+
+    fixtures = ['sample_data']
+
+    def test_anonymous_user_gets_redirect_to_login_page(self):
+        check = self.assertRedirectsWithAllMethods
+        check(reverse('delivery:order'))
+        check(reverse('delivery:meal'))
+        meal = Component.objects.first()
+        meal_id = meal.id
+        check(reverse('delivery:meal_id', kwargs={'id': meal_id}))
+        check(reverse('delivery:route'))
+        check(reverse('delivery:routes'))
+        check(reverse('delivery:organize_route', kwargs={'id': 1}))
+        check(reverse('delivery:kitchen_count'))
+        check(reverse('delivery:kitchen_count_date', kwargs={
+            'year': 2016,
+            'month': 11,
+            'day': 30
+        }))
+        check(reverse('delivery:mealLabels'))
+        check(reverse('delivery:route_sheet_id', kwargs={'id': 1}))
+        check(reverse('delivery:dailyOrders'))
+        check(reverse('delivery:refresh_orders'))
+        check(reverse('delivery:save_route'))
+
+
+class OrderlistViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['sample_data']
+
+    def setUp(self):
+        super(OrderlistViewTestCase, self).setUp()
+        self.force_login()
+
+    def test_can_filter_orders_by_client_names(self):
+        # Setup
+        Order.objects.all().update(delivery_date=tz.now())
+        url = reverse('delivery:order')
+        # Run
+        response = self.client.get(url, {'client_name': 'john'})
+        # Check
+        self.assertEqual(
+            set(response.context['orders']),
+            set(Order.objects.filter(
+                Q(client__member__firstname__icontains='john') |
+                Q(client__member__lastname__icontains='john')
+            )))
+
+
+class KitchenCountOrderFilterTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['sample_data']
+
+    def setUp(self):
+        super(KitchenCountOrderFilterTestCase, self).setUp()
+        self.factory = RequestFactory()
+
+    def test_can_filter_orders_by_client_names(self):
+        # Setup
+        queryset = Order.objects.all()
+        request_1 = self.factory.get('/')
+        request_2 = self.factory.get('/', {'client_name': 'john doe'})
+        # Run
+        filterset_1 = KitchenCountOrderFilter(request_1.GET, queryset)
+        filterset_2 = KitchenCountOrderFilter(request_2.GET, queryset)
+        # Check
+        self.assertEqual(filterset_1.qs.count(), queryset.count())
+        self.assertTrue(filterset_2.qs.count())
+        self.assertEqual(
+            set(filterset_2.qs),
+            set(Order.objects.filter(
+                Q(client__member__firstname__icontains='john') |
+                Q(client__member__firstname__icontains='doe') |
+                Q(client__member__lastname__icontains='john') |
+                Q(client__member__lastname__icontains='doe')
+            )))

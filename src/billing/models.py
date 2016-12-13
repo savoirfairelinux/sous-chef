@@ -1,7 +1,8 @@
+import collections
 from django.db import models
 from django.db.models import Q
 from member.models import Client
-from order.models import Order
+from order.models import Order, Order_item
 from datetime import datetime, date
 from annoying.fields import JSONField
 from django.utils.translation import ugettext_lazy as _
@@ -18,9 +19,11 @@ class BillingManager(models.Manager):
         # Get all billable orders for the given period
         billable_orders = Order.objects.get_billable_orders(year, month)
 
+        total_amount = calculate_amount_total(billable_orders)
+
         # Create the Billing object
         billing = Billing.objects.create(
-            total_amount=calculate_amount_total(billable_orders),
+            total_amount=total_amount,
             billing_month=month,
             billing_year=year,
             created=datetime.today(),
@@ -51,9 +54,12 @@ class BillingManager(models.Manager):
 
 class Billing(models.Model):
 
+    class Meta:
+        ordering = ["billing_year", "-billing_month"]
+
     total_amount = models.DecimalField(
         verbose_name=_('total_amount'),
-        max_digits=6,
+        max_digits=8,
         decimal_places=2
     )
 
@@ -79,6 +85,36 @@ class Billing(models.Model):
         """
         period = date(self.billing_year, self.billing_month, 1)
         return period
+
+    @property
+    def summary(self):
+        """
+        Return a summary of every client.
+        Format: dictionary {client: info}
+        """
+        # collect orders by clients
+        kvpairs = map(
+            lambda o: (o.client, o),
+            self.orders.all().prefetch_related('client')
+        )
+        d = collections.defaultdict(list)
+        for k, v in kvpairs:
+            d[k].append(v)
+        result = {}
+        for client, orders in d.items():
+            result[client] = {
+                'total_orders': len(orders),
+                'total_main_dishes': {
+                    'R': Order_item.objects.filter(
+                        order__in=orders, size='R', component_group='main_dish'
+                    ).count(),
+                    'L': Order_item.objects.filter(
+                        order__in=orders, size='L', component_group='main_dish'
+                    ).count(),
+                },
+                'total_amount': sum(map(lambda o: o.price, orders))
+            }
+        return result
 
 
 class BillingFilter(FilterSet):

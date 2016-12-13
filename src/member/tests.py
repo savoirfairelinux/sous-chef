@@ -1,5 +1,6 @@
 import datetime
 import json
+import importlib
 from django.test import TestCase, Client
 from member.models import Member, Client, User, Address, Referencing
 from member.models import Contact, Option, Client_option, Restriction, Route
@@ -25,6 +26,8 @@ from member.forms import(
     ClientReferentInformation, ClientPaymentInformation,
     ClientRestrictionsInformation, ClientEmergencyContactInformation
 )
+
+SousChefTestMixin = importlib.import_module('sous-chef.tests').TestMixin
 
 
 def load_initial_data(client):
@@ -612,7 +615,7 @@ class FormTestCase(TestCase):
             "address_information-street": "555 rue clark",
             "address_information-apartment": "222",
             "address_information-city": "montreal",
-            "address_information-postal_code": "H3C2C2",
+            "address_information-postal_code": "H3C 2C2",
             "address_information-route": self.route.id,
             "address_information-latitude": 45.5343077,
             "address_information-longitude": -73.620735,
@@ -642,7 +645,7 @@ class FormTestCase(TestCase):
             "payment_information-street": "111 rue clark",
             "payment_information-apartement": "222",
             "payment_information-city": "Montreal",
-            "payment_information-postal_code": "H2C3G4",
+            "payment_information-postal_code": "H2C 3G4",
             "wizard_goto_step": "",
         }
 
@@ -664,8 +667,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "emergency_contact",
             "emergency_contact-firstname": "Emergency",
             "emergency_contact-lastname": "User",
-            "emergency_contact-contact_type": "Home phone",
-            "emergency_contact-contact_value": "555-444-5555",
+            "emergency_contact-work_phone": "555-444-5555",
             "emergency_contact-relationship": "friend",
         }
 
@@ -710,7 +712,7 @@ class FormTestCase(TestCase):
 
         # test_client_address:
         self.assertEqual(member.address.street, "555 rue clark")
-        self.assertEqual(member.address.postal_code, "H3C2C2")
+        self.assertEqual(member.address.postal_code, "H3C 2C2")
         self.assertEqual(member.address.apartment, "222")
         self.assertEqual(member.address.city, "montreal")
 
@@ -778,7 +780,7 @@ class FormTestCase(TestCase):
         #  test_billing_address:
         self.assertEqual(client.billing_member.address.city, "Montreal")
         self.assertEqual(client.billing_member.address.street, "111 rue clark")
-        self.assertEqual(client.billing_member.address.postal_code, "H2C3G4")
+        self.assertEqual(client.billing_member.address.postal_code, "H2C 3G4")
 
         #  test_billing_rate_type:
         self.assertEqual(client.rate_type, 'default')
@@ -790,7 +792,7 @@ class FormTestCase(TestCase):
         #  test_emergency_contact_type:
         self.assertEqual(
             client.emergency_contact.member_contact.first().type,
-            "Home phone"
+            "Work phone"
         )
 
         #  test_emergency_contact_value:
@@ -854,7 +856,7 @@ class FormTestCase(TestCase):
         self.assertTrue(b"Testing" in response.content)
         self.assertTrue(b"Home phone" in response.content)
         self.assertTrue(b"555 rue clark" in response.content)
-        self.assertTrue(b"H3C2C2" in response.content)
+        self.assertTrue(b"H3C 2C2" in response.content)
         self.assertTrue(b"montreal" in response.content)
         self.assertTrue(b"Testing alert message" in response.content)
         self.assertTrue(b"555-444-5555" in response.content)
@@ -921,8 +923,7 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "emergency_contact",
             "emergency_contact-firstname": "Same",
             "emergency_contact-lastname": "User",
-            "emergency_contact-contact_type": "Home phone",
-            "emergency_contact-contact_value": "514-868-8686",
+            "emergency_contact-cell_phone": "514-868-8686",
             "emergency_contact-relationship": "friend"
         }
 
@@ -957,6 +958,7 @@ class FormTestCase(TestCase):
         self.assertEqual(member.lastname, "User")
 
         # test_home_phone_member:
+        self.assertEquals(member.home_phone, '514-868-8686')
         self.assertTrue(member.home_phone.startswith('514'))
         self.assertEquals(member.email, 'test@example.com')
         self.assertEquals(member.cell_phone, '438-000-0000')
@@ -966,7 +968,7 @@ class FormTestCase(TestCase):
 
         # test_client_address:
         self.assertEqual(member.address.street, "8686 rue clark")
-        self.assertEqual(member.address.postal_code, "H8C6C8")
+        self.assertEqual(member.address.postal_code, "H8C 6C8")
         self.assertEqual(member.address.apartment, "86")
         self.assertEqual(member.address.city, "Montreal")
 
@@ -1032,11 +1034,12 @@ class FormTestCase(TestCase):
 
         #  test_billing_address:
         self.assertEqual(client.billing_member.address.city, "Montreal")
+
         self.assertEqual(
             client.billing_member.address.street,
             "8686 rue clark"
         )
-        self.assertEqual(client.billing_member.address.postal_code, "H8C6C8")
+        self.assertEqual(client.billing_member.address.postal_code, "H8C 6C8")
 
         #  test_billing_rate_type:
         self.assertEqual(client.rate_type, 'default')
@@ -1071,7 +1074,7 @@ class FormTestCase(TestCase):
         self.assertTrue(b"Same" in response.content)
         self.assertTrue(b"Home phone" in response.content)
         self.assertTrue(b"8686 rue clark" in response.content)
-        self.assertTrue(b"H8C6C8" in response.content)
+        self.assertTrue(b"H8C 6C8" in response.content)
         self.assertTrue(b"Montreal" in response.content)
         self.assertTrue(b"Testing alert message" in response.content)
         self.assertTrue(b"514-868-8686" in response.content)
@@ -1128,6 +1131,10 @@ class FormTestCase(TestCase):
         self.assertTrue(b'lastname' in error_response.content)
         self.assertTrue(b'birthdate' in error_response.content)
         self.assertTrue(b'This field is required' in error_response.content)
+        self.assertIn(
+            b'At least one contact information is required',
+            error_response.content
+        )
 
     def _test_basic_information_without_errors(self):
         # Data for the basic_information step without errors.
@@ -1466,7 +1473,7 @@ class FormTestCase(TestCase):
         self.assertTrue(b'Delivery' not in response.content)
         self.assertTrue(b'Food preference' not in response.content)
         # HTML from the next step
-        self.assertTrue(b'contact_type' in response.content)
+        self.assertTrue(b'relationship' in response.content)
 
     def _test_step_emergency_contact_with_errors(self):
         # Data for the address_information step with errors.
@@ -1474,8 +1481,10 @@ class FormTestCase(TestCase):
             "client_wizard-current_step": "emergency_contact",
             "emergency_contact-firstname": "",
             "emergency_contact-lastname": "",
-            "emergency_contact-contact_type": "Home phone",
-            "emergency_contact-contact_value": ""
+            "emergency_contact-home_phone": "",
+            "emergency_contact-work_phone": "",
+            "emergency_contact-cell_phone": "",
+            "emergency_contact-email": "",
         }
 
         # Send the data to the form.
@@ -1490,8 +1499,7 @@ class FormTestCase(TestCase):
 
         # The response is the next step of the form with no errors messages.
         self.assertTrue(b'Required information' in response_error.content)
-        self.assertTrue(b'contact_type' in response_error.content)
-        self.assertTrue(b'contact_value' in response_error.content)
+        self.assertTrue(b'relationship' in response_error.content)
 
     def _test_step_emergency_contact_without_errors(self):
         # Data for the address_information step without errors.
@@ -1501,8 +1509,7 @@ class FormTestCase(TestCase):
             "emergency_contact-member": "[{}] First Member".format(pk),
             "emergency_contact-firstname": "Emergency",
             "emergency_contact-lastname": "User",
-            "emergency_contact-contact_type": "Home phone",
-            "emergency_contact-contact_value": "555-444-5555",
+            "emergency_contact-work_phone": "514-222-3333",
             "emergency_contact-relationship": "friend"
         }
 
@@ -1525,7 +1532,7 @@ class FormTestCase(TestCase):
         self.assertRedirects(response, reverse('member:list'))
 
 
-class MemberSearchTestCase(TestCase):
+class MemberSearchTestCase(SousChefTestMixin, TestCase):
 
     @classmethod
     def setUpTestData(cls):
@@ -1533,6 +1540,9 @@ class MemberSearchTestCase(TestCase):
             firstname='Katrina', lastname='Heide')
         Contact.objects.create(
             type='Home phone', value='514-456-7890', member=member)
+
+    def setUp(self):
+        self.force_login()
 
     def test_search_member_by_firstname(self):
         """
@@ -1825,7 +1835,7 @@ class ClientUpdateAddressInformation(ClientUpdateTestCase):
         """
         client = ClientFactory()
         form_data = {
-            'street': '111 rue Roy',
+            'street': '111 rue Roy'
         }
         form = ClientAddressInformation(data=form_data)
         self.assertFalse(form.is_valid())
@@ -1902,7 +1912,7 @@ class ClientUpdateReferentInformationTestCase(ClientUpdateTestCase):
             ),
             'information': 'CLSC',
             'date': '2012-12-12',
-            'referral_reason': 'Testing referral reason',
+            'referral_reason': 'Testing referral reason'
         })
         form = ClientReferentInformation(data=data)
         self.assertTrue(form.is_valid())
@@ -2023,7 +2033,7 @@ class ClientUpdatePaymentInformationTestCase(ClientUpdateTestCase):
             'street': None,
             'city': None,
             'apartment': '',
-            'postal_code': None,
+            'postal_code': 'H2R2N3',
             'member': '[{}] {} {}'.format(
                 payment.id,
                 payment.firstname,
@@ -2046,7 +2056,6 @@ class ClientUpdatePaymentInformationTestCase(ClientUpdateTestCase):
             data,
             follow=True
         )
-
         # Reload client data as it should have been changed in the database
         client = Client.objects.get(id=client.id)
         self.assertEqual(client.billing_member.id, payment.id)
@@ -2117,9 +2126,9 @@ class ClientUpdateDietaryRestrictionTestCase(ClientUpdateTestCase):
         self.assertEqual(client.delivery_type, "O")
 
 
-class ClientUpdateReferentInformationTestCase(ClientUpdateTestCase):
+class ClientUpdateEmergencyInformationTestCase(ClientUpdateTestCase):
 
-    def test_form_validation(self):
+    def test_form_validation_existing_member(self):
         """
         Test validation form.
         """
@@ -2140,21 +2149,65 @@ class ClientUpdateReferentInformationTestCase(ClientUpdateTestCase):
                 client.emergency_contact.firstname,
                 client.emergency_contact.lastname
             ),
-            'contact_type':
-                client.emergency_contact.member_contact.first().type,
-            'contact_value':
-                client.emergency_contact.member_contact.first().value,
             'relationship': None,
+        })
+
+        form = ClientEmergencyContactInformation(data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_form_validation_new_emergency_member(self):
+        """
+        Test validation form.
+        """
+        client = ClientFactory()
+        data = load_initial_data(client)
+        data.update({
+            'firstname': None,
+            'lastname': None,
+            'member': None,
+        })
+        form = ClientEmergencyContactInformation(data=data)
+        self.assertFalse(form.is_valid())
+
+        data.update({
+            'firstname': 'test',
+            'lastname': 'test',
+        })
+        form = ClientEmergencyContactInformation(data=data)
+        self.assertFalse(form.is_valid())
+
+        data.update({
+            'cell_phone': '514-122-3333'
         })
         form = ClientEmergencyContactInformation(data=data)
         self.assertTrue(form.is_valid())
 
-    def test_update_referent_information(self):
+        data['cell_phone'] = None
+        data.update({
+            'work_phone': '514-122-3333'
+        })
+        form = ClientEmergencyContactInformation(data=data)
+        self.assertTrue(form.is_valid())
+
+        data['work_phone'] = None
+        data.update({
+            'email': 'invalid email'
+        })
+        form = ClientEmergencyContactInformation(data=data)
+        self.assertFalse(form.is_valid())
+
+        data.update({
+            'email': 'valid@email.com'
+        })
+        form = ClientEmergencyContactInformation(data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_update_emergency_information(self):
         """
         Test the update basic information form.
         """
         client = ClientFactory()
-        emergency = MemberFactory()
+        emergency = MemberFactory()  # new emergency
         # Load initial data related to the client
         data = load_initial_data(client)
         # Update some data
@@ -2165,11 +2218,7 @@ class ClientUpdateReferentInformationTestCase(ClientUpdateTestCase):
                 emergency.id,
                 emergency.firstname,
                 emergency.lastname
-            ),
-            'contact_type':
-                client.emergency_contact.member_contact.first().type,
-            'contact_value':
-                client.emergency_contact.member_contact.first().value,
+            )
         })
 
         # Login as admin
@@ -2192,3 +2241,69 @@ class ClientUpdateReferentInformationTestCase(ClientUpdateTestCase):
             client.emergency_contact.firstname, emergency.firstname
         )
         self.assertEqual(client.emergency_contact.lastname, emergency.lastname)
+
+
+class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
+
+    fixtures = ['routes.json']
+
+    def test_anonymous_user_gets_redirect_to_login_page(self):
+        check = self.assertRedirectsWithAllMethods
+        check(reverse('member:member_step'))
+        check(reverse('member:member_step', kwargs={
+            'step': 'basic_information'
+        }))
+        check(reverse('member:member_step', kwargs={
+            'step': 'address_information'
+        }))
+        check(reverse('member:member_step', kwargs={
+            'step': 'referent_information'
+        }))
+        check(reverse('member:member_step', kwargs={
+            'step': 'payment_information'
+        }))
+        check(reverse('member:member_step', kwargs={
+            'step': 'dietary_restriction'
+        }))
+        check(reverse('member:member_step', kwargs={
+            'step': 'emergency_contact'
+        }))
+        check(reverse('member:list'))
+        check(reverse('member:search'))
+        check(reverse('member:view', kwargs={'pk': 1}))
+        check(reverse('member:list_orders', kwargs={'pk': 1}))
+        check(reverse('member:client_information', kwargs={'pk': 1}))
+        check(reverse('member:client_referent', kwargs={'pk': 1}))
+        check(reverse('member:client_payment', kwargs={'pk': 1}))
+        check(reverse('member:client_allergies', kwargs={'pk': 1}))
+        check(reverse('member:client_notes', kwargs={'pk': 1}))
+        check(reverse('member:geolocateAddress'))
+        check(reverse('member:client_status', kwargs={'pk': 1}))
+        check(reverse('member:clientStatusScheduler', kwargs={'pk': 1}))
+        check(reverse('member:restriction_delete', kwargs={'pk': 1}))
+        check(reverse('member:client_option_delete', kwargs={'pk': 1}))
+        check(reverse('member:ingredient_to_avoid_delete', kwargs={'pk': 1}))
+        check(reverse('member:component_to_avoid_delete', kwargs={'pk': 1}))
+        check(reverse('member:client_meals_pref', kwargs={'pk': 1}))
+        check(reverse('member:member_update_basic_information', kwargs={
+            'pk': 1
+        }))
+        check(reverse('member:member_update_address_information', kwargs={
+            'pk': 1
+        }))
+
+        check(reverse('member:member_update_referent_information', kwargs={
+            'pk': 1
+        }))
+
+        check(reverse('member:member_update_payment_information', kwargs={
+            'pk': 1
+        }))
+
+        check(reverse('member:member_update_dietary_restriction', kwargs={
+            'pk': 1
+        }))
+
+        check(reverse('member:member_update_emergency_contact', kwargs={
+            'pk': 1
+        }))

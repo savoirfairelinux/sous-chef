@@ -1,14 +1,34 @@
 {% load member_extras %}
 {% load i18n %}
 
+{% if client.delivery_type == 'O' %}
 <div class="ui middle aligned divided list">
-    {% for day, meal_schedule in client.meals_schedule %}
+    {% for day, meal_default in client.meals_schedule %}
     <div class="item">
-        <i class="toggle {% if meal_schedule == None %} off {% else %} on grey {% endif %} big icon"></i>
         <div class="content">
           <a class="header">{{day|title}}</a>
-          <div class="description">{{ meal_schedule|readable_prefs }}</div>
+          <div class="description">
+              {% if day in client.simple_meals_schedule %}
+                {{ meal_default|readable_prefs }}
+              {% else %}
+                {% trans 'No delivery.' %}
+              {% endif %}
+          </div>
         </div>
     </div>
   {% endfor %}
 </div>
+{% else %}
+<div class="ui middle aligned divided list">
+    {% for day, meal_default in client.meals_default %}
+    <div class="item">
+        <div class="content">
+          <a class="header">{{day|title}}</a>
+          <div class="description">
+            {{ meal_default|readable_prefs }}
+          </div>
+        </div>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
-
+{% load member_extras %}
 {% block title %}{% trans "Staff Notes" %}{% endblock %}
 
 {% block content %}
@@ -14,39 +14,51 @@
     </div>
 </div>
 
-<div class="ui row">
-<form action="" method="get" class="ui form">
 
-    <div class="inline fields">
-        <div class="field">
+
+
+<div class="ui padded basic segment">
+    <a href="{% url 'note:note_add' %}" class="ui big button">
+        <i class="add icon"></i>{% trans 'New note' %}
+    </a>
+    <div class="ui horizontal divider">
+        {% trans 'Or' %}
+    </div>
+
+
+    <div class="ui row">
+      <form action="" method="get" class="ui form">
+
+        <div class="inline fields">
+          <div class="field">
             <label>{% trans "Name" %}</label>
             <div class="field">
-                <div class="ui large left icon input">
-                    <i class="users icon"></i>
-                    {{ filter.form.name }}
-                </div>
+              <div class="ui large left icon input">
+                <i class="users icon"></i>
+                {{ filter.form.name }}
+              </div>
             </div>
-        </div>
-        <div class="field">
+          </div>
+          <div class="field">
             <label>{% trans "Priority" %}</label>
             <div class="field">
-                {{ filter.form.priority }}
+              {{ filter.form.priority|alter_field_class:'ui dropdown' }}
             </div>
-        </div>
-        <div class="field">
+          </div>
+          <div class="field">
             <label>{% trans "Is read" %}</label>
             <div class="field">
-                {{ filter.form.is_read }}
+              {{ filter.form.is_read|alter_field_class:'ui dropdown' }}
             </div>
+          </div>
         </div>
+        <div class="field">
+          <a href="{{ request.path }}?display={{ display }}" class="ui button">{% trans "Reset" %}</a>
+          <button class="ui yellow button" type="submit">{% trans "Search" %}</button>
+        </div>
+      </form>
     </div>
-    <div class="field">
-        <a href="{{ request.path }}?display={{ display }}" class="ui button">{% trans "Reset" %}</a>
-        <button class="ui yellow button" type="submit">{% trans "Search" %}</button>
-    </div>
-</form>
 </div>
-
 
 <div class="ui relaxed divided list">
     {% for note in filter %}

@@ -1,18 +1,28 @@
+# -*- coding: utf-8 -*-
+
 import random
 import urllib.parse
 import random
+import importlib
+import datetime
+from unittest.mock import patch
 from datetime import date
 
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext as _
+from django.core.exceptions import ValidationError
+from django.core.management import call_command
 
-from member.models import Client, Address, Member
+from member.models import Client, Address, Member, Route
 from member.factories import RouteFactory, ClientFactory
 from meal.factories import ComponentFactory
-from order.models import Order, Order_item, MAIN_PRICE_DEFAULT
+from order.models import Order, Order_item, MAIN_PRICE_DEFAULT, \
+    OrderStatusChange
 from order.factories import OrderFactory
+
+SousChefTestMixin = importlib.import_module('sous-chef.tests').TestMixin
 
 
 class OrderTestCase(TestCase):
@@ -62,10 +72,23 @@ class OrderManagerTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
+        cls.route = Route.objects.get(id=1)
         cls.orders = OrderFactory.create_batch(
-            10, delivery_date=date.today(), status='O')
+            10, delivery_date=date.today(),
+            status='O',
+            client__route=cls.route,
+            client__status=Client.ACTIVE
+        )
+        cls.paused_orders = OrderFactory.create_batch(
+            10, delivery_date=date.today(),
+            status='O',
+            client__route=cls.route,
+            client__status=Client.PAUSED
+        )
         cls.past_order = OrderFactory(
-            delivery_date=date(2015, 7, 15), status='O'
+            delivery_date=date(2015, 7, 15),
+            status='O',
+            client__status=Client.ACTIVE
         )
 
     def test_get_shippable_orders(self):
@@ -79,12 +102,33 @@ class OrderManagerTestCase(TestCase):
         past_order = Order.objects.get_shippable_orders(date(2015, 7, 15))
         self.assertEqual(len(past_order), 1)
 
+    def test_get_shippable_orders_by_route(self):
+        """
+        Should return all shippable orders for the given route.
+        A shippable order must be created in the database, and its ORDER_STATUS
+        must be 'O' (Ordered).
+        """
+        orders = Order.objects.get_shippable_orders_by_route(self.route.id)
+        self.assertEqual(len(orders), len(self.orders))
+
     def test_order_str_includes_date(self):
         delivery_date = date.today()
         OrderFactory(delivery_date=delivery_date)
         orders = Order.objects.get_shippable_orders(
             delivery_date=delivery_date)
         self.assertTrue(str(delivery_date) in str(orders[0]))
+
+    def test_get_shippable_orders_active_client_only(self):
+        """
+        Should return all shippable orders for the given date.
+        A shippable order must be created in the database, and its ORDER_STATUS
+        must be 'O' (Ordered) and the client status must be client.ACTIVE
+        """
+        client = self.orders[0].client
+        client.status = client.PAUSED
+        client.save()
+        new_orders = Order.objects.get_shippable_orders()
+        self.assertNotEqual(len(self.orders), len(new_orders))
 
 
 class OrderItemTestCase(TestCase):
@@ -197,8 +241,6 @@ class OrderCreateOnDefaultsTestCase(TestCase):
             status=Client.ACTIVE,
             delivery_type='O',
             meal_default_week=meals_default)
-        cls.episodic_clients = ClientFactory.create_batch(
-            6, status=Client.ACTIVE, delivery_type='E')
         # The delivery date must be a Friday, to match the meals defaults
         cls.delivery_date = date(2016, 7, 15)
 
@@ -206,9 +248,9 @@ class OrderCreateOnDefaultsTestCase(TestCase):
         """
         One order per active ongoing client must have been created.
         """
-        count = Order.objects.auto_create_orders(
+        created_orders = Order.objects.auto_create_orders(
             self.delivery_date, self.ongoing_clients)
-        self.assertEqual(count, len(self.ongoing_clients))
+        self.assertEqual(len(created_orders), len(self.ongoing_clients))
         created = Order.objects.filter(delivery_date=self.delivery_date)
         self.assertEqual(created.count(), len(self.ongoing_clients))
 
@@ -248,7 +290,7 @@ class OrderCreateOnDefaultsTestCase(TestCase):
         self.assertEqual(items.filter(component_group='compote').count(), 0)
 
 
-class OrderCreateBatchTestCase(TestCase):
+class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
 
     fixtures = ['routes.json']
 
@@ -258,19 +300,38 @@ class OrderCreateBatchTestCase(TestCase):
         Get an episodic client, three delivery dates and several order items.
         """
         cls.orditems = {
-            'main_dish_default_quantity': 1,
-            'size_default': 'L',
-            'dessert_default_quantity': 1,
-            'diabetic_default_quantity': None,
-            'fruit_salad_default_quantity': None,
-            'green_salad_default_quantity': 1,
-            'pudding_default_quantity': None,
-            'compote_default_quantity': None,
+            'main_dish_2016-12-12_quantity': 1,
+            'size_2016-12-12': 'L',
+            'dessert_2016-12-12_quantity': 1,
+            'diabetic_2016-12-12_quantity': None,
+            'fruit_salad_2016-12-12_quantity': None,
+            'green_salad_2016-12-12_quantity': 1,
+            'pudding_2016-12-12_quantity': None,
+            'compote_2016-12-12_quantity': None,
+            'main_dish_2016-12-14_quantity': 1,
+            'size_2016-12-14': 'L',
+            'dessert_2016-12-14_quantity': 1,
+            'diabetic_2016-12-14_quantity': None,
+            'fruit_salad_2016-12-14_quantity': None,
+            'green_salad_2016-12-14_quantity': 1,
+            'pudding_2016-12-14_quantity': None,
+            'compote_2016-12-14_quantity': None,
+            'main_dish_2016-12-15_quantity': 1,
+            'size_2016-12-15': 'L',
+            'dessert_2016-12-15_quantity': 1,
+            'diabetic_2016-12-15_quantity': None,
+            'fruit_salad_2016-12-15_quantity': None,
+            'green_salad_2016-12-15_quantity': 1,
+            'pudding_2016-12-15_quantity': None,
+            'compote_2016-12-15_quantity': None,
         }
         cls.episodic_client = ClientFactory.create_batch(
-            1, status=Client.ACTIVE, delivery_type='E')
+            2, status=Client.ACTIVE, delivery_type='E')
         # The delivery date must be a Friday, to match the meals defaults
         cls.delivery_dates = ['2016-12-12', '2016-12-14', '2016-12-15']
+
+    def setUp(self):
+        self.force_login()
 
     def test_create_batch_orders(self):
         """
@@ -282,6 +343,156 @@ class OrderCreateBatchTestCase(TestCase):
         counter = Order.objects.create_batch_orders(
             self.delivery_dates, self.episodic_client[0], self.orditems)
         self.assertEqual(counter, 0)
+
+    def test_view_get(self):
+        response = self.client.get(reverse('order:create_batch'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_post_success(self):
+        response = self.client.post(reverse('order:create_batch'), {
+            'client': self.episodic_client[1].pk,
+            'delivery_dates': '2016-12-12|2016-12-14',
+            'is_submit': "1",
+            'main_dish_2016-12-12_quantity': 1,
+            'size_2016-12-12': 'L',
+            'dessert_2016-12-12_quantity': 1,
+            'diabetic_2016-12-12_quantity': 0,
+            'fruit_salad_2016-12-12_quantity': 0,
+            'green_salad_2016-12-12_quantity': 1,
+            'pudding_2016-12-12_quantity': 0,
+            'compote_2016-12-12_quantity': 0,
+            'sides_2016-12-12_quantity': 0,
+            'main_dish_2016-12-14_quantity': 1,
+            'size_2016-12-14': 'L',
+            'dessert_2016-12-14_quantity': 1,
+            'diabetic_2016-12-14_quantity': 0,
+            'fruit_salad_2016-12-14_quantity': 0,
+            'green_salad_2016-12-14_quantity': 1,
+            'pudding_2016-12-14_quantity': 0,
+            'compote_2016-12-14_quantity': 0,
+            'sides_2016-12-14_quantity': 0
+        })
+        self.assertEqual(response.status_code, 302)  # form submit redirect
+        created_orders = Order.objects.filter(
+            client=self.episodic_client[1],
+            delivery_date__in=[
+                datetime.date(2016, 12, 12), datetime.date(2016, 12, 14)
+            ]
+        ).count()
+        self.assertEqual(created_orders, 2)
+
+    def test_view_post_no_submit(self):
+        # page refresh (caused by client change / removing a date)
+        # In these cases, the page will be re-posted with is_submit=0
+        # to prevent being submitted to the server,
+        # because e.g. removing a date can make the data validated.
+        response = self.client.post(reverse('order:create_batch'), {
+            'client': self.episodic_client[1].pk,
+            'delivery_dates': '2016-12-12|2016-12-14',
+            'is_submit': "0",
+            'main_dish_2016-12-12_quantity': 1,
+            'size_2016-12-12': 'L',
+            'dessert_2016-12-12_quantity': 1,
+            'diabetic_2016-12-12_quantity': 0,
+            'fruit_salad_2016-12-12_quantity': 0,
+            'green_salad_2016-12-12_quantity': 1,
+            'pudding_2016-12-12_quantity': 0,
+            'compote_2016-12-12_quantity': 0,
+            'sides_2016-12-12_quantity': 0,
+            'main_dish_2016-12-14_quantity': 1,
+            'size_2016-12-14': 'L',
+            'dessert_2016-12-14_quantity': 1,
+            'diabetic_2016-12-14_quantity': 0,
+            'fruit_salad_2016-12-14_quantity': 0,
+            'green_salad_2016-12-14_quantity': 1,
+            'pudding_2016-12-14_quantity': 0,
+            'compote_2016-12-14_quantity': 0,
+            'sides_2016-12-14_quantity': 0
+        })
+        self.assertEqual(response.status_code, 200)  # stay on form page
+        created_orders = Order.objects.filter(
+            client=self.episodic_client[1],
+            delivery_date__in=[
+                datetime.date(2016, 12, 12), datetime.date(2016, 12, 14)
+            ]
+        ).count()
+        self.assertEqual(created_orders, 0)
+
+    def test_view_post_missing_a_subfield(self):
+        response = self.client.post(reverse('order:create_batch'), {
+            'client': self.episodic_client[1].pk,
+            'delivery_dates': '2016-12-12|2016-12-14',
+            'is_submit': "1",
+            'main_dish_2016-12-12_quantity': 1,
+            'size_2016-12-12': 'L',
+            'dessert_2016-12-12_quantity': 1,
+            'diabetic_2016-12-12_quantity': 0,
+            'fruit_salad_2016-12-12_quantity': 0,
+            'green_salad_2016-12-12_quantity': 1,
+            'pudding_2016-12-12_quantity': 0,
+            'compote_2016-12-12_quantity': 0,
+            'sides_2016-12-12_quantity': 0,
+            'main_dish_2016-12-14_quantity': 1,
+            'size_2016-12-14': 'L',
+            'dessert_2016-12-14_quantity': 1,
+            'diabetic_2016-12-14_quantity': 0,
+            'fruit_salad_2016-12-14_quantity': 0,
+            'green_salad_2016-12-14_quantity': 1,
+            'pudding_2016-12-14_quantity': 0,
+            'compote_2016-12-14_quantity': 0
+            # lacks: sides_2016-12-12_quantity
+        })
+        self.assertEqual(response.status_code, 200)  # stay on form page
+        created_orders = Order.objects.filter(
+            client=self.episodic_client[1],
+            delivery_date__in=[
+                datetime.date(2016, 12, 12), datetime.date(2016, 12, 14)
+            ]
+        ).count()
+        self.assertEqual(created_orders, 0)
+
+    def test_view_post_dates_empty(self):
+        response = self.client.post(reverse('order:create_batch'), {
+            'client': self.episodic_client[1].pk,
+            'delivery_dates': '',  # HERE
+            'is_submit': "1",
+            'main_dish_2016-12-12_quantity': 1,
+            'size_2016-12-12': 'L',
+            'dessert_2016-12-12_quantity': 1,
+            'diabetic_2016-12-12_quantity': 0,
+            'fruit_salad_2016-12-12_quantity': 0,
+            'green_salad_2016-12-12_quantity': 1,
+            'pudding_2016-12-12_quantity': 0,
+            'compote_2016-12-12_quantity': 0,
+            'sides_2016-12-12_quantity': 0
+        })
+        self.assertEqual(response.status_code, 200)  # stay on form page
+        created_orders = Order.objects.filter(
+            client=self.episodic_client[1],
+            delivery_date=datetime.date(2016, 12, 12)
+        ).count()
+        self.assertEqual(created_orders, 0)
+
+    def test_view_post_client_empty(self):
+        response = self.client.post(reverse('order:create_batch'), {
+            # lacks: client
+            'delivery_dates': '2016-12-12',
+            'is_submit': "1",
+            'main_dish_2016-12-12_quantity': 1,
+            'size_2016-12-12': 'L',
+            'dessert_2016-12-12_quantity': 1,
+            'diabetic_2016-12-12_quantity': 0,
+            'fruit_salad_2016-12-12_quantity': 0,
+            'green_salad_2016-12-12_quantity': 1,
+            'pudding_2016-12-12_quantity': 0,
+            'compote_2016-12-12_quantity': 0,
+            'sides_2016-12-12_quantity': 0
+        })
+        self.assertEqual(response.status_code, 200)  # stay on form page
+        created_orders = Order.objects.filter(
+            delivery_date=datetime.date(2016, 12, 12)
+        ).count()
+        self.assertEqual(created_orders, 0)
 
 
 class OrderFormTestCase(TestCase):
@@ -410,15 +621,94 @@ class OrderFormTestCase(TestCase):
 
 
 class OrderListTestCase(TestCase):
+    pass
 
-    def test_anonymous_user_gets_redirected_to_login_page(self):
-        self.client.logout()
-        response = self.client.get(reverse('order:list'))
-        self.assertRedirects(
-            response,
-            reverse('page:login') + '?next=' + reverse('order:list'),
-            status_code=302
+
+class OrderStatusChangeTestCase(OrderItemTestCase):
+
+    def setUp(self):
+        order = self.order
+        order.status = 'B'
+        order.save()
+
+    def test_valid_creation_changes_order_status(self):
+        order = self.order
+        osc = OrderStatusChange(
+            order=order,
+            status_from='B',
+            status_to='D'
         )
+        osc.save()
+        order.refresh_from_db()
+        self.assertEqual(order.status, 'D')
+
+    def test_invalid_creation_wrong_status_from(self):
+        order = self.order
+        with self.assertRaises(ValidationError) as context:
+            osc = OrderStatusChange(
+                order=order,
+                status_from='D',
+                status_to='N'
+            )
+            osc.save()
+
+    def test_reason_field_bilingual(self):
+        order = self.order
+        reason = "ôn pàrlé «frânçaîs» èù£¤¢¼½¾³²±"
+        osc = OrderStatusChange.objects.create(
+            order=order,
+            status_from='B',
+            status_to='D',
+            reason=reason
+        )
+        osc.refresh_from_db()
+        self.assertEqual(osc.reason, reason)
+
+
+class OrderStatusChangeViewTestCase(OrderItemTestCase):
+
+    def setUp(self):
+        order = self.order
+        order.status = 'B'
+        order.save()
+        self.client.force_login(self.admin)
+
+    def test_get_page(self):
+        response = self.client.get(
+            reverse('order:update_status', kwargs={'pk': self.order.id})
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_status(self):
+        data = {
+            'order': self.order.pk,
+            'status_to': 'D',
+            'status_from': 'B'
+        }
+        response = self.client.post(
+            reverse('order:update_status', kwargs={'pk': self.order.id}),
+            data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+        )
+        # create successful. Returns json
+        self.assertEqual(response.status_code, 200)
+        self.order.refresh_from_db()
+        self.assertEqual(self.order.status, 'D')
+
+    def test_no_charge_requires_a_reason(self):
+        data = {
+            'order': self.order.pk,
+            'status_to': 'N',
+            'status_from': 'B'
+        }
+        response = self.client.post(
+            reverse('order:update_status', kwargs={'pk': self.order.id}),
+            data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+        )
+        self.assertTrue(b"errorlist" in response.content)
+        self.order.refresh_from_db()
+        self.assertEqual(self.order.status, 'B')
 
 
 class OrderCreateFormTestCase(OrderFormTestCase):
@@ -431,15 +721,6 @@ class OrderCreateFormTestCase(OrderFormTestCase):
             ), follow=True
         )
         self.assertEqual(response.status_code, 200)
-
-    def test_anonymous_user_gets_redirected_to_login_page(self):
-        self.client.logout()
-        response = self.client.get(reverse('order:create'))
-        self.assertRedirects(
-            response,
-            reverse('page:login') + '?next=' + reverse('order:create'),
-            status_code=302
-        )
 
     def test_create_form_validate_data(self):
         """Test all the step of the form with and without wrong data"""
@@ -503,19 +784,6 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-    def test_anonymous_user_gets_redirected_to_login_page(self):
-        self.client.logout()
-        response = self.client.get(reverse('order:update',
-                                           kwargs={'pk': self.order.id}))
-        self.assertRedirects(
-            response,
-            reverse('page:login') + '?next=' + reverse('order:update',
-                                                       kwargs={
-                                                           'pk': self.order.id
-                                                       }),
-            status_code=302
-        )
-
     def test_update_form_validate_data(self):
         """Test all the step of the form with and without wrong data"""
         client = ClientFactory()
@@ -525,16 +793,6 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
         self._test_order_without_errors(route, client)
         self._test_order_item_with_errors(route, client)
         self._test_order_item_without_errors(route, client, component)
-
-    def test_update_status_ajax(self):
-        data = {'status': 'D'}  # Delivery
-        response = self.client.post(
-            reverse('order:update_status', kwargs={'pk': self.order.id}),
-            data,
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
-        )
-        self.assertTrue(response.status_code, 200)
-        self.assertTrue(b'"pk":' in response.content)
 
     def test_update_form_save_data(self):
         data = {
@@ -585,17 +843,6 @@ class DeleteOrderTestCase(OrderFormTestCase):
         )
         self.assertContains(response, 'Delete Order #{}'.format(self.order.id))
 
-    def test_anonymous_user_gets_redirected_to_login_page(self):
-        self.client.logout()
-        response = self.client.get(reverse('order:delete',
-                                           args={self.order.id}))
-        self.assertRedirects(
-            response,
-            reverse('page:login') + '?next=' + reverse('order:delete',
-                                                       args={self.order.id}),
-            status_code=302
-        )
-
     def test_delete_order(self):
         # The template will POST with a 'next' parameter, which is the URL to
         # follow on success.
@@ -607,3 +854,80 @@ class DeleteOrderTestCase(OrderFormTestCase):
         )
         self.assertRedirects(response, reverse('order:list') + next_value,
                              status_code=302)
+
+
+class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
+
+    def test_anonymous_user_gets_redirect_to_login_page(self):
+        check = self.assertRedirectsWithAllMethods
+        check(reverse('order:list'))
+        check(reverse('order:view', kwargs={'pk': 1}))
+        check(reverse('order:create'))
+        check(reverse('order:create_batch'))
+        check(reverse('order:update', kwargs={'pk': 1}))
+        check(reverse('order:update_status', kwargs={'pk': 1}))
+        check(reverse('order:delete', kwargs={'pk': 1}))
+
+
+class CommandsTestCase(TestCase):
+    "Test custom manage.py commands"
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.admin = User.objects.create_superuser(
+            username='admin@example.com',
+            email='admin@example.com',
+            password='test',
+            pk=1  # command will log
+        )
+        RouteFactory()
+
+        cls.ongoing_clients = ClientFactory.create_batch(
+            10, status=Client.ACTIVE, delivery_type='O'
+        )
+        cls.episodic_clients = ClientFactory.create_batch(
+            10, status=Client.ACTIVE, delivery_type='E'
+        )
+        cls.other_clients = (
+            ClientFactory(status=Client.PENDING),
+            ClientFactory(status=Client.PAUSED),
+            ClientFactory(status=Client.STOPNOCONTACT),
+            ClientFactory(status=Client.STOPCONTACT),
+            ClientFactory(status=Client.DECEASED)
+        )
+
+    # mock function for testing purpose.
+    # always return a positive result.
+    @patch.object(Client, 'get_meal_defaults', lambda a, b, c: (1, 'L'))
+    def test_generateorders_1day(self):
+        """Generate one day's orders"""
+
+        args = ["2016-11-22"]
+        opts = {}
+        call_command('generateorders', *args, **opts)
+        self.assertEqual(
+            Order.objects.all().count(),
+            len(self.ongoing_clients)
+        )
+
+    # mock function for testing purpose.
+    # always return a positive result.
+    @patch.object(Client, 'get_meal_defaults', lambda a, b, c: (1, 'L'))
+    def test_generateorders_10day_norepeat(self):
+        """Generate 10 days' orders"""
+
+        args = ["2016-11-22"]
+        opts = {'days': 7}
+        call_command('generateorders', *args, **opts)
+        self.assertEqual(
+            Order.objects.all().count(),
+            len(self.ongoing_clients) * 7
+        )
+
+        args = ["2016-11-25"]
+        opts = {'days': 7}
+        call_command('generateorders', *args, **opts)
+        self.assertEqual(
+            Order.objects.all().count(),
+            len(self.ongoing_clients) * 10
+        )

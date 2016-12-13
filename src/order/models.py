@@ -5,8 +5,10 @@ import re
 from django.db import models, connection
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 from django_filters import FilterSet, MethodFilter, ChoiceFilter
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError
 
 from member.models import (Client, Member, Route,
                            RATE_TYPE_LOW_INCOME, RATE_TYPE_SOLIDARY,
@@ -17,7 +19,8 @@ from meal.models import (Menu, Menu_component, Component,
                          Restricted_item, Ingredient,
                          Component_ingredient, Incompatibility,
                          COMPONENT_GROUP_CHOICES,
-                         COMPONENT_GROUP_CHOICES_MAIN_DISH)
+                         COMPONENT_GROUP_CHOICES_MAIN_DISH,
+                         COMPONENT_GROUP_CHOICES_SIDES)
 
 
 ORDER_STATUS = (
@@ -70,7 +73,23 @@ class OrderManager(models.Manager):
         if delivery_date is None:
             delivery_date = date.today()
         return self.get_queryset().filter(
-            delivery_date=delivery_date, status=ORDER_STATUS_ORDERED)
+            delivery_date=delivery_date,
+            status=ORDER_STATUS_ORDERED,
+            client__status=Client.ACTIVE)
+
+    def get_shippable_orders_by_route(self, route_id):
+        """
+        Return the orders ready to be delivered for a given route.
+        It is assumed here that the delivery date is today.
+        A shippable order must be created in the database, and its ORDER_STATUS
+        must be 'O' (Ordered).
+        """
+        delivery_date = date.today()
+        return self.get_queryset().filter(
+            delivery_date=delivery_date,
+            status=ORDER_STATUS_ORDERED,
+            client__route=route_id,
+            client__status=Client.ACTIVE)
 
     def get_billable_orders(self, year, month):
         """
@@ -125,6 +144,7 @@ class OrderManager(models.Manager):
           Number of orders created.
         """
         created = 0
+        orders = []
         day = delivery_date.weekday()  # Monday is 0, Sunday is 6
         for client in clients:
             # No main_dish means no delivery this day
@@ -136,7 +156,9 @@ class OrderManager(models.Manager):
             try:
                 # If an order is already created, skip order items creation
                 # (if want to replace, must be deleted first)
-                Order.objects.get(client=client, delivery_date=delivery_date)
+                order = Order.objects.get(client=client,
+                                          delivery_date=delivery_date)
+                orders.append(order)
                 continue
             except Order.DoesNotExist:
                 order = Order.objects.create(client=client,
@@ -144,6 +166,7 @@ class OrderManager(models.Manager):
                                              delivery_date=delivery_date,
                                              status=ORDER_STATUS_ORDERED)
                 created += 1
+                orders.append(order)
 
             # TODO Use Parameters Model in member to store unit prices
             prices = self.get_client_prices(client)
@@ -172,55 +195,75 @@ class OrderManager(models.Manager):
                         size=item_size,
                         order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
                         total_quantity=total_quantity)
-        return created
+        return orders
 
-    def create_batch_orders(self, delivery_dates, client, items):
-        created = 0
+    def create_batch_orders(self, delivery_dates, client, items,
+                            return_created_orders=False):
+        created_orders = []
+        messages = []
 
         # Calculate client prices (main and side)
         prices = self.get_client_prices(client)
 
-        for delivery_date in delivery_dates:
-            delivery_date = datetime.strptime(delivery_date, "%Y-%m-%d").date()
+        for delivery_date_str in delivery_dates:
+            delivery_date = datetime.strptime(
+                delivery_date_str, "%Y-%m-%d"
+            ).date()
             try:
                 Order.objects.get(client=client, delivery_date=delivery_date)
                 # If an order is already created, skip order items creation
                 # (if want to replace, must be deleted first)
             except Order.DoesNotExist:
                 # If no order for this client/date, create it and attach items
-                self.create_order(delivery_date, client, items, prices)
-                created += 1
+                individual_items = {}
+                for key, value in items.items():
+                    if delivery_date_str in key:
+                        replaced_key = key.replace(
+                            delivery_date_str,
+                            'default'
+                        )
+                        individual_items[replaced_key] = value
+                order = self.create_order(
+                    delivery_date, client, individual_items, prices
+                )
+                created_orders.append(order)
 
-        return created
+        if not return_created_orders:
+            return len(created_orders)   # LXYANG: TO BE DEPRECATED
+        else:
+            return created_orders
 
     def create_order(self, delivery_date, client, items, prices):
         order = Order.objects.create(client=client,
                                      delivery_date=delivery_date)
 
         for component_group, trans in COMPONENT_GROUP_CHOICES:
-            item_qty = items[component_group + '_default_quantity']
-            item_pri = prices['side']
-            item_siz = None
+            if component_group != COMPONENT_GROUP_CHOICES_SIDES:
+                item_qty = items[component_group + '_default_quantity']
+                item_pri = prices['side']
+                item_siz = None
+                if (item_qty):
+                    if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH):
+                        item_pri = prices['main']
+                        item_siz = items['size_default']
 
-            if (item_qty):
-                if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH):
-                    item_pri = prices['main']
-                    item_siz = items['size_default']
+                    Order_item.objects.create(
+                        order=order,
+                        component_group=component_group,
+                        price=item_qty * item_pri,
+                        billable_flag=True,
+                        size=item_siz,
+                        order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
+                        total_quantity=item_qty)
 
-                Order_item.objects.create(
-                    order=order,
-                    component_group=component_group,
-                    price=item_qty * item_pri,
-                    billable_flag=True,
-                    size=item_siz,
-                    order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
-                    total_quantity=item_qty)
+        return order
 
 
 class Order(models.Model):
 
     class Meta:
         verbose_name_plural = _('orders')
+        ordering = ['-delivery_date']
 
     # Order information
     creation_date = models.DateField(
@@ -331,6 +374,11 @@ class Order(models.Model):
                 # found new other avoid ingredient that does not clash today
                 # should be a set
                 kitchen_list[row.cid].other_ingredients.append(
+                    row.ingredient)
+            if (row.ingredient not in
+                    kitchen_list[row.cid].avoid_ingredients):
+                # remember ingredient to avoid
+                kitchen_list[row.cid].avoid_ingredients.append(
                     row.ingredient)
 
         # Day's restrictions.
@@ -730,6 +778,7 @@ KitchenItem = collections.namedtuple(         # Meal specifics for an order.
      'meal_size',                    # Size of main dish
      'incompatible_ingredients',     # Ingredients in main dish that clash
      'other_ingredients',            # Other ingredients that client refuses
+     'avoid_ingredients',            # All ingredients to avoid for the client
      'restricted_items',             # All restricted items for the client
      'preparation',                  # All food preparations for the client
      'meal_components'])             # List of MealComponents objects
@@ -763,6 +812,7 @@ def check_for_new_client(kitchen_list, row):
             meal_size='',
             incompatible_ingredients=[],
             other_ingredients=[],
+            avoid_ingredients=[],
             restricted_items=[],
             preparation=[],
             meal_components={})
@@ -948,3 +998,60 @@ class Order_item(models.Model):
             format(str(self.order.delivery_date),
                    self.order_item_type,
                    self.component_group)
+
+
+class OrderStatusChange(models.Model):
+
+    class Meta:
+        ordering = ['change_time']
+
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        related_name="status_changes"
+    )
+
+    status_from = models.CharField(
+        max_length=1,
+        choices=ORDER_STATUS
+    )
+
+    status_to = models.CharField(
+        max_length=1,
+        choices=ORDER_STATUS
+    )
+
+    reason = models.CharField(
+        max_length=200,
+        blank=True,
+        default=''
+    )
+
+    change_time = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return "Order #{} status update: from {} to {}, on {}".format(
+            self.order.pk,
+            self.get_status_from_display(),
+            self.get_status_to_display(),
+            self.change_time
+        )
+
+    def clean(self):
+        """
+        Make sure this is valid in regards to Order.
+        """
+        if self.order.status != self.status_from:
+            raise ValidationError(
+                _("Invalid order status update."),
+                code='status_from_incorrect'
+            )
+
+    def save(self, *a, **k):
+        """ Process a scheduled change when saving."""
+        self.full_clean()  # we defined clean method so we need to override
+        super(OrderStatusChange, self).save(*a, **k)
+        self.order.status = self.status_to
+        self.order.save()

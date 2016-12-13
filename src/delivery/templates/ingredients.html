@@ -35,13 +35,6 @@
                     <div class="description">The <em>Restore recipe</em> action resets the ingredients list to the default one.</div>
                 </div>
             </a>
-            <a class="item">
-                <i class="marker icon"></i>
-                <div class="content">
-                    <div class="header">Geolocation</div>
-                    <div class="description">Highlighted orders are not properly geolocated. Edit the client information to fix it.</div>
-                </div>
-            </a>
         </div>
         <div class="ui row"></div>
     </div>
@@ -51,7 +44,6 @@
 <form class="ui form" action="{% url 'delivery:meal' %}" method="post">
     <div class="ui stackable relaxed grid container">
         <div class="six wide column">
-
             {{form.errors}}
             <div class="ui row">
                 {% csrf_token %}
@@ -61,6 +53,7 @@
                 </div>
             </div>
         </div>
+
         <div class="ten wide column">
             <div class="field ingredients selection">
                 <label>{{ form.ingredients.label }}</label>
@@ -72,8 +65,17 @@
         </div>
 
         <div class="ten wide column">
+            <div class="field sides_ingredients selection">
+                <label>{{ form.sides_ingredients.label }}</label>
+                {{ form.sides_ingredients }}
+            </div>
+        </div>
+
+        <div class="ten wide column">
             <div class="ui row">
-                <a class="ui big button" href="{% url 'delivery:order' %}">{% trans "Back" %} </a>
+                <a class="ui labeled icon big button" href="{% url 'delivery:order' %}">
+                    <i class="chevron left icon"></i>{% trans "Back" %}
+                </a>
                 <input class="ui big yellow button" type="submit" value="{% trans "Next: Print Kitchen Count" %}" name="_next" </>
             </div>
         </div>

@@ -32,14 +32,13 @@ function printMapAndItinerary() {
     printContainer.remove();
 }
 
-function getWaypoints(routeId) {
+function getRouteWaypoints(routeId) {
     var waypoints = [];
     // Reset current waypoints
     control.setWaypoints(waypoints);
 
     // Ajax call to get waypoint according route
-    $.get( "../getDailyOrders/?route="+routeId, function(data ) {
-
+    $.get( "../getDailyOrders/?route="+routeId+"&mode=euclidean&if_exist_then_retrieve=true", function(data ) {
         var deliveryPoints = L.Routing.Waypoint.extend({ member:"", address:""});
         // create an array of waypoint from ajax call
         for(var i in data.waypoints)
@@ -171,21 +170,8 @@ function main_map_init (map, options) {
        printMapAndItinerary();
     });
 
-     // during init
-    $('.ui.dropdown').dropdown({
-        onChange: function(routeId) {
-            getWaypoints(routeId);
-        }
-    });
-
-
-    // Go to delivery route sheet using selected route id
-    $("#btnnext").click(function(){
-        var routeid = $("#routeselect").val();
-        var urlmask = "/delivery/route_sheet/999/".replace(/999/, routeid);
-        // console.log("urlmask=", urlmask)
-        window.location.replace(urlmask);
-    });
+    routeId = $('#route_map').attr('data-route');
+    getRouteWaypoints(routeId);
 
     // Add sortable on the route controler
     Sortable.create(document.querySelector('.leaflet-routing-geocoders'), {
@@ -196,6 +182,7 @@ function main_map_init (map, options) {
                newI = e.newIndex,
                wps = control.getWaypoints(),
                wp = wps[oldI];
+               console.log(wp);
 
            if (oldI === newI || newI === undefined) {
                return;
@@ -204,12 +191,38 @@ function main_map_init (map, options) {
            wps.splice(oldI, 1);
            wps.splice(newI, 0, wp);
            control.setWaypoints(wps);
+
+           // Save the route
+           save_route(control);
         }
     });
-
-    getWaypoints(1);
 }
 
+function save_route(control) {
+    var wp = control.getWaypoints();
+    var data = { route: [], members: [] };
+    routeId = $('#route_map').attr('data-route');
+    save_url = $('#route_map').attr('data-save-url');
+    data.route.push({"id" : routeId});
+    // simplify waypoint into a list of member id in the map order
+    $.each(wp, function(key,value) {
+        if (typeof value.options.id !== "undefined") {
+            data.members.push({
+                "id" : value.options.id
+            });
+        }
+    });
+    // Post simple list of members to server
+    $.ajax(save_url, {
+      data : JSON.stringify(data),
+      contentType : 'application/json; charset=utf-8',
+      type : 'POST',
+      dataType: "json",
+      success: function(result) {
+      }
+   });
+
+}
     //:::  This routine calculates the distance between two points (given the     :::
     //:::  latitude/longitude of those points).                                   :::
     //:::  Passed to function:                                                    :::

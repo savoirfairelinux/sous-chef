@@ -47,17 +47,27 @@
 {% if billings %}
 <table class="ui very basic stripped celled table">
   <thead>
-    <th class="sorted descending">{% trans "Billing Period" %}</th>
-    <th class="">{% trans 'Amount' %}</th>
-    <th class="">{% trans 'Orders count' %}</th>
+      <th class="">{% trans "Billing ID" %}
+          <i class="help-text question grey icon link" data-content="{% trans 'A unique identifier for the billing.' %}"></i>
+      </th>
+    <th class="">{% trans "Billing Period" %}
+        <i class="help-text question grey icon link" data-content="{% trans 'A billing period represents a month and includes all orders delivered during the period.' %}"></i>
+    </th>
+    <th class="center aligned">{% trans 'Amount' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Total amount in $CAD delivered for the period.' %}"></i>
+    </th>
+    <th class="center aligned">{% trans 'Orders' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Number of orders delivered included in the period.' %}"></i>
+    </th>
     <th class="">{% trans 'Actions' %}</th>
   </thead>
   <tbody>
     {% for billing in billings %}
       <tr>
-        <td><strong>{{billing.billing_period|date:"F Y"}}</strong></td>
-        <td><i class="dollar icon"></i>{{billing.total_amount}}</td>
-        <td>{{billing.orders.all.count}}</td>
+          <td><i class="hashtag icon"></i>{{billing.id}}</td>
+        <td><i class="calendar icon"></i><strong>{{billing.billing_period|date:"F Y"}}</strong></td>
+        <td class="center aligned"><i class="dollar icon"></i>{{billing.total_amount}}</td>
+        <td class="center aligned">{{billing.orders.all.count}}</td>
         <td>
           <a class="ui basic icon button"  href="{% url 'billing:view' pk=billing.id %}"><i class="icon unhide"></i></a>
           <a class="ui basic icon button"  href=""><i class="icon edit"></i></a>

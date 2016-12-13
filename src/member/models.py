@@ -1,6 +1,8 @@
 import datetime
 import math
 import json
+from member.formsfield import CAPhoneNumberExtField
+from django.forms import ValidationError
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -119,6 +121,15 @@ class Member(models.Model):
     @property
     def home_phone(self):
         try:
+            val_orig = self.member_contact.filter(type=HOME).first().value
+            f = CAPhoneNumberExtField()
+            val_clean = f.clean(val_orig)
+            if val_orig != val_clean:
+                self.member_contact.filter(type=HOME).first().value = val_clean
+                self.add_contact_information(HOME, val_clean, True)
+                return val_clean
+            return val_orig
+        except ValidationError as error:
             return self.member_contact.filter(type=HOME).first().value
         except:
             return ""
@@ -126,14 +137,32 @@ class Member(models.Model):
     @property
     def cell_phone(self):
         try:
-            return self.member_contact.all().filter(type=CELL).first().value
+            val_orig = self.member_contact.filter(type=CELL).first().value
+            f = CAPhoneNumberExtField()
+            val_clean = f.clean(val_orig)
+            if val_orig != val_clean:
+                self.member_contact.filter(type=CELL).first().value = val_clean
+                self.add_contact_information(CELL, val_clean, True)
+                return val_clean
+            return val_orig
+        except ValidationError as error:
+            return self.member_contact.filter(type=CELL).first().value
         except:
             return ""
 
     @property
     def work_phone(self):
         try:
-            return self.member_contact.all().filter(type=WORK).first().value
+            val_orig = self.member_contact.filter(type=WORK).first().value
+            f = CAPhoneNumberExtField()
+            val_clean = f.clean(val_orig)
+            if val_orig != val_clean:
+                self.member_contact.filter(type=WORK).first().value = val_clean
+                self.add_contact_information(WORK, val_clean, True)
+                return val_clean
+            return val_orig
+        except ValidationError as error:
+            return self.member_contact.filter(type=WORK).first().value
         except:
             return ""
 
@@ -151,6 +180,9 @@ class Member(models.Model):
         updated. Otherwise, it should create a new one.
         """
         created = False
+        if value is None:
+            value = ''
+
         if force_update or value is not '':
             contact, created = Contact.objects.update_or_create(
                 member=self, type=type,
@@ -200,7 +232,7 @@ class Address(models.Model):
 
     # Montreal postal code look like H3E 1C2
     postal_code = models.CharField(
-        max_length=6,
+        max_length=7,
         verbose_name=_('postal code')
     )
 
@@ -252,6 +284,17 @@ class Contact(models.Model):
         related_name='member_contact',
     )
 
+    def display_value(self):
+        if self.type in (HOME, WORK, CELL):
+            try:
+                f = CAPhoneNumberExtField()
+                return f.clean(self.value)
+            except ValidationError as error:
+                return self.value
+            except:
+                return ""
+        return self.value
+
     def __str__(self):
         return "{} {}".format(self.member.firstname, self.member.lastname)
 
@@ -274,8 +317,8 @@ class Route(models.Model):
         null=True,
     )
 
-    # ordered client ids for each weekday's delivery
-    #   saved by visual route sequencing page
+    # ordered client ids for the current delivery
+    #   saved by Organize Routes sequencing page
     client_id_sequence = JSONField(
         blank=True, null=True
     )
@@ -284,25 +327,16 @@ class Route(models.Model):
         return self.name
 
     def set_client_sequence(self, date, route_client_ids):
-        # reset in case it was corrupted by user in the admin
-        try:
-            sequence = self.client_id_sequence
-        except:
-            sequence = {}
-        if not isinstance(sequence, dict):
-            sequence = {}
-        # print("set client sequence 1 seq, ids", sequence, route_client_ids)
-        # weekday : Monday is 0, Sunday is 6
-        sequence[str(date.weekday())] = route_client_ids
-        # print("set client sequence 2", sequence)
-        self.client_id_sequence = sequence
+        # save sequence of points for a delivery route
+        self.client_id_sequence = {date.strftime('%Y-%m-%d'): route_client_ids}
 
-    def get_client_sequence(self, date):
-        sequence = self.client_id_sequence
-        if isinstance(sequence, dict):
-            return sequence.get(str(date.weekday()), None)
+    def get_client_sequence(self):
+        # retrieve sequence of points for a delivery route
+        if self.client_id_sequence:
+            # ['date on which sequence was stored', [client_id, ...]]
+            return list(self.client_id_sequence.items())[0]
         else:
-            return None
+            return (None, None)
 
 
 class ClientManager(models.Manager):
@@ -384,6 +418,7 @@ class Client(models.Model):
 
     class Meta:
         verbose_name_plural = _('clients')
+        ordering = ["-member__created_at"]
 
     billing_member = models.ForeignKey(
         'member.Member',
@@ -575,29 +610,59 @@ class Client(models.Model):
             return None
 
     @property
-    def meals_schedule(self):
+    def meals_default(self):
         """
-        Returns a hierarchical dict representing the meals schedule.
+        Returns a list of tuple ((weekday, meal default), ...).
+
+        Consider a meal default "not properly configured" if:
+        (1) if all numeric fields are 0;
+        (2) OR any numeric field is None;
+        (2) OR if size is None
+        and thus set it to None.
+
+        Intended to be used for Episodic clients.
         """
-        prefs = []
+        defaults = []
         for day, str in DAYS_OF_WEEK:
             current = {}
+            numeric_fields = []
             for component, label in COMPONENT_GROUP_CHOICES:
                 item = self.meal_default_week.get(
                     component + '_' + day + '_quantity'
-                ) or 0
+                )
                 current[component] = item
+                numeric_fields.append(item)
 
             size = self.meal_default_week.get(
                 'size_' + day
-            ) or ''
+            )
             current['size'] = size
 
+            not_properly_configured = (
+                all(map(lambda x: x == 0, numeric_fields)) or
+                any(map(lambda x: x is None, numeric_fields)) or
+                size is None
+            )
+            if not_properly_configured:
+                current = None
+            defaults.append((day, current))
+
+        return defaults
+
+    @property
+    def meals_schedule(self):
+        """
+        Returns a list of tuple ((weekday, meal default), ...).
+
+        Intended to be used for Ongoing clients.
+        """
+        defaults = self.meals_default
+        prefs = []
+        for day, meal_schedule in defaults:
             if day not in self.simple_meals_schedule:
                 prefs.append((day, None))
             else:
-                prefs.append((day, current))
-
+                prefs.append((day, meal_schedule))
         return prefs
 
     def set_meals_schedule(self, schedule):

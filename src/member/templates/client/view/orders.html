@@ -19,23 +19,33 @@
             <div class="sub header">{% trans "List of all orders from" %} {{client}}.</div>
         </div>
     </h2>
+
     <div class="ui divider"></div>
 
     <table class="ui very basic stripped celled table">
         <thead>
-            <th class="sorted descending">{% trans "Order" %}</th>
-            <th class="">{% trans 'Delivery Date' %}</th>
-            <th class="">{% trans 'Status' %}</th>
-            <th class="">{% trans 'Amount' %}</th>
+            <th class="sorted descending">{% trans 'Order' %}
+                    <i class="help-text question grey icon link" data-content="{% trans 'A unique identifier for the order.' %}"></i>
+            </th>
+            <th class="">{% trans 'Delivery Date' %}
+                <i class="help-text question grey icon link" data-content="{% trans 'The delivery date planned for the order.' %}"></i>
+            </th>
+            <th class="center aligned">{% trans 'Status' %}
+                <i class="help-text question grey icon link" data-content="{% trans 'The order status' %}"></i>
+            </th>
+            <th class="">{% trans 'Amount' %}
+                <i class="help-text question grey icon link" data-content="{% trans 'Total amount in $CAD.' %}"></i>
+            </th>
             <th class="">{% trans 'Actions' %}</th>
+          </thead>
         </thead>
         <tbody>
             {% for order in orders %}
                 <tr>
-                    <td><strong>{{order.id}}</strong></td>
+                    <td><strong><i class="hashtag icon"></i>{{order.id}}</strong></td>
                     <td>{{order.delivery_date}}</td>
-                    <td>{{order.get_status_display}}</td>
-                    <td>${{order.price}}</td>
+                    <td class="center aligned">{{order.get_status_display}}</td>
+                    <td><i class="dollar icon"></i>{{order.price}}</td>
                     <td>
                         <a class="ui basic icon button"  href="{% url 'order:view' pk=order.id %}"><i class="icon unhide"></i></a>
                         <a class="ui basic icon button"  href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i></a>

@@ -52,8 +52,11 @@
             <span class="category">{{ obj.age }} {% trans "years old" %}</span>
         </div>
         <div class="description">
-            <p>{{ obj.member.firstname }} {% trans "is an" %} <strong>{{ obj.get_delivery_type_display }}</strong>
-                {% trans "client on the" %} <strong>{{ obj.route }}</strong> {% trans "route" %}.</p>
+            <p>
+                {% blocktrans with member_firstname=obj.member.firstname delivery_type=obj.get_delivery_type_display route=obj.route %}
+                    {{ member_firstname }} is an <strong>{{ delivery_type }}</strong> client on the <strong>{{ route }}</strong> route.
+                {% endblocktrans %}
+            </p>
                 <p>{% trans "This client is currently" %} <strong>{{ obj.get_status_display }}</strong>.</p>
             </div>
         </div>
@@ -80,14 +83,24 @@
 {% else %}
 
 {% if clients %}
-<table class="ui very basic stripped celled table">
+<table class="ui very basic stripped compact celled table">
     <thead>
         <tr>
-            <th class="sorted descending">{% trans 'Name' %}</th>
-            <th class="">{% trans 'Status' %}</th>
-            <th class="">{% trans 'Delivery' %}</th>
-            <th class="">{% trans 'Route' %}</th>
-            <th class="">{% trans 'Last update' %}</th>
+            <th class="">{% trans 'Name' %}
+                <i class="help-text question grey icon link" data-content="{% trans 'Full name and age of the client.' %}"></i>
+            </th>
+            <th class="">{% trans 'Status' %}
+                <i class="help-text question grey icon link" data-content="{% trans 'Meal status. Available status are: Pending, Active, Paused, Stop: no contact, Stop: contact and Deceased.' %}"></i>
+            </th>
+            <th class="">{% trans 'Delivery type' %}
+                <i class="help-text question grey icon link" data-content="{% trans 'A client can be either an ongoing or an episodic client.' %}"></i>
+            </th>
+            <th class="">{% trans 'Route' %}
+                <i class="help-text question grey icon link" data-content="{% trans 'The delivery route for the client.' %}"></i>
+            </th>
+            <th class="">{% trans 'Last update' %}
+                <i class="help-text question grey icon link" data-content="{% trans 'Last modification of the file.' %}"></i>
+            </th>
         </tr>
     </thead>
     <tbody>

@@ -5,6 +5,7 @@ import csv
 from datetime import date
 
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.db.models import Q
@@ -13,6 +14,7 @@ from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
+from django.contrib.auth.decorators import login_required
 from formtools.wizard.views import NamedUrlSessionWizardView
 from meal.models import COMPONENT_GROUP_CHOICES
 from member.forms import (
@@ -41,10 +43,11 @@ from member.models import (
     HOME, WORK, CELL, EMAIL,
 )
 from note.models import Note
-from order.mixins import AjaxableResponseMixin
+from order.mixins import FormValidAjaxableResponseMixin
+from note.views import NoteAdd
 
 
-class ClientWizard(NamedUrlSessionWizardView):
+class ClientWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
 
     template_name = 'client/create/form.html'
 
@@ -269,16 +272,19 @@ class ClientWizard(NamedUrlSessionWizardView):
                 lastname=emergency_contact.cleaned_data.get('lastname'),
             )
             emergency.save()
+            emgc_email = emergency_contact.cleaned_data.get(
+                "email", None)
+            emgc_work_phone = emergency_contact.cleaned_data.get(
+                "work_phone", None)
+            emgc_cell_phone = emergency_contact.cleaned_data.get(
+                "cell_phone", None)
+            if emgc_email:
+                emergency.add_contact_information(EMAIL, emgc_email)
+            if emgc_work_phone:
+                emergency.add_contact_information(WORK, emgc_work_phone)
+            if emgc_cell_phone:
+                emergency.add_contact_information(CELL, emgc_cell_phone)
 
-        client_emergency_contact = Contact.objects.create(
-            type=emergency_contact.cleaned_data.get("contact_type"),
-            value=emergency_contact.cleaned_data.get(
-                "contact_value"
-            ),
-
-            member=emergency,
-        )
-        client_emergency_contact.save()
         return emergency
 
     def save_referent_information(self, client, billing_member, emergency):
@@ -561,7 +567,7 @@ def ExportCSV(self, queryset):
     return response
 
 
-class ClientView(generic.DeleteView):
+class ClientView(LoginRequiredMixin, generic.DeleteView):
     # Display detail of one client
     model = Client
 
@@ -717,25 +723,12 @@ class ClientNotesView(ClientView):
         return context
 
 
+@login_required
 def clientMealsPrefsAsJSON(request, pk):
     # Display detail of one client
     client = get_object_or_404(Client, pk=pk)
     prefs = client.get_meals_prefs()
     return JsonResponse(prefs)
-
-
-def note_add(request):
-    if request.method == "POST":
-        form = NoteForm(request.POST)
-        if form.is_valid():
-            model_instance = form.save(commit=False)
-            model_instance.author = request.user
-            model_instance.save()
-            return render(request, 'notes/add.html', {'form': form})
-    else:
-        form = NoteForm()
-
-    return render(request, 'notes/add.html', {'form': form})
 
 
 class ClientDetail(ClientView):
@@ -941,6 +934,7 @@ class ClientUpdateReferentInformation(ClientUpdateInformation):
         initial.update({
             'firstname': None,
             'lastname': None,
+            'number': None,
             'street': None,
             'city': None,
             'apartment': None,
@@ -1036,7 +1030,6 @@ class ClientUpdatePaymentInformation(ClientUpdateInformation):
         Save the basic information step data.
         """
         member = client.member
-
         if payment_information.get('same_as_client'):
             billing_member = member
 
@@ -1210,6 +1203,7 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
         client = get_object_or_404(
             Client, pk=self.kwargs.get('pk')
         )
+        member_contact = client.emergency_contact.member_contact.first()
         initial.update({
             'firstname': None,
             'lastname': None,
@@ -1218,10 +1212,8 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
                 client.emergency_contact.firstname,
                 client.emergency_contact.lastname
             ),
-            'contact_type':
-                client.emergency_contact.member_contact.first().type,
-            'contact_value':
-                client.emergency_contact.member_contact.first().value,
+            'contact_type': member_contact.type if member_contact else None,
+            'contact_value': member_contact.value if member_contact else None,
             'relationship':
                 client.emergency_contact_relationship
         })
@@ -1244,17 +1236,31 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
             )
             emergency.save()
 
-        # Remove old emergency_contact
-        Contact.objects.filter(member=client.emergency_contact).delete()
-        # Add new emergency_contact
-        client_emergency_contact = Contact.objects.create(
-            type=emergency_contact.get("contact_type"),
-            value=emergency_contact.get(
-                "contact_value"
-            ),
-            member=emergency,
-        )
-        client_emergency_contact.save()
+            # save emergency contact
+            if emergency_contact.get('work_phone'):
+                Contact.objects.create(
+                    type=WORK,
+                    value=emergency_contact.get('work_phone'),
+                    member=emergency
+                )
+            elif emergency_contact.get('cell_phone'):
+                Contact.objects.create(
+                    type=CELL,
+                    value=emergency_contact.get('cell_phone'),
+                    member=emergency
+                )
+            elif emergency_contact.get('home_phone'):
+                Contact.objects.create(
+                    type=HOME,
+                    value=emergency_contact.get('home_phone'),
+                    member=emergency
+                )
+            elif emergency_contact.get('email'):
+                Contact.objects.create(
+                    type=EMAIL,
+                    value=emergency_contact.get('email'),
+                    member=emergency
+                )
 
         client.emergency_contact = emergency
         client.emergency_contact_relationship = emergency_contact.get(
@@ -1263,7 +1269,7 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
         client.save()
 
 
-class SearchMembers(generic.View):
+class SearchMembers(LoginRequiredMixin, generic.View):
 
     def get(self, request):
         if request.is_ajax():
@@ -1291,6 +1297,7 @@ class SearchMembers(generic.View):
         return JsonResponse(data)
 
 
+@login_required
 def geolocateAddress(request):
     # do something with the your data
     if request.method == 'POST':
@@ -1301,7 +1308,10 @@ def geolocateAddress(request):
     return JsonResponse({'latitude': lat, 'longtitude': long})
 
 
-class ClientStatusScheduler(AjaxableResponseMixin, generic.CreateView):
+class ClientStatusScheduler(
+        FormValidAjaxableResponseMixin,
+        generic.CreateView
+):
     model = ClientScheduledStatus
     form_class = ClientScheduledStatusForm
     template_name = "client/update/status.html"
@@ -1363,21 +1373,21 @@ class ClientStatusScheduler(AjaxableResponseMixin, generic.CreateView):
         )
 
 
-class DeleteRestriction(generic.DeleteView):
+class DeleteRestriction(LoginRequiredMixin, generic.DeleteView):
     model = Restriction
     success_url = reverse_lazy('member:list')
 
 
-class DeleteClientOption(generic.DeleteView):
+class DeleteClientOption(LoginRequiredMixin, generic.DeleteView):
     model = Client_option
     success_url = reverse_lazy('member:list')
 
 
-class DeleteIngredientToAvoid(generic.DeleteView):
+class DeleteIngredientToAvoid(LoginRequiredMixin, generic.DeleteView):
     model = Client_avoid_ingredient
     success_url = reverse_lazy('member:list')
 
 
-class DeleteComponentToAvoid(generic.DeleteView):
+class DeleteComponentToAvoid(LoginRequiredMixin, generic.DeleteView):
     model = Client_avoid_component
     success_url = reverse_lazy('member:list')

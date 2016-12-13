@@ -60,26 +60,30 @@ $(function() {
                          success: function (xhr, ajaxOptions, thrownError) {
                              if ( $(xhr).find('.errorlist').length > 0 ) {
                                  $('.ui.modal.status').html(xhr);
-                                 $('.ui.modal.status').modal("show");
+                                 $('.ui.status_to.dropdown').dropdown();
                              } else {
+                                 $('.ui.modal.status').modal("hide");
                                  location.reload();
                              }
                          },
                      });
+                    return false; // don't hide modal until we have the response
                 },
                 // When denying modal, restore default value for status dropdown
                 onDeny: function($element) {
                     $('.ui.dropdown.status').dropdown('restore defaults');
+                    $('.ui.modal.status').modal("hide");
                 }
-            }).modal("show");
+            }).modal('setting', 'autofocus', false).modal("show");
         });
     });
 
     if($('#dietary_restriction-delivery_type select').val() == 'E') {
         $('#form-meals-schedule').hide();
-        hideUiAccordionDays();
+        showAllAccordionElements();
     } else {
         $('#form-meals-schedule').show();
+        hideUiAccordionDays();
         showUiAccordionSelectedDays();
     }
 
@@ -87,9 +91,10 @@ $(function() {
         'setting', 'onChange', function(value, text, $selectedItem) {
             if($selectedItem.data('value') == 'E') {
                 $('#form-meals-schedule').hide();
-                hideUiAccordionDays();
+                showAllAccordionElements();
             } else {
                 $('#form-meals-schedule').show();
+                hideUiAccordionDays();
                 showUiAccordionSelectedDays();
             }
         }
@@ -139,6 +144,11 @@ $(function() {
         selector = '.ui.accordion.meals.' + element;
         $(selector).show();
     }
+    function showAllAccordionElements() {
+        $('.ui.accordion.meals').not('.default').each(function () {
+          $(this).show();
+        });
+    }
     function showUiAccordionSelectedDays() {
         var $selected = $("#form-meals-schedule select[multiple='multiple']").val();
         if ($selected) {
@@ -152,7 +162,6 @@ $(function() {
     }
 
     $("#form-meals-schedule select[multiple='multiple']").change(function () {
-
         hideUiAccordionDays();
         showUiAccordionSelectedDays();
     });
@@ -160,22 +169,24 @@ $(function() {
     deliveryTypeSelect.change(function () {
         if ($(this).val() == 'E') {
             $('#form-meals-schedule').hide();
-            hideUiAccordionDays();
-            $('.ui.accordion.meals.default').show();
+            showAllAccordionElements();
+            $('.ui.accordion.meals.default').hide();
         }
         else {
             $('#form-meals-schedule').show();
+            hideUiAccordionDays();
             showUiAccordionSelectedDays();
             $('.ui.accordion.meals.default').hide();
         }
     });
     if (deliveryTypeSelect.val() == 'E') {
         $('#form-meals-schedule').hide();
-        hideUiAccordionDays();
-        $('.ui.accordion.meals.default').show();
+        showAllAccordionElements();
+        $('.ui.accordion.meals.default').hide();
     }
     else {
         $('#form-meals-schedule').show();
+        hideUiAccordionDays();
         showUiAccordionSelectedDays();
         $('.ui.accordion.meals.default').hide();
     }

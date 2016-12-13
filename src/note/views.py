@@ -1,7 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
+from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 from note.models import Note, NoteFilter
 from note.forms import NoteForm
@@ -36,7 +40,7 @@ class NoteList(generic.ListView):
         return context
 
 
-class ClientNoteList(generic.ListView):
+class ClientNoteList(LoginRequiredMixin, generic.ListView):
     # Display detail of one client
     model = Note
     template_name = 'notes_client_list.html'
@@ -61,16 +65,49 @@ class ClientNoteList(generic.ListView):
         return context
 
 
-def NoteAdd(request):
-    pass
+class NoteAdd(generic.CreateView):
+    model = Note
+    form_class = NoteForm
+    template_name = 'notes_add.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(NoteAdd, self).dispatch(*args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        response = super(NoteAdd, self).form_valid(form)
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _("The note has been created.")
+        )
+        return response
+
+    def get_success_url(self):
+        return reverse('note:note_list')
 
 
+class ClientNoteListAdd(NoteAdd):
+    """
+    Reuses things from note.
+    """
+    def get_context_data(self, **kwargs):
+        context = super(ClientNoteListAdd, self).get_context_data(**kwargs)
+        context['client'] = get_object_or_404(Client, id=self.kwargs['pk'])
+        return context
+
+    def get_success_url(self):
+        return reverse('member:client_notes', kwargs={'pk': self.kwargs['pk']})
+
+
+@login_required
 def mark_as_read(request, id):
     note = get_object_or_404(Note, pk=id)
     note.mark_as_read()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+@login_required
 def mark_as_unread(request, id):
     note = get_object_or_404(Note, pk=id)
     note.mark_as_unread()

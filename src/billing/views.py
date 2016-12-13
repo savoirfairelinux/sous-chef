@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
+from django.utils.translation import ugettext_lazy as _
+from django.contrib import messages
 from billing.models import (
     Billing, calculate_amount_total, BillingFilter
 )
@@ -9,6 +11,7 @@ from django.utils.decorators import method_decorator
 from django.core.urlresolvers import reverse_lazy
 from order.models import Order
 from django.http import HttpResponseRedirect
+from member.models import Client
 
 
 class BillingList(generic.ListView):
@@ -49,7 +52,13 @@ class BillingCreate(generic.CreateView):
         if year is '' or month is '':
             return HttpResponseRedirect(reverse_lazy('billing:list'))
 
-        Billing.objects.billing_create_new(year, month)
+        billing = Billing.objects.billing_create_new(year, month)
+
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _("The billing with the identifier #%s \
+            has been successfully created." % billing.id)
+        )
         return HttpResponseRedirect(reverse_lazy('billing:list'))
 
 
@@ -57,6 +66,7 @@ class BillingAdd(generic.ListView):
     model = Order
     template_name = "billing/add.html"
     context_object_name = "orders"
+    paginate_by = 20
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -67,6 +77,21 @@ class BillingAdd(generic.ListView):
         uf = DeliveredOrdersByMonth(
             self.request.GET, queryset=self.get_queryset())
         context['filter'] = uf
+        text = ''
+        count = 0
+        for getVariable in self.request.GET:
+            if getVariable == "page":
+                continue
+            for getValue in self.request.GET.getlist(getVariable):
+                if count == 0:
+                    text += "?" + getVariable + "=" + getValue
+                else:
+                    text += "&" + getVariable + "=" + getValue
+                count += 1
+
+        text = text + "?" if count == 0 else text + "&"
+        context['get'] = text
+
         return context
 
     def get_queryset(self):
@@ -74,18 +99,62 @@ class BillingAdd(generic.ListView):
         return uf.qs
 
 
-class BillingView(generic.DetailView):
-    # Display detail of billing
+class BillingSummaryView(generic.DetailView):
+    # Display summary of billing
     model = Billing
     template_name = "billing/view.html"
     context_object_name = "billing"
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(BillingView, self).dispatch(*args, **kwargs)
+        return super(BillingSummaryView, self).dispatch(*args, **kwargs)
+
+    def get_template_names(self):
+        if self.request.method == "GET" and \
+           self.request.GET.get('print'):
+            return ['billing/print_summary.html']
+        else:
+            return super(BillingSummaryView, self).get_template_names()
 
     def get_context_data(self, **kwargs):
-        context = super(BillingView, self).get_context_data(**kwargs)
+        context = super(BillingSummaryView, self).get_context_data(**kwargs)
+
+        # generate a summary
+        billing = self.object
+        context['billing_summary'] = billing.summary.items()
+
+        return context
+
+
+class BillingOrdersView(generic.DetailView):
+    # Display orders detail of billing
+    model = Billing
+    template_name = "billing/view_orders.html"
+    context_object_name = "billing"
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(BillingOrdersView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(BillingOrdersView, self).get_context_data(**kwargs)
+
+        if self.request.GET.get('client'):
+            # has ?client=client_id
+            client_id = int(self.request.GET['client'])
+            orders = self.object.orders.filter(client__id=client_id)
+            context['orders'] = orders
+            context['client'] = Client.objects.get(id=client_id)
+        else:
+            context['orders'] = self.object.orders.all()
+
+        context['total_amount'] = sum(
+            map(lambda o: o.price, context['orders'])
+        )
+        context['clients'] = list(set(map(
+            lambda o: o.client,
+            self.object.orders.all()
+        )))
         return context
 
 

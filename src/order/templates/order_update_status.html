@@ -1,0 +1,65 @@
+{% load i18n %}
+<div class="header">
+    {% trans 'Status modification' %}
+</div>
+<form class="content ui form {% if form.errors %}error{% endif %}" id="change-status-form" method="POST" action="{% url 'order:update_status' pk=order.id %}">
+    {% csrf_token %}
+    <input type="hidden" name="order" value="{{form.order.value}}">
+    <input type="hidden" name="status_from" value="{{form.status_from.value}}">
+    <div class="field {% if form.status_to.errors %}error{% endif %}">
+        <label>{{ form.status_to.label }}</label>
+        {{ form.status_to }}
+
+        {% if form.status_to.errors %}
+        <div class="ui error message">
+          {{ form.status_to.errors }}
+        </div>
+        {% endif %}
+    </div>
+
+    {% if form.status_to.value != order_no_charge %}
+    <div class="field {% if form.reason.errors %}error{% endif %}">
+        <label>{{ form.reason.label }} ({% trans 'optional' %})</label>
+        {{ form.reason }}
+        {% if form.reason.errors %}
+        <div class="ui error message">
+          {{ form.reason.errors }}
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="grouped fields {% if form.reason.errors %}error{% endif %}" id="reason_select_group">
+      <label>{{ form.reason.label }} ({% trans 'required' %})</label>
+      {% for reason in order_no_charge_reasons %}
+      <div class="field">
+        <div class="ui radio checkbox">
+          <input name="reason_select" type="radio" value="{{ reason }}">
+          <label>{{ reason }}</label>
+        </div>
+      </div>
+      {% endfor %}
+      <div class="field">
+        <div class="ui radio checkbox">
+          <input name="reason_select" type="radio" value="other" {% if form.reason.errors %}checked="checked"{% endif %}>
+          <label>
+            {% trans "Other:" %}
+            <div class="field" id="reason_other_field">
+              {{ form.reason }}
+            </div>
+          </label>
+        </div>
+      </div>
+
+      {% if form.reason.errors %}
+      <div class="ui error message">
+        {{ form.reason.errors }}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+    </div>
+</form>
+<div class="actions">
+    <button class="ui button deny">{% trans "Cancel" %}</button>
+    <input class="ui yellow button approve" type="submit" value="{% trans "OK" %}" />
+</div>

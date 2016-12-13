@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+<!-- Load Internationalization utils-->
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Organize the delivery route" %}: {{ route.name }} {% endblock %}
+
+{% block extrahead %}
+    {% load leaflet_tags %}
+    {% leaflet_css %}
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+{% include 'kitchen_count_steps.html' with step='routes' %}
+
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">{% trans "Delivery route" %}: {{ route.name }} </h1>
+    <div class="right menu">
+      <div class="ui item"><h3><i class="calendar icon"></i>{% now "j F Y" %}</h3></div>
+    </div>
+</div>
+
+<div class="ui basic segment no-print">
+    <a href="javascript:window.print()" class="ui labeled icon right pink basic big button" title="{% trans 'Print the map and directions' %}">
+        <i class="print icon"></i>{% trans 'Map and Directions' %}
+    </a>
+</div>
+
+<div class="row">
+  <div class="thirteen wide column" id="route_map"
+        data-route="{{ route.id }}"
+        data-save-url="{% url 'delivery:save_route' %}">
+    {% leaflet_map "main" callback="main_map_init" %}
+  </div>
+  <div class="three wide column">
+    <div class="controls"></div>
+  </div>
+</div>
+
+<a href="{% url 'delivery:route_sheet_id' id=route.id %}" class="ui big labeled icon button" title="{% trans 'Print the route sheet' %}">
+  <i class="list layout icon"></i>{% trans 'Route sheet' %}
+</a>
+<a href="{% url 'delivery:routes' %}" class="ui big labeled {% if orders == 0 %} disabled {% endif %} icon button" title="{% trans 'View routes list' %}">
+  <i class="chevron left icon"></i>{% trans 'View routes' %}
+</a>
+
+{% endblock %}
+
+{% block extrajs %}
+    {% leaflet_js %}
+    {% if debug %}
+        <script src="{% static 'js/leaflet.js' %}" type="application/javascript"></script>
+    {% else %}
+        <script src="{% static 'js/leaflet.min.js' %}" type="application/javascript"></script>
+    {% endif %}
+{% endblock %}
