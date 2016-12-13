@@ -1,5 +1,7 @@
 from django.shortcuts import render
+from django.db.models import Q
 from django.views import generic
+from django.utils.translation import string_concat
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from billing.models import (
@@ -9,7 +11,7 @@ from order.models import DeliveredOrdersByMonth
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.urlresolvers import reverse_lazy
-from order.models import Order
+from order.models import Order, Order_item
 from django.http import HttpResponseRedirect
 from member.models import Client
 
@@ -121,8 +123,58 @@ class BillingSummaryView(generic.DetailView):
 
         # generate a summary
         billing = self.object
-        context['billing_summary'] = billing.summary.items()
+        context['billing_summary'] = list(billing.summary.items())
+        # sort by client lastname
+        context['billing_summary'].sort(
+            key=lambda tup: (tup[0].member.lastname, tup[0].member.firstname)
+        )
+        # tfoot
+        context['billing_total'] = {
+            'orders': billing.orders.all().count(),
+            'main_dishes': sum(map(
+                lambda t: t[1]['total_main_dishes']['R'] +
+                t[1]['total_main_dishes']['L'],
+                context['billing_summary']
+            )),
+            'amount': billing.total_amount
+        }
 
+        # Throw a warning if there's any main_dish order with size=None.
+        q = Order_item.objects.filter(
+            Q(order__in=billing.orders.all()) &
+            (Q(size__isnull=True) | Q(size='')) &
+            Q(component_group='main_dish')
+        )
+        if q.exists():
+            size_none_orders_info = list(q.values_list(
+                'order__id',
+                'order__client__member__firstname',
+                'order__client__member__lastname'
+            ))
+            formatted_htmls = ['<ul class="ui list">']
+            for i, f, l in size_none_orders_info:
+                formatted_htmls.append(
+                    '<li><a href="{0}" target="_blank">'
+                    '#{1} ({2} {3})'
+                    '</a></li>'.format(
+                        Order(id=i).get_absolute_url(),
+                        i,
+                        f,
+                        l
+                    )
+                )
+            formatted_htmls.append('</ul>')
+            formatted_html = ''.join(formatted_htmls)
+            messages.add_message(
+                self.request, messages.WARNING,
+                string_concat(
+                    _('Warning: the order(s) below have not set a "size" '
+                      'for main dish and thus have been excluded in '
+                      '"Total Main Dishes" column.'),
+                    '<br/>',
+                    formatted_html
+                )
+            )
         return context
 
 

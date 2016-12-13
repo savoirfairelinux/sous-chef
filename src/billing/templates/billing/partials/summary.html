@@ -1,0 +1,54 @@
+{% load i18n %}
+<table class="ui very basic compact celled table">
+  <thead>
+    <tr>
+      <th>{% trans 'Client' %}
+        <i class="help-text question grey icon link no-print" data-content="{% trans 'Quickly access the client file.' %}"></i>
+      </th>
+      <th>{% trans 'Total Orders' %}
+        <i class="help-text question grey icon link no-print" data-content="{% trans 'Number of orders in total in this billing period.' %}"></i>
+      </th>
+      <th>{% trans 'Total Main Dishes' %}
+        <i class="help-text question grey icon link no-print" data-content="{% trans 'Number of main dishes in total in this billing period.' %}"></i>
+      </th>
+      <th>{% trans 'Total Amount' %}
+        <i class="help-text question grey icon link no-print" data-content="{% trans 'Total amount in this billing period.' %}"></i>
+      </th>
+      <th class="no-print">{% trans 'Actions' %}</th>
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+      <th>{% trans "Total" %}</th>
+      <th>{{ billing_total.orders }}</th>
+      <th>{{ billing_total.main_dishes }}</th>
+      <th class="left aligned">${{ billing_total.amount }}</th>
+      <th class="no-print">
+        <a class="ui icon button"  href="{% url 'billing:view_orders' pk=billing.id %}">{% trans 'View Orders' %}</a>
+      </th>
+    </tr>
+  </tfoot>
+  <tbody>
+    {% for client, client_summary in billing_summary %}
+    <tr>
+      <td><a href="{% url 'member:client_information' pk=client.id %}">{{ client.member.lastname|upper }}, {{ client.member.firstname }}</a></td>
+      <td>{{client_summary.total_orders}}</td>
+      <td>
+        {% with client_summary.total_main_dishes as tmd %}
+        {% if tmd.R > 0 %}
+        {{ tmd.R }} {% trans 'Regular' %}
+        {% endif %}
+        {% if tmd.R > 0 and tmd.L > 0 %}{% trans 'and' %}{% endif %}
+        {% if tmd.L > 0 %}
+        {{ tmd.L }} {% trans 'Large' %}
+        {% endif %}
+        {% endwith %}
+      </td>
+      <td class="">${{client_summary.total_amount}}</td>
+      <td class="no-print">
+        <a class="ui icon button"  href="{% url 'billing:view_orders' pk=billing.id %}?client={{ client.id }}">{% trans 'View Orders' %}</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
