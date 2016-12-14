@@ -83,6 +83,7 @@ class Command(BaseCommand):
                         "delivery_note": row[self.ROW_DELIVERY_NOTES],
                         "route": route,
                         'language': row[self.ROW_LANG],
+                        'rate_type': row[self.ROW_PAYSCALE],
                     }
                 )
 
@@ -94,6 +95,7 @@ class Command(BaseCommand):
 
                 # Override creation date
                 client.member.created_at = row_created
+
                 client.member.save()
 
                 # Add Client option meals_schedule

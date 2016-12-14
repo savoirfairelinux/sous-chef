@@ -53,11 +53,11 @@ ORDER_ITEM_TYPE_CHOICES = (
 
 ORDER_ITEM_TYPE_CHOICES_COMPONENT = ORDER_ITEM_TYPE_CHOICES[0][0]
 
-MAIN_PRICE_DEFAULT = 8.00  # TODO use decimal ?
+MAIN_PRICE_DEFAULT = 5.50  # TODO use decimal ?
 SIDE_PRICE_DEFAULT = 1.00
-MAIN_PRICE_LOW_INCOME = 7.00
+MAIN_PRICE_LOW_INCOME = 4.50
 SIDE_PRICE_LOW_INCOME = 0.75
-MAIN_PRICE_SOLIDARY = 6.00
+MAIN_PRICE_SOLIDARY = 3.50
 SIDE_PRICE_SOLIDARY = 0.50
 
 
@@ -269,11 +269,14 @@ class OrderManager(models.Manager):
                 }
 
                 if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH):
+                    price = item_qty * prices['main']
+                    if items['size_default'] == 'L':
+                        price += item_qty * prices['side']
                     # main dish
                     Order_item.objects.create(
                         size=items['size_default'],
                         total_quantity=item_qty,
-                        price=item_qty * prices['main'],
+                        price=price,
                         billable_flag=True,
                         **common_kwargs)
                 else:
