@@ -371,3 +371,21 @@ class KitchenCountOrderFilterTestCase(SousChefTestMixin, TestCase):
                 Q(client__member__lastname__icontains='john') |
                 Q(client__member__lastname__icontains='doe')
             )))
+
+
+class RoutesInformationViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['sample_data']
+
+    def setUp(self):
+        super(RoutesInformationViewTestCase, self).setUp()
+        self.force_login()
+
+    def test_can_embed_additional_route_sheet_information_when_printing(self):
+        # Setup
+        url = reverse('delivery:routes')
+        # Run
+        response_1 = self.client.get(url)
+        response_2 = self.client.get(url, {'print': 'yes'})
+        # Check
+        self.assertNotIn('routes_dict', response_1.context)
+        self.assertIn('routes_dict', response_2.context)

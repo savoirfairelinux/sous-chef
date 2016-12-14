@@ -1,0 +1,87 @@
+{% load i18n %}
+{% load static %}
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>{% trans 'Routes Information' %}</title>
+    <style>
+      table {width: 100%;border-collapse:collapse}
+      table th {text-align:left}
+      table tr {border-bottom: 1px solid black}
+      @media only screen {
+        body {max-width:1024px}  /* for display */
+      }
+      @media only print {
+        .no-print {display:none!important;visilibity:hidden!important}
+      }
+    </style>
+  </head>
+  <body>
+    <h1>{% trans "Routes Information" %} <small>{% now "j F Y" %}</small></h1>
+    <button onclick="javascript:window.print()" class="no-print">{% trans 'Print' %}</button>
+
+    {% for route_dict in routes_dict.values %}
+    {% if route_dict.summary_lines or route_dict.detail_lines %}
+    <h2>{{ route_dict.route.name }}</h2>
+    <p>
+      <table>
+        <thead>
+         <tr>
+          <th>{% trans 'Dish' %}</th>
+          <th>{% trans 'Regular' %}</th>
+          <th>{% trans 'Large' %}</th>
+         </tr>
+        </thead>
+        <tbody>
+          {% for obj in route_dict.summary_lines %}
+            <tr>
+              <td><strong>{{obj.component_group}}</strong></td>
+              <td>{{obj.rqty}}</td>
+              <td>{{obj.lqty}}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </p>
+    <p>
+      <table class="ui very compact celled  table">
+        <thead>
+         <tr class="top center aligned">
+          <th class="three wide">{% trans 'Client' %}</th>
+          <th class="six wide">{% trans 'Note' %}</th>
+          <th class="two wide">{% trans 'Item' %}</th>
+          <th class="one wide">{% trans 'Qty' %}</th>
+         </tr>
+         </thead>
+        <tbody>
+          {% for obj in route_dict.detail_lines %}
+            <tr>
+              <td>
+                <strong>{{obj.firstname}} {{obj.lastname}}</strong><br>
+                {{obj.street}}<br>
+                {% if obj.apartment %}
+                  {% trans 'Apt' %} {{obj.apartment}}<br>
+                {% endif %}
+                {{obj.phone}}
+              </td>
+              <td class="left aligned">{{obj.delivery_note}}</td>
+              <td>
+                {% for item in obj.delivery_items %}
+                  {{item.component_group}} {% if item.remark %}{{item.remark}}{% endif %}<br>
+                {% endfor %}
+              </td>
+              <td class="center aligned">
+                {% for item in obj.delivery_items %}
+                  {{item.total_quantity}}<br>
+                {% endfor %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </p>
+    {% endif %}
+    {% endfor %}
+  </body>
+</html>

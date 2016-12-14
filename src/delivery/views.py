@@ -211,11 +211,14 @@ class RouteInformation(LoginRequiredMixin, generic.ListView):
 class RoutesInformation(LoginRequiredMixin, generic.ListView):
     # Display all the route information for a given day
     model = Delivery
-    template_name = "routes.html"
+
+    @property
+    def doprint(self):
+        return self.request.GET.get('print', False)
 
     def get_context_data(self, **kwargs):
-
         context = super(RoutesInformation, self).get_context_data(**kwargs)
+
         routes = Route.objects.all()
         orders = []
         for route in routes:
@@ -225,7 +228,25 @@ class RoutesInformation(LoginRequiredMixin, generic.ListView):
                      route.id).count()))
         context['routes'] = orders
 
+        # Embeds additional information if we are displaying the print version
+        # of the routes information page.
+        if self.doprint:
+            date = datetime.date.today()
+            routes_dict = {}
+            for route in routes:
+                date_stored, route_client_ids = route.get_client_sequence()
+                route_list = Order.get_delivery_list(date, route.id)
+                route_list = sort_sequence_ids(route_list, route_client_ids)
+                summary_lines, detail_lines = drs_make_lines(route_list, date)
+                routes_dict[route.id] = {
+                    'route': route, 'summary_lines': summary_lines,
+                    'detail_lines': detail_lines}
+            context['routes_dict'] = routes_dict
+
         return context
+
+    def get_template_names(self):
+        return ['routes_print.html', ] if self.doprint else ['routes.html', ]
 
 
 class OrganizeRoute(LoginRequiredMixin, generic.ListView):
