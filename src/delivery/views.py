@@ -6,7 +6,12 @@ import os
 import textwrap
 
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
@@ -15,8 +20,6 @@ from django.http import JsonResponse
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.admin.models import LogEntry, ADDITION
 from django.db.models.functions import Lower
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django_filters.views import FilterView
 
 import labels  # package pylabels
@@ -42,12 +45,13 @@ MEAL_LABELS_FILE = os.path.join(settings.BASE_DIR, "meal_labels.pdf")
 DELIVERY_STARTING_POINT_LAT_LONG = (45.516564, -73.575145)  # Santropol Roulant
 
 
-class Orderlist(LoginRequiredMixin, FilterView):
+class Orderlist(LoginRequiredMixin, PermissionRequiredMixin, FilterView):
     # Display all the order on a given day
+    context_object_name = 'orders'
     filterset_class = KitchenCountOrderFilter
     model = Order
+    permission_required = 'sous_chef.read'
     template_name = 'review_orders.html'
-    context_object_name = 'orders'
 
     def get_queryset(self):
         queryset = Order.objects.get_shippable_orders().order_by(
@@ -77,8 +81,9 @@ class Orderlist(LoginRequiredMixin, FilterView):
         return context
 
 
-class MealInformation(LoginRequiredMixin, generic.View):
+class MealInformation(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
     # Choose today's main dish and its ingredients
+    permission_required = 'sous_chef.read'
 
     def get(self, request, **kwargs):
         # Display today's main dish and its ingredients
@@ -129,6 +134,10 @@ class MealInformation(LoginRequiredMixin, generic.View):
                 'ingredients': dish_ingredients,
                 'sides_ingredients': sides_ingredients})
 
+        # The form should be read-only if the user does not have the permission to edit data.
+        if not request.user.has_perm('sous_chef.edit'):
+            [setattr(form.fields[k], 'disabled', True) for k in form.fields]
+
         return render(
             request,
             'ingredients.html',
@@ -137,6 +146,10 @@ class MealInformation(LoginRequiredMixin, generic.View):
 
     def post(self, request):
         # Choose ingredients in today's main dish and in Sides
+
+        # Prevent users to go further if they don't have the permission to edit data.
+        if not request.user.has_perm('sous_chef.edit'):
+            raise PermissionDenied
 
         # print("Pick Ingredients POST request=", request.POST)  # For testing
         date = datetime.date.today()
@@ -208,9 +221,10 @@ class MealInformation(LoginRequiredMixin, generic.View):
              'form': form})
 
 
-class RouteInformation(LoginRequiredMixin, generic.ListView):
+class RouteInformation(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     # Display all the route information for a given day
     model = Delivery
+    permission_required = 'sous_chef.read'
     template_name = "route.html"
 
     def get_context_data(self, **kwargs):
@@ -221,8 +235,9 @@ class RouteInformation(LoginRequiredMixin, generic.ListView):
         return context
 
 
-class RoutesInformation(LoginRequiredMixin, generic.ListView):
+class RoutesInformation(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     # Display all the route information for a given day
+    permission_required = 'sous_chef.read'
     model = Delivery
 
     @property
@@ -262,9 +277,10 @@ class RoutesInformation(LoginRequiredMixin, generic.ListView):
         return ['routes_print.html', ] if self.doprint else ['routes.html', ]
 
 
-class OrganizeRoute(LoginRequiredMixin, generic.ListView):
+class OrganizeRoute(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     # Display all the route information for a given day
     model = Delivery
+    permission_required = 'sous_chef.read'
     template_name = "organize_route.html"
 
     def get_context_data(self, **kwargs):
@@ -277,7 +293,8 @@ class OrganizeRoute(LoginRequiredMixin, generic.ListView):
 
 # Kitchen count report view, helper classes and functions
 
-class KitchenCount(LoginRequiredMixin, generic.View):
+class KitchenCount(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
+    permission_required = 'sous_chef.read'
 
     def get(self, request, **kwargs):
         # Display kitchen count report for given delivery date
@@ -728,7 +745,8 @@ def kcr_make_labels(kitchen_list, main_dish_name, main_dish_ingredients):
 # Delivery route sheet view, helper classes and functions
 
 
-class MealLabels(LoginRequiredMixin, generic.View):
+class MealLabels(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
+    permission_required = 'sous_chef.read'
 
     def get(self, request, **kwargs):
         try:
@@ -744,7 +762,8 @@ class MealLabels(LoginRequiredMixin, generic.View):
         return response
 
 
-class DeliveryRouteSheet(LoginRequiredMixin, generic.View):
+class DeliveryRouteSheet(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
+    permission_required = 'sous_chef.read'
 
     def get(self, request, **kwargs):
         # Display today's delivery sheet for given route
@@ -953,42 +972,49 @@ def dailyOrders(request):
     return JsonResponse(waypoints, safe=False)
 
 
-@csrf_exempt
-@login_required
-def saveRoute(request):
-    """Save the sequence of points for a delivery route.
+class SaveRouteView(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
+    permission_required = 'sous_chef.edit'
 
-    Saves a sequence of client ids for the delivery route.
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(SaveRouteView, self).dispatch(request, *args, **kwargs)
 
-    Args:
-        request : an http request having parameters 'members' and 'route'.
+    def post(self, request):
+        """Save the sequence of points for a delivery route.
 
-    Returns:
-        A json response confirming success.
-    """
-    data = json.loads(request.body.decode('utf-8'))
-    member_ids = [member['id'] for member in data['members']]
-    route_id = data['route'][0]['id']
-    route_client_ids = \
-        [Client.objects.get(member__id=member_id).id
-         for member_id in member_ids]
-    route = Route.objects.get(id=route_id)
-    route.set_client_sequence(datetime.date.today(), route_client_ids)
-    route.save()
-    return JsonResponse('OK', safe=False)
+        Saves a sequence of client ids for the delivery route.
+
+        Args:
+            request : an http request having parameters 'members' and 'route'.
+
+        Returns:
+            A json response confirming success.
+        """
+        data = json.loads(request.body.decode('utf-8'))
+        member_ids = [member['id'] for member in data['members']]
+        route_id = data['route'][0]['id']
+        route_client_ids = \
+            [Client.objects.get(member__id=member_id).id
+             for member_id in member_ids]
+        route = Route.objects.get(id=route_id)
+        route.set_client_sequence(datetime.date.today(), route_client_ids)
+        route.save()
+        return JsonResponse('OK', safe=False)
 
 
-@login_required
-def refreshOrders(request):
-    delivery_date = date.today()
-    clients = Client.ongoing.all()
-    orders = Order.objects.auto_create_orders(delivery_date, clients)
-    LogEntry.objects.log_action(
-        user_id=1, content_type_id=1,
-        object_id="", object_repr="Generation of orders for " + str(
-            datetime.datetime.now().strftime('%m %d %Y %H:%M')),
-        action_flag=ADDITION,
-    )
-    orders.sort(key=lambda o: (o.client.route.pk, o.pk))
-    context = {'orders': orders}
-    return render(request, 'partials/generated_orders.html', context)
+class RefreshOrderView(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
+    permission_required = 'sous_chef.edit'
+
+    def get(self, request):
+        delivery_date = date.today()
+        clients = Client.ongoing.all()
+        orders = Order.objects.auto_create_orders(delivery_date, clients)
+        LogEntry.objects.log_action(
+            user_id=1, content_type_id=1,
+            object_id="", object_repr="Generation of orders for " + str(
+                datetime.datetime.now().strftime('%m %d %Y %H:%M')),
+            action_flag=ADDITION,
+        )
+        orders.sort(key=lambda o: (o.client.route.pk, o.pk))
+        context = {'orders': orders}
+        return render(request, 'partials/generated_orders.html', context)

@@ -203,6 +203,8 @@ function save_route(control) {
     var data = { route: [], members: [] };
     routeId = $('#route_map').attr('data-route');
     save_url = $('#route_map').attr('data-save-url');
+    can_save = $('#route_map').data('can-save');
+    if (can_save == 'no') { return; }
     data.route.push({"id" : routeId});
     // simplify waypoint into a list of member id in the map order
     $.each(wp, function(key,value) {

@@ -5,15 +5,15 @@ from datetime import date
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
-from django.contrib.auth.decorators import login_required
 from formtools.wizard.views import NamedUrlSessionWizardView
 from meal.models import COMPONENT_GROUP_CHOICES, COMPONENT_GROUP_CHOICES_SIDES
 from member.forms import (
@@ -43,11 +43,10 @@ from member.models import (
 )
 from note.models import Note
 from order.mixins import FormValidAjaxableResponseMixin
-from note.views import NoteAdd
 
 
-class ClientWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
-
+class ClientWizard(LoginRequiredMixin, PermissionRequiredMixin, NamedUrlSessionWizardView):
+    permission_required = 'sous_chef.edit'
     template_name = 'client/create/form.html'
 
     def get_context_data(self, **kwargs):
@@ -432,16 +431,13 @@ class ClientWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
         return False
 
 
-class ClientList(generic.ListView):
+class ClientList(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     # Display the list of clients
-    model = Client
-    template_name = 'client/list.html'
     context_object_name = 'clients'
+    model = Client
     paginate_by = 20
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ClientList, self).dispatch(*args, **kwargs)
+    permission_required = 'sous_chef.read'
+    template_name = 'client/list.html'
 
     def get_queryset(self):
         uf = ClientFilter(self.request.GET)
@@ -574,13 +570,10 @@ def ExportCSV(self, queryset):
     return response
 
 
-class ClientView(LoginRequiredMixin, generic.DeleteView):
+class ClientView(LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     # Display detail of one client
     model = Client
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ClientView, self).dispatch(*args, **kwargs)
+    permission_required = 'sous_chef.read'
 
 
 class ClientInfoView(ClientView):
@@ -774,16 +767,9 @@ class ClientOrderList(ClientView):
         return context
 
 
-class ClientUpdateInformation(generic.edit.FormView):
+class ClientUpdateInformation(LoginRequiredMixin, PermissionRequiredMixin, generic.edit.FormView):
+    permission_required = 'sous_chef.edit'
     template_name = 'client/update/steps.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(
-            ClientUpdateInformation,
-            self).dispatch(
-            *args,
-            **kwargs)
 
     def get_initial(self):
         client = get_object_or_404(
@@ -1288,7 +1274,8 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
         client.save()
 
 
-class SearchMembers(LoginRequiredMixin, generic.View):
+class SearchMembers(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
+    permission_required = 'sous_chef.read'
 
     def get(self, request):
         if request.is_ajax():
@@ -1328,11 +1315,14 @@ def geolocateAddress(request):
 
 
 class ClientStatusScheduler(
+        LoginRequiredMixin,
+        PermissionRequiredMixin,
         FormValidAjaxableResponseMixin,
         generic.CreateView
 ):
-    model = ClientScheduledStatus
     form_class = ClientScheduledStatusForm
+    model = ClientScheduledStatus
+    permission_required = 'sous_chef.edit'
     template_name = "client/update/status.html"
 
     @method_decorator(login_required)
@@ -1392,21 +1382,25 @@ class ClientStatusScheduler(
         )
 
 
-class DeleteRestriction(LoginRequiredMixin, generic.DeleteView):
+class DeleteRestriction(LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     model = Restriction
+    permission_required = 'sous_chef.edit'
     success_url = reverse_lazy('member:list')
 
 
-class DeleteClientOption(LoginRequiredMixin, generic.DeleteView):
+class DeleteClientOption(LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     model = Client_option
+    permission_required = 'sous_chef.edit'
     success_url = reverse_lazy('member:list')
 
 
-class DeleteIngredientToAvoid(LoginRequiredMixin, generic.DeleteView):
+class DeleteIngredientToAvoid(LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     model = Client_avoid_ingredient
+    permission_required = 'sous_chef.edit'
     success_url = reverse_lazy('member:list')
 
 
-class DeleteComponentToAvoid(LoginRequiredMixin, generic.DeleteView):
+class DeleteComponentToAvoid(LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     model = Client_avoid_component
+    permission_required = 'sous_chef.edit'
     success_url = reverse_lazy('member:list')

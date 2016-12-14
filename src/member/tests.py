@@ -627,6 +627,18 @@ class FormTestCase(TestCase):
     def tearDown(self):
         self.client.logout()
 
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('member:member_step')
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 302)
+
     def test_acces_to_form(self):
         """Test if the form is accesible from its url"""
         result = self.client.get(
@@ -2488,3 +2500,558 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
         check(reverse('member:member_update_emergency_contact', kwargs={
             'pk': 1
         }))
+
+
+class ClientListViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        url = reverse('member:list')
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('member:list')
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class ClientInfoViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:client_information', kwargs={'pk': client.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:client_information', kwargs={'pk': client.id})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class ClientReferentViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:client_information', kwargs={'pk': client.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:client_information', kwargs={'pk': client.id})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class ClientPaymentViewViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:client_payment', kwargs={'pk': client.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:client_payment', kwargs={'pk': client.id})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class ClientAllergiesViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:client_allergies', kwargs={'pk': client.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:client_allergies', kwargs={'pk': client.id})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class ClientStatusViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:client_status', kwargs={'pk': client.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:client_status', kwargs={'pk': client.id})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class ClientNotesViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:client_notes', kwargs={'pk': client.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:client_notes', kwargs={'pk': client.id})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class ClientOrderListTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:list_orders', kwargs={'pk': client.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:list_orders', kwargs={'pk': client.id})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class ClientUpdateBasicInformationViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:member_update_basic_information', kwargs={'pk': client.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:member_update_basic_information', kwargs={'pk': client.id})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class ClientUpdateAddressInformationViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:member_update_address_information', kwargs={'pk': client.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:member_update_address_information', kwargs={'pk': client.id})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class ClientUpdateReferentInformationViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:member_update_referent_information', kwargs={'pk': client.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:member_update_referent_information', kwargs={'pk': client.id})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class ClientUpdatePaymentInformationViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:member_update_payment_information', kwargs={'pk': client.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:member_update_payment_information', kwargs={'pk': client.id})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class ClientUpdateDietaryRestrictionViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:member_update_dietary_restriction', kwargs={'pk': client.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        Option.objects.create(name='meals_schedule')
+        client = ClientFactory()
+        url = reverse('member:member_update_dietary_restriction', kwargs={'pk': client.id})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class ClientUpdateEmergencyContactInformationViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:member_update_emergency_contact', kwargs={'pk': client.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:member_update_emergency_contact', kwargs={'pk': client.id})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class SearchMembersViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        url = reverse('member:search')
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('member:search')
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class ClientStatusSchedulerViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:clientStatusScheduler', kwargs={'pk': client.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:clientStatusScheduler', kwargs={'pk': client.id})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class DeleteRestrictionViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        restricted_item = Restricted_item.objects.create(name='pork', restricted_item_group='meat')
+        restriction = Restriction.objects.create(client=client, restricted_item=restricted_item)
+        url = reverse('member:restriction_delete', kwargs={'pk': restriction.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        restricted_item = Restricted_item.objects.create(name='pork', restricted_item_group='meat')
+        restriction = Restriction.objects.create(client=client, restricted_item=restricted_item)
+        url = reverse('member:restriction_delete', kwargs={'pk': restriction.id})
+        # Run
+        response = self.client.post(url, follow=True)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class DeleteClientOptionViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        option = Option.objects.create(name='test')
+        coption = Client_option.objects.create(client=client, option=option)
+        url = reverse('member:client_option_delete', kwargs={'pk': coption.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        option = Option.objects.create(name='test')
+        coption = Client_option.objects.create(client=client, option=option)
+        url = reverse('member:client_option_delete', kwargs={'pk': coption.id})
+        # Run
+        response = self.client.post(url, follow=True)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class DeleteIngredientToAvoidViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        ingredient = Ingredient.objects.create(name='ground pork')
+        avoid_ing = Client_avoid_ingredient.objects.create(client=client, ingredient=ingredient)
+        url = reverse('member:ingredient_to_avoid_delete', kwargs={'pk': avoid_ing.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        ingredient = Ingredient.objects.create(name='ground pork')
+        avoid_ing = Client_avoid_ingredient.objects.create(client=client, ingredient=ingredient)
+        url = reverse('member:ingredient_to_avoid_delete', kwargs={'pk': avoid_ing.id})
+        # Run
+        response = self.client.post(url, follow=True)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class DeleteComponentToAvoidViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        component = Component.objects.create(name='ginger pork', component_group='main dish')
+        avoid_component = Client_avoid_component.objects.create(client=client, component=component)
+        url = reverse('member:component_to_avoid_delete', kwargs={'pk': avoid_component.id})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        component = Component.objects.create(name='ginger pork', component_group='main dish')
+        avoid_component = Client_avoid_component.objects.create(client=client, component=component)
+        url = reverse('member:component_to_avoid_delete', kwargs={'pk': avoid_component.id})
+        # Run
+        response = self.client.post(url, follow=True)
+        # Check
+        self.assertEqual(response.status_code, 200)

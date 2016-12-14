@@ -2,10 +2,12 @@
 <!-- Load internationalisation utils-->
 {% load i18n %}
 {% load static %}
+{% load rules %}
 
 {% block title %} {% trans 'Orders' %} {% endblock %}
 
 {% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
 
 {% include 'kitchen_count_steps.html' with step='orders' %}
 
@@ -48,6 +50,7 @@
 
     </div>
 
+    {% if can_edit_data %}
     <div class="sixteen wide center aligned column">
         <div class="ui row">
             <div class="ui labeled button" tabindex="0">
@@ -65,6 +68,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 
     <h4 class="ui horizontal divider header">
         <i class="unhide icon"></i>
@@ -92,11 +96,13 @@
         {% include 'partials/generated_orders.html' %}
     </div>
 
+    {% if can_edit_data %}
     <div class="sixteen wide column">
         <a class="ui labeled icon right yellow big button" href="{% url 'delivery:meal' %}">
             <i class="chevron right icon"></i>{% trans "OK, I'm ready" %}
         </a>
     </div>
+    {% endif %}
 
 </div>
 

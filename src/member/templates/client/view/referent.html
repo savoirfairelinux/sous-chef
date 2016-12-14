@@ -2,6 +2,7 @@
 <!-- Load internationalisation utils-->
 {% load i18n %}
 {% load admin_urls %}
+{% load rules %}
 
 {% block title %}
 
@@ -10,6 +11,8 @@
 {% endblock %}
 
 {% block subcontent %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
+
 <div class="ui segment">
     <h2 class="ui header">
         <div class="content">
@@ -17,9 +20,11 @@
             <div class="sub header">{% trans "Contact information of the referent person" %}.</div>
         </div>
     </h2>
+    {% if can_edit_data %}
     <a class="ui right floated small button" href="{% url 'member:member_update_referent_information' pk=client.id %}">
         <i class="icon edit"></i>{% trans "Edit" %}
     </a>
+    {% endif %}
     <div class="ui divider"></div>
 
 <div class="ui list">

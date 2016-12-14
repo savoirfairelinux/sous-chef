@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
+{% load rules %}
 {% load member_extras %}
+
 {% block title %}{% trans "Staff Notes" %}{% endblock %}
 
 {% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
 
 <div class="ui secondary pointing fluid menu">
     <h1 class="ui header">{% trans "Staff Notes" %}</h1>
@@ -18,12 +21,14 @@
 
 
 <div class="ui padded basic segment">
+    {% if can_edit_data %}
     <a href="{% url 'note:note_add' %}" class="ui labeled icon right basic big button">
         <i class="add icon"></i>{% trans 'New note' %}
     </a>
     <div class="ui horizontal divider">
         {% trans 'Or' %}
     </div>
+    {% endif %}
 
 
     <div class="ui row">

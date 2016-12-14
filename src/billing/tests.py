@@ -5,6 +5,7 @@ import datetime
 import importlib
 from member.factories import ClientFactory, RouteFactory
 from order.models import Order
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from billing.factories import BillingFactory
 from sous_chef.tests import TestMixin as SousChefTestMixin
@@ -92,3 +93,124 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
         bill = BillingFactory()
         check(reverse('billing:view', kwargs={'pk': bill.id}))
         check(reverse('billing:delete', kwargs={'pk': bill.id}))
+
+
+class BillingListViewTestCase(SousChefTestMixin, TestCase):
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        url = reverse('billing:list')
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('billing:list')
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class BillingCreateViewTestCase(SousChefTestMixin, TestCase):
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('billing:create')
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('billing:create')
+        # Run
+        response = self.client.get(url, {'delivery_date': '2016-1'}, follow=True)
+        # Check
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.redirect_chain[-1][0], reverse('billing:list'))
+
+
+class BillingAddViewTestCase(SousChefTestMixin, TestCase):
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('billing:add')
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('billing:add')
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class BillingSummaryViewTestCase(SousChefTestMixin, TestCase):
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        bill = BillingFactory()
+        url = reverse('billing:view', args=(bill.id, ))
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        bill = BillingFactory()
+        url = reverse('billing:view', args=(bill.id, ))
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class BillingDeleteViewTestCase(SousChefTestMixin, TestCase):
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        bill = BillingFactory()
+        url = reverse('billing:delete', args=(bill.id, ))
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        bill = BillingFactory()
+        url = reverse('billing:delete', args=(bill.id, ))
+        # Run
+        response = self.client.post(url, {'next': '/'}, follow=True)
+        # Check
+        self.assertEqual(response.status_code, 200)

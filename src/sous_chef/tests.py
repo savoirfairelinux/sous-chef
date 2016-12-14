@@ -35,4 +35,4 @@ class TestMixin(object):
                 email='testadmin@example.com',
                 password='test1234'
             )
-        self.client.force_login(admin)
+        self.client.force_login(admin, 'django.contrib.auth.backends.ModelBackend',)

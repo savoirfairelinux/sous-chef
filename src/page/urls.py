@@ -5,7 +5,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     url(
         r'^home$',
-        views.home,
+        views.HomeView.as_view(),
         name='home'
     ),
     url(

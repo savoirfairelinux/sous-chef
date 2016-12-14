@@ -1,13 +1,16 @@
 {% extends "base_order.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
+{% load rules %}
 
 {% block title %} {% trans 'View Order' %} {% endblock %}
 
 {% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
 
 <div class="ui secondary pointing fluid menu">
     <h1 class="ui header">{% trans "Order" %} #{{ order.id }}</h1>
+    {% if can_edit_data %}
     <div class="right menu">
         <div class="ui item">
             <div id="order-status " class="ui dropdown order status" data-url="{% url 'order:update_status' pk=order.id %}" data-csrf-token="{{ csrf_token }}">
@@ -21,6 +24,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 </div>
 
 <div class="ui modal status"></div>
@@ -74,6 +78,7 @@
 </div>
 </div>
 
+{% if can_edit_data %}
 <div class="ui row">
 
     <a class="ui basic red button order-delete" href="#" data-order-id="{{order.id}}"><i class="icon trash"></i>{% trans "Delete" %}</a>
@@ -82,5 +87,6 @@
 </div>
 
 {% include 'order_confirm_delete.html' %}
+{% endif %}
 
 {% endblock %}
