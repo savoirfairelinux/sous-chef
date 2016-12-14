@@ -8,7 +8,7 @@ from localflavor.ca.forms import (
     CAPhoneNumberField, CAPostalCodeField
 )
 from meal.models import Ingredient, Component, COMPONENT_GROUP_CHOICES, \
-    Restricted_item
+    Restricted_item, COMPONENT_GROUP_CHOICES_SIDES
 from order.models import SIZE_CHOICES
 from member.models import (
     Member, Client, RATE_TYPE, CONTACT_TYPE_CHOICES, Option,
@@ -176,6 +176,8 @@ class ClientRestrictionsInformation(forms.Form):
             )
 
             for meal, placeholder in COMPONENT_GROUP_CHOICES:
+                if meal is COMPONENT_GROUP_CHOICES_SIDES:
+                    continue  # skip "Sides"
                 self.fields['{}_{}_quantity'.format(meal, day)] = \
                     forms.IntegerField(
                         widget=forms.TextInput(

@@ -349,6 +349,99 @@ class ClientOptionTestCase(TestCase):
         )
 
 
+class ClientMealDefaultWeekTestCase(TestCase):
+    fixtures = ['routes']
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.clientTest = ClientFactory(
+            delivery_type="O",
+            meal_default_week={
+                "main_dish_monday_quantity": 1,
+                "size_monday": "R",
+                "diabetic_monday_quantity": 2,
+                "fruit_salad_monday_quantity": 1,
+
+                "main_dish_tuesday_quantity": 0,
+                "size_tuesday": "L",
+                "compote_tuesday_quantity": 1,
+
+                # wednesday invalid
+                "main_dish_wednesday_quantity": 0,
+                "dessert_wednesday_quantity": 0,
+                "size_wednesday": "R",
+
+                # thursday invalid (no size)
+                "main_dish_thursday_quantity": 1,
+                "diabetic_thursday_quantity": 2,
+                "fruit_salad_thursday_quantity": 1,
+
+                # friday, saturday, sunday nothing
+            }
+        )
+        meals_schedule_option = Option.objects.create(
+            name='meals_schedule', option_group='dish'
+        )
+        Client_option.objects.create(
+            client=cls.clientTest,
+            option=meals_schedule_option,
+            value=json.dumps(['monday', 'wednesday', 'friday']),
+        )
+
+    def test_client_meals_default(self):
+        """
+        Tests: Client.meals_default
+        """
+        md = dict(self.clientTest.meals_default)
+        self.assertEqual(md['monday'], {
+            'main_dish': 1,
+            'size': 'R',
+            'dessert': 0,
+            'diabetic': 2,
+            'fruit_salad': 1,
+            'green_salad': 0,
+            'pudding': 0,
+            'compote': 0
+        })
+        self.assertEqual(md['tuesday'], {
+            'main_dish': 0,
+            'size': 'L',
+            'dessert': 0,
+            'diabetic': 0,
+            'fruit_salad': 0,
+            'green_salad': 0,
+            'pudding': 0,
+            'compote': 1
+        })
+        self.assertEqual(md['wednesday'], None)
+        self.assertEqual(md['thursday'], None)
+        self.assertEqual(md['friday'], None)
+        self.assertEqual(md['saturday'], None)
+        self.assertEqual(md['sunday'], None)
+
+    def test_client_meals_schedule(self):
+        """
+        Tests: Client.meals_schedule
+        """
+        ms = dict(self.clientTest.meals_schedule)
+        self.assertEqual(ms['monday'], {
+            'main_dish': 1,
+            'size': 'R',
+            'dessert': 0,
+            'diabetic': 2,
+            'fruit_salad': 1,
+            'green_salad': 0,
+            'pudding': 0,
+            'compote': 0
+        })
+        self.assertEqual(ms['tuesday'], None)  # no delivery scheduled
+        self.assertEqual(ms['wednesday'], None)
+        self.assertEqual(ms['thursday'], None)
+        self.assertEqual(ms['friday'], None)
+        self.assertEqual(ms['saturday'], None)
+        self.assertEqual(ms['sunday'], None)
+
+
 class ClientEpisodicMealsPrefsTestCase(TestCase):
 
     fixtures = ['routes']

@@ -1,6 +1,5 @@
 # coding: utf-8
 
-
 import csv
 from datetime import date
 
@@ -16,7 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from formtools.wizard.views import NamedUrlSessionWizardView
-from meal.models import COMPONENT_GROUP_CHOICES
+from meal.models import COMPONENT_GROUP_CHOICES, COMPONENT_GROUP_CHOICES_SIDES
 from member.forms import (
     ClientScheduledStatusForm,
     ClientBasicInformation,
@@ -55,7 +54,10 @@ class ClientWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
         context = super(ClientWizard, self).get_context_data(**kwargs)
 
         context["weekday"] = DAYS_OF_WEEK
-        context["meals"] = COMPONENT_GROUP_CHOICES
+        context["meals"] = list(filter(
+            lambda tup: tup[0] != COMPONENT_GROUP_CHOICES_SIDES,
+            COMPONENT_GROUP_CHOICES
+        ))
 
         if 'pk' in kwargs:
             context.update({'edit': True})
@@ -137,6 +139,8 @@ class ClientWizard(LoginRequiredMixin, NamedUrlSessionWizardView):
                 json['size_{}'.format(days)] = None
 
             for meal, Meals in COMPONENT_GROUP_CHOICES:
+                if meal is COMPONENT_GROUP_CHOICES_SIDES:
+                    continue  # skip "Sides"
                 json['{}_{}_quantity'.format(meal, days)] \
                     = dictonary.get(
                     '{}_{}_quantity'.format(meal, days)
@@ -1075,7 +1079,10 @@ class ClientUpdateDietaryRestriction(ClientUpdateInformation):
         context.update({'current_step': 'dietary_restriction'})
         context.update({'pk': self.kwargs['pk']})
         context["weekday"] = DAYS_OF_WEEK
-        context["meals"] = COMPONENT_GROUP_CHOICES
+        context["meals"] = list(filter(
+            lambda tup: tup[0] != COMPONENT_GROUP_CHOICES_SIDES,
+            COMPONENT_GROUP_CHOICES
+        ))
         context["step_template"] = 'client/partials/forms/' \
                                    'dietary_restriction.html'
         return context
@@ -1097,6 +1104,8 @@ class ClientUpdateDietaryRestriction(ClientUpdateInformation):
         day_count = 0
         for day, v in DAYS_OF_WEEK:
             for component, v in COMPONENT_GROUP_CHOICES:
+                if component is COMPONENT_GROUP_CHOICES_SIDES:
+                    continue  # skip "Sides"
                 meals_default = Client.get_meal_defaults(
                     client, component, day_count)
                 initial[component + '_' + day + '_quantity'] = meals_default[0]
@@ -1172,10 +1181,12 @@ class ClientUpdateDietaryRestriction(ClientUpdateInformation):
             if json['size_{}'.format(days)] is "":
                 json['size_{}'.format(days)] = None
 
-            for meal in COMPONENT_GROUP_CHOICES:
-                json['{}_{}_quantity'.format(meal[0], days)] \
+            for meal, Meal in COMPONENT_GROUP_CHOICES:
+                if meal is COMPONENT_GROUP_CHOICES_SIDES:
+                    continue  # skip "Sides"
+                json['{}_{}_quantity'.format(meal, days)] \
                     = form[
-                    '{}_{}_quantity'.format(meal[0], days)
+                    '{}_{}_quantity'.format(meal, days)
                 ]
         client.delivery_type = form['delivery_type']
         client.meal_default_week = json
