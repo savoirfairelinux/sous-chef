@@ -63,20 +63,33 @@ class Command(BaseCommand):
                         self.ROW_WED,
                         self.ROW_THU,
                         self.ROW_FRI,
-                        self.ROW_SAT]
+                        self.ROW_SAT
+                    ]
                     meals_schedule = []
                     prefs = {}
 
                     for day in days:
                         if row[day] != "":
                             meals_schedule.append(row[day])
-                            prefs['size_' + row[day]] = 'R'
-                            prefs['main_dish_' + row[day] + '_quantity'] = 1
-                            prefs['compote_' + row[day] + '_quantity'] = 0
-                            prefs['dessert_' + row[day] + '_quantity'] = 1
-                            prefs['fruit_salad_' + row[day] + '_quantity'] = 0
-                            prefs['green_salad_' + row[day] + '_quantity'] = 1
-                            prefs['pudding_' + row[day] + '_quantity'] = 0
+                            delivery_day = day - 1
+                            # Hack: there is no column Thursday in the csv file
+                            if delivery_day > 3:
+                                delivery_day -= 1
+
+                            prefs['size_' + row[day]] = \
+                                row[11 + (delivery_day * 10) + 1]
+                            prefs['main_dish_' + row[day] + '_quantity'] = \
+                                row[11 + (delivery_day * 10) + 0]
+                            prefs['dessert_' + row[day] + '_quantity'] = \
+                                row[11 + (delivery_day * 10) + 5]
+                            prefs['fruit_salad_' + row[day] + '_quantity'] = \
+                                row[11 + (delivery_day * 10) + 2]
+                            prefs['green_salad_' + row[day] + '_quantity'] = \
+                                row[11 + (delivery_day * 10) + 3]
+                            prefs['pudding_' + row[day] + '_quantity'] = \
+                                row[11 + (delivery_day * 10) + 6]
+                            prefs['diabetic_' + row[day] + '_quantity'] = \
+                                row[11 + (delivery_day * 10) + 4]
 
                     client.set_meals_schedule(meals_schedule)
                     client.meal_default_week = prefs
