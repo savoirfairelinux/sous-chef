@@ -73,13 +73,13 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.locale.LocaleMiddleware',
 ]
 
-ROOT_URLCONF = 'sous-chef.urls'
+ROOT_URLCONF = 'sous_chef.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR + '/sous-chef/templates/'
+            BASE_DIR + '/sous_chef/templates/'
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -89,13 +89,13 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'sous-chef.context_processors.total',
+                'sous_chef.context_processors.total',
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'sous-chef.wsgi.application'
+WSGI_APPLICATION = 'sous_chef.wsgi.application'
 
 
 # Database
@@ -171,7 +171,7 @@ LOCALE_PATHS = (
 )
 
 FORMAT_MODULE_PATH = (
-    'sous-chef.formats',
+    'sous_chef.formats',
 )
 
 # Static files (CSS, JavaScript, Images)
@@ -179,6 +179,6 @@ FORMAT_MODULE_PATH = (
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_DIRS = (
-    BASE_DIR + '/sous-chef/static/',
+    BASE_DIR + '/sous_chef/static/',
 )
 STATIC_URL = '/static/'

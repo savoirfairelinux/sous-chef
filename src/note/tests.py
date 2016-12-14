@@ -6,8 +6,7 @@ from django.contrib.auth.models import User
 from member.factories import ClientFactory
 from django.core.urlresolvers import reverse
 from django.utils import timezone
-
-SousChefTestMixin = importlib.import_module('sous-chef.tests').TestMixin
+from sous_chef.tests import TestMixin as SousChefTestMixin
 
 
 class NoteTestCase(TestCase):

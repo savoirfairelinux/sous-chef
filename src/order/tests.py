@@ -23,8 +23,7 @@ from order.models import Order, Order_item, MAIN_PRICE_DEFAULT, \
     OrderStatusChange, COMPONENT_GROUP_CHOICES_MAIN_DISH, \
     ORDER_ITEM_TYPE_CHOICES_COMPONENT
 from order.factories import OrderFactory
-
-SousChefTestMixin = importlib.import_module('sous-chef.tests').TestMixin
+from sous_chef.tests import TestMixin as SousChefTestMixin
 
 
 class OrderTestCase(TestCase):

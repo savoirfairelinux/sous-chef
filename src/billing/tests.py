@@ -7,8 +7,7 @@ from member.factories import ClientFactory, RouteFactory
 from order.models import Order
 from django.core.urlresolvers import reverse
 from billing.factories import BillingFactory
-
-SousChefTestMixin = importlib.import_module('sous-chef.tests').TestMixin
+from sous_chef.tests import TestMixin as SousChefTestMixin
 
 
 class BillingTestCase(TestCase):

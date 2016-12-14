@@ -1,4 +1,4 @@
 version: '2'
 services:
   web:
-    command: /bin/bash -c "cd tools/gulp && gulp && cd ../../src && python manage.py collectstatic --noinput && /usr/local/bin/gunicorn sous-chef.wsgi:application -w 2 -b :8000"
+    command: /bin/bash -c "cd tools/gulp && gulp && cd ../../src && python manage.py collectstatic --noinput && /usr/local/bin/gunicorn sous_chef.wsgi:application -w 2 -b :8000"

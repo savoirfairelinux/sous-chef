@@ -102,7 +102,7 @@ tools/gulp
 tools/mariadb
 
 # Ignore generated assets.
-src/sous-chef/static
+src/sous_chef/static
 
 # Ignore generated pdf files.
 src/*.pdf
