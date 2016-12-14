@@ -13,7 +13,8 @@ from django_filters import (
 )
 from annoying.fields import JSONField
 from meal.models import (
-    COMPONENT_GROUP_CHOICES, COMPONENT_GROUP_CHOICES_MAIN_DISH
+    COMPONENT_GROUP_CHOICES, COMPONENT_GROUP_CHOICES_MAIN_DISH,
+    COMPONENT_GROUP_CHOICES_SIDES
 )
 from note.models import Note
 
@@ -615,11 +616,11 @@ class Client(models.Model):
         Returns a list of tuple ((weekday, meal default), ...).
 
         Consider a meal default "not properly configured" if:
-        (1) if all numeric fields are 0;
-        (2) OR any numeric field is None;
+        (1) if all numeric fields are 0 (or None);
         (2) OR if size is None
         and thus set it to None.
 
+        "None" numeric fields are returned as 0.
         Intended to be used for Episodic clients.
         """
         defaults = []
@@ -627,8 +628,11 @@ class Client(models.Model):
             current = {}
             numeric_fields = []
             for component, label in COMPONENT_GROUP_CHOICES:
+                if component is COMPONENT_GROUP_CHOICES_SIDES:
+                    continue  # skip "Sides"
                 item = self.meal_default_week.get(
-                    component + '_' + day + '_quantity'
+                    component + '_' + day + '_quantity',
+                    0
                 )
                 current[component] = item
                 numeric_fields.append(item)
@@ -640,7 +644,6 @@ class Client(models.Model):
 
             not_properly_configured = (
                 all(map(lambda x: x == 0, numeric_fields)) or
-                any(map(lambda x: x is None, numeric_fields)) or
                 size is None
             )
             if not_properly_configured:
