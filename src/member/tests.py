@@ -26,8 +26,7 @@ from member.forms import(
     ClientReferentInformation, ClientPaymentInformation,
     ClientRestrictionsInformation, ClientEmergencyContactInformation
 )
-
-SousChefTestMixin = importlib.import_module('sous-chef.tests').TestMixin
+from sous_chef.tests import TestMixin as SousChefTestMixin
 
 
 def load_initial_data(client):

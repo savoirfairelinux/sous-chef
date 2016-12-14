@@ -3,7 +3,7 @@ import os
 import sys
 
 if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sous-chef.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sous_chef.settings")
 
     from django.core.management import execute_from_command_line
 

@@ -30,9 +30,9 @@ var SRC_IMG = '../../src/frontend/images';
 var DST_TMP_CSS = '/tmp/css';
 var DST_TMP_CSS_NG = '/tmp/css-ng';
 var DST_TMP_JS = '/tmp/js';
-var DST_CSS = '../../src/sous-chef/static/css';
-var DST_JS = '../../src/sous-chef/static/js';
-var DST_IMG = '../../src/sous-chef/static/images';
+var DST_CSS = '../../src/sous_chef/static/css';
+var DST_JS = '../../src/sous_chef/static/js';
+var DST_IMG = '../../src/sous_chef/static/images';
 
 // Tasks
 // ==========================================

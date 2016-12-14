@@ -11,10 +11,9 @@ from django.utils import timezone as tz
 from meal.models import Menu, Component, Component_ingredient, Ingredient
 from order.models import Order
 from member.models import Client, Member, Route
+from sous_chef.tests import TestMixin as SousChefTestMixin
 
 from .filters import KitchenCountOrderFilter
-
-SousChefTestMixin = importlib.import_module('sous-chef.tests').TestMixin
 
 
 class KitchenCountReportTestCase(SousChefTestMixin, TestCase):

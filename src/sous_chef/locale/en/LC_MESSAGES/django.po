@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 23:01+0000\n"
+"POT-Creation-Date: 2016-12-14 17:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,98 +17,98 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: sous-chef/templates/404.html:4 sous-chef/templates/404.html:6
+#: sous_chef/templates/404.html:4 sous_chef/templates/404.html:6
 msgid "Page not found"
 msgstr ""
 
-#: sous-chef/templates/404.html:7
+#: sous_chef/templates/404.html:7
 msgid "We couldn't find the page you are looking for."
 msgstr ""
 
-#: sous-chef/templates/404.html:10
+#: sous_chef/templates/404.html:10
 msgid "Go back from where you came from"
 msgstr ""
 
-#: sous-chef/templates/404.html:11 sous-chef/templates/404.html:14
+#: sous_chef/templates/404.html:11 sous_chef/templates/404.html:14
 msgid "Go back to homepage"
 msgstr ""
 
-#: sous-chef/templates/base.html:9 sous-chef/templates/splash.html:9
+#: sous_chef/templates/base.html:9 sous_chef/templates/splash.html:9
 msgid "Sous-Chef"
 msgstr ""
 
-#: sous-chef/templates/base.html:58
+#: sous_chef/templates/base.html:58
 msgid "with"
 msgstr ""
 
-#: sous-chef/templates/base.html:58
+#: sous_chef/templates/base.html:58
 msgid "in Montreal"
 msgstr ""
 
-#: sous-chef/templates/dashboard/statistics.html:10
+#: sous_chef/templates/dashboard/statistics.html:10
 msgid "Active clients"
 msgstr ""
 
-#: sous-chef/templates/dashboard/statistics.html:15
+#: sous_chef/templates/dashboard/statistics.html:15
 msgid "One"
 msgstr ""
 
-#: sous-chef/templates/dashboard/statistics.html:16
+#: sous_chef/templates/dashboard/statistics.html:16
 msgid "Hundred"
 msgstr ""
 
-#: sous-chef/templates/dashboard/statistics.html:19
+#: sous_chef/templates/dashboard/statistics.html:19
 msgid "Meals a day"
 msgstr ""
 
-#: sous-chef/templates/dashboard/statistics.html:27
+#: sous_chef/templates/dashboard/statistics.html:27
 msgid "Routes"
 msgstr ""
 
-#: sous-chef/templates/dashboard/statistics.html:36
+#: sous_chef/templates/dashboard/statistics.html:36
 msgid "Volunteers"
 msgstr ""
 
-#: sous-chef/templates/system/_button_export.html:4
+#: sous_chef/templates/system/_button_export.html:4
 msgid "Export to CSV"
 msgstr ""
 
-#: sous-chef/templates/system/_button_export.html:4
+#: sous_chef/templates/system/_button_export.html:4
 msgid "Export"
 msgstr ""
 
-#: sous-chef/templates/system/breadcrumb.html:4
+#: sous_chef/templates/system/breadcrumb.html:4
 msgid "Home"
 msgstr ""
 
-#: sous-chef/templates/system/menu.html:6
+#: sous_chef/templates/system/menu.html:6
 msgid "Logo Sous-Chef"
 msgstr ""
 
-#: sous-chef/templates/system/menu.html:21
+#: sous_chef/templates/system/menu.html:21
 msgid "Clients"
 msgstr ""
 
-#: sous-chef/templates/system/menu.html:33
+#: sous_chef/templates/system/menu.html:33
 msgid "Orders"
 msgstr ""
 
-#: sous-chef/templates/system/menu.html:36
+#: sous_chef/templates/system/menu.html:36
 msgid "Staff Notes"
 msgstr ""
 
-#: sous-chef/templates/system/menu.html:43
+#: sous_chef/templates/system/menu.html:43
 msgid "Kitchen Count"
 msgstr ""
 
-#: sous-chef/templates/system/menu.html:44
+#: sous_chef/templates/system/menu.html:44
 msgid "Billing"
 msgstr ""
 
-#: sous-chef/templates/system/menu.html:45
+#: sous_chef/templates/system/menu.html:45
 msgid "Admin"
 msgstr ""
 
-#: sous-chef/templates/system/menu.html:46
+#: sous_chef/templates/system/menu.html:46
 msgid "Logout"
 msgstr ""
