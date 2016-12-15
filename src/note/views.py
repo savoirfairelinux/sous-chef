@@ -19,6 +19,7 @@ class NoteList(generic.ListView):
     model = Note
     template_name = 'notes_list.html'
     context_object_name = 'notes'
+    paginate_by = 20
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -37,6 +38,21 @@ class NoteList(generic.ListView):
 
         # Here you add some variable of context to display on template
         context['filter'] = uf
+        text = ''
+        count = 0
+        for getVariable in self.request.GET:
+            if getVariable == "page":
+                continue
+            for getValue in self.request.GET.getlist(getVariable):
+                if count == 0:
+                    text += "?" + getVariable + "=" + getValue
+                else:
+                    text += "&" + getVariable + "=" + getValue
+                count += 1
+
+        text = text + "?" if count == 0 else text + "&"
+        context['get'] = text
+
         return context
 
 
