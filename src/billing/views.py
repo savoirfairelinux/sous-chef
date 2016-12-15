@@ -157,7 +157,8 @@ class BillingSummaryView(generic.DetailView):
                 'id': client.id,
                 'firstname': client.member.firstname,
                 'lastname': client.member.lastname,
-                'payment_type': client.get_billing_payment_type_display(),
+                'payment_type': client.get_billing_payment_type_display() if (
+                    client.billing_payment_type is not None) else '',
                 'rate_type': client.get_rate_type_display() if (
                     client.rate_type != 'default') else '',
                 'total_main_dishes': client_summary['total_main_dishes'],
@@ -176,21 +177,26 @@ class BillingSummaryView(generic.DetailView):
             summary['total_amount'] += (
                 client_summary['total_amount']
             )
+
+        # sort clients in each payment type group
         for payment_type, statistics in summary['payment_types_dict'].items():
             statistics['clients'].sort(
                 key=lambda c: (c['lastname'], c['firstname'])
             )
-        import pprint
-        pprint.pprint(summary, indent=4)
-        # define the order of display
-        summary['payment_types'] = list(filter(
-            lambda tup: len(tup[1]['clients']) > 0,
-            map(
-                lambda x: (x, summary['payment_types_dict'][x]),
-                ('cash', 'eft', 'credit', 'cheque', 'check')
-            )
-        ))
-        pprint.pprint(summary['payment_types'], indent=4)
+
+        # reorder the display for supported & non-supported payment types
+        summary['payment_types'] = sorted(
+            summary['payment_types_dict'].items(),
+            key=lambda tup: {
+                None: 0,      # 0th position
+                'cash': 1,    # 1st position
+                'eft': 2,     # 2nd position
+                'credit': 3,  # 3rd position
+                'cheque': 4,  # 4th position
+                'check': 5    # 5th position
+            }.get(tup[0], 6)  # last position(s)
+        )
+
         context['summary'] = summary
 
         # Throw a warning if there's any main_dish order with size=None.
