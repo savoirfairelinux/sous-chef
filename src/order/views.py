@@ -127,10 +127,10 @@ class CreateOrdersBatch(generic.FormView):
     def get_context_data(self, **kwargs):
         context = super(CreateOrdersBatch, self).get_context_data(**kwargs)
         # Define here any needed variable for template
-        context["meals"] = filter(
+        context["meals"] = list(filter(
             lambda tup: tup[0] != COMPONENT_GROUP_CHOICES_SIDES,
             COMPONENT_GROUP_CHOICES
-        )
+        ))
 
         # delivery_dates
         if self.request.method == "POST" and \
