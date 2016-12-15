@@ -10,6 +10,7 @@
   #sc_bs .top.aligned {vertical-align:top}
   #sc_bs .bottom.aligned {vertical-align:bottom}
   #sc_bs .padding-x {padding-left:1em;padding-right:1em}
+  #sc_bs .nowrap {white-space:nowrap}
 </style>
 <table id="sc_bs">
   <thead>
@@ -38,35 +39,20 @@
     </tr>
     <tr class="border-top">
       <th colspan="4"></th>
-      <th class="center aligned" style="font-weight:normal">{% trans 'Regular' %}</th>
+      <th class="center aligned border-right" style="font-weight:normal">{% trans 'Regular' %}</th>
       <th class="center aligned" style="font-weight:normal">{% trans 'Large' %}</th>
       <th colspan="2"></th>
       <th class="no-print"></th>
     </tr>
   </thead>
-  <tfoot>
-    <tr class="border-top">
-      <th>{% comment 'column NEW' %}{% endcomment %}</th>
-      <th colspan="3">{% trans "Grand Total:" as gt %}{{ gt|upper }} {{ summary.total_main_dishes.R|add:summary.total_main_dishes.L }}</th>
-      <th class="center aligned">{{ summary.total_main_dishes.R }}</th>
-      <th class="center aligned">{{ summary.total_main_dishes.L }}</th>
-      <th class="center aligned">{{ summary.total_billable_sides }}</th>
-      <th class="right aligned">${{ summary.total_amount }}</th>
-      <th class="no-print center aligned">
-        <a class="ui basic icon button" href="{% url 'billing:view_orders' pk=billing.id %}" title="{% trans 'View orders' %}">
-          <i class="icon unhide"></i>
-        </a>
-      </th>
-    </tr>
-  </tfoot>
   <tbody>
     {% for payment_type, statistics in summary.payment_types %}
       {% for client in statistics.clients %}
     <tr>
       <td>{% comment 'column NEW' %}{% endcomment %}</td>
-      <td><a href="{% url 'member:client_information' pk=client.id %}">{{ client.lastname|upper }}, {{ client.firstname }}</a></td>
-      <td class="center aligned">{{client.payment_type}}</td>
-      <td class="center aligned">{{client.rate_type}}</td>
+      <td class="nowrap"><a href="{% url 'member:client_information' pk=client.id %}">{{ client.lastname|upper }}, {{ client.firstname }}</a></td>
+      <td class="center aligned nowrap">{{client.payment_type}}</td>
+      <td class="center aligned nowrap padding-x">{{client.rate_type}}</td>
       <td class="center aligned border-top border-right">{{client.total_main_dishes.R|default:""}}</td>
       <td class="center aligned border-top">{{client.total_main_dishes.L|default:""}}</td>
       <td class="center aligned border-top">{{client.total_billable_sides|default:""}}</td>
@@ -80,7 +66,7 @@
       {% endfor %}
     <tr>
       <th style="padding-bottom:3em"></th>
-      <th colspan="3" class="top aligned">{% trans 'Subtotal:' as tr_s %}{{ tr_s|upper }}</th>
+      <th colspan="3" class="top aligned nowrap">{% trans 'Subtotal:' as tr_s %}{{ tr_s|upper }}</th>
       <th class="center aligned border-top top aligned">{{statistics.total_main_dishes.R}}</th>
       <th class="center aligned border-top top aligned">{{statistics.total_main_dishes.L}}</th>
       <th class="center aligned border-top top aligned">{{statistics.total_billable_sides}}</th>
@@ -88,5 +74,20 @@
       <th class="no-print"></th>
     </tr>
     {% endfor %}
+
+    {% comment 'tfoot' %}to fix Firefox printing issue: FF prints tfoot on every page!{% endcomment %}
+    <tr class="border-top">
+      <th>{% comment 'column NEW' %}{% endcomment %}</th>
+      <th colspan="3" class="nowrap">{% trans "Grand Total:" as gt %}{{ gt|upper }} {{ summary.total_main_dishes.R|add:summary.total_main_dishes.L }}</th>
+      <th class="center aligned">{{ summary.total_main_dishes.R }}</th>
+      <th class="center aligned">{{ summary.total_main_dishes.L }}</th>
+      <th class="center aligned">{{ summary.total_billable_sides }}</th>
+      <th class="right aligned">${{ summary.total_amount }}</th>
+      <th class="no-print center aligned">
+        <a class="ui basic icon button" href="{% url 'billing:view_orders' pk=billing.id %}" title="{% trans 'View orders' %}">
+          <i class="icon unhide"></i>
+        </a>
+      </th>
+    </tr>
   </tbody>
 </table>
