@@ -19,7 +19,10 @@
 </div>
 
 <div class="field {% if form.birthdate.errors %} error {% endif %}">
-    <label>{{ form.birthdate.label }}</label>
+    <label>
+        {{ form.birthdate.label }}
+        <i class="help-text question yellow icon link" data-content="{{ form.birthdate.help_text }}"></i>
+    </label>
     <div class="ui calendar" id="wizard_form_birthdate">
         <div class="ui input left icon">
               <i class="calendar icon"></i>
