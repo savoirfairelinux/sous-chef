@@ -79,17 +79,17 @@ class Command(BaseCommand):
                             prefs['size_' + row[day]] = \
                                 row[11 + (delivery_day * 10) + 1]
                             prefs['main_dish_' + row[day] + '_quantity'] = \
-                                row[11 + (delivery_day * 10) + 0]
+                                int(row[11 + (delivery_day * 10) + 0])
                             prefs['dessert_' + row[day] + '_quantity'] = \
-                                row[11 + (delivery_day * 10) + 5]
+                                int(row[11 + (delivery_day * 10) + 5])
                             prefs['fruit_salad_' + row[day] + '_quantity'] = \
-                                row[11 + (delivery_day * 10) + 2]
+                                int(row[11 + (delivery_day * 10) + 2])
                             prefs['green_salad_' + row[day] + '_quantity'] = \
-                                row[11 + (delivery_day * 10) + 3]
+                                int(row[11 + (delivery_day * 10) + 3])
                             prefs['pudding_' + row[day] + '_quantity'] = \
-                                row[11 + (delivery_day * 10) + 6]
+                                int(row[11 + (delivery_day * 10) + 6])
                             prefs['diabetic_' + row[day] + '_quantity'] = \
-                                row[11 + (delivery_day * 10) + 4]
+                                int(row[11 + (delivery_day * 10) + 4])
 
                     client.set_meals_schedule(meals_schedule)
                     client.meal_default_week = prefs
