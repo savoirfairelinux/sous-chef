@@ -357,7 +357,8 @@ class ClientPaymentInformation(MemberForm):
     billing_payment_type = forms.ChoiceField(
         label=_("Payment Type"),
         choices=PAYMENT_TYPE,
-        widget=forms.Select(attrs={'class': 'ui dropdown'})
+        widget=forms.Select(attrs={'class': 'ui dropdown'}),
+        required=False
     )
 
     number = forms.IntegerField(label=_("Street Number"), required=False)
