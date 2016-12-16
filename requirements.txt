@@ -2,6 +2,7 @@ django==1.10
 mysqlclient==1.3.7
 gunicorn==19.6.0
 factory_boy==2.7.0
+fake-factory==0.7.2  # depended by factory_boy v2.7.0 only
 django-formtools==1.0
 django-filter==0.13.0
 django-annoying==0.9.0
