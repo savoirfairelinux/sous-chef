@@ -188,13 +188,11 @@ class BillingSummaryView(generic.DetailView):
         summary['payment_types'] = sorted(
             summary['payment_types_dict'].items(),
             key=lambda tup: {
-                None: 0,      # 0th position
-                'cash': 1,    # 1st position
+                ' ': 0,      # 0th position
+                'credit': 1,    # 1st position
                 'eft': 2,     # 2nd position
-                'credit': 3,  # 3rd position
-                'cheque': 4,  # 4th position
-                'check': 5    # 5th position
-            }.get(tup[0], 6)  # last position(s)
+                '3rd': 3,  # 3rd position
+            }.get(tup[0], 99)  # last position(s)
         )
 
         context['summary'] = summary
