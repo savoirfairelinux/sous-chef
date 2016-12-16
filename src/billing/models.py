@@ -95,7 +95,7 @@ class Billing(models.Model):
         # collect orders by clients
         kvpairs = map(
             lambda o: (o.client, o),
-            self.orders.all().prefetch_related('client')
+            self.orders.all().prefetch_related('client__member')
         )
         d = collections.defaultdict(list)
         for k, v in kvpairs:
@@ -116,6 +116,13 @@ class Billing(models.Model):
                         total_large=Sum('total_quantity')
                     )['total_large'] or 0
                 },
+                'total_billable_sides': Order_item.objects.filter(
+                    Q(order__in=orders) &
+                    (~Q(component_group='main_dish')) &
+                    Q(billable_flag=True)
+                ).aggregate(
+                    total_billable_sides=Sum('total_quantity')
+                )['total_billable_sides'] or 0,
                 'total_amount': sum(map(lambda o: o.price, orders))
             }
         return result

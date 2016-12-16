@@ -1,3 +1,6 @@
+import copy
+import collections
+
 from django.shortcuts import render
 from django.db.models import Q
 from django.views import generic
@@ -120,24 +123,79 @@ class BillingSummaryView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(BillingSummaryView, self).get_context_data(**kwargs)
+        billing = self.object
 
         # generate a summary
-        billing = self.object
-        context['billing_summary'] = list(billing.summary.items())
-        # sort by client lastname
-        context['billing_summary'].sort(
-            key=lambda tup: (tup[0].member.lastname, tup[0].member.firstname)
-        )
-        # tfoot
-        context['billing_total'] = {
-            'orders': billing.orders.all().count(),
-            'main_dishes': sum(map(
-                lambda t: t[1]['total_main_dishes']['R'] +
-                t[1]['total_main_dishes']['L'],
-                context['billing_summary']
-            )),
-            'amount': billing.total_amount
+        zero_statistics = {
+            'total_main_dishes': {
+                'R': 0,
+                'L': 0
+            },
+            'total_billable_sides': 0,
+            'total_amount': 0
         }
+        # target dict
+        summary = copy.deepcopy(zero_statistics)
+        summary['payment_types_dict'] = collections.defaultdict(
+            lambda: dict(clients=[], **copy.deepcopy(zero_statistics))
+        )
+        for client, client_summary in billing.summary.items():
+            t = client.billing_payment_type
+            summary['payment_types_dict'][t]['total_main_dishes']['R'] += (
+                client_summary['total_main_dishes']['R']
+            )
+            summary['payment_types_dict'][t]['total_main_dishes']['L'] += (
+                client_summary['total_main_dishes']['L']
+            )
+            summary['payment_types_dict'][t]['total_billable_sides'] += (
+                client_summary['total_billable_sides']
+            )
+            summary['payment_types_dict'][t]['total_amount'] += (
+                client_summary['total_amount']
+            )
+            summary['payment_types_dict'][t]['clients'].append({
+                'id': client.id,
+                'firstname': client.member.firstname,
+                'lastname': client.member.lastname,
+                'payment_type': client.get_billing_payment_type_display() if (
+                    client.billing_payment_type is not None) else '',
+                'rate_type': client.get_rate_type_display() if (
+                    client.rate_type != 'default') else '',
+                'total_main_dishes': client_summary['total_main_dishes'],
+                'total_billable_sides': client_summary['total_billable_sides'],
+                'total_amount': client_summary['total_amount']
+            })
+            summary['total_main_dishes']['R'] += (
+                client_summary['total_main_dishes']['R']
+            )
+            summary['total_main_dishes']['L'] += (
+                client_summary['total_main_dishes']['L']
+            )
+            summary['total_billable_sides'] += (
+                client_summary['total_billable_sides']
+            )
+            summary['total_amount'] += (
+                client_summary['total_amount']
+            )
+
+        # sort clients in each payment type group
+        for payment_type, statistics in summary['payment_types_dict'].items():
+            statistics['clients'].sort(
+                key=lambda c: (c['lastname'], c['firstname'])
+            )
+
+        # reorder the display for supported & non-supported payment types
+        summary['payment_types'] = sorted(
+            summary['payment_types_dict'].items(),
+            key=lambda tup: {
+                ' ': 0,      # 0th position
+                'credit': 1,    # 1st position
+                'eft': 2,     # 2nd position
+                '3rd': 3,  # 3rd position
+            }.get(tup[0], 99)  # last position(s)
+        )
+
+        context['summary'] = summary
 
         # Throw a warning if there's any main_dish order with size=None.
         q = Order_item.objects.filter(
