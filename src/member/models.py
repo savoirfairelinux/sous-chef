@@ -47,8 +47,8 @@ RATE_TYPE_LOW_INCOME = RATE_TYPE[1][0]
 RATE_TYPE_SOLIDARY = RATE_TYPE[2][0]
 
 PAYMENT_TYPE = (
-    ('cheque', _('Cheque')),
-    ('cash', _('Cash')),
+    (' ', _('----')),
+    ('3rd', _('3rd Party')),
     ('credit', _('Credit card')),
     ('eft', _('EFT')),
 )
@@ -431,6 +431,7 @@ class Client(models.Model):
         verbose_name=_('Payment Type'),
         max_length=10,
         null=True,
+        blank=True,
         choices=PAYMENT_TYPE,
     )
 
