@@ -42,9 +42,9 @@
             <div class="field">
                 <label></label>
                 <div class="field">
-                    <button class="ui yellow button" type="submit">{% trans "1. Preview" %}</button>
-                    <a class="ui button" id="create_billing"
-                      href="{% url 'billing:create' %}?{{request.META.QUERY_STRING}}" title="{% trans "Create Billing" %}">{% trans "2. Create Billing" %}</a>
+                    <button class="ui labeled icon right basic big button" type="submit"><i class="unhide icon"></i>{% trans "1. Preview" %}</button>
+                    <a class="ui labeled icon right pink basic big button" id="create_billing"
+                      href="{% url 'billing:create' %}?{{request.META.QUERY_STRING}}" title="{% trans "Create Billing" %}"><i class="settings icon"></i>{% trans "2. Create Billing" %}</a>
                 </div>
             </div>
         </div>

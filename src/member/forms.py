@@ -44,7 +44,13 @@ class ClientBasicInformation (forms.Form):
 
     birthdate = forms.DateField(
         label=_("Birthday"),
-        widget=forms.TextInput(attrs={'class': 'ui calendar'})
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui calendar',
+                'placeholder': _('YYYY-MM-DD')
+            }
+        ),
+        help_text=_('Format: YYYY-MM-DD'),
     )
 
     email = forms.EmailField(
@@ -100,7 +106,7 @@ class ClientAddressInformation(forms.Form):
 
     street = forms.CharField(
         max_length=100,
-        label=_("Address information"),
+        label=_("Address Information"),
         widget=forms.TextInput(attrs={
             'placeholder': _('7275 Rue Saint-Urbain'),
             'class': 'street name'
@@ -334,7 +340,13 @@ class ClientReferentInformation(MemberForm):
 
     date = forms.DateField(
         label=_("Referral Date"),
-        widget=forms.TextInput(attrs={'class': 'ui calendar'})
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui calendar',
+                'placeholder': _('YYYY-MM-DD')
+            }
+        ),
+        help_text=_('Format: YYYY-MM-DD'),
     )
 
 
@@ -357,7 +369,8 @@ class ClientPaymentInformation(MemberForm):
     billing_payment_type = forms.ChoiceField(
         label=_("Payment Type"),
         choices=PAYMENT_TYPE,
-        widget=forms.Select(attrs={'class': 'ui dropdown'})
+        widget=forms.Select(attrs={'class': 'ui dropdown'}),
+        required=False
     )
 
     number = forms.IntegerField(label=_("Street Number"), required=False)
@@ -462,5 +475,11 @@ class ClientScheduledStatusForm(forms.ModelForm):
         super(ClientScheduledStatusForm, self).__init__(*args, **kwargs)
         self.fields['end_date'] = forms.DateField(
             required=False,
-            widget=forms.TextInput(attrs={'class': 'ui calendar'})
+            widget=forms.TextInput(
+                attrs={
+                    'class': 'ui calendar',
+                    'placeholder': _('YYYY-MM-DD')
+                }
+            ),
+            help_text=_('Format: YYYY-MM-DD'),
         )

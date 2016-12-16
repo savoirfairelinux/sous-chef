@@ -732,7 +732,7 @@ class FormTestCase(TestCase):
             "payment_information-same_as_client": False,
             "payment_information-firstname": "Billing",
             "payment_information-lastname": "Testing",
-            "payment_information-billing_payment_type": "cheque",
+            "payment_information-billing_payment_type": "credit",
             "payment_information-facturation": "default",
             "payment_information-street": "111 rue clark",
             "payment_information-apartement": "222",
@@ -867,7 +867,7 @@ class FormTestCase(TestCase):
         self.assertEqual(client.billing_member.lastname, "Testing")
 
         #  test_billing_type:
-        self.assertEqual(client.billing_payment_type, "cheque")
+        self.assertEqual(client.billing_payment_type, "credit")
 
         #  test_billing_address:
         self.assertEqual(client.billing_member.address.city, "Montreal")
@@ -994,7 +994,7 @@ class FormTestCase(TestCase):
         payment_information_data = {
             "client_wizard-current_step": "payment_information",
             "payment_information-same_as_client": True,
-            "payment_information-billing_payment_type": "cheque",
+            "payment_information-billing_payment_type": "3rd",
             "payment_information-facturation": "default",
             "address_information-latitude": 0.0,
             "address_information-longitude": 0.0,
@@ -1122,7 +1122,7 @@ class FormTestCase(TestCase):
         self.assertEqual(client.billing_member.lastname, "User")
 
         #  test_billing_type:
-        self.assertEqual(client.billing_payment_type, "cheque")
+        self.assertEqual(client.billing_payment_type, "3rd")
 
         #  test_billing_address:
         self.assertEqual(client.billing_member.address.city, "Montreal")
@@ -1482,7 +1482,7 @@ class FormTestCase(TestCase):
             "payment_information-member": "[{}] First Member".format(pk),
             "payment_information-firstname": "",
             "payment_information-lastname": "",
-            "payment_information-billing_payment_type": "cheque",
+            "payment_information-billing_payment_type": "3rd",
             "payment_information-facturation": "default",
             "payment_information-street": "",
             "payment_information-apartement": "",
@@ -2103,7 +2103,7 @@ class ClientUpdatePaymentInformationTestCase(ClientUpdateTestCase):
                 client.member.lastname
             ),
             'same_as_client': True,
-            'billing_payment_type': 'cheque',
+            'billing_payment_type': 'eft',
             'facturation': 'default',
         })
         form = ClientPaymentInformation(data=data)
@@ -2132,7 +2132,7 @@ class ClientUpdatePaymentInformationTestCase(ClientUpdateTestCase):
                 payment.lastname
             ),
             'same_as_client': False,
-            'billing_payment_type': 'cheque',
+            'billing_payment_type': '',
             'facturation': 'default',
         })
 
