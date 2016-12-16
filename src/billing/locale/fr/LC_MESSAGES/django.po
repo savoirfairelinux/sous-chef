@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-15 21:47+0000\n"
+"POT-Creation-Date: 2016-12-16 22:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -28,8 +28,8 @@ msgid "Search by name"
 msgstr "Recherche par nom"
 
 #: billing/templates/billing/add.html:5 billing/templates/billing/add.html:10
-#: billing/templates/billing/list.html:5
-#: billing/templates/billing/list.html:10
+#: billing/templates/billing/list.html:6
+#: billing/templates/billing/list.html:12 billing/templates/create.html:5
 msgid "Billing"
 msgstr "Facturation"
 
@@ -88,14 +88,14 @@ msgid "Display only Ordered orders."
 msgstr ""
 
 #: billing/templates/billing/add.html:72
-#: billing/templates/billing/list.html:56
+#: billing/templates/billing/list.html:60
 #: billing/templates/billing/view_orders.html:56
 msgid "Amount"
 msgstr "Montant"
 
 #: billing/templates/billing/add.html:75
-#: billing/templates/billing/list.html:62
-#: billing/templates/billing/partials/summary.html:38
+#: billing/templates/billing/list.html:66
+#: billing/templates/billing/partials/summary.html:39
 #: billing/templates/billing/view_orders.html:59
 msgid "Actions"
 msgstr "Actions"
@@ -105,7 +105,7 @@ msgid "of"
 msgstr ""
 
 #: billing/templates/billing/add.html:130
-#: billing/templates/billing/list.html:83
+#: billing/templates/billing/list.html:87
 msgid "Sorry, no result found"
 msgstr "Désolé, aucun résultat trouvé."
 
@@ -129,47 +129,47 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: billing/templates/billing/list.html:27
-#: billing/templates/billing/list.html:53
+#: billing/templates/billing/list.html:31
+#: billing/templates/billing/list.html:57
 #, fuzzy
 #| msgid "Billing"
 msgid "Billing Period"
 msgstr "Facturation"
 
-#: billing/templates/billing/list.html:39
+#: billing/templates/billing/list.html:43
 #: billing/templates/billing/view_orders.html:30
 msgid "Reset"
 msgstr "Réinitialiser"
 
-#: billing/templates/billing/list.html:40
+#: billing/templates/billing/list.html:44
 msgid "Search"
 msgstr "Recherche"
 
-#: billing/templates/billing/list.html:50
+#: billing/templates/billing/list.html:54
 #, fuzzy
 #| msgid "Billing"
 msgid "Billing ID"
 msgstr "Facturation"
 
-#: billing/templates/billing/list.html:51
+#: billing/templates/billing/list.html:55
 msgid "A unique identifier for the billing."
 msgstr ""
 
-#: billing/templates/billing/list.html:54
+#: billing/templates/billing/list.html:58
 msgid ""
 "A billing period represents a month and includes all orders delivered during "
 "the period."
 msgstr ""
 
-#: billing/templates/billing/list.html:57
+#: billing/templates/billing/list.html:61
 msgid "Total amount in $CAD delivered for the period."
 msgstr ""
 
-#: billing/templates/billing/list.html:59
+#: billing/templates/billing/list.html:63
 msgid "Orders"
 msgstr ""
 
-#: billing/templates/billing/list.html:60
+#: billing/templates/billing/list.html:64
 msgid "Number of orders delivered included in the period."
 msgstr ""
 
@@ -182,80 +182,80 @@ msgstr ""
 msgid "Revenues"
 msgstr ""
 
-#: billing/templates/billing/partials/summary.html:18
+#: billing/templates/billing/partials/summary.html:19
 msgid "New"
 msgstr ""
 
-#: billing/templates/billing/partials/summary.html:19
+#: billing/templates/billing/partials/summary.html:20
 msgid "Indicates if the client is a new client in this billing period."
 msgstr ""
 
-#: billing/templates/billing/partials/summary.html:21
+#: billing/templates/billing/partials/summary.html:22
 #: billing/templates/billing/view_orders.html:17
 #, fuzzy
 #| msgid "client name"
 msgid "Client Name"
 msgstr "Nom du client"
 
-#: billing/templates/billing/partials/summary.html:22
+#: billing/templates/billing/partials/summary.html:23
 #: billing/templates/billing/view_orders.html:48
 msgid "Quickly access the client file."
 msgstr ""
 
-#: billing/templates/billing/partials/summary.html:24
+#: billing/templates/billing/partials/summary.html:25
 msgid "Payment Method"
 msgstr ""
 
-#: billing/templates/billing/partials/summary.html:25
+#: billing/templates/billing/partials/summary.html:26
 msgid "Price Scale"
 msgstr ""
 
-#: billing/templates/billing/partials/summary.html:27
+#: billing/templates/billing/partials/summary.html:28
 msgid "Meals"
 msgstr ""
 
-#: billing/templates/billing/partials/summary.html:28
+#: billing/templates/billing/partials/summary.html:29
 msgid "Number of main dishes in total in this billing period."
 msgstr ""
 
-#: billing/templates/billing/partials/summary.html:31
+#: billing/templates/billing/partials/summary.html:32
 msgid "Extra"
 msgstr ""
 
-#: billing/templates/billing/partials/summary.html:32
+#: billing/templates/billing/partials/summary.html:33
 msgid "Number of extra side dishes in total in this billing period."
 msgstr ""
 
-#: billing/templates/billing/partials/summary.html:35
+#: billing/templates/billing/partials/summary.html:36
 #: billing/templates/billing/view_orders.html:77
 msgid "Total"
 msgstr ""
 
-#: billing/templates/billing/partials/summary.html:36
+#: billing/templates/billing/partials/summary.html:37
 msgid "Total amount in this billing period."
 msgstr ""
 
-#: billing/templates/billing/partials/summary.html:42
+#: billing/templates/billing/partials/summary.html:43
 msgid "Regular"
 msgstr ""
 
-#: billing/templates/billing/partials/summary.html:43
+#: billing/templates/billing/partials/summary.html:44
 msgid "Large"
 msgstr ""
 
-#: billing/templates/billing/partials/summary.html:51
-msgid "Grand Total:"
-msgstr ""
-
-#: billing/templates/billing/partials/summary.html:57
-#: billing/templates/billing/partials/summary.html:76
+#: billing/templates/billing/partials/summary.html:62
+#: billing/templates/billing/partials/summary.html:88
 #, fuzzy
 #| msgid "order id"
 msgid "View orders"
 msgstr "# de commande"
 
-#: billing/templates/billing/partials/summary.html:84
+#: billing/templates/billing/partials/summary.html:70
 msgid "Subtotal:"
+msgstr ""
+
+#: billing/templates/billing/partials/summary.html:82
+msgid "Grand Total:"
 msgstr ""
 
 #: billing/templates/billing/print_summary.html:7
@@ -305,14 +305,14 @@ msgstr ""
 msgid "Total amount in $CAD."
 msgstr "total_amount"
 
-#: billing/views.py:64
+#: billing/views.py:58
 #, python-format
 msgid ""
 "The billing with the identifier #%s             has been successfully "
 "created."
 msgstr ""
 
-#: billing/views.py:231
+#: billing/views.py:217
 msgid ""
 "Warning: the order(s) below have not set a \"size\" for main dish and thus "
 "have been excluded in \"Total Main Dishes\" column."
