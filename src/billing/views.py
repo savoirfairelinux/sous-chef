@@ -19,7 +19,8 @@ from django.http import HttpResponseRedirect
 from member.models import Client
 
 
-class BillingList(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
+class BillingList(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     # Display the billing list
     context_object_name = "billings"
     model = Billing
@@ -38,7 +39,8 @@ class BillingList(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView)
         return uf.qs.annotate(Count('orders', distinct=True))
 
 
-class BillingCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
+class BillingCreate(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
     # View to create the billing
     context_object_name = "billing"
     model = Billing
@@ -61,7 +63,8 @@ class BillingCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
         return HttpResponseRedirect(reverse_lazy('billing:list'))
 
 
-class BillingAdd(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
+class BillingAdd(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     context_object_name = "orders"
     model = Order
     paginate_by = 20
@@ -109,7 +112,8 @@ class BillingAdd(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
         ))
 
 
-class BillingSummaryView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+class BillingSummaryView(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
     # Display summary of billing
     model = Billing
     permission_required = 'sous_chef.read'
@@ -259,7 +263,8 @@ class BillingSummaryView(LoginRequiredMixin, PermissionRequiredMixin, generic.De
         return context
 
 
-class BillingOrdersView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+class BillingOrdersView(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
     # Display orders detail of billing
     model = Billing
     permission_required = 'sous_chef.read'
@@ -307,7 +312,8 @@ class BillingOrdersView(LoginRequiredMixin, PermissionRequiredMixin, generic.Det
         return context
 
 
-class BillingDelete(LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
+class BillingDelete(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     model = Billing
     permission_required = 'sous_chef.edit'
     template_name = 'billing_confirm_delete.html'

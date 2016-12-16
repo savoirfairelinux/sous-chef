@@ -45,7 +45,9 @@ from note.models import Note
 from order.mixins import FormValidAjaxableResponseMixin
 
 
-class ClientWizard(LoginRequiredMixin, PermissionRequiredMixin, NamedUrlSessionWizardView):
+class ClientWizard(
+        LoginRequiredMixin, PermissionRequiredMixin,
+        NamedUrlSessionWizardView):
     permission_required = 'sous_chef.edit'
     template_name = 'client/create/form.html'
 
@@ -431,7 +433,8 @@ class ClientWizard(LoginRequiredMixin, PermissionRequiredMixin, NamedUrlSessionW
         return False
 
 
-class ClientList(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
+class ClientList(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     # Display the list of clients
     context_object_name = 'clients'
     model = Client
@@ -570,7 +573,8 @@ def ExportCSV(self, queryset):
     return response
 
 
-class ClientView(LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
+class ClientView(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     # Display detail of one client
     model = Client
     permission_required = 'sous_chef.read'
@@ -767,7 +771,9 @@ class ClientOrderList(ClientView):
         return context
 
 
-class ClientUpdateInformation(LoginRequiredMixin, PermissionRequiredMixin, generic.edit.FormView):
+class ClientUpdateInformation(
+        LoginRequiredMixin, PermissionRequiredMixin,
+        generic.edit.FormView):
     permission_required = 'sous_chef.edit'
     template_name = 'client/update/steps.html'
 
@@ -1382,25 +1388,29 @@ class ClientStatusScheduler(
         )
 
 
-class DeleteRestriction(LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
+class DeleteRestriction(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     model = Restriction
     permission_required = 'sous_chef.edit'
     success_url = reverse_lazy('member:list')
 
 
-class DeleteClientOption(LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
+class DeleteClientOption(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     model = Client_option
     permission_required = 'sous_chef.edit'
     success_url = reverse_lazy('member:list')
 
 
-class DeleteIngredientToAvoid(LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
+class DeleteIngredientToAvoid(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     model = Client_avoid_ingredient
     permission_required = 'sous_chef.edit'
     success_url = reverse_lazy('member:list')
 
 
-class DeleteComponentToAvoid(LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
+class DeleteComponentToAvoid(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     model = Client_avoid_component
     permission_required = 'sous_chef.edit'
     success_url = reverse_lazy('member:list')

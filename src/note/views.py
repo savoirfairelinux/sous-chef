@@ -15,7 +15,8 @@ from member.models import Client
 
 # Create your views here.
 
-class NoteList(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
+class NoteList(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     # Display the list of notes
     context_object_name = 'notes'
     model = Note
@@ -56,7 +57,8 @@ class NoteList(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
         return context
 
 
-class ClientNoteList(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
+class ClientNoteList(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     # Display detail of one client
     context_object_name = 'notes'
     model = Note

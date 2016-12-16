@@ -198,7 +198,8 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('delivery:meal')
         # Run & check
@@ -206,7 +207,8 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -216,9 +218,10 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
         # Check
         self.assertEqual(response.status_code, 200)
 
-    def test_disable_form_fields_for_users_that_do_not_have_edit_permission(self):
+    def test_disable_form_fields_for_users_that_do_not_have_edit_permission(self):  # noqa
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -229,9 +232,10 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
         for field in response.context['form']:
             assert field.field.disabled
 
-    def test_do_not_allow_users_that_do_not_have_edit_permission_to_post_data(self):
+    def test_do_not_allow_users_that_do_not_have_edit_permission_to_post_data(self):  # noqa
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -275,7 +279,8 @@ class DeliveryRouteSheetTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('delivery:route_sheet_id', args=[self.route_id])
         # Run & check
@@ -283,7 +288,8 @@ class DeliveryRouteSheetTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -364,7 +370,8 @@ class RouteSequencingTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -373,7 +380,8 @@ class RouteSequencingTestCase(SousChefTestMixin, TestCase):
                            {"id": 869}, {"id": 861}, {"id": 862}, {"id": 863}]}
         url = reverse('delivery:save_route')
         # Run
-        response = self.client.post(url, json.dumps(dic), content_type="application/json")
+        response = self.client.post(
+            url, json.dumps(dic), content_type="application/json")
         # Check
         self.assertEqual(response.status_code, 302)
 
@@ -388,7 +396,8 @@ class RouteSequencingTestCase(SousChefTestMixin, TestCase):
                            {"id": 869}, {"id": 861}, {"id": 862}, {"id": 863}]}
         url = reverse('delivery:save_route')
         # Run
-        response = self.client.post(url, json.dumps(dic), content_type="application/json")
+        response = self.client.post(
+            url, json.dumps(dic), content_type="application/json")
         # Check
         self.assertEqual(response.status_code, 200)
 
@@ -443,7 +452,8 @@ class OrderlistViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('delivery:order')
         # Run & check
@@ -451,7 +461,8 @@ class OrderlistViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -509,7 +520,8 @@ class RoutesInformationViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('delivery:routes')
         # Run & check
@@ -517,7 +529,8 @@ class RoutesInformationViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -533,7 +546,8 @@ class OrganizeRouteViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('delivery:organize_route', kwargs={'id': 1})
         # Run & check
@@ -541,7 +555,8 @@ class OrganizeRouteViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -557,7 +572,8 @@ class KitchenCountViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('delivery:kitchen_count')
         # Run & check
@@ -565,7 +581,8 @@ class KitchenCountViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -581,7 +598,8 @@ class MealLabelsViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('delivery:mealLabels')
         # Run & check
@@ -589,7 +607,8 @@ class MealLabelsViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -605,7 +624,8 @@ class RefreshOrderViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')

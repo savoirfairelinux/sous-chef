@@ -21,6 +21,7 @@ urlpatterns = [
     url(_(r'^route_sheet/(?P<id>\d+)/$'),
         DeliveryRouteSheet.as_view(), name='route_sheet_id'),
     url(_(r'^getDailyOrders/$'), dailyOrders, name='dailyOrders'),
-    url(_(r'^refresh_orders/$'), RefreshOrderView.as_view(), name='refresh_orders'),
+    url(_(r'^refresh_orders/$'),
+        RefreshOrderView.as_view(), name='refresh_orders'),
     url(_(r'^save_route/$'), SaveRouteView.as_view(), name='save_route'),
 ]

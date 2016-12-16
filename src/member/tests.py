@@ -629,7 +629,8 @@ class FormTestCase(TestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -2507,7 +2508,8 @@ class ClientListViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('member:list')
         # Run & check
@@ -2515,7 +2517,8 @@ class ClientListViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -2531,7 +2534,8 @@ class ClientInfoViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
         url = reverse('member:client_information', kwargs={'pk': client.id})
@@ -2540,7 +2544,8 @@ class ClientInfoViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -2557,7 +2562,8 @@ class ClientReferentViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
         url = reverse('member:client_information', kwargs={'pk': client.id})
@@ -2566,7 +2572,8 @@ class ClientReferentViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -2583,7 +2590,8 @@ class ClientPaymentViewViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
         url = reverse('member:client_payment', kwargs={'pk': client.id})
@@ -2592,7 +2600,8 @@ class ClientPaymentViewViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -2609,7 +2618,8 @@ class ClientAllergiesViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
         url = reverse('member:client_allergies', kwargs={'pk': client.id})
@@ -2618,7 +2628,8 @@ class ClientAllergiesViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -2635,7 +2646,8 @@ class ClientStatusViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
         url = reverse('member:client_status', kwargs={'pk': client.id})
@@ -2644,7 +2656,8 @@ class ClientStatusViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -2661,7 +2674,8 @@ class ClientNotesViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
         url = reverse('member:client_notes', kwargs={'pk': client.id})
@@ -2670,7 +2684,8 @@ class ClientNotesViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -2687,7 +2702,8 @@ class ClientOrderListTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
         url = reverse('member:list_orders', kwargs={'pk': client.id})
@@ -2696,7 +2712,8 @@ class ClientOrderListTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -2713,12 +2730,15 @@ class ClientUpdateBasicInformationViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
-        url = reverse('member:member_update_basic_information', kwargs={'pk': client.id})
+        url = reverse(
+            'member:member_update_basic_information',
+            kwargs={'pk': client.id})
         # Run & check
         self.assertRedirectsWithAllMethods(url)
 
@@ -2729,7 +2749,9 @@ class ClientUpdateBasicInformationViewTestCase(SousChefTestMixin, TestCase):
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
-        url = reverse('member:member_update_basic_information', kwargs={'pk': client.id})
+        url = reverse(
+            'member:member_update_basic_information',
+            kwargs={'pk': client.id})
         # Run
         response = self.client.get(url)
         # Check
@@ -2741,12 +2763,15 @@ class ClientUpdateAddressInformationViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
-        url = reverse('member:member_update_address_information', kwargs={'pk': client.id})
+        url = reverse(
+            'member:member_update_address_information',
+            kwargs={'pk': client.id})
         # Run & check
         self.assertRedirectsWithAllMethods(url)
 
@@ -2757,7 +2782,9 @@ class ClientUpdateAddressInformationViewTestCase(SousChefTestMixin, TestCase):
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
-        url = reverse('member:member_update_address_information', kwargs={'pk': client.id})
+        url = reverse(
+            'member:member_update_address_information',
+            kwargs={'pk': client.id})
         # Run
         response = self.client.get(url)
         # Check
@@ -2769,12 +2796,15 @@ class ClientUpdateReferentInformationViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
-        url = reverse('member:member_update_referent_information', kwargs={'pk': client.id})
+        url = reverse(
+            'member:member_update_referent_information',
+            kwargs={'pk': client.id})
         # Run & check
         self.assertRedirectsWithAllMethods(url)
 
@@ -2785,7 +2815,9 @@ class ClientUpdateReferentInformationViewTestCase(SousChefTestMixin, TestCase):
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
-        url = reverse('member:member_update_referent_information', kwargs={'pk': client.id})
+        url = reverse(
+            'member:member_update_referent_information',
+            kwargs={'pk': client.id})
         # Run
         response = self.client.get(url)
         # Check
@@ -2797,12 +2829,15 @@ class ClientUpdatePaymentInformationViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
-        url = reverse('member:member_update_payment_information', kwargs={'pk': client.id})
+        url = reverse(
+            'member:member_update_payment_information',
+            kwargs={'pk': client.id})
         # Run & check
         self.assertRedirectsWithAllMethods(url)
 
@@ -2813,7 +2848,9 @@ class ClientUpdatePaymentInformationViewTestCase(SousChefTestMixin, TestCase):
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
-        url = reverse('member:member_update_payment_information', kwargs={'pk': client.id})
+        url = reverse(
+            'member:member_update_payment_information',
+            kwargs={'pk': client.id})
         # Run
         response = self.client.get(url)
         # Check
@@ -2825,12 +2862,15 @@ class ClientUpdateDietaryRestrictionViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
-        url = reverse('member:member_update_dietary_restriction', kwargs={'pk': client.id})
+        url = reverse(
+            'member:member_update_dietary_restriction',
+            kwargs={'pk': client.id})
         # Run & check
         self.assertRedirectsWithAllMethods(url)
 
@@ -2842,24 +2882,30 @@ class ClientUpdateDietaryRestrictionViewTestCase(SousChefTestMixin, TestCase):
         self.client.login(username='foo', password='secure')
         Option.objects.create(name='meals_schedule')
         client = ClientFactory()
-        url = reverse('member:member_update_dietary_restriction', kwargs={'pk': client.id})
+        url = reverse(
+            'member:member_update_dietary_restriction',
+            kwargs={'pk': client.id})
         # Run
         response = self.client.get(url)
         # Check
         self.assertEqual(response.status_code, 200)
 
 
-class ClientUpdateEmergencyContactInformationViewTestCase(SousChefTestMixin, TestCase):
+class ClientUpdateEmergencyContactInformationViewTestCase(
+        SousChefTestMixin, TestCase):
     fixtures = ['routes.json']
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
-        url = reverse('member:member_update_emergency_contact', kwargs={'pk': client.id})
+        url = reverse(
+            'member:member_update_emergency_contact',
+            kwargs={'pk': client.id})
         # Run & check
         self.assertRedirectsWithAllMethods(url)
 
@@ -2870,7 +2916,9 @@ class ClientUpdateEmergencyContactInformationViewTestCase(SousChefTestMixin, Tes
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
-        url = reverse('member:member_update_emergency_contact', kwargs={'pk': client.id})
+        url = reverse(
+            'member:member_update_emergency_contact',
+            kwargs={'pk': client.id})
         # Run
         response = self.client.get(url)
         # Check
@@ -2882,7 +2930,8 @@ class SearchMembersViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('member:search')
         # Run & check
@@ -2890,7 +2939,8 @@ class SearchMembersViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -2906,7 +2956,8 @@ class ClientStatusSchedulerViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -2934,14 +2985,18 @@ class DeleteRestrictionViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
-        restricted_item = Restricted_item.objects.create(name='pork', restricted_item_group='meat')
-        restriction = Restriction.objects.create(client=client, restricted_item=restricted_item)
-        url = reverse('member:restriction_delete', kwargs={'pk': restriction.id})
+        restricted_item = Restricted_item.objects.create(
+            name='pork', restricted_item_group='meat')
+        restriction = Restriction.objects.create(
+            client=client, restricted_item=restricted_item)
+        url = reverse(
+            'member:restriction_delete', kwargs={'pk': restriction.id})
         # Run & check
         self.assertRedirectsWithAllMethods(url)
 
@@ -2952,9 +3007,12 @@ class DeleteRestrictionViewTestCase(SousChefTestMixin, TestCase):
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
-        restricted_item = Restricted_item.objects.create(name='pork', restricted_item_group='meat')
-        restriction = Restriction.objects.create(client=client, restricted_item=restricted_item)
-        url = reverse('member:restriction_delete', kwargs={'pk': restriction.id})
+        restricted_item = Restricted_item.objects.create(
+            name='pork', restricted_item_group='meat')
+        restriction = Restriction.objects.create(
+            client=client, restricted_item=restricted_item)
+        url = reverse(
+            'member:restriction_delete', kwargs={'pk': restriction.id})
         # Run
         response = self.client.post(url, follow=True)
         # Check
@@ -2966,7 +3024,8 @@ class DeleteClientOptionViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -2998,14 +3057,17 @@ class DeleteIngredientToAvoidViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
         ingredient = Ingredient.objects.create(name='ground pork')
-        avoid_ing = Client_avoid_ingredient.objects.create(client=client, ingredient=ingredient)
-        url = reverse('member:ingredient_to_avoid_delete', kwargs={'pk': avoid_ing.id})
+        avoid_ing = Client_avoid_ingredient.objects.create(
+            client=client, ingredient=ingredient)
+        url = reverse(
+            'member:ingredient_to_avoid_delete', kwargs={'pk': avoid_ing.id})
         # Run & check
         self.assertRedirectsWithAllMethods(url)
 
@@ -3017,8 +3079,10 @@ class DeleteIngredientToAvoidViewTestCase(SousChefTestMixin, TestCase):
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
         ingredient = Ingredient.objects.create(name='ground pork')
-        avoid_ing = Client_avoid_ingredient.objects.create(client=client, ingredient=ingredient)
-        url = reverse('member:ingredient_to_avoid_delete', kwargs={'pk': avoid_ing.id})
+        avoid_ing = Client_avoid_ingredient.objects.create(
+            client=client, ingredient=ingredient)
+        url = reverse(
+            'member:ingredient_to_avoid_delete', kwargs={'pk': avoid_ing.id})
         # Run
         response = self.client.post(url, follow=True)
         # Check
@@ -3030,14 +3094,19 @@ class DeleteComponentToAvoidViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
-        component = Component.objects.create(name='ginger pork', component_group='main dish')
-        avoid_component = Client_avoid_component.objects.create(client=client, component=component)
-        url = reverse('member:component_to_avoid_delete', kwargs={'pk': avoid_component.id})
+        component = Component.objects.create(
+            name='ginger pork', component_group='main dish')
+        avoid_component = Client_avoid_component.objects.create(
+            client=client, component=component)
+        url = reverse(
+            'member:component_to_avoid_delete',
+            kwargs={'pk': avoid_component.id})
         # Run & check
         self.assertRedirectsWithAllMethods(url)
 
@@ -3048,9 +3117,13 @@ class DeleteComponentToAvoidViewTestCase(SousChefTestMixin, TestCase):
         user.save()
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
-        component = Component.objects.create(name='ginger pork', component_group='main dish')
-        avoid_component = Client_avoid_component.objects.create(client=client, component=component)
-        url = reverse('member:component_to_avoid_delete', kwargs={'pk': avoid_component.id})
+        component = Component.objects.create(
+            name='ginger pork', component_group='main dish')
+        avoid_component = Client_avoid_component.objects.create(
+            client=client, component=component)
+        url = reverse(
+            'member:component_to_avoid_delete',
+            kwargs={'pk': avoid_component.id})
         # Run
         response = self.client.post(url, follow=True)
         # Check

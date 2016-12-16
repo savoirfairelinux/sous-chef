@@ -796,7 +796,8 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -994,7 +995,8 @@ class OrderStatusChangeViewTestCase(OrderItemTestCase):
         order = self.order
         order.status = 'B'
         order.save()
-        self.client.force_login(self.admin, 'django.contrib.auth.backends.ModelBackend')
+        self.client.force_login(
+            self.admin, 'django.contrib.auth.backends.ModelBackend')
 
     def test_get_page(self):
         response = self.client.get(
@@ -1037,7 +1039,8 @@ class OrderStatusChangeViewTestCase(OrderItemTestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('order:update_status', args=(self.order.id, ))
         # Run
@@ -1047,7 +1050,8 @@ class OrderStatusChangeViewTestCase(OrderItemTestCase):
 
     def test_allow_access_to_users_with_edit_permission(self):
         # Setup
-        User.objects.create_superuser(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('order:update_status', args=(self.order.id, ))
         # Run
@@ -1180,7 +1184,8 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('order:update', args=(self.order.id, ))
         # Run
@@ -1190,7 +1195,8 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
 
     def test_allow_access_to_users_with_edit_permission(self):
         # Setup
-        User.objects.create_superuser(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('order:update', args=(self.order.id, ))
         # Run
@@ -1222,7 +1228,8 @@ class DeleteOrderTestCase(OrderFormTestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('order:delete', args=(self.order.id, ))
         # Run
@@ -1232,7 +1239,8 @@ class DeleteOrderTestCase(OrderFormTestCase):
 
     def test_allow_access_to_users_with_edit_permission(self):
         # Setup
-        User.objects.create_superuser(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('order:delete', args=(self.order.id, ))
         # Run
@@ -1321,7 +1329,8 @@ class CommandsTestCase(TestCase):
 class OrderListViewTestCase(SousChefTestMixin, TestCase):
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('order:list')
         # Run & check
@@ -1329,7 +1338,8 @@ class OrderListViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -1343,7 +1353,8 @@ class OrderListViewTestCase(SousChefTestMixin, TestCase):
 class OrderDetailViewTestCase(SousChefTestMixin, OrderTestCase):
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('order:view', args=(self.order.id, ))
         # Run & check
@@ -1351,7 +1362,8 @@ class OrderDetailViewTestCase(SousChefTestMixin, OrderTestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')

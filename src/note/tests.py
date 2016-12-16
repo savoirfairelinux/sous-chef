@@ -17,7 +17,8 @@ class NoteTestCase(TestCase):
     def setUpTestData(cls):
         cls.clients = ClientFactory()
         cls.admin = User.objects.create_superuser(
-            username='admin', email='testadmin@example.com', password='test1234')
+            username='admin', email='testadmin@example.com',
+            password='test1234')
         cls.note = NoteFactory.create(client=cls.clients, author=cls.admin)
 
     def test_attach_note_to_member(self):
@@ -63,7 +64,8 @@ class NoteTestCase(TestCase):
 class NoteAddTestCase(NoteTestCase):
 
     def setUp(self):
-        self.client.force_login(self.admin, 'django.contrib.auth.backends.ModelBackend')
+        self.client.force_login(
+            self.admin, 'django.contrib.auth.backends.ModelBackend')
 
     def test_create_set_fields(self):
         """
@@ -84,7 +86,8 @@ class NoteAddTestCase(NoteTestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -114,7 +117,8 @@ class NoteAddTestCase(NoteTestCase):
 class ClientNoteAddTestCase(NoteTestCase):
 
     def setUp(self):
-        self.client.force_login(self.admin, 'django.contrib.auth.backends.ModelBackend',)
+        self.client.force_login(
+            self.admin, 'django.contrib.auth.backends.ModelBackend',)
 
     def test_get_with_client_pk(self):
         client = ClientFactory()
@@ -130,7 +134,8 @@ class ClientNoteAddTestCase(NoteTestCase):
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -172,7 +177,8 @@ class NoteListViewTestCase(SousChefTestMixin, TestCase):
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('note:note_list')
         # Run & check
@@ -180,7 +186,8 @@ class NoteListViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')

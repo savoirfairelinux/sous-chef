@@ -98,7 +98,8 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
 class BillingListViewTestCase(SousChefTestMixin, TestCase):
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         url = reverse('billing:list')
         # Run & check
@@ -106,7 +107,8 @@ class BillingListViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -120,7 +122,8 @@ class BillingListViewTestCase(SousChefTestMixin, TestCase):
 class BillingCreateViewTestCase(SousChefTestMixin, TestCase):
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -136,16 +139,19 @@ class BillingCreateViewTestCase(SousChefTestMixin, TestCase):
         self.client.login(username='foo', password='secure')
         url = reverse('billing:create')
         # Run
-        response = self.client.get(url, {'delivery_date': '2016-1'}, follow=True)
+        response = self.client.get(
+            url, {'delivery_date': '2016-1'}, follow=True)
         # Check
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.redirect_chain[-1][0], reverse('billing:list'))
+        self.assertEqual(
+            response.redirect_chain[-1][0], reverse('billing:list'))
 
 
 class BillingAddViewTestCase(SousChefTestMixin, TestCase):
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -169,7 +175,8 @@ class BillingAddViewTestCase(SousChefTestMixin, TestCase):
 class BillingSummaryViewTestCase(SousChefTestMixin, TestCase):
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
-        User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
         bill = BillingFactory()
         url = reverse('billing:view', args=(bill.id, ))
@@ -178,7 +185,8 @@ class BillingSummaryViewTestCase(SousChefTestMixin, TestCase):
 
     def test_allow_access_to_users_with_read_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
@@ -193,7 +201,8 @@ class BillingSummaryViewTestCase(SousChefTestMixin, TestCase):
 class BillingDeleteViewTestCase(SousChefTestMixin, TestCase):
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
-        user = User.objects.create_user(username='foo', email='foo@example.com', password='secure')
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')

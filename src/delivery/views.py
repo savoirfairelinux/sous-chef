@@ -81,7 +81,8 @@ class Orderlist(LoginRequiredMixin, PermissionRequiredMixin, FilterView):
         return context
 
 
-class MealInformation(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
+class MealInformation(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.View):
     # Choose today's main dish and its ingredients
     permission_required = 'sous_chef.read'
 
@@ -134,7 +135,8 @@ class MealInformation(LoginRequiredMixin, PermissionRequiredMixin, generic.View)
                 'ingredients': dish_ingredients,
                 'sides_ingredients': sides_ingredients})
 
-        # The form should be read-only if the user does not have the permission to edit data.
+        # The form should be read-only if the user does not have the
+        # permission to edit data.
         if not request.user.has_perm('sous_chef.edit'):
             [setattr(form.fields[k], 'disabled', True) for k in form.fields]
 
@@ -147,7 +149,8 @@ class MealInformation(LoginRequiredMixin, PermissionRequiredMixin, generic.View)
     def post(self, request):
         # Choose ingredients in today's main dish and in Sides
 
-        # Prevent users to go further if they don't have the permission to edit data.
+        # Prevent users to go further if they don't have the permission
+        # to edit data.
         if not request.user.has_perm('sous_chef.edit'):
             raise PermissionDenied
 
@@ -221,7 +224,8 @@ class MealInformation(LoginRequiredMixin, PermissionRequiredMixin, generic.View)
              'form': form})
 
 
-class RouteInformation(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
+class RouteInformation(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     # Display all the route information for a given day
     model = Delivery
     permission_required = 'sous_chef.read'
@@ -235,7 +239,8 @@ class RouteInformation(LoginRequiredMixin, PermissionRequiredMixin, generic.List
         return context
 
 
-class RoutesInformation(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
+class RoutesInformation(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     # Display all the route information for a given day
     permission_required = 'sous_chef.read'
     model = Delivery
@@ -277,7 +282,8 @@ class RoutesInformation(LoginRequiredMixin, PermissionRequiredMixin, generic.Lis
         return ['routes_print.html', ] if self.doprint else ['routes.html', ]
 
 
-class OrganizeRoute(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
+class OrganizeRoute(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     # Display all the route information for a given day
     model = Delivery
     permission_required = 'sous_chef.read'
@@ -293,7 +299,8 @@ class OrganizeRoute(LoginRequiredMixin, PermissionRequiredMixin, generic.ListVie
 
 # Kitchen count report view, helper classes and functions
 
-class KitchenCount(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
+class KitchenCount(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.View):
     permission_required = 'sous_chef.read'
 
     def get(self, request, **kwargs):
@@ -745,7 +752,8 @@ def kcr_make_labels(kitchen_list, main_dish_name, main_dish_ingredients):
 # Delivery route sheet view, helper classes and functions
 
 
-class MealLabels(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
+class MealLabels(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.View):
     permission_required = 'sous_chef.read'
 
     def get(self, request, **kwargs):
@@ -762,7 +770,8 @@ class MealLabels(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
         return response
 
 
-class DeliveryRouteSheet(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
+class DeliveryRouteSheet(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.View):
     permission_required = 'sous_chef.read'
 
     def get(self, request, **kwargs):
@@ -972,7 +981,8 @@ def dailyOrders(request):
     return JsonResponse(waypoints, safe=False)
 
 
-class SaveRouteView(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
+class SaveRouteView(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.View):
     permission_required = 'sous_chef.edit'
 
     @method_decorator(csrf_exempt)
@@ -1002,7 +1012,8 @@ class SaveRouteView(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
         return JsonResponse('OK', safe=False)
 
 
-class RefreshOrderView(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
+class RefreshOrderView(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.View):
     permission_required = 'sous_chef.edit'
 
     def get(self, request):

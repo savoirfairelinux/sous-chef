@@ -23,7 +23,8 @@ from meal.settings import COMPONENT_SYSTEM_DEFAULT
 from member.models import Client, DAYS_OF_WEEK
 
 
-class OrderList(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
+class OrderList(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     context_object_name = 'orders'
     model = Order
     paginate_by = 20
@@ -72,7 +73,8 @@ class OrderList(LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
         return super(OrderList, self).get(request, **kwargs)
 
 
-class OrderDetail(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+class OrderDetail(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
     model = Order
     permission_required = 'sous_chef.read'
     template_name = 'view.html'
@@ -88,7 +90,8 @@ class OrderDetail(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailVie
 
 
 class CreateOrder(
-        AjaxableResponseMixin, LoginRequiredMixin, PermissionRequiredMixin, CreateWithInlinesView):
+        AjaxableResponseMixin, LoginRequiredMixin,
+        PermissionRequiredMixin, CreateWithInlinesView):
     fields = ['client', 'delivery_date']
     inlines = [CreateOrderItem]
     model = Order
@@ -103,7 +106,8 @@ class CreateOrder(
         return self.object.get_absolute_url()
 
 
-class CreateOrdersBatch(LoginRequiredMixin, PermissionRequiredMixin, generic.FormView):
+class CreateOrdersBatch(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.FormView):
     permission_required = 'sous_chef.edit'
     success_url = reverse_lazy('order:create_batch')
     template_name = "order/create_batch.html"
@@ -248,7 +252,8 @@ class CreateOrdersBatch(LoginRequiredMixin, PermissionRequiredMixin, generic.For
 
 
 class UpdateOrder(
-        LoginRequiredMixin, PermissionRequiredMixin, AjaxableResponseMixin, UpdateWithInlinesView):
+        LoginRequiredMixin, PermissionRequiredMixin,
+        AjaxableResponseMixin, UpdateWithInlinesView):
     fields = ['client', 'delivery_date']
     inlines = [UpdateOrderItem]
     model = Order
@@ -270,8 +275,8 @@ class UpdateOrder(
 
 
 class UpdateOrderStatus(
-        LoginRequiredMixin, PermissionRequiredMixin, FormValidAjaxableResponseMixin,
-        generic.CreateView):
+        LoginRequiredMixin, PermissionRequiredMixin,
+        FormValidAjaxableResponseMixin, generic.CreateView):
     form_class = OrderStatusChangeForm
     model = OrderStatusChange
     permission_required = 'sous_chef.edit'
@@ -313,7 +318,8 @@ class UpdateOrderStatus(
         )
 
 
-class DeleteOrder(LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
+class DeleteOrder(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     model = Order
     permission_required = 'sous_chef.edit'
     template_name = 'order_confirm_delete.html'
