@@ -52,6 +52,18 @@ class Orderlist(LoginRequiredMixin, FilterView):
     def get_queryset(self):
         queryset = Order.objects.get_shippable_orders().order_by(
             'client__route__pk', 'pk'
+        ).prefetch_related('orders').select_related(
+            'client__member',
+            'client__route',
+            'client__member__address'
+        ).only(
+            'delivery_date',
+            'status',
+            'client__member__firstname',
+            'client__member__lastname',
+            'client__route__name',
+            'client__member__address__latitude',
+            'client__member__address__longitude'
         )
         return queryset
 
