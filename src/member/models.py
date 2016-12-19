@@ -122,7 +122,9 @@ class Member(models.Model):
     @property
     def home_phone(self):
         try:
-            val_orig = self.member_contact.filter(type=HOME).first().value
+            val_orig = next(
+                mc.value for mc in self.member_contact.all() if mc.type == HOME
+            )
             f = CAPhoneNumberExtField()
             val_clean = f.clean(val_orig)
             if val_orig != val_clean:
@@ -131,14 +133,16 @@ class Member(models.Model):
                 return val_clean
             return val_orig
         except ValidationError as error:
-            return self.member_contact.filter(type=HOME).first().value
+            return val_orig
         except:
             return ""
 
     @property
     def cell_phone(self):
         try:
-            val_orig = self.member_contact.filter(type=CELL).first().value
+            val_orig = next(
+                mc.value for mc in self.member_contact.all() if mc.type == CELL
+            )
             f = CAPhoneNumberExtField()
             val_clean = f.clean(val_orig)
             if val_orig != val_clean:
@@ -147,14 +151,16 @@ class Member(models.Model):
                 return val_clean
             return val_orig
         except ValidationError as error:
-            return self.member_contact.filter(type=CELL).first().value
+            return val_orig
         except:
             return ""
 
     @property
     def work_phone(self):
         try:
-            val_orig = self.member_contact.filter(type=WORK).first().value
+            val_orig = next(
+                mc.value for mc in self.member_contact.all() if mc.type == WORK
+            )
             f = CAPhoneNumberExtField()
             val_clean = f.clean(val_orig)
             if val_orig != val_clean:
@@ -163,14 +169,17 @@ class Member(models.Model):
                 return val_clean
             return val_orig
         except ValidationError as error:
-            return self.member_contact.filter(type=WORK).first().value
+            return val_orig
         except:
             return ""
 
     @property
     def email(self):
         try:
-            return self.member_contact.all().filter(type=EMAIL).first().value
+            return next(
+                mc.value for mc in self.member_contact.all()
+                if mc.type == EMAIL
+            )
         except:
             return ""
 
@@ -662,8 +671,9 @@ class Client(models.Model):
         """
         defaults = self.meals_default
         prefs = []
+        simple_meals_schedule = self.simple_meals_schedule
         for day, meal_schedule in defaults:
-            if day not in self.simple_meals_schedule:
+            if day not in simple_meals_schedule:
                 prefs.append((day, None))
             else:
                 prefs.append((day, meal_schedule))
