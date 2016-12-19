@@ -281,3 +281,21 @@ ul.doughnut-legend {
 .leaflet-routing-alt {
   max-height:400px;
 }
+
+/* Avatars */
+.list-avatars  li  {
+  list-style:none;
+  float:left;
+}
+
+.list-avatars img {
+    background-repeat: no-repeat;
+    background-position: 50%;
+    border-radius: 50%;
+    width: 80px;
+}
+
+.list-avatars label {
+    font-weight: bold;
+    font-size: medium;
+}

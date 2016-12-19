@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'note',
     'billing',
     'datamigration',
+    'avatar',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -182,3 +183,12 @@ STATICFILES_DIRS = (
     BASE_DIR + '/sous_chef/static/',
 )
 STATIC_URL = '/static/'
+
+# Avatar files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+AVATAR_STORAGE_DIR = 'avatars/'
+AVATAR_PROVIDERS = (
+    'avatar.providers.GravatarAvatarProvider',
+    'avatar.providers.DefaultAvatarProvider',
+)
