@@ -95,6 +95,8 @@ class NoteFilter(FilterSet):
         ('0', 'No'),
     )
 
+    NOTE_STATUS_UNREAD = IS_READ_CHOICES[2][0]
+
     priority = ChoiceFilter(
         choices=(('', ''),) + Note.PRIORITY_LEVEL,
     )
