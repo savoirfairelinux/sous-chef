@@ -105,6 +105,7 @@ class Component(models.Model):
     def get_recipe_ingredients(component_id):
         """Returns a list of the ingredients in the recipe of a component."""
         q = Component_ingredient.objects.\
+            select_related('ingredient').\
             filter(component__id=component_id, date=None)
         return [ci.ingredient for ci in q]
 
