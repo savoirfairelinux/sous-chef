@@ -184,6 +184,7 @@ class MealInformation(LoginRequiredMixin, generic.View):
                         ingredient=ing,
                         date=date)
                     ci.save()
+
                 # Create menu and its components for today
                 compnames = [component.name]  # main dish
                 # take first sorted name of each other component group
@@ -406,7 +407,8 @@ def kcr_make_lines(kitchen_list, date):
                     lqty=0,
                     name='',
                     ingredients=''))
-            if component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH:
+            if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH and
+                    component_lines[component_group].name == ''):
                 component_lines[component_group] = \
                     component_lines[component_group]._replace(
                         name=meal_component.name,

@@ -97,6 +97,7 @@ class Component(models.Model):
         """Returns a list of the actual ingredients
         of a component for the delivery date."""
         q = Component_ingredient.objects.\
+            select_related('ingredient').\
             filter(component__id=component_id, date=delivery_date)
         return [ci.ingredient for ci in q]
 
