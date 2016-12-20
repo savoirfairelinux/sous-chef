@@ -292,6 +292,15 @@ class ClientTestCase(TestCase):
             self.ss_client.meal_default_week['monday_main_dish_quantity'], 1
         )
 
+    def test_delete_route(self):
+        route = Route.objects.get(name=self.ss_client.route.name)
+        route.delete()
+        # We reload our client to update its informations
+        client = Client.objects.get(id=self.ss_client.id)
+        self.assertEqual(
+            client.route, None
+        )
+
 
 class OptionTestCase(TestCase):
 

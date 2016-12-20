@@ -503,6 +503,7 @@ class Client(models.Model):
 
     route = models.ForeignKey(
         'member.Route',
+        on_delete=models.SET_NULL,
         verbose_name=_('route'),
         blank=True,
         null=True
