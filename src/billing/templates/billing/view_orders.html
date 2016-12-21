@@ -59,7 +59,7 @@
     <th class="">{% trans 'Actions' %}</th>
   </thead>
   <tbody>
-    {% for order in orders.all %}
+    {% for order in orders %}
     <tr>
       <td><i class="hashtag icon"></i>{{order.id}}</td>
       <td><a href="{% url 'member:client_information' pk=order.client.id %}">{{order.client}}

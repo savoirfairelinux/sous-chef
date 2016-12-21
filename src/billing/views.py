@@ -2,7 +2,7 @@ import copy
 import collections
 
 from django.shortcuts import render
-from django.db.models import Q
+from django.db.models import Q, Count, Prefetch
 from django.views import generic
 from django.utils.translation import string_concat
 from django.utils.translation import ugettext_lazy as _
@@ -38,7 +38,7 @@ class BillingList(generic.ListView):
 
     def get_queryset(self):
         uf = BillingFilter(self.request.GET)
-        return uf.qs
+        return uf.qs.annotate(Count('orders', distinct=True))
 
 
 class BillingCreate(generic.CreateView):
@@ -101,7 +101,21 @@ class BillingAdd(generic.ListView):
 
     def get_queryset(self):
         uf = DeliveredOrdersByMonth(self.request.GET)
-        return uf.qs
+        return uf.qs.select_related(
+            'client__member'
+        ).only(
+            'status',
+            'delivery_date',
+            'client__member__firstname',
+            'client__member__lastname'
+        ).prefetch_related(Prefetch(
+            'orders',
+            queryset=Order_item.objects.all().only(
+                'order__id',
+                'price',
+                'billable_flag'
+            )
+        ))
 
 
 class BillingSummaryView(generic.DetailView):
@@ -109,6 +123,27 @@ class BillingSummaryView(generic.DetailView):
     model = Billing
     template_name = "billing/view.html"
     context_object_name = "billing"
+    queryset = Billing.objects.prefetch_related(Prefetch(
+        'orders',
+        queryset=Order.objects.all().select_related(
+            'client__member'
+        ).only(
+            'client__member__firstname',
+            'client__member__lastname',
+            'client__rate_type',
+            'client__billing_payment_type'
+        ).prefetch_related(Prefetch(
+            'orders',
+            queryset=Order_item.objects.all().only(
+                'order__id',
+                'price',
+                'billable_flag',
+                'size',
+                'component_group',
+                'total_quantity'
+            )
+        ))
+    ))
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -241,6 +276,25 @@ class BillingOrdersView(generic.DetailView):
     model = Billing
     template_name = "billing/view_orders.html"
     context_object_name = "billing"
+
+    queryset = Billing.objects.prefetch_related(Prefetch(
+        'orders',
+        queryset=Order.objects.all().select_related(
+            'client__member'
+        ).only(
+            'status',
+            'delivery_date',
+            'client__member__firstname',
+            'client__member__lastname'
+        ).prefetch_related(Prefetch(
+            'orders',
+            queryset=Order_item.objects.all().only(
+                'order__id',
+                'price',
+                'billable_flag'
+            )
+        ))
+    ))
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

@@ -445,7 +445,10 @@ class ClientList(generic.ListView):
 
     def get_queryset(self):
         uf = ClientFilter(self.request.GET)
-        return uf.qs
+        return uf.qs.select_related(
+            'member',
+            'route'
+        ).prefetch_related('member__member_contact')
 
         # The queryset must be client
 
@@ -763,7 +766,9 @@ class ClientOrderList(ClientView):
     def get_context_data(self, **kwargs):
 
         context = super(ClientOrderList, self).get_context_data(**kwargs)
-        context['orders'] = self.object.orders
+        context['orders'] = self.object.orders.prefetch_related(
+            'orders'
+        )
         context['client_status'] = Client.CLIENT_STATUS
         context['active_tab'] = 'orders'
         return context
@@ -782,8 +787,16 @@ class ClientUpdateInformation(generic.edit.FormView):
 
     def get_initial(self):
         client = get_object_or_404(
-            Client, pk=self.kwargs.get('pk')
+            Client.objects.select_related(
+                'route',
+                'member__address'
+            ).prefetch_related('member__member_contact'),
+            pk=self.kwargs.get('pk')
         )
+        if client.client_referent.exists():
+            c_ref = client.client_referent.first()
+        else:
+            c_ref = None
         initial = {
             'firstname': client.member.firstname,
             'lastname': client.member.lastname,
@@ -806,18 +819,9 @@ class ClientUpdateInformation(generic.edit.FormView):
             'latitude': client.member.address.latitude,
             'longitude': client.member.address.longitude,
             'distance': client.member.address.distance,
-            'work_information':
-                client.client_referent.first().work_information
-                if client.client_referent.count()
-                else '',
-            'referral_reason':
-                client.client_referent.first().referral_reason
-                if client.client_referent.count()
-                else '',
-            'date':
-                client.client_referent.first().date
-                if client.client_referent.count()
-                else '',
+            'work_information': c_ref.work_information if c_ref else '',
+            'referral_reason': c_ref.referral_reason if c_ref else '',
+            'date': c_ref.date if c_ref else '',
         }
         return initial
 
@@ -935,6 +939,10 @@ class ClientUpdateReferentInformation(ClientUpdateInformation):
         client = get_object_or_404(
             Client, pk=self.kwargs.get('pk')
         )
+        if client.client_referent.exists():
+            c_ref = client.client_referent.first()
+        else:
+            c_ref = None
         initial.update({
             'firstname': None,
             'lastname': None,
@@ -944,10 +952,10 @@ class ClientUpdateReferentInformation(ClientUpdateInformation):
             'apartment': None,
             'postal_code': None,
             'member': '[{}] {} {}'.format(
-                client.client_referent.first().referent.id,
-                client.client_referent.first().referent.firstname,
-                client.client_referent.first().referent.lastname
-            ),
+                c_ref.referent.id,
+                c_ref.referent.firstname,
+                c_ref.referent.lastname
+            ) if c_ref else None,
         })
         return initial
 

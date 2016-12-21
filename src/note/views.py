@@ -27,7 +27,9 @@ class NoteList(generic.ListView):
 
     def get_queryset(self):
         uf = NoteFilter(self.request.GET)
-        return uf.qs
+        return uf.qs.select_related(
+            'client__member'
+        )
 
         # The queryset must be client
 

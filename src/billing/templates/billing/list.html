@@ -67,7 +67,7 @@
           <td><i class="hashtag icon"></i>{{billing.id}}</td>
         <td><i class="calendar icon"></i><strong>{{billing.billing_period|date:"F Y"}}</strong></td>
         <td class="center aligned"><i class="dollar icon"></i>{{billing.total_amount}}</td>
-        <td class="center aligned">{{billing.orders.all.count}}</td>
+        <td class="center aligned">{{billing.orders__count}}</td>
         <td>
           <a class="ui basic icon button"  href="{% url 'billing:view' pk=billing.id %}"><i class="icon unhide"></i></a>
           <a class="ui basic icon button"  href=""><i class="icon edit"></i></a>

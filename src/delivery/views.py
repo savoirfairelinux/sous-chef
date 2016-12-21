@@ -52,6 +52,18 @@ class Orderlist(LoginRequiredMixin, FilterView):
     def get_queryset(self):
         queryset = Order.objects.get_shippable_orders().order_by(
             'client__route__pk', 'pk'
+        ).prefetch_related('orders').select_related(
+            'client__member',
+            'client__route',
+            'client__member__address'
+        ).only(
+            'delivery_date',
+            'status',
+            'client__member__firstname',
+            'client__member__lastname',
+            'client__route__name',
+            'client__member__address__latitude',
+            'client__member__address__longitude'
         )
         return queryset
 
@@ -172,6 +184,7 @@ class MealInformation(LoginRequiredMixin, generic.View):
                         ingredient=ing,
                         date=date)
                     ci.save()
+
                 # Create menu and its components for today
                 compnames = [component.name]  # main dish
                 # take first sorted name of each other component group
@@ -394,7 +407,8 @@ def kcr_make_lines(kitchen_list, date):
                     lqty=0,
                     name='',
                     ingredients=''))
-            if component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH:
+            if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH and
+                    component_lines[component_group].name == ''):
                 component_lines[component_group] = \
                     component_lines[component_group]._replace(
                         name=meal_component.name,
