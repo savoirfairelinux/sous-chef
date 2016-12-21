@@ -47,8 +47,9 @@
    <tr class="top center aligned">
     <th class="three wide">{% trans 'Client' %}</th>
     <th class="six wide">{% trans 'Note' %}</th>
-    <th class="two wide">{% trans 'Item' %}</th>
+    <th class="one wide">{% trans 'Item' %}</th>
     <th class="one wide">{% trans 'Qty' %}</th>
+    <th class="one wide">{% trans 'Include a bill' %}</th>
    </tr>
   </thead>
   <tbody>
@@ -72,6 +73,12 @@
           {% for item in obj.delivery_items %}
             {{item.total_quantity}}<br>
           {% endfor %}
+        </td>
+        <td class="center aligned">
+          <div class="ui toggle checkbox">
+            <input name="include_a_bill" type="checkbox" {% if obj.include_a_bill %}checked="checked"{% endif %} data-url="{% url 'order:update_client_bill' obj.order_id %}">
+            <label>{% trans 'Bill' %}</label>
+          </div>
         </td>
       </tr>
     {% endfor %}

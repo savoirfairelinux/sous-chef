@@ -1,10 +1,12 @@
 import csv
 import json
 from django.http import HttpResponse, JsonResponse
-from django.views import generic
+from django.views import generic, View
+from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404, render
@@ -325,6 +327,26 @@ class UpdateOrderStatus(FormValidAjaxableResponseMixin, generic.CreateView):
         return reverse(
             'order:view', kwargs={'pk': self.kwargs.get('pk')}
         )
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class CreateDeleteOrderClientBill(LoginRequiredMixin, View):
+
+    def get_object(self, pk):
+        return get_object_or_404(
+            Order.objects.prefetch_related('orders'),
+            pk=pk
+        )
+
+    def post(self, request, pk, *args, **kwargs):
+        order = self.get_object(pk)
+        order.includes_a_bill = True
+        return HttpResponse('OK', status=200)
+
+    def delete(self, request, pk, *args, **kwargs):
+        order = self.get_object(pk)
+        order.includes_a_bill = False
+        return HttpResponse('OK', status=200)
 
 
 class DeleteOrder(generic.DeleteView):
