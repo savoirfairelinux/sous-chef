@@ -35,7 +35,9 @@ class OrderList(generic.ListView):
 
     def get_queryset(self):
         uf = OrderFilter(self.request.GET)
-        return uf.qs
+        return uf.qs.select_related(
+            'client__member'
+        ).prefetch_related('orders')
 
     def get_context_data(self, **kwargs):
         uf = OrderFilter(self.request.GET, queryset=self.get_queryset())
@@ -77,6 +79,9 @@ class OrderDetail(generic.DetailView):
     model = Order
     template_name = 'view.html'
     context_object_name = 'order'
+    queryset = Order.objects.all().prefetch_related(
+        'orders'
+    )
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -262,6 +267,16 @@ class UpdateOrder(AjaxableResponseMixin, UpdateWithInlinesView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(UpdateOrder, self).dispatch(*args, **kwargs)
+
+    def get_form(self, *args, **kwargs):
+        form = super(UpdateOrder, self).get_form(*args, **kwargs)
+        form.fields['client'].queryset = Client.objects.all().select_related(
+            'member'
+        ).only(
+            'member__firstname',
+            'member__lastname'
+        )
+        return form
 
     def get_success_url(self):
         return self.object.get_absolute_url()

@@ -54,12 +54,14 @@
                 <div class="ui pink big button orders" data-url="{% url 'delivery:refresh_orders'%}">
                     <i class="refresh icon"></i> {% trans 'Generate orders' %}
                 </div>
-                <a class="ui basic left pointing pink label orders-count" data-order-count={{orders.count}}>
-                    {% blocktrans with count=orders.count  %}
+                {% with count=orders.count %}
+                <a class="ui basic left pointing pink label orders-count" data-order-count={{count}}>
+                    {% blocktrans %}
                         <span>{{ count }}</span>
                         &nbsp;today
                     {% endblocktrans %}
                 </a>
+                {% endwith %}
             </div>
         </div>
     </div>

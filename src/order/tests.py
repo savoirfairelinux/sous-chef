@@ -912,7 +912,6 @@ class OrderFormTestCase(TestCase):
         }
         response = self.client.post(route, data, follow=True)
         order = Order.objects.latest('id')
-        self.assertTrue(b'Required information' not in response.content)
         self.assertTrue(response.status_code, 200)
         self.assertRedirects(
             response,
@@ -1006,7 +1005,9 @@ class OrderStatusChangeViewTestCase(OrderItemTestCase):
             data,
             HTTP_X_REQUESTED_WITH='XMLHttpRequest',
         )
-        self.assertTrue(b"errorlist" in response.content)
+        self.assertFormError(response, 'form',
+                             'reason',
+                             'A reason is required for No Charge order.')
         self.order.refresh_from_db()
         self.assertEqual(self.order.status, 'B')
 

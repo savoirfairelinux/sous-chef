@@ -3,12 +3,13 @@
 
 {% if client.delivery_type == 'O' %}
 <div class="ui middle aligned divided list">
+  {% with simple_meals_schedule=client.simple_meals_schedule %}
     {% for day, meal_default in client.meals_schedule %}
     <div class="item">
         <div class="content">
           <a class="header">{{day|title}}</a>
           <div class="description">
-              {% if day in client.simple_meals_schedule %}
+              {% if day in simple_meals_schedule %}
                 {{ meal_default|readable_prefs }}
               {% else %}
                 {% trans 'No delivery.' %}
@@ -16,7 +17,8 @@
           </div>
         </div>
     </div>
-  {% endfor %}
+    {% endfor %}
+  {% endwith %}
 </div>
 {% else %}
 <div class="ui middle aligned divided list">

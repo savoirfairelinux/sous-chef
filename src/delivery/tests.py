@@ -257,7 +257,8 @@ class RouteSequencingTestCase(SousChefTestMixin, TestCase):
         response = self.client.post(reverse_lazy('delivery:save_route'),
                                     json.dumps(dic),
                                     content_type="application/json")
-        self.assertTrue(b'OK' in response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(b'"OK"', response.content)
 
     def test_save_route_and_retrieve(self):
         """Route sequence save then retrieve."""
@@ -269,7 +270,7 @@ class RouteSequencingTestCase(SousChefTestMixin, TestCase):
                                     json.dumps(dic),
                                     content_type="application/json")
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(b'OK' in response.content)
+        self.assertEqual(b'"OK"', response.content)
         response = self.client.get(
             '/delivery/getDailyOrders/?route=' +
             str(self.route_id) + '&if_exist_then_retrieve=true')

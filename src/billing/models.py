@@ -1,6 +1,6 @@
 import collections
 from django.db import models
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Prefetch
 from member.models import Client
 from order.models import Order, Order_item
 from datetime import datetime, date
@@ -17,7 +17,21 @@ class BillingManager(models.Manager):
         A period is a month.
          """
         # Get all billable orders for the given period
-        billable_orders = Order.objects.get_billable_orders(year, month)
+        billable_orders = Order.objects.get_billable_orders(
+            year, month
+        ).select_related(
+            'client__member'
+        ).only(
+            'client__member__firstname',
+            'client__member__lastname'
+        ).prefetch_related(Prefetch(
+            'orders',
+            queryset=Order_item.objects.all().only(
+                'order__id',
+                'price',
+                'billable_flag'
+            )
+        ))
 
         total_amount = calculate_amount_total(billable_orders)
 
@@ -31,8 +45,7 @@ class BillingManager(models.Manager):
         )
 
         # Attach the orders
-        for order in billable_orders:
-            billing.orders.add(order)
+        billing.orders.add(*billable_orders)
 
         return billing
 
@@ -95,7 +108,7 @@ class Billing(models.Model):
         # collect orders by clients
         kvpairs = map(
             lambda o: (o.client, o),
-            self.orders.all().prefetch_related('client__member')
+            self.orders.all()
         )
         d = collections.defaultdict(list)
         for k, v in kvpairs:
@@ -105,26 +118,28 @@ class Billing(models.Model):
             result[client] = {
                 'total_orders': len(orders),
                 'total_main_dishes': {
-                    'R': Order_item.objects.filter(
-                        order__in=orders, size='R', component_group='main_dish'
-                    ).aggregate(
-                        total_regular=Sum('total_quantity')
-                    )['total_regular'] or 0,
-                    'L': Order_item.objects.filter(
-                        order__in=orders, size='L', component_group='main_dish'
-                    ).aggregate(
-                        total_large=Sum('total_quantity')
-                    )['total_large'] or 0
+                    'R': 0,  # to be counted
+                    'L': 0
                 },
-                'total_billable_sides': Order_item.objects.filter(
-                    Q(order__in=orders) &
-                    (~Q(component_group='main_dish')) &
-                    Q(billable_flag=True)
-                ).aggregate(
-                    total_billable_sides=Sum('total_quantity')
-                )['total_billable_sides'] or 0,
+                'total_billable_sides': 0,  # to be counted
                 'total_amount': sum(map(lambda o: o.price, orders))
             }
+            for o in orders:
+                for o_item in o.orders.all():
+                    if o_item.component_group == 'main_dish':
+                        if o_item.size == 'R':
+                            result[client][
+                                'total_main_dishes'
+                            ]['R'] += o_item.total_quantity
+                        elif o_item.size == 'L':
+                            result[client][
+                                'total_main_dishes'
+                            ]['L'] += o_item.total_quantity
+                    else:
+                        if o_item.billable_flag is True:
+                            result[client][
+                                'total_billable_sides'
+                            ] += o_item.total_quantity
         return result
 
 
