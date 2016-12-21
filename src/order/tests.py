@@ -298,7 +298,7 @@ class OrderItemTestCase(TestCase):
             size="L",
         )
         self.assertEqual(Order_item.objects.filter(
-            order=order,
+            order=self.order,
             order_item_type='delivery',
             component_group=None).count(), 2)
         self.order.refresh_from_db()
@@ -306,7 +306,7 @@ class OrderItemTestCase(TestCase):
         self.order.includes_a_bill = False
         self.assertFalse(self.order.includes_a_bill)
         self.assertFalse(Order_item.objects.filter(
-            order=order,
+            order=self.order,
             order_item_type='delivery',
             component_group=None).exists())
 
