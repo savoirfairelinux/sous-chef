@@ -1228,14 +1228,22 @@ class FormTestCase(TestCase):
         )
 
         # The response is the same form with the errors messages.
-        self.assertTrue(b'Required information' in error_response.content)
-        self.assertTrue(b'lastname' in error_response.content)
-        self.assertTrue(b'birthdate' in error_response.content)
-        self.assertTrue(b'This field is required' in error_response.content)
-        self.assertIn(
-            b'At least one contact information is required',
-            error_response.content
-        )
+        self.assertTrue(error_response.context['form'].errors)
+        self.assertFormError(error_response, 'form',
+                             'lastname',
+                             'This field is required.')
+        self.assertFormError(error_response, 'form',
+                             'birthdate',
+                             'This field is required.')
+        self.assertFormError(error_response, 'form',
+                             'email',
+                             'At least one contact information is required.')
+        self.assertFormError(error_response, 'form',
+                             'home_phone',
+                             'At least one contact information is required.')
+        self.assertFormError(error_response, 'form',
+                             'cell_phone',
+                             'At least one contact information is required.')
 
     def _test_basic_information_without_errors(self):
         # Data for the basic_information step without errors.
@@ -1261,13 +1269,20 @@ class FormTestCase(TestCase):
             follow=True
         )
 
+        # Check redirect (successful POST)
+        self.assertRedirects(response, reverse_lazy(
+            'member:member_step',
+            kwargs={'step': "address_information"}
+        ))
+
         # The response is the next step of the form with no errors messages.
-        self.assertTrue(b'Required information' not in response.content)
-        self.assertTrue(b'gender' not in response.content)
-        self.assertTrue(b'contact_value' not in response.content)
-        self.assertTrue(b'This field is required' not in response.content)
-        # HTML from the next step
-        self.assertTrue(b'street' in response.content)
+        form = response.context['form']
+        self.assertFalse(form.errors)
+        self.assertNotIn('gender', form.fields)
+        self.assertNotIn('home_phone', form.fields)
+        self.assertNotIn('contact_value', form.fields)
+        # New form field in the next step
+        self.assertIn('street', form.fields)
 
     def _test_address_information_with_errors(self):
         # Data for the address_information step with errors.
@@ -1291,11 +1306,16 @@ class FormTestCase(TestCase):
         )
 
         # The response is the same form with the errors messages.
-        self.assertTrue(b'Required information' in response_error.content)
-        self.assertTrue(b'street' in response_error.content)
-        self.assertTrue(b'apartment' in response_error.content)
-        self.assertTrue(b'city' in response_error.content)
-        self.assertTrue(b'This field is required' in response_error.content)
+        self.assertTrue(response_error.context['form'].errors)
+        self.assertFormError(response_error, 'form',
+                             'street',
+                             'This field is required.')
+        self.assertFormError(response_error, 'form',
+                             'city',
+                             'This field is required.')
+        self.assertFormError(response_error, 'form',
+                             'postal_code',
+                             'This field is required.')
 
     def _test_address_information_without_errors(self):
         # Data for the address_information step without errors.
@@ -1321,13 +1341,19 @@ class FormTestCase(TestCase):
             follow=True
         )
 
+        # Check redirect (successful POST)
+        self.assertRedirects(response, reverse_lazy(
+            'member:member_step',
+            kwargs={'step': "referent_information"}
+        ))
+
         # The response is the next step of the form with no errors messages.
-        self.assertTrue(b'Required information' not in response.content)
-        # self.assertTrue(b'street' not in response.content)
-        # self.assertTrue(b'apartment' not in response.content)
-        self.assertTrue(b'This field is required' not in response.content)
-        # HTML from the next step
-        self.assertTrue(b'work_information' in response.content)
+        form = response.context['form']
+        self.assertFalse(form.errors)
+        self.assertNotIn('street', form.fields)
+        self.assertNotIn('apartment', form.fields)
+        # New form field in the next step
+        self.assertIn('work_information', form.fields)
 
     def _test_referent_information_with_errors(self):
         # Data for the address_information step with errors.
@@ -1353,10 +1379,20 @@ class FormTestCase(TestCase):
         )
 
         # Validate that the response is the same form with the errors messages.
-        self.assertTrue(b'Required information' in response_error.content)
-        self.assertTrue(b'member' in response_error.content)
-        self.assertTrue(b'work_information' in response_error.content)
-        self.assertTrue(b'This field is required' in response_error.content)
+        self.assertTrue(response_error.context['form'].errors)
+        self.assertFormError(response_error, 'form',
+                             'member',
+                             'This field is required '
+                             'unless you add a new member.')
+        self.assertFormError(response_error, 'form',
+                             'work_information',
+                             'This field is required.')
+        self.assertFormError(response_error, 'form',
+                             'date',
+                             'This field is required.')
+        self.assertFormError(response_error, 'form',
+                             'referral_reason',
+                             'This field is required.')
 
         referent_information_data_with_error = {
             "client_wizard-current_step": "referent_information",
@@ -1380,10 +1416,11 @@ class FormTestCase(TestCase):
         )
 
         # Validate that the response is the same form with the errors messages.
-        self.assertTrue(b'Required information' in response_error.content)
-        self.assertTrue(b'member' in response_error.content)
-        self.assertTrue(b'work_information' in response_error.content)
-        self.assertTrue(b'Not a valid member' in response_error.content)
+        self.assertTrue(response_error.context['form'].errors)
+        self.assertFormError(response_error, 'form',
+                             'member',
+                             'Not a valid member, '
+                             'please chose an existing member.')
 
     def _test_referent_information_without_errors(self):
         pk = Member.objects.get(firstname="First").id
@@ -1408,12 +1445,18 @@ class FormTestCase(TestCase):
             follow=True
         )
 
+        # Check redirect (successful POST)
+        self.assertRedirects(response, reverse_lazy(
+            'member:member_step',
+            kwargs={'step': "payment_information"}
+        ))
+
         # The response is the next step of the form with no errors messages.
-        self.assertTrue(b'Required information' not in response.content)
-        self.assertTrue(b'work_information' not in response.content)
-        self.assertTrue(b'This field is required' not in response.content)
-        # HTML from the next step
-        self.assertTrue(b'billing_payment_type' in response.content)
+        form = response.context['form']
+        self.assertFalse(form.errors)
+        self.assertNotIn('work_information', form.fields)
+        # New form field in the next step
+        self.assertIn('billing_payment_type', form.fields)
 
     def _test_payment_information_with_errors(self):
         # Data for the address_information step with errors.
@@ -1423,7 +1466,7 @@ class FormTestCase(TestCase):
             "payment_information-member": "[{}] Second Member".format(pk),
             "payment_information-firstname": "",
             "payment_information-lastname": "",
-            "payment_information-billing_payment_type": "cheque",
+            "payment_information-billing_payment_type": "INVALID",
             "payment_information-facturation": "default",
             "payment_information-street": "",
             "payment_information-apartement": "",
@@ -1443,13 +1486,16 @@ class FormTestCase(TestCase):
         )
 
         # Validate that the response is the same form with the errors messages.
-        self.assertTrue(b'Required information' in response_error.content)
-        self.assertTrue(b'billing_payment_type' in response_error.content)
-        self.assertTrue(b'facturation' in response_error.content)
-        self.assertTrue(
-            b'member has not a valid address'
-            in response_error.content
-        )
+        self.assertTrue(response_error.context['form'].errors)
+        self.assertFormError(response_error, 'form',
+                             'billing_payment_type',
+                             'Select a valid choice. INVALID is not '
+                             'one of the available choices.')
+        self.assertFormError(response_error, 'form',
+                             'member',
+                             'This member has not a valid address, '
+                             'please add a valid address to this member, '
+                             'so it can be used for the billing.')
 
         # Data for the address_information step with errors.
         payment_information_data_with_error = {
@@ -1477,11 +1523,16 @@ class FormTestCase(TestCase):
         )
 
         # Validate that the response is the same form with the errors messages.
-        self.assertTrue(b'Required information' in response_error.content)
-        self.assertTrue(b'street' in response_error.content)
-        self.assertTrue(b'city' in response_error.content)
-        self.assertTrue(b'postal_code' in response_error.content)
-        self.assertTrue(b'This field is required' in response_error.content)
+        self.assertTrue(response_error.context['form'].errors)
+        self.assertFormError(response_error, 'form',
+                             'street',
+                             'This field is required')
+        self.assertFormError(response_error, 'form',
+                             'city',
+                             'This field is required')
+        self.assertFormError(response_error, 'form',
+                             'postal_code',
+                             'This field is required')
 
     def _test_payment_information_without_errors(self):
         # Data for the address_information step without errors.
@@ -1510,15 +1561,19 @@ class FormTestCase(TestCase):
             follow=True
         )
 
+        # Check redirect (successful POST)
+        self.assertRedirects(response, reverse_lazy(
+            'member:member_step',
+            kwargs={'step': "dietary_restriction"}
+        ))
+
         # The response is the next step of the form with no errors messages.
-        self.assertTrue(b'Required information' not in response.content)
-        self.assertTrue(b'billing_payment_type' not in response.content)
-        self.assertTrue(b'facturation' not in response.content)
-        self.assertTrue(
-            b'member has not a valid address' not in response.content
-        )
-        # HTML from the next step
-        self.assertTrue(b'status' in response.content)
+        form = response.context['form']
+        self.assertFalse(form.errors)
+        self.assertNotIn('billing_payment_type', form.fields)
+        self.assertNotIn('facturation', form.fields)
+        # New form field in the next step
+        self.assertIn('status', form.fields)
 
     def _test_step_dietary_restriction_with_errors(self):
         # Data for the address_information step with errors.
@@ -1542,10 +1597,14 @@ class FormTestCase(TestCase):
         )
 
         # Validate that the response is the same form with the errors messages.
-        self.assertTrue(b'Required information' in response_error.content)
-        self.assertTrue(b'status' in response_error.content)
-        self.assertTrue(b'delivery_type' in response_error.content)
-        self.assertTrue(b'meals_schedule' in response_error.content)
+        self.assertTrue(response_error.context['form'].errors)
+        self.assertFormError(response_error, 'form',
+                             'delivery_type',
+                             'This field is required.')
+        self.assertFormError(response_error, 'form',
+                             'meals_schedule',
+                             'Select a valid choice.  is not '
+                             'one of the available choices.')
 
     def _test_step_dietary_restriction_without_errors(self):
         # Data for the address_information step without errors.
@@ -1568,13 +1627,20 @@ class FormTestCase(TestCase):
             follow=True
         )
 
+        # Check redirect (successful POST)
+        self.assertRedirects(response, reverse_lazy(
+            'member:member_step',
+            kwargs={'step': "emergency_contact"}
+        ))
+
         # The response is the next step of the form with no errors messages.
-        self.assertTrue(b'Required information' not in response.content)
-        self.assertTrue(b'status' not in response.content)
-        self.assertTrue(b'Delivery' not in response.content)
-        self.assertTrue(b'Food preference' not in response.content)
-        # HTML from the next step
-        self.assertTrue(b'relationship' in response.content)
+        form = response.context['form']
+        self.assertFalse(form.errors)
+        self.assertNotIn('status', form.fields)
+        self.assertNotIn('delivery_type', form.fields)
+        self.assertNotIn('meals_schedule', form.fields)
+        # New form field in the next step
+        self.assertIn('relationship', form.fields)
 
     def _test_step_emergency_contact_with_errors(self):
         # Data for the address_information step with errors.
@@ -1598,9 +1664,25 @@ class FormTestCase(TestCase):
             follow=True
         )
 
-        # The response is the next step of the form with no errors messages.
-        self.assertTrue(b'Required information' in response_error.content)
-        self.assertTrue(b'relationship' in response_error.content)
+        # Validate that the response is the same form with the errors messages.
+        self.assertTrue(response_error.context['form'].errors)
+        self.assertFormError(response_error, 'form',
+                             'cell_phone',
+                             'At least one emergency contact is required.')
+        self.assertFormError(response_error, 'form',
+                             'work_phone',
+                             'At least one emergency contact is required.')
+        self.assertFormError(response_error, 'form',
+                             'email',
+                             'At least one emergency contact is required.')
+        self.assertFormError(response_error, 'form',
+                             'lastname',
+                             'This field is required unless '
+                             'you chose an existing member.')
+        self.assertFormError(response_error, 'form',
+                             'firstname',
+                             'This field is required unless '
+                             'you chose an existing member.')
 
     def _test_step_emergency_contact_without_errors(self):
         # Data for the address_information step without errors.
@@ -1624,13 +1706,11 @@ class FormTestCase(TestCase):
             follow=True
         )
 
-        # The response is the next step of the form with no errors messages.
-        self.assertTrue(b'Required information' not in response.content)
-        self.assertTrue(b'contact_type' not in response.content)
-        self.assertTrue(b'contact_value' not in response.content)
-        self.assertTrue(b'relationship' not in response.content)
-        self.assertTrue(b'Clients' in response.content)
+        # Check redirect (successful POST)
         self.assertRedirects(response, reverse('member:list'))
+
+        # After final step: no forms anymore!
+        self.assertNotIn('form', response.context)
 
 
 class MemberSearchTestCase(SousChefTestMixin, TestCase):
