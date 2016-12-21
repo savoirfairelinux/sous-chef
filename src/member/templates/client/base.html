@@ -21,10 +21,9 @@
             </div>
         </div>
     </h1>
-    {% if can_edit_data %}
     <div class="right menu">
       <div class="ui item">
-          <div class="ui dropdown member status" data-url="{% url 'member:clientStatusScheduler' client.id %}">
+          <div class="ui dropdown member status{% if not can_edit_data %} disabled{% endif %}" data-url="{% url 'member:clientStatusScheduler' client.id %}">
               <div class="ui large yellow label text">{{ client.get_status_display }}</div>
               <i class="dropdown icon"></i>
               <div class="menu">
@@ -37,7 +36,6 @@
           </div>
       </div>
     </div>
-    {% endif %}
 </div>
 
 <div class="ui modal status"></div>

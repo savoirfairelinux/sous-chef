@@ -10,10 +10,9 @@
 
 <div class="ui secondary pointing fluid menu">
     <h1 class="ui header">{% trans "Order" %} #{{ order.id }}</h1>
-    {% if can_edit_data %}
     <div class="right menu">
         <div class="ui item">
-            <div id="order-status " class="ui dropdown order status" data-url="{% url 'order:update_status' pk=order.id %}" data-csrf-token="{{ csrf_token }}">
+            <div id="order-status " class="ui dropdown order status{% if not can_edit_data %} disabled{% endif %}" data-url="{% url 'order:update_status' pk=order.id %}" data-csrf-token="{{ csrf_token }}">
                 <div class="ui large yellow label text">{{ order.get_status_display }}</div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
@@ -24,7 +23,6 @@
             </div>
         </div>
     </div>
-    {% endif %}
 </div>
 
 <div class="ui modal status"></div>
