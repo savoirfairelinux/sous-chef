@@ -281,3 +281,41 @@ ul.doughnut-legend {
 .leaflet-routing-alt {
   max-height:400px;
 }
+
+/* Avatars */
+.list-avatars {
+  margin-bottom:1em;
+}
+
+.list-avatars  li  {
+  list-style:none;
+  float:left;
+  margin-right:1em;
+  margin-top:1em;
+  margin-bottom:1em;
+}
+
+.list-avatars img {
+    background-repeat: no-repeat;
+    background-position: 50%;
+    border-radius: 50%;
+    width: 80px;
+}
+
+.list-avatars label {
+    font-weight: bold;
+    font-size: medium;
+}
+.list-avatars label {
+    input, img {
+         vertical-align:middle;
+    }
+}
+.list-avatars::after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
