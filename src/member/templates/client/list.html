@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 <!-- Load internationalisation utils-->
 {% load i18n %}
+{% load rules %}
 
 {% block title %}{% trans "Clients" %}{% endblock %}
 
@@ -11,6 +12,7 @@
 {% endblock breadcrumb %}
 
 {% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
 
 <div class="ui secondary pointing fluid menu">
     <h1 class="ui header">{% trans 'Clients' %}</h1>
@@ -28,11 +30,13 @@
 </div>
 
 <div class="ui padded basic segment">
+    {% if can_edit_data %}
     <a href="{% url 'member:member_step' %}" class="ui labeled icon right basic big button"><i class="add icon"></i>{% trans 'New client' %}</a>
 
     <div class="ui horizontal divider">
         {% trans 'Or' %}
     </div>
+    {% endif %}
 
     {% include 'client/partials/filters.html' %}
 

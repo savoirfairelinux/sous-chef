@@ -1,7 +1,9 @@
 <!-- Load internationalisation utils-->
 {% load i18n %}
 {% load static %}
+{% load rules %}
 
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
 <table id="generated-orders" class="ui very basic stripped compact celled table">
   <thead>
     <th class="">{% trans 'Order' %}
@@ -41,7 +43,7 @@
         <td class="center aligned"><i class="dollar icon"></i>{{order.price}}</td>
         <td>
             <a class="ui basic icon button" title="{% trans 'Review or change the status of the order.' %}"  href="{% url 'order:view' pk=order.id %}"><i class="icon unhide"></i></a>
-            <a class="ui basic icon button" title="{% trans 'Change the details of the order.' %}" href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i></a>
+            {% if can_edit_data %}<a class="ui basic icon button" title="{% trans 'Change the details of the order.' %}" href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i></a>{% endif %}
         </td>
       </tr>
     {% endif %}

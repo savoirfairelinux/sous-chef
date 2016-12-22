@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 <!-- Load Internationalization utils-->
 {% load i18n %}
+{% load rules %}
 
 {% block title %}{% trans 'Pick Ingredients' %} {% endblock %}
 
 {% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
 
 {% include 'kitchen_count_steps.html' with step='ingredients' %}
 
@@ -59,9 +61,11 @@
                 <label>{{ form.ingredients.label }}</label>
                 {{ form.ingredients }}
             </div>
+            {% if can_edit_data %}
             <div class="ui field">
                 <input class="ui button" type="submit" value="{% trans "Restore recipe" %}" name="_restore" />
             </div>
+            {% endif %}
         </div>
 
         <div class="ten wide column">
@@ -71,6 +75,7 @@
             </div>
         </div>
 
+        {% if can_edit_data %}
         <div class="ten wide column">
             <div class="ui row">
                 <a class="ui labeled icon big button" href="{% url 'delivery:order' %}">
@@ -79,6 +84,7 @@
                 <input class="ui big yellow button" type="submit" value="{% trans "Next: Print Kitchen Count" %}" name="_next" </>
             </div>
         </div>
+        {% endif %}
     </div>
 </form>
 {% endblock content %}

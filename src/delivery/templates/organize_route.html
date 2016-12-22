@@ -2,6 +2,7 @@
 <!-- Load Internationalization utils-->
 {% load i18n %}
 {% load static %}
+{% load rules %}
 
 {% block title %}{% trans "Organize the delivery route" %}: {{ route.name }} {% endblock %}
 
@@ -12,6 +13,7 @@
 {% endblock %}
 
 {% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
 
 {% include 'kitchen_count_steps.html' with step='routes' %}
 
@@ -31,7 +33,8 @@
 <div class="row">
   <div class="thirteen wide column" id="route_map"
         data-route="{{ route.id }}"
-        data-save-url="{% url 'delivery:save_route' %}">
+        data-save-url="{% if can_edit_data %}{% url 'delivery:save_route' %}{% endif %}"
+        data-can-save="{{ can_edit_data|yesno:"yes,no" }}">
     {% leaflet_map "main" callback="main_map_init" %}
   </div>
   <div class="three wide column">

@@ -887,6 +887,31 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
         ).count()
         self.assertEqual(created_orders, 0)
 
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:create_batch')
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 302)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:create_batch')
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
 
 class OrderFormTestCase(TestCase):
 
@@ -1063,7 +1088,8 @@ class OrderStatusChangeViewTestCase(OrderItemTestCase):
         order = self.order
         order.status = 'B'
         order.save()
-        self.client.force_login(self.admin)
+        self.client.force_login(
+            self.admin, 'django.contrib.auth.backends.ModelBackend')
 
     def test_get_page(self):
         response = self.client.get(
@@ -1103,6 +1129,28 @@ class OrderStatusChangeViewTestCase(OrderItemTestCase):
                              'A reason is required for No Charge order.')
         self.order.refresh_from_db()
         self.assertEqual(self.order.status, 'B')
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:update_status', args=(self.order.id, ))
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 302)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:update_status', args=(self.order.id, ))
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
 
 
 class OrderCreateFormTestCase(OrderFormTestCase):
@@ -1227,6 +1275,28 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
         )
         self.assertEqual(order.orders.latest('id').total_quantity, 5)
 
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:update', args=(self.order.id, ))
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 302)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:update', args=(self.order.id, ))
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
 
 class UpdateClientBillTestCase(SousChefTestMixin, OrderItemTestCase):
 
@@ -1294,6 +1364,28 @@ class DeleteOrderTestCase(OrderFormTestCase):
         )
         self.assertRedirects(response, reverse('order:list') + next_value,
                              status_code=302)
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:delete', args=(self.order.id, ))
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 302)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:delete', args=(self.order.id, ))
+        # Run
+        response = self.client.post(url, {'next': '/'}, follow=True)
+        # Check
+        self.assertEqual(response.status_code, 200)
 
 
 class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
@@ -1372,3 +1464,51 @@ class CommandsTestCase(TestCase):
             Order.objects.all().count(),
             len(self.ongoing_clients) * 10
         )
+
+
+class OrderListViewTestCase(SousChefTestMixin, TestCase):
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:list')
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:list')
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class OrderDetailViewTestCase(SousChefTestMixin, OrderTestCase):
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:view', args=(self.order.id, ))
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:view', args=(self.order.id, ))
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)

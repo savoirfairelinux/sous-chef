@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load admin_urls %}
 {% load static %}
+{% load rules %}
 
 {% block title %}
 
@@ -11,15 +12,18 @@
 {% endblock %}
 
 {% block subcontent %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
 
 <div class="ui segment">
     <h3 class="ui header">
         {% trans 'Meal information' %}
         <div class="sub header">{% trans "Meal information of the referent person" %}.</div>
     </h3>
+    {% if can_edit_data %}
     <a class="ui right floated small button" href="{% url 'member:member_update_dietary_restriction' pk=client.id %}">
         <i class="icon edit"></i>{% trans "Edit" %}
     </a>
+    {% endif %}
     <div class="ui divider"></div>
 
 
@@ -92,9 +96,11 @@
         {% trans "Meal schedule" %}
         <div class="sub header">{% trans "Meal default schedule of the referent person" %}.</div>
     </h3>
+    {% if can_edit_data %}
     <a class="ui right floated small button" href="{% url 'member:member_update_dietary_restriction' pk=client.id %}">
         <i class="icon edit"></i>{% trans "Edit" %}
     </a>
+    {% endif %}
     <div class="ui divider"></div>
 
     {% include 'client/partials/prefs.html' %}

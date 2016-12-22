@@ -2,6 +2,7 @@
 <!-- Load internationalisation utils-->
 {% load i18n %}
 {% load admin_urls %}
+{% load rules %}
 
 {% block title %}
 
@@ -10,6 +11,7 @@
 {% endblock %}
 
 {% block subcontent %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
 
 <div class="ui segment">
     <h2 class="ui header">
@@ -46,9 +48,11 @@
         <div class="field">
             <a href="{{ request.path }}?display={{ display }}" class="ui button">{% trans "Reset" %}</a>
             <button class="ui yellow button" type="submit">{% trans "Search" %}</button>
+            {% if can_edit_data %}
             <a href="{% url 'member:client_notes_add' client.pk %}" class="ui button">
               <i class="add icon"></i>{% trans "New Note" %}
             </a>
+            {% endif %}
         </div>
     </form>
 

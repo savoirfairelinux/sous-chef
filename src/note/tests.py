@@ -16,7 +16,9 @@ class NoteTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.clients = ClientFactory()
-        cls.admin = User.objects.create(username="admin")
+        cls.admin = User.objects.create_superuser(
+            username='admin', email='testadmin@example.com',
+            password='test1234')
         cls.note = NoteFactory.create(client=cls.clients, author=cls.admin)
 
     def test_attach_note_to_member(self):
@@ -62,7 +64,8 @@ class NoteTestCase(TestCase):
 class NoteAddTestCase(NoteTestCase):
 
     def setUp(self):
-        self.client.force_login(self.admin)
+        self.client.force_login(
+            self.admin, 'django.contrib.auth.backends.ModelBackend')
 
     def test_create_set_fields(self):
         """
@@ -81,11 +84,41 @@ class NoteAddTestCase(NoteTestCase):
         self.assertEqual(note.is_read, False)
         self.assertTrue(time_1 <= note.date <= time_2)
 
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('note:note_add')
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 302)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('note:note_add')
+        # Run
+        response = self.client.post(url, {
+            'note': "test note TEST_PHRASE",
+            "client": ClientFactory().pk,
+            "priority": 'normal'
+        }, follow=True)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
 
 class ClientNoteAddTestCase(NoteTestCase):
 
     def setUp(self):
-        self.client.force_login(self.admin)
+        self.client.force_login(
+            self.admin, 'django.contrib.auth.backends.ModelBackend',)
 
     def test_get_with_client_pk(self):
         client = ClientFactory()
@@ -99,6 +132,33 @@ class ClientNoteAddTestCase(NoteTestCase):
         self.assertIn(client.member.firstname, content)
         self.assertIn(client.member.lastname, content)
 
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:client_notes_add', kwargs={'pk': client.pk})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 302)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        client = ClientFactory()
+        url = reverse('member:client_notes_add', kwargs={'pk': client.pk})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
 
 class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
 
@@ -110,3 +170,29 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
         check(reverse('note:read', kwargs={'id': 1}))
         check(reverse('note:unread', kwargs={'id': 1}))
         check(reverse('note:note_add'))
+
+
+class NoteListViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        url = reverse('note:note_list')
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('note:note_list')
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)

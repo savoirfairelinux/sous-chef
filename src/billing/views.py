@@ -1,33 +1,31 @@
 import copy
 import collections
 
-from django.shortcuts import render
 from django.db.models import Q, Count, Prefetch
 from django.views import generic
 from django.utils.translation import string_concat
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib import messages
+
 from billing.models import (
-    Billing, calculate_amount_total, BillingFilter
+    Billing, BillingFilter
 )
 from order.models import DeliveredOrdersByMonth
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from django.core.urlresolvers import reverse_lazy
 from order.models import Order, Order_item
 from django.http import HttpResponseRedirect
 from member.models import Client
 
 
-class BillingList(generic.ListView):
+class BillingList(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     # Display the billing list
-    model = Billing
-    template_name = "billing/list.html"
     context_object_name = "billings"
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(BillingList, self).dispatch(*args, **kwargs)
+    model = Billing
+    permission_required = 'sous_chef.read'
+    template_name = "billing/list.html"
 
     def get_context_data(self, **kwargs):
         context = super(BillingList, self).get_context_data(**kwargs)
@@ -41,14 +39,12 @@ class BillingList(generic.ListView):
         return uf.qs.annotate(Count('orders', distinct=True))
 
 
-class BillingCreate(generic.CreateView):
+class BillingCreate(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
     # View to create the billing
-    model = Billing
     context_object_name = "billing"
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(BillingCreate, self).dispatch(*args, **kwargs)
+    model = Billing
+    permission_required = 'sous_chef.edit'
 
     def get(self, request):
         date = self.request.GET.get('delivery_date', '')
@@ -67,15 +63,13 @@ class BillingCreate(generic.CreateView):
         return HttpResponseRedirect(reverse_lazy('billing:list'))
 
 
-class BillingAdd(generic.ListView):
-    model = Order
-    template_name = "billing/add.html"
+class BillingAdd(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     context_object_name = "orders"
+    model = Order
     paginate_by = 20
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(BillingAdd, self).dispatch(*args, **kwargs)
+    permission_required = 'sous_chef.edit'
+    template_name = "billing/add.html"
 
     def get_context_data(self, **kwargs):
         context = super(BillingAdd, self).get_context_data(**kwargs)
@@ -118,9 +112,11 @@ class BillingAdd(generic.ListView):
         ))
 
 
-class BillingSummaryView(generic.DetailView):
+class BillingSummaryView(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
     # Display summary of billing
     model = Billing
+    permission_required = 'sous_chef.read'
     template_name = "billing/view.html"
     context_object_name = "billing"
     queryset = Billing.objects.prefetch_related(Prefetch(
@@ -144,10 +140,6 @@ class BillingSummaryView(generic.DetailView):
             )
         ))
     ))
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(BillingSummaryView, self).dispatch(*args, **kwargs)
 
     def get_template_names(self):
         if self.request.method == "GET" and \
@@ -271,9 +263,11 @@ class BillingSummaryView(generic.DetailView):
         return context
 
 
-class BillingOrdersView(generic.DetailView):
+class BillingOrdersView(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
     # Display orders detail of billing
     model = Billing
+    permission_required = 'sous_chef.read'
     template_name = "billing/view_orders.html"
     context_object_name = "billing"
 
@@ -295,10 +289,6 @@ class BillingOrdersView(generic.DetailView):
             )
         ))
     ))
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(BillingOrdersView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(BillingOrdersView, self).get_context_data(**kwargs)
@@ -322,14 +312,12 @@ class BillingOrdersView(generic.DetailView):
         return context
 
 
-class BillingDelete(generic.DeleteView):
+class BillingDelete(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     model = Billing
+    permission_required = 'sous_chef.edit'
     template_name = 'billing_confirm_delete.html'
 
     def get_success_url(self):
         # 'next' parameter should always be included in POST'ed URL.
-        return self.request.GET['next']
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(BillingDelete, self).dispatch(*args, **kwargs)
+        return self.request.GET.get('next') or self.request.POST['next']

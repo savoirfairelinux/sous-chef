@@ -21,10 +21,10 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from page.views import home
+
+from page.views import HomeView
 from django.conf import settings
 from django.conf.urls.static import static
-
 
 urlpatterns = [
     url(
@@ -51,7 +51,7 @@ urlpatterns = [
         r'^p/',
         include('page.urls', namespace="page")
     ),
-    url(r'^$', home, name='home'),
+    url(r'^$', HomeView.as_view(), name='home'),
     url(
         r'^delivery/',
         include('delivery.urls', namespace="delivery")

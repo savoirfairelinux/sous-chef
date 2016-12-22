@@ -7,14 +7,15 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy, reverse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView
 
-from datetime import date, datetime
+from datetime import datetime
 
-from order.models import Order, Order_item, OrderFilter, OrderManager,  \
+from order.models import Order, OrderFilter, \
     ORDER_STATUS, OrderStatusChange
 from order.mixins import AjaxableResponseMixin, FormValidAjaxableResponseMixin
 from order.forms import CreateOrderItem, UpdateOrderItem, \
@@ -25,15 +26,13 @@ from meal.settings import COMPONENT_SYSTEM_DEFAULT
 from member.models import Client, DAYS_OF_WEEK
 
 
-class OrderList(generic.ListView):
-    model = Order
-    template_name = 'list.html'
+class OrderList(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     context_object_name = 'orders'
+    model = Order
     paginate_by = 20
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(OrderList, self).dispatch(*args, **kwargs)
+    permission_required = 'sous_chef.read'
+    template_name = 'list.html'
 
     def get_queryset(self):
         uf = OrderFilter(self.request.GET)
@@ -77,17 +76,15 @@ class OrderList(generic.ListView):
         return super(OrderList, self).get(request, **kwargs)
 
 
-class OrderDetail(generic.DetailView):
+class OrderDetail(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
     model = Order
+    permission_required = 'sous_chef.read'
     template_name = 'view.html'
     context_object_name = 'order'
     queryset = Order.objects.all().prefetch_related(
         'orders'
     )
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(OrderDetail, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(OrderDetail, self).get_context_data(**kwargs)
@@ -95,31 +92,28 @@ class OrderDetail(generic.DetailView):
         return context
 
 
-class CreateOrder(AjaxableResponseMixin, CreateWithInlinesView):
-    model = Order
+class CreateOrder(
+        AjaxableResponseMixin, LoginRequiredMixin,
+        PermissionRequiredMixin, CreateWithInlinesView):
     fields = ['client', 'delivery_date']
     inlines = [CreateOrderItem]
+    model = Order
+    permission_required = 'sous_chef.edit'
     template_name = 'create.html'
 
     # TODO: Change the validation of the form,
     # If component is present, then component_group is not required
     # and vice versa
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(CreateOrder, self).dispatch(*args, **kwargs)
-
     def get_success_url(self):
         return self.object.get_absolute_url()
 
 
-class CreateOrdersBatch(generic.FormView):
-    template_name = "order/create_batch.html"
+class CreateOrdersBatch(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.FormView):
+    permission_required = 'sous_chef.edit'
     success_url = reverse_lazy('order:create_batch')
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(CreateOrdersBatch, self).dispatch(*args, **kwargs)
+    template_name = "order/create_batch.html"
 
     def get_form(self, *args, **kwargs):
         k = self.get_form_kwargs()  # kwargs to initialize the form
@@ -260,15 +254,14 @@ class CreateOrdersBatch(generic.FormView):
         return response
 
 
-class UpdateOrder(AjaxableResponseMixin, UpdateWithInlinesView):
-    model = Order
+class UpdateOrder(
+        LoginRequiredMixin, PermissionRequiredMixin,
+        AjaxableResponseMixin, UpdateWithInlinesView):
     fields = ['client', 'delivery_date']
     inlines = [UpdateOrderItem]
+    model = Order
+    permission_required = 'sous_chef.edit'
     template_name = 'update.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(UpdateOrder, self).dispatch(*args, **kwargs)
 
     def get_form(self, *args, **kwargs):
         form = super(UpdateOrder, self).get_form(*args, **kwargs)
@@ -284,14 +277,13 @@ class UpdateOrder(AjaxableResponseMixin, UpdateWithInlinesView):
         return self.object.get_absolute_url()
 
 
-class UpdateOrderStatus(FormValidAjaxableResponseMixin, generic.CreateView):
-    model = OrderStatusChange
+class UpdateOrderStatus(
+        LoginRequiredMixin, PermissionRequiredMixin,
+        FormValidAjaxableResponseMixin, generic.CreateView):
     form_class = OrderStatusChangeForm
+    model = OrderStatusChange
+    permission_required = 'sous_chef.edit'
     template_name = "order_update_status.html"
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(UpdateOrderStatus, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(UpdateOrderStatus, self).get_context_data(**kwargs)
@@ -330,7 +322,9 @@ class UpdateOrderStatus(FormValidAjaxableResponseMixin, generic.CreateView):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class CreateDeleteOrderClientBill(LoginRequiredMixin, View):
+class CreateDeleteOrderClientBill(
+        LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'sous_chef.edit'
 
     def get_object(self, pk):
         return get_object_or_404(
@@ -349,17 +343,15 @@ class CreateDeleteOrderClientBill(LoginRequiredMixin, View):
         return HttpResponse('OK', status=200)
 
 
-class DeleteOrder(generic.DeleteView):
+class DeleteOrder(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     model = Order
+    permission_required = 'sous_chef.edit'
     template_name = 'order_confirm_delete.html'
 
     def get_success_url(self):
         # 'next' parameter should always be included in POST'ed URL.
-        return self.request.GET['next']
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(DeleteOrder, self).dispatch(*args, **kwargs)
+        return self.request.GET.get('next') or self.request.POST['next']
 
 
 def ExportCSV(request, queryset):
