@@ -2,6 +2,7 @@
 <!-- Load Internationalization utils-->
 {% load i18n %}
 {% load static %}
+{% load rules %}
 
 {% block title %}{% trans 'Routes Information' %} {% endblock %}
 
@@ -13,6 +14,7 @@
 {% endblock %}
 
 {% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
 
 {% include 'kitchen_count_steps.html' with step='routes' %}
 
@@ -58,9 +60,11 @@
   </div>
 </div>
 
+{% if can_edit_data %}
 <a class="ui labeled icon big button" href="{% url 'delivery:kitchen_count' %}">
     <i class="chevron left icon"></i>{% trans "Back" %}
 </a>
+{% endif %}
 
 {% endblock %}
 

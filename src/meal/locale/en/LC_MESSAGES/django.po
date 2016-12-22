@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 23:01+0000\n"
+"POT-Creation-Date: 2016-12-16 22:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,114 +45,118 @@ msgstr ""
 msgid "Compote"
 msgstr ""
 
-#: meal/models.py:17 meal/models.py:31
+#: meal/models.py:12
+msgid "Sides"
+msgstr ""
+
+#: meal/models.py:19 meal/models.py:33
 msgid "Meat"
 msgstr ""
 
-#: meal/models.py:18
+#: meal/models.py:20
 msgid "Dairy"
 msgstr ""
 
-#: meal/models.py:19
+#: meal/models.py:21
 msgid "Fish"
 msgstr ""
 
-#: meal/models.py:20 meal/models.py:33
+#: meal/models.py:22 meal/models.py:35
 msgid "Seafood"
 msgstr ""
 
-#: meal/models.py:21
+#: meal/models.py:23
 msgid "Veggies and fruits"
 msgstr ""
 
-#: meal/models.py:22
+#: meal/models.py:24
 msgid "Legumineuse"
 msgstr ""
 
-#: meal/models.py:23
+#: meal/models.py:25
 msgid "Grains"
 msgstr ""
 
-#: meal/models.py:24
+#: meal/models.py:26
 msgid "Fresh herbs"
 msgstr ""
 
-#: meal/models.py:25
+#: meal/models.py:27
 msgid "Spices"
 msgstr ""
 
-#: meal/models.py:26
+#: meal/models.py:28
 msgid "Dry and canned goods"
 msgstr ""
 
-#: meal/models.py:27
+#: meal/models.py:29
 msgid "Oils and sauces"
 msgstr ""
 
-#: meal/models.py:32
+#: meal/models.py:34
 msgid "Vegetables"
 msgstr ""
 
-#: meal/models.py:34
+#: meal/models.py:36
 msgid "Seeds and nuts"
 msgstr ""
 
-#: meal/models.py:35
+#: meal/models.py:37
 msgid "Other"
 msgstr ""
 
-#: meal/models.py:41
+#: meal/models.py:43
 msgid "ingredients"
 msgstr ""
 
-#: meal/models.py:46 meal/models.py:74 meal/models.py:147
+#: meal/models.py:48 meal/models.py:76 meal/models.py:149
 msgid "name"
 msgstr ""
 
-#: meal/models.py:51 meal/models.py:79 meal/models.py:151
+#: meal/models.py:53 meal/models.py:81 meal/models.py:153
 msgid "description"
 msgstr ""
 
-#: meal/models.py:59
+#: meal/models.py:61
 msgid "ingredient group"
 msgstr ""
 
-#: meal/models.py:69
+#: meal/models.py:71
 msgid "components"
 msgstr ""
 
-#: meal/models.py:87
+#: meal/models.py:89
 msgid "component group"
 msgstr ""
 
-#: meal/models.py:112 meal/models.py:269
+#: meal/models.py:114 meal/models.py:271
 msgid "component"
 msgstr ""
 
-#: meal/models.py:117 meal/models.py:180
+#: meal/models.py:119 meal/models.py:182
 msgid "ingredient"
 msgstr ""
 
-#: meal/models.py:121 meal/models.py:194
+#: meal/models.py:123 meal/models.py:196
 msgid "date"
 msgstr ""
 
-#: meal/models.py:141
+#: meal/models.py:143
 msgid "restricted items"
 msgstr ""
 
-#: meal/models.py:159
+#: meal/models.py:161
 msgid "restricted item group"
 msgstr ""
 
-#: meal/models.py:175
+#: meal/models.py:177
 msgid "restricted item"
 msgstr ""
 
-#: meal/models.py:191
+#: meal/models.py:193
 msgid "menus"
 msgstr ""
 
-#: meal/models.py:264
+#: meal/models.py:266
 msgid "menu"
 msgstr ""

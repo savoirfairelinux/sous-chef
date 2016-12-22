@@ -1,12 +1,13 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
+
 from note.models import Note, NoteFilter
 from note.forms import NoteForm
 from member.models import Client
@@ -14,16 +15,14 @@ from member.models import Client
 
 # Create your views here.
 
-class NoteList(generic.ListView):
+class NoteList(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     # Display the list of notes
-    model = Note
-    template_name = 'notes_list.html'
     context_object_name = 'notes'
+    model = Note
     paginate_by = 20
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(NoteList, self).dispatch(*args, **kwargs)
+    permission_required = 'sous_chef.read'
+    template_name = 'notes_list.html'
 
     def get_queryset(self):
         uf = NoteFilter(self.request.GET)
@@ -58,11 +57,13 @@ class NoteList(generic.ListView):
         return context
 
 
-class ClientNoteList(LoginRequiredMixin, generic.ListView):
+class ClientNoteList(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     # Display detail of one client
-    model = Note
-    template_name = 'notes_client_list.html'
     context_object_name = 'notes'
+    model = Note
+    permission_required = 'sous_chef.read'
+    template_name = 'notes_client_list.html'
 
     def get_queryset(self):
         queryset = NoteFilter(
@@ -83,14 +84,11 @@ class ClientNoteList(LoginRequiredMixin, generic.ListView):
         return context
 
 
-class NoteAdd(generic.CreateView):
-    model = Note
+class NoteAdd(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
     form_class = NoteForm
+    model = Note
+    permission_required = 'sous_chef.edit'
     template_name = 'notes_add.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(NoteAdd, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
         form.instance.author = self.request.user

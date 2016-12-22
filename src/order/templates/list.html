@@ -2,22 +2,26 @@
 <!-- Load internationalisation utils-->
 {% load i18n %}
 {% load static %}
+{% load rules %}
 
 {% block title %} {% trans 'Orders' %} {% endblock %}
 
 {% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
 
 <div class="ui secondary pointing fluid menu">
     <h1 class="ui header">{% trans "Orders" %}</h1>
 </div>
 
 <div class="ui padded basic segment">
+    {% if can_edit_data %}
     <a href="{% url 'order:create_batch' %}" class="ui labeled icon right basic big button">
         <i class="add icon"></i>{% trans 'New orders' %}
     </a>
     <div class="ui horizontal divider">
         {% trans 'Or' %}
     </div>
+    {% endif %}
 
     {% include 'order/partials/filters.html' %}
 </div>
@@ -52,8 +56,8 @@
         <td><i class="dollar icon"></i>{{order.price}}</td>
         <td>
           <a class="ui basic icon button"  href="{% url 'order:view' pk=order.id %}"><i class="icon unhide"></i></a>
-          <a class="ui basic icon button"  href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i></a>
-          <a class="ui basic icon button order-delete" href="#" data-order-id="{{order.id}}"><i class="icon trash"></i></a>
+          {% if can_edit_data %}<a class="ui basic icon button"  href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i></a>{% endif %}
+          {% if can_edit_data %}<a class="ui basic icon button order-delete" href="#" data-order-id="{{order.id}}"><i class="icon trash"></i></a>{% endif %}
         </td>
       </tr>
       {% include "order_confirm_delete.html" %}

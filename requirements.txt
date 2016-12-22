@@ -14,3 +14,4 @@ django-template-i18n-lint>=1.2.1
 pylabels==1.2.1
 django-avatar==3.1.0
 django-localflavor==1.3
+rules==1.1.1

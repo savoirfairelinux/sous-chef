@@ -2,10 +2,12 @@
 <!-- Load internationalisation utils-->
 {% load i18n %}
 {% load static %}
+{% load rules %}
 
 {% block title %}{% trans "Client" %}{% endblock %}
 
 {% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
 
 <div class="ui secondary pointing fluid menu">
 
@@ -21,7 +23,7 @@
     </h1>
     <div class="right menu">
       <div class="ui item">
-          <div class="ui dropdown member status" data-url="{% url 'member:clientStatusScheduler' client.id %}">
+          <div class="ui dropdown member status{% if not can_edit_data %} disabled{% endif %}" data-url="{% url 'member:clientStatusScheduler' client.id %}">
               <div class="ui large yellow label text">{{ client.get_status_display }}</div>
               <i class="dropdown icon"></i>
               <div class="menu">

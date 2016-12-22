@@ -40,26 +40,33 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third party apps
+    'annoying',
+    'avatar',
+    'django_filters',
+    'formtools',
+    'leaflet',
+    'rules.apps.AutodiscoverRulesConfig',
+
+    # Sous-chef apps
+    'sous_chef',
+    'billing',
+    'datamigration',
+    'delivery',
     'meal',
     'member',
     'order',
     'notification',
     'page',
-    'delivery',
-    'formtools',
-    'django_filters',
-    'annoying',
-    'leaflet',
     'note',
-    'billing',
-    'datamigration',
-    'avatar',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -138,6 +145,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LOGIN_URL = reverse_lazy('page:login')
 LOGIN_REDIRECT_URL = reverse_lazy('page:home')
+
+AUTHENTICATION_BACKENDS = (
+    'rules.permissions.ObjectPermissionBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 
 # Internationalization
