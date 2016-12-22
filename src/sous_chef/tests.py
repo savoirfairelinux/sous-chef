@@ -8,7 +8,7 @@ class TestMixin(object):
 
     def assertRedirectsWithAllMethods(self, url, methods=METHODS, **kwargs):
         """
-        Test a URL with all HTTP methods.
+        Test a URL with all HTTP methods, as not logged-in guests.
         """
         self.client.logout()
         for method in methods:

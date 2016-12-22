@@ -1301,7 +1301,8 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
 class UpdateClientBillTestCase(SousChefTestMixin, OrderItemTestCase):
 
     def setUp(self):
-        self.client.force_login(self.admin)
+        self.client.force_login(
+            self.admin, 'django.contrib.auth.backends.ModelBackend')
 
     def test_post(self):
         response = self.client.post(
@@ -1342,6 +1343,55 @@ class UpdateClientBillTestCase(SousChefTestMixin, OrderItemTestCase):
             self.assertEqual(response.content, b'OK')
             self.order.refresh_from_db()
             self.assertTrue(self.order.includes_a_bill)
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:update_client_bill', kwargs={'pk': 1})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 302)
+        # Run
+        response = self.client.post(url)
+        # Check
+        self.assertEqual(response.status_code, 302)
+        # Run
+        response = self.client.put(url)
+        # Check
+        self.assertEqual(response.status_code, 302)
+        # Run
+        response = self.client.delete(url)
+        # Check
+        self.assertEqual(response.status_code, 302)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:update_client_bill', kwargs={'pk': 1})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 405)
+        # Run
+        response = self.client.post(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+        # Run
+        response = self.client.put(url)
+        # Check
+        self.assertEqual(response.status_code, 405)
+        # Run
+        response = self.client.delete(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
 
 
 class DeleteOrderTestCase(OrderFormTestCase):
