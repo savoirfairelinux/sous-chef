@@ -1,3 +1,5 @@
+.print-only {display:none!important}
+
 @media only print {
     .ui.left.fixed.vertical.inverted.menu
     {display:none;}
@@ -17,6 +19,6 @@
     div{font-size:xx-small;}
 
     .no-print {
-        display:none;}
+        display:none!important;}
+    .print-only {display:block!important}
 }
-

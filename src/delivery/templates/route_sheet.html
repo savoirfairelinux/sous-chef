@@ -77,9 +77,16 @@
           {% endfor %}
         </td>
         <td class="center aligned">
-          <div class="ui toggle checkbox">
+          <div class="ui toggle checkbox no-print">
             <input name="include_a_bill" type="checkbox" {% if obj.include_a_bill %}checked="checked"{% endif %} data-url="{% url 'order:update_client_bill' obj.order_id %}" {% if not can_edit_data %}disabled="disabled"{% endif %}>
             <label>{% trans 'Bill' %}</label>
+          </div>
+          <div class="print-only">
+            {% if obj.include_a_bill %}
+              {% trans 'Yes' %}
+            {% else %}
+              {% trans 'No' %}
+            {% endif %}
           </div>
         </td>
       </tr>
