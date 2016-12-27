@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <title>{% trans 'Routes Information' %}</title>
     <style>
-      table {width: 100%;border-collapse:collapse}
+      table {width: 100%;border-collapse:collapse;font-size: 115%}
       table th {text-align:left}
       table tr {border-bottom: 1px solid black}
       @media only screen {
@@ -14,6 +14,7 @@
       }
       @media only print {
         .no-print {display:none!important;visilibity:hidden!important}
+        .pagebreak { page-break-before: always; }
       }
     </style>
   </head>
@@ -23,7 +24,7 @@
 
     {% for route_dict in routes_dict.values %}
     {% if route_dict.summary_lines or route_dict.detail_lines %}
-    <h2>{{ route_dict.route.name }}</h2>
+    <h2 {% if not forloop.first %} class="pagebreak"{% endif %}>{{ route_dict.route.name }}</h2>
     <p>
       <table>
         <thead>
