@@ -22,7 +22,7 @@
       <div class="ui icon button cancel add referent member right floated">
         <i class="close icon"></i>
       </div>
-      <div class="field">
+      <div class="field {% if form.firstname.errors or form.lastname.errors %} error {% endif %}">
         <label>{% trans 'Name' %}</label>
         <div class="two fields">
           <div class="field {% if form.firstname.errors %} error {% endif %}">
@@ -32,39 +32,40 @@
               {{form.lastname}}
           </div>
         </div>
-        <div class="field">
-          <label>Contact information</label>
-          <div class="three fields">
-            <div class="field">
-              <div class="ui left icon input">
-                <i class="at icon"></i>
-                {{form.email}}
-              </div>
+      </div>
+      <div class="field {% if form.work_information.errors %} error {% endif %}">
+        <label>{{ form.work_information.label }}</label>
+        {{ form.work_information }}
+      </div>
+      <div class="field">
+        <label>Contact information</label>
+        <div class="three fields">
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="at icon"></i>
+              {{form.email}}
             </div>
-            <div class="field">
-              <div class="ui left icon input">
-                <i class="building icon"></i>
-                {{form.work_phone}}
-              </div>
+          </div>
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="building icon"></i>
+              {{form.work_phone}}
             </div>
-            <div class="field">
-              <div class="ui left icon input">
-                <i class="call icon"></i>
-                {{form.cell_phone}}
-              </div>
+          </div>
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="call icon"></i>
+              {{form.cell_phone}}
             </div>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 
 
-<div class="field {% if form.work_information.errors %} error {% endif %}">
-    <label>{{ form.work_information.label }}</label>
-    {{ form.work_information }}
-</div>
 
 <h4 class="ui dividing header">{% trans 'Referral reason' %}</h4>
 

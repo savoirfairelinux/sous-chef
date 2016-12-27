@@ -108,6 +108,12 @@ class Member(models.Model):
         null=True,
     )
 
+    work_information = models.TextField(
+        verbose_name=_('Work information'),
+        blank=True,
+        null=True,
+    )
+
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
@@ -998,12 +1004,6 @@ class Referencing (models.Model):
 
     referral_reason = models.TextField(
         verbose_name=_("Referral reason")
-    )
-
-    work_information = models.TextField(
-        verbose_name=_('Work information'),
-        blank=True,
-        null=True,
     )
 
     date = models.DateField(

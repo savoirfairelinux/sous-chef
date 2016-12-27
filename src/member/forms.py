@@ -330,7 +330,8 @@ class ClientReferentInformation(MemberForm):
         label=_('Work information'),
         widget=forms.TextInput(attrs={
             'placeholder': _('Hotel-Dieu, St-Anne Hospital, ...')
-        })
+        }),
+        required=False
     )
 
     referral_reason = forms.CharField(
@@ -348,6 +349,21 @@ class ClientReferentInformation(MemberForm):
         ),
         help_text=_('Format: YYYY-MM-DD'),
     )
+
+    def clean(self):
+        """
+        Add an error message for referent.
+        """
+        cleaned_data = super(ClientReferentInformation, self).clean()
+
+        member = cleaned_data.get('member')
+        work_information = cleaned_data.get('work_information')
+        if not member and not work_information:
+            msg = _(
+                'This field is required unless you chose an existing member.'
+            )
+            self.add_error('work_information', msg)
+        return cleaned_data
 
 
 class ClientPaymentInformation(MemberForm):

@@ -31,7 +31,7 @@
 {% for referent in client.client_referent.all %}
     <div class="item"><div class="header">{% trans 'First Name' %}</div>{{referent.referent.firstname}}</div>
     <div class="item"><div class="header">{% trans 'Last Name' %}</div>{{referent.referent.lastname}}</div>
-    <div class="item"><div class="header">{% trans 'Workplace information' %}</div>{{referent.work_information}}</div>
+    <div class="item"><div class="header">{% trans 'Workplace information' %}</div>{{referent.referent.work_information}}</div>
     <div class="item"><div class="header">{% trans 'Referral Date' %}</div>{{referent.date}}</div>
     <div class="item"><div class="header">{% trans 'Referral Reason' %}</div>{{referent.referral_reason}}</div>
     {% for contact in referent.referent.member_contact.all %}
