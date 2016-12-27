@@ -17,6 +17,8 @@ urlpatterns = [
     url(_(r'^kitchen_count/$'), KitchenCount.as_view(), name='kitchen_count'),
     url(_(r'^kitchen_count/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d+)/$'),
         KitchenCount.as_view(), name='kitchen_count_date'),
+    url(_(r'^viewDownloadKitchenCount/$'),
+        KitchenCount.as_view(), name='downloadKitchenCount'),
     url(_(r'^viewMealLabels/$'), MealLabels.as_view(), name='mealLabels'),
     url(_(r'^route_sheet/(?P<id>\d+)/$'),
         DeliveryRouteSheet.as_view(), name='route_sheet_id'),

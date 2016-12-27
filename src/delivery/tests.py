@@ -52,6 +52,14 @@ class KitchenCountReportTestCase(SousChefTestMixin, TestCase):
                 ingredient=ing,
                 date=self.today)
             ci.save()
+        # Add extra ingredient so that more clashing clients will
+        #  require two pages on the PDF kitchen count report
+        extra = Ingredient.objects.get(name='Walnuts')
+        ci = Component_ingredient(
+            component=main_dish,
+            ingredient=extra,
+            date=self.today)
+        ci.save()
         # menu today
         Menu.create_menu_and_components(
             self.today,
@@ -83,6 +91,24 @@ class KitchenCountReportTestCase(SousChefTestMixin, TestCase):
 
         self.client.get('/delivery/kitchen_count/')
         response = self.client.get('/delivery/viewMealLabels/')
+        self.assertTrue('ReportLab' in repr(response.content))
+
+    def test_pdf_report_show_restrictions(self):
+        """An ingredient we know will clash must be in the pdf report"""
+        # generate orders today
+        self.today = datetime.date.today()
+        clients = Client.active.all()
+        numorders = Order.objects.auto_create_orders(
+            self.today, clients)
+        Menu.create_menu_and_components(
+            self.today,
+            ['Ginger pork',
+             'Green Salad', 'Fruit Salad',
+             'Day s Dessert', 'Day s Diabetic Dessert',
+             'Day s Pudding', 'Day s Compote'])
+
+        self.client.get('/delivery/kitchen_count/')
+        response = self.client.get('/delivery/viewDownloadKitchenCount/')
         self.assertTrue('ReportLab' in repr(response.content))
 
 

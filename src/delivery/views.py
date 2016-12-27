@@ -12,12 +12,13 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.http import JsonResponse
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.contrib.admin.models import LogEntry, ADDITION
 from django.db.models.functions import Lower
 from django_filters.views import FilterView
@@ -25,6 +26,19 @@ from django_filters.views import FilterView
 import labels  # package pylabels
 
 from reportlab.graphics import shapes as rl_shapes
+from reportlab.lib import (
+    colors as rl_colors, enums as rl_enums)
+from reportlab.lib.styles import (
+    getSampleStyleSheet as rl_getSampleStyleSheet,
+    ParagraphStyle as RLParagraphStyle)
+from reportlab.lib.units import inch as rl_inch
+from reportlab.pdfbase import pdfmetrics as rl_pdfmetrics
+from reportlab.platypus import (
+    Paragraph as RLParagraph,
+    SimpleDocTemplate as RLSimpleDocTemplate,
+    Spacer as RLSpacer,
+    Table as RLTable,
+    TableStyle as RLTableStyle)
 
 from meal.models import (
     COMPONENT_GROUP_CHOICES,
@@ -42,6 +56,9 @@ from .forms import DishIngredientsForm
 from . import tsp
 
 MEAL_LABELS_FILE = os.path.join(settings.BASE_DIR, "meal_labels.pdf")
+KITCHEN_COUNT_FILE = os.path.join(settings.BASE_DIR, "kitchen_count.pdf")
+LOGO_IMAGE = os.path.join(settings.BASE_DIR,
+                          "160widthSR-Logo-Screen-PurpleGreen-HI-RGB1.jpg")
 DELIVERY_STARTING_POINT_LAT_LONG = (45.516564, -73.575145)  # Santropol Roulant
 
 
@@ -209,7 +226,7 @@ class MealInformation(
                         compname = Component.objects.order_by(
                             Lower('name')).filter(
                                 component_group=group
-                        )
+                            )
                         if compname:
                             compnames.append(compname[0].name)
                 Menu.create_menu_and_components(date, compnames)
@@ -303,30 +320,51 @@ class KitchenCount(
         LoginRequiredMixin, PermissionRequiredMixin, generic.View):
     permission_required = 'sous_chef.read'
 
-    def get(self, request, **kwargs):
-        # Display kitchen count report for given delivery date
-        #   or for today by default; generate meal labels
-        if 'year' in kwargs and 'month' in kwargs and 'day' in kwargs:
-            date = datetime.date(
-                int(kwargs['year']), int(kwargs['month']), int(kwargs['day']))
+    def get(self, request, *args, **kwargs):
+        if reverse('delivery:downloadKitchenCount') in request.path:
+            # download kitchen count report as PDF
+            try:
+                f = open(KITCHEN_COUNT_FILE, "rb")
+            except:
+                raise Http404("File " + KITCHEN_COUNT_FILE + " does not exist")
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = \
+                'attachment; filename="kitchencount{}.pdf"'. \
+                format(datetime.date.today().strftime("%Y%m%d"))
+            response.write(f.read())
+            f.close()
+            return response
         else:
-            date = datetime.date.today()
+            # Display kitchen count report for given delivery date
+            #   or for today by default; generate meal labels
+            if 'year' in kwargs and 'month' in kwargs and 'day' in kwargs:
+                date = datetime.date(
+                    int(kwargs['year']), int(kwargs['month']),
+                    int(kwargs['day']))
+            else:
+                date = datetime.date.today()
 
-        kitchen_list = Order.get_kitchen_items(date)
-        component_lines, meal_lines = kcr_make_lines(kitchen_list, date)
-        if component_lines:
-            # we have orders today
-            num_labels = kcr_make_labels(
-                kitchen_list,                         # KitchenItems
-                component_lines[0].name,              # main dish name
-                component_lines[0].ingredients)       # main dish ingredients
-        else:
-            # no orders today
-            num_labels = 0
-        return render(request, 'kitchen_count.html',
-                      {'component_lines': component_lines,
-                       'meal_lines': meal_lines,
-                       'num_labels': num_labels})
+            kitchen_list = Order.get_kitchen_items(date)
+            component_lines, meal_lines = kcr_make_lines(kitchen_list, date)
+            if component_lines:
+                # we have orders today
+                num_pages = kcr_make_pages(     # kitchen count as PDF
+                    date,
+                    component_lines,                    # summary
+                    meal_lines)                         # detail
+                num_labels = kcr_make_labels(   # meal labels as PDF
+                    kitchen_list,                       # KitchenItems
+                    component_lines[0].name,            # main dish name
+                    component_lines[0].ingredients)     # main dish ingredients
+            else:
+                # no orders today
+                num_pages = 0
+                num_labels = 0
+            return render(request, 'kitchen_count.html',
+                          {'component_lines': component_lines,
+                           'meal_lines': meal_lines,
+                           'num_pages': num_pages,
+                           'num_labels': num_labels})
 
 
 component_line_fields = [          # Component summary Line on Kitchen Count.
@@ -426,13 +464,15 @@ def kcr_make_lines(kitchen_list, date):
             component_lines.setdefault(
                 component_group,
                 ComponentLine(
-                    component_group=component_group,
+                    component_group=next(cg for cg in COMPONENT_GROUP_CHOICES
+                                         if cg[0] == component_group)[1],
                     rqty=0,
                     lqty=0,
                     name='',
                     ingredients=''))
             if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH and
                     component_lines[component_group].name == ''):
+                # not yet got main dish name and ingredients, do it
                 component_lines[component_group] = \
                     component_lines[component_group]._replace(
                         name=meal_component.name,
@@ -515,6 +555,228 @@ def kcr_make_lines(kitchen_list, date):
     return (component_lines_sorted, meal_lines)
 
 
+def kcr_make_pages(date, component_lines, meal_lines):
+    """Generate the kitchen count report pages as a PDF file.
+
+    Uses ReportLab see http://www.reportlab.com/documentation/faq/
+
+    Args:
+        date : The delivery date of the meals.
+        component_lines : A list of ComponentLine objects, the summary of
+            component quantities and sizes for the date's meal.
+        meal_lines : A list of MealLine objects, the details of the clients
+            for the date that have ingredients clashing with those in today's
+            main dish.
+
+    Returns:
+        An integer : The number of pages generated.
+    """
+    PAGE_HEIGHT = 11.0 * rl_inch
+    PAGE_WIDTH = 8.5 * rl_inch
+
+    styles = rl_getSampleStyleSheet()
+    styles.add(RLParagraphStyle(
+        name='NormalLeft', fontName='Helvetica',
+        fontSize=10, alignment=rl_enums.TA_LEFT))
+    styles.add(RLParagraphStyle(
+        name='NormalCenter', fontName='Helvetica',
+        fontSize=10, alignment=rl_enums.TA_CENTER))
+    styles.add(RLParagraphStyle(
+        name='NormalRight', fontName='Helvetica',
+        fontSize=10, alignment=rl_enums.TA_RIGHT))
+
+    styles.add(RLParagraphStyle(
+        name='BoldLeft', fontName='Helvetica-Bold',
+        fontSize=10, alignment=rl_enums.TA_LEFT))
+    styles.add(RLParagraphStyle(
+        name='BoldRight', fontName='Helvetica-Bold',
+        fontSize=10, alignment=rl_enums.TA_RIGHT))
+
+    styles.add(RLParagraphStyle(
+        name='SmallRight', fontName='Helvetica',
+        fontSize=7, alignment=rl_enums.TA_RIGHT))
+
+    styles.add(RLParagraphStyle(
+        name='LargeBoldLeft', fontName='Helvetica-Bold',
+        fontSize=12, alignment=rl_enums.TA_LEFT))
+    styles.add(RLParagraphStyle(
+        name='LargeBoldRight', fontName='Helvetica-Bold',
+        fontSize=12, alignment=rl_enums.TA_RIGHT))
+
+    def drawHeader(canvas, doc):
+        """Draw the header part common to all pages.
+
+        Args:
+            canvas : A reportlab.pdfgen.canvas.Canvas object.
+            doc : A reportlab.platypus.SimpleDocTemplate object.
+        """
+        canvas.setFont('Helvetica', 14)
+        canvas.drawString(
+            x=1.9 * rl_inch, y=PAGE_HEIGHT,
+            text='Kitchen count report')
+        canvas.setFont('Helvetica', 9)
+        canvas.drawRightString(
+            x=6.0 * rl_inch, y=PAGE_HEIGHT,
+            text='{}'.format(datetime.date.today().strftime('%a., %d %B %Y')))
+        canvas.drawRightString(
+            x=PAGE_WIDTH - 0.75 * rl_inch, y=PAGE_HEIGHT,
+            text='Page {:d}'.format(doc.page))
+
+    def myFirstPage(canvas, doc):
+        """Draw the complete header for the first page.
+
+        Args:
+            canvas : A reportlab.pdfgen.canvas.Canvas object.
+            doc : A reportlab.platypus.SimpleDocTemplate object.
+        """
+        canvas.saveState()
+        drawHeader(canvas, doc)
+        canvas.drawInlineImage(
+            LOGO_IMAGE,
+            0.75 * rl_inch, PAGE_HEIGHT - 1.0 * rl_inch,
+            width=1.0 * rl_inch, height=1.0 * rl_inch)
+        canvas.restoreState()
+
+    def myLaterPages(canvas, doc):
+        """Draw the complete header for all pages except the first one.
+
+        Args:
+            canvas : A reportlab.pdfgen.canvas.Canvas object.
+            doc : A reportlab.platypus.SimpleDocTemplate object.
+        """
+        canvas.saveState()
+        drawHeader(canvas, doc)
+        canvas.restoreState()
+
+    def go():
+        """Generate the pages.
+
+        Returns:
+            An integer : The number of pages generated.
+        """
+        doc = RLSimpleDocTemplate(KITCHEN_COUNT_FILE)
+        story = []
+
+        # begin Summary section
+        story.append(RLSpacer(1, 0.25 * rl_inch))
+        rows = []
+        rows.append(['',
+                     RLParagraph('TOTAL', styles['NormalCenter']),
+                     '',
+                     RLParagraph('Menu', styles['NormalLeft']),
+                     RLParagraph('Ingredients', styles['NormalLeft'])])
+        rows.append(['',
+                     RLParagraph('Regular', styles['SmallRight']),
+                     RLParagraph('Large', styles['SmallRight']),
+                     '',
+                     ''])
+        for cl in component_lines:
+            rows.append([cl.component_group,
+                         cl.rqty,
+                         cl.lqty,
+                         cl.name,
+                         RLParagraph(cl.ingredients, styles['NormalLeft'])])
+        tab = RLTable(rows,
+                      colWidths=(100, 40, 40, 120, 220),
+                      style=[('VALIGN', (0, 0), (-1, 1), 'TOP'),
+                             ('VALIGN', (0, 2), (-1, -1), 'BOTTOM'),
+                             ('GRID', (1, 0), (-1, 1), 1, rl_colors.black),
+                             ('SPAN', (1, 0), (2, 0)),
+                             ('ALIGN', (1, 2), (2, -1), 'RIGHT'),
+                             ('SPAN', (3, 0), (3, 1)),
+                             ('SPAN', (4, 0), (4, 1))])
+        story.append(tab)
+        story.append(RLSpacer(1, 0.25 * rl_inch))
+        # end Summary section
+
+        # begin Detail section
+        rows = []
+        line = 0
+        tab_style = RLTableStyle(
+            [('VALIGN', (0, 0), (-1, -1), 'TOP')])
+        rows.append([RLParagraph('Clashing ingredients', styles['NormalLeft']),
+                     RLParagraph('Regular', styles['NormalRight']),
+                     RLParagraph('Large', styles['NormalRight']),
+                     '',
+                     RLParagraph('Client', styles['NormalLeft']),
+                     RLParagraph('Other restrictions', styles['NormalLeft'])])
+        tab_style.add('LINEABOVE',
+                      (0, line), (-1, line), 1, rl_colors.black)
+        tab_style.add('LINEBEFORE',
+                      (0, line), (0, line), 1, rl_colors.black)
+        tab_style.add('LINEAFTER',
+                      (-1, line), (-1, line), 1, rl_colors.black)
+        line += 1
+        for ml in meal_lines:
+            if ml.ingr_clash and not ml.client:
+                # Total line at the bottom
+                rows.append([RLParagraph(ml.ingr_clash, styles['BoldLeft']),
+                             RLParagraph(ml.rqty, styles['BoldRight']),
+                             RLParagraph(ml.lqty, styles['BoldRight']),
+                             '',
+                             '',
+                             ''])
+                tab_style.add('LINEABOVE',
+                              (0, line), (-1, line), 1, rl_colors.black)
+            elif ml.ingr_clash or ml.client:
+                # not a blank separator line
+                if ml.span != '-1':
+                    # line has ingredient clash data
+                    tab_style.add('SPAN',
+                                  (0, line), (0, line + int(ml.span) - 1))
+                    tab_style.add('LINEABOVE',
+                                  (0, line), (-1, line), 1, rl_colors.black)
+                    # for dashes, must use LINEABOVE because dashes do not work
+                    #   with LINEBELOW; seems to be a bug in ReportLab see :
+                    #   reportlab/platypus/tables.py line # 1309
+                    tab_style.add('LINEABOVE',           # op
+                                  (1, line + 1),         # start
+                                  (-1, line + 1),        # stop
+                                  1,                     # weight
+                                  rl_colors.black,       # color
+                                  None,                  # cap
+                                  [1, 2])                # dashes
+                    value = RLParagraph(ml.ingr_clash, styles['LargeBoldLeft'])
+                else:
+                    # span = -1 means clash data must be blanked out
+                    #   because it is the same as the initial spanned row
+                    value = ''
+                # END IF
+                if ml.client == 'SUBTOTAL':
+                    client = ''
+                    qty_style = 'LargeBoldRight'
+                else:
+                    client = ml.client
+                    qty_style = 'NormalRight'
+                rows.append([
+                    value,
+                    RLParagraph(ml.rqty, styles[qty_style]),
+                    RLParagraph(ml.lqty, styles[qty_style]),
+                    '',
+                    RLParagraph(client, styles['NormalLeft']),
+                    [RLParagraph(
+                        ml.rest_ingr +
+                        (' ;' if ml.rest_ingr and ml.rest_item else ''),
+                        styles['NormalLeft']),
+                     RLParagraph(ml.rest_item, styles['BoldLeft'])]])
+                # END IF
+                line += 1
+            # END IF
+        # END FOR
+        tab = RLTable(rows,
+                      colWidths=(150, 50, 50, 20, 100, 150),
+                      repeatRows=1)
+        tab.setStyle(tab_style)
+        story.append(tab)
+        story.append(RLSpacer(1, 1 * rl_inch))
+        # end Detail section
+
+        # build full document
+        doc.build(story, onFirstPage=myFirstPage, onLaterPages=myLaterPages)
+        return doc.page
+    return go()  # returns number of pages generated
+
+
 meal_label_fields = [                         # Contents for Meal Labels.
     # field name, default value
     'sortkey', '',          # key for sorting
@@ -544,10 +806,10 @@ def draw_label(label, width, height, data):
         height : Single label height in font points.
         data : A MealLabel namedtuple.
     """
-    # dimensions are in font points
+    # dimensions are in font points (72 points = 1 inch)
     # Line 1
     vertic_pos = height * 0.85
-    horiz_margin = 3
+    horiz_margin = 9  # distance from edge of label 9/72 = 1/8 inch
     if data.name:
         label.add(rl_shapes.String(
             horiz_margin, vertic_pos, data.name,
@@ -569,40 +831,48 @@ def draw_label(label, width, height, data):
     if data.size:
         label.add(rl_shapes.String(
             width - horiz_margin, vertic_pos, data.size,
-            fontName="Helvetica", fontSize=10, textAnchor="end"))
+            fontName="Helvetica-Bold", fontSize=10, textAnchor="end"))
     # Line(s) 3
     vertic_pos -= 12
     if data.dish_clashes:
         for line in data.dish_clashes:
-            if vertic_pos < 0:
-                break
             label.add(rl_shapes.String(
                 horiz_margin, vertic_pos, line,
                 fontName="Helvetica", fontSize=9))
             vertic_pos -= 10
     # Line(s) 4
     if data.preparations:
-        for line in data.preparations:
-            if vertic_pos < 0:
-                break
+        # draw prefix
+        label.add(rl_shapes.String(
+            horiz_margin, vertic_pos, data.preparations[0],
+            fontName="Helvetica", fontSize=9))
+        # measure prefix length to offset first line
+        offset = rl_pdfmetrics.stringWidth(
+            data.preparations[0], fontName="Helvetica", fontSize=9)
+        for line in data.preparations[1:]:
             label.add(rl_shapes.String(
-                horiz_margin, vertic_pos, line,
+                horiz_margin + offset, vertic_pos, line,
                 fontName="Helvetica-Bold", fontSize=9))
+            offset = 0.0  # Only first line is offset at right of prefix
             vertic_pos -= 10
     # Line(s) 5
     if data.sides_clashes:
-        for line in data.sides_clashes:
-            if vertic_pos < 0:
-                break
+        # draw prefix
+        label.add(rl_shapes.String(
+            horiz_margin, vertic_pos, data.sides_clashes[0],
+            fontName="Helvetica", fontSize=9))
+        # measure prefix length to offset first line
+        offset = rl_pdfmetrics.stringWidth(
+            data.sides_clashes[0], fontName="Helvetica", fontSize=9)
+        for line in data.sides_clashes[1:]:
             label.add(rl_shapes.String(
-                horiz_margin, vertic_pos, line,
-                fontName="Helvetica", fontSize=9))
+                horiz_margin + offset, vertic_pos, line,
+                fontName="Helvetica-Bold", fontSize=9))
+            offset = 0.0  # Only first line is offset at right of prefix
             vertic_pos -= 10
     # Line(s) 6
     if data.other_restrictions:
         for line in data.other_restrictions:
-            if vertic_pos < 0:
-                break
             label.add(rl_shapes.String(
                 horiz_margin, vertic_pos, line,
                 fontName="Helvetica", fontSize=9))
@@ -610,8 +880,6 @@ def draw_label(label, width, height, data):
     # Line(s) 7
     if data.ingredients:
         for line in data.ingredients:
-            if vertic_pos < 0:
-                break
             label.add(rl_shapes.String(
                 horiz_margin, vertic_pos, line,
                 fontName="Helvetica", fontSize=8))
@@ -662,45 +930,56 @@ def kcr_make_labels(kitchen_list, main_dish_name, main_dish_ingredients):
         right_margin=horiz_margin,
         corner_radius=1.5)
 
-    sheet = labels.Sheet(specs, draw_label, border=True)
+    sheet = labels.Sheet(specs, draw_label, border=False)
 
     meal_labels = []
     for kititm in kitchen_list.values():
         meal_label = MealLabel(*meal_label_fields[1::2])
         meal_label = meal_label._replace(
-            route=kititm.routename,
+            route=kititm.routename.upper(),
             main_dish_name=main_dish_name,
             name=kititm.lastname + ", " + kititm.firstname[0:2] + ".")
         if kititm.meal_size == SIZE_CHOICES_LARGE:
-            meal_label = meal_label._replace(size='LARGE')
+            meal_label = meal_label._replace(size=ugettext('LARGE'))
         if kititm.incompatible_ingredients:
             meal_label = meal_label._replace(
                 main_dish_name='_______________________________________',
                 dish_clashes=textwrap.wrap(
-                    'Special : {}'.format(
+                    ugettext('Restrictions') + ' : {}'.format(
                         ' , '.join(kititm.incompatible_ingredients)),
                     width=65,
                     break_long_words=False, break_on_hyphens=False))
         elif not kititm.sides_clashes:
             meal_label = meal_label._replace(
                 ingredients=textwrap.wrap(
-                    'Ingredients : {}'.format(main_dish_ingredients),
+                    ugettext('Ingredients') + ' : {}'.format(
+                        main_dish_ingredients),
                     width=74,
                     break_long_words=False, break_on_hyphens=False))
         if kititm.preparation:
+            prefix = ugettext('Preparation') + ' : '
+            # wrap all text including prefix
+            preparation_list = textwrap.wrap(
+                prefix + ' , '.join(kititm.preparation),
+                width=65,
+                break_long_words=False,
+                break_on_hyphens=False)
+            # remove prefix from first line
+            preparation_list[0] = preparation_list[0][len(prefix):]
             meal_label = meal_label._replace(
-                preparations=textwrap.wrap(
-                    'Preparation= {}'.format(
-                        ' , '.join(kititm.preparation)),
-                    width=65,
-                    break_long_words=False, break_on_hyphens=False))
+                preparations=[prefix] + preparation_list)
         if kititm.sides_clashes:
+            prefix = ugettext('Sides clashes') + ' : '
+            # wrap all text including prefix
+            sides_clashes_list = textwrap.wrap(
+                prefix + ' , '.join(kititm.sides_clashes),
+                width=65,
+                break_long_words=False,
+                break_on_hyphens=False)
+            # remove prefix from first line
+            sides_clashes_list[0] = sides_clashes_list[0][len(prefix):]
             meal_label = meal_label._replace(
-                sides_clashes=textwrap.wrap(
-                    'Sides clashes= {}'.format(
-                        ' , '.join(kititm.sides_clashes)),
-                    width=65,
-                    break_long_words=False, break_on_hyphens=False))
+                sides_clashes=[prefix] + sides_clashes_list)
         other_restrictions = []
         if kititm.sides_clashes:
             other_restrictions.extend(
@@ -719,7 +998,7 @@ def kcr_make_labels(kitchen_list, main_dish_name, main_dish_ingredients):
         if other_restrictions:
             meal_label = meal_label._replace(
                 other_restrictions=textwrap.wrap(
-                    'Other restrictions= {}'.format(
+                    ugettext('Other restrictions') + ' : {}'.format(
                         ' , '.join(other_restrictions)),
                     width=65,
                     break_long_words=False, break_on_hyphens=False))
