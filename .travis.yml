@@ -10,6 +10,7 @@ install:
 
 script:
   - PYTHONWARNINGS=once coverage run --omit=*.virtualenvs*,*virtualenv* src/manage.py test --settings=sous_chef.settings_test member meal order notification delivery note billing page
+  - python3 src/manage.py test --settings=sous_chef.settings_test_fr member meal order notification delivery note billing page
   - pep8 --count --show-source --exclude=migrations src/
 
 after_success:

@@ -13,7 +13,7 @@ urlpatterns = [
         mark_as_read, name='read'),
     url(_(r'^unread/(?P<id>\d+)/$'),
         mark_as_unread, name='unread'),
-    url(r'^add/$', NoteAdd.as_view(), name='note_add'),
-    url(r'^batch_toggle/$',
+    url(_(r'^add/$'), NoteAdd.as_view(), name='note_add'),
+    url(_(r'^batch_toggle/$'),
         NoteBatchToggle.as_view(), name='batch_toggle'),
 ]

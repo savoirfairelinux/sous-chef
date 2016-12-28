@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-31 14:17-0400\n"
+"POT-Creation-Date: 2017-04-04 14:50-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
@@ -75,7 +75,7 @@ msgstr "Alerte"
 msgid "Your message here ..."
 msgstr "Votre message ici ..."
 
-#: member/forms.py
+#: member/forms.py member/tests.py
 msgid "At least one contact information is required."
 msgstr "Au moins une information de contact est requise."
 
@@ -140,7 +140,7 @@ msgstr "Vos notes de livraison ici ..."
 msgid "Default"
 msgstr "Par Défaut"
 
-#: member/forms.py member/models.py
+#: member/forms.py member/models.py member/tests.py
 msgid "Active"
 msgstr "Actif"
 
@@ -184,15 +184,15 @@ msgstr "Tapez 3 ou plus caractères pour rechercher des membres"
 msgid "Work phone"
 msgstr "Téléphone professionnel"
 
-#: member/forms.py
+#: member/forms.py member/tests.py
 msgid "This field is required unless you add a new member."
 msgstr "Ce champ est requis sauf si vous souhaitez ajouter un nouveau membre."
 
-#: member/forms.py
+#: member/forms.py member/tests.py
 msgid "This field is required unless you chose an existing member."
 msgstr "Ce champ est requis à moins que vous ne choisissiez un membre existant."
 
-#: member/forms.py
+#: member/forms.py member/tests.py
 msgid "Not a valid member, please chose an existing member."
 msgstr "Membre non valide. Veuillez choisir un membre existant."
 
@@ -246,11 +246,11 @@ msgstr "Rue"
 msgid "City Name"
 msgstr "Ville"
 
-#: member/forms.py
+#: member/forms.py member/tests.py
 msgid "This member has not a valid address, please add a valid address to this member, so it can be used for the billing."
 msgstr "Ce membre ne possède pas une adresse valide. Veillez ajouter une adresse valide afin qu'elle puisse être utilisée pour la facturation."
 
-#: member/forms.py
+#: member/forms.py member/tests.py
 msgid "This field is required"
 msgstr "Ce champ est requis"
 
@@ -262,7 +262,7 @@ msgstr "Lien"
 msgid "Parent, friend, ..."
 msgstr "Parent, ami(e), ..."
 
-#: member/forms.py
+#: member/forms.py member/tests.py
 msgid "At least one emergency contact is required."
 msgstr "Au moins un contact d'urgence est requis."
 
@@ -302,7 +302,7 @@ msgstr "Carte de crédit"
 msgid "EFT"
 msgstr "TFE"
 
-#: member/models.py
+#: member/models.py member/tests.py
 msgid "Ongoing"
 msgstr "Régulier"
 
@@ -623,6 +623,32 @@ msgstr "Modifier le Client"
 msgid "New Client"
 msgstr "Nouveau client"
 
+#: member/templates/client/create/form.html member/tests.py member/urls.py
+msgid "basic_information"
+msgstr "personnel"
+
+#: member/templates/client/create/form.html member/tests.py member/urls.py
+msgid "address_information"
+msgstr "adresse"
+
+#: member/templates/client/create/form.html member/tests.py member/urls.py
+msgid "referent_information"
+msgstr "référent"
+
+#: member/templates/client/create/form.html member/tests.py member/urls.py
+msgid "payment_information"
+msgstr "paiement"
+
+#: member/templates/client/create/form.html member/tests.py member/urls.py
+msgid "dietary_restriction"
+msgstr "préférences"
+
+#: member/templates/client/create/form.html member/tests.py
+#, fuzzy
+#| msgid "emergency_contacts"
+msgid "emergency_contact"
+msgstr "contacts_d'urgence"
+
 #: member/templates/client/create/form.html
 #: member/templates/client/partials/menu.html
 #: member/templates/client/update/base.html
@@ -732,6 +758,7 @@ msgid "Or"
 msgstr "Ou"
 
 #: member/templates/client/list.html member/templates/client/view/summary.html
+#: member/tests.py
 msgid "years old"
 msgstr "ans"
 
@@ -1286,65 +1313,102 @@ msgstr ""
 msgid "%(count)s %(component_label)s"
 msgstr ""
 
+#: member/tests.py
+msgid "This field is required."
+msgstr "Ce champ est requis."
+
+#: member/tests.py
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+
+#: member/tests.py member/urls.py
+msgid "emergency_contacts"
+msgstr "contacts_d'urgence"
+
+#: member/urls.py
+msgid "^create/$"
+msgstr "^créer/$"
+
+#: member/urls.py
+msgid "^create/(?P<step>.+)/$"
+msgstr "^créer/(?P<step>.+)/$"
+
+#: member/urls.py
+msgid "^list/$"
+msgstr "^liste/$"
+
+#: member/urls.py
+msgid "^search/$"
+msgstr "^rechercher/$"
+
 #: member/urls.py
 msgid "^view/(?P<pk>\\d+)/$"
-msgstr ""
+msgstr "^voir/(?P<pk>\\d+)/$"
 
 #: member/urls.py
 msgid "^view/(?P<pk>\\d+)/orders$"
-msgstr ""
+msgstr "^voir/(?P<pk>\\d+)/commandes$"
 
 #: member/urls.py
 msgid "^view/(?P<pk>\\d+)/information$"
-msgstr ""
+msgstr "^voir/(?P<pk>\\d+)/information$"
 
 #: member/urls.py
 msgid "^view/(?P<pk>\\d+)/referent$"
-msgstr ""
+msgstr "^voir/(?P<pk>\\d+)/référent$"
 
 #: member/urls.py
 msgid "^view/(?P<pk>\\d+)/billing$"
-msgstr ""
+msgstr "^voir/(?P<pk>\\d+)/facturation$"
 
 #: member/urls.py
 msgid "^view/(?P<pk>\\d+)/preferences$"
-msgstr ""
+msgstr "^voir/(?P<pk>\\d+)/préférences$"
 
 #: member/urls.py
 msgid "^view/(?P<pk>\\d+)/notes$"
-msgstr ""
+msgstr "^voir/(?P<pk>\\d+)/notes$"
 
 #: member/urls.py
 msgid "^view/(?P<pk>\\d+)/notes/add$"
-msgstr ""
+msgstr "^voir/(?P<pk>\\d+)/notes/ajouter$"
 
 #: member/urls.py
 msgid "^geolocateAddress/$"
-msgstr ""
+msgstr "^géolocaliser_l'adresse/$"
 
 #: member/urls.py
 msgid "^view/(?P<pk>\\d+)/status$"
-msgstr ""
+msgstr "^voir/(?P<pk>\\d+)/statut$"
+
+#: member/urls.py
+msgid "^client/(?P<pk>\\d+)/status/scheduler$"
+msgstr "^client/(?P<pk>\\d+)/statut/planificateur$"
 
 #: member/urls.py
 msgid "^restriction/(?P<pk>\\d+)/delete/$"
-msgstr ""
+msgstr "^restriction/(?P<pk>\\d+)/supprimer/$"
 
 #: member/urls.py
 msgid "^client_option/(?P<pk>\\d+)/delete/$"
-msgstr ""
+msgstr "^client_option/(?P<pk>\\d+)/supprimer/$"
 
 #: member/urls.py
 msgid "^ingredient_to_avoid/(?P<pk>\\d+)/delete/$"
-msgstr ""
+msgstr "^ingrédients_à_éviter/(?P<pk>\\d+)/supprimer/$"
 
 #: member/urls.py
 msgid "^component_to_avoid/(?P<pk>\\d+)/delete/$"
-msgstr ""
+msgstr "^plats_à_éviter/(?P<pk>\\d+)/supprimer/$"
 
 #: member/urls.py
-msgid "^(?P<pk>\\d+)/update/{}/$"
-msgstr ""
+msgid "^client/(?P<pk>\\d+)/meals/preferences$"
+msgstr "^client/(?P<pk>\\d+)/repas/préférences$"
+
+#: member/urls.py
+msgid "^(?P<pk>\\d+)/update/"
+msgstr "^(?P<pk>\\d+)/mettre_à_jour/"
 
 #: member/views.py
 msgid "The client has been created"

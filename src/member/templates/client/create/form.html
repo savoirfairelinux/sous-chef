@@ -41,12 +41,19 @@
 
 <div class="six wide column">
     <div class="ui vertical steps">
-        {% include 'client/create/steps.html' with step=1 url='basic_information' icon='male' name=_('Personal') description=_('First name, last name, ...') %}
-        {% include 'client/create/steps.html' with step=2 url='address_information' icon='home' name=_('Address') description=_('Street number, city, ...') %}
-        {% include 'client/create/steps.html' with step=3 url='referent_information' icon='treatment' name=_('Referent') description=_('Referent contact information') %}
-        {% include 'client/create/steps.html' with step=4 url='payment_information' icon='payment' name=_('Payment') description=_('Payment method, card, ...') %}
-        {% include 'client/create/steps.html' with step=5 url='dietary_restriction' icon='food' name=_('Preferences') description=_('Deliveries, restrictions, ...') %}
-        {% include 'client/create/steps.html' with step=6 url='emergency_contacts' icon='first aid' name=_('Emergency') description=_('Emergency contact information') %}
+      {% trans 'basic_information' as i18n_basic_information %}
+      {% trans 'address_information' as i18n_address_information %}
+      {% trans 'referent_information' as i18n_referent_information %}
+      {% trans 'payment_information' as i18n_payment_information %}
+      {% trans 'dietary_restriction' as i18n_dietary_restriction %}
+      {% trans 'emergency_contact' as i18n_emergency_contact %}
+
+      {% include 'client/create/steps.html' with step=1 url=i18n_basic_information icon='male' name=_('Personal') description=_('First name, last name, ...') %}
+      {% include 'client/create/steps.html' with step=2 url=i18n_address_information icon='home' name=_('Address') description=_('Street number, city, ...') %}
+      {% include 'client/create/steps.html' with step=3 url=i18n_referent_information icon='treatment' name=_('Referent') description=_('Referent contact information') %}
+      {% include 'client/create/steps.html' with step=4 url=i18n_payment_information icon='payment' name=_('Payment') description=_('Payment method, card, ...') %}
+      {% include 'client/create/steps.html' with step=5 url=i18n_dietary_restriction icon='food' name=_('Preferences') description=_('Deliveries, restrictions, ...') %}
+      {% include 'client/create/steps.html' with step=6 url=i18n_emergency_contact icon='first aid' name=_('Emergency') description=_('Emergency contact information') %}
     </div>
  </div>
 
@@ -65,7 +72,7 @@
 
         {{wizard.management_form}}
 
-        {% include 'client/partials/forms/'|add:wizard.steps.current|add:'.html' %}
+        {% include step_template %}
 
         {% if wizard.steps.prev and not edit %}
         <button class="ui left floated button" name="wizard_goto_step" type="submit" value="{{wizard.steps.prev}}">

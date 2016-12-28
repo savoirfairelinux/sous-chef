@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
 from django.test import TransactionTestCase
+from django.utils.http import urlquote
 
 METHODS = ('GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS')
 
@@ -19,7 +20,7 @@ class TestMixin(object):
             response = getattr(self.client, method.lower())(url)
             self.assertRedirects(
                 response,
-                settings.LOGIN_URL + '?next=' + url,
+                urlquote(settings.LOGIN_URL) + '?next=' + urlquote(url),
                 status_code=302,
                 msg_prefix="{0} {1} ".format(method, url),
                 **kwargs

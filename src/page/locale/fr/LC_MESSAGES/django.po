@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-31 14:17-0400\n"
+"POT-Creation-Date: 2017-04-04 14:50-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
@@ -94,6 +94,18 @@ msgstr "Votre mot de passe doit comporter au moins {ruleValue} caractères"
 #: page/templates/registration/login.html
 msgid "Connect"
 msgstr "Connexion"
+
+#: page/urls.py
+msgid "^home$"
+msgstr "^accueil$"
+
+#: page/urls.py
+msgid "^login$"
+msgstr "^se_connecter$"
+
+#: page/urls.py
+msgid "^logout$"
+msgstr "^se_déconnecter$"
 
 #~ msgid "Downloads"
 #~ msgstr "Téléchargements"

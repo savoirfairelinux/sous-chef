@@ -1565,7 +1565,8 @@ class DeleteOrderTestCase(OrderFormTestCase):
             reverse('order:delete', args=(self.order.id,)),
             follow=True
         )
-        self.assertContains(response, 'Delete Order #{}'.format(self.order.id))
+        self.assertContains(response,
+                            "{} #{}".format(_('Delete Order'), self.order.id))
 
     def test_delete_order(self):
         # The template will POST with a 'next' parameter, which is the URL to

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-31 14:17-0400\n"
+"POT-Creation-Date: 2017-04-04 14:50-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
@@ -166,6 +166,14 @@ msgstr "^lu/(?P<id>\\d+)/$"
 #: note/urls.py
 msgid "^unread/(?P<id>\\d+)/$"
 msgstr "^nonlu/(?P<id>\\d+)/$"
+
+#: note/urls.py
+msgid "^add/$"
+msgstr "^ajouter/$"
+
+#: note/urls.py
+msgid "^batch_toggle/$"
+msgstr "^batch_toggle/$"
 
 #: note/views.py
 msgid "The note has been created."
