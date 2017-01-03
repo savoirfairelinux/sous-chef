@@ -16,7 +16,8 @@ $(function() {
     $('.ui.accordion').accordion();
     $('.ui.dropdown').dropdown({
         transition: 'drop',
-        fullTextSearch: 'exact'
+        fullTextSearch: 'exact',
+        forceSelection: false
     });
 
     $('.ui.calendar').calendar({
