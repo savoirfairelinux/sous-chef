@@ -19,9 +19,15 @@
 
 
 <div class="ui basic segment no-print">
-    <a href="javascript:window.print()" class="ui labeled icon right pink basic big button" title="{% trans 'Print the kitchen count report' %}">
-        <i class="print icon"></i>{% trans 'Kitchen Count' %}
-    </a>
+    {% if num_pages > 0 %}
+      <a href="{% url 'delivery:downloadKitchenCount' %}" class="ui labeled icon right pink basic big button" title="{% trans 'Download the kitchen count report' %}">
+        <i class="download icon"></i>{% trans "Kitchen Count" %}
+      </a>
+    {% else %}
+      <a href="{% url 'delivery:downloadKitchenCount' %}" class="ui disabled labeled icon right pink basic big button" title="{% trans 'No kitchen count report available' %}">
+        <i class="download icon"></i>{% trans "Kitchen Count" %}
+      </a>
+    {% endif %}
     {% if num_labels > 0 %}
       <a href="{% url 'delivery:mealLabels' %}" class="ui labeled icon right pink basic big button" title="{% trans 'Download the labels' %}">
          <i class="download icon"></i>{% trans "Labels" %}
