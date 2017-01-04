@@ -51,7 +51,7 @@
     <th class="six wide">{% trans 'Note' %}</th>
     <th class="one wide">{% trans 'Item' %}</th>
     <th class="one wide">{% trans 'Qty' %}</th>
-    <th class="one wide">{% trans 'Include a bill' %}</th>
+    <th class="one wide">{% trans 'Bill' %}</th>
    </tr>
   </thead>
   <tbody>
@@ -79,7 +79,7 @@
         <td class="center aligned">
           <div class="ui toggle checkbox no-print">
             <input name="include_a_bill" type="checkbox" {% if obj.include_a_bill %}checked="checked"{% endif %} data-url="{% url 'order:update_client_bill' obj.order_id %}" {% if not can_edit_data %}disabled="disabled"{% endif %}>
-            <label>{% trans 'Bill' %}</label>
+            <label></label>
           </div>
           <div class="print-only">
             {% if obj.include_a_bill %}
