@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import Q
-from django_filters import FilterSet, ChoiceFilter, BooleanFilter, MethodFilter
+from django_filters import ChoiceFilter, DateFilter, FilterSet, MethodFilter
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -110,9 +110,11 @@ class NoteFilter(FilterSet):
         label=_('Search by name')
     )
 
+    date = DateFilter(lookup_expr='date')
+
     class Meta:
         model = Note
-        fields = ['priority', 'is_read']
+        fields = ['priority', 'is_read', 'date', ]
 
     @staticmethod
     def filter_search(queryset, value):
