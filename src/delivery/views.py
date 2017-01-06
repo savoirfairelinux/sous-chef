@@ -6,6 +6,7 @@ import os
 import textwrap
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -13,6 +14,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext
+from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
@@ -272,10 +274,10 @@ class RoutesInformation(
         routes = Route.objects.all()
         orders = []
         for route in routes:
-            orders.append(
-                (route,
-                 Order.objects.get_shippable_orders_by_route(
-                     route.id).count()))
+            order_count = Order.objects.get_shippable_orders_by_route(
+                route.id, exclude_non_geolocalized=True).count()
+            orders.append((route, order_count))
+
         context['routes'] = orders
 
         # Embeds additional information if we are displaying the print version
@@ -310,7 +312,6 @@ class OrganizeRoute(
 
         context = super(OrganizeRoute, self).get_context_data(**kwargs)
         context['route'] = Route.objects.get(id=self.kwargs['id'])
-
         return context
 
 
@@ -344,7 +345,21 @@ class KitchenCount(
             else:
                 date = datetime.date.today()
 
-            kitchen_list = Order.get_kitchen_items(date)
+            kitchen_list_unfiltered = Order.get_kitchen_items(date)
+
+            # filter out route=None clients and not geolocalized clients
+            kitchen_list = {}
+            geolocalized_client_ids = list(Client.objects.filter(
+                pk__in=kitchen_list_unfiltered.keys(),
+                member__address__latitude__isnull=False,
+                member__address__longitude__isnull=False
+            ).values_list('pk', flat=True))
+
+            for client_id, kitchen_item in kitchen_list_unfiltered.items():
+                if kitchen_item.routename is not None \
+                   and client_id in geolocalized_client_ids:
+                    kitchen_list[client_id] = kitchen_item
+
             component_lines, meal_lines = kcr_make_lines(kitchen_list, date)
             if component_lines:
                 # we have orders today
@@ -1227,7 +1242,10 @@ def dailyOrders(request):
     #   if not previously saved, calculate it using "mode"
     if_exist_then_retrieve = request.GET.get('if_exist_then_retrieve')
     # Load all orders for the day
-    orders = Order.objects.get_shippable_orders_by_route(route_id)
+    orders = Order.objects.get_shippable_orders_by_route(
+        route_id,
+        exclude_non_geolocalized=True
+    )
 
     for order in orders:
         waypoint = {
@@ -1305,6 +1323,9 @@ class RefreshOrderView(
                 datetime.datetime.now().strftime('%m %d %Y %H:%M')),
             action_flag=ADDITION,
         )
-        orders.sort(key=lambda o: (o.client.route.pk, o.pk))
+        orders.sort(key=lambda o: (
+            o.client.route.pk if o.client.route is not None else -1,
+            o.pk
+        ))
         context = {'orders': orders}
         return render(request, 'partials/generated_orders.html', context)

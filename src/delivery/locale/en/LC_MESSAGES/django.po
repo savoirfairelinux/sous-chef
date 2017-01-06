@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-27 17:50+0000\n"
+"POT-Creation-Date: 2017-01-09 20:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,7 +58,7 @@ msgid "Restore recipe"
 msgstr ""
 
 #: delivery/templates/ingredients.html:82
-#: delivery/templates/kitchen_count.html:96 delivery/templates/routes.html:65
+#: delivery/templates/kitchen_count.html:102 delivery/templates/routes.html:65
 msgid "Back"
 msgstr ""
 
@@ -74,88 +74,93 @@ msgstr ""
 msgid "Kitchen Count Report"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:22
-msgid "Print the kitchen count report"
+#: delivery/templates/kitchen_count.html:23
+msgid "Download the kitchen count report"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:23
+#: delivery/templates/kitchen_count.html:24
+#: delivery/templates/kitchen_count.html:28
 #: delivery/templates/kitchen_count_steps.html:18
 msgid "Kitchen Count"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:26
+#: delivery/templates/kitchen_count.html:27
+msgid "No kitchen count report available"
+msgstr ""
+
+#: delivery/templates/kitchen_count.html:32
 msgid "Download the labels"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:27
-#: delivery/templates/kitchen_count.html:31
+#: delivery/templates/kitchen_count.html:33
+#: delivery/templates/kitchen_count.html:37
 msgid "Labels"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:30
+#: delivery/templates/kitchen_count.html:36
 msgid "No labels available"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:40
+#: delivery/templates/kitchen_count.html:46
 msgid "Component"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:41
-#: delivery/templates/kitchen_count.html:42
+#: delivery/templates/kitchen_count.html:47
+#: delivery/templates/kitchen_count.html:48
 msgid "TOTAL"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:41
+#: delivery/templates/kitchen_count.html:47
 #: delivery/templates/route_sheet.html:32
 #: delivery/templates/routes_print.html:33
 msgid "Regular"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:42
+#: delivery/templates/kitchen_count.html:48
 #: delivery/templates/route_sheet.html:33
 #: delivery/templates/routes_print.html:34
 msgid "Large"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:43
+#: delivery/templates/kitchen_count.html:49
 msgid "Dish today"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:44
+#: delivery/templates/kitchen_count.html:50
 msgid "Ingredients today"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:63
+#: delivery/templates/kitchen_count.html:69
 msgid "Clashing ingredients"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:64
-#: delivery/templates/kitchen_count.html:65
+#: delivery/templates/kitchen_count.html:70
+#: delivery/templates/kitchen_count.html:71
 #: delivery/templates/route_sheet.html:53
 #: delivery/templates/routes_print.html:55
 msgid "Qty"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:64
+#: delivery/templates/kitchen_count.html:70
 msgid "Reg"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:65
+#: delivery/templates/kitchen_count.html:71
 msgid "Lge"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:66
+#: delivery/templates/kitchen_count.html:72
 #: delivery/templates/partials/generated_orders.html:12
 #: delivery/templates/route_sheet.html:50
 #: delivery/templates/routes_print.html:52
 msgid "Client"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:67
+#: delivery/templates/kitchen_count.html:73 delivery/views.py:963
 msgid "Restrictions"
 msgstr ""
 
-#: delivery/templates/kitchen_count.html:99
+#: delivery/templates/kitchen_count.html:105
 msgid "Next: Organize Routes"
 msgstr ""
 
@@ -168,7 +173,7 @@ msgstr ""
 msgid "Review orders for the day."
 msgstr ""
 
-#: delivery/templates/kitchen_count_steps.html:12
+#: delivery/templates/kitchen_count_steps.html:12 delivery/views.py:970
 msgid "Ingredients"
 msgstr ""
 
@@ -266,15 +271,23 @@ msgstr ""
 msgid "Total amount in $CAD."
 msgstr ""
 
-#: delivery/templates/partials/generated_orders.html:39
-msgid "Fix geolocalization."
+#: delivery/templates/partials/generated_orders.html:41
+msgid ""
+"Please fix geolocalization. Otherwise this client will be excluded in the "
+"next steps."
 msgstr ""
 
-#: delivery/templates/partials/generated_orders.html:45
+#: delivery/templates/partials/generated_orders.html:44
+msgid ""
+"Please fix delivery route. Otherwise this client will be excluded in the "
+"next steps."
+msgstr ""
+
+#: delivery/templates/partials/generated_orders.html:50
 msgid "Review or change the status of the order."
 msgstr ""
 
-#: delivery/templates/partials/generated_orders.html:46
+#: delivery/templates/partials/generated_orders.html:51
 msgid "Change the details of the order."
 msgstr ""
 
@@ -353,17 +366,12 @@ msgid "Item"
 msgstr ""
 
 #: delivery/templates/route_sheet.html:54
-#: delivery/templates/routes_print.html:56
-msgid "Include a bill"
+msgid "Bill"
 msgstr ""
 
 #: delivery/templates/route_sheet.html:64
 #: delivery/templates/routes_print.html:66
 msgid "Apt"
-msgstr ""
-
-#: delivery/templates/route_sheet.html:82
-msgid "Bill"
 msgstr ""
 
 #: delivery/templates/route_sheet.html:86
@@ -413,6 +421,14 @@ msgstr ""
 msgid "Print"
 msgstr ""
 
+#: delivery/templates/routes_print.html:56
+msgid "Include a bill"
+msgstr ""
+
+#: delivery/tests.py:915
+msgid "Main Dish"
+msgstr ""
+
 #: delivery/urls.py:10
 msgid "^order/$"
 msgstr ""
@@ -447,21 +463,41 @@ msgid "^kitchen_count/(?P<year>\\d{4})/(?P<month>\\d{2})/(?P<day>\\d+)/$"
 msgstr ""
 
 #: delivery/urls.py:20
+msgid "^viewDownloadKitchenCount/$"
+msgstr ""
+
+#: delivery/urls.py:22
 msgid "^viewMealLabels/$"
 msgstr ""
 
-#: delivery/urls.py:21
+#: delivery/urls.py:23
 msgid "^route_sheet/(?P<id>\\d+)/$"
 msgstr ""
 
-#: delivery/urls.py:23
+#: delivery/urls.py:25
 msgid "^getDailyOrders/$"
 msgstr ""
 
-#: delivery/urls.py:24
+#: delivery/urls.py:26
 msgid "^refresh_orders/$"
 msgstr ""
 
-#: delivery/urls.py:26
+#: delivery/urls.py:28
 msgid "^save_route/$"
+msgstr ""
+
+#: delivery/views.py:958
+msgid "LARGE"
+msgstr ""
+
+#: delivery/views.py:975
+msgid "Preparation"
+msgstr ""
+
+#: delivery/views.py:987
+msgid "Sides clashes"
+msgstr ""
+
+#: delivery/views.py:1016
+msgid "Other restrictions"
 msgstr ""
