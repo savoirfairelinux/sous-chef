@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-09 20:16+0000\n"
+"POT-Creation-Date: 2017-01-11 15:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -64,7 +64,7 @@ msgid "Restore recipe"
 msgstr "Restaurer la recette"
 
 #: delivery/templates/ingredients.html:82
-#: delivery/templates/kitchen_count.html:102 delivery/templates/routes.html:65
+#: delivery/templates/kitchen_count.html:102 delivery/templates/routes.html:71
 msgid "Back"
 msgstr "Précédent"
 
@@ -168,7 +168,7 @@ msgstr "Lrg"
 msgid "Client"
 msgstr "Client"
 
-#: delivery/templates/kitchen_count.html:73 delivery/views.py:963
+#: delivery/templates/kitchen_count.html:73 delivery/views.py:967
 msgid "Restrictions"
 msgstr "Restrictions"
 
@@ -185,7 +185,7 @@ msgstr "Réviser les commandes"
 msgid "Review orders for the day."
 msgstr "Réviser les commandes du jour."
 
-#: delivery/templates/kitchen_count_steps.html:12 delivery/views.py:970
+#: delivery/templates/kitchen_count_steps.html:12 delivery/views.py:974
 msgid "Ingredients"
 msgstr "Ingrédients"
 
@@ -225,22 +225,22 @@ msgstr ""
 msgid "Map and Directions"
 msgstr ""
 
-#: delivery/templates/organize_route.html:45 delivery/templates/routes.html:45
+#: delivery/templates/organize_route.html:50 delivery/templates/routes.html:45
 #, fuzzy
 #| msgid "Print the Report"
 msgid "Print the route sheet"
 msgstr "Imprimer l'inventaire des repas"
 
-#: delivery/templates/organize_route.html:46 delivery/templates/routes.html:46
+#: delivery/templates/organize_route.html:51 delivery/templates/routes.html:46
 msgid "Route sheet"
 msgstr "Feuille d'itinéraires"
 
-#: delivery/templates/organize_route.html:48
+#: delivery/templates/organize_route.html:53
 #: delivery/templates/route_sheet.html:101
 msgid "View routes list"
 msgstr ""
 
-#: delivery/templates/organize_route.html:49
+#: delivery/templates/organize_route.html:54
 #: delivery/templates/route_sheet.html:102
 #, fuzzy
 #| msgid "View Order"
@@ -451,11 +451,19 @@ msgstr "Imprimer l'inventaire des repas"
 msgid "Route Sheets"
 msgstr "Feuille d'itinéraires"
 
-#: delivery/templates/routes.html:53
-msgid "Cycling map"
+#: delivery/templates/routes.html:54
+msgid "Cycling"
 msgstr ""
 
-#: delivery/templates/routes.html:54
+#: delivery/templates/routes.html:56
+msgid "Driving"
+msgstr ""
+
+#: delivery/templates/routes.html:58
+msgid "Walking"
+msgstr ""
+
+#: delivery/templates/routes.html:60
 msgid "Number of orders on this route"
 msgstr ""
 
@@ -473,84 +481,90 @@ msgstr ""
 msgid "Main Dish"
 msgstr "Plat principal"
 
-#: delivery/urls.py:10
+#: delivery/urls.py:11
 msgid "^order/$"
 msgstr "^order/$"
 
-#: delivery/urls.py:11
+#: delivery/urls.py:12
 msgid "^meal/$"
 msgstr "^meal/$"
 
-#: delivery/urls.py:12
+#: delivery/urls.py:13
 msgid "^meal/(?P<id>\\d+)/$"
 msgstr "^meal/(?P<id>\\d+)/$"
 
-#: delivery/urls.py:13
+#: delivery/urls.py:14
 msgid "^route/$"
 msgstr "^route/$"
 
-#: delivery/urls.py:14
+#: delivery/urls.py:15
 #, fuzzy
 #| msgid "^route/$"
 msgid "^routes/$"
 msgstr "^route/$"
 
-#: delivery/urls.py:15
+#: delivery/urls.py:16
 #, fuzzy
 #| msgid "^route_sheet/(?P<id>\\d+)/$"
 msgid "^route/(?P<id>\\d+)$"
 msgstr "^route_sheet/(?P<id>\\d+)/$"
 
-#: delivery/urls.py:17
+#: delivery/urls.py:18
 msgid "^kitchen_count/$"
 msgstr "^kitchen_count/$"
 
-#: delivery/urls.py:18
+#: delivery/urls.py:19
 #, python-brace-format
 msgid "^kitchen_count/(?P<year>\\d{4})/(?P<month>\\d{2})/(?P<day>\\d+)/$"
 msgstr "^kitchen_count/(?P<year>\\d{4})/(?P<month>\\d{2})/(?P<day>\\d+)/$"
 
-#: delivery/urls.py:20
+#: delivery/urls.py:21
 #, fuzzy
 #| msgid "^kitchen_count/$"
 msgid "^viewDownloadKitchenCount/$"
 msgstr "^kitchen_count/$"
 
-#: delivery/urls.py:22
+#: delivery/urls.py:23
 msgid "^viewMealLabels/$"
 msgstr ""
 
-#: delivery/urls.py:23
+#: delivery/urls.py:24
 msgid "^route_sheet/(?P<id>\\d+)/$"
 msgstr "^route_sheet/(?P<id>\\d+)/$"
 
-#: delivery/urls.py:25
+#: delivery/urls.py:26
 msgid "^getDailyOrders/$"
 msgstr "^getDailyOrders/$"
 
-#: delivery/urls.py:26
+#: delivery/urls.py:27
 msgid "^refresh_orders/$"
 msgstr "^refresh_orders/$"
 
-#: delivery/urls.py:28
+#: delivery/urls.py:29
 #, fuzzy
 #| msgid "^saveRoute/$"
 msgid "^save_route/$"
 msgstr "^saveRoute/$"
 
-#: delivery/views.py:958
+#: delivery/urls.py:30
+#, fuzzy
+#| msgid "^saveRoute/$"
+msgid "^save_route_vehicle/$"
+msgstr "^saveRoute/$"
+
+#: delivery/views.py:962
 msgid "LARGE"
 msgstr ""
 
-#: delivery/views.py:975
+#: delivery/views.py:979
 msgid "Preparation"
 msgstr "Préparation"
 
-#: delivery/views.py:987
+#: delivery/views.py:991
 msgid "Sides clashes"
 msgstr ""
 
-#: delivery/views.py:1016
+#: delivery/views.py:1020
 #, fuzzy
 #| msgid "Restrictions"
 msgid "Other restrictions"
