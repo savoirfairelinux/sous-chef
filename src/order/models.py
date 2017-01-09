@@ -63,7 +63,9 @@ SIDE_PRICE_SOLIDARY = 0.50
 
 class OrderManager(models.Manager):
 
-    def get_shippable_orders(self, delivery_date=None):
+    def get_shippable_orders(self,
+                             delivery_date=None,
+                             exclude_non_geolocalized=False):
         """
         Return the orders ready to be delivered for a given date.
         A shippable order must be created in the database, and its ORDER_STATUS
@@ -72,12 +74,19 @@ class OrderManager(models.Manager):
         # If no date is passed, use the current day
         if delivery_date is None:
             delivery_date = date.today()
+        extra_kwargs = {}
+        if exclude_non_geolocalized is True:
+            extra_kwargs['client__member__address__latitude__isnull'] = False
+            extra_kwargs['client__member__address__longitude__isnull'] = False
         return self.get_queryset().filter(
             delivery_date=delivery_date,
             status=ORDER_STATUS_ORDERED,
-            client__status=Client.ACTIVE)
+            client__status=Client.ACTIVE,
+            **extra_kwargs)
 
-    def get_shippable_orders_by_route(self, route_id):
+    def get_shippable_orders_by_route(self,
+                                      route_id,
+                                      exclude_non_geolocalized=False):
         """
         Return the orders ready to be delivered for a given route.
         It is assumed here that the delivery date is today.
@@ -85,11 +94,16 @@ class OrderManager(models.Manager):
         must be 'O' (Ordered).
         """
         delivery_date = date.today()
+        extra_kwargs = {}
+        if exclude_non_geolocalized is True:
+            extra_kwargs['client__member__address__latitude__isnull'] = False
+            extra_kwargs['client__member__address__longitude__isnull'] = False
         return self.get_queryset().filter(
             delivery_date=delivery_date,
             status=ORDER_STATUS_ORDERED,
             client__route=route_id,
-            client__status=Client.ACTIVE)
+            client__status=Client.ACTIVE,
+            **extra_kwargs)
 
     def get_billable_orders(self, year, month):
         """
@@ -493,7 +507,9 @@ class Order(models.Model):
 
     @staticmethod
     def get_delivery_list(delivery_date, route_id):
-        """Get all delivery order specifics for delivery date and route.
+        """
+        Get all delivery order specifics for delivery date and route.
+        Exclude non-geolocalized clients.
 
         For each client that has ordered a meal for 'delivery_date'
         and that belongs to the route specified, find all the
@@ -520,7 +536,10 @@ class Order(models.Model):
 
         route_list = {}
         for oi in orditms:
-            if oi.order.client.id not in route_list:
+            if oi.order.client.is_geolocalized is False:
+                # exclude non-geolocalized client
+                continue
+            if not route_list.get(oi.order.client.id):
                 # found new client
                 route_list[oi.order.client.id] = DeliveryClient(
                     oi.order.client.member.firstname,

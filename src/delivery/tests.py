@@ -8,10 +8,17 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils import timezone as tz
+from django.utils.translation import ugettext_lazy
 
 from meal.models import Menu, Component, Component_ingredient, Ingredient
+from meal.factories import (IngredientFactory, ComponentFactory,
+                            ComponentIngredientFactory,
+                            IncompatibilityFactory, RestrictedItemFactory)
 from order.models import Order
-from member.models import Client, Member, Route
+from member.models import (Client, Member, Route, Restriction,
+                           Client_avoid_ingredient)
+from member.factories import (AddressFactory, MemberFactory, ClientFactory,
+                              RouteFactory)
 from sous_chef.tests import TestMixin as SousChefTestMixin
 
 from .filters import KitchenCountOrderFilter
@@ -221,6 +228,46 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
         req['maindish'] = 'wrong'
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         self.assertTrue(b'Select a valid choice.' in response.content)
+
+    def test_if_valid_no_red_sign(self):
+        o = Order.objects.first()
+        o.delivery_date = tz.now()
+        o.save()
+        response = self.client.get(reverse('delivery:order'))
+        self.assertNotIn(b'<i class="warning sign red icon"></i>',
+                         response.content)
+        response = self.client.get(reverse('delivery:refresh_orders'))
+        self.assertNotIn(b'<i class="warning sign red icon"></i>',
+                         response.content)
+
+    def test_no_route_error(self):
+        o = Order.objects.first()
+        o.delivery_date = tz.now()
+        o.save()
+        c = o.client
+        c.route = None
+        c.save()
+        response = self.client.get(reverse('delivery:order'))
+        self.assertIn(b'<i class="warning sign red icon"></i>',
+                      response.content)
+        response = self.client.get(reverse('delivery:refresh_orders'))
+        self.assertIn(b'<i class="warning sign red icon"></i>',
+                      response.content)
+
+    def test_not_geolocalized_error(self):
+        o = Order.objects.first()
+        o.delivery_date = tz.now()
+        o.save()
+        c = o.client
+        c.member.address.latitude = None
+        c.member.address.longitude = None
+        c.member.address.save()
+        response = self.client.get(reverse('delivery:order'))
+        self.assertIn(b'<i class="warning sign red icon"></i>',
+                      response.content)
+        response = self.client.get(reverse('delivery:refresh_orders'))
+        self.assertIn(b'<i class="warning sign red icon"></i>',
+                      response.content)
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
@@ -670,3 +717,367 @@ class RefreshOrderViewTestCase(SousChefTestMixin, TestCase):
         response = self.client.get(url)
         # Check
         self.assertEqual(response.status_code, 200)
+
+
+class ExcludeMalconfiguredClientsTestCase(SousChefTestMixin, TestCase):
+    """
+    Test 4 clients:
+    - c_valid: correctly configured
+               id==10, avoid veggie_10->chicken_10, avoid wine_10
+    - c_nr:    malconfigured: route==None
+               id==20, avoid veggie_20->chicken_20, avoid wine_20
+    - c_ng:    malconfigured: not .isgeolocalized
+               id==30, avoid veggie_30->chicken_30, avoid wine_30
+    - c_nrng:  malconfigured: route==None and not .isgeolocalized
+               id==40, avoid veggie_40->chicken_40, avoid wine_40
+
+    Test meal = chicken_10 + wine_10 + chicken_20 + wine_20 + ...
+
+    c_nr, c_ng and c_nrng should be excluded.
+    """
+
+    @classmethod
+    def setUpTestData(cls):
+        meal_default_week = {
+            "main_dish_friday_quantity": 1,
+            "main_dish_monday_quantity": 1,
+            "main_dish_saturday_quantity": 1,
+            "main_dish_sunday_quantity": 1,
+            "main_dish_thursday_quantity": 1,
+            "main_dish_tuesday_quantity": 1,
+            "main_dish_wednesday_quantity": 1,
+
+            "size_friday": "L",
+            "size_monday": "L",
+            "size_saturday": "L",
+            "size_sunday": "L",
+            "size_thursday": "L",
+            "size_tuesday": "L",
+            "size_wednesday": "L",
+
+            "dessert_friday_quantity": 1,
+            "dessert_monday_quantity": 1,
+            "dessert_saturday_quantity": 1,
+            "dessert_sunday_quantity": 1,
+            "dessert_thursday_quantity": 1,
+            "dessert_tuesday_quantity": 1,
+            "dessert_wednesday_quantity": 1,
+        }
+        cls.route1 = RouteFactory()
+        cls.route2 = RouteFactory()
+        cls.c_valid = ClientFactory(
+            pk=10,
+            status=Client.ACTIVE,
+            delivery_type="O",  # ongoing
+            route=cls.route1,
+            meal_default_week=meal_default_week,
+            member=MemberFactory(
+                firstname="Valid",
+                lastname="Valid",
+                address=AddressFactory()
+            )
+        )
+        cls.c_nr = ClientFactory(
+            pk=20,
+            status=Client.ACTIVE,
+            delivery_type="O",  # ongoing
+            route=None,
+            meal_default_week=meal_default_week,
+            member=MemberFactory(
+                firstname="Nronly",
+                lastname="Nronly",
+                address=AddressFactory()
+            )
+        )
+        cls.c_ng = ClientFactory(
+            pk=30,
+            status=Client.ACTIVE,
+            delivery_type="O",  # ongoing
+            route=cls.route2,
+            meal_default_week=meal_default_week,
+            member=MemberFactory(
+                firstname="Ngonly",
+                lastname="Ngonly",
+                address=AddressFactory(
+                    latitude=None
+                )
+            )
+        )
+        cls.c_nrng = ClientFactory(
+            pk=40,
+            status=Client.ACTIVE,
+            delivery_type="O",  # ongoing
+            route=None,
+            meal_default_week=meal_default_week,
+            member=MemberFactory(
+                firstname="Nrng",
+                lastname="Nrng",
+                address=AddressFactory(
+                    longitude=None
+                )
+            )
+        )
+
+        cls.main_dish = ComponentFactory(
+            name="coq au vin",
+            component_group="main_dish")
+        cls.sides = ComponentFactory(
+            name="sides",
+            component_group="sides")
+
+        cls.ingred_chickens = []
+        cls.ingred_wines = []
+        for client in (cls.c_valid, cls.c_nr, cls.c_ng, cls.c_nrng):
+            # client-specific ingredient (for testing clashes)
+            this_chicken = IngredientFactory(
+                name="chicken_{0}".format(client.id),
+                ingredient_group="meat")
+            this_wine = IngredientFactory(
+                name="wine_{0}".format(client.id),
+                ingredient_group="oils_and_sauces")
+
+            # add them to main_dish
+            ComponentIngredientFactory(
+                component=cls.main_dish,
+                ingredient=this_chicken)
+            ComponentIngredientFactory(
+                component=cls.main_dish,
+                ingredient=this_wine)
+
+            # all special veggies, special winehaters
+            this_incompatib = IncompatibilityFactory(
+                restricted_item=RestrictedItemFactory(
+                    name="veggie_{0}".format(client.id),
+                    restricted_item_group="meat"
+                ),
+                ingredient=this_chicken
+            )
+            Restriction.objects.create(
+                client=client,
+                restricted_item=this_incompatib.restricted_item)
+            Client_avoid_ingredient.objects.create(
+                client=client,
+                ingredient=this_wine)
+
+            # keep track of these chickens and wines
+            cls.ingred_chickens.append(this_chicken)
+            cls.ingred_wines.append(this_wine)
+
+    def setUp(self):
+        self.force_login()
+
+    def _refresh_orders(self):
+        return self.client.get(reverse('delivery:refresh_orders'))
+
+    def _today_meal(self):
+        return self.client.post(reverse('delivery:meal'), {
+            'maindish': [str(self.main_dish.id)],
+            '_next': ['Next: Print Kitchen Count'],
+            'ingredients': map(
+                lambda ingred: str(ingred.id),
+                self.ingred_chickens + self.ingred_wines
+            ),
+            'sides_ingredients': map(
+                lambda ingred: str(ingred.id),
+                self.ingred_chickens
+            )
+        })
+
+    def test_step_1__review_orders(self):
+        response = self.client.get(reverse('delivery:order'))
+        self.assertEqual(
+            len(response.context['orders']), 0
+        )
+        self.assertEqual(
+            response.content.count(
+                b'<i class="warning sign red icon"></i>'
+            ), 0
+        )
+        # refresh to create orders
+        response = self._refresh_orders()
+        self.assertEqual(
+            len(response.context['orders']), 4
+        )
+        self.assertEqual(
+            response.content.count(
+                b'<i class="warning sign red icon"></i>'
+            ), 3
+        )
+
+    def test_step_3__component_table(self):
+        _ = self._refresh_orders()
+        response = self._today_meal()
+        self.assertRedirects(response, reverse("delivery:kitchen_count"))
+        response = self.client.get(reverse("delivery:kitchen_count"))
+        component_lines = response.context['component_lines']
+        main_dish_component_line = next(
+            cl for cl in component_lines
+            if cl.component_group == ugettext_lazy('Main Dish')
+        )
+        self.assertEqual(main_dish_component_line.rqty, 0)
+        # only c_valid
+        self.assertEqual(main_dish_component_line.lqty, 1)
+
+    def test_step_3__clashing_ingredients_restrictions_table(self):
+        _ = self._refresh_orders()
+        response = self._today_meal()
+        self.assertRedirects(response, reverse("delivery:kitchen_count"))
+        response = self.client.get(reverse("delivery:kitchen_count"))
+        meal_lines = response.context['meal_lines']
+
+        # contains c_valid (10)
+        ml_valid_clash = next(
+            ml for ml in meal_lines
+            if 'chicken_10' in ml.ingr_clash and
+            'wine_10' in ml.ingr_clash
+        )
+        self.assertEqual(ml_valid_clash.rqty, '0')
+        self.assertEqual(ml_valid_clash.lqty, '1')
+        ml_valid_restrict = next(
+            ml for ml in meal_lines
+            if 'veggie_10' in ml.rest_item
+        )
+        self.assertIn('Valid', ml_valid_restrict.client)
+
+        # doesn't contain c_nronly (20)
+        self.assertRaises(StopIteration, lambda: next(
+            ml for ml in meal_lines
+            if 'chicken_20' in ml.ingr_clash and
+            'wine_20' in ml.ingr_clash
+        ))
+        self.assertRaises(StopIteration, lambda: next(
+            ml for ml in meal_lines
+            if 'veggie_20' in ml.rest_item
+        ))
+
+        # doesn't contain c_ngonly (30)
+        self.assertRaises(StopIteration, lambda: next(
+            ml for ml in meal_lines
+            if 'chicken_30' in ml.ingr_clash and
+            'wine_30' in ml.ingr_clash
+        ))
+        self.assertRaises(StopIteration, lambda: next(
+            ml for ml in meal_lines
+            if 'veggie_30' in ml.rest_item
+        ))
+
+        # doesn't contain c_nrng (40)
+        self.assertRaises(StopIteration, lambda: next(
+            ml for ml in meal_lines
+            if 'chicken_40' in ml.ingr_clash and
+            'wine_40' in ml.ingr_clash
+        ))
+        self.assertRaises(StopIteration, lambda: next(
+            ml for ml in meal_lines
+            if 'veggie_40' in ml.rest_item
+        ))
+
+        # TOTAL SPECIALS
+        ml_last = meal_lines[-1]
+        self.assertEqual(ml_last.ingr_clash, "TOTAL SPECIALS")
+        self.assertEqual(ml_last.rqty, '0')
+        self.assertEqual(ml_last.lqty, '1')
+
+    def test_step_3__labels(self):
+        _ = self._refresh_orders()
+        response = self._today_meal()
+        self.assertRedirects(response, reverse("delivery:kitchen_count"))
+        response = self.client.get(reverse("delivery:kitchen_count"))
+        num_labels = response.context['num_labels']
+        self.assertEqual(num_labels, 1)  # only c_valid
+
+    def test_step_4__routes_overview(self):
+        """
+        Should ignore route==None and not geolocalized
+        """
+        _ = self._refresh_orders()
+        _ = self._today_meal()
+        response = self.client.get(reverse("delivery:routes"))
+        route_orders_tuples = response.context['routes']
+        route_orders_dict = dict(route_orders_tuples)
+        self.assertIn(self.route1, route_orders_dict)
+        self.assertEqual(route_orders_dict[self.route1], 1)
+        self.assertIn(self.route2, route_orders_dict)
+        self.assertEqual(route_orders_dict[self.route2], 0)
+
+    def test_step_4__routes_overview_print(self):
+        _ = self._refresh_orders()
+        _ = self._today_meal()
+        response = self.client.get(reverse("delivery:routes"),
+                                   {'print': 'yes'})
+        routes_dict = response.context['routes_dict']
+
+        # only route1 has one client
+        route1 = routes_dict[self.route1.id]
+        route2 = routes_dict[self.route2.id]
+        self.assertEqual(len(route1['detail_lines']), 1)
+        self.assertEqual(len(route2['detail_lines']), 0)
+
+        # check output page
+        self.assertIn(
+            self.route1.name.encode(encoding=response.charset),
+            response.content
+        )
+        self.assertNotIn(
+            self.route2.name.encode(encoding=response.charset),
+            response.content
+        )
+
+    def test_step_4__route_sheet_detail(self):
+        _ = self._refresh_orders()
+        _ = self._today_meal()
+
+        # Route 1
+        response1 = self.client.get(reverse(
+            "delivery:route_sheet_id", kwargs={'id': self.route1.id}))
+        # 1 dessert 1 L main_dish
+        summary_line1 = response1.context['summary_lines']
+        main_dish_line1 = next(
+            l for l in summary_line1 if l.component_group == 'main_dish'
+        )
+        self.assertEqual(main_dish_line1.rqty, 0)
+        self.assertEqual(main_dish_line1.lqty, 1)
+        dessert_line1 = next(
+            l for l in summary_line1 if l.component_group == 'dessert'
+        )
+        self.assertEqual(dessert_line1.rqty, 1)
+        # 1 client
+        detail_line1 = response1.context['detail_lines']
+        self.assertEqual(len(detail_line1), 1)
+        self.assertEqual(detail_line1[0].firstname, 'Valid')
+        self.assertEqual(detail_line1[0].lastname, 'Valid')
+
+        # Route 2 - nothing
+        response2 = self.client.get(reverse(
+            "delivery:route_sheet_id", kwargs={'id': self.route2.id}))
+        summary_line2 = response2.context['summary_lines']
+        self.assertRaises(StopIteration, lambda: next(
+            l for l in summary_line2 if l.component_group == 'main_dish'
+        ))
+        self.assertRaises(StopIteration, lambda: next(
+            l for l in summary_line2 if l.component_group == 'dessert'
+        ))
+        # 0 client
+        detail_line2 = response2.context['detail_lines']
+        self.assertEqual(len(detail_line2), 0)
+
+    def test_step_4__route_organize(self):
+        _ = self._refresh_orders()
+        _ = self._today_meal()
+
+        # Route 1
+        response1 = self.client.get(reverse("delivery:dailyOrders"),
+                                    {'route': self.route1.id,
+                                     'mode': 'euclidean',
+                                     'if_exist_then_retrieve': 'yes'})
+        waypoints = response1.json()['waypoints']
+        self.assertEqual(len(waypoints), 1)
+        self.assertIn("Valid Valid", waypoints[0]['member'])
+
+        # Route 2 (nothing)
+        response2 = self.client.get(reverse("delivery:dailyOrders"),
+                                    {'route': self.route2.id,
+                                     'mode': 'euclidean',
+                                     'if_exist_then_retrieve': 'yes'})
+        waypoints = response2.json()['waypoints']
+        self.assertEqual(len(waypoints), 0)
