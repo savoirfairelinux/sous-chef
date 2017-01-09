@@ -520,7 +520,7 @@ class Order(models.Model):
 
         route_list = {}
         for oi in orditms:
-            if not route_list.get(oi.order.client.id):
+            if oi.order.client.id not in route_list:
                 # found new client
                 route_list[oi.order.client.id] = DeliveryClient(
                     oi.order.client.member.firstname,
@@ -533,24 +533,59 @@ class Order(models.Model):
                     (oi.order.client.member.home_phone or
                      oi.order.client.member.cell_phone),
                     oi.order.client.delivery_note,
-                    delivery_items=[])
-            # found new delivery item for client
-            route_list[oi.order.client.id].delivery_items.append(
-                DeliveryItem(
-                    oi.component_group,
-                    oi.total_quantity,
-                    oi.order_item_type,
-                    oi.remark,
-                    size=(
-                        oi.size if
-                        oi.component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH
-                        else '')))
+                    delivery_items=[],
+                    order_id=oi.order.id,
+                    include_a_bill=oi.order.includes_a_bill)
+            # found new delivery item for client, if it's really an item
+            if oi.component_group:
+                route_list[oi.order.client.id].delivery_items.append(
+                    DeliveryItem(
+                        oi.component_group,
+                        oi.total_quantity,
+                        oi.order_item_type,
+                        oi.remark,
+                        size=(
+                            oi.size if
+                            oi.component_group == (
+                                COMPONENT_GROUP_CHOICES_MAIN_DISH
+                            ) else '')))
 
         # Sort delivery items for each client
         for client in route_list.values():
             client.delivery_items.sort(key=component_group_sorting)
 
         return route_list
+
+    @property
+    def includes_a_bill(self):
+        for item in self.orders.all():
+            if item.is_a_client_bill:
+                return True
+        return False
+
+    @includes_a_bill.setter
+    def includes_a_bill(self, value):
+        if value is True:
+            if self.includes_a_bill is False:
+                Order_item.objects.create(
+                    order=self,
+                    price=0,
+                    billable_flag=False,
+                    size=None,
+                    order_item_type="delivery",
+                    remark=None,
+                    total_quantity=None,
+                    component_group=None
+                )
+        elif value is False:
+            if self.includes_a_bill is True:
+                for item in self.orders.all():
+                    if item.is_a_client_bill:
+                        item.delete()
+        else:
+            raise ValueError("Order.includes_a_bill only accepts "
+                             "boolean values.")
+
 
 # Order.get_kitchen_items helper functions.
 
@@ -906,7 +941,9 @@ DeliveryClient = collections.namedtuple(  # Delivery details for client order.
      'apartment',
      'phone',
      'delivery_note',
-     'delivery_items'])  # list of DeliveryItem objects
+     'delivery_items',  # list of DeliveryItem objects
+     'order_id',
+     'include_a_bill'])
 
 
 DeliveryItem = collections.namedtuple(    # Item contained in a delivery.
@@ -1091,6 +1128,14 @@ class Order_item(models.Model):
             return _("Visit")
         else:
             return dict(ORDER_ITEM_TYPE_CHOICES)[self.order_item_type]
+
+    @property
+    def is_a_client_bill(self):
+        """
+        An order item may indicate a bill to the client for this order.
+        """
+        return self.order_item_type == 'delivery' and \
+            self.component_group is None
 
 
 class OrderStatusChange(models.Model):

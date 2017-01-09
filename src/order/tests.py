@@ -185,6 +185,24 @@ class OrderItemTestCase(TestCase):
             remark="testing",
             size="L",
         )
+        Order_item.objects.create(
+            order=cls.order,
+            price=8.00,
+            billable_flag=False,
+            order_item_type='delivery',
+            component_group='main_dish',
+            remark="testing",
+            size="L",
+        )
+        Order_item.objects.create(
+            order=cls.order,
+            price=0,
+            billable_flag=False,
+            order_item_type='delivery',
+            component_group=None,
+            remark="testing",
+            size="L",
+        )
 
     def test_billable_flag(self):
         billable_order_item = Order_item.objects.get(
@@ -216,6 +234,81 @@ class OrderItemTestCase(TestCase):
         order = Order.objects.get(delivery_date=delivery_date)
         order_item = order.orders.first()
         self.assertTrue(str(delivery_date) in str(order_item))
+
+    def test_is_a_client_bill(self):
+        order_item = Order_item.objects.get(
+            order=self.order,
+            order_item_type='delivery',
+            component_group=None)
+        self.assertTrue(order_item.is_a_client_bill)
+
+    def test_is_not_a_client_bill(self):
+        order_item = Order_item.objects.get(
+            order=self.order, price=6.50)
+        self.assertFalse(order_item.is_a_client_bill)
+
+        order_item2 = Order_item.objects.get(
+            order=self.order,
+            order_item_type='delivery',
+            component_group='main_dish')
+        self.assertFalse(order_item2.is_a_client_bill)
+
+    def test_order_includes_a_bill(self):
+        order = Order.objects.get(delivery_date=date(2016, 5, 10))
+        self.assertTrue(order.includes_a_bill)
+
+    def test_order_not_includes_a_bill(self):
+        order = Order.objects.get(delivery_date=date(2016, 10, 10))
+        self.assertFalse(order.includes_a_bill)
+
+    def test_order_set_false_includes_a_bill(self):
+        order = Order.objects.get(delivery_date=date(2016, 5, 10))
+        order.includes_a_bill = False
+        self.assertFalse(order.includes_a_bill)
+        self.assertFalse(Order_item.objects.filter(
+            order=order,
+            order_item_type='delivery',
+            component_group=None).exists())
+
+    def test_order_set_true_includes_a_bill(self):
+        order = Order.objects.get(delivery_date=date(2016, 10, 10))
+        order.includes_a_bill = True
+        self.assertTrue(order.includes_a_bill)
+        self.assertTrue(Order_item.objects.filter(
+            order=order,
+            order_item_type='delivery',
+            component_group=None).exists())
+
+        # add twice, it should be still one delivery order item.
+        order.includes_a_bill = True
+        self.assertTrue(order.includes_a_bill)
+        self.assertEqual(Order_item.objects.filter(
+            order=order,
+            order_item_type='delivery',
+            component_group=None).count(), 1)
+
+    def test_edge_case_two_delivery_items(self):
+        order_item2 = Order_item.objects.create(
+            order=self.order,
+            price=0,
+            billable_flag=False,
+            order_item_type='delivery',
+            component_group=None,
+            remark="testing",
+            size="L",
+        )
+        self.assertEqual(Order_item.objects.filter(
+            order=self.order,
+            order_item_type='delivery',
+            component_group=None).count(), 2)
+        self.order.refresh_from_db()
+        self.assertTrue(self.order.includes_a_bill)
+        self.order.includes_a_bill = False
+        self.assertFalse(self.order.includes_a_bill)
+        self.assertFalse(Order_item.objects.filter(
+            order=self.order,
+            order_item_type='delivery',
+            component_group=None).exists())
 
 
 class OrderAutoCreateOnDefaultsTestCase(TestCase):
@@ -1205,6 +1298,102 @@ class OrderUpdateFormTestCase(OrderFormTestCase):
         self.assertEqual(response.status_code, 200)
 
 
+class UpdateClientBillTestCase(SousChefTestMixin, OrderItemTestCase):
+
+    def setUp(self):
+        self.client.force_login(
+            self.admin, 'django.contrib.auth.backends.ModelBackend')
+
+    def test_post(self):
+        response = self.client.post(
+            reverse('order:update_client_bill',
+                    args=(self.total_zero_order.id, ))
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b'OK')
+        self.total_zero_order.refresh_from_db()
+        self.assertTrue(self.total_zero_order.includes_a_bill)
+
+    def test_delete(self):
+        response = self.client.delete(
+            reverse('order:update_client_bill',
+                    args=(self.order.id, ))
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b'OK')
+        self.order.refresh_from_db()
+        self.assertFalse(self.order.includes_a_bill)
+
+    def test_back_and_forth(self):
+        for i in range(10):
+            response = self.client.delete(
+                reverse('order:update_client_bill',
+                        args=(self.order.id, ))
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.content, b'OK')
+            self.order.refresh_from_db()
+            self.assertFalse(self.order.includes_a_bill)
+
+            response = self.client.post(
+                reverse('order:update_client_bill',
+                        args=(self.order.id, ))
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.content, b'OK')
+            self.order.refresh_from_db()
+            self.assertTrue(self.order.includes_a_bill)
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:update_client_bill', kwargs={'pk': 1})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 302)
+        # Run
+        response = self.client.post(url)
+        # Check
+        self.assertEqual(response.status_code, 302)
+        # Run
+        response = self.client.put(url)
+        # Check
+        self.assertEqual(response.status_code, 302)
+        # Run
+        response = self.client.delete(url)
+        # Check
+        self.assertEqual(response.status_code, 302)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('order:update_client_bill', kwargs={'pk': 1})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 405)
+        # Run
+        response = self.client.post(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+        # Run
+        response = self.client.put(url)
+        # Check
+        self.assertEqual(response.status_code, 405)
+        # Run
+        response = self.client.delete(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
 class DeleteOrderTestCase(OrderFormTestCase):
 
     def test_confirm_delete_order(self):
@@ -1259,6 +1448,7 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
         check(reverse('order:create_batch'))
         check(reverse('order:update', kwargs={'pk': 1}))
         check(reverse('order:update_status', kwargs={'pk': 1}))
+        check(reverse('order:update_client_bill', kwargs={'pk': 1}))
         check(reverse('order:delete', kwargs={'pk': 1}))
 
 

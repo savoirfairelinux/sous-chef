@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 <!-- Load Internationalization utils-->
 {% load i18n %}
+{% load rules %}
 
 {% block title %}{% trans 'Delivery Route Sheet' %} {% endblock %}
 
 {% block content %}
 
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
 {% include 'kitchen_count_steps.html' with step='delivery_sheet' %}
 
 <div class="ui secondary pointing fluid menu">
@@ -47,8 +49,9 @@
    <tr class="top center aligned">
     <th class="three wide">{% trans 'Client' %}</th>
     <th class="six wide">{% trans 'Note' %}</th>
-    <th class="two wide">{% trans 'Item' %}</th>
+    <th class="one wide">{% trans 'Item' %}</th>
     <th class="one wide">{% trans 'Qty' %}</th>
+    <th class="one wide">{% trans 'Bill' %}</th>
    </tr>
   </thead>
   <tbody>
@@ -72,6 +75,19 @@
           {% for item in obj.delivery_items %}
             {{item.total_quantity}}<br>
           {% endfor %}
+        </td>
+        <td class="center aligned">
+          <div class="ui toggle checkbox no-print">
+            <input name="include_a_bill" type="checkbox" {% if obj.include_a_bill %}checked="checked"{% endif %} data-url="{% url 'order:update_client_bill' obj.order_id %}" {% if not can_edit_data %}disabled="disabled"{% endif %}>
+            <label></label>
+          </div>
+          <div class="print-only">
+            {% if obj.include_a_bill %}
+              {% trans 'Yes' %}
+            {% else %}
+              {% trans 'No' %}
+            {% endif %}
+          </div>
         </td>
       </tr>
     {% endfor %}

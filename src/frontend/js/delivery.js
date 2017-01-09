@@ -21,4 +21,18 @@ $(function() {
             },
         });
     });
+
+    $('input[name=include_a_bill]').change(function () {
+        var self = this;
+        var url = $(self).data('url');
+        var checked = $(self).is(':checked');
+        $.ajax({
+            type: (checked) ? 'POST' : 'DELETE',
+            url: url,
+            success: function (xhr, ajaxOptions, thrownError) {
+                $(self).removeAttr('disabled');
+            }
+        });
+        $(self).attr('disabled', 'disabled');
+    });
 });

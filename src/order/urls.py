@@ -8,6 +8,7 @@ from order.views import (
     CreateOrdersBatch,
     UpdateOrder,
     UpdateOrderStatus,
+    CreateDeleteOrderClientBill,
     DeleteOrder)
 
 urlpatterns = [
@@ -23,6 +24,11 @@ urlpatterns = [
         _(r'^update/(?P<pk>\d+)/status$'),
         UpdateOrderStatus.as_view(),
         name='update_status'
+    ),
+    url(
+        _(r'^update/(?P<pk>\d+)/client_bill$'),
+        CreateDeleteOrderClientBill.as_view(),
+        name='update_client_bill'
     ),
     url(_(r'^delete/(?P<pk>\d+)/$'), DeleteOrder.as_view(), name='delete'),
 ]
