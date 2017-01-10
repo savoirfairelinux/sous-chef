@@ -56,6 +56,17 @@
               {{ filter.form.is_read|alter_field_class:'ui dropdown' }}
             </div>
           </div>
+          <div class="field">
+              <label>{% trans 'Date' %}</label>
+              <div class="field">
+                  <div class="ui calendar" id="note_date">
+                      <div class="ui input left icon">
+                            <i class="calendar icon"></i>
+                            {{ filter.form.date }}
+                      </div>
+                  </div>
+              </div>
+          </div>
         </div>
         <div class="field">
           <a href="{{ request.path }}?display={{ display }}" class="ui button">{% trans "Reset" %}</a>
