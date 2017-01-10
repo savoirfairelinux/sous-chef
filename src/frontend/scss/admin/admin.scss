@@ -123,7 +123,8 @@ p.signup, p.dashboard {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 171px;
+  height: 171px;
+  overflow-y: auto;
 }
 
 .ui.dashboard.statistic .value {

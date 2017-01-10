@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-16 22:14+0000\n"
+"POT-Creation-Date: 2017-01-12 16:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,16 +62,15 @@ msgid ""
 msgstr ""
 
 #: page/templates/pages/home.html:64
-msgid "Any Header"
+msgid "Routes"
 msgstr ""
 
-#: page/templates/pages/home.html:72
-msgid "Downloads"
-msgstr ""
-
-#: page/templates/pages/home.html:77
-msgid "Footer"
-msgstr ""
+#: page/templates/pages/home.html:86
+#, python-format
+msgid "%(count)s route."
+msgid_plural "%(count)s routes."
+msgstr[0] ""
+msgstr[1] ""
 
 #: page/templates/registration/login.html:8
 #: page/templates/registration/login.html:37
