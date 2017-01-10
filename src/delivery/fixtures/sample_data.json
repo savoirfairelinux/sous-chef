@@ -51,6 +51,7 @@
             "updated_at": "2016-08-12T12:04:20.815Z",
             "firstname": "Dr. Lucie",
             "address": null,
+            "work_information": "CHUM H\u00f4tel-Dieu",
             "created_at": "2016-08-12T12:04:20.815Z"
         }
     },
@@ -62,6 +63,7 @@
             "updated_at": "2016-08-12T12:04:20.830Z",
             "firstname": "Dr. Mary",
             "address": null,
+            "work_information": "CUSM",
             "created_at": "2016-08-12T12:04:20.830Z"
         }
     },
@@ -1855,8 +1857,7 @@
             "referent": 865,
             "date": "2015-11-02",
             "client": 606,
-            "referral_reason": "Can hardly walk.",
-            "work_information": "CHUM H\u00f4tel-Dieu"
+            "referral_reason": "Can hardly walk."
         }
     },
     {
@@ -1866,8 +1867,7 @@
             "referent": 866,
             "date": "2014-01-12",
             "client": 607,
-            "referral_reason": "Had an operation.",
-            "work_information": "CUSM"
+            "referral_reason": "Had an operation."
         }
     },
     {
@@ -1877,8 +1877,7 @@
             "referent": 865,
             "date": "2016-05-04",
             "client": 609,
-            "referral_reason": "Needs help.",
-            "work_information": ""
+            "referral_reason": "Needs help."
         }
     },
     {
@@ -15784,6 +15783,7 @@
             "firstname": "Dr. Mary",
             "lastname": "refer_Johnson",
             "address": null,
+            "work_information": "CHUM",
             "created_at": "2016-08-12T12:04:20.830Z",
             "updated_at": "2016-08-12T12:04:20.830Z"
         }
@@ -15869,7 +15869,6 @@
             "referent": 198,
             "client": 100,
             "referral_reason": "Needs help.",
-            "work_information": "CHUM",
             "date": "2016-12-21"
         }
     },
@@ -15948,7 +15947,6 @@
             "referent": 198,
             "client": 101,
             "referral_reason": "Needs help.",
-            "work_information": "CHUM",
             "date": "2016-12-21"
         }
     },
@@ -16027,7 +16025,6 @@
             "referent": 198,
             "client": 102,
             "referral_reason": "Needs help.",
-            "work_information": "CHUM",
             "date": "2016-12-21"
         }
     },
@@ -16106,7 +16103,6 @@
             "referent": 198,
             "client": 103,
             "referral_reason": "Needs help.",
-            "work_information": "CHUM",
             "date": "2016-12-21"
         }
     },
@@ -16185,7 +16181,6 @@
             "referent": 198,
             "client": 104,
             "referral_reason": "Needs help.",
-            "work_information": "CHUM",
             "date": "2016-12-21"
         }
     },
@@ -16264,7 +16259,6 @@
             "referent": 198,
             "client": 105,
             "referral_reason": "Needs help.",
-            "work_information": "CHUM",
             "date": "2016-12-21"
         }
     },
@@ -16343,7 +16337,6 @@
             "referent": 198,
             "client": 106,
             "referral_reason": "Needs help.",
-            "work_information": "CHUM",
             "date": "2016-12-21"
         }
     },
@@ -16422,7 +16415,6 @@
             "referent": 198,
             "client": 107,
             "referral_reason": "Needs help.",
-            "work_information": "CHUM",
             "date": "2016-12-21"
         }
     },
@@ -16501,7 +16493,6 @@
             "referent": 198,
             "client": 108,
             "referral_reason": "Needs help.",
-            "work_information": "CHUM",
             "date": "2016-12-21"
         }
     },
@@ -16580,7 +16571,6 @@
             "referent": 198,
             "client": 109,
             "referral_reason": "Needs help.",
-            "work_information": "CHUM",
             "date": "2016-12-21"
         }
     },
@@ -16659,7 +16649,6 @@
             "referent": 198,
             "client": 110,
             "referral_reason": "Needs help.",
-            "work_information": "CHUM",
             "date": "2016-12-21"
         }
     },

@@ -117,7 +117,9 @@ class ClientWizard(
             'latitude': client.member.address.latitude,
             'longitude': client.member.address.longitude,
             'distance': client.member.address.distance,
-            'work_information': client.client_referent.get().work_information,
+            'work_information': (
+                client.client_referent.get().referent.work_information
+            ),
             'referral_reason': client.client_referent.get().referral_reason,
             'date': client.client_referent.get().date,
             'member': client.id,
@@ -297,8 +299,16 @@ class ClientWizard(
         e_referent = referent_information.cleaned_data.get('member')
         if self.referent_is_billing_member():
             referent = billing_member
+            referent.work_information = referent_information.cleaned_data.get(
+                'work_information'
+            )
+            referent.save(update_fields=['work_information'])
         elif self.referent_is_emergency_contact():
             referent = emergency
+            referent.work_information = referent_information.cleaned_data.get(
+                'work_information'
+            )
+            referent.save(update_fields=['work_information'])
         elif e_referent:
             e_referent_id = e_referent.split(' ')[0]\
                 .replace('[', '')\
@@ -308,6 +318,9 @@ class ClientWizard(
             referent = Member.objects.create(
                 firstname=referent_information.cleaned_data.get("firstname"),
                 lastname=referent_information.cleaned_data.get("lastname"),
+                work_information=referent_information.cleaned_data.get(
+                    'work_information'
+                ),
             )
             referent.save()
             ref_email = referent_information.cleaned_data.get(
@@ -328,9 +341,6 @@ class ClientWizard(
             client=client,
             referral_reason=referent_information.cleaned_data.get(
                 "referral_reason"
-            ),
-            work_information=referent_information.cleaned_data.get(
-                'work_information'
             ),
             date=referent_information.cleaned_data.get(
                 'date'
@@ -811,7 +821,8 @@ class ClientUpdateInformation(
             'latitude': client.member.address.latitude,
             'longitude': client.member.address.longitude,
             'distance': client.member.address.distance,
-            'work_information': c_ref.work_information if c_ref else '',
+            'work_information': c_ref.referent.work_information
+            if c_ref and c_ref.referent else '',
             'referral_reason': c_ref.referral_reason if c_ref else '',
             'date': c_ref.date if c_ref else '',
         }
@@ -965,6 +976,9 @@ class ClientUpdateReferentInformation(ClientUpdateInformation):
             referent = Member.objects.create(
                 firstname=referent_information.get("firstname"),
                 lastname=referent_information.get("lastname"),
+                work_information=referent_information.get(
+                    'work_information'
+                ),
             )
             referent.save()
 
@@ -978,9 +992,6 @@ class ClientUpdateReferentInformation(ClientUpdateInformation):
             client=client,
             referral_reason=referent_information.get(
                 "referral_reason"
-            ),
-            work_information=referent_information.get(
-                'work_information'
             ),
             date=referent_information.get(
                 'date'

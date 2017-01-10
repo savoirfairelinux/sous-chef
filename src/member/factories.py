@@ -33,6 +33,7 @@ class MemberFactory (factory.DjangoModelFactory):
     lastname = factory.Faker('last_name')
 
     address = factory.SubFactory(AddressFactory)
+    work_information = factory.Faker('company')
     contact = factory.RelatedFactory(
         'member.factories.ContactFactory',
         'member'
@@ -113,8 +114,6 @@ class ReferencingFactory(factory.DjangoModelFactory):
     client = factory.SubFactory(ClientFactory)
 
     referral_reason = factory.Faker('sentence')
-
-    work_information = factory.Faker('company')
 
     date = factory.Faker('date')
 

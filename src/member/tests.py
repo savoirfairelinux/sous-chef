@@ -56,7 +56,7 @@ def load_initial_data(client):
         'longitude': client.member.address.longitude,
         'distance': client.member.address.distance,
         'work_information':
-            client.client_referent.get().work_information
+            client.client_referent.get().referent.work_information
             if client.client_referent.count()
             else '',
         'referral_reason':
@@ -868,7 +868,7 @@ class FormTestCase(TestCase):
 
         # test_referent_work_information:
         self.assertEqual(
-            client.client_referent.first().work_information,
+            client.client_referent.first().referent.work_information,
             "CLSC"
         )
 
@@ -1120,7 +1120,7 @@ class FormTestCase(TestCase):
 
         # test_referent_work_information:
         self.assertEqual(
-            client.client_referent.first().work_information,
+            client.client_referent.first().referent.work_information,
             "CLSC"
         )
 
@@ -1398,8 +1398,17 @@ class FormTestCase(TestCase):
                              'This field is required '
                              'unless you add a new member.')
         self.assertFormError(response_error, 'form',
+                             'firstname',
+                             'This field is required unless '
+                             'you chose an existing member.')
+        self.assertFormError(response_error, 'form',
+                             'lastname',
+                             'This field is required unless '
+                             'you chose an existing member.')
+        self.assertFormError(response_error, 'form',
                              'work_information',
-                             'This field is required.')
+                             'This field is required unless '
+                             'you chose an existing member.')
         self.assertFormError(response_error, 'form',
                              'date',
                              'This field is required.')
