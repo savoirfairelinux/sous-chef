@@ -11,6 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext
@@ -49,7 +50,7 @@ from meal.models import (
     Component,
     Menu, Menu_component,
     Component_ingredient)
-from member.models import Client, Route
+from member.models import Client, Route, ROUTE_VEHICLES
 from order.models import (
     Order, component_group_sorting, SIZE_CHOICES_REGULAR, SIZE_CHOICES_LARGE)
 from .models import Delivery
@@ -312,6 +313,9 @@ class OrganizeRoute(
 
         context = super(OrganizeRoute, self).get_context_data(**kwargs)
         context['route'] = Route.objects.get(id=self.kwargs['id'])
+        context['vehicle_choices_json'] = json.dumps(
+            ROUTE_VEHICLES, cls=DjangoJSONEncoder
+        )
         return context
 
 
@@ -1299,12 +1303,46 @@ class SaveRouteView(
         """
         data = json.loads(request.body.decode('utf-8'))
         member_ids = [member['id'] for member in data['members']]
+        member_client_ids_dict = dict(Client.objects.filter(
+            member__in=member_ids
+        ).values_list('member__pk', 'pk'))
+        route_client_ids = list(map(
+            lambda mid: member_client_ids_dict[mid],
+            member_ids
+        ))
+
         route_id = data['route'][0]['id']
-        route_client_ids = \
-            [Client.objects.get(member__id=member_id).id
-             for member_id in member_ids]
         route = Route.objects.get(id=route_id)
         route.set_client_sequence(datetime.date.today(), route_client_ids)
+        route.save()
+        return JsonResponse('OK', safe=False)
+
+
+class SaveRouteVehicleView(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.View):
+    permission_required = 'sous_chef.edit'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(
+            SaveRouteVehicleView, self
+        ).dispatch(request, *args, **kwargs)
+
+    def post(self, request):
+        """
+        Save the vehicle of a delivery route.
+
+        Args:
+            request : an http request having parameter 'vehicle'.
+
+        Returns:
+            A json response confirming success.
+        """
+        data = json.loads(request.body.decode('utf-8'))
+        vehicle = data['vehicle']
+        route_id = data['route'][0]['id']
+        route = Route.objects.get(id=route_id)
+        route.vehicle = vehicle
         route.save()
         return JsonResponse('OK', safe=False)
 

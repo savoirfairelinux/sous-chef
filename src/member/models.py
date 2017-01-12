@@ -77,6 +77,15 @@ DAYS_OF_WEEK = (
     ('sunday', _('Sunday')),
 )
 
+ROUTE_VEHICLES = (
+    # Vehicles should be supported by mapbox.
+    ('cycling', _('Cycling')),
+    ('walking', _('Walking')),
+    ('driving', _('Driving')),
+)
+
+DEFAULT_VEHICLE = ROUTE_VEHICLES[0][0]
+
 
 class Member(models.Model):
 
@@ -331,6 +340,13 @@ class Route(models.Model):
         verbose_name=_('description'),
         blank=True,
         null=True,
+    )
+
+    vehicle = models.CharField(
+        max_length=20,
+        choices=ROUTE_VEHICLES,
+        verbose_name=_('vehicle'),
+        default=DEFAULT_VEHICLE
     )
 
     # ordered client ids for the current delivery

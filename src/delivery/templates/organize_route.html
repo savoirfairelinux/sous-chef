@@ -34,7 +34,11 @@
   <div class="thirteen wide column" id="route_map"
         data-route="{{ route.id }}"
         data-save-url="{% if can_edit_data %}{% url 'delivery:save_route' %}{% endif %}"
-        data-can-save="{{ can_edit_data|yesno:"yes,no" }}">
+        {% comment %} JSON uses double quotes, so use single quotes for this attr {% endcomment %}
+        data-vehicles='{{ vehicle_choices_json|safe }}'
+        data-selected-vehicle="{{ route.vehicle }}"
+        data-save-vehicle-url="{% if can_edit_data %}{% url 'delivery:save_route_vehicle' %}{% endif %}"
+        data-can-save="{{ can_edit_data|yesno:'yes,no' }}">
     {% leaflet_map "main" callback="main_map_init" %}
   </div>
   <div class="three wide column">

@@ -500,6 +500,7 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
         check(reverse('delivery:dailyOrders'))
         check(reverse('delivery:refresh_orders'))
         check(reverse('delivery:save_route'))
+        check(reverse('delivery:save_route_vehicle'))
 
 
 class OrderlistViewTestCase(SousChefTestMixin, TestCase):
@@ -1081,3 +1082,56 @@ class ExcludeMalconfiguredClientsTestCase(SousChefTestMixin, TestCase):
                                      'if_exist_then_retrieve': 'yes'})
         waypoints = response2.json()['waypoints']
         self.assertEqual(len(waypoints), 0)
+
+
+class SaveRouteAjaxViewsTestCase(SousChefTestMixin, TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.route = RouteFactory()
+        cls.clients = ClientFactory.create_batch(
+            10,
+            route=cls.route
+        )
+
+    def setUp(self):
+        self.force_login()
+
+    def test_save_route_vehicle(self):
+        response = self.client.post(
+            reverse('delivery:save_route_vehicle'),
+            json.dumps({
+                'route': [{'id': self.route.pk}],
+                'vehicle': 'walking'
+            }),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b'"OK"')
+        route = Route.objects.get(pk=self.route.pk)
+        self.assertEqual(route.vehicle, 'walking')
+
+    def test_save_route_sequence(self):
+        response = self.client.post(
+            reverse('delivery:save_route'),
+            json.dumps({
+                'route': [{'id': self.route.pk}],
+                'members': list(map(
+                    lambda i: {'id': self.clients[i].member.pk},
+                    [1, 3, 5, 7, 9, 0, 2, 4, 6, 8]
+                ))
+            }),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b'"OK"')
+        route = Route.objects.get(pk=self.route.pk)
+        self.assertEqual(
+            route.client_id_sequence,
+            {
+                tz.now().strftime('%Y-%m-%d'): list(map(
+                    lambda i: self.clients[i].pk,
+                    [1, 3, 5, 7, 9, 0, 2, 4, 6, 8]
+                ))
+            }
+        )

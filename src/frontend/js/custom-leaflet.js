@@ -1,7 +1,7 @@
 // Javascript of the delivery application
 // ****************************************
 
-var control;
+var control;  // global bind
 
 function printMapAndItinerary() {
     var body               = $('body');
@@ -75,16 +75,137 @@ function main_map_init (map, options) {
 
     // Create bike router using mapbox
     var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
-    bikerouter.options.profile = 'mapbox.cycling';
+    var defaultVehicle = $('#route_map').data('selected-vehicle');
+    bikerouter.options.profile = 'mapbox.' + defaultVehicle;
 
-    // Extend Routing Control to build  sortable geocoder
+    // Extend Routing Plan to add more buttons
+    var routingPlan = L.Routing.Plan.extend({
+        createGeocoders: function () {
+            // Helper function
+            function create_button(innerHTML, container) {
+                var btn = L.DomUtil.create('button', '', container);
+                btn.setAttribute('type', 'button');
+                btn.className = 'ui button';
+                btn.innerHTML = innerHTML;
+                return btn;
+            }
+
+            var container = L.Routing.Plan.prototype.createGeocoders.call(this);
+
+            // Create a button group for different route vehicles
+            var div = L.DomUtil.create('div', '', container);
+            div.style.padding = '0';
+            div.className = 'small ui basic buttons';
+            var vehicleButtons = {};
+            var vehicles = $('#route_map').data('vehicles');  // already JSON
+            $.each(vehicles, function (idx, tuple) {
+                var code = tuple[0];
+                var displayName = tuple[1];
+                var button = L.DomUtil.create('button', '', div);
+                button.setAttribute('type', 'button');
+                button.className = 'ui button';
+                button.innerText = displayName;
+                button.style.float = 'left';
+                var can_save = $('#route_map').data('can-save');
+                if (can_save === 'no') {
+                    button.setAttribute('disabled', 'disabled');
+                }
+                vehicleButtons[code] = button;
+            });
+            $.each(vehicleButtons, function (vehicle, btn) {
+                L.DomEvent.on(btn, 'click', function () {
+                    vehicleButtons[vehicle].classList.add('loading');
+                    save_vehicle(vehicle, function () {
+                        // success callback
+                        vehicleButtons[vehicle].classList.remove('loading');
+
+                        // vehicle is one of: cycling, driving, or walking
+                        control.getRouter().options.profile = "mapbox." + vehicle;
+                        // refresh route display
+                        control.route();
+
+                        $.each(vehicleButtons, function (v, b) {
+                            b.classList.remove('active');
+                        });
+                        vehicleButtons[vehicle].classList.add('active');
+                    });
+
+                });
+            });
+
+            vehicleButtons[defaultVehicle].classList.add('active');  // set default active button
+            return container;
+        }
+    });
+
+    var plan = new routingPlan(
+        // Empty waypoints
+        [], {
+            // Default geocoder
+            geocoder: L.Control.Geocoder.nominatim({ geocodingQueryParams: { countrycodes: 'ca'}}),
+
+            // Create routes while dragging markers
+            routeWhileDragging: true,
+
+            // Add a button for reversing waypoints
+            reverseWaypoints: true,
+
+            createGeocoder: function(i, total_waypoints, plan) {
+                var geocoder = L.Routing.GeocoderElement.prototype.options.createGeocoder.call(plan, i, total_waypoints, plan),
+                    handle = L.DomUtil.create('div', 'geocoder-handle'),
+                    geolocateBtn = L.DomUtil.create('span', 'geocoder-geolocate-btn', geocoder.container);
+
+                handle.innerHTML = String.fromCharCode(65 + i);
+                geocoder.container.insertBefore(handle, geocoder.container.firstChild);
+                return geocoder;
+            },
+
+            createMarker: function(i, wp) {
+                var marker;
+
+                // adjust marker according waypoints
+                if (wp.name == "santropol") {
+                    // add awesome marker for santropol
+                    marker =  L.marker([45.516564, -73.575145], {
+                        draggable: false,
+                        opacity: 1,
+                        icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
+                    });
+
+                    var info = "<div class='ui list'>"
+                        +"<div class='item'><i class='user icon'></i> Santro </div>"
+                        +"</div>"
+
+                    marker.bindPopup(info).openPopup();
+
+                    return marker;
+                }
+                else {
+                    marker =  L.marker(wp.latLng, {
+                        icon: L.icon.glyph({
+                            prefix: '',
+                            glyph: String.fromCharCode(65 + i)
+                        }),
+                        draggable: true
+                    });
+
+                    var info = "<div class='ui list'>"
+                        +"<div class='item'><i class='user icon'></i>" + wp.options.member + "</div>"
+                        +"<div class='item'><i class='home icon'></i>" + wp.options.address + "</div>"
+                        +"</div>"
+
+                    marker.bindPopup(info).openPopup();
+                    return marker;
+                }
+            }
+        }
+    );
+
+    // Extend Routing Control to build sortable geocoder
     var routingContol = L.Routing.Control.extend({
         initialize: function(map, initialWaypoints) {
             L.Routing.Control.prototype.initialize.call(this, {
                 router: bikerouter,
-                geocoder: L.Control.Geocoder.nominatim({ geocodingQueryParams: { countrycodes: 'ca'}}),
-                routeWhileDragging: true,
-                reverseWaypoints: true,
                 language: 'fr',
                 showAlternatives: true,
                 lineOptions: {
@@ -101,61 +222,7 @@ function main_map_init (map, options) {
                         {color: 'blue', opacity: 0.25, weight: 3}
                     ]
                 },
-                // waypoints: waypoints,
-                createMarker: function(i, wp) {
-                     var  marker;
-
-                    // adjust marker according waypoints
-                    if (wp.name == "santropol") {
-                       // add awesome marker for santropol
-                       marker =  L.marker([45.516564, -73.575145], {
-                           draggable: false,
-                           opacity: 1,
-                           icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
-                       });
-
-                       var info = "<div class='ui list'>"
-                                      +"<div class='item'><i class='user icon'></i> Santro </div>"
-                                      +"</div>"
-
-                       marker.bindPopup(info).openPopup();
-
-                       return marker;
-                    }
-                    else {
-                       marker =  L.marker(wp.latLng, {
-                           icon: L.icon.glyph({
-                               prefix: '',
-                               glyph: String.fromCharCode(65 + i)
-                           }),
-                           draggable: true
-                       });
-
-                       var info = "<div class='ui list'>"
-                                      +"<div class='item'><i class='user icon'></i>" + wp.options.member + "</div>"
-                                      +"<div class='item'><i class='home icon'></i>" + wp.options.address + "</div>"
-                                      +"</div>"
-
-                       marker.bindPopup(info).openPopup();
-                       return marker;
-                    }
-
-                },
-                createGeocoder: L.bind(function(i) {
-                    var geocoder = L.Routing.GeocoderElement.prototype.options.createGeocoder.call(this, i, this.getPlan().getWaypoints().length, this.getPlan().options),
-                        handle = L.DomUtil.create('div', 'geocoder-handle'),
-                        geolocateBtn = L.DomUtil.create('span', 'geocoder-geolocate-btn', geocoder.container);
-
-                    handle.innerHTML = String.fromCharCode(65 + i);
-                    geocoder.container.insertBefore(handle, geocoder.container.firstChild);
-
-                    L.DomEvent.on(handle, 'click', function() {
-                        var wp = this.getWaypoints()[i];
-
-                    }, this);
-
-                    return geocoder;
-                }, this)
+                plan: plan
             });
         },
     });
@@ -170,7 +237,7 @@ function main_map_init (map, options) {
        printMapAndItinerary();
     });
 
-    routeId = $('#route_map').attr('data-route');
+    var routeId = $('#route_map').attr('data-route');
     getRouteWaypoints(routeId);
 
     // Add sortable on the route controler
@@ -182,7 +249,6 @@ function main_map_init (map, options) {
                newI = e.newIndex,
                wps = control.getWaypoints(),
                wp = wps[oldI];
-               console.log(wp);
 
            if (oldI === newI || newI === undefined) {
                return;
@@ -201,9 +267,9 @@ function main_map_init (map, options) {
 function save_route(control) {
     var wp = control.getWaypoints();
     var data = { route: [], members: [] };
-    routeId = $('#route_map').attr('data-route');
-    save_url = $('#route_map').attr('data-save-url');
-    can_save = $('#route_map').data('can-save');
+    var routeId = $('#route_map').data('route');
+    var save_url = $('#route_map').data('save-url');
+    var can_save = $('#route_map').data('can-save');
     if (can_save == 'no') { return; }
     data.route.push({"id" : routeId});
     // simplify waypoint into a list of member id in the map order
@@ -223,7 +289,24 @@ function save_route(control) {
       success: function(result) {
       }
    });
-
+}
+function save_vehicle(vehicle, success_callback, error_callback) {
+    var data = { route: [], vehicle: '' };
+    var routeId = $('#route_map').data('route');
+    var save_vehicle_url = $('#route_map').data('save-vehicle-url');
+    var can_save = $('#route_map').data('can-save');
+    if (can_save == 'no') { return; }
+    data.route.push({"id" : routeId});
+    data.vehicle = vehicle;
+    // Post simple list of members to server
+    $.ajax(save_vehicle_url, {
+      data : JSON.stringify(data),
+      contentType : 'application/json; charset=utf-8',
+      type : 'POST',
+      dataType: "json",
+      success: success_callback,
+      error: error_callback
+   });
 }
     //:::  This routine calculates the distance between two points (given the     :::
     //:::  latitude/longitude of those points).                                   :::

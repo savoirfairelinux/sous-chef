@@ -50,7 +50,13 @@
             <div class="content">
               <div class="header">{{ route.name }}</div>
               <div class="description">
-                  <i class="bicycle circular icon" title="{% trans 'Cycling map' %}"></i>
+                {% if route.vehicle == 'cycling' %}
+                  <i class="bicycle circular icon" title="{% trans 'Cycling' %}"></i>
+                {% elif route.vehicle == 'driving' %}
+                  <i class="car circular icon" title="{% trans 'Driving' %}"></i>
+                {% elif route.vehicle == 'walking' %}
+                  <i class="male circular icon" title="{% trans 'Walking' %}"></i>
+                {% endif %}
                   <div class="ui circular pink basic label" title="{% trans 'Number of orders on this route' %}">{{ orders }}</div>
               </div>
             </div>
