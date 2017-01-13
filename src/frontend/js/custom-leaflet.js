@@ -4,32 +4,51 @@
 var control;  // global bind
 
 function printMapAndItinerary() {
-    var body               = $('body');
-    var mapContainer       = $('#main');
-    var mapContainerParent = mapContainer.parent();
-    var printContainer     = $('<div>');
-    var itinerary = $(".leaflet-routing-alt table");
+    var pane_position = $('.leaflet-map-pane').position();
+    var map_imgs = [];
+    $('img.leaflet-tile.leaflet-tile-loaded').each(function (i, elem) {
+        var position = $(elem).position();
+        map_imgs.push({
+            top: position.top,
+            left: position.left,
+            src: elem.src
+        });
+    });
 
-    printContainer
-        .addClass('print-container')
-        .css('position', 'relative')
-        .height(mapContainer.height())
-        .append(mapContainer)
-        .append(itinerary)
-        .prependTo(body);
+    var routes = [];
+    $('.leaflet-routing-geocoder').each(function (i, elem) {
+        routes.push({
+            client_order: $(elem).find('> .geocoder-handle').text(),
+            client_name: $(elem).find('> input').val()
+        });
+    });
+    var waypoints = control.getWaypoints();
+    $.each(waypoints, function (i, waypoint) {
+        routes[i].client_address = waypoint.options.address;
+    });
+    $('.leaflet-marker-pane > div').each(function (i, elem) {
+        var position = $(elem).position();
+        routes[i].marker_html = elem.outerHTML;
+    });
 
-    var content = body
-        .children()
-        .not('script')
-        .not(printContainer)
-        .detach();
+    var directions = $('.leaflet-routing-alt:not(.leaflet-routing-alt-minimized)');
 
-    window.print();
+    var template_vars = {
+        map_height: $('#main').height(),
+        map_width: $('#main').width(),
+        pane_left: pane_position.left,
+        pane_top: pane_position.top,
+        map_imgs: map_imgs,
+        map_route_svg: $('svg.leaflet-zoom-animated')[0].outerHTML,
+        routes: routes,
+        distance_and_time: directions.find('> h3').text(),
+        directions_table: directions.find('> table').html()
+    };
 
-    body.prepend(content);
-    mapContainerParent.prepend(mapContainer);
-
-    printContainer.remove();
+    var w = window.open('');
+    w.document.open();
+    w.document.write(Mustache.render($("#print-template").html(), template_vars));
+    w.document.close();
 }
 
 function getRouteWaypoints(routeId) {
@@ -231,11 +250,6 @@ function main_map_init (map, options) {
     control = new routingContol()
     var routeBlock = control.onAdd(map);
     $(".controls").append(routeBlock);
-
-
-    $("#btnprint").click(function(){
-       printMapAndItinerary();
-    });
 
     var routeId = $('#route_map').attr('data-route');
     getRouteWaypoints(routeId);

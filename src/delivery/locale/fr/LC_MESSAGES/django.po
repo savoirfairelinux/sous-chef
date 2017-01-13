@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-11 15:12+0000\n"
+"POT-Creation-Date: 2017-01-13 20:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -212,6 +212,8 @@ msgid "Organize the delivery route"
 msgstr "Organiser les itinéraires de livraison."
 
 #: delivery/templates/organize_route.html:21
+#: delivery/templates/organize_route.html:64
+#: delivery/templates/organize_route.html:75
 #, fuzzy
 #| msgid "Delivery Date"
 msgid "Delivery route"
@@ -246,6 +248,29 @@ msgstr ""
 #| msgid "View Order"
 msgid "View routes"
 msgstr "Voir la commande"
+
+#: delivery/templates/organize_route.html:79
+#: delivery/templates/routes_print.html:23
+msgid "Print"
+msgstr "Imprimer"
+
+#: delivery/templates/organize_route.html:100
+#, fuzzy
+#| msgid "Route sheet"
+msgid "Route Sequence"
+msgstr ""
+
+#: delivery/templates/organize_route.html:105
+msgid "Client Name"
+msgstr "Nom du Client"
+
+#: delivery/templates/organize_route.html:106
+msgid "Address"
+msgstr "Adresse"
+
+#: delivery/templates/organize_route.html:124
+msgid "Directions"
+msgstr "Directions"
 
 #: delivery/templates/partials/generated_orders.html:9
 msgid "Order"
@@ -467,15 +492,11 @@ msgstr ""
 msgid "Number of orders on this route"
 msgstr ""
 
-#: delivery/templates/routes_print.html:23
-msgid "Print"
-msgstr "Imprimer"
-
 #: delivery/templates/routes_print.html:56
 msgid "Include a bill"
 msgstr ""
 
-#: delivery/tests.py:915
+#: delivery/tests.py:916
 #, fuzzy
 #| msgid "Main dish"
 msgid "Main Dish"

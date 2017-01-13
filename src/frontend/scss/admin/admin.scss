@@ -282,6 +282,10 @@ ul.doughnut-legend {
   max-height:400px;
 }
 
+.leaflet-routing-icon {
+    background-image: url('/static/images/vendor/leaflet-routing/leaflet.routing.icons.svg')!important;
+}
+
 /* Avatars */
 .list-avatars {
   margin-bottom:1em;
