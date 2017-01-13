@@ -61,20 +61,30 @@
             <div class="dashboard-stat column">
               <div class="ui segments">
                 <div class="ui segment">
-                  <h3 class="ui blue header">{% trans "Any Header" %}</h3>
+                  <h3 class="ui blue header">{% trans "Routes" %}</h3>
                 </div>
-                <div class="ui secondary blue inverted dashboard center aligned segment">
-                  <div class="ui dashboard statistic">
-                    <div class="value">
-                      5,550
-                    </div>
-                    <div class="label">
-                      {% trans "Downloads" %}
-                    </div>
+                <div class="ui secondary blue inverted dashboard left aligned segment" style="justify-content: flex-start">
+                  <div style="padding-bottom:14px">
+                    <table class="ui very compact table">
+                      <tbody>
+                    {% for route_name, num_clients in routes %}
+                        <tr>
+                          <td>
+                            {{ route_name }}
+                          </td>
+                          <td>
+                            <span class="ui blue basic label">{{ num_clients }}</span>
+                          </td>
+                        </tr>
+                    {% endfor %}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
                 <div class="ui segment">
-                  <p>{% trans "Footer" %}</p>
+                  <p>
+                    {% blocktrans count count=routes|length %}{{ count }} route.{% plural %}{{ count }} routes.{% endblocktrans %}
+                  </p>
                 </div>
               </div>
             </div>
