@@ -22,8 +22,12 @@ class NoteTestCase(TestCase):
         cls.note = NoteFactory.create(
             client=cls.clients,
             author=cls.admin,
-            priority=NotePriority.objects.get(pk=NotePriority.DEFAULT_PRIORITY_ID),
-            category=NoteCategory.objects.get(pk=NoteCategory.DEFAULT_CATEGORY_ID)
+            priority=NotePriority.objects.get(
+                pk=NotePriority.DEFAULT_PRIORITY_ID
+            ),
+            category=NoteCategory.objects.get(
+                pk=NoteCategory.DEFAULT_CATEGORY_ID
+            )
         )
 
     def test_attach_note_to_member(self):

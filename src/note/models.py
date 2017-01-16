@@ -78,11 +78,17 @@ class Note(models.Model):
     )
 
     priority = models.ForeignKey(
-        NotePriority, verbose_name=_('Priority'), related_name="notes", default=NotePriority.DEFAULT_PRIORITY_ID
+        NotePriority,
+        verbose_name=_('Priority'),
+        related_name="notes",
+        default=NotePriority.DEFAULT_PRIORITY_ID
     )
 
     category = models.ForeignKey(
-        NoteCategory, verbose_name=_('Category'), related_name="notes", default=NoteCategory.DEFAULT_CATEGORY_ID
+        NoteCategory,
+        verbose_name=_('Category'),
+        related_name="notes",
+        default=NoteCategory.DEFAULT_CATEGORY_ID
     )
 
     objects = NoteManager()
