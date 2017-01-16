@@ -19,13 +19,11 @@ class NoteTestCase(TestCase):
         cls.admin = User.objects.create_superuser(
             username='admin', email='testadmin@example.com',
             password='test1234')
-        cls.note_priority = NotePriority.objects.get(pk=1)
-        cls.note_category = NoteCategory.objects.get(pk=1)
         cls.note = NoteFactory.create(
             client=cls.clients,
             author=cls.admin,
-            priority=cls.note_priority,
-            category=cls.note_category
+            priority=NotePriority.objects.get(pk=NotePriority.DEFAULT_PRIORITY_ID),
+            category=NoteCategory.objects.get(pk=NoteCategory.DEFAULT_CATEGORY_ID)
         )
 
     def test_attach_note_to_member(self):
@@ -54,9 +52,7 @@ class NoteTestCase(TestCase):
         note = Note.objects.create(
             client=self.clients,
             author=self.admin,
-            note='x123y',
-            priority=self.note_priority,
-            category=self.note_category
+            note='x123y'
         )
         self.assertTrue('x123y' in note.note)
 

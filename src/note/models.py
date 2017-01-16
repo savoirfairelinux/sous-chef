@@ -22,6 +22,7 @@ class UnreadNoteManager(NoteManager):
 
 
 class NotePriority(models.Model):
+    DEFAULT_PRIORITY_ID = 1
     name = models.CharField(max_length=150, verbose_name=_('Name'))
 
     class Meta:
@@ -33,6 +34,7 @@ class NotePriority(models.Model):
 
 
 class NoteCategory(models.Model):
+    DEFAULT_CATEGORY_ID = 1
     name = models.CharField(max_length=150, verbose_name=_('Name'))
 
     class Meta:
@@ -75,9 +77,13 @@ class Note(models.Model):
         related_name='client_notes'
     )
 
-    priority = models.ForeignKey(NotePriority, verbose_name=_('Priority'), related_name="notes")
+    priority = models.ForeignKey(
+        NotePriority, verbose_name=_('Priority'), related_name="notes", default=NotePriority.DEFAULT_PRIORITY_ID
+    )
 
-    category = models.ForeignKey(NoteCategory, verbose_name=_('Category'), related_name="notes")
+    category = models.ForeignKey(
+        NoteCategory, verbose_name=_('Category'), related_name="notes", default=NoteCategory.DEFAULT_CATEGORY_ID
+    )
 
     objects = NoteManager()
 

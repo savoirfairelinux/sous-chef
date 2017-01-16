@@ -25,6 +25,6 @@ class NoteFactory(factory.DjangoModelFactory):
     priority = factory.LazyAttribute(
         lambda x: random.choice(NotePriority.objects.all()).pk
     )
-    categories = factory.LazyAttribute(
+    category = factory.LazyAttribute(
         lambda x: random.choice(NoteCategory.objects.all()).pk
     )
