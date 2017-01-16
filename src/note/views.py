@@ -1,9 +1,10 @@
 from django.shortcuts import get_object_or_404
-from django.views import generic
+from django.views import generic, View
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Case, When
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
@@ -128,3 +129,21 @@ def mark_as_unread(request, id):
     note = get_object_or_404(Note, pk=id)
     note.mark_as_unread()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class NoteBatchToggle(
+        LoginRequiredMixin, PermissionRequiredMixin, View
+):
+    permission_required = 'sous_chef.read'
+
+    def post(self, request, *args, **kwargs):
+        ids = request.POST.getlist('note')
+        count = Note.objects.filter(id__in=ids).update(is_read=Case(
+            When(is_read=True, then=False),
+            When(is_read=False, then=True)
+        ))
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _("%(count)s note(s) have been updated.") % {'count': count}
+        )
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
