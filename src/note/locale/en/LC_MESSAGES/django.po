@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-06 21:40+0000\n"
+"POT-Creation-Date: 2017-01-16 16:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,48 +17,61 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: note/models.py:30
-msgid "Normal"
+#: models.py:25 models.py:36 templates/notes_list.html:39
+msgid "Name"
 msgstr ""
 
-#: note/models.py:31
-msgid "Urgent"
+#: models.py:28
+msgid "Note priorities"
 msgstr ""
 
-#: note/models.py:35
+#: models.py:39
+msgid "Note categories"
+msgstr ""
+
+#: models.py:49
 msgid "Notes"
 msgstr ""
 
-#: note/models.py:39
+#: models.py:53
 msgid "Note"
 msgstr ""
 
-#: note/models.py:44
+#: models.py:58
 msgid "Author"
 msgstr ""
 
-#: note/models.py:49 note/templates/notes_list.html:60
+#: models.py:63 templates/notes_list.html:66
 msgid "Date"
 msgstr ""
 
-#: note/models.py:54 note/templates/notes_client_list.html:40
-#: note/templates/notes_list.html:54
+#: models.py:68 templates/notes_client_list.html:40
+#: templates/notes_list.html:60
 msgid "Is read"
 msgstr ""
 
-#: note/models.py:60
+#: models.py:74
 msgid "Client"
 msgstr ""
 
-#: note/models.py:110
+#: models.py:78 templates/notes_client_list.html:33
+#: templates/notes_list.html:48
+msgid "Priority"
+msgstr ""
+
+#: models.py:80 templates/notes_list.html:54
+msgid "Category"
+msgstr ""
+
+#: models.py:118
 msgid "Search by name"
 msgstr ""
 
-#: note/templates/notes_add.html:12
+#: templates/notes_add.html:12
 msgid "Add a Note"
 msgstr ""
 
-#: note/templates/notes_add.html:14
+#: templates/notes_add.html:14
 #, python-format
 msgid ""
 "\n"
@@ -66,83 +79,75 @@ msgid ""
 "        "
 msgstr ""
 
-#: note/templates/notes_add.html:66
+#: templates/notes_add.html:77
 msgid "Create"
 msgstr ""
 
-#: note/templates/notes_add.html:67
+#: templates/notes_add.html:78
 msgid "Cancel"
 msgstr ""
 
-#: note/templates/notes_client_list.html:9
+#: templates/notes_client_list.html:9
 msgid "Information"
 msgstr ""
 
-#: note/templates/notes_client_list.html:19 note/templates/notes_list.html:7
-#: note/templates/notes_list.html:13
+#: templates/notes_client_list.html:19 templates/notes_list.html:7
+#: templates/notes_list.html:13
 msgid "Staff Notes"
 msgstr ""
 
-#: note/templates/notes_client_list.html:21
+#: templates/notes_client_list.html:21
 msgid "Notes added to"
 msgstr ""
 
-#: note/templates/notes_client_list.html:21
+#: templates/notes_client_list.html:21
 msgid "s file"
 msgstr ""
 
-#: note/templates/notes_client_list.html:33 note/templates/notes_list.html:48
-msgid "Priority"
-msgstr ""
-
-#: note/templates/notes_client_list.html:49 note/templates/notes_list.html:72
+#: templates/notes_client_list.html:49 templates/notes_list.html:78
 msgid "Reset"
 msgstr ""
 
-#: note/templates/notes_client_list.html:50 note/templates/notes_list.html:73
+#: templates/notes_client_list.html:50 templates/notes_list.html:79
 msgid "Search"
 msgstr ""
 
-#: note/templates/notes_client_list.html:53
+#: templates/notes_client_list.html:53
 msgid "New Note"
 msgstr ""
 
-#: note/templates/notes_client_list.html:65 note/templates/notes_list.html:83
+#: templates/notes_client_list.html:65 templates/notes_list.html:89
 msgid "Mark as unread"
 msgstr ""
 
-#: note/templates/notes_client_list.html:68 note/templates/notes_list.html:86
+#: templates/notes_client_list.html:68 templates/notes_list.html:92
 msgid "Mark as read"
 msgstr ""
 
-#: note/templates/notes_list.html:26
+#: templates/notes_list.html:26
 msgid "New note"
 msgstr ""
 
-#: note/templates/notes_list.html:29
+#: templates/notes_list.html:29
 msgid "Or"
 msgstr ""
 
-#: note/templates/notes_list.html:39
-msgid "Name"
-msgstr ""
-
-#: note/templates/notes_list.html:117
+#: templates/notes_list.html:123
 msgid "of"
 msgstr ""
 
-#: note/urls.py:9
+#: urls.py:9
 msgid "^$"
 msgstr ""
 
-#: note/urls.py:10
+#: urls.py:10
 msgid "^read/(?P<id>\\d+)/$"
 msgstr ""
 
-#: note/urls.py:12
+#: urls.py:12
 msgid "^unread/(?P<id>\\d+)/$"
 msgstr ""
 
-#: note/views.py:98
+#: views.py:98
 msgid "The note has been created."
 msgstr ""

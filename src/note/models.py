@@ -21,15 +21,29 @@ class UnreadNoteManager(NoteManager):
         )
 
 
-class Note (models.Model):
+class NotePriority(models.Model):
+    name = models.CharField(max_length=150, verbose_name=_('Name'))
 
-    PRIORITY_LEVEL_NORMAL = 'normal'
-    PRIORITY_LEVEL_URGENT = 'urgent'
+    class Meta:
+        verbose_name_plural = _('Note priorities')
+        ordering = ('name',)
 
-    PRIORITY_LEVEL = (
-        (PRIORITY_LEVEL_NORMAL, _('Normal')),
-        (PRIORITY_LEVEL_URGENT, _('Urgent')),
-    )
+    def __str__(self):
+        return u"%s" % self.name
+
+
+class NoteCategory(models.Model):
+    name = models.CharField(max_length=150, verbose_name=_('Name'))
+
+    class Meta:
+        verbose_name_plural = _('Note categories')
+        ordering = ('name',)
+
+    def __str__(self):
+        return u"%s" % self.name
+
+
+class Note(models.Model):
 
     class Meta:
         verbose_name_plural = _('Notes')
@@ -61,11 +75,9 @@ class Note (models.Model):
         related_name='client_notes'
     )
 
-    priority = models.CharField(
-        max_length=15,
-        choices=PRIORITY_LEVEL,
-        default=PRIORITY_LEVEL_NORMAL
-    )
+    priority = models.ForeignKey(NotePriority, verbose_name=_('Priority'), related_name="notes")
+
+    category = models.ForeignKey(NoteCategory, verbose_name=_('Category'), related_name="notes")
 
     objects = NoteManager()
 
@@ -97,10 +109,6 @@ class NoteFilter(FilterSet):
 
     NOTE_STATUS_UNREAD = IS_READ_CHOICES[2][0]
 
-    priority = ChoiceFilter(
-        choices=(('', ''),) + Note.PRIORITY_LEVEL,
-    )
-
     is_read = ChoiceFilter(
         choices=IS_READ_CHOICES,
     )
@@ -110,11 +118,11 @@ class NoteFilter(FilterSet):
         label=_('Search by name')
     )
 
-    date = DateFilter(lookup_expr='date')
+    date = DateFilter(lookup_expr='contains')
 
     class Meta:
         model = Note
-        fields = ['priority', 'is_read', 'date', ]
+        fields = ['priority', 'is_read', 'date', 'category', ]
 
     @staticmethod
     def filter_search(queryset, value):
