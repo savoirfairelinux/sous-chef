@@ -38,10 +38,10 @@
           {% if order.client.route %}
             {{order.client.route}}
             {% if not order.client.is_geolocalized %}
-            <a href="{% url 'member:member_update_address_information' pk=order.client.id %}" title="{% trans 'Please fix geolocalization. Otherwise this client will be excluded in the next steps.' %}"><i class="warning sign red icon"></i></a>
+            <a href="{% url 'member:member_update_address_information' pk=order.client.id %}?next={% url 'delivery:order' %}" title="{% trans 'Please fix geolocalization. Otherwise this client will be excluded in the next steps.' %}"><i class="warning sign red icon"></i></a>
             {% endif %}
           {% else %}
-            <a href="{% url 'member:member_update_address_information' pk=order.client.id %}" title="{% trans 'Please fix delivery route. Otherwise this client will be excluded in the next steps.' %}"><i class="warning sign red icon"></i></a>
+            <a href="{% url 'member:member_update_address_information' pk=order.client.id %}?next={% url 'delivery:order' %}" title="{% trans 'Please fix delivery route. Otherwise this client will be excluded in the next steps.' %}"><i class="warning sign red icon"></i></a>
           {% endif %}
         </td>
         <td class="center aligned">{{order.get_status_display}}</td>

@@ -829,10 +829,14 @@ class ClientUpdateInformation(
         return initial
 
     def get_success_url(self):
-        return reverse_lazy(
-            'member:client_information',
-            kwargs={'pk': self.kwargs.get('pk')}
-        )
+        redirect_url = self.request.GET.get('next')
+        if redirect_url:
+            return redirect_url
+        else:
+            return reverse_lazy(
+                'member:client_information',
+                kwargs={'pk': self.kwargs.get('pk')}
+            )
 
     def form_valid(self, form):
         # This method is called when valid form data has been POSTed.
