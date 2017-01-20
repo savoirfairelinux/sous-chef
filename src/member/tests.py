@@ -102,11 +102,11 @@ class MemberContact(TestCase):
         self.assertTrue(
             self.member.add_contact_information(CELL, '438-000-0000')
         )
-        self.assertEquals(self.member.cell_phone, '438-000-0000')
+        self.assertEqual(self.member.cell_phone, '438-000-0000')
         self.assertTrue(
             self.member.add_contact_information(EMAIL, 'admin@example.com')
         )
-        self.assertEquals(self.member.email, 'admin@example.com')
+        self.assertEqual(self.member.email, 'admin@example.com')
 
     def test_add_contact_information_empty(self):
         """
@@ -114,15 +114,15 @@ class MemberContact(TestCase):
         the force_update parameter was passed.
         """
         self.member.add_contact_information(CELL, '438-000-0000')
-        self.assertEquals(self.member.cell_phone, '438-000-0000')
+        self.assertEqual(self.member.cell_phone, '438-000-0000')
         self.assertFalse(
             self.member.add_contact_information(CELL, '')
         )
-        self.assertEquals(self.member.cell_phone, '438-000-0000')
+        self.assertEqual(self.member.cell_phone, '438-000-0000')
         self.assertFalse(
             self.member.add_contact_information(CELL, '', True)
         )
-        self.assertEquals(self.member.cell_phone, '')
+        self.assertEqual(self.member.cell_phone, '')
 
     def test_update_contact_information(self):
         """
@@ -133,7 +133,7 @@ class MemberContact(TestCase):
         self.assertFalse(
             self.member.add_contact_information(HOME, '514-000-0000')
         )
-        self.assertEquals(self.member.home_phone, '514-000-0000')
+        self.assertEqual(self.member.home_phone, '514-000-0000')
 
 
 class MemberTestCase(TestCase):
@@ -818,8 +818,8 @@ class FormTestCase(TestCase):
 
         # test_home_phone_member:
         self.assertTrue(member.home_phone.startswith('555'))
-        self.assertEquals(member.email, 'test@example.com')
-        self.assertEquals(member.cell_phone, '438-000-0000')
+        self.assertEqual(member.email, 'test@example.com')
+        self.assertEqual(member.cell_phone, '438-000-0000')
 
         # test_client_contact_type:
         self.assertEqual(member.member_contact.first().type, "Home phone")
@@ -1072,10 +1072,10 @@ class FormTestCase(TestCase):
         self.assertEqual(member.lastname, "User")
 
         # test_home_phone_member:
-        self.assertEquals(member.home_phone, '514-868-8686')
+        self.assertEqual(member.home_phone, '514-868-8686')
         self.assertTrue(member.home_phone.startswith('514'))
-        self.assertEquals(member.email, 'test@example.com')
-        self.assertEquals(member.cell_phone, '438-000-0000')
+        self.assertEqual(member.email, 'test@example.com')
+        self.assertEqual(member.cell_phone, '438-000-0000')
 
         # test_client_contact_type:
         self.assertEqual(member.member_contact.first().type, "Home phone")

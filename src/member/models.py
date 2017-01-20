@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django_filters import (
-    FilterSet, MethodFilter, CharFilter, ChoiceFilter, BooleanFilter
+    FilterSet, CharFilter, ChoiceFilter, BooleanFilter
 )
 from annoying.fields import JSONField
 from meal.models import (
@@ -966,8 +966,8 @@ class ClientScheduledStatusFilter(FilterSet):
 
 class ClientFilter(FilterSet):
 
-    name = MethodFilter(
-        action='filter_search',
+    name = CharFilter(
+        method='filter_search',
         label=_('Search by name')
     )
 
@@ -983,8 +983,7 @@ class ClientFilter(FilterSet):
         model = Client
         fields = ['route', 'status', 'delivery_type']
 
-    @staticmethod
-    def filter_search(queryset, value):
+    def filter_search(self, queryset, field_name, value):
         if not value:
             return queryset
 
