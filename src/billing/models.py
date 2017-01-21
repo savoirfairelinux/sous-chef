@@ -6,7 +6,7 @@ from order.models import Order, Order_item
 from datetime import datetime, date
 from annoying.fields import JSONField
 from django.utils.translation import ugettext_lazy as _
-from django_filters import FilterSet, MethodFilter, DateFilter
+from django_filters import FilterSet, CharFilter
 
 
 class BillingManager(models.Manager):
@@ -144,20 +144,20 @@ class Billing(models.Model):
 
 
 class BillingFilter(FilterSet):
-    name = MethodFilter(
-        action='filter_search',
+    name = CharFilter(
+        method='filter_search',
         label=_('Search by name')
     )
 
-    date = MethodFilter(
-        action='filter_period'
+    date = CharFilter(
+        method='filter_period'
     )
 
     class Meta:
         model = Billing
+        fields = '__all__'
 
-    @staticmethod
-    def filter_search(queryset, value):
+    def filter_search(self, queryset, field_name, value):
         if not value:
             return queryset
 
@@ -178,8 +178,7 @@ class BillingFilter(FilterSet):
 
         return queryset.filter(name_contains)
 
-    @staticmethod
-    def filter_period(queryset, value):
+    def filter_period(self, queryset, field_name, value):
         if not value:
             return queryset
 

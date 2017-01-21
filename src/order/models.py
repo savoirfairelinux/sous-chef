@@ -6,7 +6,7 @@ from django.db import models, connection, transaction
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-from django_filters import FilterSet, MethodFilter, ChoiceFilter
+from django_filters import FilterSet, ChoiceFilter, CharFilter
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 
@@ -1000,8 +1000,8 @@ def component_group_sorting(component):
 
 class OrderFilter(FilterSet):
 
-    name = MethodFilter(
-        action='filter_search',
+    name = CharFilter(
+        method='filter_search',
         label=_('Search by name')
     )
 
@@ -1013,8 +1013,7 @@ class OrderFilter(FilterSet):
         model = Order
         fields = ['status', 'delivery_date']
 
-    @staticmethod
-    def filter_search(queryset, value):
+    def filter_search(self, queryset, field_name, value):
         if not value:
             return queryset
 
@@ -1041,15 +1040,15 @@ class OrderFilter(FilterSet):
 
 class DeliveredOrdersByMonth(FilterSet):
 
-    delivery_date = MethodFilter(
-        action='filter_period'
+    delivery_date = CharFilter(
+        method='filter_period'
     )
 
     class Meta:
         model = Order
+        fields = '__all__'
 
-    @staticmethod
-    def filter_period(queryset, value):
+    def filter_period(self, queryset, field_name, value):
         if not value:
             return None
 

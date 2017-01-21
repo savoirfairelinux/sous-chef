@@ -196,3 +196,42 @@ class NoteListViewTestCase(SousChefTestMixin, TestCase):
         response = self.client.get(url)
         # Check
         self.assertEqual(response.status_code, 200)
+
+    def test_search_by_name(self):
+        """
+        Search text should be contained by either firstname or
+        lastname.
+        """
+        client1 = ClientFactory(
+            member__firstname='tessst',
+            member__lastname='woooo'
+        )
+        client2 = ClientFactory(
+            member__firstname='woooo',
+            member__lastname='tessst'
+        )
+        client3 = ClientFactory(
+            member__firstname='woooo',
+            member__lastname='woooo'
+        )
+        note1a = NoteFactory(client=client1)
+        note1b = NoteFactory(client=client1)
+        note2a = NoteFactory(client=client2)
+        note2b = NoteFactory(client=client2)
+        note3a = NoteFactory(client=client3)
+        note3b = NoteFactory(client=client3)
+
+        self.force_login()
+        url = reverse('note:note_list')
+        response = self.client.get(
+            url,
+            {'name': 'esss'}
+        )
+        self.assertEqual(response.status_code, 200)
+        notes = response.context['notes']
+        self.assertIn(note1a, notes)
+        self.assertIn(note1b, notes)
+        self.assertIn(note2a, notes)
+        self.assertIn(note2b, notes)
+        self.assertNotIn(note3a, notes)
+        self.assertNotIn(note3b, notes)
