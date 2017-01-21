@@ -85,8 +85,12 @@ python3 manage.py loaddata sample_data
 ### Run gulp from the web service
 
 ```
-$> docker-compose exec web sh -c "cd tools/gulp && gulp"
+$> docker-compose exec web sh -c "cd tools/gulp && npm install --unsafe-perm && gulp"
 ```
+
+Please rest assured that the "unsafe-perm" option will not bring any security risk to sous-chef. The Node.js packages that we are installing here are only used for generating static files, such as images, CSS, JavaScript, etc., and will never be executed from external.
+
+If you have an error with this command, try deleting the folder `tools/gulp/node_modules` completely and rerun it. If the problem still exists, please let us know.
 
 
 ## Connection to application
