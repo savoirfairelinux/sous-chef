@@ -1979,6 +1979,38 @@ class ClientUpdateTestCase(TestCase):
         )
         self.client.login(username=admin.username, password='test1234')
 
+    def test_redirect_to_next(self):
+        """
+        If "?next" exists in URL parameter, the 302 redirect should
+        point to this URL upon successful form submission.
+        """
+        client = ClientFactory()
+        # Load initial data related to the client
+        data = load_initial_data(client)
+        # Update some data
+        data['firstname'] = 'John'
+        data['lastname'] = 'Doe'
+        data['birthdate'] = '1923-03-21'
+        # Login as admin
+        self.login_as_admin()
+
+        # Send the data to the form.
+        response = self.client.post(
+            reverse(
+                'member:member_update_basic_information',
+                kwargs={
+                    'pk': client.id
+                }
+            ) + '?next=/fake/any_url',
+            data,
+            follow=True
+        )
+
+        self.assertRedirects(
+            response, '/fake/any_url',
+            status_code=302, target_status_code=404
+        )
+
 
 class ClientUpdateBasicInformation(ClientUpdateTestCase):
 
