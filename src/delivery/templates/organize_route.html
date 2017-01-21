@@ -25,7 +25,7 @@
 </div>
 
 <div class="ui basic segment no-print">
-    <a href="javascript:window.print()" class="ui labeled icon right pink basic big button" title="{% trans 'Print the map and directions' %}">
+    <a href="javascript:printMapAndItinerary()" class="ui labeled icon right pink basic big button" title="{% trans 'Print the map and directions' %}">
         <i class="print icon"></i>{% trans 'Map and Directions' %}
     </a>
 </div>
@@ -53,13 +53,94 @@
   <i class="chevron left icon"></i>{% trans 'View routes' %}
 </a>
 
+
+<script type="x-tmpl-mustache" id="print-template">
+  {% comment %}The print window is managed by JavaScript (using Mustache template system). Below is the page template.{% endcomment %}
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>{% trans "Delivery route" %}: {{ route.name }} - {% now "j F Y" %}</title>
+      <meta charset="utf-8">
+      <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet">
+      {% leaflet_css %}
+      <link href="{% static 'css/main.min.css' %}" type="text/css" rel="stylesheet">
+      <style>
+        hr {margin-top:2em;margin-bottom:2em}
+        #directions td:last-child {white-space:nowrap}
+      </style>
+    </head>
+    <body style="width: {% verbatim %}{{ map_width }}{% endverbatim %}px;" other=" height:100%; overflow:auto">
+      <h1>{% trans "Delivery route" %}: {{ route.name }}</h1>
+      <h4>{% now "j F Y" %}</h4>
+      <br/>
+      <div>
+        <button class="no-print" onclick="window.print()">{% trans 'Print' %}</button>
+      </div>
+
+      {% verbatim %}
+      <div style="height: {{ map_height }}px; width: {{ map_width }}px; position:relative; overflow:hidden">
+        <div style="position:absolute; left: {{ pane_left }}px; top: {{ pane_top }}px;">
+        {{#map_imgs}}
+          <img src="{{ src }}" style="position:absolute; top: {{ top }}px; left: {{ left }}px">
+        {{/map_imgs}}
+
+        {{{ map_route_svg }}}
+
+        {{#routes}}
+          <div style="position:absolute; top:0; left:0">{{{ marker_html }}}</div>
+        {{/routes}}
+        </div>
+      </div>
+      {% endverbatim %}
+
+      <hr />
+
+      <h2>{% trans 'Route Sequence' %}</h2>
+      <table style="width: 100%">
+        <thead>
+          <tr>
+            <th></th>
+            <th style="text-align:left">{% trans 'Client Name' %}</th>
+            <th style="text-align:left">{% trans 'Address' %}</th>
+          </tr>
+        </thead>
+        {% verbatim %}
+        <tbody>
+          {{#routes}}
+          <tr>
+            <th>{{ client_order }}</th>
+            <td>{{ client_name }}</td>
+            <td>{{ client_address }}</td>
+          </tr>
+          {{/routes}}
+        </tbody>
+        {% endverbatim %}
+      </table>
+
+      <hr />
+
+      <h2>{% trans 'Directions' %}</h2>
+      {% verbatim %}
+      <h4>{{ distance_and_time }}</h4>
+      {% endverbatim %}
+      <table style="width: 100%" id="directions">
+        {% verbatim %}
+        {{{ directions_table }}}
+        {% endverbatim %}
+      </table>
+      <br/>
+    </body>
+  </html>
+</script>
 {% endblock %}
 
 {% block extrajs %}
     {% leaflet_js %}
     {% if debug %}
         <script src="{% static 'js/leaflet.js' %}" type="application/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.js"></script>
     {% else %}
         <script src="{% static 'js/leaflet.min.js' %}" type="application/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
     {% endif %}
 {% endblock %}

@@ -1,6 +1,8 @@
 .print-only {display:none!important}
 
 @media only print {
+    html, body {background:none!important}
+
     .ui.left.fixed.vertical.inverted.menu
     {display:none;}
 
