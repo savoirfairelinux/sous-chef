@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-06 21:40+0000\n"
+"POT-Creation-Date: 2017-01-16 22:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,8 @@ msgstr ""
 msgid "Normal"
 msgstr ""
 
-#: note/models.py:31
+#: note/models.py:31 note/templates/notes_client_list.html:67
+#: note/templates/notes_list.html:83
 msgid "Urgent"
 msgstr ""
 
@@ -107,12 +108,26 @@ msgstr ""
 msgid "New Note"
 msgstr ""
 
-#: note/templates/notes_client_list.html:65 note/templates/notes_list.html:83
+#: note/templates/notes_client_list.html:69 note/templates/notes_list.html:85
+msgid "Not urgent"
+msgstr ""
+
+#: note/templates/notes_client_list.html:81 note/templates/notes_list.html:102
 msgid "Mark as unread"
 msgstr ""
 
-#: note/templates/notes_client_list.html:68 note/templates/notes_list.html:86
+#: note/templates/notes_client_list.html:85 note/templates/notes_list.html:106
 msgid "Mark as read"
+msgstr ""
+
+#: note/templates/notes_client_list.html:103
+#: note/templates/notes_list.html:146
+msgid "Mark all as read"
+msgstr ""
+
+#: note/templates/notes_client_list.html:109
+#: note/templates/notes_list.html:152
+msgid "Commit selected changes"
 msgstr ""
 
 #: note/templates/notes_list.html:26
@@ -127,7 +142,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: note/templates/notes_list.html:117
+#: note/templates/notes_list.html:126
 msgid "of"
 msgstr ""
 
@@ -143,6 +158,11 @@ msgstr ""
 msgid "^unread/(?P<id>\\d+)/$"
 msgstr ""
 
-#: note/views.py:98
+#: note/views.py:99
 msgid "The note has been created."
+msgstr ""
+
+#: note/views.py:147
+#, python-format
+msgid "%(count)s note(s) have been updated."
 msgstr ""

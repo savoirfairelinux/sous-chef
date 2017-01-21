@@ -62,6 +62,7 @@ gulp.task('scripts', function() {
         SRC_JS + '/order.js',
         SRC_JS + '/billing.js',
         SRC_JS + '/page.js',
+        SRC_JS + '/note.js',
     ])
         .pipe(concat('sous-chef.js'))
         .pipe(gulp.dest(DST_JS))
