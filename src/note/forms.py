@@ -16,7 +16,7 @@ class NoteForm(forms.ModelForm):
 
     class Meta:
         model = Note
-        fields = ['note', 'client', 'priority']
+        fields = ['note', 'client', 'priority', 'category']
 
         widgets = {
             'note': forms.Textarea(attrs={'rows': 5}),
@@ -24,6 +24,9 @@ class NoteForm(forms.ModelForm):
                 attrs={'class': 'ui search dropdown'}
             ),
             'priority': forms.Select(
+                attrs={'class': 'ui dropdown'}
+            ),
+            'category': forms.Select(
                 attrs={'class': 'ui dropdown'}
             ),
         }

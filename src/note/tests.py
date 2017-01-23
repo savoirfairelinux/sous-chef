@@ -1,6 +1,6 @@
 import importlib
 from django.test import TestCase
-from note.models import Note
+from note.models import Note, NotePriority, NoteCategory
 from note.factories import NoteFactory
 from django.contrib.auth.models import User
 from member.factories import ClientFactory
@@ -19,7 +19,16 @@ class NoteTestCase(TestCase):
         cls.admin = User.objects.create_superuser(
             username='admin', email='testadmin@example.com',
             password='test1234')
-        cls.note = NoteFactory.create(client=cls.clients, author=cls.admin)
+        cls.note = NoteFactory.create(
+            client=cls.clients,
+            author=cls.admin,
+            priority=NotePriority.objects.get(
+                pk=NotePriority.DEFAULT_PRIORITY_ID
+            ),
+            category=NoteCategory.objects.get(
+                pk=NoteCategory.DEFAULT_CATEGORY_ID
+            )
+        )
 
     def test_attach_note_to_member(self):
         """Create a note attached to a member"""
@@ -75,7 +84,8 @@ class NoteAddTestCase(NoteTestCase):
         response = self.client.post(reverse('note:note_add'), {
             'note': "test note TEST_PHRASE",
             "client": ClientFactory().pk,
-            "priority": 'normal'
+            "priority": '1',
+            "category": '1'
         }, follow=False)
         time_2 = timezone.now()
         self.assertEqual(response.status_code, 302)  # successful creation
@@ -108,7 +118,7 @@ class NoteAddTestCase(NoteTestCase):
         response = self.client.post(url, {
             'note': "test note TEST_PHRASE",
             "client": ClientFactory().pk,
-            "priority": 'normal'
+            "priority": '1'
         }, follow=True)
         # Check
         self.assertEqual(response.status_code, 200)

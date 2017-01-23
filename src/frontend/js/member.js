@@ -131,10 +131,10 @@ $(function() {
         $('.ui.add.form.member').transition('scale');
     }
 
-    $search_url = $('.ui.search').attr('data-url')
+    $search_url = $('.ui.search .ui.input').attr('data-url');
     $('.ui.search').search({
         apiSettings: {
-            cache : 'local',
+            cache : false,
             url: $search_url + '?name={query}',
         },
         minCharacters : 3,

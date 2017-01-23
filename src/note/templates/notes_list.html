@@ -51,6 +51,12 @@
             </div>
           </div>
           <div class="field">
+            <label>{% trans "Category" %}</label>
+            <div class="field">
+              {{ filter.form.category|alter_field_class:'ui dropdown' }}
+            </div>
+          </div>
+          <div class="field">
             <label>{% trans "Is read" %}</label>
             <div class="field">
               {{ filter.form.is_read|alter_field_class:'ui dropdown' }}
