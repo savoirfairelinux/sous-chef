@@ -12,8 +12,8 @@
 </div>
 
 <div class="ui center aligned basic segment" id="billing_select_member">
-  <div class="ui fluid category search" data-url="{% url 'member:search' %}">
-    <div class="ui icon input">
+  <div class="ui fluid category search">
+    <div class="ui icon input" data-url="{% url 'member:search' %}">
       {{form.member}}
       <i class="search icon"></i>
     </div>
