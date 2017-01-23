@@ -298,8 +298,8 @@ class ClientWizard(
         referent_information = self.form_dict['referent_information']
         e_referent = referent_information.cleaned_data.get('member')
         if (
-            self.referent_is_billing_member()
-            and client.pk != billing_member.pk
+            self.referent_is_billing_member() and
+            client.pk != billing_member.pk
         ):
             referent = billing_member
             referent.work_information = referent_information.cleaned_data.get(
