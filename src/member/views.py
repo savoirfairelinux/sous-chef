@@ -222,6 +222,7 @@ class ClientWizard(
                 'delivery_note': address_information.get('delivery_note'),
                 'emergency_contact_relationship':
                     emergency_information.get('relationship'),
+                'status': 'A' if dietary_restriction['status'] else 'D',
             }
         )
 
