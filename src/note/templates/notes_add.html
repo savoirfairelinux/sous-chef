@@ -62,6 +62,17 @@
     {% endif %}
   </div>
 
+  <div class="field {% if form.category.errors %}error{% endif %}">
+    <label>{{ form.category.label }}</label>
+    {{ form.category }}
+
+    {% if form.category.errors %}
+    <div class="ui error message">
+      {{ form.category.errors }}
+    </div>
+    {% endif %}
+  </div>
+
   <div class="ui row">
     <button class="ui primary button" type="submit">{% trans "Create" %}</button>
     <a class="ui button" href="{% if not client %}{% url 'note:note_list' %}{% else %}{% url 'member:client_notes' client.pk %}{% endif %}">{% trans "Cancel" %}</a>

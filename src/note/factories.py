@@ -1,9 +1,8 @@
 # coding=utf-8
 import factory
 import random
-from member.models import Client
 from member.factories import ClientFactory
-from note.models import Note
+from note.models import Note, NotePriority, NoteCategory
 from django.contrib.auth.models import User
 
 
@@ -24,5 +23,8 @@ class NoteFactory(factory.DjangoModelFactory):
     author = factory.SubFactory(UserFactory)
     client = factory.SubFactory(ClientFactory)
     priority = factory.LazyAttribute(
-        lambda x: random.choice(Note.PRIORITY_LEVEL)[0]
+        lambda x: random.choice(NotePriority.objects.all()).pk
+    )
+    category = factory.LazyAttribute(
+        lambda x: random.choice(NoteCategory.objects.all()).pk
     )
