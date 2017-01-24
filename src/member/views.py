@@ -1211,6 +1211,9 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
         client = get_object_or_404(
             Client, pk=self.kwargs.get('pk')
         )
+        if client.emergency_contact is None:
+            return initial
+        
         member_contact = client.emergency_contact.member_contact.first()
         initial.update({
             'firstname': None,
