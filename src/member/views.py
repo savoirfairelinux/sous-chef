@@ -1213,7 +1213,7 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
         )
         if client.emergency_contact is None:
             return initial
-        
+
         member_contact = client.emergency_contact.member_contact.first()
         initial.update({
             'firstname': None,
@@ -1298,6 +1298,10 @@ class SearchMembers(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
             results = []
             for m in members:
                 name = '[' + str(m.id) + '] ' + m.firstname + ' ' + m.lastname
+
+                if m.work_information is not None:
+                    name += ' (' + m.work_information + ')'
+
                 results.append({'title': name})
             data = {
                 'success': True,
