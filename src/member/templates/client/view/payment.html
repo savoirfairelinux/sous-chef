@@ -41,10 +41,10 @@
             <div class="header">{% trans 'Rate type' %}</div>{{client.get_rate_type_display}}
         </div>
         <div class="item">
-            <div class="header">
-                <i class="icon home"></i>{% trans "Address" %}
-            </div>
-            {{client.billing_member.address.street}}, {{client.billing_member.address.city}}, {{client.billing_member.address.postal_code}}
+            <div class="header"><i class="icon home"></i>{% trans "Address" %}</div>
+            {{client.billing_member.address.street}}
+            {% if client.billing_member.address.apartment %}, {{client.billing_member.address.apartment}}{% endif %}
+            <br/>{{client.billing_member.address.city}} ({{client.billing_member.address.postal_code}})
         </div>
     </div>
 
