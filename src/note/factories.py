@@ -23,8 +23,8 @@ class NoteFactory(factory.DjangoModelFactory):
     author = factory.SubFactory(UserFactory)
     client = factory.SubFactory(ClientFactory)
     priority = factory.LazyAttribute(
-        lambda x: random.choice(NotePriority.objects.all()).pk
+        lambda x: random.choice(NotePriority.objects.all())
     )
     category = factory.LazyAttribute(
-        lambda x: random.choice(NoteCategory.objects.all()).pk
+        lambda x: random.choice(NoteCategory.objects.all())
     )
