@@ -46,6 +46,7 @@
         {% if client.member.address.apartment %}, {{client.member.address.apartment}}{% endif %}
         <br/>{{client.member.address.city}} ({{client.member.address.postal_code}})
     </div>
+    <div class="item"><div class="header">{% trans "Route" %}</div>{{client.route}}</div>
     <div class="item"><div class="header">{% trans "Delivery Note" %}</div>{{client.delivery_note}}</div>
 </div>
 </div>
