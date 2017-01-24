@@ -248,6 +248,7 @@ class NoteListViewTestCase(SousChefTestMixin, TestCase):
         self.assertNotIn(note3a, notes)
         self.assertNotIn(note3b, notes)
 
+
 class NoteBatchToggleViewTestCase(SousChefTestMixin, TestCase):
 
     @classmethod
