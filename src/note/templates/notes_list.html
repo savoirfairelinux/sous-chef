@@ -56,6 +56,8 @@
               {{ filter.form.category|alter_field_class:'ui dropdown' }}
             </div>
           </div>
+      </div>
+      <div class="inline fields">
           <div class="field">
             <label>{% trans "Is read" %}</label>
             <div class="field">
@@ -85,10 +87,11 @@
         {% for note in notes %}
         <tr {% if not note.is_read %} class="{% if note.priority == 'urgent' %}warning{% else %}warning{% endif %}" {% endif %}>
           <td class="center aligned">
-            {% if note.priority == 'urgent' %}
+            {% if note.priority == "Urgent" %}
+              {{note.priority}}
             <i class="warning sign middle aligned icon" title="{% trans 'Urgent' %}"></i>
             {% else %}
-            <i class="info middle aligned icon" title="{% trans 'Not urgent' %}"></i>
+            <small>{{note.category}}</small>
             {% endif %}
           </td>
           <td style="width:100%;{% if not note.is_read %}font-weight:bold!important{% endif %}">
@@ -98,7 +101,7 @@
             </div>
             <div class="description">
               <div class="date">
-                <em>{{note.date}}</em>
+                <small>{{note.date}} {% trans 'created by' %} {{note.author}}</small>
               </div>
             </div>
           </td>

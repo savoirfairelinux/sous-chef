@@ -66,13 +66,16 @@
             {% if note.priority == 'urgent' %}
             <i class="warning sign middle aligned icon" title="{% trans 'Urgent' %}"></i>
             {% else %}
-            <i class="info middle aligned icon" title="{% trans 'Not urgent' %}"></i>
+            {{note.category}}
             {% endif %}
           </td>
           <td style="width:100%;{% if not note.is_read %}font-weight:bold!important{% endif %}">
             <a class="header">{{note.date}}</a>
             <div class="description">
               {{ note.note }}
+            </div>
+            <div class="author">
+                <small>{% trans 'Created by' %} {{note.author}}</small>
             </div>
           </td>
           <td class="right aligned" style="white-space:nowrap">
