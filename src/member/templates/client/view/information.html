@@ -40,7 +40,12 @@
     {% for contact in client.member.member_contact.all %}
         <div class="item"><div class="header">{{contact.type}}</div>{{contact.display_value}}</div>
     {% endfor %}
-    <div class="item"><div class="header"><i class="icon home"></i>{% trans "Address" %}</div>{{client.member.address.street}}, {{client.member.address.city}}, {{client.member.address.postal_code}}</div>
+    <div class="item">
+        <div class="header"><i class="icon home"></i>{% trans "Address" %}</div>
+        {{client.member.address.street}}
+        {% if client.member.address.apartment %}, {{client.member.address.apartment}}{% endif %}
+        <br/>{{client.member.address.city}} ({{client.member.address.postal_code}})
+    </div>
     <div class="item"><div class="header">{% trans "Delivery Note" %}</div>{{client.delivery_note}}</div>
 </div>
 </div>
