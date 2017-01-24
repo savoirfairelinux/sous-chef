@@ -56,30 +56,66 @@
         </div>
     </form>
 
-    <div class="ui relaxed divided list">
-        {% for note in notes %}
-        <div class="item">
-            <div class="right floated content">
-                {% if note.is_read %}
-                <a class="ui tiny  button " href="{% url 'note:unread' note.id %}">
-                {% trans 'Mark as unread' %}</a>
-                {% else %}
-                <a class="ui tiny  button" href="{% url 'note:read' note.id %}">
-                {% trans 'Mark as read' %}
-                {% endif %}
-                </a>
-            </div>
-            <i class="{% if note.priority == 'urgent' %} warning sign {% else %} info {% endif %} middle aligned icon"></i>
-            <div class="content">
-                <a class="header">{{note.date}}</a>
-                <div class="description">
-                    {{ note.note }}
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
 
+
+    <table class="ui very basic compact table">
+      <tbody>
+        {% for note in notes %}
+        <tr {% if not note.is_read %} class="{% if note.priority == 'urgent' %}warning{% else %}warning{% endif %}" {% endif %}>
+          <td class="center aligned">
+            {% if note.priority == 'urgent' %}
+            <i class="warning sign middle aligned icon" title="{% trans 'Urgent' %}"></i>
+            {% else %}
+            {{note.category}}
+            {% endif %}
+          </td>
+          <td style="width:100%;{% if not note.is_read %}font-weight:bold!important{% endif %}">
+            <a class="header">{{note.date}}</a>
+            <div class="description">
+              {{ note.note }}
+            </div>
+            <div class="author">
+                <small>{% trans 'Created by' %} {{note.author}}</small>
+            </div>
+          </td>
+          <td class="right aligned" style="white-space:nowrap">
+            {% if note.is_read %}
+            <button class="ui tiny basic button" data-note-id="{{note.id}}" data-batch-commit-btn="#batch-commit-btn">
+              {% trans 'Mark as unread' %}
+            </button>
+            {% else %}
+            <button class="ui tiny basic yellow button" data-note-id="{{note.id}}" data-batch-commit-btn="#batch-commit-btn">
+              {% trans 'Mark as read' %}
+            </button>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="3">
+            <form action="{% url 'note:batch_toggle' %}" method="post" style="float:right">
+              {% csrf_token %}
+              {% for note in notes %}
+              {% if not note.is_read %}
+              <input type="hidden" name="note" value="{{ note.id }}">
+              {% endif %}
+              {% endfor %}
+              <button class="ui button" type="submit">
+                {% trans 'Mark all as read' %}
+              </button>
+            </form>
+
+            <form action="{% url 'note:batch_toggle' %}" method="post" style="float:right;margin-right:0.5em">
+              {% csrf_token %}
+              <button type="submit" class="ui yellow button" style="display:none" id="batch-commit-btn">{% trans 'Commit selected changes' %}</button>
+            </form>
+
+          </th>
+        </tr>
+      </tfoot>
+    </table>
 </div>
 
 {% endblock %}

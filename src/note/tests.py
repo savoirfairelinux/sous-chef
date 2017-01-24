@@ -1,9 +1,10 @@
 import importlib
+import itertools
 from django.test import TestCase
 from note.models import Note, NotePriority, NoteCategory
 from note.factories import NoteFactory
 from django.contrib.auth.models import User
-from member.factories import ClientFactory
+from member.factories import ClientFactory, RouteFactory
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from sous_chef.tests import TestMixin as SousChefTestMixin
@@ -180,6 +181,7 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
         check(reverse('note:read', kwargs={'id': 1}))
         check(reverse('note:unread', kwargs={'id': 1}))
         check(reverse('note:note_add'))
+        check(reverse('note:batch_toggle'))
 
 
 class NoteListViewTestCase(SousChefTestMixin, TestCase):
@@ -245,3 +247,31 @@ class NoteListViewTestCase(SousChefTestMixin, TestCase):
         self.assertIn(note2b, notes)
         self.assertNotIn(note3a, notes)
         self.assertNotIn(note3b, notes)
+
+class NoteBatchToggleViewTestCase(SousChefTestMixin, TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        r = RouteFactory()  # prerequisite
+        cls.unread_notes = NoteFactory.create_batch(10, is_read=False)
+        cls.read_notes = NoteFactory.create_batch(10, is_read=True)
+
+    def test_toggle(self):
+        self.force_login()
+        response = self.client.post(
+            reverse('note:batch_toggle'),
+            {'note': list(map(
+                lambda n: n.id,
+                itertools.chain(self.unread_notes, self.read_notes)
+            ))},
+            redirect=False
+        )
+        self.assertEqual(response.status_code, 302)  # should redirect
+
+        # Refetch
+        for n in self.unread_notes:
+            n.refresh_from_db()
+            self.assertTrue(n.is_read)
+        for n in self.read_notes:
+            n.refresh_from_db()
+            self.assertFalse(n.is_read)

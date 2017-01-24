@@ -56,6 +56,8 @@
               {{ filter.form.category|alter_field_class:'ui dropdown' }}
             </div>
           </div>
+      </div>
+      <div class="inline fields">
           <div class="field">
             <label>{% trans "Is read" %}</label>
             <div class="field">
@@ -80,39 +82,49 @@
         </div>
       </form>
     </div>
-    <div class="ui relaxed divided list">
-      {% for note in notes %}
-      <div class="item">
-        <div class="right floated content">
-            {% if note.is_read %}
-            <a class="ui tiny  button " href="{% url 'note:unread' note.id %}">
-            {% trans 'Mark as unread' %}</a>
+    <table class="ui basic compact table">
+      <tbody>
+        {% for note in notes %}
+        <tr {% if not note.is_read %} class="{% if note.priority == 'urgent' %}warning{% else %}warning{% endif %}" {% endif %}>
+          <td class="center aligned">
+            {% if note.priority == "Urgent" %}
+              {{note.priority}}
+            <i class="warning sign middle aligned icon" title="{% trans 'Urgent' %}"></i>
             {% else %}
-            <a class="ui tiny  button" href="{% url 'note:read' note.id %}">
-            {% trans 'Mark as read' %}
+            <small>{{note.category}}</small>
             {% endif %}
-            </a>
-        </div>
-        <i class="{% if note.priority == 'urgent' %} warning sign {% else %} info {% endif %} middle aligned icon"></i>
-        <div class="content">
+          </td>
+          <td style="width:100%;{% if not note.is_read %}font-weight:bold!important{% endif %}">
             <a class="header" href="{% url 'member:client_information' pk=note.client.id %}">{{note.client}}</a>
             <div class="description">
-                {{ note.note }}
+              {{ note.note }}
             </div>
             <div class="description">
-                <div class="date">
-                    <em>{{note.date}}</em>
-                </div>
+              <div class="date">
+                <small>{{note.date}} {% trans 'created by' %} {{note.author}}</small>
+              </div>
             </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
+          </td>
+          <td class="right aligned" style="white-space:nowrap">
+            {% if note.is_read %}
+            <button class="ui tiny basic button" data-note-id="{{note.id}}" data-batch-commit-btn="#batch-commit-btn">
+              {% trans 'Mark as unread' %}
+            </button>
+            {% else %}
+            <button class="ui tiny basic yellow button" data-note-id="{{note.id}}" data-batch-commit-btn="#batch-commit-btn">
+              {% trans 'Mark as read' %}
+            </button>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 
-    {% if is_paginated %}
 
     <div class="ui row">
-      <div class="ui pagination menu" style="margin: 2em auto; width=100%;";>
+      {% if is_paginated %}
+      <div class="ui pagination menu" style="margin: 2em auto">
         {% if page_obj.has_previous %}
         <a class="icon item"
            href="{{ request.path }}{{ get }}page={{ page_obj.previous_page_number }}">
@@ -129,6 +141,24 @@
         </a>
         {% endif %}
       </div>
+      {% endif %}
+
+
+      <form action="{% url 'note:batch_toggle' %}" method="post" style="float:right;margin-right:0.5em">
+        {% csrf_token %}
+        {% for note in notes %}
+          {% if not note.is_read %}
+          <input type="hidden" name="note" value="{{ note.id }}">
+          {% endif %}
+        {% endfor %}
+        <button class="ui button" style="margin: 2em auto" type="submit">
+          {% trans 'Mark all as read' %}
+        </button>
+      </form>
+
+      <form action="{% url 'note:batch_toggle' %}" method="post" style="float:right;margin-right:0.5em">
+        {% csrf_token %}
+        <button type="submit" class="ui yellow button" style="margin: 2em auto; display:none" id="batch-commit-btn">{% trans 'Commit selected changes' %}</button>
+      </form>
     </div>
-    {% endif %}
 {% endblock %}
