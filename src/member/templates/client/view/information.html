@@ -36,7 +36,7 @@
     <div class="item"><div class="header">{% trans 'Gender' %}</div>{{client.get_gender_display}}</div>
     <div class="item"><div class="header">{% trans 'Language' %}</div>{{client.get_language_display}}</div>
     <div class="item"><div class="header">{% trans 'Delivery Type' %}</div>{{client.get_delivery_type_display}}</div>
-    <div class="item"><div class="header">{% trans 'Birthday' %}</div>{{client.birthdate}}</div>
+    <div class="item"><div class="header">{% trans 'Birthday' %}</div>{{client.birthdate|date:"d F Y"}}</div>
     {% for contact in client.member.member_contact.all %}
         <div class="item"><div class="header">{{contact.type}}</div>{{contact.display_value}}</div>
     {% endfor %}
