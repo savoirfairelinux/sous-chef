@@ -1187,7 +1187,6 @@ class ClientUpdateDietaryRestriction(ClientUpdateInformation):
                 ]
         client.delivery_type = form['delivery_type']
         client.meal_default_week = json
-        client.status = Client.ACTIVE if form.get('status') else Client.PENDING
         client.save()
 
 
