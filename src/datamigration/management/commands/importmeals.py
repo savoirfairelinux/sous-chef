@@ -107,15 +107,6 @@ class Command(BaseCommand):
                             option=food_prep_puree
                         )
 
-                    # Add a note that contains the old meal label
-                    if row[self.ROW_MLABEL] != "":
-                        note = Note(
-                            note=row[self.ROW_MLABEL],
-                            author=None,
-                            client=client,
-                        )
-                        note.save()
-
                 except Member.DoesNotExist:
                     self.stdout.write(
                         self.style.WARNING('Non existing member'))

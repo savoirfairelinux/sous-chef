@@ -55,7 +55,9 @@ class Command(BaseCommand):
                                 rid=row[self.ROW_RID], defaults={
                                     "firstname": row[
                                         self.ROW_FIRSTNAME], "lastname": row[
-                                        self.ROW_LASTNAME], })
+                                        self.ROW_LASTNAME],
+                                    "work_information": row[
+                                        self.ROW_WORK_INFORMATION]})
 
                         if row[self.ROW_EMERGENCY] == '1':
                             self.stdout.write(
@@ -76,9 +78,6 @@ class Command(BaseCommand):
                                 referent=relationship,
                                 client=client,
                                 referral_reason=row[self.ROW_REASON],
-                                work_information=row[
-                                    self.ROW_WORK_INFORMATION
-                                ],
                                 date=date.today(), )
 
                         client.save()
