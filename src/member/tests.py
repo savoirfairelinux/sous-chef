@@ -2335,6 +2335,8 @@ class ClientUpdateDietaryRestrictionTestCase(ClientUpdateTestCase):
         client = ClientFactory()
         # Load initial data related to the client
         data = load_initial_data(client)
+        # Make sure the status stays unchanged
+        status = client.status
         # Update some data
         data.update({
             'status': "A",
@@ -2357,7 +2359,7 @@ class ClientUpdateDietaryRestrictionTestCase(ClientUpdateTestCase):
 
         # Reload client data as it should have been changed in the database
         client = Client.objects.get(id=client.id)
-        self.assertEqual(client.status, 'A')
+        self.assertEqual(client.status, status)
         self.assertEqual(client.delivery_type, "O")
 
 
