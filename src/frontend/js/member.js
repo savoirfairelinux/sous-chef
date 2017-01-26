@@ -138,7 +138,7 @@ $(function() {
             url: $search_url + '?name={query}',
         },
         minCharacters : 3,
-        maxResults : 15,
+        maxResults : 10,
     });
 
     function showOneAccordionElement(element, index, array) {
