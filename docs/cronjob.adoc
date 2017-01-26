@@ -1,0 +1,35 @@
+## Scheduled tasks
+
+A couple of tasks must be scheduled daily for Sous-Chef to work as expected.
+
+### Orders generation
+
+Orders can be generated days in advance for episodic and ongoing clients, according to their meal defaults.
+This allows a better and simpler administration.
+
+To generate orders 30 days in advance, run the following script:
+
+ docker exec -it souschef_web_1 python src/manage.py generateorders <date> --days 30
+
+Cronjob version:
+
+ @daily /usr/bin/docker exec -it souschef_web_1 python src/manage.py generateorders $(date +%Y-%m-%d) --days 30
+
+Note that existing orders won't be overriden by this script.
+
+### Delivered Orders
+
+Orders that have been successfully delivered must be updated to reflect that.
+
+Every day, the *Ordered* orders are delivered. Once they are, they should pass to the *Delivered* status,
+which will allow the billing system to work properly.
+
+### Backup
+
+To run a database backup, one option is to run the following command (using here the default credentials):
+
+ docker exec -it souschef_db_1 mysqldump -uroot -p123456 feast > souschef_data.sql
+
+Cronjob version:
+
+ @daily /usr/bin/docker exec -it souschef_db_1 mysqldump -uroot -p123456 feast > souschef_data_$(date +%Y%m%d-%H%M%S).sql
