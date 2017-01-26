@@ -328,6 +328,13 @@ class OrderManager(models.Manager):
 
         return order
 
+    """
+    Allow changing status of multiple orders at once.
+    """
+    def update_orders_status(self, orders, new):
+        count = orders.update(status=new)
+        return count
+
 
 class Order(models.Model):
 
