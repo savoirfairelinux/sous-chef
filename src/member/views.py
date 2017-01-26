@@ -1282,18 +1282,36 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
 class SearchMembers(LoginRequiredMixin, PermissionRequiredMixin, generic.View):
     permission_required = 'sous_chef.read'
 
+    @staticmethod
+    def _get_query_args(query):
+        """
+        Return query arguments built for first_name and
+        last_name Member fields
+        :return: Q() | Q() or Q() & Q()
+        """
+        query = query.strip()
+        if ' ' not in query:
+            # Is a simple word, check if both fields contains
+            # the query value
+            return Q(
+                firstname__icontains=query
+            ) | Q(
+                lastname__icontains=query
+            )
+        else:
+            # More than one word, split query to search separately
+            # by first and last name
+            s_query = query.split(' ')
+            return Q(
+                firstname__icontains=s_query[0]
+            ) & Q(
+                lastname__icontains=' '.join(s_query[1:])
+            )
+
     def get(self, request):
         if request.is_ajax():
-            q = self.request.GET.get('name', '')
-            name_contains = Q()
-            firstname_contains = Q(
-                firstname__icontains=q
-            )
-            lastname_contains = Q(
-                lastname__icontains=q
-            )
-            name_contains |= firstname_contains | lastname_contains
-            members = Member.objects.filter(name_contains)[:20]
+            q = request.GET.get('name', '')
+            members = Member.objects.filter(self._get_query_args(q))[:20]
             results = []
             for m in members:
                 name = '[' + str(m.id) + '] ' + m.firstname + ' ' + m.lastname
