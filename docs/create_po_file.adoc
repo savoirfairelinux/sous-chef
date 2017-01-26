@@ -4,8 +4,7 @@
 
 If commits in your pull request have introduced new translatable content, you must update the .po files and include them in your pull request.
 
-1. `docker ps` to obtain the container ID for 'web'
-2. `docker exec -it <container_id> bash`
+1. `docker exec -it souschef_web_1 bash`
 3. `cd src`
 4. `python3 manage.py makemessages -l fr -l en` to update the various django.po
 files with your new strings.
