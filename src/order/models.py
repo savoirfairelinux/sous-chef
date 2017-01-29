@@ -157,59 +157,35 @@ class OrderManager(models.Manager):
         Returns:
           Created orders.
         """
-        created = 0
-        orders = []
+        created_orders = []
+        messages = []
         day = delivery_date.weekday()  # Monday is 0, Sunday is 6
         for client in clients:
-            # No main_dish means no delivery this day
-            main_dish_quantity, main_dish_size = Client.get_meal_defaults(
-                client,
-                COMPONENT_GROUP_CHOICES_MAIN_DISH, day)
-            if main_dish_quantity == 0:
-                continue
             try:
-                # If an order is already created, skip order items creation
-                # (if want to replace, must be deleted first)
                 order = Order.objects.get(client=client,
                                           delivery_date=delivery_date)
-                orders.append(order)
+                created_orders.append(order)
                 continue
             except Order.DoesNotExist:
-                order = Order.objects.create(client=client,
-                                             creation_date=datetime.today(),
-                                             delivery_date=delivery_date,
-                                             status=ORDER_STATUS_ORDERED)
-                created += 1
-                orders.append(order)
-
-            # TODO Use Parameters Model in member to store unit prices
-            prices = self.get_client_prices(client)
-            main_price = prices['main']
-            side_price = prices['side']
-
-            for component_group, trans in COMPONENT_GROUP_CHOICES:
-                item_quantity, item_size = Client.get_meal_defaults(
-                    client, component_group, day)
-                if item_quantity > 0:
-                    # Set the quantity of the current item
-                    total_quantity = item_quantity
-                    # Set the unit price of the current item
-                    if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH):
-                        unit_price = main_price
+                # If no order for this client/date, create it and attach items
+                prices = self.get_client_prices(client)
+                items = client.meals_default[day][1]
+                # Skip this client if no default is set
+                if items is None:
+                    continue
+                individual_items = {}
+                for key, value in items.items():
+                    if 'size' in key:
+                        replaced_key = key + '_default'
                     else:
-                        unit_price = side_price
-                        while main_dish_quantity > 0 and item_quantity > 0:
-                            main_dish_quantity -= 1
-                            item_quantity -= 1
-                    Order_item.objects.create(
-                        order=order,
-                        component_group=component_group,
-                        price=total_quantity * unit_price,
-                        billable_flag=True,
-                        size=item_size,
-                        order_item_type=ORDER_ITEM_TYPE_CHOICES_COMPONENT,
-                        total_quantity=total_quantity)
-        return orders
+                        replaced_key = key + '_default_quantity'
+                    individual_items[replaced_key] = value
+                order = self.create_order(
+                    delivery_date, client, individual_items, prices
+                )
+
+                created_orders.append(order)
+        return created_orders
 
     def create_batch_orders(self, delivery_dates, client, items,
                             return_created_orders=False):
