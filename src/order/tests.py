@@ -322,11 +322,11 @@ class OrderAutoCreateOnDefaultsTestCase(TestCase):
         """
         meals_default = {
             'main_dish_friday_quantity': 2,
-            'size_friday': 'L',
+            'size_friday': 'R',
             'dessert_friday_quantity': 0,
             'diabetic_dessert_friday_quantity': 0,
             'fruit_salad_friday_quantity': 1,
-            'green_salad_friday_quantity': 0,
+            'green_salad_friday_quantity': 1,
             'pudding_friday_quantity': 1,
             'compote_friday_quantity': 0,
         }
@@ -334,6 +334,7 @@ class OrderAutoCreateOnDefaultsTestCase(TestCase):
             4,
             status=Client.ACTIVE,
             delivery_type='O',
+            rate_type='default',
             meal_default_week=meals_default)
         # The delivery date must be a Friday, to match the meals defaults
         cls.delivery_date = date(2016, 7, 15)
@@ -346,7 +347,20 @@ class OrderAutoCreateOnDefaultsTestCase(TestCase):
             self.delivery_date, self.ongoing_clients)
         self.assertEqual(len(created_orders), len(self.ongoing_clients))
         created = Order.objects.filter(delivery_date=self.delivery_date)
+        random_order = random.choice(created)
         self.assertEqual(created.count(), len(self.ongoing_clients))
+        # Every client has the same defaults
+        self.assertEqual(random_order.price, 12.00)
+
+    def test_auto_create_orders_no_delivery(self):
+        """
+        Must handle properly the case where no default are
+        set for a given day.
+        """
+        delivery_date = date(2016, 7, 16)
+        created_orders = Order.objects.auto_create_orders(
+            delivery_date, self.ongoing_clients)
+        self.assertEqual(len(created_orders), 0)
 
     def test_auto_create_orders_existing_order(self):
         """
@@ -372,14 +386,16 @@ class OrderAutoCreateOnDefaultsTestCase(TestCase):
         client = random.choice(self.ongoing_clients)
         order = Order.objects.filter(client=client).get()
         items = order.orders.all()
-        self.assertEqual(items.count(), 3)
+        self.assertEqual(items.count(), 4)
         main_dish_item = items.filter(component_group='main_dish').get()
         self.assertEqual(main_dish_item.total_quantity, 2)
-        self.assertEqual(main_dish_item.size, 'L')
+        self.assertEqual(main_dish_item.size, 'R')
         self.assertTrue(main_dish_item.billable_flag)
         pudding_item = items.filter(component_group='pudding').get()
         self.assertEqual(pudding_item.total_quantity, 1)
         fruit_salad_item = items.filter(component_group='fruit_salad').get()
+        self.assertEqual(fruit_salad_item.total_quantity, 1)
+        green_salad_item = items.filter(component_group='green_salad').get()
         self.assertEqual(fruit_salad_item.total_quantity, 1)
         self.assertEqual(items.filter(component_group='compote').count(), 0)
 
@@ -1464,12 +1480,31 @@ class CommandsTestCase(TestCase):
             pk=1  # command will log
         )
         RouteFactory()
-
+        meals_default = {
+            'main_dish_friday_quantity': 2,
+            'size_friday': 'R',
+            'dessert_friday_quantity': 0,
+            'diabetic_dessert_friday_quantity': 0,
+            'fruit_salad_friday_quantity': 1,
+            'green_salad_friday_quantity': 1,
+            'pudding_friday_quantity': 1,
+            'compote_friday_quantity': 0,
+            'main_dish_monday_quantity': 2,
+            'size_monday': 'L',
+            'dessert_monday_quantity': 1,
+            'diabetic_dessert_monday_quantity': 0,
+            'fruit_salad_monday_quantity': 1,
+            'green_salad_monday_quantity': 1,
+            'pudding_monday_quantity': 1,
+            'compote_monday_quantity': 0,
+        }
         cls.ongoing_clients = ClientFactory.create_batch(
-            10, status=Client.ACTIVE, delivery_type='O'
+            10, status=Client.ACTIVE, delivery_type='O',
+            meal_default_week=meals_default
         )
         cls.episodic_clients = ClientFactory.create_batch(
-            10, status=Client.ACTIVE, delivery_type='E'
+            10, status=Client.ACTIVE, delivery_type='E',
+            meal_default_week=meals_default
         )
         cls.other_clients = (
             ClientFactory(status=Client.PENDING),
@@ -1485,7 +1520,7 @@ class CommandsTestCase(TestCase):
     def test_generateorders_1day(self):
         """Generate one day's orders"""
 
-        args = ["2016-11-22"]
+        args = ["2016-11-25"]
         opts = {}
         call_command('generateorders', *args, **opts)
         self.assertEqual(
@@ -1504,7 +1539,7 @@ class CommandsTestCase(TestCase):
         call_command('generateorders', *args, **opts)
         self.assertEqual(
             Order.objects.all().count(),
-            len(self.ongoing_clients) * 7
+            len(self.ongoing_clients) * 2
         )
 
         args = ["2016-11-25"]
@@ -1512,7 +1547,7 @@ class CommandsTestCase(TestCase):
         call_command('generateorders', *args, **opts)
         self.assertEqual(
             Order.objects.all().count(),
-            len(self.ongoing_clients) * 10
+            len(self.ongoing_clients) * 2
         )
 
 
