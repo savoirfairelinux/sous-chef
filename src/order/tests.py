@@ -131,6 +131,19 @@ class OrderManagerTestCase(TestCase):
         new_orders = Order.objects.get_shippable_orders()
         self.assertNotEqual(len(self.orders), len(new_orders))
 
+    def test_update_orders_status(self):
+        """
+        Should update orders status.
+        """
+        ordered = Order.objects.get_shippable_orders()
+        ordered_count = len(ordered)
+        Order.objects.update_orders_status(ordered, 'D')
+        delivered = Order.objects.filter(
+            delivery_date=date.today(),
+            status='D',
+        )
+        self.assertEqual(ordered_count, len(delivered))
+
 
 class OrderItemTestCase(TestCase):
 
