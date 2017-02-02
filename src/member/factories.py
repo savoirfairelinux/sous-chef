@@ -1,14 +1,14 @@
 # coding=utf-8
 import factory
 import random
+
 from member.models import (
     Member, Client, Contact, Route, Address, Referencing,
-    CONTACT_TYPE_CHOICES, GENDER_CHOICES, PAYMENT_TYPE,
+    EmergencyContact, GENDER_CHOICES, PAYMENT_TYPE,
     DELIVERY_TYPE, DAYS_OF_WEEK, RATE_TYPE,
     ClientScheduledStatus
 )
 from meal.models import COMPONENT_GROUP_CHOICES
-from django.contrib.auth.models import User
 
 
 class AddressFactory (factory.DjangoModelFactory):
@@ -70,10 +70,6 @@ class ClientFactory (factory.DjangoModelFactory):
         lambda x: random.choice(RATE_TYPE)[0]
     )
     member = member
-    emergency_contact = factory.SubFactory(MemberFactory)
-    emergency_contact_relationship = factory.LazyAttribute(
-        lambda x: random.choice(['friends', 'family', 'coworkers'])
-    )
     status = factory.LazyAttribute(
         lambda x: random.choice(
             Client.CLIENT_STATUS)[0]
@@ -101,6 +97,17 @@ class ClientFactory (factory.DjangoModelFactory):
     referencing = factory.RelatedFactory(
         'member.factories.ReferencingFactory',
         'client'
+    )
+
+
+class EmergencyContactFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = EmergencyContact
+
+    client = factory.SubFactory(ClientFactory)
+    member = factory.SubFactory(MemberFactory)
+    relationship = factory.LazyAttribute(
+        lambda x: random.choice(['friends', 'family', 'coworkers'])
     )
 
 

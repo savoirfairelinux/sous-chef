@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.db.models import Q
+from django.db.transaction import atomic
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -23,8 +24,8 @@ from member.forms import (
     ClientReferentInformation,
     ClientRestrictionsInformation,
     ClientPaymentInformation,
-    ClientEmergencyContactInformation
 )
+from member.formsets import UpdateEmergencyContactFormset
 from member.models import (
     Client,
     ClientScheduledStatus,
@@ -40,7 +41,7 @@ from member.models import (
     Client_avoid_ingredient,
     Client_avoid_component,
     HOME, WORK, CELL, EMAIL,
-)
+    EmergencyContact)
 from note.models import Note
 from order.mixins import FormValidAjaxableResponseMixin
 
@@ -126,7 +127,6 @@ class ClientWizard(
             'same_as_client': True,
             'facturation': '',
             'billing_payment_type': '',
-            'emergency_contact_relationship': '',
         }
         return initial
 
@@ -151,6 +151,7 @@ class ClientWizard(
 
         return json
 
+    @atomic
     def save(self, id=None):
         """
         Update or create the member and all its related data.
@@ -164,8 +165,6 @@ class ClientWizard(
             'payment_information'].cleaned_data
         dietary_restriction = self.form_dict[
             'dietary_restriction'].cleaned_data
-        emergency_information = self.form_dict[
-            'emergency_contact'].cleaned_data
 
         member, created = Member.objects.update_or_create(
             id=id,
@@ -201,7 +200,6 @@ class ClientWizard(
         )
 
         billing_member = self.save_billing_member(member)
-        emergency = self.save_emergency_contact(billing_member)
 
         client, created = Client.objects.update_or_create(
             id=member.id,
@@ -215,18 +213,21 @@ class ClientWizard(
                 'billing_payment_type':
                     payment_information.get('billing_payment_type'),
                 'billing_member': billing_member,
-                'emergency_contact': emergency,
                 'delivery_type': dietary_restriction.get('delivery_type'),
                 'meal_default_week': self.save_json(dietary_restriction),
                 'route': address_information.get('route'),
                 'delivery_note': address_information.get('delivery_note'),
-                'emergency_contact_relationship':
-                    emergency_information.get('relationship'),
                 'status': 'A' if dietary_restriction['status'] else 'D',
             }
         )
 
-        self.save_referent_information(client, billing_member, emergency)
+        emergency_contacts = self.save_emergency_contacts(
+            billing_member, client
+        )
+
+        self.save_referent_information(
+            client, billing_member, emergency_contacts
+        )
         self.save_preferences(client)
 
     def save_billing_member(self, member):
@@ -264,89 +265,104 @@ class ClientWizard(
 
         return billing_member
 
-    def save_emergency_contact(self, billing_member):
-        emergency_contact = self.form_dict['emergency_contact']
-        e_emergency_member = emergency_contact.cleaned_data.get('member')
-        if self.billing_member_is_emergency_contact(billing_member):
-            emergency = billing_member
-        elif e_emergency_member:
-            e_emergency_member_id = e_emergency_member.split(' ')[0]\
-                .replace('[', '')\
-                .replace(']', '')
-            emergency = Member.objects.get(pk=e_emergency_member_id)
-        else:
-            emergency = Member.objects.create(
-                firstname=emergency_contact.cleaned_data.get("firstname"),
-                lastname=emergency_contact.cleaned_data.get('lastname'),
-            )
-            emergency.save()
-            emgc_email = emergency_contact.cleaned_data.get(
-                "email", None)
-            emgc_work_phone = emergency_contact.cleaned_data.get(
-                "work_phone", None)
-            emgc_cell_phone = emergency_contact.cleaned_data.get(
-                "cell_phone", None)
-            if emgc_email:
-                emergency.add_contact_information(EMAIL, emgc_email)
-            if emgc_work_phone:
-                emergency.add_contact_information(WORK, emgc_work_phone)
-            if emgc_cell_phone:
-                emergency.add_contact_information(CELL, emgc_cell_phone)
+    def save_emergency_contacts(self, billing_member, client):
+        emergency_contacts = self.form_dict['emergency_contacts']
+        results = []
+        for emergency_contact in emergency_contacts:
+            e_emergency_member = emergency_contact.cleaned_data.get('member')
+            if self.billing_member_is_emergency_contact(
+                    emergency_contact, billing_member
+            ):
+                member = billing_member
+            elif e_emergency_member:
+                e_emergency_member_id = e_emergency_member.split(' ')[0]\
+                    .replace('[', '')\
+                    .replace(']', '')
+                member = Member.objects.get(pk=e_emergency_member_id)
+            else:
+                member = Member.objects.create(
+                    firstname=emergency_contact.cleaned_data.get("firstname"),
+                    lastname=emergency_contact.cleaned_data.get('lastname'),
+                )
+                member.save()
+                emgc_email = emergency_contact.cleaned_data.get(
+                    "email", None)
+                emgc_work_phone = emergency_contact.cleaned_data.get(
+                    "work_phone", None)
+                emgc_cell_phone = emergency_contact.cleaned_data.get(
+                    "cell_phone", None)
+                if emgc_email:
+                    member.add_contact_information(EMAIL, emgc_email)
+                if emgc_work_phone:
+                    member.add_contact_information(WORK, emgc_work_phone)
+                if emgc_cell_phone:
+                    member.add_contact_information(CELL, emgc_cell_phone)
 
-        return emergency
+            results.append(EmergencyContact.objects.create(
+                client=client,
+                member=member,
+                relationship=emergency_contact.cleaned_data.get(
+                    "relationship"
+                )
+            ))
 
-    def save_referent_information(self, client, billing_member, emergency):
-        referent_information = self.form_dict['referent_information']
-        e_referent = referent_information.cleaned_data.get('member')
+        return results
+
+    def save_referent_information(
+            self, client, billing_member, emergency_contacts
+    ):
+        referent_info = self.form_dict['referent_information']
+        e_referent = referent_info.cleaned_data.get('member')
         if (
             self.referent_is_billing_member() and
             client.pk != billing_member.pk
         ):
             referent = billing_member
-            referent.work_information = referent_information.cleaned_data.get(
+            referent.work_information = referent_info.cleaned_data.get(
                 'work_information'
             )
             referent.save(update_fields=['work_information'])
-        elif self.referent_is_emergency_contact():
-            referent = emergency
-            referent.work_information = referent_information.cleaned_data.get(
-                'work_information'
-            )
-            referent.save(update_fields=['work_information'])
-        elif e_referent:
-            e_referent_id = e_referent.split(' ')[0]\
-                .replace('[', '')\
-                .replace(']', '')
-            referent = Member.objects.get(pk=e_referent_id)
         else:
-            referent = Member.objects.create(
-                firstname=referent_information.cleaned_data.get("firstname"),
-                lastname=referent_information.cleaned_data.get("lastname"),
-                work_information=referent_information.cleaned_data.get(
+            referent = self.referent_in_emergency_contacts(emergency_contacts)
+            if referent:
+                referent.work_information = referent_info.cleaned_data.get(
                     'work_information'
-                ),
-            )
-            referent.save()
-            ref_email = referent_information.cleaned_data.get(
-                "email", None)
-            ref_work_phone = referent_information.cleaned_data.get(
-                "work_phone", None)
-            ref_cell_phone = referent_information.cleaned_data.get(
-                "cell_phone", None)
-            if ref_email:
-                referent.add_contact_information(EMAIL, ref_email)
-            if ref_work_phone:
-                referent.add_contact_information(WORK, ref_work_phone)
-            if ref_cell_phone:
-                referent.add_contact_information(CELL, ref_cell_phone)
+                )
+                referent.save(update_fields=['work_information'])
+            elif e_referent:
+                e_referent_id = e_referent.split(' ')[0]\
+                    .replace('[', '')\
+                    .replace(']', '')
+                referent = Member.objects.get(pk=e_referent_id)
+            else:
+                referent = Member.objects.create(
+                    firstname=referent_info.cleaned_data.get("firstname"),
+                    lastname=referent_info.cleaned_data.get("lastname"),
+                    work_information=referent_info.cleaned_data.get(
+                        'work_information'
+                    ),
+                )
+                referent.save()
+                ref_email = referent_info.cleaned_data.get(
+                    "email", None)
+                ref_work_phone = referent_info.cleaned_data.get(
+                    "work_phone", None)
+                ref_cell_phone = referent_info.cleaned_data.get(
+                    "cell_phone", None)
+                if ref_email:
+                    referent.add_contact_information(EMAIL, ref_email)
+                if ref_work_phone:
+                    referent.add_contact_information(WORK, ref_work_phone)
+                if ref_cell_phone:
+                    referent.add_contact_information(CELL, ref_cell_phone)
 
         referencing = Referencing.objects.create(
             referent=referent,
             client=client,
-            referral_reason=referent_information.cleaned_data.get(
+            referral_reason=referent_info.cleaned_data.get(
                 "referral_reason"
             ),
-            date=referent_information.cleaned_data.get(
+            date=referent_info.cleaned_data.get(
                 'date'
             ),
         )
@@ -406,31 +422,34 @@ class ClientWizard(
             return True
         return False
 
-    def billing_member_is_emergency_contact(self, billing_member):
-        emergency_contact = self.form_dict['emergency_contact']
-
+    def billing_member_is_emergency_contact(
+            self, emergency_contact, billing_member
+    ):
         e_firstname = emergency_contact.cleaned_data.get('firstname')
         e_lastname = emergency_contact.cleaned_data.get('lastname')
 
-        if e_firstname == billing_member.firstname \
-                and e_lastname == billing_member.lastname:
+        if (
+            e_firstname == billing_member.firstname and
+            e_lastname == billing_member.lastname
+        ):
             return True
 
         return False
 
-    def referent_is_emergency_contact(self):
-        emergency_contact = self.form_dict['emergency_contact']
+    def referent_in_emergency_contacts(self, emergency_contacts):
         referent_information = self.form_dict['referent_information']
-
-        e_firstname = emergency_contact.cleaned_data.get('firstname')
-        e_lastname = emergency_contact.cleaned_data.get('lastname')
-
         r_firstname = referent_information.cleaned_data.get("firstname")
         r_lastname = referent_information.cleaned_data.get("lastname")
 
-        if e_firstname == r_firstname and e_lastname == r_lastname:
-            return True
-        return False
+        for emergency_contact in emergency_contacts:
+            e_firstname = emergency_contact.member.firstname
+            e_lastname = emergency_contact.member.lastname
+
+            if (e_firstname or r_firstname or e_lastname or r_lastname) and (
+                e_firstname == r_firstname and e_lastname == r_lastname
+            ):
+                return emergency_contact.member
+        return None
 
     def referent_is_billing_member(self):
         referent_information = self.form_dict['referent_information']
@@ -442,7 +461,9 @@ class ClientWizard(
         p_firstname = payment_information.cleaned_data.get('firstname')
         p_lastname = payment_information.cleaned_data.get('lastname')
 
-        if r_firstname == p_firstname and r_lastname == p_lastname:
+        if (r_firstname or p_firstname or r_lastname or p_lastname) and (
+            r_firstname == p_firstname and r_lastname == p_lastname
+        ):
             return True
         return False
 
@@ -527,7 +548,7 @@ def ExportCSV(self, queryset):
         "Client Route",
         "Client Billing Type",
         "Billing Member",
-        "Emergency Contact",
+        "Emergency Contacts",
         "Meal Default",
     ])
 
@@ -558,7 +579,7 @@ def ExportCSV(self, queryset):
             route,
             obj.billing_payment_type,
             obj.billing_member,
-            obj.emergency_contact,
+            ", ".join(str(c) for c in obj.emergency_contacts.all()),
             obj.meal_default_week,
         ])
 
@@ -1191,92 +1212,117 @@ class ClientUpdateDietaryRestriction(ClientUpdateInformation):
 
 
 class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
-    form_class = ClientEmergencyContactInformation
+    form_class = UpdateEmergencyContactFormset
+    prefix = 'emergency_contacts'
 
     def get_context_data(self, **kwargs):
         context = super(
             ClientUpdateEmergencyContactInformation,
             self).get_context_data(
             **kwargs)
-        context.update({'current_step': 'emergency_contact'})
+        context.update({'current_step': 'emergency_contacts'})
         context.update({'pk': self.kwargs['pk']})
         context["step_template"] = 'client/partials/forms/' \
-                                   'emergency_contact.html'
+                                   'emergency_contacts.html'
         return context
 
     def get_initial(self):
-        initial = super(ClientUpdateEmergencyContactInformation,
-                        self).get_initial()
         client = get_object_or_404(
             Client, pk=self.kwargs.get('pk')
         )
-        if client.emergency_contact is None:
-            return initial
+        initial = {}
 
-        member_contact = client.emergency_contact.member_contact.first()
-        initial.update({
-            'firstname': None,
-            'lastname': None,
-            'member': '[{}] {} {}'.format(
-                client.emergency_contact.id,
-                client.emergency_contact.firstname,
-                client.emergency_contact.lastname
-            ),
-            'contact_type': member_contact.type if member_contact else None,
-            'contact_value': member_contact.value if member_contact else None,
-            'relationship':
-                client.emergency_contact_relationship
-        })
+        if self.request.method == 'GET':
+            for i, emergency_contact in enumerate(
+                    client.emergencycontact_set.all()
+            ):
+                contact = emergency_contact.member.member_contact.first()
+                if contact:
+                    contact_type = contact.type
+                    contact_value = contact.value
+                else:
+                    contact_type = None
+                    contact_value = None
+
+                initial[i] = {
+                    'firstname'.format(i): None,
+                    'lastname'.format(i): None,
+                    'member'.format(i): '[{}] {} {}'.format(
+                        emergency_contact.member.id,
+                        emergency_contact.member.firstname,
+                        emergency_contact.member.lastname
+                    ),
+                    'contact_type'.format(i): contact_type,
+                    'contact_value'.format(i): contact_value,
+                    'relationship'.format(i):
+                        emergency_contact.relationship
+                }
         return initial
 
-    def save(self, emergency_contact, client):
+    def save(self, emergency_contacts, client):
         """
         Save the basic information step data.
         """
-        e_emergency_member = emergency_contact.get('member')
-        if e_emergency_member:
-            e_emergency_member_id = e_emergency_member.split(' ')[0] \
-                .replace('[', '') \
-                .replace(']', '')
-            emergency = Member.objects.get(pk=e_emergency_member_id)
-        else:
-            emergency = Member.objects.create(
-                firstname=emergency_contact.get("firstname"),
-                lastname=emergency_contact.get('lastname'),
-            )
-            emergency.save()
+        emergency_contacts_posted = []
+        for emergency_contact in emergency_contacts:
+            e_emergency_member = emergency_contact.get('member')
+            if e_emergency_member:
+                e_emergency_member_id = e_emergency_member.split(' ')[0] \
+                    .replace('[', '') \
+                    .replace(']', '')
+                member = Member.objects.get(pk=e_emergency_member_id)
+            else:
+                member = Member.objects.create(
+                    firstname=emergency_contact.get("firstname"),
+                    lastname=emergency_contact.get('lastname'),
+                )
+                member.save()
 
-            # save emergency contact
-            if emergency_contact.get('work_phone'):
-                Contact.objects.create(
-                    type=WORK,
-                    value=emergency_contact.get('work_phone'),
-                    member=emergency
+                # save emergency contact
+                if emergency_contact.get('work_phone'):
+                    Contact.objects.create(
+                        type=WORK,
+                        value=emergency_contact.get('work_phone'),
+                        member=member
+                    )
+                elif emergency_contact.get('cell_phone'):
+                    Contact.objects.create(
+                        type=CELL,
+                        value=emergency_contact.get('cell_phone'),
+                        member=member
+                    )
+                elif emergency_contact.get('home_phone'):
+                    Contact.objects.create(
+                        type=HOME,
+                        value=emergency_contact.get('home_phone'),
+                        member=member
+                    )
+                elif emergency_contact.get('email'):
+                    Contact.objects.create(
+                        type=EMAIL,
+                        value=emergency_contact.get('email'),
+                        member=member
+                    )
+
+            try:
+                to_update = EmergencyContact.objects.get(
+                    client__pk=client.pk, member__pk=member.pk
                 )
-            elif emergency_contact.get('cell_phone'):
-                Contact.objects.create(
-                    type=CELL,
-                    value=emergency_contact.get('cell_phone'),
-                    member=emergency
-                )
-            elif emergency_contact.get('home_phone'):
-                Contact.objects.create(
-                    type=HOME,
-                    value=emergency_contact.get('home_phone'),
-                    member=emergency
-                )
-            elif emergency_contact.get('email'):
-                Contact.objects.create(
-                    type=EMAIL,
-                    value=emergency_contact.get('email'),
-                    member=emergency
+                to_update.relationship = emergency_contact.get("relationship")
+                to_update.save()
+                emergency_contacts_posted.append(to_update)
+            except EmergencyContact.DoesNotExist:
+                emergency_contacts_posted.append(
+                    EmergencyContact.objects.create(
+                        client=client,
+                        member=member,
+                        relationship=emergency_contact.get("relationship")
+                    )
                 )
 
-        client.emergency_contact = emergency
-        client.emergency_contact_relationship = emergency_contact.get(
-            "relationship"
-        )
-        client.save()
+        EmergencyContact.objects.filter(client=client).exclude(
+            pk__in=[c.pk for c in emergency_contacts_posted]
+        ).delete()
 
 
 class SearchMembers(LoginRequiredMixin, PermissionRequiredMixin, generic.View):

@@ -1,0 +1,76 @@
+{% load i18n %}
+<h4 class="ui dividing header">{% trans 'Emergency contacts' %}</h4>
+
+<div class="formset-container ui basic segment" data-add-label="{% trans 'Add contact' %}" data-remove-label="{% trans 'Remove contact' %}">
+  {{ form.management_form }}
+  {% for item_form in form.forms %}
+      <div class="formset-item ui vertical segment">
+        <div class="ui center aligned basic segment">
+          <div class="ui fluid category search">
+            <div class="ui icon input" data-url="{% url 'member:search' %}">
+              {{item_form.member}}
+              <i class="search icon"></i>
+            </div>
+            <div class="results"></div>
+          </div>
+          <div class="ui horizontal divider">
+            {% trans 'Or' %}
+          </div>
+          <div class="ui teal labeled icon button add emergency contact member">
+            {% trans 'Create new emergency contact' %}
+            <i class="add icon"></i>
+          </div>
+
+          <div class="ui form add emergency contact member transition hidden">
+            <div class="content">
+              <div class="ui icon button cancel add emergency contact member right floated">
+                <i class="close icon"></i>
+              </div>
+
+              <div class="field">
+                <label>{% trans 'Name' %}</label>
+                <div class="two fields">
+                  <div class="field {% if item_form.firstname.errors %} error {% endif %}">
+                    {{item_form.firstname}}
+                  </div>
+                  <div class="field {% if item_form.lastname.errors %} error {% endif %}">
+                    {{item_form.lastname}}
+                  </div>
+                </div>
+
+                <label>{% trans 'Contact information' %}</label>
+                <div class="three fields">
+                  <div class="field {% if item_form.email.errors %} error {% endif %}">
+                    <div class="ui left icon input">
+                      <i class="at grey icon"></i>
+                      {{ item_form.email }}
+                    </div>
+                  </div>
+                  <div class="field {% if item_form.work_phone.errors %} error {% endif %}">
+                    <div class="ui left icon input">
+                      <i class="building icon"></i>
+                      {{ item_form.work_phone }}
+                    </div>
+                  </div>
+                  <div class="field {% if item_form.cell_phone.errors %} error {% endif %}">
+                    <div class="ui left icon input">
+                      <i class="call icon"></i>
+                      {{ item_form.cell_phone }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>{% trans 'Contact relationship' %}</label>
+          <div class="field {% if item_form.relationship.errors %} error {% endif %}">
+              {{item_form.relationship}}
+          </div>
+        </div>
+      </div>
+  {% endfor %}
+</div>
