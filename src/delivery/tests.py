@@ -26,11 +26,13 @@ from .filters import KitchenCountOrderFilter
 
 class KitchenCountReportTestCase(SousChefTestMixin, TestCase):
 
+    # This data set includes 'Ground porc' clashing ingredient
+    # This data set includes 'Tracy' client lastname
+    #   and his side dish is 'compote'
     fixtures = ['sample_data']
 
     @classmethod
     def setUpTestData(cls):
-        # This data set includes 'Ground porc' clashing ingredient
         Menu.create_menu_and_components(
             datetime.date(2016, 5, 21),
             ['Ginger pork',
@@ -117,6 +119,36 @@ class KitchenCountReportTestCase(SousChefTestMixin, TestCase):
         self.client.get('/delivery/kitchen_count/')
         response = self.client.get('/delivery/viewDownloadKitchenCount/')
         self.assertTrue('ReportLab' in repr(response.content))
+
+    def test_extra_similar_side_dishes(self):
+        """Test cumulative quantities for similar side dishes."""
+        # generate orders today
+        self.today = datetime.date.today()
+        clients = Client.active.all()
+        numorders = Order.objects.auto_create_orders(
+            self.today, clients)
+        Menu.create_menu_and_components(
+            self.today,
+            ['Ginger pork',
+             'Green Salad', 'Fruit Salad',
+             'Day s Dessert', 'Day s Diabetic Dessert',
+             'Day s Pudding', 'Day s Compote'])
+        # Add two separate extra compote order items for 'Tracy'
+        member = Member.objects.filter(lastname='Tracy')[0]
+        client = Client.objects.get(member=member.id)
+        order = Order.objects.get(client=client.id, delivery_date=self.today)
+        order.add_item(
+            'meal_component',
+            component_group='compote',
+            total_quantity=1,
+            remark='no sugar')
+        order.add_item(
+            'meal_component',
+            component_group='compote',
+            total_quantity=1,
+            remark='no sugar')
+        response = self.client.get('/delivery/kitchen_count/')
+        self.assertTrue(b'Compote' in response.content)
 
 
 class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
@@ -321,10 +353,14 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
 
 class DeliveryRouteSheetTestCase(SousChefTestMixin, TestCase):
 
+    # This data set includes 'Blondin' client lastname
+    #   in 'Centre Sud' route
+    # This data set includes 'Tracy' client lastname
+    #   in 'Mile-End' route
+    #   and his side dish is 'compote'
     fixtures = ['sample_data']
 
     def setUp(self):
-        # This data set includes 'Blondin' client lastname
         # generate orders today
         self.today = datetime.date.today()
         clients = Client.active.all()
@@ -337,6 +373,26 @@ class DeliveryRouteSheetTestCase(SousChefTestMixin, TestCase):
         """Sample route sheet query."""
         route_list = Order.get_delivery_list(self.today, self.route_id)
         self.assertTrue('Blondin' in repr(route_list))
+
+    def test_extra_similar_sides(self):
+        """Test cumulative quantities for similar side dishes."""
+        # Add two separate extra compote order items for 'Tracy'
+        member = Member.objects.filter(lastname='Tracy')[0]
+        client = Client.objects.get(member=member.id)
+        order = Order.objects.get(client=client.id, delivery_date=self.today)
+        order.add_item(
+            'meal_component',
+            component_group='compote',
+            total_quantity=1,
+            remark='no sugar')
+        order.add_item(
+            'meal_component',
+            component_group='compote',
+            total_quantity=1,
+            remark='no sugar')
+        mile_end_id = Route.objects.get(name='Mile-End').id
+        route_list = Order.get_delivery_list(self.today, mile_end_id)
+        self.assertTrue('Tracy' in repr(route_list))
 
     def test_sheet(self):
         """Sample route sheet page."""
