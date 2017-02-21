@@ -1,12 +1,11 @@
-from django.core.management.base import BaseCommand
-from django.core.management import call_command
-from django.shortcuts import get_object_or_404
-from member.factories import ClientFactory, MemberFactory
-from member.models import Client, Member, Route, Address, Contact, Referencing
-import os
 import csv
-from sys import path
+
 from datetime import date
+from django.core.management.base import BaseCommand
+
+from member.models import (
+    Client, Member, Referencing, EmergencyContact
+)
 
 
 class Command(BaseCommand):
@@ -60,13 +59,15 @@ class Command(BaseCommand):
                                         self.ROW_WORK_INFORMATION]})
 
                         if row[self.ROW_EMERGENCY] == '1':
+                            EmergencyContact.objects.create(
+                                client=client,
+                                member=relationship,
+                                relationship=row[self.ROW_RELATIONSHIP]
+                            )
                             self.stdout.write(
                                 self.style.SUCCESS(
                                     'Added an emergency Relationship.'
                                 ))
-                            client.emergency_contact = relationship
-                            client.emergency_contact_relationship = row[
-                                self.ROW_RELATIONSHIP]
                         if row[self.ROW_BILLTO] == '1':
                             self.stdout.write(
                                 self.style.SUCCESS(
