@@ -2,7 +2,7 @@
 'To generate image : see http://www.plantuml.com/plantuml
 @startuml
 scale 1.0
-title SousChef Data Model (revised_data_model.uml, 2016-09-21 at 20:00)\n(this may be out of sync with the django models)\n
+title SousChef Data Model (revised_data_model.uml, 2017-02-08 at 9:00)\n(this may be out of sync with the django models)\n
 hide methods
 'hide fields
 skinparam shadowing false
@@ -22,7 +22,7 @@ legend left
   <u>LEGEND</u>
   <b>App : Meal=<color:green>green</color> Member=<color:red>red</color> Order=<color:blue>blue</color> Notification=<color:orange>=orange</color> Billing=<color:purple>purple</color> Note=<color:pink>pink</color></b>
   <b>(C)</b> : ORM class + DB table
-  <b>(M)</b> : Many-to-many DB table
+  <b>(m)</b> : Many-to-many DB table
 endlegend
 
 Client "0..1" -u- "1" Member
@@ -46,12 +46,15 @@ Member "*" -u- "0..1" Address
 Menu_component "*" -r- "1" Component
 Menu_component "*" -u- "1" Menu
 Note "*" -u- "1" Client
+Note "*" -d- "1" NoteCategory
+Note "*" -d- "1" NotePriority
 Note "*" -d- "1" User
 Notification "*" -d- "1" Member
 Order "*" -u- "1" Client
-OrderBilling "*" -u- "1" Billing
-OrderBilling "*" -u- "1" Order
+OrderBilling "*" -d- "1" Billing
+OrderBilling "*" -d- "1" Order
 Order_item "*" -u- "1" Order
+OrderStatusChange "*" -u- "1" Order
 Referencing "*" -r- "1" Client
 Referencing "*" -u- "1" Member
 Restriction "*" -l- "1" Client
@@ -103,13 +106,13 @@ class Client << (C,red) >> {
     delivery_note
 }
 
-class Client_avoid_component << (M,white) >> {
+class Client_avoid_component << (m,white) >> {
     id
     client_id
     component_id
 }
 
-class Client_avoid_ingredient << (M,white) >> {
+class Client_avoid_ingredient << (m,white) >> {
     id
     client_id
     ingredient_id
@@ -161,7 +164,7 @@ class Contact << (C,red) >> {
     member_id
 }
 
-class Incompatibility << (M,white) >> {
+class Incompatibility << (m,white) >> {
     id
     restricted_item_id
     ingredient_id
@@ -176,9 +179,12 @@ class Ingredient << (C,green) >>  {
 
 class Member << (C,red) >> {
     id
+    mid
+    rid
     firstname
     lastname
     address_id
+    work_information
     created_at
     updated_at
 }
@@ -188,7 +194,7 @@ class Menu << (C,green) >> {
     date
 }
 
-class Menu_component << (M,white) >> {
+class Menu_component << (m,white) >> {
     id
     menu_id
     component_id
@@ -201,8 +207,19 @@ class Note << (C,pink) >> {
     date
     is_read
     client_id
-    priority
+    category_id
+    priority_id
       'choices: normal, urgent
+}
+
+class NoteCategory << (C,pink) >> {
+    id
+    name
+}
+
+class NotePriority << (C,pink) >> {
+    id
+    name
 }
 
 class Notification << (C,orange) >> {
@@ -234,7 +251,7 @@ class Order << (C,blue) >> {
     client_id
 }
 
-class OrderBilling << (M,white) >> {
+class OrderBilling << (m,white) >> {
     id
     order_id
     billing_id
@@ -259,12 +276,20 @@ class Order_item << (C,blue) >> {
     component_group
 }
 
+class OrderStatusChange << (C,blue) >> {
+    id
+    order_id
+    status_from
+    status_to
+    reason
+    change_time
+}
+
 class Referencing << (C,red) >> {
     id
     referent_member_id
     client_id
     referral_reason
-    work_information
     date
 }
 
@@ -277,7 +302,7 @@ class Restricted_item << (C,green) >> {
       'dairy, meat, vegetables
 }
 
-class Restriction << (M,white) >> {
+class Restriction << (m,white) >> {
     id
     client_id
     restricted_item__id
@@ -287,6 +312,7 @@ class Route << (C,red) >> {
     id
     name
     description
+    vehicle
     client_id_sequence
 }
 
