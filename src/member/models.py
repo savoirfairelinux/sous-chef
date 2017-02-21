@@ -5,6 +5,7 @@ from member.formsfield import CAPhoneNumberExtField
 from django.forms import ValidationError
 from django.db import models
 from django.db.models import Q
+from django.db.models.functions import Extract
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -379,8 +380,9 @@ class ClientManager(models.Manager):
 
         return self.filter(
             birthdate__month=today.month,
-            birthdate__day=today.day
-        )
+            birthdate__day__gte=today.day,
+            birthdate__day__lte=today.day + 7,
+        ).order_by(Extract('birthdate', 'day'))
 
 
 class ActiveClientManager(ClientManager):
@@ -606,6 +608,23 @@ class Client(models.Model):
         if current < self.birthdate:
             return 0
         return math.floor((current - self.birthdate).days / 365)
+
+    @property
+    def age_to_celebrate_this_year(self):
+        """
+        Returns integer specifying person's age in years on the current year.
+
+        >>> from datetime import date
+        >>> p = Client(birthdate=date(1950, 12, 12)
+        >>> p.age_to_celebrate_this_year()
+        67
+        """
+        from datetime import date
+        current = date.today()
+
+        if current < self.birthdate:
+            return 0
+        return current.year - self.birthdate.year
 
     @property
     def orders(self):

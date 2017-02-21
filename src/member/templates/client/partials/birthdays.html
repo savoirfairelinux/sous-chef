@@ -1,16 +1,27 @@
 {% load i18n %}
 <div class="ui segment">
-  <h3 class="ui blue header">{% trans 'Happy Birthday' %}</h3>
-  </div>
-  <div class="ui segment">
-      <table class="ui very basic table">
-          <tbody>
-              {% for client in birthday %}
-              <tr>
-                  <td><a href="{% url 'member:client_information' pk=client.id %}">{{ client }}</a></td>
-                  <td>{{ client.age }}</td>
-              </tr>
-              {% endfor %}
-        </tbody>
-      </table>
+    <h3 class="ui green header">{% trans 'Happy Birthday' %}</h3>
+</div>
+<div class="ui secondary green inverted dashboard left aligned segment" style="justify-content: flex-start">
+    <table class="ui very compact table">
+        <thead>
+                <th>{% trans 'Client' %}</th>
+                <th>{% trans 'Age' %}</th>
+                <th>{% trans 'Date' %}</th>
+        </thead>
+        <tbody>
+            {% for client in birthday %}
+            <tr>
+                <td><a href="{% url 'member:client_information' pk=client.id %}">{{ client }}</a></td>
+                <td>{{ client.age_to_celebrate_this_year }}</td>
+                <td> {{ client.birthdate|date:'MONTH_DAY_FORMAT' }} </td>
+            </tr>
+            {% endfor %}
+      </tbody>
+    </table>
+</div>
+<div class="ui segment">
+    <p>
+      {% blocktrans count count=birthday|length %}{{ count }} birthday.{% plural %}{{ count }} birthdays.{% endblocktrans %}
+    </p>
 </div>
