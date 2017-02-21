@@ -4,7 +4,7 @@
 <div class="formset-container ui basic segment" data-add-label="{% trans 'Add contact' %}" data-remove-label="{% trans 'Remove contact' %}">
   {{ form.management_form }}
   {% for item_form in form.forms %}
-      <div class="formset-item ui vertical segment">
+      <div class="formset-item ui raised segment">
         <div class="ui center aligned basic segment">
           <div class="ui fluid category search">
             <div class="ui icon input" data-url="{% url 'member:search' %}">

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-02 04:09+0000\n"
+"POT-Creation-Date: 2017-02-21 15:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -416,7 +416,7 @@ msgstr "contacts"
 msgid "contact type"
 msgstr "type de contact"
 
-#: models.py:303 models.py:1090
+#: models.py:303 models.py:1091
 msgid "value"
 msgstr "valeur"
 
@@ -428,11 +428,11 @@ msgstr "membre"
 msgid "Routes"
 msgstr "Routes"
 
-#: models.py:336 models.py:1057
+#: models.py:336 models.py:1058
 msgid "name"
 msgstr "nom"
 
-#: models.py:340 models.py:1061
+#: models.py:340 models.py:1062
 msgid "description"
 msgstr "description"
 
@@ -532,8 +532,8 @@ msgstr "référents"
 msgid "referent"
 msgstr "référent"
 
-#: models.py:1010 models.py:1031 models.py:1079 models.py:1107 models.py:1124
-#: models.py:1141
+#: models.py:1010 models.py:1031 models.py:1080 models.py:1108 models.py:1125
+#: models.py:1142
 msgid "client"
 msgstr "client"
 
@@ -549,27 +549,27 @@ msgstr "Date du référencement"
 msgid "relationship"
 msgstr "lien"
 
-#: models.py:1052
+#: models.py:1053
 msgid "options"
 msgstr "options"
 
-#: models.py:1069
+#: models.py:1070
 msgid "option group"
 msgstr "groupe d'options"
 
-#: models.py:1084
+#: models.py:1085
 msgid "option"
 msgstr "option"
 
-#: models.py:1112
+#: models.py:1113
 msgid "restricted item"
 msgstr "item restreint"
 
-#: models.py:1129
+#: models.py:1130
 msgid "ingredient"
 msgstr "ingrédient"
 
-#: models.py:1146
+#: models.py:1147
 msgid "component"
 msgstr "composant"
 
@@ -1054,7 +1054,7 @@ msgstr "Contacts d'Urgence"
 #: templates/client/view/information.html:60
 #, fuzzy
 #| msgid "Information of the person to contact in case of an emergency"
-msgid "Information of the persons to contact in case of an emergency"
+msgid "Information of the people to contact in case of an emergency"
 msgstr "Information sur les personnes à contacter en cas d'urgence"
 
 #: templates/client/view/notes.html:19
@@ -1271,7 +1271,7 @@ msgstr "Le client a été crée"
 msgid "The client has been updated"
 msgstr "Le client a été mis à jour"
 
-#: views.py:1430
+#: views.py:1448
 msgid "The status has been changed"
 msgstr "Le statut a été changé"
 

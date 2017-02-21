@@ -1039,6 +1039,7 @@ class EmergencyContact(models.Model):
 
     class Meta:
         verbose_name_plural = _('emergency contacts')
+        unique_together = ('client', 'member')
 
     def __str__(self):
         return "{} is an emergency contact of {}".format(

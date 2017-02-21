@@ -19,6 +19,20 @@ def migrate_emergency_contacts(apps, schema_editor):
             )
 
 
+def reverse_emergency_contacts(apps, schema_editor):
+    # set NotePriority initial
+    Client = apps.get_model('member', 'Client')
+    for client in Client.objects.all():
+        # Use as client emergency contact the first item of
+        # relationship
+        emergency_contact = client.emergencycontact_set.first()
+        # reversing info
+        client.emergency_contact = emergency_contact.member
+        client.emergency_contact_relationship = emergency_contact.relationship
+        # removing info
+        client.emergencycontact_set.delete()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -54,7 +68,7 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(related_name='emergency_contacts_of', through='member.EmergencyContact',
                                          to='member.Member', verbose_name='emergency contacts'),
         ),
-        migrations.RunPython(migrate_emergency_contacts),
+        migrations.RunPython(migrate_emergency_contacts, reverse_emergency_contacts),
         migrations.RemoveField(
             model_name='client',
             name='emergency_contact',

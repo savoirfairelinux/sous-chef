@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-02 04:09+0000\n"
+"POT-Creation-Date: 2017-02-21 15:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -409,7 +409,7 @@ msgstr ""
 msgid "contact type"
 msgstr ""
 
-#: models.py:303 models.py:1090
+#: models.py:303 models.py:1091
 msgid "value"
 msgstr ""
 
@@ -421,11 +421,11 @@ msgstr ""
 msgid "Routes"
 msgstr ""
 
-#: models.py:336 models.py:1057
+#: models.py:336 models.py:1058
 msgid "name"
 msgstr ""
 
-#: models.py:340 models.py:1061
+#: models.py:340 models.py:1062
 msgid "description"
 msgstr ""
 
@@ -525,8 +525,8 @@ msgstr ""
 msgid "referent"
 msgstr ""
 
-#: models.py:1010 models.py:1031 models.py:1079 models.py:1107 models.py:1124
-#: models.py:1141
+#: models.py:1010 models.py:1031 models.py:1080 models.py:1108 models.py:1125
+#: models.py:1142
 msgid "client"
 msgstr ""
 
@@ -542,27 +542,27 @@ msgstr ""
 msgid "relationship"
 msgstr ""
 
-#: models.py:1052
+#: models.py:1053
 msgid "options"
 msgstr ""
 
-#: models.py:1069
+#: models.py:1070
 msgid "option group"
 msgstr ""
 
-#: models.py:1084
+#: models.py:1085
 msgid "option"
 msgstr ""
 
-#: models.py:1112
+#: models.py:1113
 msgid "restricted item"
 msgstr ""
 
-#: models.py:1129
+#: models.py:1130
 msgid "ingredient"
 msgstr ""
 
-#: models.py:1146
+#: models.py:1147
 msgid "component"
 msgstr ""
 
@@ -1033,7 +1033,7 @@ msgid "Emergency Contacts"
 msgstr ""
 
 #: templates/client/view/information.html:60
-msgid "Information of the persons to contact in case of an emergency"
+msgid "Information of the people to contact in case of an emergency"
 msgstr ""
 
 #: templates/client/view/notes.html:19
@@ -1250,6 +1250,6 @@ msgstr ""
 msgid "The client has been updated"
 msgstr ""
 
-#: views.py:1430
+#: views.py:1448
 msgid "The status has been changed"
 msgstr ""

@@ -52,12 +52,12 @@
 </div>
 
 
-{% if client.emergencycontact_set.all|length %}
+{% if client.emergencycontact_set.all.exists %}
 <div class="ui segment">
     <h2 class="ui header">
         <div class="content">
             {% trans 'Emergency Contacts' %}
-            <div class="sub header">{% trans "Information of the persons to contact in case of an emergency" %}.</div>
+            <div class="sub header">{% trans "Information of the people to contact in case of an emergency" %}.</div>
         </div>
     </h2>
     {% if can_edit_data %}
