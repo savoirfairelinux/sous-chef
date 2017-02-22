@@ -269,42 +269,47 @@ class ClientWizard(
         emergency_contacts = self.form_dict['emergency_contacts']
         results = []
         for emergency_contact in emergency_contacts:
-            e_emergency_member = emergency_contact.cleaned_data.get('member')
-            if self.billing_member_is_emergency_contact(
-                    emergency_contact, billing_member
-            ):
-                member = billing_member
-            elif e_emergency_member:
-                e_emergency_member_id = e_emergency_member.split(' ')[0]\
-                    .replace('[', '')\
-                    .replace(']', '')
-                member = Member.objects.get(pk=e_emergency_member_id)
-            else:
-                member = Member.objects.create(
-                    firstname=emergency_contact.cleaned_data.get("firstname"),
-                    lastname=emergency_contact.cleaned_data.get('lastname'),
-                )
-                member.save()
-                emgc_email = emergency_contact.cleaned_data.get(
-                    "email", None)
-                emgc_work_phone = emergency_contact.cleaned_data.get(
-                    "work_phone", None)
-                emgc_cell_phone = emergency_contact.cleaned_data.get(
-                    "cell_phone", None)
-                if emgc_email:
-                    member.add_contact_information(EMAIL, emgc_email)
-                if emgc_work_phone:
-                    member.add_contact_information(WORK, emgc_work_phone)
-                if emgc_cell_phone:
-                    member.add_contact_information(CELL, emgc_cell_phone)
+            # Avoid empty forms, at least one emergency contact form is
+            # required by django formset validation. If we have
+            # one form good filled and several empty forms, the 'is_valid'
+            # method return True
+            if emergency_contact.changed_data:
+                e_emergency_member = emergency_contact.cleaned_data.get('member')
+                if self.billing_member_is_emergency_contact(
+                        emergency_contact, billing_member
+                ):
+                    member = billing_member
+                elif e_emergency_member:
+                    e_emergency_member_id = e_emergency_member.split(' ')[0]\
+                        .replace('[', '')\
+                        .replace(']', '')
+                    member = Member.objects.get(pk=e_emergency_member_id)
+                else:
+                    member = Member.objects.create(
+                        firstname=emergency_contact.cleaned_data.get("firstname"),
+                        lastname=emergency_contact.cleaned_data.get('lastname'),
+                    )
+                    member.save()
+                    emgc_email = emergency_contact.cleaned_data.get(
+                        "email", None)
+                    emgc_work_phone = emergency_contact.cleaned_data.get(
+                        "work_phone", None)
+                    emgc_cell_phone = emergency_contact.cleaned_data.get(
+                        "cell_phone", None)
+                    if emgc_email:
+                        member.add_contact_information(EMAIL, emgc_email)
+                    if emgc_work_phone:
+                        member.add_contact_information(WORK, emgc_work_phone)
+                    if emgc_cell_phone:
+                        member.add_contact_information(CELL, emgc_cell_phone)
 
-            results.append(EmergencyContact.objects.create(
-                client=client,
-                member=member,
-                relationship=emergency_contact.cleaned_data.get(
-                    "relationship"
-                )
-            ))
+                results.append(EmergencyContact.objects.create(
+                    client=client,
+                    member=member,
+                    relationship=emergency_contact.cleaned_data.get(
+                        "relationship"
+                    )
+                ))
 
         return results
 
@@ -1265,60 +1270,65 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
         """
         emergency_contacts_posted = []
         for emergency_contact in emergency_contacts:
-            e_emergency_member = emergency_contact.get('member')
-            if e_emergency_member:
-                e_emergency_member_id = e_emergency_member.split(' ')[0] \
-                    .replace('[', '') \
-                    .replace(']', '')
-                member = Member.objects.get(pk=e_emergency_member_id)
-            else:
-                member = Member.objects.create(
-                    firstname=emergency_contact.get("firstname"),
-                    lastname=emergency_contact.get('lastname'),
-                )
-                member.save()
+            # Avoid empty forms, at least one emergency contact form is
+            # required by django formset validation. If we have
+            # one form good filled and several empty forms, the 'is_valid'
+            # method return True
+            if emergency_contact:
+                e_emergency_member = emergency_contact.get('member')
+                if e_emergency_member:
+                    e_emergency_member_id = e_emergency_member.split(' ')[0] \
+                        .replace('[', '') \
+                        .replace(']', '')
+                    member = Member.objects.get(pk=e_emergency_member_id)
+                else:
+                    member = Member.objects.create(
+                        firstname=emergency_contact.get("firstname"),
+                        lastname=emergency_contact.get('lastname'),
+                    )
+                    member.save()
 
-                # save emergency contact
-                if emergency_contact.get('work_phone'):
-                    Contact.objects.create(
-                        type=WORK,
-                        value=emergency_contact.get('work_phone'),
-                        member=member
-                    )
-                elif emergency_contact.get('cell_phone'):
-                    Contact.objects.create(
-                        type=CELL,
-                        value=emergency_contact.get('cell_phone'),
-                        member=member
-                    )
-                elif emergency_contact.get('home_phone'):
-                    Contact.objects.create(
-                        type=HOME,
-                        value=emergency_contact.get('home_phone'),
-                        member=member
-                    )
-                elif emergency_contact.get('email'):
-                    Contact.objects.create(
-                        type=EMAIL,
-                        value=emergency_contact.get('email'),
-                        member=member
-                    )
+                    # save emergency contact
+                    if emergency_contact.get('work_phone'):
+                        Contact.objects.create(
+                            type=WORK,
+                            value=emergency_contact.get('work_phone'),
+                            member=member
+                        )
+                    elif emergency_contact.get('cell_phone'):
+                        Contact.objects.create(
+                            type=CELL,
+                            value=emergency_contact.get('cell_phone'),
+                            member=member
+                        )
+                    elif emergency_contact.get('home_phone'):
+                        Contact.objects.create(
+                            type=HOME,
+                            value=emergency_contact.get('home_phone'),
+                            member=member
+                        )
+                    elif emergency_contact.get('email'):
+                        Contact.objects.create(
+                            type=EMAIL,
+                            value=emergency_contact.get('email'),
+                            member=member
+                        )
 
-            try:
-                to_update = EmergencyContact.objects.get(
-                    client__pk=client.pk, member__pk=member.pk
-                )
-                to_update.relationship = emergency_contact.get("relationship")
-                to_update.save()
-                emergency_contacts_posted.append(to_update)
-            except EmergencyContact.DoesNotExist:
-                emergency_contacts_posted.append(
-                    EmergencyContact.objects.create(
-                        client=client,
-                        member=member,
-                        relationship=emergency_contact.get("relationship")
+                try:
+                    to_update = EmergencyContact.objects.get(
+                        client__pk=client.pk, member__pk=member.pk
                     )
-                )
+                    to_update.relationship = emergency_contact.get("relationship")
+                    to_update.save()
+                    emergency_contacts_posted.append(to_update)
+                except EmergencyContact.DoesNotExist:
+                    emergency_contacts_posted.append(
+                        EmergencyContact.objects.create(
+                            client=client,
+                            member=member,
+                            relationship=emergency_contact.get("relationship")
+                        )
+                    )
 
         EmergencyContact.objects.filter(client=client).exclude(
             pk__in=[c.pk for c in emergency_contacts_posted]
