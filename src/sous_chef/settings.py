@@ -157,13 +157,16 @@ AUTHENTICATION_BACKENDS = (
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
 USE_I18N = True
 
 USE_L10N = True
 
+
+# Store datetimes as UTC in database
 USE_TZ = True
+
+# Use this timezone when displaying datetimes
+TIME_ZONE = 'America/Montreal'
 
 
 # List of supported languages
