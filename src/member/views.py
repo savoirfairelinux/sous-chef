@@ -274,7 +274,9 @@ class ClientWizard(
             # one form good filled and several empty forms, the 'is_valid'
             # method return True
             if emergency_contact.changed_data:
-                e_emergency_member = emergency_contact.cleaned_data.get('member')
+                e_emergency_member = emergency_contact.cleaned_data.get(
+                    'member'
+                )
                 if self.billing_member_is_emergency_contact(
                         emergency_contact, billing_member
                 ):
@@ -286,8 +288,12 @@ class ClientWizard(
                     member = Member.objects.get(pk=e_emergency_member_id)
                 else:
                     member = Member.objects.create(
-                        firstname=emergency_contact.cleaned_data.get("firstname"),
-                        lastname=emergency_contact.cleaned_data.get('lastname'),
+                        firstname=emergency_contact.cleaned_data.get(
+                            "firstname"
+                        ),
+                        lastname=emergency_contact.cleaned_data.get(
+                            'lastname'
+                        ),
                     )
                     member.save()
                     emgc_email = emergency_contact.cleaned_data.get(
@@ -1318,7 +1324,9 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
                     to_update = EmergencyContact.objects.get(
                         client__pk=client.pk, member__pk=member.pk
                     )
-                    to_update.relationship = emergency_contact.get("relationship")
+                    to_update.relationship = emergency_contact.get(
+                        "relationship"
+                    )
                     to_update.save()
                     emergency_contacts_posted.append(to_update)
                 except EmergencyContact.DoesNotExist:
