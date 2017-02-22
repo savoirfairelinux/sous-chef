@@ -372,7 +372,8 @@ class Order(models.Model):
             billable_flag=billable,
             size=kwargs.get('size', 'R'),
             order_item_type=type,
-            total_quantity=quantity)
+            total_quantity=quantity,
+            remark=kwargs.get('remark', ''))
 
     def remove_item(self, order_item_id):
         """
@@ -473,10 +474,19 @@ class Order(models.Model):
                     meal_qty=(kitchen_list[row.cid].meal_qty +
                               row.total_quantity),
                     meal_size=row.size)
-            kitchen_list[row.cid].meal_components[row.component_group] = \
-                MealComponent(id=row.component_id,
-                              name=row.component_name,
-                              qty=row.total_quantity)
+            old_component = \
+                kitchen_list[row.cid].meal_components.get(row.component_group)
+            if old_component:
+                # component group already exists in the order
+                kitchen_list[row.cid].meal_components[row.component_group] = \
+                    old_component._replace(
+                        qty=old_component.qty + (row.total_quantity or 0))
+            else:
+                # new component group for this order
+                kitchen_list[row.cid].meal_components[row.component_group] = \
+                    MealComponent(id=row.component_id,
+                                  name=row.component_name,
+                                  qty=row.total_quantity or 0)
             kitchen_list[row.cid] = kitchen_list[row.cid]._replace(
                 routename=row.routename)
 
@@ -530,27 +540,50 @@ class Order(models.Model):
                     oi.order.client.member.address.number,
                     oi.order.client.member.address.street,
                     oi.order.client.member.address.apartment,
-                    # TODO idea : get list of member ids, later select
-                    #   contacts and loop to add phone number
                     (oi.order.client.member.home_phone or
                      oi.order.client.member.cell_phone),
                     oi.order.client.delivery_note,
                     delivery_items=[],
                     order_id=oi.order.id,
                     include_a_bill=oi.order.includes_a_bill)
-            # found new delivery item for client, if it's really an item
-            if oi.component_group:
-                route_list[oi.order.client.id].delivery_items.append(
-                    DeliveryItem(
-                        oi.component_group,
-                        oi.total_quantity,
-                        oi.order_item_type,
-                        oi.remark,
-                        size=(
-                            oi.size if
-                            oi.component_group == (
-                                COMPONENT_GROUP_CHOICES_MAIN_DISH
-                            ) else '')))
+            # found new delivery item for client
+            if (oi.order_item_type == ORDER_ITEM_TYPE_CHOICES_COMPONENT and
+                    oi.component_group):
+                # found a meal_component with proper component_group
+                for j in range(
+                        len(route_list[oi.order.client.id].delivery_items)):
+                    if (route_list[oi.order.client.id].delivery_items[j].
+                            component_group == oi.component_group):
+                        # existing component_group in this order
+                        old_quantity = route_list[oi.order.client.id]. \
+                            delivery_items[j].total_quantity
+                        old_remark = route_list[oi.order.client.id]. \
+                            delivery_items[j].remark
+                        if old_remark != '':
+                            old_remark = old_remark + '; '
+                        route_list[oi.order.client.id].delivery_items[j] = \
+                            route_list[oi.order.client.id].delivery_items[j]. \
+                            _replace(
+                                # cumulate quantities
+                                total_quantity=(
+                                    old_quantity + (oi.total_quantity or 0)),
+                                # concatenate order item remarks
+                                remark=(
+                                    old_remark + (oi.remark or '')))
+                        break
+                else:
+                    # new component_group in this order
+                    route_list[oi.order.client.id].delivery_items.append(
+                        DeliveryItem(
+                            oi.component_group,
+                            oi.total_quantity or 0,
+                            oi.order_item_type,
+                            oi.remark or '',
+                            size=(
+                                oi.size if
+                                oi.component_group == (
+                                    COMPONENT_GROUP_CHOICES_MAIN_DISH
+                                ) else '')))
 
         # Sort delivery items for each client
         for client in route_list.values():

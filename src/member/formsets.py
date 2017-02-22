@@ -3,8 +3,8 @@ from .forms import ClientEmergencyContactInformation
 
 
 CreateEmergencyContactFormset = formset_factory(
-    ClientEmergencyContactInformation, extra=1
+    ClientEmergencyContactInformation, min_num=1, extra=1
 )
 UpdateEmergencyContactFormset = formset_factory(
-    ClientEmergencyContactInformation, extra=0
+    ClientEmergencyContactInformation, min_num=1, extra=0
 )

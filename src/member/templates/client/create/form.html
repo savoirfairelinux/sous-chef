@@ -56,7 +56,10 @@
         <div class="ui error message">
             <div class="header">{% trans 'Required information missing' %}</div>
             <p>{% trans 'Please review the form to make sure that all required fields are filled.' %}</p>
-            {{ wizard.form.errors }}
+            <!-- Show only if wizard.form is not a formset instance -->
+            {% if not wizard.form.forms %}
+                {{ wizard.form.errors }}
+            {% endif %}
         </div>
         {% endif %}
 
