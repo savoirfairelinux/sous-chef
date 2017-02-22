@@ -22,15 +22,17 @@ def migrate_emergency_contacts(apps, schema_editor):
 def reverse_emergency_contacts(apps, schema_editor):
     # set NotePriority initial
     Client = apps.get_model('member', 'Client')
+    EmergencyContact = apps.get_model('member', 'EmergencyContact')
     for client in Client.objects.all():
-        # Use as client emergency contact the first item of
-        # relationship
-        emergency_contact = client.emergencycontact_set.first()
-        # reversing info
-        client.emergency_contact = emergency_contact.member
-        client.emergency_contact_relationship = emergency_contact.relationship
-        # removing info
-        client.emergencycontact_set.delete()
+        if client.emergencycontact_set.exists():
+            # Use as client emergency contact the first item of
+            # relationship
+            emergency_contact = client.emergencycontact_set.first()
+            # reversing info
+            client.emergency_contact = emergency_contact.member
+            client.emergency_contact_relationship = emergency_contact.relationship
+            # removing info
+            EmergencyContact.objects.filter(client=client).delete()
 
 
 class Migration(migrations.Migration):
@@ -62,6 +64,10 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='member.Member',
                                     verbose_name='member'),
         ),
+        migrations.AlterUniqueTogether(
+            name='emergencycontact',
+            unique_together=set([('client', 'member')]),
+        ),
         migrations.AddField(
             model_name='client',
             name='emergency_contacts',
@@ -76,10 +82,5 @@ class Migration(migrations.Migration):
         migrations.RemoveField(
             model_name='client',
             name='emergency_contact_relationship',
-        ),
-        migrations.AlterField(
-            model_name='route',
-            name='vehicle',
-            field=models.CharField(choices=[('cycling', 'Cycling'), ('walking', 'Walking'), ('driving', 'Driving')], default='cycling', max_length=20, verbose_name='vehicle'),
         ),
     ]

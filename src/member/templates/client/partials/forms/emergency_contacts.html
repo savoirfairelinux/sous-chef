@@ -5,6 +5,11 @@
   {{ form.management_form }}
   {% for item_form in form.forms %}
       <div class="formset-item ui raised segment">
+        {% if item_form.errors %}
+          <div class="ui error message">
+              {{ item_form.errors }}
+          </div>
+        {% endif %}
         <div class="ui center aligned basic segment">
           <div class="ui fluid category search">
             <div class="ui icon input" data-url="{% url 'member:search' %}">
