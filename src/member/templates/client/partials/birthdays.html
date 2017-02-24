@@ -13,7 +13,7 @@
             {% for client in birthday %}
             <tr>
                 <td><a href="{% url 'member:client_information' pk=client.id %}">{{ client }}</a></td>
-                <td>{{ client.age_to_celebrate_this_year }}</td>
+                <td>{{ client.age_to_celebrate }}</td>
                 <td> {{ client.birthdate|date:'MONTH_DAY_FORMAT' }} </td>
             </tr>
             {% endfor %}
