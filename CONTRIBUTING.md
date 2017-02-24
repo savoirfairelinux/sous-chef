@@ -65,6 +65,8 @@ For your pull request to be merged, the answer to the following questions must b
 
 [TravisCI](https://travis-ci.org/) is configured to run those checks on every Pull-Request. It is recommanded you configure your fork to do the same.
 
+Note: You may have a "coverage decreased" message after creating the pull request. It may happen with trivial changes: [example1](https://github.com/savoirfairelinux/sous-chef/pull/633/files), [example2](https://github.com/savoirfairelinux/sous-chef/pull/671/files). Don't worry about it in these cases. We will verify the commits.
+
 ### Documentation
 
 Documentation is important and can always be improved:
