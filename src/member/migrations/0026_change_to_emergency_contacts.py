@@ -31,6 +31,7 @@ def reverse_emergency_contacts(apps, schema_editor):
             # reversing info
             client.emergency_contact = emergency_contact.member
             client.emergency_contact_relationship = emergency_contact.relationship
+            client.save()
             # removing info
             EmergencyContact.objects.filter(client=client).delete()
 
