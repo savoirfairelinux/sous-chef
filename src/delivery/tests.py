@@ -10,7 +10,8 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils import timezone as tz
 from django.utils.translation import ugettext_lazy
 
-from meal.models import Menu, Component, Component_ingredient, Ingredient
+from meal.models import (Menu, Component, Component_ingredient, Ingredient,
+                         COMPONENT_GROUP_CHOICES_SIDES)
 from meal.factories import (IngredientFactory, ComponentFactory,
                             ComponentIngredientFactory,
                             IncompatibilityFactory, RestrictedItemFactory)
@@ -91,12 +92,34 @@ class KitchenCountReportTestCase(SousChefTestMixin, TestCase):
         clients = Client.active.all()
         numorders = Order.objects.auto_create_orders(
             self.today, clients)
+        # main dish and its ingredients today
+        main_dishes = Component.objects.filter(name='Ginger pork')
+        main_dish = main_dishes[0]
+        dish_ingredients = Component.get_recipe_ingredients(
+            main_dish.id)
+        for ing in dish_ingredients:
+            ci = Component_ingredient(
+                component=main_dish,
+                ingredient=ing,
+                date=self.today)
+            ci.save()
+        # Add sides ingredient
+        sides_component = Component.objects.get(
+            component_group=COMPONENT_GROUP_CHOICES_SIDES)
+        # This ingredient is in the restrictions of some clients in the data
+        sides_ingredient = Ingredient.objects.get(name='Brussel sprouts')
+        ci = Component_ingredient(
+            component=sides_component,
+            ingredient=sides_ingredient,
+            date=self.today)
+        ci.save()
+        # menu today
         Menu.create_menu_and_components(
             self.today,
             ['Ginger pork',
              'Green Salad', 'Fruit Salad',
              'Day s Dessert', 'Day s Diabetic Dessert',
-             'Day s Pudding', 'Day s Compote'])
+             'Day s Pudding', 'Day s Compote', 'Days Sides'])
 
         self.client.get('/delivery/kitchen_count/')
         response = self.client.get('/delivery/viewMealLabels/')
