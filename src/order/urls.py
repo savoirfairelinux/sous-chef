@@ -11,6 +11,8 @@ from order.views import (
     CreateDeleteOrderClientBill,
     DeleteOrder)
 
+app_name = "order"
+
 urlpatterns = [
     url(_(r'^list/$'), OrderList.as_view(), name='list'),
     url(_(r'^view/(?P<pk>\d+)/$'), OrderDetail.as_view(), name='view'),
