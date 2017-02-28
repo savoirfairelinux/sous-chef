@@ -1,0 +1,8 @@
+title: Sous-chef
+description: Sous-Chef is a Django application to help organizations to plan and deliver meals, and to manage clients files.
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-architect
+
+gems:
+  - jekyll-mentions
