@@ -27,7 +27,7 @@
 <h4 class="ui dividing header">{% trans 'Geolocation' %}</h4>
 
 <div class="field">
-    <button id="geocodeBtn" type="button" class="ui labeled icon right yellow big button">
+    <button id="geocodeBtn" type="button" class="ui labeled icon right yellow big button" data-not-found-msg="{% trans 'Address not Found !!' %}">
       <i class="marker icon"></i>{% trans 'Geolocate' %}
     </button>
     <i class="help-text question yellow icon link" data-content="{% trans 'Geolocation is mandatory.' %}"></i>

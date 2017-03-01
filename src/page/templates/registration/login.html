@@ -16,7 +16,12 @@
 </h2>
 
 {% if not user.username %}
-<form method="post" action='' class="ui large form">{% csrf_token%}
+<form method="post" action='' class="ui large form"
+    data-username-empty-msg="{% trans 'Please enter a username' %}"
+    data-password-empty-msg="{% trans 'Please enter a password' %}"
+    data-password-min-length-msg="{% trans 'Your password must be at least {ruleValue} characters' %}"
+    >
+    {% csrf_token%}
     <div class="ui error message"></div>
     <div class="ui stacked segment">
         <div class="field">

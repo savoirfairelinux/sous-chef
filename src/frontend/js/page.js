@@ -3,6 +3,11 @@ $(function() {
     // Javascript of the page application.
     // **************************************
 
+    var form = $('.ui.large.form'),
+        usernameEmptyMsg = form.data('usernameEmptyMsg'),
+        passwordEmptyMsg = form.data('passwordEmptyMsg'),
+        passwordMinLengthMsg = form.data('passwordMinLengthMsg');
+
     $('.ui.large.form').form({
         on: 'submit',
         revalidate: 'false',
@@ -11,17 +16,17 @@ $(function() {
                 identifier: 'username',
                 rules: [{
                     type   : 'empty',
-                    prompt : 'Please enter a username'
+                    prompt : usernameEmptyMsg
                 }]
             },
             password: {
                 identifier: 'password',
                 rules: [{
                     type   : 'empty',
-                    prompt : 'Please enter a password'
+                    prompt : passwordEmptyMsg
                     },{
                     type   : 'minLength[6]',
-                    prompt : 'Your password must be at least {ruleValue} characters'
+                    prompt : passwordMinLengthMsg
                 }]
             }
         }
