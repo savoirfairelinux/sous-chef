@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-12 16:31+0000\n"
+"POT-Creation-Date: 2017-03-01 14:07-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -19,43 +19,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: page/templates/pages/card.html:11
+#: templates/pages/card.html:11
 msgid "Joined in 2010"
 msgstr ""
 
-#: page/templates/pages/card.html:14
+#: templates/pages/card.html:14
 msgid "Katrina is the coordinator of the clients system"
 msgstr ""
 
-#: page/templates/pages/home.html:7
+#: templates/pages/home.html:7
 msgid "Homepage"
 msgstr "Page d’accueil"
 
-#: page/templates/pages/home.html:20
+#: templates/pages/home.html:20
 msgid "Clients"
 msgstr "Clients"
 
-#: page/templates/pages/home.html:28
+#: templates/pages/home.html:28
 msgid "Active clients"
 msgstr "Clients actifs"
 
-#: page/templates/pages/home.html:33
+#: templates/pages/home.html:33
 msgid "clients are"
 msgstr "Clients sont"
 
-#: page/templates/pages/home.html:33
+#: templates/pages/home.html:33
 msgid "pending"
 msgstr "En attente"
 
-#: page/templates/pages/home.html:40
+#: templates/pages/home.html:40
 msgid "Delivered this month"
 msgstr ""
 
-#: page/templates/pages/home.html:48
+#: templates/pages/home.html:48
 msgid "Orders"
 msgstr "Commandes"
 
-#: page/templates/pages/home.html:54
+#: templates/pages/home.html:54
 #, python-format
 msgid ""
 "\n"
@@ -63,27 +63,39 @@ msgid ""
 "                        "
 msgstr ""
 
-#: page/templates/pages/home.html:64
+#: templates/pages/home.html:64
 msgid "Routes"
 msgstr ""
 
-#: page/templates/pages/home.html:86
+#: templates/pages/home.html:86
 #, python-format
 msgid "%(count)s route."
 msgid_plural "%(count)s routes."
 msgstr[0] ""
 msgstr[1] ""
 
-#: page/templates/registration/login.html:8
-#: page/templates/registration/login.html:37
+#: templates/registration/login.html:8 templates/registration/login.html:42
 msgid "Login"
 msgstr "Identifiant"
 
-#: page/templates/registration/login.html:14
+#: templates/registration/login.html:14
 msgid "Log-in to your account"
 msgstr "Se connecter à son compte"
 
-#: page/templates/registration/login.html:48
+#: templates/registration/login.html:20
+msgid "Please enter a username"
+msgstr "Merci d'entrer un nom d'utilisateur"
+
+#: templates/registration/login.html:21
+msgid "Please enter a password"
+msgstr "Merci d'entrer un mot de passe"
+
+#: templates/registration/login.html:22
+#, python-brace-format
+msgid "Your password must be at least {ruleValue} characters"
+msgstr "Votre mot de passe doit comporter au moins {ruleValue} caractères"
+
+#: templates/registration/login.html:53
 msgid "Connect"
 msgstr "Connexion"
 
