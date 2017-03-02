@@ -70,6 +70,14 @@
     {% endif %}
     <!-- WARNING :  Do not move this line before a manual import of script! -->
     {% block extrajs %}{% endblock %}
+
+    <script type="application/javascript">
+      $(function () {
+        $(".ui.dropdown > select[required]").each(function () {
+          $(this).removeAttr('required');
+        });
+      });  // Don't use HTML5 validation on hidden <select> elements that are replaced by Semantic UI.
+    </script>
 </body>
 
 </html>
