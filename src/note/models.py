@@ -59,7 +59,7 @@ class Note(models.Model):
         User,
         verbose_name=_('Author'),
         null=True,
-        on_delete=models.CASCADE
+        on_delete=models.SET_NULL
     )
 
     date = models.DateTimeField(
@@ -84,7 +84,7 @@ class Note(models.Model):
         verbose_name=_('Priority'),
         related_name="notes",
         default=NotePriority.DEFAULT_PRIORITY_ID,
-        on_delete=models.CASCADE
+        on_delete=models.SET_DEFAULT
     )
 
     category = models.ForeignKey(
@@ -92,7 +92,7 @@ class Note(models.Model):
         verbose_name=_('Category'),
         related_name="notes",
         default=NoteCategory.DEFAULT_CATEGORY_ID,
-        on_delete=models.CASCADE
+        on_delete=models.SET_DEFAULT
     )
 
     objects = NoteManager()

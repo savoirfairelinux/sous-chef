@@ -117,7 +117,7 @@ class Member(models.Model):
         'member.Address',
         verbose_name=_('address'),
         null=True,
-        on_delete=models.CASCADE
+        on_delete=models.SET_NULL
     )
 
     work_information = models.TextField(
@@ -468,7 +468,8 @@ class Client(models.Model):
         'member.Member',
         related_name='+',
         verbose_name=_('billing member'),
-        on_delete=models.CASCADE
+        # A client must have a billing member
+        on_delete=models.PROTECT
     )
 
     billing_payment_type = models.CharField(
@@ -496,8 +497,7 @@ class Client(models.Model):
         'member.Member',
         verbose_name=_('emergency contact'),
         related_name='emergency_contact',
-        null=True,
-        on_delete=models.CASCADE
+        null=True
     )
 
     emergency_contact_relationship = models.CharField(
