@@ -55,6 +55,10 @@ Télécharger :
 
 Voir la [procédure d'installation](https://github.com/savoirfairelinux/sous-chef/blob/dev/INSTALL.md) .
 
+ <section id="downloads">
+-              <a class="zip_download_link" href="https://github.com/savoirfairelinux/sous-chef/zipball/master"> Télécharger Sous-chef en .zip file</a>
+-              <a class="tar_download_link" href="https://github.com/savoirfairelinux/sous-chef/tarball/master">Télécharger Sous-chef en tar.gz file</a> </section>
+
 Il n'y a pas d'hébergement gratuit offert, mais vous êtes libre de le télécharger pour l’héberger vous-même ou à travers un fournisseur spécialisé en respectant les termes de la licence d’utilisation.
 
 # La petite histoire
