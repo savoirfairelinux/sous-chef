@@ -29,6 +29,7 @@ from member.forms import(
     ClientReferentInformation, ClientPaymentInformation,
     ClientRestrictionsInformation, ClientEmergencyContactInformation
 )
+from sous_chef.tests import TestMigrations
 from sous_chef.tests import TestMixin as SousChefTestMixin
 
 
@@ -3213,3 +3214,198 @@ class DeleteComponentToAvoidViewTestCase(SousChefTestMixin, TestCase):
         response = self.client.post(url, follow=True)
         # Check
         self.assertEqual(response.status_code, 200)
+
+
+class TestMigrationApply0026(TestMigrations):
+    migrate_from = '0025_route_vehicle'
+    migrate_to = '0026_change_to_emergency_contacts'
+
+    def setUpBeforeMigration(self, apps):
+        Member = apps.get_model('member', 'Member')
+        Client = apps.get_model('member', 'Client')
+
+        member1 = Member.objects.create(
+            firstname="HasContact",
+            lastname="HasContactRelationship"
+        )
+        member2 = Member.objects.create(
+            firstname="HasContact",
+            lastname="NoContactRelationship"
+        )
+        member3 = Member.objects.create(
+            firstname="NoContact",
+            lastname="HasContactRelationship"
+        )
+        member4 = Member.objects.create(
+            firstname="NoContact",
+            lastname="NoContactRelationship"
+        )
+        emgc_member = Member.objects.create(
+            firstname="John",
+            lastname="Doe"
+        )
+        client1 = Client.objects.create(
+            billing_member=member1,
+            member=member1,
+            # Important fields
+            emergency_contact=emgc_member,
+            emergency_contact_relationship='friend'
+        )
+        client2 = Client.objects.create(
+            billing_member=member2,
+            member=member2,
+            # Important fields
+            emergency_contact=emgc_member,
+            emergency_contact_relationship=None
+        )
+        client3 = Client.objects.create(
+            billing_member=member3,
+            member=member3,
+            # Important fields
+            emergency_contact=None,
+            emergency_contact_relationship='friend'
+        )
+        client4 = Client.objects.create(
+            billing_member=member4,
+            member=member4,
+            # Important fields
+            emergency_contact=None,
+            emergency_contact_relationship=None
+        )
+
+    def test_emergency_contact_migrated(self):
+        Member = self.apps.get_model('member', 'Member')
+        Client = self.apps.get_model('member', 'Client')
+        EmergencyContact = self.apps.get_model('member', 'EmergencyContact')
+
+        client1 = Client.objects.get(
+            member__firstname="HasContact",
+            member__lastname="HasContactRelationship"
+        )
+        client2 = Client.objects.get(
+            member__firstname="HasContact",
+            member__lastname="NoContactRelationship"
+        )
+        client3 = Client.objects.get(
+            member__firstname="NoContact",
+            member__lastname="HasContactRelationship"
+        )
+        client4 = Client.objects.get(
+            member__firstname="NoContact",
+            member__lastname="NoContactRelationship"
+        )
+
+        self.assertEqual(client1.emergency_contacts.count(), 1)
+        self.assertEqual(client2.emergency_contacts.count(), 1)
+        self.assertEqual(client3.emergency_contacts.count(), 0)
+        self.assertEqual(client4.emergency_contacts.count(), 0)
+
+        emgc_member = Member.objects.get(
+            firstname="John",
+            lastname="Doe"
+        )
+
+        emgc1 = client1.emergency_contacts.first()
+        self.assertEqual(emgc1, emgc_member)
+        ec1 = EmergencyContact.objects.get(client=client1, member=emgc1)
+        self.assertEqual(ec1.relationship, 'friend')
+
+        emgc2 = client2.emergency_contacts.first()
+        self.assertEqual(emgc2, emgc_member)
+        ec2 = EmergencyContact.objects.get(client=client2, member=emgc2)
+        self.assertEqual(ec2.relationship, None)
+
+
+class TestMigrationUnapply0026(TestMigrations):
+    migrate_from = '0026_change_to_emergency_contacts'
+    migrate_to = '0025_route_vehicle'
+
+    def setUpBeforeMigration(self, apps):
+        Member = apps.get_model('member', 'Member')
+        Client = apps.get_model('member', 'Client')
+        EmergencyContact = apps.get_model('member', 'EmergencyContact')
+
+        member0 = Member.objects.create(
+            firstname="No",
+            lastname="EmergencyContact"
+        )
+        member1 = Member.objects.create(
+            firstname="One",
+            lastname="EmergencyContact"
+        )
+        member2 = Member.objects.create(
+            firstname="Two",
+            lastname="EmergencyContact"
+        )
+        emgc_member1 = Member.objects.create(
+            firstname="John",
+            lastname="Doe"
+        )
+        emgc_member2 = Member.objects.create(
+            firstname="Andy",
+            lastname="Lee"
+        )
+        client0 = Client.objects.create(
+            billing_member=member0,
+            member=member0,
+        )
+        client1 = Client.objects.create(
+            billing_member=member1,
+            member=member1,
+        )
+        EmergencyContact.objects.create(
+            client=client1,
+            member=emgc_member1,
+            relationship='friend'
+        )
+        client2 = Client.objects.create(
+            billing_member=member2,
+            member=member2,
+        )
+        EmergencyContact.objects.create(
+            client=client2,
+            member=emgc_member1,
+            relationship='friend1'
+        )
+        EmergencyContact.objects.create(
+            client=client2,
+            member=emgc_member2,
+            relationship='friend2'
+        )
+
+    def test_emergency_contact_migrated(self):
+        Member = self.apps.get_model('member', 'Member')
+        Client = self.apps.get_model('member', 'Client')
+
+        client0 = Client.objects.get(
+            member__firstname="No",
+            member__lastname="EmergencyContact"
+        )
+        client1 = Client.objects.get(
+            member__firstname="One",
+            member__lastname="EmergencyContact"
+        )
+        client2 = Client.objects.get(
+            member__firstname="Two",
+            member__lastname="EmergencyContact"
+        )
+        emgc_member1 = Member.objects.get(
+            firstname="John",
+            lastname="Doe"
+        )
+        emgc_member2 = Member.objects.get(
+            firstname="Andy",
+            lastname="Lee"
+        )
+
+        self.assertEqual(client0.emergency_contact, None)
+        self.assertEqual(client0.emergency_contact_relationship, None)
+
+        self.assertEqual(client1.emergency_contact, emgc_member1)
+        self.assertEqual(client1.emergency_contact_relationship, 'friend')
+
+        self.assertIn(client2.emergency_contact, [emgc_member1, emgc_member2])
+        if client2.emergency_contact == emgc_member1:
+            self.assertIn(client2.emergency_contact_relationship, 'friend1')
+        else:
+            self.assertIn(client2.emergency_contact_relationship, 'friend2')
