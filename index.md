@@ -56,8 +56,8 @@ Télécharger :
 Voir la [procédure d'installation](https://github.com/savoirfairelinux/sous-chef/blob/dev/INSTALL.md) .
 
  <section id="downloads">
--              <a class="zip_download_link" href="https://github.com/savoirfairelinux/sous-chef/zipball/master"> Télécharger Sous-chef en .zip file</a>
--              <a class="tar_download_link" href="https://github.com/savoirfairelinux/sous-chef/tarball/master">Télécharger Sous-chef en tar.gz file</a> </section>
+-              <a class="zip_download_link" href="https://github.com/savoirfairelinux/sous-chef/zipball/master"> Télécharger Sous-chef en fichier .zip </a>
+-              <a class="tar_download_link" href="https://github.com/savoirfairelinux/sous-chef/tarball/master">Télécharger Sous-chef en fichier tar.gz</a> </section>
 
 Il n'y a pas d'hébergement gratuit offert, mais vous êtes libre de le télécharger pour l’héberger vous-même ou à travers un fournisseur spécialisé en respectant les termes de la licence d’utilisation.
 
@@ -73,7 +73,7 @@ Pourquoi ce nom?  Comme le [sous-chef](https://en.wikipedia.org/wiki/Sous_chef) 
 
 
 Les popotes roulantes au Québec 
->Il y a plus de 350 popotes à travers la province et estime que c'est près de 2 millions de repas qui sont livrés à > une clientèle composée majoritairement de personnes âgées, mais aussi de convalescents et d'handicapés. Cela > > représente une aide tangible à des milliers de citoyens vivant une situation de perte d’autonomie. Ils sont > présents autant en milieu urbain que rural. Pour plus d'information, voir le site http://popotes.org
+>Il y a plus de 350 popotes à travers la province et estime que c'est près de 2 millions de repas qui sont livrés à une clientèle composée majoritairement de personnes âgées, mais aussi de convalescents et d'handicapés. Cela représente une aide tangible à des milliers de citoyens vivant une situation de perte d’autonomie. Ils sont présents autant en milieu urbain que rural. Pour plus d'information, voir le site http://popotes.org
 
 # À propos
 Licence : Sous-chef un logiciel libre distribué sous licence [Affero General Public License 3](https://www.gnu.org/licenses/agpl-3.0.fr.html)  
