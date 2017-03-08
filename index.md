@@ -1,7 +1,7 @@
 # SOUS-CHEF
 Sous-chef est un logiciel de gestion de popote roulante c'est-à-dire de service de cuisine et de livraison de repas chaud livré à domicile pour les personnes à mobilité réduite. 
 
-La plateforme Sous-chef simplifie la gestion des bénéficiaires (base de données client et facturation), aide à générer des repas selon les préférences (gestion des menus) et la livraison (gestion des routes). This automatic page generator is the e
+La plateforme Sous-chef simplifie la gestion des bénéficiaires (base de données client et facturation), aide à générer des repas selon les préférences (gestion des menus) et la livraison (gestion des routes).
 
 # Fonctionnalités
 
@@ -55,7 +55,7 @@ Télécharger :
 
 Voir la [procédure d'installation](https://github.com/savoirfairelinux/sous-chef/blob/dev/INSTALL.md) .
 
-Il n'y a pas d'hébergement gratuit offert, mais vous êtes libre d'utiliser le service sur un poste en utilisation locale.
+Il n'y a pas d'hébergement gratuit offert, mais vous êtes libre de le télécharger pour l’héberger vous-même ou à travers un fournisseur spécialisé en respectant les termes de la licence d’utilisation.
 
 # La petite histoire
 
