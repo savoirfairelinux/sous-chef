@@ -360,6 +360,7 @@ $(function() {
 
         // Display a loading indicator
         $('form').addClass('loading');
+        var notFoundMsg = $(this).data('notFoundMsg');
 
         var geocoder = new L.Control.Geocoder.nominatim({ geocodingQueryParams: { countrycodes: 'ca'}});
         // var yourQuery = "4846 rue cartier, Montreal, Qc";
@@ -409,7 +410,7 @@ $(function() {
                   });
             }
             else {
-                alert("Address not Found !!");
+                alert(notFoundMsg);
             }
 
             // Remove the loading indicator

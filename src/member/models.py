@@ -8,7 +8,8 @@ from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django_filters import (
-    FilterSet, CharFilter, ChoiceFilter
+    FilterSet, CharFilter, ChoiceFilter, BooleanFilter,
+    MultipleChoiceFilter
 )
 from annoying.fields import JSONField
 
@@ -378,11 +379,18 @@ class ClientManager(models.Manager):
 
         today = datetime.datetime.now()
 
-        return self.filter(
+        clients = self.filter(
+            birthdate__year__lte=today.year,
             birthdate__month=today.month,
             birthdate__day__gte=today.day,
             birthdate__day__lte=today.day + 7,
         ).order_by(Extract('birthdate', 'day'))
+
+        today = datetime.date.today()
+        for client in clients:
+            client.age_to_celebrate = today.year - client.birthdate.year
+
+        return clients
 
 
 class ActiveClientManager(ClientManager):
@@ -590,34 +598,25 @@ class Client(models.Model):
         """
         Returns integer specifying person's age in years on the current date.
 
+        To compare the Month and Day they need to be in the same year. Since
+        either the birthday can be in a leap year or today can be Feb 29 of a
+        leap year, we need to make sure to compare the days, in a leap year,
+        therefore we are comparing in the year 2000, which was a leap year.
+
         >>> from datetime import date
         >>> p = Client(birthdate=date(1950, 4, 19)
         >>> p.age()
         66
         """
-        from datetime import date
-        current = date.today()
-
-        if current < self.birthdate:
-            return 0
-        return math.floor((current - self.birthdate).days / 365)
-
-    @property
-    def age_to_celebrate_this_year(self):
-        """
-        Returns integer specifying person's age in years on the current year.
-
-        >>> from datetime import date
-        >>> p = Client(birthdate=date(1950, 12, 12)
-        >>> p.age_to_celebrate_this_year()
-        67
-        """
-        from datetime import date
-        current = date.today()
-
-        if current < self.birthdate:
-            return 0
-        return current.year - self.birthdate.year
+        today = datetime.date.today()
+        if today < self.birthdate:
+            age = 0
+        elif datetime.date(2000, self.birthdate.month, self.birthdate.day) <= \
+                datetime.date(2000, today.month, today.day):
+            age = today.year - self.birthdate.year
+        else:
+            age = today.year - self.birthdate.year - 1
+        return age
 
     @property
     def orders(self):
@@ -983,8 +982,8 @@ class ClientFilter(FilterSet):
         label=_('Search by name')
     )
 
-    status = ChoiceFilter(
-        choices=(('', ''),) + Client.CLIENT_STATUS,
+    status = MultipleChoiceFilter(
+        choices=Client.CLIENT_STATUS
     )
 
     delivery_type = ChoiceFilter(
