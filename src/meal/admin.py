@@ -44,7 +44,7 @@ class ComponentAdmin(admin.ModelAdmin):
             request, queryset, search_term)
         search_list = [choice[0] for
                        choice in COMPONENT_GROUP_CHOICES
-                       if search_term in choice[1]]
+                       if search_term.lower() in choice[1].lower()]
         if search_list:
             queryset |= self.model.objects.filter(
                 component_group__in=search_list)
@@ -65,7 +65,7 @@ class IngredientAdmin(admin.ModelAdmin):
             request, queryset, search_term)
         search_list = [choice[0] for
                        choice in INGREDIENT_GROUP_CHOICES
-                       if search_term in choice[1]]
+                       if search_term.lower() in choice[1].lower()]
         if search_list:
             queryset |= self.model.objects.filter(
                 ingredient_group__in=search_list)
@@ -89,7 +89,7 @@ class Restricted_itemAdmin(admin.ModelAdmin):
             request, queryset, search_term)
         search_list = [choice[0] for
                        choice in RESTRICTED_ITEM_GROUP_CHOICES
-                       if search_term in choice[1]]
+                       if search_term.lower() in choice[1].lower()]
         if search_list:
             queryset |= self.model.objects.filter(
                 restricted_item_group__in=search_list)
