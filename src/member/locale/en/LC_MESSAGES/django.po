@@ -125,6 +125,7 @@ msgstr ""
 msgid "Route"
 msgstr ""
 
+
 #: forms.py:163 models.py:558 templates/client/view/information.html:50
 msgid "Delivery Note"
 msgstr ""
@@ -218,6 +219,7 @@ msgid ""
 "If checked, the personal information             of the client will be used "
 "as billing information."
 msgstr ""
+
 
 #: forms.py:386 models.py:472
 msgid "Payment Type"
@@ -1153,6 +1155,10 @@ msgstr ""
 
 #: templates/client/view/status.html:34
 msgid "Apply"
+msgstr ""
+
+#: templates/client/view/status.html:42
+msgid "Date"
 msgstr ""
 
 #: templates/client/view/status.html:43

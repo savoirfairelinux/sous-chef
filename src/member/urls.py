@@ -30,8 +30,9 @@ from member.views import (
 from member.forms import (
     ClientBasicInformation, ClientAddressInformation,
     ClientReferentInformation, ClientPaymentInformation,
-    ClientRestrictionsInformation, ClientEmergencyContactInformation
+    ClientRestrictionsInformation
 )
+from member.formsets import CreateEmergencyContactFormset
 
 from note.views import ClientNoteList, ClientNoteListAdd
 
@@ -41,7 +42,7 @@ create_member_forms = (
     ('referent_information', ClientReferentInformation),
     ('payment_information', ClientPaymentInformation),
     ('dietary_restriction', ClientRestrictionsInformation),
-    ('emergency_contact', ClientEmergencyContactInformation)
+    ('emergency_contacts', CreateEmergencyContactFormset)
 )
 
 member_wizard = ClientWizard.as_view(create_member_forms,
@@ -95,7 +96,7 @@ member_update_forms = (
     ('referent_information', ClientUpdateReferentInformation),
     ('payment_information', ClientUpdatePaymentInformation),
     ('dietary_restriction', ClientUpdateDietaryRestriction),
-    ('emergency_contact', ClientUpdateEmergencyContactInformation),
+    ('emergency_contacts', ClientUpdateEmergencyContactInformation),
 )
 
 # Handle client update forms URL

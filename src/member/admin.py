@@ -1,8 +1,9 @@
 from django.contrib import admin
-from member.models import (Member, Client, Contact, Address,
-                           Referencing, Route, Option)
 
-from meal.models import Ingredient
+from member.models import (
+    Member, Client, Contact, Address,
+    Referencing, Route, Option, EmergencyContact
+)
 
 
 class IngredientsToAvoidInline(admin.TabularInline):
@@ -78,3 +79,4 @@ admin.site.register(Contact, ContactAdmin)
 admin.site.register(Address)
 admin.site.register(Referencing, ReferencingAdmin)
 admin.site.register(Option)
+admin.site.register(EmergencyContact)

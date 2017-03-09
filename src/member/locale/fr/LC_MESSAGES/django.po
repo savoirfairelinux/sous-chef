@@ -37,6 +37,7 @@ msgstr "Prénom"
 msgid "Last Name"
 msgstr "Nom de famille"
 
+
 #: forms.py:31
 msgid "Last name"
 msgstr "Nom de famille"
@@ -127,6 +128,7 @@ msgstr "Distance du Santropol Roulant"
 msgid "Route"
 msgstr "Route"
 
+
 #: forms.py:163 models.py:558 templates/client/view/information.html:50
 msgid "Delivery Note"
 msgstr "Notes de Livraison"
@@ -188,6 +190,7 @@ msgid "This field is required unless you chose an existing member."
 msgstr ""
 "Ce champ est requis à moins que vous ne choisissiez un membre existant."
 
+
 #: forms.py:321 forms.py:450
 msgid "Not a valid member, please chose an existing member."
 msgstr "Membre non valide. Veuillez choisir un membre existant."
@@ -224,6 +227,7 @@ msgstr ""
 "Si sélectionné, les informations personnelles du client seront utilisées "
 "pour la facturation.."
 
+
 #: forms.py:386 models.py:472
 msgid "Payment Type"
 msgstr "Type de Paiement"
@@ -251,6 +255,7 @@ msgid ""
 msgstr ""
 "Ce membre ne possède pas une adresse valide. Veillez ajouter une adresse "
 "valide afin qu'elle puisse être utilisée pour la facturation."
+
 
 #: forms.py:424
 msgid "This field is required"
@@ -774,20 +779,16 @@ msgid "A client can be either an ongoing or an episodic client."
 msgstr ""
 
 #: templates/client/list.html:103
-#, fuzzy
-#| msgid "The delivery date planned for the order."
 msgid "The delivery route for the client."
-msgstr "Date de livraison prévue pour la commande"
+msgstr ""
 
 #: templates/client/list.html:105
 msgid "Last update"
 msgstr "Dernière modification"
 
 #: templates/client/list.html:106
-#, fuzzy
-#| msgid "Contact information of the client"
 msgid "Last modification of the file."
-msgstr "Coordonnées du client"
+msgstr ""
 
 #: templates/client/list.html:145
 msgid "of"
@@ -832,11 +833,10 @@ msgstr "Recherche"
 msgid "Geolocation"
 msgstr "Localisation"
 
+
 #: templates/client/partials/forms/address_information.html:30
-#, fuzzy
-#| msgid "Address information"
 msgid "Address not Found !!"
-msgstr "Adresse civile"
+msgstr ""
 
 #: templates/client/partials/forms/address_information.html:31
 msgid "Geolocate"
@@ -846,7 +846,7 @@ msgstr "Localiser"
 #, fuzzy
 #| msgid "Geolocation"
 msgid "Geolocation is mandatory."
-msgstr "Localisation"
+msgstr ""
 
 #: templates/client/partials/forms/address_information.html:49
 msgid "km"
@@ -880,15 +880,23 @@ msgstr "Statut de livraison"
 msgid "Food preferences"
 msgstr "Préférences alimentaires    "
 
-#: templates/client/partials/forms/emergency_contact.html:2
-msgid "Emergency contact"
-msgstr "Contact d'urgence"
+#: templates/client/partials/forms/emergency_contacts.html:2
+msgid "Emergency contacts"
+msgstr "Contacts d'urgence"
 
-#: templates/client/partials/forms/emergency_contact.html:16
+#: templates/client/partials/forms/emergency_contacts.html:4
+msgid "Add contact"
+msgstr "Ajouter contact"
+
+#: templates/client/partials/forms/emergency_contacts.html:4
+msgid "Remove contact"
+msgstr "Supprimer contact"
+
+#: templates/client/partials/forms/emergency_contacts.html:20
 msgid "Create new emergency contact"
 msgstr "Créer un contact d'urgence"
 
-#: templates/client/partials/forms/emergency_contact.html:65
+#: templates/client/partials/forms/emergency_contacts.html:69
 msgid "Contact relationship"
 msgstr "Relation de contact"
 
@@ -957,10 +965,8 @@ msgid "Orders"
 msgstr "Commandes"
 
 #: templates/client/partials/prefs.html:15
-#, fuzzy
-#| msgid "Delivery"
 msgid "No delivery."
-msgstr "Livraison"
+msgstr "Pas de livraison"
 
 #: templates/client/update/base.html:14 templates/client/update/base.html:30
 msgid "Update Client"
@@ -1069,12 +1075,14 @@ msgid "Delivery Type"
 msgstr "Type de Livraison"
 
 #: templates/client/view/information.html:59
-msgid "Emergency Contact"
-msgstr "Contact d'Urgence"
+msgid "Emergency Contacts"
+msgstr "Contacts d'Urgence"
 
 #: templates/client/view/information.html:60
-msgid "Information of the person to contact in case of an emergency"
-msgstr "Information sur la personne contact en cas d'urgence"
+#, fuzzy
+#| msgid "Information of the person to contact in case of an emergency"
+msgid "Information of the people to contact in case of an emergency"
+msgstr "Information sur les personnes à contacter en cas d'urgence"
 
 #: templates/client/view/notes.html:19
 msgid "Staff Notes"
@@ -1097,10 +1105,8 @@ msgid "Is read"
 msgstr "Lu"
 
 #: templates/client/view/notes.html:53
-#, fuzzy
-#| msgid "Notes"
 msgid "New Note"
-msgstr "Notes"
+msgstr "Nouvelle Note"
 
 #: templates/client/view/notes.html:75
 msgid "Done/Read"
@@ -1186,6 +1192,10 @@ msgstr "Voici l'historique des changements de statut."
 msgid "Apply"
 msgstr "Appliquer"
 
+#: templates/client/view/status.html:42
+msgid "Date"
+msgstr "Date"
+
 #: templates/client/view/status.html:43
 msgid "From"
 msgstr "De"
@@ -1219,6 +1229,7 @@ msgstr ""
 #, python-format
 msgid "%(count)s %(component_label)s"
 msgstr ""
+
 
 #: urls.py:57
 msgid "^view/(?P<pk>\\d+)/$"
@@ -1303,3 +1314,6 @@ msgstr "Le statut a été changé"
 
 #~ msgid "Cash"
 #~ msgstr "Argent"
+
+#~ msgid "emergency contact relationship"
+#~ msgstr "lien avec le contact d'urgence"

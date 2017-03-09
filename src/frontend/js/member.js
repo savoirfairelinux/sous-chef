@@ -113,33 +113,57 @@ $(function() {
         }
     });
 
-    $('.ui.button.add.member').on('click', function() {
-        $('.existing--member').val('').attr('disabled', 'disabled');
-        $(this).transition('scale');
-        $('.ui.add.form.member').transition('scale');
+    var body = $('body');
+    body.delegate('.ui.button.add.member', 'click', function() {
+        var $this = $(this),
+            commonParent = $(this).closest('div.ui.segment');
+        $this.transition('scale');
+        commonParent.find('.ui.add.form.member').transition('scale');
+        commonParent.find('.existing--member').val('').attr('disabled', 'disabled');
     });
 
-    $('.ui.button.cancel.add.member').on('click', function() {
-        $('.ui.button.add.member').transition('scale');
-        $('.existing--member').removeAttr('disabled');
+    body.delegate('.ui.button.cancel.add.member', 'click', function() {
+        var commonParent = $(this).closest('div.ui.segment');
+        commonParent.find('.ui.button.add.member').not('cancel').transition('scale');
+        commonParent.find('.existing--member').removeAttr('disabled');
     });
 
-    if( $('.firstname').val() !== '' || $('.lastname').val() !== ''
-        && $('.existing--member').val() === '' ) {
-        $('.ui.button.add.member').transition('scale');
-        $('.existing--member').attr('disabled', 'disabled');
-        $('.ui.add.form.member').transition('scale');
+    // Emergency contact formset
+    var formsetContainer = $('form.ui.form div.formset-container'),
+        formsetItems = $('form.ui.form div.formset-item'),
+        $search_url = $('.ui.search .ui.input').first().attr('data-url'),
+        initMemberQuickSearch = function (selector) {
+            selector.search({
+                apiSettings: {
+                    cache : false,
+                    url: $search_url + '?name={query}',
+                },
+                minCharacters : 3,
+                maxResults : 10
+            });
+        };
+
+    if (formsetItems.length > 0) {
+        formsetItems.formset({
+            'prefix': 'emergency_contacts',
+            'addText': '<i class="plus icon"></i> ' + formsetContainer.data('addLabel'),
+            'deleteText': '<i class="remove icon"></i> ' + formsetContainer.data('removeLabel'),
+            'added': function (row) {
+                initMemberQuickSearch(row.find('.ui.search'));
+            }
+        });
+    } else {
+        if( $('.firstname').val() !== '' || $('.lastname').val() !== ''
+            && $('.existing--member').val() === '' ) {
+            $('.ui.button.add.member').transition('scale');
+            $('.existing--member').attr('disabled', 'disabled');
+            $('.ui.add.form.member').transition('scale');
+        }
     }
 
-    $search_url = $('.ui.search .ui.input').attr('data-url');
-    $('.ui.search').search({
-        apiSettings: {
-            cache : false,
-            url: $search_url + '?name={query}',
-        },
-        minCharacters : 3,
-        maxResults : 10,
-    });
+    initMemberQuickSearch($('.ui.search'));
+
+
 
     function showOneAccordionElement(element, index, array) {
         selector = '.ui.accordion.meals.' + element;
@@ -191,5 +215,4 @@ $(function() {
         showUiAccordionSelectedDays();
         $('.ui.accordion.meals.default').hide();
     }
-
 });

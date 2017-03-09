@@ -1,17 +1,16 @@
-import re
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
-from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
+
 from member.formsfield import CAPhoneNumberExtField
-from localflavor.ca.forms import (
-    CAPhoneNumberField, CAPostalCodeField
-)
-from meal.models import Ingredient, Component, COMPONENT_GROUP_CHOICES, \
+from localflavor.ca.forms import CAPostalCodeField
+from meal.models import (
+    Ingredient, Component, COMPONENT_GROUP_CHOICES,
     Restricted_item, COMPONENT_GROUP_CHOICES_SIDES
+)
 from order.models import SIZE_CHOICES
 from member.models import (
-    Member, Client, RATE_TYPE, CONTACT_TYPE_CHOICES, Option,
+    Member, Client, RATE_TYPE, Option,
     GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE,
     DAYS_OF_WEEK, Route, ClientScheduledStatus
 )
@@ -446,7 +445,7 @@ class ClientEmergencyContactInformation(MemberForm):
             member_id = member.split(' ')[0].replace('[', '').replace(']', '')
             try:
                 Member.objects.get(pk=member_id)
-            except ObjectDoesNotExist:
+            except (ObjectDoesNotExist, ValueError):
                 msg = _('Not a valid member, please chose an existing member.')
                 self.add_error('member', msg)
         else:

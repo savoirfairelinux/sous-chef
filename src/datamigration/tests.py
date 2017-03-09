@@ -1,9 +1,10 @@
-from django.test import TestCase
-from member.models import Member, Client, Address, Referencing
-from member.models import Contact, Option, Client_option, Restriction, Route
-from order.models import Order
 from datetime import date
 from django.core.management import call_command
+from django.test import TestCase
+
+from member.models import Member, Client, Address
+from member.models import Option
+from order.models import Order
 
 
 class ImportMemberTestCase(TestCase):
@@ -122,8 +123,14 @@ class ImportMemberRelationshipsTestCase(TestCase):
         dorothy = Client.objects.get(member__mid=94)
         self.assertEquals(str(dorothy.billing_member), 'Alice Cardona')
         self.assertEquals(dorothy.billing_member.rid, 2884)
-        self.assertEquals(dorothy.emergency_contact, dorothy.billing_member)
-        self.assertEquals(dorothy.emergency_contact_relationship, 'daughter')
+        self.assertIn(
+            dorothy.billing_member.pk,
+            [c.pk for c in dorothy.emergency_contacts.all()]
+        )
+        self.assertIn(
+            'daughter',
+            [ce.relationship for ce in dorothy.emergencycontact_set.all()]
+        )
         self.assertEquals(dorothy.client_referent.all().count(), 0)
         marie = Client.objects.get(member__mid=93)
         marion = Member.objects.get(rid=865)
@@ -131,8 +138,9 @@ class ImportMemberRelationshipsTestCase(TestCase):
         referencing = marie.client_referent.first()
         self.assertEquals(referencing.referent, marion)
         self.assertEquals(
-            referencing.work_information,
-            'CLSC St-Louis du Parc')
+            referencing.referent.work_information,
+            'CLSC St-Louis du Parc'
+        )
         self.assertEquals(referencing.referral_reason, 'Low mobility')
 
 

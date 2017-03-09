@@ -1707,7 +1707,6 @@
         "pk": 606,
         "model": "member.client",
         "fields": {
-            "emergency_contact_relationship": "Nephew",
             "route": 1,
             "billing_payment_type": "check",
             "gender": "M",
@@ -1718,17 +1717,24 @@
             "birthdate": "1940-02-23",
             "alert": "",
             "member": 861,
-            "emergency_contact": 863,
             "status": "A",
             "billing_member": 862,
             "rate_type": "default"
         }
     },
     {
+        "pk": 1,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 606,
+            "member": 863,
+            "relationship": "Nephew"
+        }
+    },
+    {
         "pk": 607,
         "model": "member.client",
         "fields": {
-            "emergency_contact_relationship": "Friend",
             "route": 1,
             "billing_payment_type": "check",
             "gender": "M",
@@ -1739,17 +1745,24 @@
             "birthdate": "1945-12-13",
             "alert": "",
             "member": 864,
-            "emergency_contact": 861,
             "status": "A",
             "billing_member": 864,
             "rate_type": "default"
         }
     },
     {
+        "pk": 2,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 607,
+            "member": 861,
+            "relationship": "Friend"
+        }
+    },
+    {
         "pk": 608,
         "model": "member.client",
         "fields": {
-            "emergency_contact_relationship": "Friend",
             "route": 1,
             "billing_payment_type": "check",
             "gender": "M",
@@ -1760,17 +1773,24 @@
             "birthdate": "1943-12-13",
             "alert": "",
             "member": 862,
-            "emergency_contact": 864,
             "status": "A",
             "billing_member": 862,
             "rate_type": "default"
         }
     },
     {
+        "pk": 3,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 608,
+            "member": 866,
+            "relationship": "Friend"
+        }
+    },
+    {
         "pk": 609,
         "model": "member.client",
         "fields": {
-            "emergency_contact_relationship": "Friend",
             "route": 1,
             "billing_payment_type": "check",
             "gender": "M",
@@ -1781,17 +1801,24 @@
             "birthdate": "1943-12-13",
             "alert": "",
             "member": 863,
-            "emergency_contact": 862,
             "status": "A",
             "billing_member": 863,
             "rate_type": "default"
         }
     },
     {
+        "pk": 4,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 609,
+            "member": 862,
+            "relationship": "Friend"
+        }
+    },
+    {
         "pk": 610,
         "model": "member.client",
         "fields": {
-            "emergency_contact_relationship": "Friend",
             "route": 1,
             "billing_payment_type": "check",
             "gender": "M",
@@ -1802,17 +1829,24 @@
             "birthdate": "1943-12-13",
             "alert": "",
             "member": 867,
-            "emergency_contact": 868,
             "status": "A",
             "billing_member": 867,
             "rate_type": "default"
         }
     },
     {
+        "pk": 5,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 610,
+            "member": 868,
+            "relationship": "Friend"
+        }
+    },
+    {
         "pk": 611,
         "model": "member.client",
         "fields": {
-            "emergency_contact_relationship": "Friend",
             "route": 1,
             "billing_payment_type": "check",
             "gender": "M",
@@ -1823,17 +1857,24 @@
             "birthdate": "1943-12-13",
             "alert": "",
             "member": 868,
-            "emergency_contact": 867,
             "status": "A",
             "billing_member": 868,
             "rate_type": "default"
         }
     },
     {
+        "pk": 6,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 611,
+            "member": 867,
+            "relationship": "Friend"
+        }
+    },
+    {
         "pk": 612,
         "model": "member.client",
         "fields": {
-            "emergency_contact_relationship": "Friend",
             "route": 3,
             "billing_payment_type": "check",
             "gender": "M",
@@ -1844,10 +1885,18 @@
             "birthdate": "1943-12-13",
             "alert": "",
             "member": 869,
-            "emergency_contact": 868,
             "status": "A",
             "billing_member": 869,
             "rate_type": "default"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 612,
+            "member": 868,
+            "relationship": "Friend"
         }
     },
     {
@@ -1939,7 +1988,7 @@
         "model": "member.option",
         "fields": {
             "description": "",
-            "name": "Puree all",
+            "name": "Puree all 2",
             "option_group": "preparation"
         }
     },
@@ -15849,8 +15898,6 @@
             "billing_payment_type": "cheque",
             "rate_type": "default",
             "member": 100,
-            "emergency_contact": 197,
-            "emergency_contact_relationship": "friend",
             "status": "A",
             "language": "en",
             "alert": "",
@@ -15860,6 +15907,15 @@
             "route": 196,
             "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
             "delivery_note": "Ring door bell many times."
+        }
+    },
+    {
+        "pk": 8,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 100,
+            "member": 197,
+            "relationship": "friend"
         }
     },
     {
@@ -15927,8 +15983,6 @@
             "billing_payment_type": "cheque",
             "rate_type": "default",
             "member": 101,
-            "emergency_contact": 197,
-            "emergency_contact_relationship": "friend",
             "status": "A",
             "language": "en",
             "alert": "",
@@ -15938,6 +15992,15 @@
             "route": 196,
             "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
             "delivery_note": "Ring door bell many times."
+        }
+    },
+    {
+        "pk": 9,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 101,
+            "member": 197,
+            "relationship": "friend"
         }
     },
     {
@@ -16005,8 +16068,6 @@
             "billing_payment_type": "cheque",
             "rate_type": "default",
             "member": 102,
-            "emergency_contact": 197,
-            "emergency_contact_relationship": "friend",
             "status": "A",
             "language": "en",
             "alert": "",
@@ -16016,6 +16077,15 @@
             "route": 196,
             "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
             "delivery_note": "Ring door bell many times."
+        }
+    },
+    {
+        "pk": 10,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 102,
+            "member": 197,
+            "relationship": "friend"
         }
     },
     {
@@ -16083,8 +16153,6 @@
             "billing_payment_type": "cheque",
             "rate_type": "default",
             "member": 103,
-            "emergency_contact": 197,
-            "emergency_contact_relationship": "friend",
             "status": "A",
             "language": "en",
             "alert": "",
@@ -16094,6 +16162,15 @@
             "route": 196,
             "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
             "delivery_note": "Ring door bell many times."
+        }
+    },
+    {
+        "pk": 11,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 103,
+            "member": 197,
+            "relationship": "friend"
         }
     },
     {
@@ -16161,8 +16238,6 @@
             "billing_payment_type": "cheque",
             "rate_type": "default",
             "member": 104,
-            "emergency_contact": 197,
-            "emergency_contact_relationship": "friend",
             "status": "A",
             "language": "en",
             "alert": "",
@@ -16172,6 +16247,15 @@
             "route": 196,
             "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
             "delivery_note": "Ring door bell many times."
+        }
+    },
+    {
+        "pk": 12,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 104,
+            "member": 197,
+            "relationship": "friend"
         }
     },
     {
@@ -16239,8 +16323,6 @@
             "billing_payment_type": "cheque",
             "rate_type": "default",
             "member": 105,
-            "emergency_contact": 197,
-            "emergency_contact_relationship": "friend",
             "status": "A",
             "language": "en",
             "alert": "",
@@ -16250,6 +16332,15 @@
             "route": 196,
             "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
             "delivery_note": "Ring door bell many times."
+        }
+    },
+    {
+        "pk": 13,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 105,
+            "member": 197,
+            "relationship": "friend"
         }
     },
     {
@@ -16317,8 +16408,6 @@
             "billing_payment_type": "cheque",
             "rate_type": "default",
             "member": 106,
-            "emergency_contact": 197,
-            "emergency_contact_relationship": "friend",
             "status": "A",
             "language": "en",
             "alert": "",
@@ -16328,6 +16417,15 @@
             "route": 196,
             "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
             "delivery_note": "Ring door bell many times."
+        }
+    },
+    {
+        "pk": 14,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 106,
+            "member": 197,
+            "relationship": "friend"
         }
     },
     {
@@ -16395,8 +16493,6 @@
             "billing_payment_type": "cheque",
             "rate_type": "default",
             "member": 107,
-            "emergency_contact": 197,
-            "emergency_contact_relationship": "friend",
             "status": "A",
             "language": "en",
             "alert": "",
@@ -16406,6 +16502,15 @@
             "route": 196,
             "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
             "delivery_note": "Ring door bell many times."
+        }
+    },
+    {
+        "pk": 15,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 107,
+            "member": 197,
+            "relationship": "friend"
         }
     },
     {
@@ -16473,8 +16578,6 @@
             "billing_payment_type": "cheque",
             "rate_type": "default",
             "member": 108,
-            "emergency_contact": 197,
-            "emergency_contact_relationship": "friend",
             "status": "A",
             "language": "en",
             "alert": "",
@@ -16484,6 +16587,15 @@
             "route": 196,
             "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
             "delivery_note": "Ring door bell many times."
+        }
+    },
+    {
+        "pk": 16,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 108,
+            "member": 197,
+            "relationship": "friend"
         }
     },
     {
@@ -16551,8 +16663,6 @@
             "billing_payment_type": "cheque",
             "rate_type": "default",
             "member": 109,
-            "emergency_contact": 197,
-            "emergency_contact_relationship": "friend",
             "status": "A",
             "language": "en",
             "alert": "",
@@ -16562,6 +16672,15 @@
             "route": 196,
             "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
             "delivery_note": "Ring door bell many times."
+        }
+    },
+    {
+        "pk": 17,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 109,
+            "member": 197,
+            "relationship": "friend"
         }
     },
     {
@@ -16629,8 +16748,6 @@
             "billing_payment_type": "cheque",
             "rate_type": "default",
             "member": 110,
-            "emergency_contact": 197,
-            "emergency_contact_relationship": "friend",
             "status": "A",
             "language": "en",
             "alert": "",
@@ -16640,6 +16757,15 @@
             "route": 196,
             "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
             "delivery_note": "Ring door bell many times."
+        }
+    },
+    {
+        "pk": 18,
+        "model": "member.emergencycontact",
+        "fields": {
+            "client": 110,
+            "member": 197,
+            "relationship": "friend"
         }
     },
     {
