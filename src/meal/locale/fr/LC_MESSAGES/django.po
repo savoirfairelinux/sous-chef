@@ -120,7 +120,7 @@ msgstr "groupe d'ingrédients"
 
 #: meal/models.py:69
 msgid "components"
-msgstr "composants"
+msgstr "composants (Plats et recettes)"
 
 #: meal/models.py:87
 msgid "component group"
@@ -140,11 +140,11 @@ msgstr "date"
 
 #: meal/models.py:141
 msgid "restricted items"
-msgstr "Aliment avec restrictions"
+msgstr "Catégories de restrictions"
 
 #: meal/models.py:159
 msgid "restricted item group"
-msgstr "groupe d'aliment avec restrictions"
+msgstr "Type de catégorie de restrictions"
 
 #: meal/models.py:175
 msgid "restricted item"

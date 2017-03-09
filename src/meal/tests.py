@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib.auth.models import User
 from django.test import TestCase
 
 from meal.models import Component, Component_ingredient
@@ -183,3 +184,31 @@ class Restricted_itemTestCase(TestCase):
         name = 'pork'
         restricted_item = Restricted_item.objects.get(name=name)
         self.assertEqual(name, str(restricted_item))
+
+
+class MealAdminTestCase(TestCase):
+
+    fixtures = ['sample_data']
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.admin = User.objects.create_superuser(
+            username='admin@example.com',
+            email='admin@example.com',
+            password='test1234'
+        )
+
+    def setUp(self):
+        self.client.login(username=self.admin.username, password='test1234')
+
+    def test_component_search(self):
+        response = self.client.get('/admin/meal/component/?q=ess')
+        self.assertTrue(b'Diabetic' in response.content)
+
+    def test_ingredient_search(self):
+        response = self.client.get('/admin/meal/ingredient/?q=ann')
+        self.assertTrue(b'Canned' in response.content)
+
+    def test_restricted_item_search(self):
+        response = self.client.get('/admin/meal/restricted_item/?q=ea')
+        self.assertTrue(b'eef' in response.content)
