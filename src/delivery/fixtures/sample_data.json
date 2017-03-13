@@ -1729,7 +1729,7 @@
         "model": "member.client",
         "fields": {
             "emergency_contact_relationship": "Friend",
-            "route": 1,
+            "route": 3,
             "billing_payment_type": "check",
             "gender": "M",
             "delivery_note": "",
@@ -1974,7 +1974,7 @@
         "pk": 509,
         "model": "member.client_option",
         "fields": {
-            "value": "cut-up meat",
+            "value": "X",
             "client": 608,
             "option": 889
         }
@@ -2040,6 +2040,15 @@
             "value": "[\"monday\", \"tuesday\", \"wednesday\", \"thursday\", \"friday\", \"saturday\", \"sunday\"]",
             "client": 612,
             "option": 1
+        }
+    },
+    {
+        "pk": 517,
+        "model": "member.client_option",
+        "fields": {
+            "value": "X",
+            "client": 611,
+            "option": 889
         }
     },
     {
@@ -15951,15 +15960,6 @@
         }
     },
     {
-        "model": "member.client_option",
-        "pk": 101,
-        "fields": {
-            "client": 101,
-            "option": 195,
-            "value": "X"
-        }
-    },
-    {
         "model": "member.restriction",
         "pk": 101,
         "fields": {
@@ -16124,14 +16124,6 @@
         }
     },
     {
-        "model": "member.client_avoid_ingredient",
-        "pk": 103,
-        "fields": {
-            "client": 103,
-            "ingredient": 3388
-        }
-    },
-    {
         "model": "member.member",
         "pk": 104,
         "fields": {
@@ -16182,15 +16174,6 @@
             "client": 104,
             "referral_reason": "Needs help.",
             "date": "2016-12-21"
-        }
-    },
-    {
-        "model": "member.client_option",
-        "pk": 104,
-        "fields": {
-            "client": 104,
-            "option": 195,
-            "value": "X"
         }
     },
     {
@@ -16325,7 +16308,7 @@
             "delivery_type": "O",
             "gender": "M",
             "birthdate": "1941-11-12",
-            "route": 196,
+            "route": 3,
             "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
             "delivery_note": "Ring door bell many times."
         }
@@ -16436,14 +16419,6 @@
         }
     },
     {
-        "model": "member.client_avoid_ingredient",
-        "pk": 107,
-        "fields": {
-            "client": 107,
-            "ingredient": 3388
-        }
-    },
-    {
         "model": "member.member",
         "pk": 108,
         "fields": {
@@ -16494,15 +16469,6 @@
             "client": 108,
             "referral_reason": "Needs help.",
             "date": "2016-12-21"
-        }
-    },
-    {
-        "model": "member.client_option",
-        "pk": 108,
-        "fields": {
-            "client": 108,
-            "option": 195,
-            "value": "X"
         }
     },
     {
@@ -16592,14 +16558,6 @@
         }
     },
     {
-        "model": "member.client_avoid_ingredient",
-        "pk": 109,
-        "fields": {
-            "client": 109,
-            "ingredient": 3388
-        }
-    },
-    {
         "model": "member.member",
         "pk": 110,
         "fields": {
@@ -16650,15 +16608,6 @@
             "client": 110,
             "referral_reason": "Needs help.",
             "date": "2016-12-21"
-        }
-    },
-    {
-        "model": "member.client_option",
-        "pk": 110,
-        "fields": {
-            "client": 110,
-            "option": 195,
-            "value": "X"
         }
     },
     {
