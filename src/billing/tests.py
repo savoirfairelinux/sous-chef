@@ -6,7 +6,7 @@ import importlib
 from member.factories import ClientFactory, RouteFactory
 from order.models import Order
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from billing.factories import BillingFactory
 from sous_chef.tests import TestMixin as SousChefTestMixin
 

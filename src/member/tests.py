@@ -3,8 +3,8 @@ import json
 from datetime import date, timedelta
 from django.contrib.auth.models import User
 from django.core.management import call_command
-from django.core.urlresolvers import reverse, reverse_lazy
 from django.forms import BaseFormSet
+from django.urls import reverse, reverse_lazy
 from django.utils.six import StringIO
 from django.test import TestCase, Client
 
