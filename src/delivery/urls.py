@@ -7,6 +7,8 @@ from delivery.views import (Orderlist, MealInformation, RoutesInformation,
                             SaveRouteVehicleView, OrganizeRoute,
                             RouteInformation)
 
+app_name = "delivery"
+
 urlpatterns = [
     url(_(r'^order/$'), Orderlist.as_view(), name='order'),
     url(_(r'^meal/$'), MealInformation.as_view(), name='meal'),

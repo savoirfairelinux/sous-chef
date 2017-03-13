@@ -5,9 +5,8 @@ import re
 from django.db import models, connection, transaction
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
 from django_filters import FilterSet, ChoiceFilter, CharFilter
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 
 from member.models import (Client, Member, Route,
@@ -340,7 +339,8 @@ class Order(models.Model):
         verbose_name=_('client'),
         related_name='client_order',
         blank=False,
-        default=""
+        default="",
+        on_delete=models.CASCADE
     )
 
     objects = OrderManager()
@@ -1085,6 +1085,7 @@ class Order_item(models.Model):
         'order.Order',
         verbose_name=_('order'),
         related_name='orders',
+        on_delete=models.CASCADE
     )
 
     price = models.DecimalField(

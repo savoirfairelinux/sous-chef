@@ -114,12 +114,16 @@ class Component_ingredient(models.Model):
     component = models.ForeignKey(
         'meal.Component',
         verbose_name=_('component'),
-        related_name='+')
+        related_name='+',
+        on_delete=models.CASCADE
+    )
 
     ingredient = models.ForeignKey(
         'meal.Ingredient',
         verbose_name=_('ingredient'),
-        related_name='+')
+        related_name='+',
+        on_delete=models.CASCADE
+    )
 
     date = models.DateField(
         verbose_name=_('date'),
@@ -177,12 +181,16 @@ class Incompatibility(models.Model):
     restricted_item = models.ForeignKey(
         'meal.Restricted_item',
         verbose_name=_('restricted item'),
-        related_name='+')
+        related_name='+',
+        on_delete=models.CASCADE
+    )
 
     ingredient = models.ForeignKey(
         'meal.Ingredient',
         verbose_name=_('ingredient'),
-        related_name='+')
+        related_name='+',
+        on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return "{} <clash> {}".format(self.restricted_item.name,
@@ -266,12 +274,16 @@ class Menu_component(models.Model):
     menu = models.ForeignKey(
         'meal.Menu',
         verbose_name=_('menu'),
-        related_name='+')
+        related_name='+',
+        on_delete=models.CASCADE
+    )
 
     component = models.ForeignKey(
         'meal.Component',
         verbose_name=_('component'),
-        related_name='+')
+        related_name='+',
+        on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return "On {} <menu includes> {}".format(str(self.menu.date),

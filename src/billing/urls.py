@@ -5,6 +5,8 @@ from billing.views import (
 )
 from django.utils.translation import ugettext_lazy as _
 
+app_name = "billing"
+
 urlpatterns = [
     url(r'^list/$', BillingList.as_view(), name="list"),
     url(r'^create/$', BillingCreate.as_view(), name="create"),
