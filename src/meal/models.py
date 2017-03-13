@@ -68,7 +68,7 @@ class Ingredient(models.Model):
 class Component(models.Model):
 
     class Meta:
-        verbose_name_plural = _('components')
+        verbose_name_plural = _('components (Dishes and recipes)')
 
     # Meal component (ex. main dish, vegetable, seasonal) information
     name = models.CharField(
@@ -142,7 +142,7 @@ class Component_ingredient(models.Model):
 class Restricted_item(models.Model):
 
     class Meta:
-        verbose_name_plural = _('restricted items')
+        verbose_name_plural = _('restricted items (Restriction categories)')
 
     # Information about restricted item categories that some clients never eat
     #   for allergy or other reasons (ex. Gluten, Nuts, Pork)
