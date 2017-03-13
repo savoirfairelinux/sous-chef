@@ -5,6 +5,8 @@ from note.views import NoteList, NoteAdd, NoteBatchToggle
 
 from note.views import mark_as_read, mark_as_unread
 
+app_name = "note"
+
 urlpatterns = [
     url(_(r'^$'), NoteList.as_view(), name='note_list'),
     url(_(r'^read/(?P<id>\d+)/$'),

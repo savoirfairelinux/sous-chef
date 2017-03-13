@@ -36,6 +36,8 @@ from member.formsets import CreateEmergencyContactFormset
 
 from note.views import ClientNoteList, ClientNoteListAdd
 
+app_name = "member"
+
 create_member_forms = (
     ('basic_information', ClientBasicInformation),
     ('address_information', ClientAddressInformation),
