@@ -1,19 +1,19 @@
 import datetime
 import math
 import json
-from member.formsfield import CAPhoneNumberExtField
-from django.forms import ValidationError
 from django.db import models
 from django.db.models import Q
 from django.db.models.functions import Extract
+from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-from django.contrib.auth.models import User
 from django_filters import (
     FilterSet, CharFilter, ChoiceFilter, BooleanFilter,
     MultipleChoiceFilter
 )
 from annoying.fields import JSONField
+
+from member.formsfield import CAPhoneNumberExtField
 from meal.models import (
     COMPONENT_GROUP_CHOICES, COMPONENT_GROUP_CHOICES_MAIN_DISH,
     COMPONENT_GROUP_CHOICES_SIDES
@@ -488,18 +488,11 @@ class Client(models.Model):
         verbose_name=_('member')
     )
 
-    emergency_contact = models.ForeignKey(
+    emergency_contacts = models.ManyToManyField(
         'member.Member',
-        verbose_name=_('emergency contact'),
-        related_name='emergency_contact',
-        null=True,
-    )
-
-    emergency_contact_relationship = models.CharField(
-        max_length=100,
-        verbose_name=_('emergency contact relationship'),
-        blank=True,
-        null=True,
+        verbose_name=_('emergency contacts'),
+        related_name="emergency_contacts_of",
+        through='member.EmergencyContact'
     )
 
     status = models.CharField(
@@ -1050,6 +1043,26 @@ class Referencing (models.Model):
             self.referent.firstname, self.referent.lastname,
             self.client.member.firstname, self.client.member.lastname,
             str(self.date))
+
+
+class EmergencyContact(models.Model):
+    client = models.ForeignKey(Client, verbose_name=_("client"))
+    member = models.ForeignKey(Member, verbose_name=_("member"))
+    relationship = models.CharField(
+        max_length=100,
+        verbose_name=_('relationship'),
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        verbose_name_plural = _('emergency contacts')
+        unique_together = ('client', 'member')
+
+    def __str__(self):
+        return "{} is an emergency contact of {}".format(
+            self.member, self.client
+        )
 
 
 class Option(models.Model):
