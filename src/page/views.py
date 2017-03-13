@@ -54,7 +54,7 @@ class HomeView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
 
 
 def custom_login(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         # Redirect to home if already logged in.
         return HttpResponseRedirect(reverse_lazy("page:home"))
     else:
