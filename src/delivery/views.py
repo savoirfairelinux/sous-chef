@@ -1030,13 +1030,23 @@ def kcr_make_labels(kitchen_list, main_dish_name, main_dish_ingredients):
     for label in meal_labels:
         routew = max(routew, len(label.route))
         namew = max(namew, len(label.name))
-    # generate sorting key
-    meal_labels = [
-        label._replace(
-            sortkey='{rou:{rouw}}{nam:{namw}}'.format(
-                rou=label.route, rouw=routew,
-                nam=label.name, namw=namew))
-        for label in meal_labels]
+    # generate grouping and sorting key
+    for j in range(len(meal_labels)):
+        route = ''  # for groups 1, 2 and 3 : sort by name
+        if meal_labels[j].dish_clashes:     # has dish restrictions
+            group = 1
+        elif meal_labels[j].sides_clashes:  # has sides restrictions
+            group = 2
+        elif meal_labels[j].preparations:   # has food preparations
+            group = 3
+        else:                               # regular meal
+            group = 4
+            route = meal_labels[j].route        # sort by route, name
+        meal_labels[j] = meal_labels[j]._replace(
+            sortkey='{grp:1}{rou:{rouw}}{nam:{namw}}'.format(
+                grp=group,
+                rou=route, rouw=routew,
+                nam=meal_labels[j].name, namw=namew))
     # generate labels into PDF
     for label in sorted(meal_labels, key=lambda x: x.sortkey):
         sheet.add_label(label)

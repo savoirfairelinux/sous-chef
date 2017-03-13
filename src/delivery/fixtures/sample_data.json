@@ -1735,7 +1735,7 @@
         "pk": 607,
         "model": "member.client",
         "fields": {
-            "route": 1,
+            "route": 3,
             "billing_payment_type": "check",
             "gender": "M",
             "delivery_note": "",
@@ -2023,7 +2023,7 @@
         "pk": 509,
         "model": "member.client_option",
         "fields": {
-            "value": "cut-up meat",
+            "value": "X",
             "client": 608,
             "option": 889
         }
@@ -2089,6 +2089,15 @@
             "value": "[\"monday\", \"tuesday\", \"wednesday\", \"thursday\", \"friday\", \"saturday\", \"sunday\"]",
             "client": 612,
             "option": 1
+        }
+    },
+    {
+        "pk": 517,
+        "model": "member.client_option",
+        "fields": {
+            "value": "X",
+            "client": 611,
+            "option": 889
         }
     },
     {
@@ -2160,7 +2169,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dairy",
+            "ingredient_group": "dairy",
             "name": "Butter"
         }
     },
@@ -2169,7 +2178,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dairy",
+            "ingredient_group": "dairy",
             "name": "Cheese : Blue cheese"
         }
     },
@@ -2178,7 +2187,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dairy",
+            "ingredient_group": "dairy",
             "name": "Cheese : Bocconcini"
         }
     },
@@ -2187,7 +2196,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dairy",
+            "ingredient_group": "dairy",
             "name": "Cheese : Cheddar"
         }
     },
@@ -2196,7 +2205,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dairy",
+            "ingredient_group": "dairy",
             "name": "Cheese : Cottage cheese"
         }
     },
@@ -2205,7 +2214,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dairy",
+            "ingredient_group": "dairy",
             "name": "Cheese : Feta"
         }
     },
@@ -2214,7 +2223,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dairy",
+            "ingredient_group": "dairy",
             "name": "Cheese : Goat cheese"
         }
     },
@@ -2223,7 +2232,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dairy",
+            "ingredient_group": "dairy",
             "name": "Cheese : Mozzarella"
         }
     },
@@ -2232,7 +2241,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dairy",
+            "ingredient_group": "dairy",
             "name": "Cheese : Parmesan"
         }
     },
@@ -2241,7 +2250,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dairy",
+            "ingredient_group": "dairy",
             "name": "Cheese : Ricotta"
         }
     },
@@ -2250,7 +2259,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dairy",
+            "ingredient_group": "dairy",
             "name": "Eggs"
         }
     },
@@ -2259,7 +2268,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dairy",
+            "ingredient_group": "dairy",
             "name": "Margarine"
         }
     },
@@ -2268,7 +2277,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dairy",
+            "ingredient_group": "dairy",
             "name": "Milk"
         }
     },
@@ -2277,7 +2286,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dairy",
+            "ingredient_group": "dairy",
             "name": "Tofu"
         }
     },
@@ -2286,7 +2295,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dairy",
+            "ingredient_group": "dairy",
             "name": "Yogurt"
         }
     },
@@ -2295,7 +2304,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Almond Powder "
         }
     },
@@ -2304,7 +2313,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Almonds"
         }
     },
@@ -2313,7 +2322,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Capers"
         }
     },
@@ -2322,7 +2331,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Corn meal"
         }
     },
@@ -2331,7 +2340,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "corn starch"
         }
     },
@@ -2340,7 +2349,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Creamed corn"
         }
     },
@@ -2349,7 +2358,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Egg noodles"
         }
     },
@@ -2358,7 +2367,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Linguini"
         }
     },
@@ -2367,7 +2376,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "peanut butter"
         }
     },
@@ -2376,7 +2385,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "peanuts "
         }
     },
@@ -2385,7 +2394,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Pickles"
         }
     },
@@ -2394,7 +2403,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Polenta"
         }
     },
@@ -2403,7 +2412,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Rice noodles"
         }
     },
@@ -2412,7 +2421,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "sesame seeds"
         }
     },
@@ -2421,7 +2430,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Sunflower seeds"
         }
     },
@@ -2430,7 +2439,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Tomato paste"
         }
     },
@@ -2439,7 +2448,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Walnuts"
         }
     },
@@ -2448,7 +2457,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Whole wheat lasagna"
         }
     },
@@ -2457,7 +2466,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Whole wheat linguini "
         }
     },
@@ -2466,7 +2475,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Whole wheat macaroni"
         }
     },
@@ -2475,7 +2484,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Whole wheat penne "
         }
     },
@@ -2484,7 +2493,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Dry and Canned goods",
+            "ingredient_group": "dry_and_canned_goods",
             "name": "Whole wheat spaghetti"
         }
     },
@@ -2493,7 +2502,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Fish",
+            "ingredient_group": "fish",
             "name": "Canned salmon"
         }
     },
@@ -2502,7 +2511,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Fish",
+            "ingredient_group": "fish",
             "name": "Canned tuna"
         }
     },
@@ -2511,7 +2520,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Fish",
+            "ingredient_group": "fish",
             "name": "Cod"
         }
     },
@@ -2520,7 +2529,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Fish",
+            "ingredient_group": "fish",
             "name": "Haddock"
         }
     },
@@ -2529,7 +2538,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Fish",
+            "ingredient_group": "fish",
             "name": "Pollock"
         }
     },
@@ -2538,7 +2547,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Fresh herbs",
+            "ingredient_group": "fresh_herbs",
             "name": "Basil"
         }
     },
@@ -2547,7 +2556,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Fresh herbs",
+            "ingredient_group": "fresh_herbs",
             "name": "Chives"
         }
     },
@@ -2556,7 +2565,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Fresh herbs",
+            "ingredient_group": "fresh_herbs",
             "name": "Cilantro"
         }
     },
@@ -2565,7 +2574,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Fresh herbs",
+            "ingredient_group": "fresh_herbs",
             "name": "Dill"
         }
     },
@@ -2574,7 +2583,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Fresh herbs",
+            "ingredient_group": "fresh_herbs",
             "name": "Marjoram"
         }
     },
@@ -2583,7 +2592,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Fresh herbs",
+            "ingredient_group": "fresh_herbs",
             "name": "Oregano"
         }
     },
@@ -2592,7 +2601,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Fresh herbs",
+            "ingredient_group": "fresh_herbs",
             "name": "Parsley"
         }
     },
@@ -2601,7 +2610,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Fresh herbs",
+            "ingredient_group": "fresh_herbs",
             "name": "Rosemary"
         }
     },
@@ -2610,7 +2619,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Fresh herbs",
+            "ingredient_group": "fresh_herbs",
             "name": "Thyme"
         }
     },
@@ -2619,7 +2628,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Grains",
+            "ingredient_group": "grains",
             "name": "Barley (gluten)"
         }
     },
@@ -2628,7 +2637,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Grains",
+            "ingredient_group": "grains",
             "name": "Basmati rice"
         }
     },
@@ -2637,7 +2646,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Grains",
+            "ingredient_group": "grains",
             "name": "Breadcrumbs"
         }
     },
@@ -2646,7 +2655,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Grains",
+            "ingredient_group": "grains",
             "name": "Brown rice"
         }
     },
@@ -2655,7 +2664,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Grains",
+            "ingredient_group": "grains",
             "name": "Buckwheat"
         }
     },
@@ -2664,7 +2673,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Grains",
+            "ingredient_group": "grains",
             "name": "Couscous (gluten)"
         }
     },
@@ -2673,7 +2682,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Grains",
+            "ingredient_group": "grains",
             "name": "Millet"
         }
     },
@@ -2682,7 +2691,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Grains",
+            "ingredient_group": "grains",
             "name": "Oats"
         }
     },
@@ -2691,7 +2700,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Grains",
+            "ingredient_group": "grains",
             "name": "Quinoa"
         }
     },
@@ -2700,7 +2709,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Grains",
+            "ingredient_group": "grains",
             "name": "White flour"
         }
     },
@@ -2709,7 +2718,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Grains",
+            "ingredient_group": "grains",
             "name": "Whole wheat flour"
         }
     },
@@ -2718,7 +2727,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Grains",
+            "ingredient_group": "grains",
             "name": "Wild rice"
         }
     },
@@ -2727,7 +2736,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Legumineuse",
+            "ingredient_group": "legumineuse",
             "name": "Black beans"
         }
     },
@@ -2736,7 +2745,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Legumineuse",
+            "ingredient_group": "legumineuse",
             "name": "Chickpeas"
         }
     },
@@ -2745,7 +2754,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Legumineuse",
+            "ingredient_group": "legumineuse",
             "name": "Kidney beans"
         }
     },
@@ -2754,7 +2763,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Legumineuse",
+            "ingredient_group": "legumineuse",
             "name": "Lentils"
         }
     },
@@ -2763,7 +2772,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Legumineuse",
+            "ingredient_group": "legumineuse",
             "name": "White beans"
         }
     },
@@ -2772,7 +2781,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Meat",
+            "ingredient_group": "meat",
             "name": "Beef cubes"
         }
     },
@@ -2781,7 +2790,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Meat",
+            "ingredient_group": "meat",
             "name": "Chicken"
         }
     },
@@ -2790,7 +2799,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Meat",
+            "ingredient_group": "meat",
             "name": "Chicken thighs"
         }
     },
@@ -2799,7 +2808,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Meat",
+            "ingredient_group": "meat",
             "name": "Ground beef"
         }
     },
@@ -2808,7 +2817,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Meat",
+            "ingredient_group": "meat",
             "name": "Ground porc"
         }
     },
@@ -2817,7 +2826,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Meat",
+            "ingredient_group": "meat",
             "name": "Ham"
         }
     },
@@ -2826,7 +2835,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Meat",
+            "ingredient_group": "meat",
             "name": "Lamb cubes"
         }
     },
@@ -2835,7 +2844,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Meat",
+            "ingredient_group": "meat",
             "name": "Pork sausage"
         }
     },
@@ -2844,7 +2853,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Meat",
+            "ingredient_group": "meat",
             "name": "Pork toulouse sausage"
         }
     },
@@ -2853,7 +2862,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Meat",
+            "ingredient_group": "meat",
             "name": "Roast Beef "
         }
     },
@@ -2862,7 +2871,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Meat",
+            "ingredient_group": "meat",
             "name": "stock"
         }
     },
@@ -2871,7 +2880,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Meat",
+            "ingredient_group": "meat",
             "name": "Turkey"
         }
     },
@@ -2880,7 +2889,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Meat",
+            "ingredient_group": "meat",
             "name": "Turkey thighs"
         }
     },
@@ -2889,7 +2898,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "Apple cider vinegar"
         }
     },
@@ -2898,7 +2907,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "Balsamic vinegar"
         }
     },
@@ -2907,7 +2916,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "cooking wine"
         }
     },
@@ -2916,7 +2925,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "Dijon mustard"
         }
     },
@@ -2925,7 +2934,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "honey"
         }
     },
@@ -2934,7 +2943,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "maple sirop"
         }
     },
@@ -2943,7 +2952,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "Olive oil"
         }
     },
@@ -2952,7 +2961,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "Prepared mustard"
         }
     },
@@ -2961,7 +2970,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "Red wine (salt)"
         }
     },
@@ -2970,7 +2979,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "Red wine vinegar"
         }
     },
@@ -2979,7 +2988,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "Rice vinegar "
         }
     },
@@ -2988,7 +2997,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "rice wine vinegar"
         }
     },
@@ -2997,7 +3006,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "Sesame oil"
         }
     },
@@ -3006,7 +3015,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "Soy sauce (gluten, salt)"
         }
     },
@@ -3015,7 +3024,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "Vinegar"
         }
     },
@@ -3024,7 +3033,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Oils and Sauces",
+            "ingredient_group": "oils_and_sauces",
             "name": "White wine"
         }
     },
@@ -3033,7 +3042,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Seafood",
+            "ingredient_group": "seafood",
             "name": "Seafood medley (shrimp, mussels, calamari)"
         }
     },
@@ -3042,7 +3051,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Seafood",
+            "ingredient_group": "seafood",
             "name": "Shrimp"
         }
     },
@@ -3051,7 +3060,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Allspice"
         }
     },
@@ -3060,7 +3069,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Bay leaves"
         }
     },
@@ -3069,7 +3078,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Black pepper"
         }
     },
@@ -3078,7 +3087,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Cardamom"
         }
     },
@@ -3087,7 +3096,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Chili"
         }
     },
@@ -3096,7 +3105,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Cinnamon"
         }
     },
@@ -3105,7 +3114,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Cloves"
         }
     },
@@ -3114,7 +3123,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Coriander"
         }
     },
@@ -3123,7 +3132,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Cumin"
         }
     },
@@ -3132,7 +3141,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Curry"
         }
     },
@@ -3141,7 +3150,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Ginger powder"
         }
     },
@@ -3150,7 +3159,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Herbes de provence"
         }
     },
@@ -3159,7 +3168,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Mustard powder"
         }
     },
@@ -3168,7 +3177,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Nutmeg"
         }
     },
@@ -3177,7 +3186,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Paprika"
         }
     },
@@ -3186,7 +3195,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Sage"
         }
     },
@@ -3195,7 +3204,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Terragon"
         }
     },
@@ -3204,7 +3213,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Spices",
+            "ingredient_group": "spices",
             "name": "Turmeric"
         }
     },
@@ -3213,7 +3222,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Apples"
         }
     },
@@ -3222,7 +3231,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Apricots"
         }
     },
@@ -3231,7 +3240,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Arugula"
         }
     },
@@ -3240,7 +3249,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Artichokes"
         }
     },
@@ -3249,7 +3258,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Bean sprouts"
         }
     },
@@ -3258,7 +3267,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Beets"
         }
     },
@@ -3267,7 +3276,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Bok choy"
         }
     },
@@ -3276,7 +3285,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Broccoli"
         }
     },
@@ -3285,7 +3294,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Brussel sprouts"
         }
     },
@@ -3294,7 +3303,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Cabbage"
         }
     },
@@ -3303,7 +3312,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Carrots"
         }
     },
@@ -3312,7 +3321,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Cauliflower"
         }
     },
@@ -3321,7 +3330,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "celery"
         }
     },
@@ -3330,7 +3339,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Celery root"
         }
     },
@@ -3339,7 +3348,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Chicory"
         }
     },
@@ -3348,7 +3357,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Corn"
         }
     },
@@ -3357,7 +3366,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Cranberries"
         }
     },
@@ -3366,7 +3375,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Cucumber"
         }
     },
@@ -3375,7 +3384,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Eggplant"
         }
     },
@@ -3384,7 +3393,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Garlic"
         }
     },
@@ -3393,7 +3402,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Ginger"
         }
     },
@@ -3402,7 +3411,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Green beans"
         }
     },
@@ -3411,7 +3420,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Green peas"
         }
     },
@@ -3420,7 +3429,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Green peppers"
         }
     },
@@ -3429,7 +3438,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Kale"
         }
     },
@@ -3438,7 +3447,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Kolhrabi"
         }
     },
@@ -3447,7 +3456,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Leeks"
         }
     },
@@ -3456,7 +3465,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Lemons"
         }
     },
@@ -3465,7 +3474,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Lettuce"
         }
     },
@@ -3474,7 +3483,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "lime"
         }
     },
@@ -3483,7 +3492,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "mung bean sprouts"
         }
     },
@@ -3492,7 +3501,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Mushrooms"
         }
     },
@@ -3501,7 +3510,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Olives"
         }
     },
@@ -3510,7 +3519,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Onions"
         }
     },
@@ -3519,7 +3528,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Orange peppers"
         }
     },
@@ -3528,7 +3537,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "parsnip"
         }
     },
@@ -3537,7 +3546,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Potatoes"
         }
     },
@@ -3546,7 +3555,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Pumpkin"
         }
     },
@@ -3555,7 +3564,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Radish"
         }
     },
@@ -3564,7 +3573,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Raisins"
         }
     },
@@ -3573,7 +3582,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Red peppers  "
         }
     },
@@ -3582,7 +3591,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Snap peas"
         }
     },
@@ -3591,7 +3600,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Snow peas"
         }
     },
@@ -3600,7 +3609,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Spinach"
         }
     },
@@ -3609,7 +3618,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "squash"
         }
     },
@@ -3618,7 +3627,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Sweet potatoes"
         }
     },
@@ -3627,7 +3636,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Swiss chard"
         }
     },
@@ -3636,7 +3645,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Tomatoes"
         }
     },
@@ -3645,7 +3654,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Turnips"
         }
     },
@@ -3654,7 +3663,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "Yellow beans"
         }
     },
@@ -3663,7 +3672,7 @@
         "model": "meal.ingredient",
         "fields": {
             "description": null,
-            "ingredient_group": "Veggies & Fruits",
+            "ingredient_group": "veggies_and_fruits",
             "name": "zucchini"
         }
     },
@@ -8623,7 +8632,7 @@
         "fields": {
             "description": "",
             "name": "fish",
-            "restricted_item_group": "fish&seafood"
+            "restricted_item_group": "seafood"
         }
     },
     {
@@ -8632,7 +8641,7 @@
         "fields": {
             "description": "",
             "name": "seafood",
-            "restricted_item_group": "fish&seafood"
+            "restricted_item_group": "seafood"
         }
     },
     {
@@ -8695,7 +8704,7 @@
         "fields": {
             "description": "",
             "name": "nuts ",
-            "restricted_item_group": "nuts&seeds"
+            "restricted_item_group": "seeds and nuts"
         }
     },
     {
@@ -8704,7 +8713,7 @@
         "fields": {
             "description": "",
             "name": "peanut butter",
-            "restricted_item_group": "nuts&seeds"
+            "restricted_item_group": "seeds and nuts"
         }
     },
     {
@@ -8713,7 +8722,7 @@
         "fields": {
             "description": "gluten, salt",
             "name": "peanuts",
-            "restricted_item_group": "nuts&seeds"
+            "restricted_item_group": "seeds and nuts"
         }
     },
     {
@@ -8722,7 +8731,7 @@
         "fields": {
             "description": "text",
             "name": "seeds",
-            "restricted_item_group": "nuts&seeds"
+            "restricted_item_group": "seeds and nuts"
         }
     },
     {
@@ -16014,15 +16023,6 @@
         }
     },
     {
-        "model": "member.client_option",
-        "pk": 101,
-        "fields": {
-            "client": 101,
-            "option": 195,
-            "value": "X"
-        }
-    },
-    {
         "model": "member.restriction",
         "pk": 101,
         "fields": {
@@ -16201,14 +16201,6 @@
         }
     },
     {
-        "model": "member.client_avoid_ingredient",
-        "pk": 103,
-        "fields": {
-            "client": 103,
-            "ingredient": 3388
-        }
-    },
-    {
         "model": "member.member",
         "pk": 104,
         "fields": {
@@ -16266,15 +16258,6 @@
             "client": 104,
             "referral_reason": "Needs help.",
             "date": "2016-12-21"
-        }
-    },
-    {
-        "model": "member.client_option",
-        "pk": 104,
-        "fields": {
-            "client": 104,
-            "option": 195,
-            "value": "X"
         }
     },
     {
@@ -16414,7 +16397,7 @@
             "delivery_type": "O",
             "gender": "M",
             "birthdate": "1941-11-12",
-            "route": 196,
+            "route": 3,
             "meal_default_week": "{\n  \"compote_friday_quantity\": 1,\n  \"compote_monday_quantity\": 1,\n  \"compote_saturday_quantity\": 1,\n  \"compote_sunday_quantity\": 1,\n  \"compote_thursday_quantity\": 1,\n  \"compote_tuesday_quantity\": 1,\n  \"compote_wednesday_quantity\": 1,\n  \"dessert_friday_quantity\": 0,\n  \"dessert_monday_quantity\": 0,\n  \"dessert_saturday_quantity\": 0,\n  \"dessert_sunday_quantity\": 0,\n  \"dessert_thursday_quantity\": 0,\n  \"dessert_tuesday_quantity\": 0,\n  \"dessert_wednesday_quantity\": 0,\n  \"diabetic_dessert_friday_quantity\": 0,\n  \"diabetic_dessert_monday_quantity\": 0,\n  \"diabetic_dessert_saturday_quantity\": 0,\n  \"diabetic_dessert_sunday_quantity\": 0,\n  \"diabetic_dessert_thursday_quantity\": 0,\n  \"diabetic_dessert_tuesday_quantity\": 0,\n  \"diabetic_dessert_wednesday_quantity\": 0,\n  \"fruit_salad_friday_quantity\": 0,\n  \"fruit_salad_monday_quantity\": 0,\n  \"fruit_salad_saturday_quantity\": 0,\n  \"fruit_salad_sunday_quantity\": 0,\n  \"fruit_salad_thursday_quantity\": 0,\n  \"fruit_salad_tuesday_quantity\": 0,\n  \"fruit_salad_wednesday_quantity\": 0,\n  \"green_salad_friday_quantity\": 0,\n  \"green_salad_monday_quantity\": 0,\n  \"green_salad_saturday_quantity\": 0,\n  \"green_salad_sunday_quantity\": 0,\n  \"green_salad_thursday_quantity\": 0,\n  \"green_salad_tuesday_quantity\": 0,\n  \"green_salad_wednesday_quantity\": 0,\n  \"main_dish_friday_quantity\": 1,\n  \"main_dish_monday_quantity\": 1,\n  \"main_dish_saturday_quantity\": 1,\n  \"main_dish_sunday_quantity\": 1,\n  \"main_dish_thursday_quantity\": 1,\n  \"main_dish_tuesday_quantity\": 1,\n  \"main_dish_wednesday_quantity\": 1,\n  \"pudding_friday_quantity\": 0,\n  \"pudding_monday_quantity\": 0,\n  \"pudding_saturday_quantity\": 0,\n  \"pudding_sunday_quantity\": 0,\n  \"pudding_thursday_quantity\": 0,\n  \"pudding_tuesday_quantity\": 0,\n  \"pudding_wednesday_quantity\": 0,\n  \"size_friday\": \"R\",\n  \"size_monday\": \"R\",\n  \"size_saturday\": \"R\",\n  \"size_sunday\": \"R\",\n  \"size_thursday\": \"R\",\n  \"size_tuesday\": \"R\",\n  \"size_wednesday\": \"R\"\n}",
             "delivery_note": "Ring door bell many times."
         }
@@ -16541,14 +16524,6 @@
         }
     },
     {
-        "model": "member.client_avoid_ingredient",
-        "pk": 107,
-        "fields": {
-            "client": 107,
-            "ingredient": 3388
-        }
-    },
-    {
         "model": "member.member",
         "pk": 108,
         "fields": {
@@ -16606,15 +16581,6 @@
             "client": 108,
             "referral_reason": "Needs help.",
             "date": "2016-12-21"
-        }
-    },
-    {
-        "model": "member.client_option",
-        "pk": 108,
-        "fields": {
-            "client": 108,
-            "option": 195,
-            "value": "X"
         }
     },
     {
@@ -16711,14 +16677,6 @@
         }
     },
     {
-        "model": "member.client_avoid_ingredient",
-        "pk": 109,
-        "fields": {
-            "client": 109,
-            "ingredient": 3388
-        }
-    },
-    {
         "model": "member.member",
         "pk": 110,
         "fields": {
@@ -16776,15 +16734,6 @@
             "client": 110,
             "referral_reason": "Needs help.",
             "date": "2016-12-21"
-        }
-    },
-    {
-        "model": "member.client_option",
-        "pk": 110,
-        "fields": {
-            "client": 110,
-            "option": 195,
-            "value": "X"
         }
     },
     {
