@@ -13,7 +13,7 @@ from billing.models import (
     Billing, BillingFilter
 )
 from order.models import DeliveredOrdersByMonth
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from order.models import Order, Order_item
 from django.http import HttpResponseRedirect
 from member.models import Client

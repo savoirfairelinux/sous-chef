@@ -14,7 +14,8 @@ class Notification(models.Model):
 
     member = models.ForeignKey(
         'member.Member',
-        verbose_name=_('member')
+        verbose_name=_('member'),
+        on_delete=models.CASCADE
     )
 
     date = models.DateField(

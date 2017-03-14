@@ -1,4 +1,4 @@
 from django.conf.urls import url
 
-urlpatterns = [
-]
+app_name = "meal"
+urlpatterns = []

@@ -117,6 +117,7 @@ class Member(models.Model):
         'member.Address',
         verbose_name=_('address'),
         null=True,
+        on_delete=models.SET_NULL
     )
 
     work_information = models.TextField(
@@ -309,6 +310,7 @@ class Contact(models.Model):
         'member.Member',
         verbose_name=_('member'),
         related_name='member_contact',
+        on_delete=models.CASCADE
     )
 
     def display_value(self):
@@ -466,6 +468,8 @@ class Client(models.Model):
         'member.Member',
         related_name='+',
         verbose_name=_('billing member'),
+        # A client must have a billing member
+        on_delete=models.PROTECT
     )
 
     billing_payment_type = models.CharField(
@@ -485,7 +489,8 @@ class Client(models.Model):
 
     member = models.ForeignKey(
         'member.Member',
-        verbose_name=_('member')
+        verbose_name=_('member'),
+        on_delete=models.CASCADE
     )
 
     emergency_contacts = models.ManyToManyField(
@@ -1021,12 +1026,18 @@ class Referencing (models.Model):
     class Meta:
         verbose_name_plural = _('referents')
 
-    referent = models.ForeignKey('member.Member',
-                                 verbose_name=_('referent'))
+    referent = models.ForeignKey(
+        'member.Member',
+        verbose_name=_('referent'),
+        on_delete=models.CASCADE
+    )
 
-    client = models.ForeignKey('member.Client',
-                               verbose_name=_('client'),
-                               related_name='client_referent')
+    client = models.ForeignKey(
+        'member.Client',
+        verbose_name=_('client'),
+        related_name='client_referent',
+        on_delete=models.CASCADE
+    )
 
     referral_reason = models.TextField(
         verbose_name=_("Referral reason")
@@ -1046,8 +1057,10 @@ class Referencing (models.Model):
 
 
 class EmergencyContact(models.Model):
-    client = models.ForeignKey(Client, verbose_name=_("client"))
-    member = models.ForeignKey(Member, verbose_name=_("member"))
+    client = models.ForeignKey(
+        Client, verbose_name=_("client"), on_delete=models.CASCADE)
+    member = models.ForeignKey(
+        Member, verbose_name=_("member"), on_delete=models.CASCADE)
     relationship = models.CharField(
         max_length=100,
         verbose_name=_('relationship'),
@@ -1096,12 +1109,16 @@ class Client_option(models.Model):
     client = models.ForeignKey(
         'member.Client',
         verbose_name=_('client'),
-        related_name='+')
+        related_name='+',
+        on_delete=models.CASCADE
+    )
 
     option = models.ForeignKey(
         'member.option',
         verbose_name=_('option'),
-        related_name='+')
+        related_name='+',
+        on_delete=models.CASCADE
+    )
 
     value = models.CharField(
         max_length=255,
@@ -1124,12 +1141,16 @@ class Restriction(models.Model):
     client = models.ForeignKey(
         'member.Client',
         verbose_name=_('client'),
-        related_name='+')
+        related_name='+',
+        on_delete=models.CASCADE
+    )
 
     restricted_item = models.ForeignKey(
         'meal.Restricted_item',
         verbose_name=_('restricted item'),
-        related_name='+')
+        related_name='+',
+        on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return "{} {} <restricts> {}".format(self.client.member.firstname,
@@ -1141,12 +1162,16 @@ class Client_avoid_ingredient(models.Model):
     client = models.ForeignKey(
         'member.Client',
         verbose_name=_('client'),
-        related_name='+')
+        related_name='+',
+        on_delete=models.CASCADE
+    )
 
     ingredient = models.ForeignKey(
         'meal.Ingredient',
         verbose_name=_('ingredient'),
-        related_name='+')
+        related_name='+',
+        on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return "{} {} <has> {}".format(self.client.member.firstname,
@@ -1158,12 +1183,16 @@ class Client_avoid_component(models.Model):
     client = models.ForeignKey(
         'member.Client',
         verbose_name=_('client'),
-        related_name='+')
+        related_name='+',
+        on_delete=models.CASCADE
+    )
 
     component = models.ForeignKey(
         'meal.Component',
         verbose_name=_('component'),
-        related_name='+')
+        related_name='+',
+        on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return "{} {} <has> {}".format(self.client.member.firstname,

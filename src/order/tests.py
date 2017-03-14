@@ -10,7 +10,7 @@ from datetime import date
 
 from django.test import TestCase
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
 from django.core.management import call_command

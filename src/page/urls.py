@@ -2,6 +2,8 @@ from django.conf.urls import url
 from page import views
 from django.contrib.auth import views as auth_views
 
+app_name = "page"
+
 urlpatterns = [
     url(
         r'^home$',

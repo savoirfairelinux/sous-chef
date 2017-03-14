@@ -21,7 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.http import JsonResponse
-from django.core.urlresolvers import reverse_lazy, reverse
+from django.urls import reverse_lazy, reverse
 from django.contrib.admin.models import LogEntry, ADDITION
 from django.db.models.functions import Lower
 from django_filters.views import FilterView

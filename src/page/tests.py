@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse_lazy
-from django.core.urlresolvers import reverse
+from django.urls import reverse_lazy, reverse
 
 from member.factories import RouteFactory, ClientFactory
 from member.models import Client

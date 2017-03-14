@@ -4,7 +4,7 @@ from django.contrib.auth.views import login
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.db.models import Count, Case, When, IntegerField
 from django.views.generic import TemplateView
 from member.models import Client, Route
@@ -54,7 +54,7 @@ class HomeView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
 
 
 def custom_login(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         # Redirect to home if already logged in.
         return HttpResponseRedirect(reverse_lazy("page:home"))
     else:

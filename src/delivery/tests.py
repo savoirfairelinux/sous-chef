@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.test import RequestFactory
 from django.test import TestCase
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse_lazy, reverse
+from django.urls import reverse_lazy, reverse
 from django.utils import timezone as tz
 from django.utils.translation import ugettext_lazy
 

@@ -5,7 +5,7 @@ from note.models import Note, NotePriority, NoteCategory
 from note.factories import NoteFactory
 from django.contrib.auth.models import User
 from member.factories import ClientFactory, RouteFactory
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
 from sous_chef.tests import TestMixin as SousChefTestMixin
 
