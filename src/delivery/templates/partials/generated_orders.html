@@ -48,10 +48,17 @@
         <td class="center aligned"><i class="dollar icon"></i>{{order.price}}</td>
         <td>
             <a class="ui basic icon button" title="{% trans 'Review or change the status of the order.' %}"  href="{% url 'order:view' pk=order.id %}"><i class="icon unhide"></i></a>
-            {% if can_edit_data %}<a class="ui basic icon button" title="{% trans 'Change the details of the order.' %}" href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i></a>{% endif %}
+            {% if can_edit_data %}
+              <a class="ui basic icon button" title="{% trans 'Change the details of the order.' %}" href="{% url 'order:update' pk=order.id %}"><i class="icon edit"></i></a>
+              <a class="ui basic icon order cancel button" title="{% trans 'Cancel the order.' %}" data-url="{% url 'order:update_status' pk=order.id %}"><i class="icon ban"></i></a>
+            {% endif %}
         </td>
       </tr>
       {% endif %}
     {% endfor %}
   </tbody>
 </table>
+
+{% if can_edit_data %}
+  <div class="ui modal status"></div>
+{% endif %}

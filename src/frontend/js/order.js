@@ -37,7 +37,7 @@ $(function() {
                     addReasonSelectListener();
                     updateOtherFieldStatus();
                 },
-                // When approvind modal, submit form
+                // When approving modal, submit form
                 onApprove: function($element, modalCtntURL) {
                     var origdata = $('#change-status-form').serializeArray();
                     var origdata_o = {};

@@ -22,6 +22,39 @@ $(function() {
         });
     });
 
+    $('.ui.order.cancel.button').click(function () {
+        var self = this;
+        var modalCtntURL = $(self).attr('data-url');
+        $.get(modalCtntURL, {status:'C'}, function(data, modalCtntURL){
+            $('.ui.modal.status').html(data).modal("setting", {
+                closable: false,
+                // When approving modal, submit form
+                onApprove: function($element, modalCtntURL) {
+                    var data = $('#change-status-form').serializeArray();
+
+                    $.ajax({
+                         type: 'POST',
+                         url: $(self).attr('data-url'),
+                         data: data,
+                         success: function (xhr, ajaxOptions, thrownError) {
+                             if ( $(xhr).find('.errorlist').length > 0 ) {
+                                 $('.ui.modal.status').html(xhr);
+                             } else {
+                                 $('.ui.modal.status').modal("hide");
+                                 location.reload();
+                             }
+                         },
+                     });
+                    return false; // don't hide modal until we have the response
+                },
+                // When denying modal, restore default value for status dropdown
+                onDeny: function($element) {
+                    $('.ui.modal.status').modal("hide");
+                }
+            }).modal('setting', 'autofocus', false).modal("show");
+        });
+    });
+
     $('input[name=include_a_bill]').change(function () {
         var self = this;
         var url = $(self).data('url');

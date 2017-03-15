@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-13 20:39+0000\n"
+"POT-Creation-Date: 2017-03-15 15:23-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -310,7 +310,11 @@ msgstr ""
 msgid "Review or change the status of the order."
 msgstr ""
 
-#: delivery/templates/partials/generated_orders.html:51
+#: delivery/templates/partials/generated_orders.html:52
+msgid "Cancel the order."
+msgstr ""
+
+#: delivery/templates/partials/generated_orders.html:53
 msgid "Change the details of the order."
 msgstr ""
 
@@ -452,68 +456,68 @@ msgstr ""
 msgid "Include a bill"
 msgstr ""
 
-#: delivery/tests.py:916
+#: delivery/tests.py:995
 msgid "Main Dish"
 msgstr ""
 
-#: delivery/urls.py:11
+#: delivery/urls.py:13
 msgid "^order/$"
 msgstr ""
 
-#: delivery/urls.py:12
+#: delivery/urls.py:14
 msgid "^meal/$"
 msgstr ""
 
-#: delivery/urls.py:13
+#: delivery/urls.py:15
 msgid "^meal/(?P<id>\\d+)/$"
 msgstr ""
 
-#: delivery/urls.py:14
+#: delivery/urls.py:16
 msgid "^route/$"
 msgstr ""
 
-#: delivery/urls.py:15
+#: delivery/urls.py:17
 msgid "^routes/$"
 msgstr ""
 
-#: delivery/urls.py:16
+#: delivery/urls.py:18
 msgid "^route/(?P<id>\\d+)$"
 msgstr ""
 
-#: delivery/urls.py:18
+#: delivery/urls.py:20
 msgid "^kitchen_count/$"
 msgstr ""
 
-#: delivery/urls.py:19
+#: delivery/urls.py:21
 #, python-brace-format
 msgid "^kitchen_count/(?P<year>\\d{4})/(?P<month>\\d{2})/(?P<day>\\d+)/$"
 msgstr ""
 
-#: delivery/urls.py:21
+#: delivery/urls.py:23
 msgid "^viewDownloadKitchenCount/$"
 msgstr ""
 
-#: delivery/urls.py:23
+#: delivery/urls.py:25
 msgid "^viewMealLabels/$"
 msgstr ""
 
-#: delivery/urls.py:24
+#: delivery/urls.py:26
 msgid "^route_sheet/(?P<id>\\d+)/$"
 msgstr ""
 
-#: delivery/urls.py:26
+#: delivery/urls.py:28
 msgid "^getDailyOrders/$"
 msgstr ""
 
-#: delivery/urls.py:27
+#: delivery/urls.py:29
 msgid "^refresh_orders/$"
 msgstr ""
 
-#: delivery/urls.py:29
+#: delivery/urls.py:31
 msgid "^save_route/$"
 msgstr ""
 
-#: delivery/urls.py:30
+#: delivery/urls.py:32
 msgid "^save_route_vehicle/$"
 msgstr ""
 
