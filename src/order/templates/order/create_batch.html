@@ -24,6 +24,8 @@
 
     <form action="" method="post" class="ui form {% if form.errors %}error{% endif %}" novalidate id="form_create_batch">
         {% csrf_token %}
+        <input id="id_override_dates" type="hidden" name="override_dates" value="{{ override_dates }}"></input>
+
         <div class="thirteen wide field {% if form.client.errors %}error{% endif %}" id="id_client">
             <label for="{{ form.client.id_for_label }}">{% trans 'Client' %}</label>
             {{ form.client }}
@@ -143,6 +145,25 @@
 
         <input type="hidden" name="is_submit" value="1" id="id_is_submit">
         <input type="hidden" name="accordions_inactive" value="" id="id_accordions_active">
+
+        {% if show_override_modal %}
+        <div class="ui order-override modal" data-order-date="{{ override_date }}">
+            <div class="header">
+              <i class="warning sign icon"></i>
+              {% trans 'Override Order?' %}
+            </div>
+            <div class="content">
+              {% blocktrans with firstname=client.member.firstname lastname=client.member.lastname date=override_date %}
+              An order already exists for <strong>{{ firstname }} {{ lastname }}</strong> on <strong>{{ date }}</strong>. Do you want to override this order with a new one, or go back and edit the existing one instead?
+              {% endblocktrans %}
+            </div>
+            <div class="actions">
+               <button class="ui order-override cancel button">{% trans 'Cancel' %}</button>
+               <a class="ui button" href="{% url 'order:update' pk=override_order %}">{% trans 'Edit Existing' %}</a>
+               <button class="ui order-override yellow override button">{% trans 'Override' %}</button>
+            </div>
+        </div>
+        {% endif %}
     </form>
 </div>
 

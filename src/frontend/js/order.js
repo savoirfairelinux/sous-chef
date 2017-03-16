@@ -3,6 +3,35 @@ $(function() {
     // Javascript of the order application.
     // **************************************
 
+    if ($('.ui.order-override.modal')) {
+      $('.ui.order-override.modal').modal('show');
+    }
+
+    $('.order-override.cancel.button').click(function() {
+      var dateToRemove = $('.ui.order-override.modal').attr('data-order-date');
+      var deliveryDates = ($('#id_delivery_dates').val() || '').split('|');
+      var idxOfDeliveryDate = deliveryDates.indexOf(dateToRemove);
+
+      if (idxOfDeliveryDate === -1) {
+        deliveryDates.push(dateToRemove);
+        $('#id_delivery_dates').val(deliveryDates.join('|'));
+      }
+      $('#form_create_batch #id_is_submit').val("0");
+      $('#form_create_batch').submit();
+    });
+
+    $('.order-override.override.button').click(function() {
+      var dateToOverride = $('.ui.order-override.modal').attr('data-order-date');
+      var overrideDates = ($('#id_override_dates').val() || '').split('|');
+      var idxOfOverrideDate = overrideDates.indexOf(dateToOverride);
+
+      if (idxOfOverrideDate === -1) {
+        overrideDates.push(dateToOverride);
+        $('#id_override_dates').val(overrideDates.join('|'));
+      }
+      $('.ui.order-override.modal').modal('hide');
+    });
+
     $('.order-delete').click(function(){
         var order_id = $(this).attr('data-order-id');
         var selector = '.ui.basic.modal.order-' + order_id;

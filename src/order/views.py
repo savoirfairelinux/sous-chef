@@ -140,6 +140,14 @@ class CreateOrdersBatch(
         else:
             delivery_dates = []
 
+        # dates of orders to override
+        if self.request.method == "POST" and \
+           self.request.POST.get('override_dates'):
+            override_dates = self.request.POST['override_dates'].split('|')
+            override_dates = [x for x in override_dates if x in delivery_dates]
+        else:
+            override_dates = []
+
         # inactive accordion dates
         if self.request.method == "POST" and \
            self.request.POST.get('accordions_inactive'):
@@ -166,12 +174,23 @@ class CreateOrdersBatch(
             )
         context['delivery_dates'] = []
         DAYS_OF_WEEK_DICT = dict(DAYS_OF_WEEK)
+
         for date in delivery_dates:
+            date_obj = datetime.strptime(date, '%Y-%m-%d')
             # sunday = 0, saturday = 6
             day = ("sunday", "monday", "tuesday", "wednesday", "thursday",
-                   "friday", "saturday")[int(
-                       datetime.strptime(date, '%Y-%m-%d').strftime('%w')
-                   )]
+                   "friday", "saturday")[int(date_obj.strftime('%w'))]
+
+            if date not in override_dates and context.get('client'):
+                order_on_day = context['client'].orders\
+                    .filter(delivery_date=date_obj).first()
+                if context.get('client') and order_on_day:
+                    # the client has an order already on this day.
+                    # show the warning modal if it's not already being shown.
+                    context['show_override_modal'] = True
+                    context['override_order'] = order_on_day.id
+                    context['override_date'] = date
+
             if not meals_default_dict[day]:  # None or {}
                 # system default
                 default_json = json.dumps(
@@ -181,12 +200,11 @@ class CreateOrdersBatch(
                 # client default
                 default_json = json.dumps(meals_default_dict[day])
 
-            date_obj = datetime.strptime(date, '%Y-%m-%d')
-
             context['delivery_dates'].append(
                 (date, date_obj, default_json)
             )
 
+        context['override_dates'] = '|'.join(override_dates)
         return context
 
     def form_invalid(self, form, **kwargs):
@@ -208,6 +226,7 @@ class CreateOrdersBatch(
     def form_valid(self, form):
         # Get posted datas
         del_dates = form.cleaned_data['delivery_dates'].split('|')
+        ovr_dates = form.cleaned_data['override_dates'].split('|')
         client = form.cleaned_data['client']
         items = form.cleaned_data
         del items['delivery_dates']

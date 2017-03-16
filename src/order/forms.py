@@ -100,6 +100,12 @@ class CreateOrdersBatchForm(forms.Form):
         max_length=200
     )
 
+    override_dates = forms.CharField(
+        required=False,
+        label=_('Override dates'),
+        max_length=200
+    )
+
     is_submit = forms.IntegerField(
         required=True,
         label=_('Is form submit')
