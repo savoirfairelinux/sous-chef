@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-17 10:28-0400\n"
+"POT-Creation-Date: 2017-03-17 11:15-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -323,16 +323,21 @@ msgid ""
 "one, or go back and edit the existing one instead?"
 msgstr ""
 
-#: order/templates/order/create_batch.html:160
+#: order/templates/order/create_batch.html:159
+#, python-format
+msgid "The existing order's status is <strong>%(status)s</strong>."
+msgstr ""
+
+#: order/templates/order/create_batch.html:163
 #: order/templates/order_update_status.html:63 order/templates/update.html:24
 msgid "Cancel"
 msgstr ""
 
-#: order/templates/order/create_batch.html:161
+#: order/templates/order/create_batch.html:164
 msgid "Edit Existing"
 msgstr ""
 
-#: order/templates/order/create_batch.html:162
+#: order/templates/order/create_batch.html:165
 msgid "Override"
 msgstr ""
 

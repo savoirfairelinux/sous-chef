@@ -184,12 +184,12 @@ class CreateOrdersBatch(
             if date not in override_dates and context.get('client'):
                 order_on_day = context['client'].orders\
                     .filter(delivery_date=date_obj).first()
-                if context.get('client') and order_on_day:
-                    # the client has an order already on this day.
+                if context.get('client') and order_on_day and \
+                   order_on_day.status != 'C':
+                    # the client has an active order already on this day.
                     # show the warning modal if it's not already being shown.
                     context['show_override_modal'] = True
-                    context['override_order'] = order_on_day.id
-                    context['override_date'] = date
+                    context['order_to_override'] = order_on_day
 
             if not meals_default_dict[day]:  # None or {}
                 # system default
