@@ -153,9 +153,7 @@
               {% trans 'Override Order?' %}
             </div>
             <div class="content">
-              {% blocktrans with firstname=client.member.firstname lastname=client.member.lastname date=override_date %}
-              An order already exists for <strong>{{ firstname }} {{ lastname }}</strong> on <strong>{{ date }}</strong>. Do you want to override this order with a new one, or go back and edit the existing one instead?
-              {% endblocktrans %}
+              {% blocktrans with firstname=client.member.firstname lastname=client.member.lastname date=override_date %}An order already exists for <strong>{{ firstname }} {{ lastname }}</strong> on <strong>{{ date }}</strong>. Do you want to override this order with a new one, or go back and edit the existing one instead?{% endblocktrans %}
             </div>
             <div class="actions">
                <button class="ui order-override cancel button">{% trans 'Cancel' %}</button>
