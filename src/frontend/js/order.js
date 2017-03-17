@@ -12,8 +12,8 @@ $(function() {
       var deliveryDates = ($('#id_delivery_dates').val() || '').split('|');
       var idxOfDeliveryDate = deliveryDates.indexOf(dateToRemove);
 
-      if (idxOfDeliveryDate === -1) {
-        deliveryDates.push(dateToRemove);
+      if (idxOfDeliveryDate !== -1) {
+        deliveryDates.splice(idxOfDeliveryDate, 1);
         $('#id_delivery_dates').val(deliveryDates.join('|'));
       }
       $('#form_create_batch #id_is_submit').val("0");
