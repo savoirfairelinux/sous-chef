@@ -58,15 +58,20 @@ function getRouteWaypoints(routeId) {
     // Ajax call to get waypoint according route
     $.get( "../getDailyOrders/?route="+routeId+"&mode=euclidean&if_exist_then_retrieve=true", function(data ) {
         var deliveryPoints = L.Routing.Waypoint.extend({ member:"", address:""});
+
+        var groupedWaypoints = groupWaypoints(data.waypoints);
+
         // create an array of waypoint from ajax call
-        for(var i in data.waypoints)
-        {
-             waypoints.push(new deliveryPoints(L.latLng(data.waypoints[i].latitude, data.waypoints[i].longitude)) );
-             waypoints[i].options.address = data.waypoints[i].address;
-             waypoints[i].options.member = data.waypoints[i].member;
-             waypoints[i].options.id = data.waypoints[i].id;
-             waypoints[i].name = data.waypoints[i].member ;
-        }
+        Object.keys(groupedWaypoints).forEach(function(k, i) {
+          var currentWaypoint = groupedWaypoints[k][0];
+          var memberString = groupedWaypoints[k].map(function(x) { return x.member; }).join(', ');
+          waypoints.push(new deliveryPoints(L.latLng(currentWaypoint.latitude, currentWaypoint.longitude)));
+          waypoints[i].options.multipleClients = groupedWaypoints[k].length !== 1;
+          waypoints[i].options.address = currentWaypoint.address;
+          waypoints[i].options.member = memberString;
+          waypoints[i].options.id = currentWaypoint.id;
+          waypoints[i].name = memberString;
+        });
 
         //add first waypoint for santropol
         var santro = new deliveryPoints(L.latLng(45.516564,  -73.575145));
@@ -87,6 +92,31 @@ function getRouteWaypoints(routeId) {
         control.setWaypoints(waypoints);
       }
     );
+}
+
+function groupWaypoints(waypoints) {
+
+  // Parse waypoints. If they are within 5 decimal places of tolerance with another waypoint
+  // on the list, we can safely assume they are at the same address.
+  // In this case, we show one special marker with the number of the coexisting waypoints on it.
+
+  var groupedWaypoints = waypoints.reduce(function(rv, x) {
+    var lat = x.latitude.split('.');
+    lat[1] = lat[1].slice(0, 5);
+    lat = lat.join('.');
+
+    var lng = x.longitude.split('.');
+    lng[1] = lng[1].slice(0, 5);
+    lng = lng.join('.');
+
+    var val = lat + ', ' + lng;
+
+    (rv[val] = rv[val] || []).push(x);
+    return rv;
+  }, {});
+
+  return groupedWaypoints;
+
 }
 
 function main_map_init (map, options) {
@@ -212,21 +242,29 @@ function main_map_init (map, options) {
                   return;
                 }
                 else {
-                    marker =  L.marker(wp.latLng, {
-                        icon: L.icon.glyph({
-                            prefix: '',
-                            glyph: String.fromCharCode(65 + i)
-                        }),
-                        draggable: true
+                  var markerIcon;
+
+                  if (wp.options.multipleClients) {
+                    markerIcon = L.AwesomeMarkers.icon({icon: 'star', prefix: 'fa', markerColor: 'blue', iconColor: 'white'})
+                  } else {
+                    markerIcon = L.icon.glyph({
+                      prefix: '',
+                      glyph: String.fromCharCode(65 + i)
                     });
+                  }
 
-                    var info = "<div class='ui list'>"
-                        +"<div class='item'><i class='user icon'></i>" + wp.options.member + "</div>"
-                        +"<div class='item'><i class='home icon'></i>" + wp.options.address + "</div>"
-                        +"</div>"
+                  marker = L.marker(wp.latLng, {
+                    icon: markerIcon,
+                    draggable: true
+                  });
 
-                    marker.bindPopup(info).openPopup();
-                    return marker;
+                  var info = "<div class='ui list'>"
+                      +"<div class='item'><i class='user icon'></i>" + wp.options.member + "</div>"
+                      +"<div class='item'><i class='home icon'></i>" + wp.options.address + "</div>"
+                      +"</div>"
+
+                  marker.bindPopup(info).openPopup();
+                  return marker;
                 }
             }
         }
