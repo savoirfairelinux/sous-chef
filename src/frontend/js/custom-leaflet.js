@@ -69,10 +69,13 @@ function getRouteWaypoints(routeId) {
              waypoints[i].name = data.waypoints[i].member ;
         }
 
-        //add fisrt waypoint for santropol
+        //add first waypoint for santropol
         var santro = new deliveryPoints(L.latLng(45.516564,  -73.575145));
-        santro.name = "santropol";
+        santro.name = "Santropol Roulant";
         waypoints.splice(0, 0, santro);
+
+        // add return waypoint to go back to santropol
+        waypoints.push(santro);
 
         // Set waypoints on the map
         control.setWaypoints(waypoints);
