@@ -22,7 +22,7 @@
 
 ### New translatable strings
 
-- [ ] If applicable, I have included updated .po files with new strings (see http://goo.gl/kfBO7N)
+- [ ] If applicable, I have included updated .po files with new strings (see https://github.com/savoirfairelinux/sous-chef/blob/dev/docs/internationalization.adoc)
 
 ### Additional notes
 
