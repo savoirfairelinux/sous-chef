@@ -31,7 +31,7 @@
 </div>
 
 <div class="row">
-  <div class="thirteen wide column" id="route_map"
+  <div class="eleven wide column" id="route_map"
         data-route="{{ route.id }}"
         data-save-url="{% if can_edit_data %}{% url 'delivery:save_route' %}{% endif %}"
         {% comment %} JSON uses double quotes, so use single quotes for this attr {% endcomment %}
@@ -41,7 +41,7 @@
         data-can-save="{{ can_edit_data|yesno:'yes,no' }}">
     {% leaflet_map "main" callback="main_map_init" %}
   </div>
-  <div class="three wide column">
+  <div class="five wide column">
     <div class="controls"></div>
   </div>
 </div>
@@ -96,6 +96,11 @@
       <hr />
 
       <h2>{% trans 'Route Sequence' %}</h2>
+      <br />
+      {% verbatim %}
+      <h4>{{ distance_and_time }}</h4>
+      {% endverbatim %}
+      <br />
       <table style="width: 100%">
         <thead>
           <tr>
@@ -116,19 +121,6 @@
         </tbody>
         {% endverbatim %}
       </table>
-
-      <hr />
-
-      <h2>{% trans 'Directions' %}</h2>
-      {% verbatim %}
-      <h4>{{ distance_and_time }}</h4>
-      {% endverbatim %}
-      <table style="width: 100%" id="directions">
-        {% verbatim %}
-        {{{ directions_table }}}
-        {% endverbatim %}
-      </table>
-      <br/>
     </body>
   </html>
 </script>

@@ -41,8 +41,7 @@ function printMapAndItinerary() {
         map_imgs: map_imgs,
         map_route_svg: $('svg.leaflet-zoom-animated')[0].outerHTML,
         routes: routes,
-        distance_and_time: directions.find('> h3').text(),
-        directions_table: directions.find('> table').html()
+        distance_and_time: directions.find('> h3').text()
     };
 
     var w = window.open('');
@@ -71,10 +70,17 @@ function getRouteWaypoints(routeId) {
 
         //add first waypoint for santropol
         var santro = new deliveryPoints(L.latLng(45.516564,  -73.575145));
+        santro.santro = true;
         santro.name = "Santropol Roulant";
+        santro.options.address = "111 rue Roy Est";
         waypoints.splice(0, 0, santro);
 
         // add return waypoint to go back to santropol
+        var santro = new deliveryPoints(L.latLng(45.516564,  -73.575145));
+        santro.santro = true;
+        santro.hideMarker = true;
+        santro.name = "Santropol Roulant";
+        santro.options.address = "111 rue Roy Est";
         waypoints.push(santro);
 
         // Set waypoints on the map
@@ -186,7 +192,7 @@ function main_map_init (map, options) {
                 var marker;
 
                 // adjust marker according waypoints
-                if (wp.name == "santropol") {
+                if (wp.santro && !wp.hideMarker) {
                     // add awesome marker for santropol
                     marker =  L.marker([45.516564, -73.575145], {
                         draggable: false,
@@ -201,6 +207,9 @@ function main_map_init (map, options) {
                     marker.bindPopup(info).openPopup();
 
                     return marker;
+                }
+                else if (wp.santro) {
+                  return;
                 }
                 else {
                     marker =  L.marker(wp.latLng, {
@@ -244,7 +253,8 @@ function main_map_init (map, options) {
                         {color: 'blue', opacity: 0.25, weight: 3}
                     ]
                 },
-                plan: plan
+                plan: plan,
+                show: false
             });
         },
     });
