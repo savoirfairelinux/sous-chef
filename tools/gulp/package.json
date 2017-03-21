@@ -1,6 +1,13 @@
 {
   "name": "sous-chef-skel",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "description": "Sous-Chef is a web application to help organizations to plan and deliver meals, and to manage clients files. This package includes some of the front-end assets required to build Sous-Chef.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/savoirfairelinux/sous-chef"
+  },
+  "license": "AGPL-3.0",
+  "private": true,
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
