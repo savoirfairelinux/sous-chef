@@ -79,7 +79,7 @@ const sources = {
 
   img: {
     vendor: [
-      'node_modules/leaflet-routing-machine/dist/images/*.{png,svg}',
+      'node_modules/leaflet-routing-machine/dist/*.{png,svg}',
       'node_modules/leaflet-control-geocoder/dist/images/*',
       'node_modules/leaflet.awesome-markers/dist/images/*',
       'node_modules/leaflet.icon.glyph/*.{png,svg}',
