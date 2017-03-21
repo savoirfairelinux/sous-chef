@@ -139,7 +139,7 @@ function main_map_init (map, options) {
                         vehicleButtons[vehicle].classList.remove('loading');
 
                         // vehicle is one of: cycling, driving, or walking
-                        control.getRouter().options.profile = "mapbox." + vehicle;
+                        control.getRouter().options.profile = "mapbox/" + vehicle;
                         // refresh route display
                         control.route();
 
