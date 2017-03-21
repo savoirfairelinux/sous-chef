@@ -1,155 +1,206 @@
 'use strict';
 
-// http://stackoverflow.com/a/32940141
-require('es6-promise').polyfill();
-
 // Load Plugins
 // ==========================================
-var gulp = require('gulp');
-var browsersync = require('browser-sync').create();
-var minifycss = require('gulp-minify-css');
-var rename = require('gulp-rename');
-var sass = require('gulp-sass');
-var autoprefixer = require('gulp-autoprefixer');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var imagemin = require('gulp-imagemin');
-var cache = require('gulp-cache');
-var debug = require('gulp-debug');
-var validate = require('gulp-jsvalidate');
+const gulp = require('gulp');
+const bytediff = require('gulp-bytediff');
+const minifycss = require('gulp-clean-css');
+const rename = require('gulp-rename');
+const sass = require('gulp-sass');
+const autoprefixer = require('gulp-autoprefixer');
+const concat = require('gulp-concat');
+const uglify = require('gulp-uglify');
+const imagemin = require('gulp-imagemin');
+const cache = require('gulp-cache');
+const debug = require('gulp-debug');
+const validate = require('gulp-jsvalidate');
 
 // Paths
 // ==========================================
+// - Source path folders
+const SRC_SCSS = '../../src/frontend/scss';
+const SRC_JS = '../../src/frontend/js';
+const SRC_IMG = '../../src/frontend/images';
+
 // - Source paths
-var SRC_SCSS = '../../src/frontend/scss';
-var SRC_JS = '../../src/frontend/js';
-var SRC_IMG = '../../src/frontend/images';
+// Add any additional vendor or site files added to the appropriate property below.
+const sources = {
 
-// - Destination paths
-// We use tmp destinations to avoid creating transitionary files in our work dir.
-var DST_TMP_CSS = '/tmp/css';
-var DST_TMP_CSS_NG = '/tmp/css-ng';
-var DST_TMP_JS = '/tmp/js';
-var DST_CSS = '../../src/sous_chef/static/css';
-var DST_JS = '../../src/sous_chef/static/js';
-var DST_IMG = '../../src/sous_chef/static/images';
-
-// Tasks
-// ==========================================
-
-gulp.task('styles', function() {
-    return gulp.src(SRC_SCSS + '/main.scss')
-        .pipe(sass({ style: 'expanded', errLogToConsole: true }))
-        .pipe(autoprefixer({
-            browsers: ['last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'],
-            cascade: false
-        }))
-        .pipe(gulp.dest(DST_TMP_CSS))
-        .pipe(rename({ suffix: '.min' }))
-        .pipe(minifycss())
-        .pipe(gulp.dest(DST_CSS));
-});
-
-gulp.task('scss-watch', ['styles'], browsersync.reload);
-
-gulp.task('scripts', function() {
-    return gulp.src([
+  js: {
+    scripts: {
+      vendor: [
         'node_modules/jquery-tablesort/jquery-tablesort.js',
         'node_modules/jquery.formset/src/jquery.formset.js',
         'node_modules/semantic-ui-calendar/dist/calendar.js',
-        SRC_JS + '/global.js',
-        SRC_JS + '/delivery.js',
-        SRC_JS + '/member.js',
-        SRC_JS + '/order.js',
-        SRC_JS + '/billing.js',
-        SRC_JS + '/page.js',
-        SRC_JS + '/note.js',
-    ])
-        .pipe(concat('sous-chef.js'))
-        .pipe(gulp.dest(DST_JS))
-        .pipe(uglify())
-        .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest(DST_JS));
-});
-
-gulp.task('scripts-leaflet', function() {
-    return gulp.src([
+      ],
+      site: [
+        `${SRC_JS}/global.js`,
+        `${SRC_JS}/delivery.js`,
+        `${SRC_JS}/member.js`,
+        `${SRC_JS}/order.js`,
+        `${SRC_JS}/billing.js`,
+        `${SRC_JS}/page.js`,
+        `${SRC_JS}/note.js`,
+      ]
+    },
+    leaflet: {
+      vendor: [
         'node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.js',
         'node_modules/leaflet-control-geocoder/dist/Control.Geocoder.js',
         'node_modules/leaflet.awesome-markers/dist/leaflet.awesome-markers.js',
         'node_modules/leaflet.icon.glyph/Leaflet.Icon.Glyph.js',
         'node_modules/sortablejs/Sortable.js',
-        SRC_JS + '/custom-leaflet.js',
-    ])
-        .pipe(concat('leaflet.js'))
-        .pipe(gulp.dest(DST_JS))
-        .pipe(uglify())
-        .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest(DST_JS));
-});
-
-gulp.task('scripts-multidatespicker', function() {
-    return gulp.src([
+      ],
+      site: [
+        `${SRC_JS}/custom-leaflet.js`,
+      ]
+    },
+    multiDatesPicker: {
+      vendor: [
         'node_modules/jquery-ui-multi-date-picker/dist/jquery-ui.multidatespicker.js',
-        SRC_JS + '/multidatespicker.js',
-    ])
-        .pipe(concat('multidatespicker.js'))
-        .pipe(gulp.dest(DST_JS))
-        .pipe(uglify())
-        .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest(DST_JS));
+      ],
+      site: [
+        `${SRC_JS}/multidatespicker.js`,
+      ]
+    }
+  },
+
+  css: {
+    vendor: [
+      'node_modules/semantic-ui-calendar/dist/calendar.css',
+      'node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.css',
+      'node_modules/leaflet-control-geocoder/dist/Control.Geocoder.css',
+      'node_modules/leaflet.awesome-markers/dist/leaflet.awesome-markers.css',
+    ],
+    site: [
+      `${SRC_SCSS}/main.scss`,
+    ]
+  },
+
+  img: {
+    vendor: [
+      'node_modules/leaflet-routing-machine/dist/images/*.{png,svg}',
+      'node_modules/leaflet-control-geocoder/dist/images/*',
+      'node_modules/leaflet.awesome-markers/dist/images/*',
+      'node_modules/leaflet.icon.glyph/*.{png,svg}',
+    ],
+    site: [
+      `${SRC_IMG}/**/*`,
+    ]
+  }
+};
+
+// - Destination path folders
+const destinations = {
+  css: '../../src/sous_chef/static/css',
+  js: '../../src/sous_chef/static/js',
+  img: '../../src/sous_chef/static/images'
+};
+
+// Tasks
+// ==========================================
+
+gulp.task('styles', () =>
+  gulp.src([].concat(sources.css.vendor).concat(sources.css.site))
+    .pipe(sass({ style: 'expanded', errLogToConsole: true }))
+    .pipe(autoprefixer({
+      browsers: ['last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'],
+      cascade: false
+    }))
+    .pipe(concat('main.css'))
+    .pipe(bytediff.start())
+    .pipe(gulp.dest('/tmp/css'))
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(minifycss())
+    .pipe(bytediff.stop(bytediffFormatter))
+    .pipe(gulp.dest(destinations.css))
+);
+
+gulp.task('scripts', () =>
+  gulp.src([].concat(sources.js.scripts.vendor).concat(sources.js.scripts.site))
+    .pipe(concat('sous-chef.js'))
+    .pipe(gulp.dest(destinations.js))
+    .pipe(bytediff.start())
+    .pipe(uglify())
+    .pipe(bytediff.stop(bytediffFormatter))
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(gulp.dest(destinations.js))
+);
+
+gulp.task('scripts-leaflet', () =>
+  gulp.src([].concat(sources.js.leaflet.vendor).concat(sources.js.leaflet.site))
+    .pipe(concat('leaflet.js'))
+    .pipe(gulp.dest(destinations.js))
+    .pipe(bytediff.start())
+    .pipe(uglify())
+    .pipe(bytediff.stop(bytediffFormatter))
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(gulp.dest(destinations.js))
+);
+
+gulp.task('scripts-multidatespicker', () =>
+  gulp.src([].concat(sources.js.multiDatesPicker.vendor).concat(sources.js.multiDatesPicker.site))
+    .pipe(concat('multidatespicker.js'))
+    .pipe(gulp.dest(destinations.js))
+    .pipe(bytediff.start())
+    .pipe(uglify())
+    .pipe(bytediff.stop(bytediffFormatter))
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(gulp.dest(destinations.js))
+);
+
+gulp.task('images', () =>
+  gulp.src([].concat(sources.img.vendor).concat(sources.img.site))
+    .pipe(cache(imagemin({
+      optimizationLevel: 3,
+      progressive: true,
+      interlaced: true
+    })))
+    .pipe(gulp.dest(destinations.img))
+);
+
+gulp.task('default', () => {
+  gulp.start('styles', 'scripts-multidatespicker', 'scripts-leaflet', 'scripts',
+  'images');
 });
 
-gulp.task('js-watch', ['scripts-multidatespicker', 'scripts-leaflet', 'scripts'],
-browsersync.reload);
-
-gulp.task('images', function() {
-    return gulp.src([SRC_IMG + '/**/*'])
-        .pipe(cache(imagemin({
-            optimizationLevel: 3,
-            progressive: true,
-            interlaced: true
-        })))
-        .pipe(gulp.dest(DST_IMG));
+gulp.task('watch', ['default'], () => {
+  gulp.watch(`${SRC_SCSS}/**/*.scss`, ['styles']);
+  gulp.watch(`${SRC_JS}/**/*.js`, ['scripts-multidatespicker', 'scripts-leaflet', 'scripts']);
+  gulp.watch(`${SRC_IMG}/**/*`, ['images']);
 });
 
-gulp.task('images-watch', ['images'], browsersync.reload);
+gulp.task('validate', () =>
+  gulp.src([]
+    .concat(sources.js.scripts.site)
+    .concat(sources.js.leaflet.site)
+    .concat(sources.js.multiDatesPicker.site)
+  )
+  .pipe(debug())
+  .pipe(validate())
+  .on('error', onError)
+);
 
-gulp.task('default', function() {
-    gulp.start('styles', 'scripts-multidatespicker', 'scripts-leaflet', 'scripts',
-    'images');
-});
 
-gulp.task('watch', ['default'], function() {
-    browsersync.init({
-        proxy: "localhost"
-    });
-
-    gulp.watch(SRC_SCSS + '/**/*.scss', ['scss-watch']);
-    gulp.watch(SRC_JS + '/**/*.js', ['js-watch']);
-    gulp.watch(SRC_IMG + '/**/*', ['images-watch']);
-});
-
-gulp.task('validate', function () {
-   return gulp.src([
-        SRC_JS + '/delivery.js',
-        SRC_JS + '/member.js',
-        SRC_JS + '/order.js',
-        SRC_JS + '/page.js',
-        SRC_JS + '/global.js',
-        SRC_JS + '/multidatespicker.js',
-    ])
-        .pipe(debug())
-        .pipe(validate())
-        .on('error', onError);
-});
-
+// Log errors on JS validation problems.
 function onError(error) {
-   console.log(error.message);
+ console.log(error.message);
 
-   if (error.plugin === 'gulp-jsvalidate') {
-       console.log('In file: ' + error.fileName);
-   }
+ if (error.plugin === 'gulp-jsvalidate') {
+   console.log('In file: ' + error.fileName);
+ }
 
-   process.exit(1);
-}
+ process.exit(1);
+};
+
+// Tell us how much our files have been compressed after minification.
+function bytediffFormatter(data) {
+  return `${data.fileName} went from ${(data.startSize / 1000).toFixed(2)} ` +
+  `kB to ${(data.endSize / 1000).toFixed(2)} kB and is ` +
+  `${formatPercent(1 - data.percent, 2)}% ` +
+  `${(data.savings > 0) ? 'smaller' : 'larger'}.`;
+};
+
+function formatPercent(num, precision) {
+  return (num * 100).toFixed(precision);
+};
