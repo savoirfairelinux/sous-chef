@@ -203,8 +203,10 @@ class OrderManager(models.Manager):
             )
             if prior_order.exists():
                 if delivery_date_str in override_dates:
-                    # If an order is already created, override the original
-                    prior_order.delete()
+                    # If an order is already created, override the original(s)
+                    for x in prior_order:
+                        x.status = 'C'
+                        x.save()
                 else:
                     continue
             individual_items = {}

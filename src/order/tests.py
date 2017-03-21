@@ -828,6 +828,7 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
         self.assertEqual(
             Order_item.objects.filter(
                 order__client=self.episodic_client[1],
+                order__status='O',
                 order__delivery_date='2016-12-12',
                 order_item_type='meal_component',
                 component_group='main_dish',
@@ -843,6 +844,18 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
         self.assertEqual(
             Order_item.objects.filter(
                 order__client=self.episodic_client[1],
+                order__status='C',
+                order__delivery_date='2016-12-12',
+                order_item_type='meal_component',
+                component_group='main_dish',
+                size='L',
+                total_quantity=1
+            ).count(), 1
+        )
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=self.episodic_client[1],
+                order__status='O',
                 order__delivery_date='2016-12-12',
                 order_item_type='meal_component',
                 component_group='main_dish',
