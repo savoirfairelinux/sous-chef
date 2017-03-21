@@ -250,7 +250,7 @@ class MemberForm(forms.Form):
     member = forms.CharField(
         label=_("Member"),
         widget=forms.TextInput(attrs={
-            'placeholder': _('Member'),
+            'placeholder': _('Type more than 2 characters to search Members'),
             'class': 'prompt existing--member'
         }),
         required=False
