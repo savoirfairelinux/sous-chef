@@ -3,12 +3,14 @@ $(function() {
     // Javascript of the order application.
     // **************************************
 
-    if ($('.ui.order-override.modal')) {
-      $('.ui.order-override.modal').modal('show');
+    var $overrideModal = $('.ui.order-override.modal');
+
+    if ($overrideModal) {
+      $overrideModal.modal('show');
     }
 
     $('.order-override.cancel.button').click(function() {
-      var dateToRemove = $('.ui.order-override.modal').attr('data-order-date');
+      var dateToRemove = $overrideModal.data('orderDate');
       var deliveryDates = ($('#id_delivery_dates').val() || '').split('|');
       var idxOfDeliveryDate = deliveryDates.indexOf(dateToRemove);
 
@@ -21,7 +23,7 @@ $(function() {
     });
 
     $('.order-override.override.button').click(function() {
-      var dateToOverride = $('.ui.order-override.modal').attr('data-order-date');
+      var dateToOverride = $overrideModal.data('orderDate');
       var overrideDates = ($('#id_override_dates').val() || '').split('|');
       var idxOfOverrideDate = overrideDates.indexOf(dateToOverride);
 
@@ -29,11 +31,11 @@ $(function() {
         overrideDates.push(dateToOverride);
         $('#id_override_dates').val(overrideDates.join('|'));
       }
-      $('.ui.order-override.modal').modal('hide');
+      $overrideModal.modal('hide');
     });
 
     $('.order-delete').click(function(){
-        var order_id = $(this).attr('data-order-id');
+        var order_id = $(this).data('orderId');
         var selector = '.ui.basic.modal.order-' + order_id;
         $(selector).modal('show');
     });
