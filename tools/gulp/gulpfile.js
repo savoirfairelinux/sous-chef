@@ -54,8 +54,9 @@ gulp.task('scss-watch', ['styles'], browsersync.reload);
 
 gulp.task('scripts', function() {
     return gulp.src([
-        SRC_JS + '/vendor/jquery/**/*.js',
-        SRC_JS + '/vendor/calendar/**/*.js',
+        'node_modules/jquery-tablesort/jquery-tablesort.js',
+        'node_modules/jquery.formset/src/jquery.formset.js',
+        'node_modules/semantic-ui-calendar/dist/calendar.js',
         SRC_JS + '/global.js',
         SRC_JS + '/delivery.js',
         SRC_JS + '/member.js',
@@ -73,11 +74,11 @@ gulp.task('scripts', function() {
 
 gulp.task('scripts-leaflet', function() {
     return gulp.src([
-        SRC_JS + '/vendor/leaflet-routing/**/*.js',
-        SRC_JS + '/vendor/leaflet-geocoder/**/*.js',
-        SRC_JS + '/vendor/leaflet-awesome-markers/**/*.js',
-        SRC_JS + '/vendor/leaflet-icon-glyph/**/*.js',
-        SRC_JS + '/vendor/sortable/**/*.js',
+        'node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.js',
+        'node_modules/leaflet-control-geocoder/dist/Control.Geocoder.js',
+        'node_modules/leaflet.awesome-markers/dist/leaflet.awesome-markers.js',
+        'node_modules/leaflet.icon.glyph/Leaflet.Icon.Glyph.js',
+        'node_modules/sortablejs/Sortable.js',
         SRC_JS + '/custom-leaflet.js',
     ])
         .pipe(concat('leaflet.js'))
@@ -89,7 +90,7 @@ gulp.task('scripts-leaflet', function() {
 
 gulp.task('scripts-multidatespicker', function() {
     return gulp.src([
-        SRC_JS + '/vendor/multidatespicker/*.js',
+        'node_modules/jquery-ui-multi-date-picker/dist/jquery-ui.multidatespicker.js',
         SRC_JS + '/multidatespicker.js',
     ])
         .pipe(concat('multidatespicker.js'))
