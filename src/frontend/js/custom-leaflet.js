@@ -95,7 +95,7 @@ function main_map_init (map, options) {
     // Create bike router using mapbox
     var bikerouter = L.Routing.mapbox('pk.eyJ1IjoicmphY3F1ZW1pbiIsImEiOiJjaXAxaWpxdGkwMm5ydGhtNG84eGdjbGthIn0.TdwCw6vhAJdgxzH0JBp6iA');
     var defaultVehicle = $('#route_map').data('selected-vehicle');
-    bikerouter.options.profile = 'mapbox.' + defaultVehicle;
+    bikerouter.options.profile = 'mapbox/' + defaultVehicle;
 
     // Extend Routing Plan to add more buttons
     var routingPlan = L.Routing.Plan.extend({
@@ -139,7 +139,7 @@ function main_map_init (map, options) {
                         vehicleButtons[vehicle].classList.remove('loading');
 
                         // vehicle is one of: cycling, driving, or walking
-                        control.getRouter().options.profile = "mapbox." + vehicle;
+                        control.getRouter().options.profile = "mapbox/" + vehicle;
                         // refresh route display
                         control.route();
 

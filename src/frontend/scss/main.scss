@@ -1,15 +1,10 @@
 // MAIN.SCSS
 @charset "UTF-8";
 
-// From other sources
-@import "vendor/calendar/_calendar";
-@import "vendor/leaflet-routing/_leaflet-routing-machine";
-@import "vendor/leaflet-geocoder/_Control.Geocoder";
-@import "vendor/leaflet-awesome-markers/_leaflet.awesome-markers";
-
 // Custom SCSS
 @import "admin/admin";
 @import "base/print";
 @import "base/menu";
 @import "base/global";
+@import "base/map";
 @import "base/multidatespicker";
