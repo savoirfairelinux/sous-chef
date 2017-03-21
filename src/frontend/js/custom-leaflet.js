@@ -231,7 +231,7 @@ function main_map_init (map, options) {
                     });
 
                     var info = "<div class='ui list'>"
-                        +"<div class='item'><i class='user icon'></i> Santro </div>"
+                        +"<div class='item'><i class='food icon'></i> Santropol Roulant </div>"
                         +"</div>"
 
                     marker.bindPopup(info).openPopup();
