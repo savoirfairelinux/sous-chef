@@ -238,23 +238,14 @@ function main_map_init (map, options) {
 
                     return marker;
                 }
-                else if (wp.santro) {
-                  return;
-                }
-                else {
-                  var markerIcon;
-
-                  if (wp.options.multipleClients) {
-                    markerIcon = L.AwesomeMarkers.icon({icon: 'star', prefix: 'fa', markerColor: 'blue', iconColor: 'white'})
-                  } else {
-                    markerIcon = L.icon.glyph({
-                      prefix: '',
-                      glyph: String.fromCharCode(65 + i)
-                    });
-                  }
-
+                else if (!wp.santro) {
                   marker = L.marker(wp.latLng, {
-                    icon: markerIcon,
+                    icon: markerIcon = L.icon.glyph({
+                      prefix: '',
+                      glyph: wp.options.multipleClients ?
+                        String.fromCharCode(65 + i) + '*' :
+                        String.fromCharCode(65 + i)
+                    }),
                     draggable: true
                   });
 
