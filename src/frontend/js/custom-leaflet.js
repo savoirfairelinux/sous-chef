@@ -41,8 +41,7 @@ function printMapAndItinerary() {
         map_imgs: map_imgs,
         map_route_svg: $('svg.leaflet-zoom-animated')[0].outerHTML,
         routes: routes,
-        distance_and_time: directions.find('> h3').text(),
-        directions_table: directions.find('> table').html()
+        distance_and_time: directions.find('> h3').text()
     };
 
     var w = window.open('');
@@ -59,25 +58,65 @@ function getRouteWaypoints(routeId) {
     // Ajax call to get waypoint according route
     $.get( "../getDailyOrders/?route="+routeId+"&mode=euclidean&if_exist_then_retrieve=true", function(data ) {
         var deliveryPoints = L.Routing.Waypoint.extend({ member:"", address:""});
-        // create an array of waypoint from ajax call
-        for(var i in data.waypoints)
-        {
-             waypoints.push(new deliveryPoints(L.latLng(data.waypoints[i].latitude, data.waypoints[i].longitude)) );
-             waypoints[i].options.address = data.waypoints[i].address;
-             waypoints[i].options.member = data.waypoints[i].member;
-             waypoints[i].options.id = data.waypoints[i].id;
-             waypoints[i].name = data.waypoints[i].member ;
-        }
 
-        //add fisrt waypoint for santropol
+        var groupedWaypoints = groupWaypoints(data.waypoints);
+
+        // create an array of waypoint from ajax call
+        Object.keys(groupedWaypoints).forEach(function(k, i) {
+          var currentWaypoint = groupedWaypoints[k][0];
+          var memberString = groupedWaypoints[k].map(function(x) { return x.member; }).join(', ');
+          waypoints.push(new deliveryPoints(L.latLng(currentWaypoint.latitude, currentWaypoint.longitude)));
+          waypoints[i].options.multipleClients = groupedWaypoints[k].length !== 1;
+          waypoints[i].options.address = currentWaypoint.address;
+          waypoints[i].options.member = memberString;
+          waypoints[i].options.id = currentWaypoint.id;
+          waypoints[i].name = memberString;
+        });
+
+        //add first waypoint for santropol
         var santro = new deliveryPoints(L.latLng(45.516564,  -73.575145));
-        santro.name = "santropol";
+        santro.santro = true;
+        santro.name = "Santropol Roulant";
+        santro.options.address = "111 rue Roy Est";
         waypoints.splice(0, 0, santro);
+
+        // add return waypoint to go back to santropol
+        var santro = new deliveryPoints(L.latLng(45.516564,  -73.575145));
+        santro.santro = true;
+        santro.hideMarker = true;
+        santro.name = "Santropol Roulant";
+        santro.options.address = "111 rue Roy Est";
+        waypoints.push(santro);
 
         // Set waypoints on the map
         control.setWaypoints(waypoints);
       }
     );
+}
+
+function groupWaypoints(waypoints) {
+
+  // Parse waypoints. If they are within 5 decimal places of tolerance with another waypoint
+  // on the list, we can safely assume they are at the same address.
+  // In this case, we show one special marker with the number of the coexisting waypoints on it.
+
+  var groupedWaypoints = waypoints.reduce(function(rv, x) {
+    var lat = x.latitude.split('.');
+    lat[1] = lat[1].slice(0, 5);
+    lat = lat.join('.');
+
+    var lng = x.longitude.split('.');
+    lng[1] = lng[1].slice(0, 5);
+    lng = lng.join('.');
+
+    var val = lat + ', ' + lng;
+
+    (rv[val] = rv[val] || []).push(x);
+    return rv;
+  }, {});
+
+  return groupedWaypoints;
+
 }
 
 function main_map_init (map, options) {
@@ -183,7 +222,7 @@ function main_map_init (map, options) {
                 var marker;
 
                 // adjust marker according waypoints
-                if (wp.name == "santropol") {
+                if (wp.santro && !wp.hideMarker) {
                     // add awesome marker for santropol
                     marker =  L.marker([45.516564, -73.575145], {
                         draggable: false,
@@ -192,29 +231,31 @@ function main_map_init (map, options) {
                     });
 
                     var info = "<div class='ui list'>"
-                        +"<div class='item'><i class='user icon'></i> Santro </div>"
+                        +"<div class='item'><i class='food icon'></i> Santropol Roulant </div>"
                         +"</div>"
 
                     marker.bindPopup(info).openPopup();
 
                     return marker;
                 }
-                else {
-                    marker =  L.marker(wp.latLng, {
-                        icon: L.icon.glyph({
-                            prefix: '',
-                            glyph: String.fromCharCode(65 + i)
-                        }),
-                        draggable: true
-                    });
+                else if (!wp.santro) {
+                  marker = L.marker(wp.latLng, {
+                    icon: markerIcon = L.icon.glyph({
+                      prefix: '',
+                      glyph: wp.options.multipleClients ?
+                        String.fromCharCode(65 + i) + '*' :
+                        String.fromCharCode(65 + i)
+                    }),
+                    draggable: true
+                  });
 
-                    var info = "<div class='ui list'>"
-                        +"<div class='item'><i class='user icon'></i>" + wp.options.member + "</div>"
-                        +"<div class='item'><i class='home icon'></i>" + wp.options.address + "</div>"
-                        +"</div>"
+                  var info = "<div class='ui list'>"
+                      +"<div class='item'><i class='user icon'></i>" + wp.options.member + "</div>"
+                      +"<div class='item'><i class='home icon'></i>" + wp.options.address + "</div>"
+                      +"</div>"
 
-                    marker.bindPopup(info).openPopup();
-                    return marker;
+                  marker.bindPopup(info).openPopup();
+                  return marker;
                 }
             }
         }
@@ -241,7 +282,8 @@ function main_map_init (map, options) {
                         {color: 'blue', opacity: 0.25, weight: 3}
                     ]
                 },
-                plan: plan
+                plan: plan,
+                show: false
             });
         },
     });
