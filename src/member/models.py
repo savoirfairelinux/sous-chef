@@ -705,18 +705,26 @@ class Client(models.Model):
     def meals_schedule(self):
         """
         Returns a list of tuple ((weekday, meal default), ...).
+        If client option 'meals_schedule' is not set, simply return
+        everyday's default as None (no delivery).
 
         Intended to be used for Ongoing clients.
         """
         defaults = self.meals_default
         prefs = []
         simple_meals_schedule = self.simple_meals_schedule
-        for day, meal_schedule in defaults:
-            if day not in simple_meals_schedule:
+
+        if simple_meals_schedule is None:
+            for day, _ in defaults:
                 prefs.append((day, None))
-            else:
-                prefs.append((day, meal_schedule))
-        return prefs
+            return prefs
+        else:
+            for day, meal_schedule in defaults:
+                if day not in simple_meals_schedule:
+                    prefs.append((day, None))
+                else:
+                    prefs.append((day, meal_schedule))
+            return prefs
 
     def set_meals_schedule(self, schedule):
         """
