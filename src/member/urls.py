@@ -18,6 +18,7 @@ from member.views import (
     geolocateAddress,
     ClientStatusScheduler,
     ClientStatusView,
+    ClientStatusSchedulerDeleteView,
     ClientUpdateBasicInformation,
     ClientUpdateAddressInformation,
     ClientUpdateReferentInformation,
@@ -77,6 +78,11 @@ urlpatterns = [
         ClientStatusView.as_view(), name='client_status'),
     url(r'^client/(?P<pk>\d+)/status/scheduler$',
         ClientStatusScheduler.as_view(), name='clientStatusScheduler'),
+    url(
+        r'^status/(?P<pk>\d+)/delete$',
+        ClientStatusSchedulerDeleteView.as_view(),
+        name='delete_status'
+    ),
     url(_(r'^restriction/(?P<pk>\d+)/delete/$'),
         DeleteRestriction.as_view(), name='restriction_delete'),
     url(_(r'^client_option/(?P<pk>\d+)/delete/$'),

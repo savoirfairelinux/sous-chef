@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     'datamigration',
     'delivery',
     'meal',
-    'member',
+    'member.apps.MemberConfig',
     'order',
     'notification',
     'page',

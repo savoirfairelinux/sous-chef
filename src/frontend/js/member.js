@@ -78,6 +78,13 @@ $(function() {
         });
     });
 
+    var removeStatusConfirmationModal = $('#remove-status-confirmation');
+    $('a.remove-status').click(function (e) {
+        e.preventDefault();
+        removeStatusConfirmationModal.load(this.href);
+        removeStatusConfirmationModal.modal('show');
+    });
+
     if($('#dietary_restriction-delivery_type select').val() == 'E') {
         $('#form-meals-schedule').hide();
         showAllAccordionElements();
