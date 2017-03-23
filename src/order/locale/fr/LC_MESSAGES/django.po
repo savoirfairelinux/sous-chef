@@ -303,6 +303,10 @@ msgstr "Désolé, aucun résultat trouvé."
 msgid "Place orders"
 msgstr "Créer des commandes"
 
+#: order/templates/order/create_batch.html:38
+msgid "An order already exists on this day."
+msgstr ""
+
 #: order/templates/order/create_batch.html:43
 msgid "Order items"
 msgstr "Éléments de la commande"

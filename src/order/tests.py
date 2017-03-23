@@ -11,6 +11,7 @@ from datetime import date
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
 from django.core.management import call_command
@@ -805,6 +806,41 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
             ]
         ).count()
         self.assertEqual(created_orders, 2)
+
+    def test_view_display_ordered_dates(self):
+        """
+        The user interface should be notified of such existing orders:
+        1. The orders are of today or a later date.
+        2. The orders should not be cancelled.
+        """
+        today = timezone.datetime.today()
+        future = today + datetime.timedelta(days=1)
+        past = today - datetime.timedelta(days=1)
+
+        client = self.episodic_client[1]
+        order1 = OrderFactory(
+            delivery_date=today,
+            status='O',
+            client=client
+        )
+        order2 = OrderFactory(
+            delivery_date=future,
+            status='O',
+            client=client
+        )
+        order0 = OrderFactory(
+            delivery_date=past,
+            status='O',
+            client=client
+        )
+        response = self.client.post(reverse('order:create_batch'), {
+            'client': self.episodic_client[1].pk,
+            'is_submit': '0'
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'data-ordered-dates="{}|{}"'.format(
+            today.strftime('%Y-%m-%d'), future.strftime('%Y-%m-%d')
+        ))
 
     def test_view_post_override_yes(self):
         # Create an order batch, create an order for the same day,

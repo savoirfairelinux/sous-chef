@@ -34,7 +34,7 @@
 
         <div class="thirteen wide field">
             <label for="{{ form.delivery_dates.id_for_label }}">{% trans 'Delivery dates' %}</label>
-            <div id="delivery_dates"></div>{{ form.delivery_dates }}
+            <div id="delivery_dates" data-ordered-dates="{{ ordered_dates }}" data-ordered-date-tooltip="{% trans 'An order already exists on this day.' %}"></div>{{ form.delivery_dates }}
         </div>
 
         {% if delivery_dates %}
