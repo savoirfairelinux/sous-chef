@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-21 09:02-0400\n"
+"POT-Creation-Date: 2017-03-23 11:22-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -177,8 +177,8 @@ msgid "Member"
 msgstr "Membre"
 
 #: forms.py:253
-msgid "Type more than 2 characters to search Members"
-msgstr "Escriba más de 2 caracteres para buscar Miembros"
+msgid "Type 3 characters or more to search members"
+msgstr "Tapez 3 ou plus caractères pour rechercher des membres"
 
 #: forms.py:285
 msgid "Work phone"
