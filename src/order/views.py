@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
+from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView
 
@@ -165,6 +166,18 @@ class CreateOrdersBatch(
             else:
                 meals_default_dict = dict(c.meals_schedule)
             context['client'] = c
+
+            # The dates where an order already exists.
+            today = timezone.datetime.today()
+            ordered_dates = c.orders.filter(
+                delivery_date__gte=today
+            ).exclude(status='C').order_by('delivery_date').values_list(
+                'delivery_date', flat=True
+            )
+            context['ordered_dates'] = '|'.join(map(
+                lambda d: d.strftime('%Y-%m-%d'),
+                ordered_dates
+            ))
         else:
             meals_default_dict = dict(
                 map(
