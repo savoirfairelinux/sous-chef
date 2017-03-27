@@ -408,7 +408,7 @@ class ClientMealDefaultWeekTestCase(TestCase):
         meals_schedule_option = Option.objects.create(
             name='meals_schedule', option_group='dish'
         )
-        Client_option.objects.create(
+        cls.clientOptionTest = Client_option.objects.create(
             client=cls.clientTest,
             option=meals_schedule_option,
             value=json.dumps(['monday', 'wednesday', 'friday']),
@@ -461,6 +461,21 @@ class ClientMealDefaultWeekTestCase(TestCase):
             'compote': 0
         })
         self.assertEqual(ms['tuesday'], None)  # no delivery scheduled
+        self.assertEqual(ms['wednesday'], None)
+        self.assertEqual(ms['thursday'], None)
+        self.assertEqual(ms['friday'], None)
+        self.assertEqual(ms['saturday'], None)
+        self.assertEqual(ms['sunday'], None)
+
+    def test_client_meals_schedule_without_option(self):
+        """
+        Test when the client option 'meals_schedule' is not set.
+        Refs #706.
+        """
+        self.clientOptionTest.delete()
+        ms = dict(self.clientTest.meals_schedule)
+        self.assertEqual(ms['monday'], None)
+        self.assertEqual(ms['tuesday'], None)
         self.assertEqual(ms['wednesday'], None)
         self.assertEqual(ms['thursday'], None)
         self.assertEqual(ms['friday'], None)
