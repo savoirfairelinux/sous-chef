@@ -684,14 +684,13 @@ class Client(models.Model):
         Returns a list of days, corresponding to the client's delivery
         days.
         """
-        try:
-            option = Option.objects.get(name='meals_schedule')
-            meals_schedule_option = Client_option.objects.get(
-                client=self, option=option
-            )
-            return json.loads(meals_schedule_option.value)
-        except (Option.DoesNotExist, Client_option.DoesNotExist):
-            return None
+        for co in self.client_option_set.all():
+            if co.option.name == 'meals_schedule':
+                try:
+                    return json.loads(co.value)
+                except (ValueError, TypeError):  # JSON error
+                    continue
+        return None
 
     @property
     def meals_default(self):
@@ -1042,14 +1041,12 @@ class Client_option(models.Model):
     client = models.ForeignKey(
         'member.Client',
         verbose_name=_('client'),
-        related_name='+',
         on_delete=models.CASCADE
     )
 
     option = models.ForeignKey(
         'member.option',
         verbose_name=_('option'),
-        related_name='+',
         on_delete=models.CASCADE
     )
 
