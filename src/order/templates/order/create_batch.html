@@ -132,7 +132,7 @@
             </div>
         </div>
         <div class="wide field">
-            <button class="ui button primary" type="submit">{% trans 'Place orders' %}</button>
+            <button id="original-form-submit" class="ui button primary" type="submit">{% trans 'Place orders' %}</button>
         </div>
         {% else %}
         <div class="ui message">
@@ -147,21 +147,24 @@
         <input type="hidden" name="accordions_inactive" value="" id="id_accordions_active">
 
         {% if show_override_modal %}
-        <div class="ui order-override modal" data-order-date="{{ order_to_override.delivery_date | date:'Y-m-d' }}">
+        <div class="ui order-override modal" data-order-dates="{% for order in override_orders %}{{ order.delivery_date | date:'Y-m-d' }}|{% endfor %}">
             <div class="header">
               <i class="warning sign icon"></i>
               {% trans 'Override Order?' %}
             </div>
             <div class="content">
-              <p>{% blocktrans with firstname=client.member.firstname lastname=client.member.lastname date=order_to_override.delivery_date|date:"DATE_FORMAT"|capfirst %}An order already exists for <strong>{{ firstname }} {{ lastname }}</strong> on <strong>{{ date }}</strong>. Do you want to override this order with a new one, or go back and edit the existing one instead?{% endblocktrans %}</p>
-              {% if order_to_override.status != 'O' %}
-                <p>{% blocktrans with status=order_to_override.get_status_display %}The existing order's status is <strong>{{ status }}</strong>.{% endblocktrans %}</p>
-              {% endif %}
+              <p>{% blocktrans with firstname=client.member.firstname lastname=client.member.lastname %}The following order(s) already exist(s) for <strong>{{ firstname }} {{ lastname }}</strong>:{% endblocktrans %}</p>
+              <ul>
+                {% for order in override_orders %}
+                  <li><strong>{{ order.delivery_date|date:"DATE_FORMAT"|capfirst }}</strong>: {{ order.simple_summary }} {% if order.status != 'O' %}({% trans 'Status' %}: {{ order.get_status_display }}){% endif %}</li>
+                {% endfor %}
+              </ul>
+              <br />
+              <p>{% trans 'Would you like to override the above order(s), or cancel?' %}</p>
             </div>
             <div class="actions">
                <button class="ui order-override cancel button">{% trans 'Cancel' %}</button>
-               <a class="ui button" href="{% url 'order:update' pk=order_to_override.id %}">{% trans 'Edit Existing' %}</a>
-               <button class="ui order-override yellow override button">{% trans 'Override' %}</button>
+               <button id="order-override-submit" class="ui order-override yellow override button">{% trans 'Override' %}</button>
             </div>
         </div>
         {% endif %}

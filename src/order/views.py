@@ -188,6 +188,7 @@ class CreateOrdersBatch(
         context['delivery_dates'] = []
         DAYS_OF_WEEK_DICT = dict(DAYS_OF_WEEK)
 
+        context['override_orders'] = []
         for date in delivery_dates:
             date_obj = datetime.strptime(date, '%Y-%m-%d')
             # sunday = 0, saturday = 6
@@ -201,7 +202,7 @@ class CreateOrdersBatch(
                     # the client has an active order already on this day.
                     # show the warning modal if it's not already being shown.
                     context['show_override_modal'] = True
-                    context['order_to_override'] = order_on_day
+                    context['override_orders'].append(order_on_day)
 
             if not meals_default_dict[day]:  # None or {}
                 # system default

@@ -362,6 +362,17 @@ class Order(models.Model):
                 total = total + item.price
         return total
 
+    @property
+    def simple_summary(self):
+        """
+        Returns a simple summary of the accompanying order items.
+        """
+        return ",".join([
+            "{0} {1}".format(x.total_quantity, x.get_component_group_display())
+            for x in self.orders.all()
+            if x.order_item_type == 'meal_component' or x.component_group
+        ])
+
     def add_item(self, type, **kwargs):
         """
         Add a new item to the given order.
