@@ -11,6 +11,7 @@ from datetime import date
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
 from django.core.management import call_command
@@ -610,9 +611,6 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
         counter = Order.objects.create_batch_orders(
             self.delivery_dates, self.episodic_client[0], self.orditems)
         self.assertEqual(counter, 4)
-        counter = Order.objects.create_batch_orders(
-            self.delivery_dates, self.episodic_client[0], self.orditems)
-        self.assertEqual(counter, 0)
 
         # check items
         # 2016-12-12
@@ -808,6 +806,143 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
             ]
         ).count()
         self.assertEqual(created_orders, 2)
+
+    def test_view_display_ordered_dates(self):
+        """
+        The user interface should be notified of such existing orders:
+        1. The orders are of today or a later date.
+        2. The orders should not be cancelled.
+        """
+        today = timezone.datetime.today()
+        future = today + datetime.timedelta(days=1)
+        past = today - datetime.timedelta(days=1)
+
+        client = self.episodic_client[1]
+        order1 = OrderFactory(
+            delivery_date=today,
+            status='O',
+            client=client
+        )
+        order2 = OrderFactory(
+            delivery_date=future,
+            status='O',
+            client=client
+        )
+        order0 = OrderFactory(
+            delivery_date=past,
+            status='O',
+            client=client
+        )
+        response = self.client.post(reverse('order:create_batch'), {
+            'client': self.episodic_client[1].pk,
+            'is_submit': '0'
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'data-ordered-dates="{}|{}"'.format(
+            today.strftime('%Y-%m-%d'), future.strftime('%Y-%m-%d')
+        ))
+
+    def test_view_post_override_yes(self):
+        # Create an order batch, create an order for the same day,
+        #  set an override date, ensure order was overridden
+        order_data = {
+            'client': self.episodic_client[1].pk,
+            'delivery_dates': '2016-12-12',
+            'override_dates': '',
+            'is_submit': '1',
+            'main_dish_2016-12-12_quantity': 1,
+            'size_2016-12-12': 'L',
+            'dessert_2016-12-12_quantity': 1,
+            'diabetic_2016-12-12_quantity': 0,
+            'fruit_salad_2016-12-12_quantity': 0,
+            'green_salad_2016-12-12_quantity': 1,
+            'pudding_2016-12-12_quantity': 0,
+            'compote_2016-12-12_quantity': 0
+        }
+        response = self.client.post(reverse('order:create_batch'), order_data)
+        self.assertEqual(response.status_code, 302)  # form submit redirect
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=self.episodic_client[1],
+                order__status='O',
+                order__delivery_date='2016-12-12',
+                order_item_type='meal_component',
+                component_group='main_dish',
+                size='L',
+                total_quantity=1
+            ).count(), 1
+        )
+
+        order_data['override_dates'] = '2016-12-12'
+        order_data['size_2016-12-12'] = 'R'
+        response = self.client.post(reverse('order:create_batch'), order_data)
+        self.assertEqual(response.status_code, 302)  # form submit redirect
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=self.episodic_client[1],
+                order__status='C',
+                order__delivery_date='2016-12-12',
+                order_item_type='meal_component',
+                component_group='main_dish',
+                size='L',
+                total_quantity=1
+            ).count(), 1
+        )
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=self.episodic_client[1],
+                order__status='O',
+                order__delivery_date='2016-12-12',
+                order_item_type='meal_component',
+                component_group='main_dish',
+                size='R',
+                total_quantity=1
+            ).count(), 1
+        )
+
+    def test_view_post_override_no(self):
+        # Create an order batch, create an order for the same day,
+        #  do NOT set an override date, ensure order was NOT overridden
+        order_data = {
+            'client': self.episodic_client[1].pk,
+            'delivery_dates': '2016-12-12',
+            'override_dates': '',
+            'is_submit': '1',
+            'main_dish_2016-12-12_quantity': 1,
+            'size_2016-12-12': 'L',
+            'dessert_2016-12-12_quantity': 1,
+            'diabetic_2016-12-12_quantity': 0,
+            'fruit_salad_2016-12-12_quantity': 0,
+            'green_salad_2016-12-12_quantity': 1,
+            'pudding_2016-12-12_quantity': 0,
+            'compote_2016-12-12_quantity': 0
+        }
+        response = self.client.post(reverse('order:create_batch'), order_data)
+        self.assertEqual(response.status_code, 302)  # form submit redirect
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=self.episodic_client[1],
+                order__delivery_date='2016-12-12',
+                order_item_type='meal_component',
+                component_group='main_dish',
+                size='L',
+                total_quantity=1
+            ).count(), 1
+        )
+
+        order_data['size_2016-12-12'] = 'R'
+        response = self.client.post(reverse('order:create_batch'), order_data)
+        self.assertEqual(response.status_code, 302)  # form submit redirect
+        self.assertEqual(
+            Order_item.objects.filter(
+                order__client=self.episodic_client[1],
+                order__delivery_date='2016-12-12',
+                order_item_type='meal_component',
+                component_group='main_dish',
+                size='L',
+                total_quantity=1
+            ).count(), 1
+        )
 
     def test_view_post_no_submit(self):
         # page refresh (caused by client change / removing a date)

@@ -187,7 +187,7 @@ class OrderManager(models.Manager):
         return created_orders
 
     def create_batch_orders(self, delivery_dates, client, items,
-                            return_created_orders=False):
+                            override_dates=[], return_created_orders=False):
         created_orders = []
         messages = []
 
@@ -198,26 +198,29 @@ class OrderManager(models.Manager):
             delivery_date = datetime.strptime(
                 delivery_date_str, "%Y-%m-%d"
             ).date()
-            if Order.objects.filter(
-                    client=client, delivery_date=delivery_date
-            ).exists():
-                # If an order is already created, skip order items creation
-                # (if want to replace, must be deleted first)
-                pass
-            else:
-                # If no order for this client/date, create it and attach items
-                individual_items = {}
-                for key, value in items.items():
-                    if delivery_date_str in key:
-                        replaced_key = key.replace(
-                            delivery_date_str,
-                            'default'
-                        )
-                        individual_items[replaced_key] = value
-                order = self.create_order(
-                    delivery_date, client, individual_items, prices
-                )
-                created_orders.append(order)
+            prior_order = Order.objects.filter(
+                client=client, delivery_date=delivery_date
+            )
+            if prior_order.exists():
+                if delivery_date_str in override_dates:
+                    # If an order is already created, override the original(s)
+                    for x in prior_order:
+                        x.status = 'C'
+                        x.save()
+                else:
+                    continue
+            individual_items = {}
+            for key, value in items.items():
+                if delivery_date_str in key:
+                    replaced_key = key.replace(
+                        delivery_date_str,
+                        'default'
+                    )
+                    individual_items[replaced_key] = value
+            order = self.create_order(
+                delivery_date, client, individual_items, prices
+            )
+            created_orders.append(order)
 
         if not return_created_orders:
             return len(created_orders)   # LXYANG: TO BE DEPRECATED
@@ -358,6 +361,18 @@ class Order(models.Model):
             if item.billable_flag is True:
                 total = total + item.price
         return total
+
+    @property
+    def simple_summary(self):
+        """
+        Returns a simple summary of the accompanying order items.
+        """
+        return ", ".join([
+            "{0}x {1}".format(
+                x.total_quantity, x.get_component_group_display())
+            for x in self.orders.all()
+            if x.order_item_type == 'meal_component' or x.component_group
+        ])
 
     def add_item(self, type, **kwargs):
         """
