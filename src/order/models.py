@@ -367,8 +367,9 @@ class Order(models.Model):
         """
         Returns a simple summary of the accompanying order items.
         """
-        return ",".join([
-            "{0} {1}".format(x.total_quantity, x.get_component_group_display())
+        return ", ".join([
+            "{0}x {1}".format(
+                x.total_quantity, x.get_component_group_display())
             for x in self.orders.all()
             if x.order_item_type == 'meal_component' or x.component_group
         ])
