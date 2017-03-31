@@ -15,7 +15,7 @@
         <div class="content">
             {{client}}
             <div class="sub header">
-                {% blocktrans with created_at=client.member.created_at|date:"d F Y" %}
+                {% blocktrans trimmed with created_at=client.member.created_at|date:"d F Y" %}
                   Client since {{ created_at }}
                 {% endblocktrans %}
             </div>

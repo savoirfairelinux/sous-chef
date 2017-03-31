@@ -57,8 +57,8 @@ class BillingCreate(
 
         messages.add_message(
             self.request, messages.SUCCESS,
-            _("The billing with the identifier #%s \
-            has been successfully created." % billing.id)
+            _("The billing with the identifier #%s "
+              "has been successfully created." % billing.id)
         )
         return HttpResponseRedirect(reverse_lazy('billing:list'))
 

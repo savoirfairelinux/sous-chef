@@ -18,7 +18,7 @@
 </div>
 
 <div class="ui active inverted dimmer" style="display:none;">
-    <div class="ui indeterminate massive text loader">Preparing billing</div>
+    <div class="ui indeterminate massive text loader">{% trans 'Preparing billing' %}</div>
 </div>
 
 <div class="ui mobile reversed equal width grid">
@@ -58,19 +58,19 @@
 <table class="ui very basic stripped celled table">
   <thead>
     <th class="">{% trans 'Order' %}
-            <i class="help-text question grey icon link" data-content="{% trans 'Order\'s unique identifier.' %}"></i>
+            <i class="help-text question grey icon link" data-content="{% trans "Order's unique identifier." %}"></i>
     </th>
     <th class="">{% trans 'Client' %}
-        <i class="help-text question grey icon link" data-content="{% trans 'Quickly access the client\'s file.' %}"></i>
+        <i class="help-text question grey icon link" data-content="{% trans "Quickly access the client's file." %}"></i>
     </th>
     <th class="">{% trans 'Delivery Date' %}
-        <i class="help-text question grey icon link" data-content="{% trans 'Order\'s delivery date.' %}"></i>
+        <i class="help-text question grey icon link" data-content="{% trans "Order's delivery date." %}"></i>
     </th>
     <th class="center aligned">{% trans 'Status' %}
-        <i class="help-text question grey icon link" data-content="{% trans 'Display only Ordered orders.' %}"></i>
+        <i class="help-text question grey icon link" data-content="{% trans "Display only Ordered orders." %}"></i>
     </th>
     <th class="center aligned">{% trans 'Amount' %}
-        <i class="help-text question grey icon link" data-content="{% trans 'Order\'s total amount.' %}"></i>
+        <i class="help-text question grey icon link" data-content="{% trans "Order's total amount." %}"></i>
     </th>
     <th class="">{% trans 'Actions' %}</th>
   </thead>

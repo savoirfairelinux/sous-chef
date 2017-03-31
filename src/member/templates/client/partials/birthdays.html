@@ -22,6 +22,10 @@
 </div>
 <div class="ui segment">
     <p>
-      {% blocktrans count count=birthday|length %}{{ count }} birthday.{% plural %}{{ count }} birthdays.{% endblocktrans %}
+      {% blocktrans trimmed count count=birthday|length %}
+        {{ count }} birthday.
+      {% plural %}
+        {{ count }} birthdays.
+      {% endblocktrans %}
     </p>
 </div>
