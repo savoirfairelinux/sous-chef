@@ -70,10 +70,6 @@ msgid "Paid"
 msgstr "Payée"
 
 #: order/models.py
-msgid "Serving size"
-msgstr "Taille du repas"
-
-#: order/models.py
 msgid "Regular"
 msgstr "Standard"
 
@@ -485,6 +481,9 @@ msgstr "Sélectionner un client"
 #: order/views.py
 msgid "The status has been changed"
 msgstr ""
+
+#~ msgid "Serving size"
+#~ msgstr "Taille du repas"
 
 #~ msgid "Multiple orders"
 #~ msgstr "Commandes multiples"

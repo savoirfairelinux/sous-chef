@@ -161,10 +161,7 @@ class CreateOrdersBatch(
         if self.request.method == "POST" and \
            self.request.POST.get('client'):
             c = Client.objects.get(pk=self.request.POST['client'])
-            if c.delivery_type == 'E':  # episodic
-                meals_default_dict = dict(c.meals_default)
-            else:
-                meals_default_dict = dict(c.meals_schedule)
+            meals_default_dict = dict(c.meals_default)
             context['client'] = c
 
             # The dates where an order already exists.

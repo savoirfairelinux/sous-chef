@@ -175,23 +175,22 @@ class ClientRestrictionsInformation(forms.Form):
     def __init__(self, *args, **kwargs):
         super(ClientRestrictionsInformation, self).__init__(*args, **kwargs)
 
-        for day, translation in DAYS_OF_WEEK + (('default', _('Default')),):
+        for day, translation in DAYS_OF_WEEK:
             self.fields['size_{}'.format(day)] = forms.ChoiceField(
                 choices=SIZE_CHOICES,
-                widget=forms.Select(attrs={'class': 'ui dropdown'}),
+                widget=forms.Select(),
                 required=False
             )
 
-            for meal, placeholder in COMPONENT_GROUP_CHOICES:
+            for meal, meal_translation in COMPONENT_GROUP_CHOICES:
                 if meal is COMPONENT_GROUP_CHOICES_SIDES:
                     continue  # skip "Sides"
                 self.fields['{}_{}_quantity'.format(meal, day)] = \
                     forms.IntegerField(
-                        widget=forms.TextInput(
-                            attrs={'placeholder': placeholder}
-                        ),
-                        required=False
-                )
+                        required=False,
+                        min_value=0,
+                        widget=forms.TextInput()
+                    )
 
     status = forms.BooleanField(
         label=_('Active'),
@@ -245,6 +244,66 @@ class ClientRestrictionsInformation(forms.Form):
             attrs={'class': 'ui dropdown search'}
         )
     )
+
+    def clean(self):
+        """
+        The meal defaults are required for the scheduled delivery days:
+        at least one of the quantities should be set.
+        This only applies to ongoing clients!
+
+        Regardless of meal schedules, when a main dish is set, we should
+        enforce the setting of its size.
+        """
+        super(ClientRestrictionsInformation, self).clean()
+
+        if self.cleaned_data.get('delivery_type') == 'O':
+            # Ongoing
+            meals_schedule = self.cleaned_data.get('meals_schedule')
+            if meals_schedule is None:
+                meals_schedule = []
+        else:
+            # Episodic
+            meals_schedule = []
+
+        day_displays = dict(DAYS_OF_WEEK)
+
+        for day in meals_schedule:
+            # At least one of the quantities should be set.
+            quantity_fieldnames = []
+            for meal, meal_translation in COMPONENT_GROUP_CHOICES:
+                if meal is COMPONENT_GROUP_CHOICES_SIDES:
+                    continue  # skip "Sides"
+                fieldname = '{}_{}_quantity'.format(meal, day)
+                quantity_fieldnames.append(fieldname)
+
+            total_quantity = sum(map(
+                lambda n: self.cleaned_data.get(n) or 0,
+                quantity_fieldnames
+            ), 0)
+            if total_quantity == 0:
+                for n in quantity_fieldnames:
+                    self.add_error(
+                        n,
+                        _("At least one of the quantities should be "
+                          "set because %(weekday)s is scheduled for "
+                          "delivery.") % {
+                              'weekday': day_displays[day]
+                          }
+                    )
+
+        for day, day_display in DAYS_OF_WEEK:
+            # If the main dish is set, size should also be set.
+            main_dish_quantity = self.cleaned_data.get(
+                'main_dish_{}_quantity'.format(day)
+            )
+            fieldname_size = 'size_{}'.format(day)
+            if main_dish_quantity and not self.cleaned_data.get(
+                    fieldname_size
+            ):
+                self.add_error(
+                    fieldname_size,
+                    _("Size is required when the main dish is set.")
+                )
 
 
 class MemberForm(forms.Form):

@@ -34,7 +34,7 @@ ORDER_STATUS = (
 ORDER_STATUS_ORDERED = ORDER_STATUS[0][0]
 
 SIZE_CHOICES = (
-    ('', _('Serving size')),
+    ('', ''),
     ('R', _('Regular')),
     ('L', _('Large')),
 )
@@ -169,11 +169,16 @@ class OrderManager(models.Manager):
                 # If no order for this client/date, create it and attach items
                 prices = self.get_client_prices(client)
                 items = client.meals_default[day][1]
+                filtered_items = {
+                    k: v for k, v in items.items() if v is not None
+                }
+
                 # Skip this client if no default is set
-                if items is None:
+                if not filtered_items:
                     continue
+
                 individual_items = {}
-                for key, value in items.items():
+                for key, value in filtered_items.items():
                     if 'size' in key:
                         replaced_key = key + '_default'
                     else:

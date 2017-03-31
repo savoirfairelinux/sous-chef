@@ -650,27 +650,26 @@ class Client(models.Model):
         Returns a list of days, corresponding to the client's delivery
         days.
         """
-        option = Option.objects.get(name='meals_schedule')
         try:
+            option = Option.objects.get(name='meals_schedule')
             meals_schedule_option = Client_option.objects.get(
                 client=self, option=option
             )
             return json.loads(meals_schedule_option.value)
-        except Client_option.DoesNotExist:
+        except (Option.DoesNotExist, Client_option.DoesNotExist):
             return None
 
     @property
     def meals_default(self):
         """
-        Returns a list of tuple ((weekday, meal default), ...).
+        Returns a list of tuple ((weekday, meal default), ...) that
+        represents what the client wants on particular days.
 
-        Consider a meal default "not properly configured" if:
-        (1) if all numeric fields are 0 (or None);
-        (2) OR if size is None
-        and thus set it to None.
+        The "meal default" always contains all available components.
+        If not set, it will be None.
 
-        "None" numeric fields are returned as 0.
-        Intended to be used for Episodic clients.
+        It is possible to have zero value, representing that the client
+        has said no to a component on a particular day.
         """
         defaults = []
         for day, str in DAYS_OF_WEEK:
@@ -680,8 +679,7 @@ class Client(models.Model):
                 if component is COMPONENT_GROUP_CHOICES_SIDES:
                     continue  # skip "Sides"
                 item = self.meal_default_week.get(
-                    component + '_' + day + '_quantity',
-                    0
+                    component + '_' + day + '_quantity'
                 )
                 current[component] = item
                 numeric_fields.append(item)
@@ -691,12 +689,6 @@ class Client(models.Model):
             )
             current['size'] = size
 
-            not_properly_configured = (
-                all(map(lambda x: x == 0, numeric_fields)) or
-                size is None
-            )
-            if not_properly_configured:
-                current = None
             defaults.append((day, current))
 
         return defaults
@@ -704,30 +696,27 @@ class Client(models.Model):
     @property
     def meals_schedule(self):
         """
-        Returns a list of tuple ((weekday, meal default), ...).
-        If client option 'meals_schedule' is not set, simply return
-        everyday's default as None (no delivery).
+        Filters `self.meals_default` based on `self.simple_meals_schedule`.
+        Non-scheduled days are excluded from the result tuple.
 
-        Intended to be used for Ongoing clients.
+        Intended to be called only for Ongoing clients. For episodic clients
+        or if `simple_meals_schedule` is not set, it returns empty tuple.
         """
         defaults = self.meals_default
         prefs = []
         simple_meals_schedule = self.simple_meals_schedule
 
-        if simple_meals_schedule is None:
-            for day, _ in defaults:
-                prefs.append((day, None))
-            return prefs
+        if self.delivery_type == 'E' or simple_meals_schedule is None:
+            return ()
         else:
             for day, meal_schedule in defaults:
-                if day not in simple_meals_schedule:
-                    prefs.append((day, None))
-                else:
+                if day in simple_meals_schedule:
                     prefs.append((day, meal_schedule))
             return prefs
 
     def set_meals_schedule(self, schedule):
         """
+        [LXYANG] Rename to set_simple_meals_schedule.
         Set the delivery days for the client.
         @param schedule
             A python list of days.
@@ -751,117 +740,6 @@ class Client(models.Model):
                 'value': json.dumps(schedule),
             }
         )
-
-    @staticmethod
-    def get_meal_defaults(client, component_group, day):
-        """Get the meal defaults quantity and size for a day.
-
-        # TODO fix keys in wizard code to use Component_group constants
-
-        Static method called only on class object.
-
-        Parameters:
-          client : client objectget_meal_defaults
-          component_group : as in meal.models.COMPONENT_GROUP_CHOICES
-          day : day of week where 0 is monday, 6 is sunday
-
-        Returns:
-          (quantity, size)
-
-        Prerequisite:
-          client.meal_default_week is a dictionary like
-            {
-              "compote_friday_quantity": null,
-              ...
-              "compote_wednesday_quantity": null,
-              "dessert_friday_quantity": 2,
-              ...
-              "dessert_wednesday_quantity": null,
-              "diabetic_friday_quantity": null,
-              ...
-              "fruit_salad_friday_quantity": null,
-              "green_salad_friday_quantity": 2,
-              "main_dish_friday_quantity": 2,
-              "main_dish_wednesday_quantity": 1,
-              "pudding_friday_quantity": null,
-              "pudding_wednesday_quantity": null,
-              "size_friday": "R",
-              ...
-              "size_saturday": "",
-            }
-        """
-
-        meals_default = client.meal_default_week
-        if meals_default:
-            quantity = meals_default.get(
-                component_group + '_' + DAYS_OF_WEEK[day][0] + '_quantity'
-            ) or 0
-            size = meals_default.get('size_' + DAYS_OF_WEEK[day][0]) or ''
-        else:
-            quantity = 0
-            size = ''
-        # DEBUG
-        # print("client, compgroup, day, qty, size",
-        #       client, component_group, DAYS_OF_WEEK[day][0], quantity, size)
-        return quantity, size
-
-    def set_meal_defaults(self, component_group, day, quantity=0, size=''):
-        """Set the meal defaults quantity and size for a day.
-
-        Static method called only on class object.
-
-        Parameters:
-          component_group : as in meal.models.COMPONENT_GROUP_CHOICES
-          day : day of week where 0 is monday, 6 is sunday
-          quantity : number of servings of this component_group
-          size : size of the serving of this component_group
-        """
-
-        if not self.meal_default_week:
-            self.meal_default_week = {}
-        self.meal_default_week[
-            component_group + '_' + DAYS_OF_WEEK[day][0] + '_quantity'
-        ] = quantity
-        if component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH:
-            self.meal_default_week['size_' + DAYS_OF_WEEK[day][0]] = size
-        # DEBUG
-        # print("SET client, compgroup, day, qty, size, dict",
-        #       self, component_group, days[day], quantity, size,
-        #       self.meal_default_week)
-
-    def get_meals_prefs(self):
-        """
-        Returns a list of items defined per client.
-        """
-        try:
-            option, created = Option.objects.get_or_create(
-                name='meals_default')
-            meals_prefs_opt = Client_option.objects.get(
-                client=self, option=option
-            )
-            return json.loads(meals_prefs_opt.value)
-        except Client_option.DoesNotExist:
-            return {}
-
-    def set_meals_prefs(self, data):
-        if (data['delivery_type'] == 'E'):
-            option, created = Option.objects.get_or_create(
-                name='meals_default')
-            prefs = {
-                "maindish_q": data['main_dish_default_quantity'],
-                "maindish_s": data['size_default'],
-                "dst_q": data['dessert_default_quantity'],
-                "diabdst_q": data['diabetic_default_quantity'],
-                "fruitsld_q": data['fruit_salad_default_quantity'],
-                "greensld_q": data['green_salad_default_quantity'],
-                "pudding_q": data['pudding_default_quantity'],
-                "compot_q": data['compote_default_quantity'],
-            }
-            Client_option.objects.update_or_create(
-                client=self, option=option,
-                defaults={
-                    'value': json.dumps(prefs),
-                })
 
 
 class ClientScheduledStatus(models.Model):

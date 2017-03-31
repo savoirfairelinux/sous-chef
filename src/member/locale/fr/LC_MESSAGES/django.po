@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-04 14:50-0400\n"
+"POT-Creation-Date: 2017-04-10 10:30-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
@@ -135,11 +135,6 @@ msgstr "Notes de Livraison"
 msgid "Delivery Note here ..."
 msgstr "Vos notes de livraison ici ..."
 
-#: member/forms.py member/models.py
-#: member/templates/client/partials/forms/meal_prefs.html
-msgid "Default"
-msgstr "Par Défaut"
-
 #: member/forms.py member/models.py member/tests.py
 msgid "Active"
 msgstr "Actif"
@@ -171,6 +166,15 @@ msgstr "Ingrédients à éviter"
 #: member/forms.py
 msgid "Dish(es) To Avoid"
 msgstr "Plats à éviter"
+
+#: member/forms.py
+#, python-format
+msgid "At least one of the quantities should be set because %(weekday)s is scheduled for delivery."
+msgstr ""
+
+#: member/forms.py
+msgid "Size is required when the main dish is set."
+msgstr ""
 
 #: member/forms.py
 msgid "Member"
@@ -277,6 +281,10 @@ msgstr "Homme"
 #: member/models.py
 msgid "Other"
 msgstr "Autre"
+
+#: member/models.py
+msgid "Default"
+msgstr "Par Défaut"
 
 #: member/models.py
 msgid "Low income"
@@ -806,7 +814,9 @@ msgstr "Statut"
 msgid "Meal status. Available status are: Pending, Active, Paused, Stop: no contact, Stop: contact and Deceased."
 msgstr ""
 
-#: member/templates/client/list.html member/templates/client/view/summary.html
+#: member/templates/client/list.html
+#: member/templates/client/view/allergies.html
+#: member/templates/client/view/summary.html
 msgid "Delivery type"
 msgstr "Type de Livraison"
 
@@ -913,6 +923,13 @@ msgstr "Statut de livraison"
 msgid "Food preferences"
 msgstr "Préférences alimentaires    "
 
+#: member/templates/client/partials/forms/dietary_restriction.html
+#: member/templates/client/view/allergies.html
+#, fuzzy
+#| msgid "Meal status"
+msgid "Meal defaults"
+msgstr "Statut de livraison"
+
 #: member/templates/client/partials/forms/emergency_contacts.html
 msgid "Emergency contacts"
 msgstr "Contacts d'urgence"
@@ -934,22 +951,8 @@ msgid "Contact relationship"
 msgstr "Relation de contact"
 
 #: member/templates/client/partials/forms/meal_defaults.html
-#: member/templates/client/partials/forms/meal_prefs.html
-#: member/templates/client/partials/meal_defaults.html
 msgid "Size"
 msgstr "Taille"
-
-#: member/templates/client/partials/forms/meal_defaults.html
-#: member/templates/client/partials/forms/meal_prefs.html
-#: member/templates/client/partials/meal_defaults.html
-msgid "Component"
-msgstr "Composant"
-
-#: member/templates/client/partials/forms/meal_defaults.html
-#: member/templates/client/partials/forms/meal_prefs.html
-#: member/templates/client/partials/meal_defaults.html
-msgid "Quantity"
-msgstr "Quantité"
 
 #: member/templates/client/partials/forms/payment_information.html
 msgid "Billing information"
@@ -1000,10 +1003,6 @@ msgstr "Notes"
 msgid "Orders"
 msgstr "Commandes"
 
-#: member/templates/client/partials/prefs.html
-msgid "No delivery."
-msgstr "Pas de livraison"
-
 #: member/templates/client/update/base.html
 msgid "Update Client"
 msgstr "Mise à jour du client"
@@ -1053,6 +1052,18 @@ msgid "Edit"
 msgstr "Éditer"
 
 #: member/templates/client/view/allergies.html
+#, fuzzy
+#| msgid "No delivery."
+msgid "Ongoing delivery"
+msgstr "Pas de livraison"
+
+#: member/templates/client/view/allergies.html
+#, fuzzy
+#| msgid "Work information"
+msgid "No information provided."
+msgstr "Lieu de travail"
+
+#: member/templates/client/view/allergies.html
 msgid "Yipee! No restriction"
 msgstr "Parfait! Aucune restriction"
 
@@ -1075,14 +1086,6 @@ msgstr "Parfait! Aucune restriction"
 #: member/templates/client/view/allergies.html
 msgid "Dish(es) to avoid"
 msgstr "Plats à éviter"
-
-#: member/templates/client/view/allergies.html
-msgid "Meal schedule"
-msgstr "Calendrier des repas"
-
-#: member/templates/client/view/allergies.html
-msgid "Meal default schedule of the referent person"
-msgstr ""
 
 #: member/templates/client/view/delete_status_confirmation.html
 msgid "Remove Scheduled Status Confirmation"
@@ -1303,19 +1306,11 @@ msgstr "Supprimer"
 msgid "Home"
 msgstr "Domicile"
 
-#: member/templatetags/member_extras.py
-#, python-format
-msgid "%(count)s %(size)s %(component_label)s"
-msgstr ""
-
-#: member/templatetags/member_extras.py
-#, python-format
-msgid "%(count)s %(component_label)s"
-msgstr ""
-
 #: member/tests.py
+#, fuzzy
+#| msgid "This field is required"
 msgid "This field is required."
-msgstr "Ce champ est requis."
+msgstr "Ce champ est requis"
 
 #: member/tests.py
 #, python-format
@@ -1323,12 +1318,14 @@ msgid "Select a valid choice. %(value)s is not one of the available choices."
 msgstr ""
 
 #: member/tests.py member/urls.py
+#, fuzzy
+#| msgid "emergency_contacts"
 msgid "emergency_contacts"
 msgstr "contacts_d'urgence"
 
 #: member/urls.py
 msgid "^create/$"
-msgstr "^créer/$"
+msgstr ""
 
 #: member/urls.py
 msgid "^create/(?P<step>.+)/$"
@@ -1336,7 +1333,7 @@ msgstr "^créer/(?P<step>.+)/$"
 
 #: member/urls.py
 msgid "^list/$"
-msgstr "^liste/$"
+msgstr ""
 
 #: member/urls.py
 msgid "^search/$"
@@ -1403,10 +1400,6 @@ msgid "^component_to_avoid/(?P<pk>\\d+)/delete/$"
 msgstr "^plats_à_éviter/(?P<pk>\\d+)/supprimer/$"
 
 #: member/urls.py
-msgid "^client/(?P<pk>\\d+)/meals/preferences$"
-msgstr "^client/(?P<pk>\\d+)/repas/préférences$"
-
-#: member/urls.py
 msgid "^(?P<pk>\\d+)/update/"
 msgstr "^(?P<pk>\\d+)/mettre_à_jour/"
 
@@ -1421,6 +1414,18 @@ msgstr "Le client a été mis à jour"
 #: member/views.py
 msgid "The status has been changed"
 msgstr "Le statut a été changé"
+
+#~ msgid "^client/(?P<pk>\\d+)/meals/preferences$"
+#~ msgstr "^client/(?P<pk>\\d+)/repas/préférences$"
+
+#~ msgid "Component"
+#~ msgstr "Composant"
+
+#~ msgid "Quantity"
+#~ msgstr "Quantité"
+
+#~ msgid "Meal schedule"
+#~ msgstr "Calendrier des repas"
 
 #~ msgid "emergency contact relationship"
 #~ msgstr "lien avec le contact d'urgence"
