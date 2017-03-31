@@ -1,7 +1,6 @@
 # coding: utf-8
 
 import csv
-from datetime import date
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -1437,30 +1436,7 @@ class ClientStatusScheduler(
         }
 
     def form_valid(self, form):
-        client = get_object_or_404(Client, pk=self.kwargs.get('pk'))
-        start_date = form.cleaned_data.get('change_date')
-        end_date = form.cleaned_data.get('end_date')
-
         response = super(ClientStatusScheduler, self).form_valid(form)
-
-        # Immediate status update (schedule and process)
-        if start_date == date.today():
-            self.object.process()
-
-        # Schedule a time range during which status will be different,
-        # then back to current (double schedule)
-        if end_date is not None:
-            change2 = ClientScheduledStatus(
-                client=client,
-                status_from=form.cleaned_data.get('status_to'),
-                status_to=form.cleaned_data.get('status_from'),
-                reason=form.cleaned_data.get('reason'),
-                change_date=end_date,
-                change_state=ClientScheduledStatus.END,
-                operation_status=ClientScheduledStatus.TOBEPROCESSED
-            )
-            change2.linked_scheduled_status = self.object
-            change2.save()
         messages.add_message(
             self.request, messages.SUCCESS,
             _("The status has been changed")
@@ -1470,6 +1446,17 @@ class ClientStatusScheduler(
     def get_success_url(self):
         return reverse(
             'member:client_information', kwargs={'pk': self.kwargs.get('pk')}
+        )
+
+
+class ClientStatusSchedulerDeleteView(generic.DeleteView):
+    model = ClientScheduledStatus
+    template_name = "client/view/delete_status_confirmation.html"
+
+    def get_success_url(self):
+        return reverse(
+            'member:client_status',
+            kwargs={'pk': self.object.client.pk}
         )
 
 

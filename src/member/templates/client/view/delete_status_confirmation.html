@@ -1,0 +1,35 @@
+{% load i18n %}
+
+<div class="header"><i class="big yellow warning sign icon"></i> {% trans "Remove Scheduled Status Confirmation" %}</div>
+
+<div class="content">
+    <p>
+        {% blocktrans with client=object.client from=object.get_status_from_display to=object.get_status_to_display date=object.change_date %}
+            Your are trying to remove the scheduled status related to the client <strong>{{ client }}</strong>,
+            in order to change the status from <strong>{{ from }}</strong> to <strong>{{ to }}</strong> the
+            next <strong>{{ date }}</strong>.
+        {% endblocktrans %}
+    </p>
+    {% with pair=object.get_pair %}
+        {% if pair %}
+            <p>
+                {% blocktrans with client=pair.client from=pair.get_status_from_display to=pair.get_status_to_display date=pair.change_date %}
+                    The scheduled status to be removed, is directly related to the scheduled status to change the status from
+                    <strong>{{ from }}</strong> to <strong>{{ to }}</strong> the next <strong>{{ date }}</strong>.
+                    If you finally accept, both scheduled status will be removed.
+                {% endblocktrans %}
+            </p>
+        {% endif %}
+    {% endwith %}
+    <p>
+        {% blocktrans %}
+            Press <strong>Cancel</strong> to avoid or <strong>Accept</strong> to complete this operation.
+        {% endblocktrans %}
+    </p>
+</div>
+
+<form class="actions" action="{% url 'member:delete_status' pk=object.pk %}" method="post">
+    {% csrf_token %}
+    <button type="button" class="ui cancel button">{% trans "Cancel" %}</button>
+    <button type="submit" class="ui button">{% trans "Accept" %}</button>
+</form>

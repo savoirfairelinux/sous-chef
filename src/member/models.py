@@ -890,12 +890,13 @@ class ClientScheduledStatus(models.Model):
         related_name='scheduled_statuses'
     )
 
-    linked_scheduled_status = models.ForeignKey(
+    pair = models.OneToOneField(
         'self',
+        verbose_name=_("Client Scheduled Status Pair"),
+        related_name="my_pair",
         on_delete=models.CASCADE,
-        null=True,
         blank=True,
-        default=None
+        null=True
     )
 
     status_from = models.CharField(
@@ -942,6 +943,18 @@ class ClientScheduledStatus(models.Model):
             self.get_status_to_display(),
             self.change_date
         )
+
+    @property
+    def get_pair(self):
+        """
+        Returns the pair relationship. If the pair relationship does
+        not exists, None value will be returned.
+        :return:  ClientScheduledStatus
+        """
+        try:
+            return self.pair or self.my_pair
+        except ClientScheduledStatus.DoesNotExist:
+            return None
 
     def process(self):
         """ Process a scheduled change if valid."""

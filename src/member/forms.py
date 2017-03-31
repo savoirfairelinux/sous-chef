@@ -1,3 +1,5 @@
+from datetime import date
+
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _
@@ -498,3 +500,29 @@ class ClientScheduledStatusForm(forms.ModelForm):
             ),
             help_text=_('Format: YYYY-MM-DD'),
         )
+
+    def save(self, commit=True):
+        if commit:
+            instance = super().save(commit)
+            end_date = self.cleaned_data.get('end_date')
+
+            # Immediate status update (schedule and process)
+            if self.cleaned_data.get('change_date') == date.today():
+                instance.process()
+
+            if end_date:
+                # Schedule a time range during which status will be different,
+                # then back to current (double schedule)
+                ClientScheduledStatus.objects.create(
+                    client=instance.client,
+                    status_from=instance.status_to,
+                    status_to=instance.status_from,
+                    reason=instance.reason,
+                    change_date=end_date,
+                    change_state=ClientScheduledStatus.END,
+                    operation_status=ClientScheduledStatus.TOBEPROCESSED,
+                    pair=instance
+                )
+
+            return instance
+        return super().save(commit)
