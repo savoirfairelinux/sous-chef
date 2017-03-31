@@ -47,11 +47,17 @@ class BillingCreate(
     permission_required = 'sous_chef.edit'
 
     def get(self, request):
-        date = self.request.GET.get('delivery_date', '')
+        date = self.request.GET.get('delivery_date', '-')
+        date = date if date is not '' else '-'
         year, month = date.split('-')
 
         if year is '' or month is '':
-            return HttpResponseRedirect(reverse_lazy('billing:list'))
+            messages.add_message(
+                self.request, messages.ERROR,
+                _("You must select a period to create a billing and click in "
+                  "the first step 'Preview'")
+            )
+            return HttpResponseRedirect(reverse_lazy('billing:add'))
 
         billing = Billing.objects.billing_create_new(year, month)
 
