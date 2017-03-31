@@ -8,148 +8,170 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-16 16:33+0000\n"
+"POT-Creation-Date: 2017-03-31 14:17-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
-"Language-Team: French (https://www.transifex.com/savoirfairelinux/"
-"teams/63058/fr/)\n"
+"Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: models.py:25 models.py:36 templates/notes_list.html:39
+#: note/models.py note/templates/notes_list.html
 msgid "Name"
 msgstr "Nom"
 
-#: models.py:28
+#: note/models.py
 msgid "Note priorities"
 msgstr "Priorités de notes"
 
-#: models.py:39
+#: note/models.py
 msgid "Note categories"
 msgstr "Catégories de notes"
 
-#: models.py:49
+#: note/models.py
 msgid "Notes"
 msgstr "Notes"
 
-#: models.py:53
+#: note/models.py
 msgid "Note"
 msgstr "Note"
 
-#: models.py:58
+#: note/models.py
 msgid "Author"
 msgstr "Auteur"
 
-#: models.py:63 templates/notes_list.html:66
+#: note/models.py note/templates/notes_list.html
 msgid "Date"
 msgstr "Date"
 
-#: models.py:68 templates/notes_client_list.html:40
-#: templates/notes_list.html:60
+#: note/models.py note/templates/notes_client_list.html
+#: note/templates/notes_list.html
 msgid "Is read"
 msgstr "lu"
 
-#: models.py:74
+#: note/models.py
 msgid "Client"
 msgstr "Client"
 
-#: models.py:78 templates/notes_client_list.html:33
-#: templates/notes_list.html:48
+#: note/models.py note/templates/notes_client_list.html
+#: note/templates/notes_list.html
 msgid "Priority"
 msgstr "Priorité"
 
-#: models.py:80 templates/notes_list.html:54
+#: note/models.py note/templates/notes_list.html
 msgid "Category"
 msgstr "Catégorie"
 
-#: models.py:118
+#: note/models.py
 msgid "Search by name"
 msgstr "Recherche par nom"
 
-#: templates/notes_add.html:12
+#: note/templates/notes_add.html
 msgid "Add a Note"
 msgstr ""
 
-#: templates/notes_add.html:14
+#: note/templates/notes_add.html
 #, python-format
-msgid ""
-"\n"
-"         Add a Note for %(firstname)s %(lastname)s\n"
-"        "
+msgid "Add a Note for %(firstname)s %(lastname)s"
 msgstr ""
 
-#: templates/notes_add.html:77
+#: note/templates/notes_add.html
 msgid "Create"
 msgstr ""
 
-#: templates/notes_add.html:78
+#: note/templates/notes_add.html
 msgid "Cancel"
 msgstr ""
 
-#: templates/notes_client_list.html:9
+#: note/templates/notes_client_list.html
 msgid "Information"
 msgstr "Information"
 
-#: templates/notes_client_list.html:19 templates/notes_list.html:7
-#: templates/notes_list.html:13
+#: note/templates/notes_client_list.html note/templates/notes_list.html
 msgid "Staff Notes"
 msgstr "Notes de l'équipe"
 
-#: templates/notes_client_list.html:21
+#: note/templates/notes_client_list.html
 msgid "Notes added to"
 msgstr "Notes ajoutées à"
 
-#: templates/notes_client_list.html:21
+#: note/templates/notes_client_list.html
 msgid "s file"
 msgstr ""
 
-#: templates/notes_client_list.html:49 templates/notes_list.html:78
+#: note/templates/notes_client_list.html note/templates/notes_list.html
 msgid "Reset"
 msgstr "Réinitialiser"
 
-#: templates/notes_client_list.html:50 templates/notes_list.html:79
+#: note/templates/notes_client_list.html note/templates/notes_list.html
 msgid "Search"
 msgstr "Recherche"
 
-#: templates/notes_client_list.html:53
+#: note/templates/notes_client_list.html
 msgid "New Note"
 msgstr "Nouvelle Note"
 
-#: templates/notes_client_list.html:65 templates/notes_list.html:89
+#: note/templates/notes_client_list.html note/templates/notes_list.html
+msgid "Urgent"
+msgstr ""
+
+#: note/templates/notes_client_list.html
+msgid "Created by"
+msgstr ""
+
+#: note/templates/notes_client_list.html note/templates/notes_list.html
 msgid "Mark as unread"
 msgstr "Marquer comme non lu"
 
-#: templates/notes_client_list.html:68 templates/notes_list.html:92
+#: note/templates/notes_client_list.html note/templates/notes_list.html
 msgid "Mark as read"
 msgstr "Marquer comme lu"
 
-#: templates/notes_list.html:26
+#: note/templates/notes_client_list.html note/templates/notes_list.html
+#, fuzzy
+#| msgid "Mark as read"
+msgid "Mark all as read"
+msgstr "Marquer comme lu"
+
+#: note/templates/notes_client_list.html note/templates/notes_list.html
+msgid "Commit selected changes"
+msgstr ""
+
+#: note/templates/notes_list.html
 msgid "New note"
 msgstr ""
 
-#: templates/notes_list.html:29
+#: note/templates/notes_list.html
 msgid "Or"
 msgstr ""
 
-#: templates/notes_list.html:123
+#: note/templates/notes_list.html
+msgid "created by"
+msgstr ""
+
+#: note/templates/notes_list.html
 msgid "of"
 msgstr ""
 
-#: urls.py:9
+#: note/urls.py
 msgid "^$"
 msgstr "^$"
 
-#: urls.py:10
+#: note/urls.py
 msgid "^read/(?P<id>\\d+)/$"
 msgstr "^lu/(?P<id>\\d+)/$"
 
-#: urls.py:12
+#: note/urls.py
 msgid "^unread/(?P<id>\\d+)/$"
 msgstr "^nonlu/(?P<id>\\d+)/$"
 
-#: views.py:98
+#: note/views.py
 msgid "The note has been created."
+msgstr ""
+
+#: note/views.py
+#, python-format
+msgid "%(count)s note(s) have been updated."
 msgstr ""

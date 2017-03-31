@@ -2,158 +2,168 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 23:01+0000\n"
+"POT-Creation-Date: 2017-03-31 14:17-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: savoirfairelinux <support@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: meal/models.py:5
+#: meal/models.py
 msgid "Main Dish"
 msgstr "Plat principal"
 
-#: meal/models.py:6
+#: meal/models.py
 msgid "Dessert"
 msgstr "Dessert"
 
-#: meal/models.py:7
+#: meal/models.py
 msgid "Diabetic Dessert"
 msgstr "Dessert pour diabétique"
 
-#: meal/models.py:8
+#: meal/models.py
 msgid "Fruit Salad"
 msgstr "Salade de Fruit"
 
-#: meal/models.py:9
+#: meal/models.py
 msgid "Green Salad"
 msgstr "Salade verte"
 
-#: meal/models.py:10
+#: meal/models.py
 msgid "Pudding"
 msgstr "Pudding"
 
-#: meal/models.py:11
+#: meal/models.py
 msgid "Compote"
 msgstr "Compote"
 
-#: meal/models.py:17 meal/models.py:31
+#: meal/models.py
+msgid "Sides"
+msgstr ""
+
+#: meal/models.py
 msgid "Meat"
 msgstr "Viande"
 
-#: meal/models.py:18
+#: meal/models.py
 msgid "Dairy"
 msgstr "Produits laitiers"
 
-#: meal/models.py:19
+#: meal/models.py
 msgid "Fish"
 msgstr "Poisson"
 
-#: meal/models.py:20 meal/models.py:33
+#: meal/models.py
 msgid "Seafood"
 msgstr "Fruits de mer"
 
-#: meal/models.py:21
+#: meal/models.py
 msgid "Veggies and fruits"
 msgstr "Fruits et légumes"
 
-#: meal/models.py:22
+#: meal/models.py
 msgid "Legumineuse"
 msgstr "Légumineuses"
 
-#: meal/models.py:23
+#: meal/models.py
 msgid "Grains"
 msgstr "Céréales"
 
-#: meal/models.py:24
+#: meal/models.py
 msgid "Fresh herbs"
 msgstr "Fines herbes"
 
-#: meal/models.py:25
+#: meal/models.py
 msgid "Spices"
 msgstr "Épices"
 
-#: meal/models.py:26
+#: meal/models.py
 msgid "Dry and canned goods"
 msgstr "Conserves et produits déshydratés"
 
-#: meal/models.py:27
+#: meal/models.py
 msgid "Oils and sauces"
 msgstr "Huile, sauces"
 
-#: meal/models.py:32
+#: meal/models.py
 msgid "Vegetables"
 msgstr "Légumes"
 
-#: meal/models.py:34
+#: meal/models.py
 msgid "Seeds and nuts"
 msgstr "Noix et graines"
 
-#: meal/models.py:35
+#: meal/models.py
 msgid "Other"
 msgstr "Autres"
 
-#: meal/models.py:41
+#: meal/models.py
 msgid "ingredients"
 msgstr "ingrédients"
 
-#: meal/models.py:46 meal/models.py:74 meal/models.py:147
+#: meal/models.py
 msgid "name"
 msgstr "nom"
 
-#: meal/models.py:51 meal/models.py:79 meal/models.py:151
+#: meal/models.py
 msgid "description"
 msgstr "description"
 
-#: meal/models.py:59
+#: meal/models.py
 msgid "ingredient group"
 msgstr "groupe d'ingrédients"
 
-#: meal/models.py:69
-msgid "components"
-msgstr "composants (Plats et recettes)"
+#: meal/models.py
+msgid "components (Dishes and recipes)"
+msgstr ""
 
-#: meal/models.py:87
+#: meal/models.py
 msgid "component group"
 msgstr "groupe d'article"
 
-#: meal/models.py:112 meal/models.py:269
+#: meal/models.py
 msgid "component"
 msgstr "composant"
 
-#: meal/models.py:117 meal/models.py:180
+#: meal/models.py
 msgid "ingredient"
 msgstr "ingrédient"
 
-#: meal/models.py:121 meal/models.py:194
+#: meal/models.py
 msgid "date"
 msgstr "date"
 
-#: meal/models.py:141
-msgid "restricted items"
-msgstr "Catégories de restrictions"
+#: meal/models.py
+msgid "restricted items (Restriction categories)"
+msgstr ""
 
-#: meal/models.py:159
+#: meal/models.py
 msgid "restricted item group"
 msgstr "Type de catégorie de restrictions"
 
-#: meal/models.py:175
+#: meal/models.py
 msgid "restricted item"
 msgstr "Aliment avec restriction"
 
-#: meal/models.py:191
+#: meal/models.py
 msgid "menus"
 msgstr "menus"
 
-#: meal/models.py:264
+#: meal/models.py
 msgid "menu"
 msgstr "menu"
+
+#~ msgid "components"
+#~ msgstr "composants (Plats et recettes)"
+
+#~ msgid "restricted items"
+#~ msgstr "Catégories de restrictions"
