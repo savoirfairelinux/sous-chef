@@ -2,146 +2,196 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 23:01+0000\n"
+"POT-Creation-Date: 2017-03-28 12:43-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
-"Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
+"Language-Team: French (https://www.transifex.com/savoirfairelinux/"
+"teams/63058/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: order/forms.py:67 order/templates/_order_info.html:7
-#: order/templates/list.html:35 order/templates/order/create_batch.html:24
+#: order/forms.py:87 order/templates/_order_info.html:7
+#: order/templates/list.html:35 order/templates/order/create_batch.html:31
 msgid "Client"
 msgstr "Client"
 
-#: order/forms.py:74 order/templates/order/create_batch.html:29
+#: order/forms.py:99 order/templates/order/create_batch.html:37
 msgid "Delivery dates"
 msgstr "Dates de livraison"
 
-#: order/models.py:24
+#: order/forms.py:105
+#, fuzzy
+#| msgid "Delivery dates"
+msgid "Override dates"
+msgstr "Dates de livraison"
+
+#: order/forms.py:111
+msgid "Is form submit"
+msgstr ""
+
+#: order/forms.py:119
+msgid "This field must be 1 to submit the form."
+msgstr ""
+
+#: order/forms.py:147
+msgid "A reason is required for No Charge order."
+msgstr ""
+
+#: order/models.py:26
 msgid "Ordered"
 msgstr "Commandée"
 
-#: order/models.py:25
+#: order/models.py:27
 msgid "Delivered"
 msgstr "Livrée"
 
-#: order/models.py:26
+#: order/models.py:28
 msgid "No Charge"
 msgstr "Gratuit"
 
-#: order/models.py:27
+#: order/models.py:29
 msgid "Cancelled"
 msgstr "Annulé"
 
-#: order/models.py:28
+#: order/models.py:30
 msgid "Billed"
 msgstr "Facturée"
 
-#: order/models.py:29
+#: order/models.py:31
 msgid "Paid"
 msgstr "Payée"
 
-#: order/models.py:35
+#: order/models.py:37
 msgid "Serving size"
 msgstr "Taille du repas"
 
-#: order/models.py:36
+#: order/models.py:38
 msgid "Regular"
 msgstr "Standard"
 
-#: order/models.py:37
+#: order/models.py:39
 msgid "Large"
 msgstr "Grand"
 
-#: order/models.py:45
+#: order/models.py:47
 msgid "Meal component (main dish, vegetable, side dish, seasonal)"
 msgstr "Élément de repas (plat principal, légumes, à côté)"
 
-#: order/models.py:46
+#: order/models.py:48
 msgid "Delivery (general store item, invitation, ...)"
 msgstr "Livraison ( article de la boutique, invitation, etc)"
 
-#: order/models.py:47
+#: order/models.py:49
 msgid "Pickup (payment)"
 msgstr "Ramassage (paiement)"
 
-#: order/models.py:48
+#: order/models.py:50 order/models.py:1177
+#: order/templates/order/create_batch.html:123
 msgid "Visit"
 msgstr "Visite"
 
-#: order/models.py:239
+#: order/models.py:320
 msgid "orders"
 msgstr "commandes"
 
-#: order/models.py:244
+#: order/models.py:325
 msgid "creation date"
 msgstr "date de création"
 
-#: order/models.py:249
+#: order/models.py:330
 msgid "delivery date"
 msgstr "date de livraison"
 
-#: order/models.py:255
+#: order/models.py:336
 msgid "order status"
 msgstr "statut de la commande"
 
-#: order/models.py:261
+#: order/models.py:342
 msgid "client"
 msgstr "client"
 
-#: order/models.py:842
+#: order/models.py:1035
 msgid "Search by name"
 msgstr "Chercher par nom"
 
-#: order/models.py:904
+#: order/models.py:1096
 msgid "order items"
 msgstr "éléments de la commande"
 
-#: order/models.py:908
+#: order/models.py:1100
 msgid "order"
 msgstr "commande"
 
-#: order/models.py:915
+#: order/models.py:1108
 msgid "price"
 msgstr "prix"
 
-#: order/models.py:919
+#: order/models.py:1112
 msgid "billable flag"
 msgstr "facturable"
 
-#: order/models.py:923
+#: order/models.py:1116
 msgid "size"
 msgstr "taille"
 
-#: order/models.py:930
+#: order/models.py:1124
 msgid "order item type"
 msgstr "type d'éléments de commande"
 
-#: order/models.py:937
+#: order/models.py:1131
 msgid "remark"
 msgstr "remarque"
 
-#: order/models.py:943
+#: order/models.py:1137
 msgid "total quantity"
 msgstr "quantité"
 
-#: order/models.py:949
+#: order/models.py:1143
 msgid "free quantity"
 msgstr "quantité gratuite"
 
-#: order/models.py:957
+#: order/models.py:1151
 msgid "component group"
 msgstr "groupe d'article"
+
+#: order/models.py:1165 order/templates/order_confirm_delete.html:14
+msgid "Yes"
+msgstr "Oui"
+
+#: order/models.py:1167 order/templates/order_confirm_delete.html:13
+msgid "No"
+msgstr "Non"
+
+#: order/models.py:1171
+#, fuzzy
+#| msgid "Component"
+msgid "Meal component"
+msgstr "Élément"
+
+#: order/models.py:1173 order/templates/order/create_batch.html:97
+#, fuzzy
+#| msgid "Delivered"
+msgid "Delivery"
+msgstr "Livrée"
+
+#: order/models.py:1175 order/templates/order/create_batch.html:110
+msgid "Pickup"
+msgstr ""
+
+#: order/models.py:1235
+#, fuzzy
+#| msgid "order status"
+msgid "Invalid order status update."
+msgstr "statut de la commande"
 
 #: order/templates/_form.html:5 order/templates/_form.html:49
 #: order/templates/update.html:18
@@ -162,12 +212,12 @@ msgstr "Sélectionner un client"
 msgid "Order item"
 msgstr "éléments de la commande"
 
-#: order/templates/_order_info.html:14 order/templates/view.html:48
+#: order/templates/_order_info.html:14 order/templates/view.html:52
 msgid "Price"
 msgstr "Prix"
 
 #: order/templates/_order_info.html:21
-#: order/templates/order/partials/filters.html:22
+#: order/templates/order/partials/filters.html:23
 msgid "Delivery date"
 msgstr "Date de livraison"
 
@@ -175,8 +225,8 @@ msgstr "Date de livraison"
 msgid "Creation date"
 msgstr "Date de création"
 
-#: order/templates/create.html:6 order/templates/list.html:6
-#: order/templates/list.html:11 order/templates/update.html:6
+#: order/templates/create.html:6 order/templates/list.html:7
+#: order/templates/list.html:13 order/templates/update.html:6
 msgid "Orders"
 msgstr "Commandes"
 
@@ -188,19 +238,17 @@ msgstr "Nouvelle commande"
 msgid "Create"
 msgstr "Créer"
 
-#: order/templates/list.html:16
-msgid "New order"
-msgstr "Nouvelle commande"
-
 #: order/templates/list.html:19
-msgid "Multiple orders"
-msgstr "Commandes multiples"
+#, fuzzy
+#| msgid "New order"
+msgid "New orders"
+msgstr "Nouvelle commande"
 
 #: order/templates/list.html:22
 msgid "Or"
 msgstr "Ou"
 
-#: order/templates/list.html:32 order/templates/view.html:10
+#: order/templates/list.html:32 order/templates/view.html:12
 msgid "Order"
 msgstr "Commande"
 
@@ -220,7 +268,8 @@ msgstr "Date de Livraison"
 msgid "The delivery date planned for the order."
 msgstr "La date de livraison prévue pour la commande."
 
-#: order/templates/list.html:41 order/templates/order/partials/filters.html:16
+#: order/templates/list.html:41 order/templates/order/create_batch.html:160
+#: order/templates/order/partials/filters.html:17
 msgid "Status"
 msgstr "Statut"
 
@@ -248,43 +297,72 @@ msgstr ""
 msgid "Sorry, no result found"
 msgstr "Désolé, aucun résultat trouvé."
 
-#: order/templates/order/create_batch.html:7
-msgid "Place multiple orders for a client"
-msgstr "Placer plusieurs commandes pour un client."
-
-#: order/templates/order/create_batch.html:16
-msgid "Place multiple orders"
-msgstr "Placer plusieurs commandes"
-
-#: order/templates/order/create_batch.html:34
-msgid "Order items"
-msgstr "Éléments de la commande"
-
-#: order/templates/order/create_batch.html:40
-msgid "Size"
-msgstr "Taille"
-
-#: order/templates/order/create_batch.html:41 order/templates/view.html:44
-msgid "Component"
-msgstr "Élément"
-
-#: order/templates/order/create_batch.html:42
-msgid "Quantity"
-msgstr "Quantité"
-
-#: order/templates/order/create_batch.html:63
+#: order/templates/order/create_batch.html:8
+#: order/templates/order/create_batch.html:21
+#: order/templates/order/create_batch.html:136
+#: order/templates/order/create_batch.html:143
 msgid "Place orders"
 msgstr "Créer des commandes"
 
-#: order/templates/order/partials/filters.html:7
+#: order/templates/order/create_batch.html:38
+msgid "An order already exists on this day."
+msgstr ""
+
+#: order/templates/order/create_batch.html:43
+msgid "Order items"
+msgstr "Éléments de la commande"
+
+#: order/templates/order/create_batch.html:56
+msgid "Size"
+msgstr "Taille"
+
+#: order/templates/order/create_batch.html:57 order/templates/view.html:48
+msgid "Component"
+msgstr "Élément"
+
+#: order/templates/order/create_batch.html:58
+msgid "Quantity"
+msgstr "Quantité"
+
+#: order/templates/order/create_batch.html:140
+msgid "Please select one or multiple delivery dates."
+msgstr ""
+
+#: order/templates/order/create_batch.html:154
+#, fuzzy
+#| msgid "View Order"
+msgid "Override Order?"
+msgstr "Voir Commande"
+
+#: order/templates/order/create_batch.html:157
+#, python-format
+msgid ""
+"The following order(s) already exist(s) for <strong>%(firstname)s "
+"%(lastname)s</strong>:"
+msgstr ""
+
+#: order/templates/order/create_batch.html:164
+msgid "Would you like to override the above order(s), or cancel?"
+msgstr ""
+
+#: order/templates/order/create_batch.html:167
+#: order/templates/order_update_status.html:63 order/templates/update.html:24
+msgid "Cancel"
+msgstr "Annuler"
+
+#: order/templates/order/create_batch.html:168
+msgid "Override"
+msgstr ""
+
+#: order/templates/order/partials/filters.html:8
 msgid "Name"
 msgstr "Nom"
 
-#: order/templates/order/partials/filters.html:34
+#: order/templates/order/partials/filters.html:35
 msgid "Reset"
 msgstr "Réinitialiser"
 
-#: order/templates/order/partials/filters.html:35
+#: order/templates/order/partials/filters.html:36
 msgid "Search"
 msgstr "Recherche"
 
@@ -293,97 +371,143 @@ msgid "Delete Order"
 msgstr "Supprimer commande"
 
 #: order/templates/order_confirm_delete.html:9
-msgid ""
-"This order will be deleted and all the info will be lost, are you sure?"
+msgid "This order will be deleted and all the info will be lost, are you sure?"
 msgstr ""
 "Cette commande et toutes les informations vont être effacées. Êtes-vous "
 "sûr(e) ?"
 
-#: order/templates/order_confirm_delete.html:13
-msgid "No"
-msgstr "Non"
+#: order/templates/order_update_status.html:3
+msgid "Status modification"
+msgstr ""
 
-#: order/templates/order_confirm_delete.html:14
-msgid "Yes"
-msgstr "Oui"
+#: order/templates/order_update_status.html:22
+msgid "optional"
+msgstr ""
+
+#: order/templates/order_update_status.html:32
+msgid "required"
+msgstr ""
+
+#: order/templates/order_update_status.html:45
+msgid "Other:"
+msgstr ""
+
+#: order/templates/order_update_status.html:64
+msgid "OK"
+msgstr ""
 
 #: order/templates/update.html:11
 msgid "Update Order"
 msgstr "Mettre à jour la commande"
 
-#: order/templates/update.html:24
-msgid "Cancel"
-msgstr "Annuler"
-
-#: order/templates/update.html:25 order/templates/view.html:74
+#: order/templates/update.html:25 order/templates/view.html:83
 msgid "Update"
 msgstr "Mettre à jour"
 
-#: order/templates/view.html:5
+#: order/templates/view.html:6
 msgid "View Order"
 msgstr "Voir Commande"
 
-#: order/templates/view.html:35
+#: order/templates/view.html:39
 msgid "Order detail"
 msgstr "Détails de la commande"
 
-#: order/templates/view.html:37
+#: order/templates/view.html:41
 msgid "Order items attached to the order"
 msgstr "Articles de la commande"
 
-#: order/templates/view.html:45
+#: order/templates/view.html:49
 msgid "Description"
 msgstr "Description"
 
-#: order/templates/view.html:46
+#: order/templates/view.html:50
 msgid "Total Quantity"
 msgstr "Quantité totale"
 
-#: order/templates/view.html:47
+#: order/templates/view.html:51
 msgid "Billable"
 msgstr "Facturable"
 
-#: order/templates/view.html:63
+#: order/templates/view.html:71
 msgid "Total"
 msgstr "Total"
 
-#: order/templates/view.html:73
+#: order/templates/view.html:82
 msgid "Delete"
 msgstr "Supprimer"
 
-#: order/urls.py:14
+#: order/urls.py:17
 msgid "^list/$"
 msgstr "^list/$"
 
-#: order/urls.py:15
+#: order/urls.py:18
 msgid "^view/(?P<pk>\\d+)/$"
 msgstr "^view/(?P<pk>\\d+)/$"
 
-#: order/urls.py:16
+#: order/urls.py:19
 msgid "^create/$"
 msgstr "^create/$"
 
-#: order/urls.py:18
+#: order/urls.py:21
 msgid "^create/batch$"
 msgstr ""
 
-#: order/urls.py:21
+#: order/urls.py:24
 msgid "^update/(?P<pk>\\d+)/$"
 msgstr "^update/(?P<pk>\\d+)/$"
 
-#: order/urls.py:23
+#: order/urls.py:26
 msgid "^update/(?P<pk>\\d+)/status$"
 msgstr "^update/(?P<pk>\\d+)/status$"
 
-#: order/urls.py:27
+#: order/urls.py:31
+#, fuzzy
+#| msgid "^update/(?P<pk>\\d+)/$"
+msgid "^update/(?P<pk>\\d+)/client_bill$"
+msgstr "^update/(?P<pk>\\d+)/$"
+
+#: order/urls.py:35
 msgid "^delete/(?P<pk>\\d+)/$"
 msgstr "^delete/(?P<pk>\\d+)/$"
 
-#: order/views.py:121
-msgid "Default"
-msgstr "Défaut"
-
-#: order/views.py:138
+#: order/views.py:268
 #, python-format
-msgid "%(n)s order(s) successfully placed for %(client)s."
+msgid "%(n)s order(s) successfully placed for %(client)s on %(dates)s."
 msgstr ""
+
+#: order/views.py:278
+#, python-format
+msgid "%(n)s existing order(s) skipped for %(client)s on %(dates)s."
+msgstr ""
+
+#: order/views.py:329
+msgid "Restrictions mistake"
+msgstr ""
+
+#: order/views.py:330
+#, fuzzy
+#| msgid "Delivery date"
+msgid "Delivery mistake"
+msgstr "Date de livraison"
+
+#: order/views.py:331
+#, fuzzy
+#| msgid "Select a client"
+msgid "Really unhappy client"
+msgstr "Sélectionner un client"
+
+#: order/views.py:347
+msgid "The status has been changed"
+msgstr ""
+
+#~ msgid "Multiple orders"
+#~ msgstr "Commandes multiples"
+
+#~ msgid "Place multiple orders for a client"
+#~ msgstr "Placer plusieurs commandes pour un client."
+
+#~ msgid "Place multiple orders"
+#~ msgstr "Placer plusieurs commandes"
+
+#~ msgid "Default"
+#~ msgstr "Défaut"

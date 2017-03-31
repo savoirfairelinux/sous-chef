@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-23 10:31-0400\n"
+"POT-Creation-Date: 2017-03-23 11:22-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/"
@@ -19,205 +19,209 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: forms.py:25 forms.py:262 forms.py:264
+#: forms.py:23 forms.py:260 forms.py:262
 #: templates/client/view/information.html:34
 #: templates/client/view/information.html:73
 #: templates/client/view/payment.html:32 templates/client/view/referent.html:32
 msgid "First Name"
 msgstr "Prénom"
 
-#: forms.py:26
+#: forms.py:24
 msgid "First name"
 msgstr "Prénom"
 
-#: forms.py:31 forms.py:271 forms.py:273
+#: forms.py:29 forms.py:269 forms.py:271
 #: templates/client/view/information.html:35
 #: templates/client/view/information.html:74
 #: templates/client/view/payment.html:35 templates/client/view/referent.html:33
 msgid "Last Name"
 msgstr "Nom de famille"
 
-#: forms.py:32
+#: forms.py:30
 msgid "Last name"
 msgstr "Nom de famille"
 
-#: forms.py:42
+#: forms.py:40
 msgid "Preferred language"
 msgstr "Langue d'usage"
 
-#: forms.py:47 templates/client/view/information.html:39
+#: forms.py:45 templates/client/view/information.html:39
 msgid "Birthday"
 msgstr "Date de naissance"
 
-#: forms.py:51 forms.py:348 forms.py:498
+#: forms.py:49 forms.py:346 forms.py:496
 msgid "YYYY-MM-DD"
 msgstr ""
 
-#: forms.py:54 forms.py:351 forms.py:501
+#: forms.py:52 forms.py:349 forms.py:499
 msgid "Format: YYYY-MM-DD"
 msgstr ""
 
-#: forms.py:60 forms.py:281
+#: forms.py:58 forms.py:279
 msgid "Email"
 msgstr "Courriel"
 
-#: forms.py:66
+#: forms.py:64
 msgid "Home phone"
 msgstr "Téléphone au domicile"
 
-#: forms.py:72 forms.py:293
+#: forms.py:70 forms.py:291
 msgid "Cellular"
 msgstr "Cellulaire"
 
-#: forms.py:77 templates/client/partials/forms/basic_information.html:67
+#: forms.py:75 templates/client/partials/forms/basic_information.html:67
 msgid "Alert"
 msgstr "Alerte"
 
-#: forms.py:81
+#: forms.py:79
 msgid "Your message here ..."
 msgstr "Votre message ici ..."
 
-#: forms.py:89
+#: forms.py:87
 msgid "At least one contact information is required."
 msgstr "Au moins une information de contact est requise."
 
-#: forms.py:100 forms.py:102 forms.py:396 forms.py:397
+#: forms.py:98 forms.py:100 forms.py:394 forms.py:395
 msgid "Apt #"
 msgstr "# Appart."
 
-#: forms.py:110
+#: forms.py:108
 #, fuzzy
 msgid "Address Information"
 msgstr "Adresse Civile"
 
-#: forms.py:112
+#: forms.py:110
 msgid "7275 Rue Saint-Urbain"
 msgstr ""
 
-#: forms.py:119
+#: forms.py:117
 msgid "City"
 msgstr "Ville"
 
-#: forms.py:121
+#: forms.py:119
 msgid "Montreal"
 msgstr "Montréal"
 
-#: forms.py:128 forms.py:407
+#: forms.py:126 forms.py:405
 msgid "Postal Code"
 msgstr "Code Postal"
 
-#: forms.py:130
+#: forms.py:128
 msgid "H2R 2Y5"
 msgstr "H2R 2Y5"
 
-#: forms.py:136
+#: forms.py:134
 msgid "Latitude"
 msgstr "Latitude"
 
-#: forms.py:143
+#: forms.py:141
 msgid "Longitude"
 msgstr "Longitude"
 
-#: forms.py:150
+#: forms.py:148
 msgid "Distance from Santropol"
 msgstr "Distance du Santropol Roulant"
 
-#: forms.py:157 templates/client/list.html:102
+#: forms.py:155 templates/client/list.html:102
 #: templates/client/partials/filters.html:16
 #: templates/client/view/information.html:49
 msgid "Route"
 msgstr "Route"
 
-#: forms.py:164 models.py:556 templates/client/view/information.html:50
+#: forms.py:162 models.py:556 templates/client/view/information.html:50
 msgid "Delivery Note"
 msgstr "Notes de Livraison"
 
-#: forms.py:168
+#: forms.py:166
 msgid "Delivery Note here ..."
 msgstr "Vos notes de livraison ici ..."
 
-#: forms.py:178 models.py:43 templates/client/partials/forms/meal_prefs.html:6
+#: forms.py:176 models.py:43 templates/client/partials/forms/meal_prefs.html:6
 msgid "Default"
 msgstr "Par Défaut"
 
-#: forms.py:197 models.py:450
+#: forms.py:195 models.py:450
 msgid "Active"
 msgstr "Actif"
 
-#: forms.py:198
+#: forms.py:196
 msgid "By default, the client meal status is Pending."
 msgstr "Par défaut, le statut sera 'En attente'."
 
-#: forms.py:203
+#: forms.py:201
 msgid "Type"
 msgstr "Type"
 
-#: forms.py:210
+#: forms.py:208
 msgid "Schedule"
 msgstr "Calendrier"
 
-#: forms.py:218 templates/client/view/allergies.html:36
+#: forms.py:216 templates/client/view/allergies.html:36
 msgid "Restrictions"
 msgstr "Restrictions"
 
-#: forms.py:225 models.py:66
+#: forms.py:223 models.py:66
 msgid "Preparation"
 msgstr "Préparation"
 
-#: forms.py:232
+#: forms.py:230
 msgid "Ingredient To Avoid"
 msgstr "Ingrédients à éviter"
 
-#: forms.py:241
+#: forms.py:239
 msgid "Dish(es) To Avoid"
 msgstr "Plats à éviter"
 
-#: forms.py:253 forms.py:255
+#: forms.py:251
 msgid "Member"
 msgstr "Membre"
 
-#: forms.py:287
+#: forms.py:253
+msgid "Type 3 characters or more to search members"
+msgstr "Tapez 3 ou plus caractères pour rechercher des membres"
+
+#: forms.py:285
 msgid "Work phone"
 msgstr "Téléphone professionnel"
 
-#: forms.py:309
+#: forms.py:307
 msgid "This field is required unless you add a new member."
 msgstr "Ce champ est requis sauf si vous souhaitez ajouter un nouveau membre."
 
-#: forms.py:312 forms.py:364 forms.py:456 forms.py:462
+#: forms.py:310 forms.py:362 forms.py:454 forms.py:460
 msgid "This field is required unless you chose an existing member."
 msgstr ""
 "Ce champ est requis à moins que vous ne choisissiez un membre existant."
 
-#: forms.py:322 forms.py:451
+#: forms.py:320 forms.py:449
 msgid "Not a valid member, please chose an existing member."
 msgstr "Membre non valide. Veuillez choisir un membre existant."
 
-#: forms.py:331 models.py:124
+#: forms.py:329 models.py:124
 msgid "Work information"
 msgstr "Lieu de travail"
 
-#: forms.py:333
+#: forms.py:331
 msgid "Hotel-Dieu, St-Anne Hospital, ..."
 msgstr "Hôtel-Dieu, Hôpital Sainte-Anne, ..."
 
-#: forms.py:339 templates/client/view/referent.html:36
+#: forms.py:337 templates/client/view/referent.html:36
 msgid "Referral Reason"
 msgstr "Raison du référencement"
 
-#: forms.py:344 templates/client/view/referent.html:35
+#: forms.py:342 templates/client/view/referent.html:35
 msgid "Referral Date"
 msgstr "Date du référencement"
 
-#: forms.py:373
+#: forms.py:371
 msgid "Billing Type"
 msgstr "Type de Facturation"
 
-#: forms.py:379
+#: forms.py:377
 msgid "Same As Client"
 msgstr "Identique au Client"
 
-#: forms.py:381
+#: forms.py:379
 msgid ""
 "If checked, the personal information             of the client will be used "
 "as billing information."
@@ -225,27 +229,27 @@ msgstr ""
 "Si sélectionné, les informations personnelles du client seront utilisées "
 "pour la facturation.."
 
-#: forms.py:387 models.py:476
+#: forms.py:385 models.py:476
 msgid "Payment Type"
 msgstr "Type de Paiement"
 
-#: forms.py:393
+#: forms.py:391
 msgid "Street Number"
 msgstr "Numéro de rue"
 
-#: forms.py:401
+#: forms.py:399
 msgid "Floor"
 msgstr "Étage"
 
-#: forms.py:403
+#: forms.py:401
 msgid "Street Name"
 msgstr "Rue"
 
-#: forms.py:405
+#: forms.py:403
 msgid "City Name"
 msgstr "Ville"
 
-#: forms.py:420
+#: forms.py:418
 msgid ""
 "This member has not a valid address, please add a valid address to this "
 "member, so it can be used for the billing."
@@ -253,19 +257,19 @@ msgstr ""
 "Ce membre ne possède pas une adresse valide. Veillez ajouter une adresse "
 "valide afin qu'elle puisse être utilisée pour la facturation."
 
-#: forms.py:425
+#: forms.py:423
 msgid "This field is required"
 msgstr "Ce champ est requis"
 
-#: forms.py:437 templates/client/view/information.html:75
+#: forms.py:435 templates/client/view/information.html:75
 msgid "Relationship"
 msgstr "Lien"
 
-#: forms.py:439
+#: forms.py:437
 msgid "Parent, friend, ..."
 msgstr "Parent, ami(e), ..."
 
-#: forms.py:469
+#: forms.py:467
 msgid "At least one emergency contact is required."
 msgstr "Au moins un contact d'urgence est requis."
 
@@ -417,11 +421,11 @@ msgstr "contacts"
 msgid "contact type"
 msgstr "type de contact"
 
-#: models.py:306 models.py:1139
+#: models.py:306 models.py:1126
 msgid "value"
 msgstr "valeur"
 
-#: models.py:311 models.py:492 models.py:1076
+#: models.py:311 models.py:492 models.py:1063
 msgid "member"
 msgstr "membre"
 
@@ -429,11 +433,11 @@ msgstr "membre"
 msgid "Routes"
 msgstr "Routes"
 
-#: models.py:340 models.py:1102
+#: models.py:340 models.py:1089
 msgid "name"
 msgstr "nom"
 
-#: models.py:344 models.py:1106
+#: models.py:344 models.py:1093
 msgid "description"
 msgstr "description"
 
@@ -485,7 +489,7 @@ msgstr "personne à facturer"
 msgid "rate type"
 msgstr "type de taux"
 
-#: models.py:498 models.py:1085
+#: models.py:498 models.py:1072
 msgid "emergency contacts"
 msgstr "contacts d'urgence"
 
@@ -517,64 +521,60 @@ msgstr "Traité"
 msgid "Error"
 msgstr "Erreur"
 
-#: models.py:887
-msgid "Client Scheduled Status Pair"
-msgstr "Paire de statut planifiés du client"
-
-#: models.py:987
+#: models.py:974
 msgid "All"
 msgstr "Tout"
 
-#: models.py:1000
+#: models.py:987
 msgid "Search by name"
 msgstr "Recherche par nom"
 
-#: models.py:1040
+#: models.py:1027
 msgid "referents"
 msgstr "référents"
 
-#: models.py:1044
+#: models.py:1031
 msgid "referent"
 msgstr "référent"
 
-#: models.py:1050 models.py:1074 models.py:1124 models.py:1156 models.py:1177
-#: models.py:1198
+#: models.py:1037 models.py:1061 models.py:1111 models.py:1143 models.py:1164
+#: models.py:1185
 msgid "client"
 msgstr "client"
 
-#: models.py:1056 templates/client/partials/forms/referent_information.html:70
+#: models.py:1043 templates/client/partials/forms/referent_information.html:70
 msgid "Referral reason"
 msgstr "Raison du référencement"
 
-#: models.py:1060
+#: models.py:1047
 msgid "Referral date"
 msgstr "Date du référencement"
 
-#: models.py:1079
+#: models.py:1066
 msgid "relationship"
 msgstr "lien"
 
-#: models.py:1097
+#: models.py:1084
 msgid "options"
 msgstr "options"
 
-#: models.py:1114
+#: models.py:1101
 msgid "option group"
 msgstr "groupe d'options"
 
-#: models.py:1131
+#: models.py:1118
 msgid "option"
 msgstr "option"
 
-#: models.py:1163
+#: models.py:1150
 msgid "restricted item"
 msgstr "item restreint"
 
-#: models.py:1184
+#: models.py:1171
 msgid "ingredient"
 msgstr "ingrédient"
 
-#: models.py:1205
+#: models.py:1192
 msgid "component"
 msgstr "composant"
 
@@ -801,7 +801,7 @@ msgstr "Bonne Fête"
 
 #: templates/client/partials/birthdays.html:9
 msgid "Age"
-msgstr ""
+msgstr "Âge"
 
 #: templates/client/partials/birthdays.html:10
 #: templates/client/view/status.html:42
@@ -995,7 +995,6 @@ msgid "End date"
 msgstr "Date de fin"
 
 #: templates/client/update/status.html:45
-#: templates/client/view/delete_status_confirmation.html:33
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -1051,66 +1050,6 @@ msgstr "Calendrier des repas"
 #: templates/client/view/allergies.html:97
 msgid "Meal default schedule of the referent person"
 msgstr ""
-
-#: templates/client/view/delete_status_confirmation.html:3
-msgid "Remove Scheduled Status Confirmation"
-msgstr "Confirmation pour supprimer le statut planifié"
-
-#: templates/client/view/delete_status_confirmation.html:7
-#, python-format
-msgid ""
-"\n"
-"            Your are trying to remove the scheduled status related to the "
-"client <strong>%(client)s</strong>,\n"
-"            in order to change the status from <strong>%(from)s</strong> to "
-"<strong>%(to)s</strong> the\n"
-"            next <strong>%(date)s</strong>.\n"
-"        "
-msgstr ""
-"\n"
-"            Vous etes en train de supprimer le statut planifié lié au "
-"client <strong>%(client)s</strong>,\n"
-"            afin de modifier le statut de <strong>%(from)s</strong> à "
-"<strong>%(to)s</strong> le\n"
-"            prochaine <strong>%(date)s</strong>.\n"
-"        "
-
-#: templates/client/view/delete_status_confirmation.html:16
-#, python-format
-msgid ""
-"\n"
-"                    The scheduled status to be removed, is directly related "
-"to the scheduled status to change the status from\n"
-"                    <strong>%(from)s</strong> to <strong>%(to)s</strong> the "
-"next <strong>%(date)s</strong>.\n"
-"                    If you finally accept, both scheduled status will be "
-"removed.\n"
-"                "
-msgstr ""
-"\n"
-"                    Le statut qui va être supprimé, c'est directement lié "
-"à le status planifié pour changer le statut de\n"
-"                    <strong>%(from)s</strong> à <strong>%(to)s</strong> le "
-"prochaine <strong>%(date)s</strong>.\n"
-"                    Si vous acceptez finalement, les deux statuts programmés "
-"seront supprimés.\n"
-"                "
-
-#: templates/client/view/delete_status_confirmation.html:25
-msgid ""
-"\n"
-"            Press <strong>Cancel</strong> to avoid or <strong>Accept</"
-"strong> to complete this operation.\n"
-"        "
-msgstr ""
-"\n"
-"            Appuyez sur <strong>Annuler</strong> pour éviter ou <strong>Accepter</"
-"strong> pour terminer cette opération.\n"
-"        "
-
-#: templates/client/view/delete_status_confirmation.html:34
-msgid "Accept"
-msgstr "Accepter"
 
 #: templates/client/view/information.html:19
 msgid "Basic information"
@@ -1266,13 +1205,9 @@ msgstr "Raison"
 msgid "Operation status"
 msgstr "Statut"
 
-#: templates/client/view/status.html:53
+#: templates/client/view/status.html:52
 msgid "No status modification."
 msgstr "Aucun changement de statut."
-
-#: templates/client/view/status.html:63
-msgid "Remove"
-msgstr "Supprimer"
 
 #: templates/client/view/summary.html:21
 msgid "Home"
@@ -1288,75 +1223,75 @@ msgstr ""
 msgid "%(count)s %(component_label)s"
 msgstr ""
 
-#: urls.py:61
+#: urls.py:60
 msgid "^view/(?P<pk>\\d+)/$"
 msgstr ""
 
-#: urls.py:62
+#: urls.py:61
 msgid "^view/(?P<pk>\\d+)/orders$"
 msgstr ""
 
-#: urls.py:64
+#: urls.py:63
 msgid "^view/(?P<pk>\\d+)/information$"
 msgstr ""
 
-#: urls.py:66
+#: urls.py:65
 msgid "^view/(?P<pk>\\d+)/referent$"
 msgstr ""
 
-#: urls.py:68
+#: urls.py:67
 msgid "^view/(?P<pk>\\d+)/billing$"
 msgstr ""
 
-#: urls.py:70
+#: urls.py:69
 msgid "^view/(?P<pk>\\d+)/preferences$"
 msgstr ""
 
-#: urls.py:72
+#: urls.py:71
 msgid "^view/(?P<pk>\\d+)/notes$"
 msgstr ""
 
-#: urls.py:74
+#: urls.py:73
 msgid "^view/(?P<pk>\\d+)/notes/add$"
 msgstr ""
 
-#: urls.py:76
+#: urls.py:75
 msgid "^geolocateAddress/$"
 msgstr ""
 
-#: urls.py:77
+#: urls.py:76
 msgid "^view/(?P<pk>\\d+)/status$"
 msgstr ""
 
-#: urls.py:86
+#: urls.py:80
 msgid "^restriction/(?P<pk>\\d+)/delete/$"
 msgstr ""
 
-#: urls.py:88
+#: urls.py:82
 msgid "^client_option/(?P<pk>\\d+)/delete/$"
 msgstr ""
 
-#: urls.py:90
+#: urls.py:84
 msgid "^ingredient_to_avoid/(?P<pk>\\d+)/delete/$"
 msgstr ""
 
-#: urls.py:92
+#: urls.py:86
 msgid "^component_to_avoid/(?P<pk>\\d+)/delete/$"
 msgstr ""
 
-#: urls.py:113
+#: urls.py:107
 msgid "^(?P<pk>\\d+)/update/{}/$"
 msgstr ""
 
-#: views.py:95
+#: views.py:96
 msgid "The client has been created"
 msgstr "Le client a été crée"
 
-#: views.py:863
+#: views.py:864
 msgid "The client has been updated"
 msgstr "Le client a été mis à jour"
 
-#: views.py:1442
+#: views.py:1466
 msgid "The status has been changed"
 msgstr "Le statut a été changé"
 
