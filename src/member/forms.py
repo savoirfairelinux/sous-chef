@@ -508,7 +508,7 @@ class ClientScheduledStatusForm(forms.ModelForm):
 
             # Immediate status update (schedule and process)
             if self.cleaned_data.get('change_date') == date.today():
-                self.object.process()
+                instance.process()
 
             if end_date:
                 # Schedule a time range during which status will be different,

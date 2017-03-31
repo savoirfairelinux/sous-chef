@@ -2024,6 +2024,42 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
         self.assertEqual(scheduled_change.reason, 'Holidays')
         self.assertEqual(scheduled_change.get_pair, None)
 
+    def test_view_client_status_update_to_by_processed_immediately(self):
+        admin = User.objects.create_superuser(
+            username='admin@example.com',
+            email='admin@example.com',
+            password='test1234'
+        )
+        self.client.login(username=admin.username, password='test1234')
+        data = {
+            'client': self.active_client.id,
+            'status_from': self.active_client.status,
+            'status_to': Client.STOPCONTACT,
+            'reason': 'Holidays',
+            # set today to be processed immediately
+            'change_date': date.today().isoformat(),
+            'end_date': '',
+        }
+        self.client.post(
+            reverse_lazy('member:clientStatusScheduler',
+                         kwargs={'pk': self.active_client.id}),
+            data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+            follow=True,
+        )
+        client = Client.objects.get(pk=self.active_client.id)
+        scheduled_change = ClientScheduledStatus.objects.get(
+            client=client.id
+        )
+        self.assertEqual(
+            scheduled_change.operation_status,
+            ClientScheduledStatus.PROCESSED
+        )
+        self.assertEqual(scheduled_change.status_to, Client.STOPCONTACT)
+        self.assertEqual(client.status, Client.STOPCONTACT)
+        self.assertEqual(scheduled_change.reason, 'Holidays')
+        self.assertEqual(scheduled_change.get_pair, None)
+
     def test_view_client_status_delete_without_pair(self):
         admin = User.objects.create_superuser(
             username='admin@example.com',
