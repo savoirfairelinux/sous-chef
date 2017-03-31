@@ -1,28 +1,57 @@
 ## Instructions for internationalization
 
+### Additional requirements when specifying a translatable string
+
+1. In HTML templates, always use `{% blocktrans trimmed %}` instead of `{% blocktrans %}`. This can remove noisy newlines and indent spaces, allowing developers to have a more readable code and avoiding translators getting confused.
+2. For multiline Python strings, use string literal concatenation instead of line break:
+   - Do:
+
+        ```python
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            (_('%(n)s order(s) successfully placed '
+               'for %(client)s on %(dates)s.') % { ...
+        ```
+
+   - Don't:
+
+        ```python
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            (_('%(n)s order(s) successfully placed \
+                for %(client)s on %(dates)s.') % { ...
+        ```
+
+   - Why: a line break will also cause a few spaces between the lines, depending on the indentation level.
+
+3. Provide translator comments if you feel necessary. Translators may know very little about the context.
+   - In Python: use [pgettext()](https://docs.djangoproject.com/en/1.10/ref/utils/#django.utils.translation.pgettext) or [translator comments](https://docs.djangoproject.com/en/1.10/topics/i18n/translation/#comments-for-translators).
+   - In HTML templates: use [translator comments](https://docs.djangoproject.com/en/1.10/topics/i18n/translation/#comments-for-translators-in-templates).
+
 ### Updating .po files for every pull request, if applicable
 
 If commits in your pull request have introduced new translatable content, you must update the .po files and include them in your pull request.
 
 1. `docker exec -it souschef_web_1 bash`
-3. `cd src`
-4. `python3 manage.py makemessages -l fr -l en` to update the various django.po
-files with your new strings.
-5. Commit the changes to your branch to be included in the pull request. Commit only the `django.po` files related to the module that you have worked on, even if Django has updated the `django.po` files in other modules as well.
+2. `cd src`
+3. `python3 manage.py makemessages -l fr --no-wrap --add-location=file` to update the various django.po files with your new strings.
+4. Commit the changes to your branch to be included in the pull request. Commit only the `django.po` files related to the module that you have worked on, even if Django has updated the `django.po` files in other modules as well.
 
 ### How the project gets translated
+
 We use Transifex to translate the sous-chef project. In a nutshell, Transifex regularly obtains the translation (.po) files from this Django project, and translators can contribute on the [Transifex website](https://www.transifex.com/savoirfairelinux/sous-chef). Once in a while, a project member can run `tx pull` in the Docker container's root directory to pull (and then commit) the new translations.
 
 ### Enabling translations for a new Django application.
+
 1. In your application create a folder `locale`
-2. In `settings.py` add the locale path in `LOCALE_PATHS`,
-  for example
-```
+2. In `settings.py` add the locale path in `LOCALE_PATHS`, for example:
+
+    ```python
     LOCALE_PATHS = (
-    'meal/locale/',
-    'member/locale/',
-    'notification/locale/',
-    'order/locale/',
-    'page/locale/',
+        'meal/locale/',
+        'member/locale/',
+        'notification/locale/',
+        'order/locale/',
+        'page/locale/',
     )
-```
+    ```

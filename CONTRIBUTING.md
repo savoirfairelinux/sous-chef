@@ -102,20 +102,9 @@ Each Django module comes with its own `tests.py` file. Feel free to implement mi
 
 ### Translating
 
-Sous-Chef is a bilingual (french/english) application and needs your talent of translators!
+Sous-Chef is a bilingual (French/English) application and needs your talent of translators!
 
-It uses Django multilingual framework, based on Gettext and po files.
-
-Each module has its own set of translation files. To list them all:
-
-```
-$ find . -name "*.po"
-```
-
-[Poedit](https://poedit.net/) can be used to translate those files.
-Follow the workflow described in the Code section to contribute your translations.
-
-An other way to contribute there is to review the code and make sure all strings are translatable.
+We use Transifex to translate the Sous-Chef project. Please visit [Sous-Chef on Transifex](https://www.transifex.com/savoirfairelinux/sous-chef) if you are interested!
 
 ## Additional notes
 
