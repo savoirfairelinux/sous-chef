@@ -140,6 +140,11 @@ class BillingCreateViewTestCase(SousChefTestMixin, TestCase):
         url = reverse('billing:create')
         # Run
         response = self.client.get(
+            url, {'delivery_date': ''}, follow=True)
+        # Check
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('error message' in repr(response.content))
+        response = self.client.get(
             url, {'delivery_date': '2016-1'}, follow=True)
         # Check
         self.assertEqual(response.status_code, 200)
