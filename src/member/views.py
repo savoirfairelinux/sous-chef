@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseBadRequest
 from django.urls import reverse_lazy, reverse
 from django.db.models import Q
 from django.db.transaction import atomic
@@ -1449,8 +1450,10 @@ class ClientStatusScheduler(
         )
 
 
-class ClientStatusSchedulerDeleteView(generic.DeleteView):
+class ClientStatusSchedulerDeleteView(
+        PermissionRequiredMixin, generic.DeleteView):
     model = ClientScheduledStatus
+    permission_required = 'sous_chef.edit'
     template_name = "client/view/delete_status_confirmation.html"
 
     def get_success_url(self):
