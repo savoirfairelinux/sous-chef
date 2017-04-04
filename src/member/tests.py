@@ -2067,20 +2067,19 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
             password='test1234'
         )
         self.client.login(username=admin.username, password='test1234')
-        data = {
-            'client': self.active_client.id,
-            'status_from': self.active_client.status,
-            'status_to': Client.STOPCONTACT,
-            'reason': 'Holidays',
-            'change_date': '2019-09-23',
-            'end_date': '',
-        }
         self.client.post(
             reverse_lazy(
                 'member:clientStatusScheduler',
                 kwargs={'pk': self.active_client.id}
             ),
-            data,
+            {
+                'client': self.active_client.id,
+                'status_from': self.active_client.status,
+                'status_to': Client.STOPCONTACT,
+                'reason': 'Holidays',
+                'change_date': '2019-09-23',
+                'end_date': '',
+            },
             HTTP_X_REQUESTED_WITH='XMLHttpRequest',
             follow=True,
         )
@@ -2092,9 +2091,6 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
                 'member:delete_status',
                 kwargs={'pk': ClientScheduledStatus.objects.first().id}
             ),
-            data,
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
-            follow=True,
         )
 
         self.assertEqual(0, ClientScheduledStatus.objects.count())
@@ -2106,20 +2102,19 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
             password='test1234'
         )
         self.client.login(username=admin.username, password='test1234')
-        data = {
-            'client': self.active_client.id,
-            'status_from': self.active_client.status,
-            'status_to': Client.PAUSED,
-            'reason': 'Holidays',
-            'change_date': '2018-09-23',
-            'end_date': '2018-10-02',
-        }
         self.client.post(
             reverse_lazy(
                 'member:clientStatusScheduler',
                 kwargs={'pk': self.active_client.id}
             ),
-            data,
+            {
+                'client': self.active_client.id,
+                'status_from': self.active_client.status,
+                'status_to': Client.PAUSED,
+                'reason': 'Holidays',
+                'change_date': '2018-09-23',
+                'end_date': '2018-10-02',
+            },
             HTTP_X_REQUESTED_WITH='XMLHttpRequest',
             follow=True
         )
@@ -2133,10 +2128,7 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
             reverse_lazy(
                 'member:delete_status',
                 kwargs={'pk': client_status_base.id}
-            ),
-            data,
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
-            follow=True,
+            )
         )
 
         self.assertEqual(0, ClientScheduledStatus.objects.count())
@@ -2148,20 +2140,19 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
             password='test1234'
         )
         self.client.login(username=admin.username, password='test1234')
-        data = {
-            'client': self.active_client.id,
-            'status_from': self.active_client.status,
-            'status_to': Client.PAUSED,
-            'reason': 'Holidays',
-            'change_date': '2018-09-23',
-            'end_date': '2018-10-02',
-        }
         self.client.post(
             reverse_lazy(
                 'member:clientStatusScheduler',
                 kwargs={'pk': self.active_client.id}
             ),
-            data,
+            {
+                'client': self.active_client.id,
+                'status_from': self.active_client.status,
+                'status_to': Client.PAUSED,
+                'reason': 'Holidays',
+                'change_date': '2018-09-23',
+                'end_date': '2018-10-02',
+            },
             HTTP_X_REQUESTED_WITH='XMLHttpRequest',
             follow=True
         )
@@ -2175,13 +2166,92 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
             reverse_lazy(
                 'member:delete_status',
                 kwargs={'pk': client_status_base.id}
-            ),
-            data,
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
-            follow=True,
+            )
         )
 
         self.assertEqual(0, ClientScheduledStatus.objects.count())
+
+    def test_view_client_status_delete_with_not_logged_user(self):
+        admin = User.objects.create_superuser(
+            username='admin@example.com',
+            email='admin@example.com',
+            password='test1234'
+        )
+        self.client.login(username=admin.username, password='test1234')
+        self.client.post(
+            reverse_lazy(
+                'member:clientStatusScheduler',
+                kwargs={'pk': self.active_client.id}
+            ),
+            {
+                'client': self.active_client.id,
+                'status_from': self.active_client.status,
+                'status_to': Client.PAUSED,
+                'reason': 'Holidays',
+                'change_date': '2018-09-23',
+                'end_date': '',
+            },
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+            follow=True
+        )
+
+        self.assertEqual(1, ClientScheduledStatus.objects.count())
+
+        self.client.logout()
+
+        client_status_base = ClientScheduledStatus.objects.first()
+        response = self.client.post(
+            reverse_lazy(
+                'member:delete_status',
+                kwargs={'pk': client_status_base.id}
+            )
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_view_client_status_delete_with_not_admin_user(self):
+        admin = User.objects.create_superuser(
+            username='admin@example.com',
+            email='admin@example.com',
+            password='test1234'
+        )
+        user = User.objects.create_user(
+            username='user@example.com',
+            email='user@example.com',
+            password='user1234'
+        )
+        self.client.login(username=admin.username, password='test1234')
+        self.client.post(
+            reverse_lazy(
+                'member:clientStatusScheduler',
+                kwargs={'pk': self.active_client.id}
+            ),
+            {
+                'client': self.active_client.id,
+                'status_from': self.active_client.status,
+                'status_to': Client.PAUSED,
+                'reason': 'Holidays',
+                'change_date': '2018-09-23',
+                'end_date': '2018-10-02',
+            },
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+            follow=True
+        )
+
+        self.assertEqual(2, ClientScheduledStatus.objects.count())
+
+        self.client.logout()
+        self.client.login(username=user.username, password='user1234')
+
+        client_status_base = ClientScheduledStatus.objects.first()
+        response = self.client.post(
+            reverse_lazy(
+                'member:delete_status',
+                kwargs={'pk': client_status_base.id}
+            )
+        )
+
+        self.assertEqual(response.status_code, 400)
 
 
 class ClientUpdateTestCase(TestCase):
