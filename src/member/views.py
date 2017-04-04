@@ -1450,7 +1450,8 @@ class ClientStatusScheduler(
         )
 
 
-class ClientStatusSchedulerDeleteView(PermissionRequiredMixin, generic.DeleteView):
+class ClientStatusSchedulerDeleteView(
+        PermissionRequiredMixin, generic.DeleteView):
     model = ClientScheduledStatus
     permission_required = 'sous_chef.edit'
     template_name = "client/view/delete_status_confirmation.html"
