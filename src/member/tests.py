@@ -2251,7 +2251,7 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
             )
         )
 
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 302)
 
 
 class ClientUpdateTestCase(TestCase):

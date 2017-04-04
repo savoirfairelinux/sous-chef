@@ -2,6 +2,9 @@
 <!-- Load internationalisation utils-->
 {% load i18n %}
 {% load admin_urls %}
+{% load rules %}
+
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
 
 {% block title %}
 
@@ -44,7 +47,7 @@
                 <th>{% trans 'To' %}</th>
                 <th>{% trans 'Reason' %}</th>
                 <th>{% trans 'Operation status' %}</th>
-                {% if user.is_staff %}<th></th>{% endif %}
+                {% if can_edit_data %}<th></th>{% endif %}
             </tr>
         </thead>
         <tbody>
@@ -60,7 +63,7 @@
                 <td>{{ status.get_status_to_display }}</td>
                 <td>{{ status.reason }}</td>
                 <td>{{ status.get_operation_status_display }}</td>
-                {% if user.is_staff %}<td><a href="{% url 'member:delete_status' pk=status.pk %}" class="mini ui red button remove-status">{% trans "Remove" %}</a></td>{% endif %}
+                {% if can_edit_data %}<td><a href="{% url 'member:delete_status' pk=status.pk %}" class="mini ui red button remove-status">{% trans "Remove" %}</a></td>{% endif %}
             </tr>
             {% endfor %}
         {% endif %}
@@ -69,7 +72,7 @@
 </div>
 
 <!-- Modal confirmation -->
-{% if user.is_staff %}
+{% if can_edit_data %}
     <div id="remove-status-confirmation" class="ui modal"></div>
 {% endif %}
 
