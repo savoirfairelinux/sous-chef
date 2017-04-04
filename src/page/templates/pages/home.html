@@ -51,7 +51,7 @@
                 </div>
                 <div class="ui segment">
                     <p><em>
-                        {% blocktrans with count=billable_orders_year %}
+                        {% blocktrans trimmed with count=billable_orders_year %}
                            {{ count }} orders delivered this year.
                         {% endblocktrans %}
                   </em></p>
@@ -83,7 +83,11 @@
                 </div>
                 <div class="ui segment">
                   <p>
-                    {% blocktrans count count=routes|length %}{{ count }} route.{% plural %}{{ count }} routes.{% endblocktrans %}
+                    {% blocktrans trimmed count count=routes|length %}
+                      {{ count }} route.
+                    {% plural %}
+                      {{ count }} routes.
+                    {% endblocktrans %}
                   </p>
                 </div>
               </div>

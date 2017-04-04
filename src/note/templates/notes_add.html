@@ -11,7 +11,7 @@
       {% if not client %}
         {% trans "Add a Note" %}
       {% else %}
-        {% blocktrans with firstname=client.member.firstname|title lastname=client.member.lastname|title%}
+        {% blocktrans trimmed with firstname=client.member.firstname|title lastname=client.member.lastname|title%}
          Add a Note for {{firstname}} {{lastname}}
         {% endblocktrans %}
       {% endif %}

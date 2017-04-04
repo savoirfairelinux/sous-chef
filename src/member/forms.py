@@ -378,8 +378,8 @@ class ClientPaymentInformation(MemberForm):
     same_as_client = forms.BooleanField(
         label=_("Same As Client"),
         required=False,
-        help_text=_('If checked, the personal information \
-            of the client will be used as billing information.'),
+        help_text=_('If checked, the personal information '
+                    'of the client will be used as billing information.'),
         widget=forms.CheckboxInput(
             attrs={}))
 

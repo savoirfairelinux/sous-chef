@@ -35,15 +35,19 @@
             <a class="item">
                 <i class="refresh icon"></i>
                 <div class="content">
-                    <div class="header">Generate orders</div>
-                    <div class="description">Orders for ongoing clients are automatically generated at midnight every day, based on their default preferences. Press the <em>Generate orders</em> button to manually run the script.</div>
+                    <div class="header">{% trans 'Generate orders' %}</div>
+                    <div class="description">
+                      {% blocktrans trimmed %}
+                      Orders for ongoing clients are automatically generated at midnight every day, based on their default preferences. Press the <em>Generate orders</em> button to manually run the script.
+                      {% endblocktrans %}
+                    </div>
                 </div>
             </a>
             <a class="item">
                 <i class="marker icon"></i>
                 <div class="content">
-                    <div class="header">Geolocation</div>
-                    <div class="description">Highlighted orders are not properly geolocated. Edit the client information to fix it.</div>
+                    <div class="header">{% trans 'Geolocation' %}</div>
+                    <div class="description">{% trans 'Highlighted orders are not properly geolocated. Edit the client information to fix it.' %}</div>
                 </div>
             </a>
         </div>
@@ -59,10 +63,10 @@
                 </div>
                 {% with count=orders.count %}
                 <a class="ui basic left pointing pink label orders-count" data-order-count={{count}}>
-                    {% blocktrans %}
-                        <span>{{ count }}</span>
-                        &nbsp;today
-                    {% endblocktrans %}
+                  {# Translators: This text is displayed in the kitchen count -> step 1: order review -> pink button #}
+                  {% blocktrans trimmed %}
+                    {{ count }} today
+                  {% endblocktrans %}
                 </a>
                 {% endwith %}
             </div>

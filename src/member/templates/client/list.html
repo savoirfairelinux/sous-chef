@@ -57,7 +57,7 @@
         </div>
         <div class="description">
             <p>
-                {% blocktrans with member_firstname=obj.member.firstname delivery_type=obj.get_delivery_type_display route=obj.route %}
+                {% blocktrans trimmed with member_firstname=obj.member.firstname delivery_type=obj.get_delivery_type_display route=obj.route %}
                     {{ member_firstname }} is an <strong>{{ delivery_type }}</strong> client on the <strong>{{ route }}</strong> route.
                 {% endblocktrans %}
             </p>
