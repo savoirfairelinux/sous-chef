@@ -12,11 +12,7 @@ $(function() {
         type: 'month',
         formatter: {
             date: function (date, settings) {
-                if (!date) return '';
-                var month = date.getMonth() + 1;
-                var year = date.getFullYear();
-                if (month < 10) month = '0' + month;
-                return year + '-' + month ;
+                return date ? dateFormat(date, 'yyyy-mm') : '';
             }
         }
     });

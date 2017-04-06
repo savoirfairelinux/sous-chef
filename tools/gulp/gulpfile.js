@@ -32,6 +32,7 @@ const sources = {
         'node_modules/jquery-tablesort/jquery-tablesort.js',
         'node_modules/jquery.formset/src/jquery.formset.js',
         'node_modules/semantic-ui-calendar/dist/calendar.js',
+        'node_modules/dateformat/lib/dateformat.js',
       ],
       site: [
         `${SRC_JS}/global.js`,
