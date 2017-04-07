@@ -2,10 +2,10 @@ $(function() {
 
     // Javascript of the member application.
     // **************************************
+    var today = new Date();
 
     $('.ui.dropdown.member.status > .menu > .item').click(function () {
         var value = $(this).data('value');
-        var today = new Date();
         var modalCtntURL = $('.ui.dropdown.status').attr('data-url');
         $.get(modalCtntURL, {status:value}, function(data, modalCtntURL){
             $('.ui.modal.status').html(data).modal("setting", {
@@ -18,19 +18,10 @@ $(function() {
                     $('#rangestart').calendar({
                         type: 'date',
                         on: 'click',
-                        minDate: new Date(
-                            today.getFullYear(),
-                            today.getMonth(),
-                            today.getDate()),
+                        minDate: today,
                         formatter: {
                             date: function (date, settings) {
-                                if (!date) return '';
-                                var day = date.getDate();
-                                var month = date.getMonth() + 1;
-                                var year = date.getFullYear();
-                                if (month < 10) month = '0' + month;
-                                if (day < 10) day = '0' + day;
-                                return year + '-' + month + '-' + day;
+                                return date ? dateFormat(date, 'yyyy-mm-dd') : '';
                             }
                         },
                         endCalendar: $('#rangeend'),
@@ -39,13 +30,7 @@ $(function() {
                         type: 'date',
                         formatter: {
                             date: function (date, settings) {
-                                if (!date) return '';
-                                var day = date.getDate();
-                                var month = date.getMonth() + 1;
-                                var year = date.getFullYear();
-                                if (month < 10) month = '0' + month;
-                                if (day < 10) day = '0' + day;
-                                return year + '-' + month + '-' + day;
+                                return date ? dateFormat(date, 'yyyy-mm-dd') : '';
                             }
                         },
                         startCalendar: $('#rangestart'),
@@ -76,6 +61,16 @@ $(function() {
                 }
             }).modal('setting', 'autofocus', false).modal("show");
         });
+    });
+
+    $('#wizard_form_birthdate').calendar({
+        type: 'date',
+        maxDate: today,
+        formatter: {
+            date: function (date, settings) {
+                return date ? dateFormat(date, 'yyyy-mm-dd') : '';
+            }
+        },
     });
 
     var removeStatusConfirmationModal = $('#remove-status-confirmation');
