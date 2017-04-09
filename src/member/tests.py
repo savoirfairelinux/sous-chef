@@ -810,7 +810,6 @@ class FormTestCase(TestCase):
                 [self.restricted_item_1.id, self.restricted_item_2.id],
             "dietary_restriction-food_preparation": self.food_preparation.id,
             "dietary_restriction-ingredient_to_avoid": self.ingredient.id,
-            "dietary_restriction-dish_to_avoid": self.component.id,
             "wizard_goto_step": ""
         }
 

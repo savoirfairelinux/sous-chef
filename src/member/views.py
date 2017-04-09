@@ -478,13 +478,6 @@ class ClientWizard(
                 ingredient=ingredient_to_avoid
             )
 
-        # Save components to avoid
-        for component_to_avoid in preferences.get('dish_to_avoid'):
-            Client_avoid_component.objects.create(
-                client=client,
-                component=component_to_avoid
-            )
-
     def billing_member_is_member(self):
         basic_information = self.form_dict['basic_information']
         payment_information = self.form_dict['payment_information']
@@ -1193,7 +1186,6 @@ class ClientUpdateDietaryRestriction(ClientUpdateInformation):
             'meals_schedule': client.simple_meals_schedule,
             'restrictions': client.restrictions.all,
             'ingredient_to_avoid': client.ingredients_to_avoid.all,
-            'dish_to_avoid': client.components_to_avoid.all,
             'food_preparation': client.food_preparation.all,
         })
         day_count = 0
@@ -1258,14 +1250,6 @@ class ClientUpdateDietaryRestriction(ClientUpdateInformation):
             Client_avoid_ingredient.objects.create(
                 client=client,
                 ingredient=ingredient_to_avoid
-            )
-
-        # Save components to avoid
-        client.components_to_avoid.clear()
-        for component_to_avoid in form['dish_to_avoid']:
-            Client_avoid_component.objects.create(
-                client=client,
-                component=component_to_avoid
             )
 
         # Save preferences

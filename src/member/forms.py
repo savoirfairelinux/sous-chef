@@ -237,15 +237,6 @@ class ClientRestrictionsInformation(forms.Form):
         )
     )
 
-    dish_to_avoid = forms.ModelMultipleChoiceField(
-        label=_("Dish(es) To Avoid"),
-        queryset=Component.objects.all(),
-        required=False,
-        widget=forms.SelectMultiple(
-            attrs={'class': 'ui dropdown search'}
-        )
-    )
-
 
 class MemberForm(forms.Form):
 

@@ -47,20 +47,6 @@
     {% endfor %}
 
     <h3 class="ui header">
-        {% trans 'Food preparation' %}
-    </h3>
-    {% for option in client.food_preparation %}
-    <div class="ui label">
-        {{ option.name }}
-        <i class="delete icon" data-id={{option.id}} data-model="client_option"></i>
-    </div>
-    {% empty %}
-    <div class="ui row">
-        <em>{% trans "Nope! Nothing specific" %}.</em>
-    </div>
-    {% endfor %}
-
-    <h3 class="ui header">
         {% trans 'Ingredients to avoid' %}
     </h3>
     {% for ingredient_to_avoid in client.ingredients_to_avoid.all %}
@@ -75,18 +61,19 @@
     {% endfor %}
 
     <h3 class="ui header">
-        {% trans 'Dish(es) to avoid' %}
+        {% trans 'Food preparation' %}
     </h3>
-    {% for component_to_avoid in client.components_to_avoid.all %}
+    {% for option in client.food_preparation %}
     <div class="ui label">
-        {{ component_to_avoid.name }}
-        <i class="delete icon" data-id={{component_to_avoid.id}} data-model="component_to_avoid"></i>
+        {{ option.name }}
+        <i class="delete icon" data-id={{option.id}} data-model="client_option"></i>
     </div>
     {% empty %}
     <div class="ui row">
-        <em>{% trans "Yeah! Likes everything" %}!</em>
+        <em>{% trans "Nope! Nothing specific" %}.</em>
     </div>
     {% endfor %}
+
 </div>
 
 
