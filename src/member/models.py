@@ -113,7 +113,7 @@ class Member(models.Model):
         verbose_name=_('lastname')
     )
 
-    address = models.ForeignKey(
+    address = models.OneToOneField(
         'member.Address',
         verbose_name=_('address'),
         null=True,

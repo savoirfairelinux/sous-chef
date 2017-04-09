@@ -3697,3 +3697,159 @@ class TestMigrationUnapply0026(TestMigrations):
             self.assertIn(client2.emergency_contact_relationship, 'friend1')
         else:
             self.assertIn(client2.emergency_contact_relationship, 'friend2')
+
+
+class TestMigrationApply0029(TestMigrations):
+    """
+    Refs #704.
+    """
+    migrate_from = '0028_change_linked_scheduled_status_relationship'
+    migrate_to = '0029_member_address_fk_to_1to1'
+
+    def setUpBeforeMigration(self, apps):
+        Member = apps.get_model('member', 'Member')
+        Address = apps.get_model('member', 'Address')
+
+        addr0 = Address.objects.create(
+            street="no member",
+            city="-",
+            postal_code="-"
+        )
+        addr1 = Address.objects.create(
+            street="one member",
+            city="-",
+            postal_code="-"
+        )
+        addr2 = Address.objects.create(
+            street="two members",
+            city="-",
+            postal_code="-"
+        )
+        addr3 = Address.objects.create(
+            street="three members",
+            city="-",
+            postal_code="-"
+        )
+
+        member1 = Member.objects.create(
+            firstname="1",
+            lastname="-",
+            address=addr1
+        )
+        member2a = Member.objects.create(
+            firstname="2",
+            lastname="a",
+            address=addr2
+        )
+        member2b = Member.objects.create(
+            firstname="2",
+            lastname="b",
+            address=addr2
+        )
+        member3a = Member.objects.create(
+            firstname="3",
+            lastname="a",
+            address=addr3
+        )
+        member3b = Member.objects.create(
+            firstname="3",
+            lastname="b",
+            address=addr3
+        )
+        member3c = Member.objects.create(
+            firstname="3",
+            lastname="c",
+            address=addr3
+        )
+        member_no_addr = Member.objects.create(
+            firstname="No",
+            lastname="Address",
+            address=None
+        )
+
+        self.data = {
+            'addr0_pk': addr0.pk,
+            'addr1_pk': addr1.pk,
+            'addr2_pk': addr2.pk,
+            'addr3_pk': addr3.pk,
+        }
+
+    def test_address_objects_separated(self):
+        Member = self.apps.get_model('member', 'Member')
+        Address = self.apps.get_model('member', 'Address')
+
+        member1 = Member.objects.get(
+            firstname="1",
+            lastname="-"
+        )
+        member2a = Member.objects.get(
+            firstname="2",
+            lastname="a"
+        )
+        member2b = Member.objects.get(
+            firstname="2",
+            lastname="b"
+        )
+        member3a = Member.objects.get(
+            firstname="3",
+            lastname="a"
+        )
+        member3b = Member.objects.get(
+            firstname="3",
+            lastname="b"
+        )
+        member3c = Member.objects.get(
+            firstname="3",
+            lastname="c"
+        )
+
+        # Test addr0: there should be no changes.
+        self.assertEqual(
+            Address.objects.filter(pk=self.data['addr0_pk']).count(),
+            1
+        )
+        addr0 = Address.objects.get(pk=self.data['addr0_pk'])
+        self.assertEqual(addr0.street, "no member")
+
+        # Test addr1: there should be no changes.
+        self.assertEqual(
+            Address.objects.filter(pk=self.data['addr1_pk']).count(),
+            1
+        )
+        addr1 = Address.objects.get(pk=self.data['addr1_pk'])
+        self.assertEqual(addr1.street, "one member")
+        self.assertEqual(member1.address.pk, addr1.pk)
+
+        # Test addr2: it should be split into 2 instances.
+        # But we still have the original instance.
+        self.assertEqual(
+            Address.objects.filter(street="two members").count(),
+            2
+        )
+        self.assertEqual(
+            Address.objects.filter(pk=self.data['addr2_pk']).count(),
+            1
+        )
+        self.assertEqual(member2a.address.street, "two members")
+        self.assertEqual(member2b.address.street, "two members")
+
+        # Test addr3: it should be split into 3 instances.
+        # But we still have the original instance.
+        self.assertEqual(
+            Address.objects.filter(street="three members").count(),
+            3
+        )
+        self.assertEqual(
+            Address.objects.filter(pk=self.data['addr3_pk']).count(),
+            1
+        )
+        self.assertEqual(member3a.address.street, "three members")
+        self.assertEqual(member3b.address.street, "three members")
+        self.assertEqual(member3c.address.street, "three members")
+
+        # Test member without address
+        member_no_addr = Member.objects.get(
+            firstname="No",
+            lastname="Address"
+        )
+        self.assertEqual(member_no_addr.address, None)
