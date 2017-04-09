@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import string_concat
 
 from member.views import (
     ClientWizard,
@@ -39,25 +40,53 @@ from note.views import ClientNoteList, ClientNoteListAdd
 
 app_name = "member"
 
-create_member_forms = (
-    ('basic_information', ClientBasicInformation),
-    ('address_information', ClientAddressInformation),
-    ('referent_information', ClientReferentInformation),
-    ('payment_information', ClientPaymentInformation),
-    ('dietary_restriction', ClientRestrictionsInformation),
-    ('emergency_contacts', CreateEmergencyContactFormset)
-)
+member_forms = ({
+    'name':        'basic_information',
+    'step_url':    _('basic_information'),
+    'create_form': ClientBasicInformation,
+    'update_form': ClientUpdateBasicInformation
+}, {
+    'name':        'address_information',
+    'step_url':    _('address_information'),
+    'create_form': ClientAddressInformation,
+    'update_form': ClientUpdateAddressInformation
+}, {
+    'name':        'referent_information',
+    'step_url':    _('referent_information'),
+    'create_form': ClientReferentInformation,
+    'update_form': ClientUpdateReferentInformation
+}, {
+    'name':        'payment_information',
+    'step_url':    _('payment_information'),
+    'create_form': ClientPaymentInformation,
+    'update_form': ClientUpdatePaymentInformation,
+}, {
+    'name':        'dietary_restriction',
+    'step_url':    _('dietary_restriction'),
+    'create_form': ClientRestrictionsInformation,
+    'update_form': ClientUpdateDietaryRestriction,
+}, {
+    'name':        'emergency_contacts',
+    'step_url':    _('emergency_contacts'),
+    'create_form': CreateEmergencyContactFormset,
+    'update_form': ClientUpdateEmergencyContactInformation
+})
 
-member_wizard = ClientWizard.as_view(create_member_forms,
-                                     url_name='member:member_step')
+member_wizard = ClientWizard.as_view(
+    list(map(lambda d: (d['name'], d['create_form']), member_forms)),
+    i18n_url_names=list(map(
+        lambda d: (d['name'], d['step_url']), member_forms
+    )),
+    url_name='member:member_step'
+)
 
 
 urlpatterns = [
-    url(r'^create/$', member_wizard, name='member_step'),
-    url(r'^create/(?P<step>.+)/$', member_wizard,
+    url(_(r'^create/$'), member_wizard, name='member_step'),
+    url(_(r'^create/(?P<step>.+)/$'), member_wizard,
         name='member_step'),
-    url(r'^list/$', ClientList.as_view(), name='list'),
-    url(r'^search/$', SearchMembers.as_view(), name='search'),
+    url(_(r'^list/$'), ClientList.as_view(), name='list'),
+    url(_(r'^search/$'), SearchMembers.as_view(), name='search'),
     url(_(r'^view/(?P<pk>\d+)/$'), ClientDetail.as_view(), name='view'),
     url(_(r'^view/(?P<pk>\d+)/orders$'),
         ClientOrderList.as_view(), name='list_orders'),
@@ -76,7 +105,7 @@ urlpatterns = [
     url(_(r'^geolocateAddress/$'), geolocateAddress, name='geolocateAddress'),
     url(_(r'^view/(?P<pk>\d+)/status$'),
         ClientStatusView.as_view(), name='client_status'),
-    url(r'^client/(?P<pk>\d+)/status/scheduler$',
+    url(_(r'^client/(?P<pk>\d+)/status/scheduler$'),
         ClientStatusScheduler.as_view(), name='clientStatusScheduler'),
     url(
         r'^status/(?P<pk>\d+)/delete$',
@@ -92,24 +121,15 @@ urlpatterns = [
     url(_(r'^component_to_avoid/(?P<pk>\d+)/delete/$'),
         DeleteComponentToAvoid.as_view(), name='component_to_avoid_delete'),
 
-    url(r'^client/(?P<pk>\d+)/meals/preferences$',
+    url(_(r'^client/(?P<pk>\d+)/meals/preferences$'),
         clientMealsPrefsAsJSON, name='client_meals_pref'),
 
 ]
 
-
-member_update_forms = (
-    ('basic_information', ClientUpdateBasicInformation),
-    ('address_information', ClientUpdateAddressInformation),
-    ('referent_information', ClientUpdateReferentInformation),
-    ('payment_information', ClientUpdatePaymentInformation),
-    ('dietary_restriction', ClientUpdateDietaryRestriction),
-    ('emergency_contacts', ClientUpdateEmergencyContactInformation),
-)
-
 # Handle client update forms URL
-for k, v in member_update_forms:
+for d in member_forms:
     urlpatterns.append(
-        url(_(r'^(?P<pk>\d+)/update/{}/$'.format(k)), v.as_view(),
-            name='member_update_' + k)
+        url(string_concat(_(r'^(?P<pk>\d+)/update/'), d['step_url'], '/$'),
+            d['update_form'].as_view(),
+            name='member_update_' + d['name'])
     )

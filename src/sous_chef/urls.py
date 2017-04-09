@@ -25,26 +25,28 @@ from django.contrib import admin
 from page.views import HomeView
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls.i18n import i18n_patterns
+from django.utils.translation import ugettext_lazy as _
 
-urlpatterns = [
+urlpatterns = i18n_patterns(
     url(
-        r'^admin/',
+        _(r'^admin/'),
         admin.site.urls
     ),
     url(
-        r'^meal/',
+        _(r'^meal/'),
         include('meal.urls', namespace="meal")
     ),
     url(
-        r'^member/',
+        _(r'^member/'),
         include('member.urls', namespace="member")
     ),
     url(
-        r'^notification/',
+        _(r'^notification/'),
         include('notification.urls', namespace="notification")
     ),
     url(
-        r'^order/',
+        _(r'^order/'),
         include('order.urls', namespace="order")
     ),
     url(
@@ -53,19 +55,20 @@ urlpatterns = [
     ),
     url(r'^$', HomeView.as_view(), name='home'),
     url(
-        r'^delivery/',
+        _(r'^delivery/'),
         include('delivery.urls', namespace="delivery")
     ),
     url(
-        r'^note/',
+        _(r'^note/'),
         include('note.urls', namespace="note")
     ),
     url(
-        r'^billing/',
+        _(r'^billing/'),
         include('billing.urls', namespace="billing")
     ),
     url(
-        r'^avatar/',
+        _(r'^avatar/'),
         include('avatar.urls')
         ),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    prefix_default_language=False
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

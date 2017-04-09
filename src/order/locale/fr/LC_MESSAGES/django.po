@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-31 14:17-0400\n"
+"POT-Creation-Date: 2017-04-04 14:50-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
@@ -356,7 +356,7 @@ msgstr "Réinitialiser"
 msgid "Search"
 msgstr "Recherche"
 
-#: order/templates/order_confirm_delete.html
+#: order/templates/order_confirm_delete.html order/tests.py
 msgid "Delete Order"
 msgstr "Supprimer commande"
 
@@ -426,37 +426,35 @@ msgstr "Supprimer"
 
 #: order/urls.py
 msgid "^list/$"
-msgstr "^list/$"
+msgstr "^liste/$"
 
 #: order/urls.py
 msgid "^view/(?P<pk>\\d+)/$"
-msgstr "^view/(?P<pk>\\d+)/$"
+msgstr "^voir/(?P<pk>\\d+)/$"
 
 #: order/urls.py
 msgid "^create/$"
-msgstr "^create/$"
+msgstr "^créer/$"
 
 #: order/urls.py
 msgid "^create/batch$"
-msgstr ""
+msgstr "^créer/multiple$"
 
 #: order/urls.py
 msgid "^update/(?P<pk>\\d+)/$"
-msgstr "^update/(?P<pk>\\d+)/$"
+msgstr "^mettre_à_jour/(?P<pk>\\d+)/$"
 
 #: order/urls.py
 msgid "^update/(?P<pk>\\d+)/status$"
-msgstr "^update/(?P<pk>\\d+)/status$"
+msgstr "^mettre_à_jour/(?P<pk>\\d+)/statut$"
 
 #: order/urls.py
-#, fuzzy
-#| msgid "^update/(?P<pk>\\d+)/$"
 msgid "^update/(?P<pk>\\d+)/client_bill$"
-msgstr "^update/(?P<pk>\\d+)/$"
+msgstr "^mettre_à_jour/(?P<pk>\\d+)/facturation_client$"
 
 #: order/urls.py
 msgid "^delete/(?P<pk>\\d+)/$"
-msgstr "^delete/(?P<pk>\\d+)/$"
+msgstr "^supprimer/(?P<pk>\\d+)/$"
 
 #: order/views.py
 #, python-format

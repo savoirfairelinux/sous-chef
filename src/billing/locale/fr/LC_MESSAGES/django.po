@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-31 14:17-0400\n"
+"POT-Creation-Date: 2017-04-04 14:50-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
@@ -27,7 +27,6 @@ msgid "Search by name"
 msgstr "Recherche par nom"
 
 #: billing/templates/billing/add.html billing/templates/billing/list.html
-#: billing/templates/create.html
 msgid "Billing"
 msgstr "Facturation"
 
@@ -306,6 +305,34 @@ msgstr "Affiche seulement les commandes incluses"
 #: billing/templates/billing/view_orders.html
 msgid "Total amount in $CAD."
 msgstr "Montant total en $CAD"
+
+#: billing/urls.py
+msgid "^list/$"
+msgstr "^lister/$"
+
+#: billing/urls.py
+msgid "^create/$"
+msgstr "^créer/$"
+
+#: billing/urls.py
+msgid "^add/$"
+msgstr "^ajouter/$"
+
+#: billing/urls.py
+msgid "^view/(?P<pk>\\d+)/$"
+msgstr "^voir/(?P<pk>\\d+)/$"
+
+#: billing/urls.py
+msgid "^view/(?P<pk>\\d+)/orders/$"
+msgstr "^voir/(?P<pk>\\d+)/commandes/$"
+
+#: billing/urls.py
+msgid "^delete/(?P<pk>\\d+)/$"
+msgstr "^supprimer/(?P<pk>\\d+)/$"
+
+#: billing/views.py
+msgid "You must select a period to create a billing and click in the first step 'Preview'"
+msgstr ""
 
 #: billing/views.py
 #, python-format

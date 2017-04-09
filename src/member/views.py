@@ -12,7 +12,8 @@ from django.db.models import Q
 from django.db.transaction import atomic
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
+from django.utils.decorators import method_decorator, classonlymethod
+from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 from formtools.wizard.views import NamedUrlSessionWizardView
@@ -25,7 +26,8 @@ from member.forms import (
     ClientRestrictionsInformation,
     ClientPaymentInformation,
 )
-from member.formsets import UpdateEmergencyContactFormset
+from member.formsets import (CreateEmergencyContactFormset,
+                             UpdateEmergencyContactFormset)
 from member.models import (
     Client,
     ClientScheduledStatus,
@@ -46,9 +48,56 @@ from note.models import Note
 from order.mixins import FormValidAjaxableResponseMixin
 
 
+class NamedUrlSessionWizardView_i18nURL(NamedUrlSessionWizardView):
+
+    @classonlymethod
+    def as_view(cls, *args, **kwargs):
+        cls.i18n_url_names = kwargs.pop('i18n_url_names')
+        return super(NamedUrlSessionWizardView_i18nURL, cls).as_view(
+            *args, **kwargs)
+
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Replace kwargs['step'] as non-i18n step name.
+        """
+        if 'step' in kwargs:
+            i18n_step = kwargs.pop('step')
+            try:
+                matched_tup = next(
+                    tup for tup in self.i18n_url_names
+                    if force_text(tup[1]) == i18n_step
+                )
+                non_i18n_step = matched_tup[0]
+            except StopIteration:
+                # not found
+                non_i18n_step = i18n_step
+            finally:
+                kwargs['step'] = non_i18n_step
+        return super(NamedUrlSessionWizardView_i18nURL, self).dispatch(
+            request, *args, **kwargs)
+
+    def get_step_url(self, step):
+        """
+        Replace non-i18n step name as i18n step name.
+        """
+        non_i18n_step = step
+        try:
+            matched_tup = next(
+                tup for tup in self.i18n_url_names
+                if force_text(tup[0]) == non_i18n_step
+            )
+            i18n_step = matched_tup[1]
+        except StopIteration:
+            # not found
+            i18n_step = non_i18n_step
+        finally:
+            return super(NamedUrlSessionWizardView_i18nURL, self).get_step_url(
+                i18n_step)
+
+
 class ClientWizard(
         LoginRequiredMixin, PermissionRequiredMixin,
-        NamedUrlSessionWizardView):
+        NamedUrlSessionWizardView_i18nURL):
     permission_required = 'sous_chef.edit'
     template_name = 'client/create/form.html'
 
@@ -64,6 +113,23 @@ class ClientWizard(
         if 'pk' in kwargs:
             context.update({'edit': True})
             context.update({'pk': kwargs['pk']})
+
+        form = context['form']
+        if isinstance(form, ClientBasicInformation):
+            step_template = 'client/partials/forms/basic_information.html'
+        elif isinstance(form, ClientAddressInformation):
+            step_template = 'client/partials/forms/address_information.html'
+        elif isinstance(form, ClientReferentInformation):
+            step_template = 'client/partials/forms/referent_information.html'
+        elif isinstance(form, ClientPaymentInformation):
+            step_template = 'client/partials/forms/payment_information.html'
+        elif isinstance(form, ClientRestrictionsInformation):
+            step_template = 'client/partials/forms/dietary_restriction.html'
+        elif isinstance(form, CreateEmergencyContactFormset):
+            step_template = 'client/partials/forms/emergency_contacts.html'
+        else:
+            step_template = None
+        context['step_template'] = step_template
 
         return context
 

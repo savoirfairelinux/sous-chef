@@ -8,7 +8,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone as tz
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import ugettext_lazy, ugettext
 
 from meal.models import (Menu, Component, Component_ingredient, Ingredient,
                          COMPONENT_GROUP_CHOICES_SIDES)
@@ -77,11 +77,15 @@ class KitchenCountReportTestCase(SousChefTestMixin, TestCase):
              'Green Salad', 'Fruit Salad',
              'Day s Dessert', 'Day s Diabetic Dessert',
              'Day s Pudding', 'Day s Compote'])
-        response = self.client.get('/delivery/kitchen_count/')
+        response = self.client.get(reverse_lazy('delivery:kitchen_count'))
         self.assertTrue(b'Ground porc' in response.content)
 
     def test_no_components(self):
         """No orders on this day therefore no component summary"""
+        response = self.client.get(reverse_lazy(
+            'delivery:kitchen_count_date',
+            kwargs={'year': '2015', 'month': '05', 'day': '21'}
+        ))
         response = self.client.get('/delivery/kitchen_count/2015/05/21/')
         self.assertTrue(b'SUBTOTAL' not in response.content)
 
@@ -121,8 +125,8 @@ class KitchenCountReportTestCase(SousChefTestMixin, TestCase):
              'Day s Dessert', 'Day s Diabetic Dessert',
              'Day s Pudding', 'Day s Compote', 'Days Sides'])
 
-        self.client.get('/delivery/kitchen_count/')
-        response = self.client.get('/delivery/viewMealLabels/')
+        self.client.get(reverse_lazy('delivery:kitchen_count'))
+        response = self.client.get(reverse_lazy('delivery:mealLabels'))
         self.assertTrue('ReportLab' in repr(response.content))
 
     def test_pdf_report_show_restrictions(self):
@@ -282,7 +286,13 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
         req['_restore'] = 'Next: Print Kitchen Count'
         req['maindish'] = 'wrong'
         response = self.client.post(reverse_lazy('delivery:meal'), req)
-        self.assertTrue(b'Select a valid choice.' in response.content)
+
+        self.assertIn(
+            ugettext(
+                'Select a valid choice. That choice is not one of '
+                'the available choices.').encode(response.charset),
+            response.content
+        )
 
     def test_if_valid_no_red_sign(self):
         o = Order.objects.first()
@@ -469,8 +479,9 @@ class RouteSequencingTestCase(SousChefTestMixin, TestCase):
     def test_get_orders_euclidean(self):
         """Route get orders with Euclidean optimized sequence."""
         response = self.client.get(
-            '/delivery/getDailyOrders/?route=' +
-            str(self.route_id) + '&mode=euclidean')
+            reverse_lazy('delivery:dailyOrders'),
+            {'route': str(self.route_id), 'mode': 'euclidean'}
+        )
         self.assertTrue(b'Dallaire' in response.content)
 
     def test_save_route(self):
@@ -496,8 +507,9 @@ class RouteSequencingTestCase(SousChefTestMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(b'"OK"', response.content)
         response = self.client.get(
-            '/delivery/getDailyOrders/?route=' +
-            str(self.route_id) + '&if_exist_then_retrieve=true')
+            reverse_lazy('delivery:dailyOrders'),
+            {'route': str(self.route_id), 'if_exist_then_retrieve': 'true'}
+        )
         self.assertEqual(response.status_code, 200)
         content = response.content.decode(response.charset)
         waypoints = json.loads(content)['waypoints']
@@ -509,16 +521,18 @@ class RouteSequencingTestCase(SousChefTestMixin, TestCase):
         route_id_none = Route.objects.get(name='Centre Sud').id
         with self.assertRaises(Exception) as cm:
             response = self.client.get(
-                '/delivery/getDailyOrders/?route=' +
-                str(route_id_none) + '&if_exist_then_retrieve=true')
+                reverse_lazy('delivery:dailyOrders'),
+                {'route': str(route_id_none), 'if_exist_then_retrieve': 'true'}
+            )
         self.assertIn('unknown', str(cm.exception))
 
     def test_get_orders_unknown_mode(self):
         """Route get orders with unknown transportation mode."""
         with self.assertRaises(Exception) as cm:
             response = self.client.get(
-                '/delivery/getDailyOrders/?route=' +
-                str(self.route_id) + '&mode=swimming')
+                reverse_lazy('delivery:dailyOrders'),
+                {'route': str(self.route_id), 'mode': 'swimming'}
+            )
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup

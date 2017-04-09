@@ -24,6 +24,11 @@ from member.factories import(
     MemberFactory, EmergencyContactFactory
 )
 from meal.factories import IngredientFactory, ComponentFactory
+from django.core.management import call_command
+from django.utils.six import StringIO
+from django.utils import translation
+from django.utils.translation import ugettext
+
 from order.factories import OrderFactory
 from member.forms import(
     ClientBasicInformation, ClientAddressInformation,
@@ -685,9 +690,9 @@ class FormTestCase(TestCase):
         result = self.client.get(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': 'basic_information'}
+                kwargs={'step': ugettext('basic_information')}
             ),
-            follow=True
+            follow=False
         )
         self.assertEqual(result.status_code, 200)
 
@@ -695,9 +700,9 @@ class FormTestCase(TestCase):
         result = self.client.get(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': 'address_information'}
+                kwargs={'step': ugettext('address_information')}
             ),
-            follow=True
+            follow=False
         )
         self.assertEqual(result.status_code, 200)
 
@@ -705,9 +710,9 @@ class FormTestCase(TestCase):
         result = self.client.get(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': 'referent_information'}
+                kwargs={'step': ugettext('referent_information')}
             ),
-            follow=True
+            follow=False
         )
         self.assertEqual(result.status_code, 200)
 
@@ -731,11 +736,11 @@ class FormTestCase(TestCase):
         )
         self.assertEqual(result.status_code, 200)
 
-    def test_acces_to_form_by_url_emergency_contact(self):
+    def test_acces_to_form_by_url_emergency_contacts(self):
         result = self.client.get(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': 'emergency_contact'}
+                kwargs={'step': 'emergency_contacts'}
             ),
             follow=True
         )
@@ -832,7 +837,8 @@ class FormTestCase(TestCase):
 
         for step, data in stepsdata:
             response = self.client.post(
-                reverse_lazy('member:member_step', kwargs={'step': step}),
+                reverse_lazy('member:member_step',
+                             kwargs={'step': ugettext(step)}),
                 data,
                 follow=True
             )
@@ -1245,9 +1251,18 @@ class FormTestCase(TestCase):
         response = self.client.get(reverse_lazy('member:list'))
         self.assertTrue(b"User" in response.content)
         self.assertTrue(b"Same" in response.content)
-        self.assertTrue(b"30 years old" in response.content)
-        self.assertTrue(b"Active" in response.content)
-        self.assertTrue(b"Ongoing" in response.content)
+        self.assertIn(
+            ("30 " + ugettext('years old')).encode(response.charset),
+            response.content
+        )
+        self.assertIn(
+            ugettext('Active').encode(response.charset),
+            response.content
+        )
+        self.assertIn(
+            ugettext('Ongoing').encode(response.charset),
+            response.content
+        )
         self.assertTrue(b"514-868-8686" in response.content)
 
     def test_form_validate_data(self):
@@ -1262,8 +1277,8 @@ class FormTestCase(TestCase):
         self._test_payment_information_without_errors()
         self._test_step_dietary_restriction_with_errors()
         self._test_step_dietary_restriction_without_errors()
-        self._test_step_emergency_contact_with_errors()
-        self._test_step_emergency_contact_without_errors()
+        self._test_step_emergency_contacts_with_errors()
+        self._test_step_emergency_contacts_without_errors()
 
     def _test_basic_information_with_errors(self):
         # Data for the basic_information step with errors.
@@ -1292,19 +1307,22 @@ class FormTestCase(TestCase):
         self.assertTrue(error_response.context['form'].errors)
         self.assertFormError(error_response, 'form',
                              'lastname',
-                             'This field is required.')
+                             ugettext('This field is required.'))
         self.assertFormError(error_response, 'form',
                              'birthdate',
-                             'This field is required.')
+                             ugettext('This field is required.'))
         self.assertFormError(error_response, 'form',
                              'email',
-                             'At least one contact information is required.')
+                             ugettext('At least one contact information '
+                                      'is required.'))
         self.assertFormError(error_response, 'form',
                              'home_phone',
-                             'At least one contact information is required.')
+                             ugettext('At least one contact information '
+                                      'is required.'))
         self.assertFormError(error_response, 'form',
                              'cell_phone',
-                             'At least one contact information is required.')
+                             ugettext('At least one contact information '
+                                      'is required.'))
 
     def _test_basic_information_without_errors(self):
         # Data for the basic_information step without errors.
@@ -1324,7 +1342,7 @@ class FormTestCase(TestCase):
         response = self.client.post(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': "basic_information"}
+                kwargs={'step': ugettext("basic_information")}
             ),
             basic_information_data,
             follow=True
@@ -1333,7 +1351,7 @@ class FormTestCase(TestCase):
         # Check redirect (successful POST)
         self.assertRedirects(response, reverse_lazy(
             'member:member_step',
-            kwargs={'step': "address_information"}
+            kwargs={'step': ugettext("address_information")}
         ))
 
         # The response is the next step of the form with no errors messages.
@@ -1360,7 +1378,7 @@ class FormTestCase(TestCase):
         response_error = self.client.post(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': "address_information"}
+                kwargs={'step': ugettext("address_information")}
             ),
             address_information_data_with_error,
             follow=True
@@ -1370,13 +1388,13 @@ class FormTestCase(TestCase):
         self.assertTrue(response_error.context['form'].errors)
         self.assertFormError(response_error, 'form',
                              'street',
-                             'This field is required.')
+                             ugettext('This field is required.'))
         self.assertFormError(response_error, 'form',
                              'city',
-                             'This field is required.')
+                             ugettext('This field is required.'))
         self.assertFormError(response_error, 'form',
                              'postal_code',
-                             'This field is required.')
+                             ugettext('This field is required.'))
 
     def _test_address_information_without_errors(self):
         # Data for the address_information step without errors.
@@ -1397,7 +1415,7 @@ class FormTestCase(TestCase):
         response = self.client.post(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': "address_information"}),
+                kwargs={'step': ugettext("address_information")}),
             address_information_data,
             follow=True
         )
@@ -1405,7 +1423,7 @@ class FormTestCase(TestCase):
         # Check redirect (successful POST)
         self.assertRedirects(response, reverse_lazy(
             'member:member_step',
-            kwargs={'step': "referent_information"}
+            kwargs={'step': ugettext("referent_information")}
         ))
 
         # The response is the next step of the form with no errors messages.
@@ -1433,7 +1451,7 @@ class FormTestCase(TestCase):
         response_error = self.client.post(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': "referent_information"}
+                kwargs={'step': ugettext("referent_information")}
             ),
             referent_information_data_with_error,
             follow=True
@@ -1443,26 +1461,26 @@ class FormTestCase(TestCase):
         self.assertTrue(response_error.context['form'].errors)
         self.assertFormError(response_error, 'form',
                              'member',
-                             'This field is required '
-                             'unless you add a new member.')
+                             ugettext('This field is required '
+                                      'unless you add a new member.'))
         self.assertFormError(response_error, 'form',
                              'firstname',
-                             'This field is required unless '
-                             'you chose an existing member.')
+                             ugettext('This field is required unless '
+                                      'you chose an existing member.'))
         self.assertFormError(response_error, 'form',
                              'lastname',
-                             'This field is required unless '
-                             'you chose an existing member.')
+                             ugettext('This field is required unless '
+                                      'you chose an existing member.'))
         self.assertFormError(response_error, 'form',
                              'work_information',
-                             'This field is required unless '
-                             'you chose an existing member.')
+                             ugettext('This field is required unless '
+                                      'you chose an existing member.'))
         self.assertFormError(response_error, 'form',
                              'date',
-                             'This field is required.')
+                             ugettext('This field is required.'))
         self.assertFormError(response_error, 'form',
                              'referral_reason',
-                             'This field is required.')
+                             ugettext('This field is required.'))
 
         referent_information_data_with_error = {
             "client_wizard-current_step": "referent_information",
@@ -1479,7 +1497,7 @@ class FormTestCase(TestCase):
         response_error = self.client.post(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': "referent_information"}
+                kwargs={'step': ugettext("referent_information")}
             ),
             referent_information_data_with_error,
             follow=True
@@ -1489,8 +1507,8 @@ class FormTestCase(TestCase):
         self.assertTrue(response_error.context['form'].errors)
         self.assertFormError(response_error, 'form',
                              'member',
-                             'Not a valid member, '
-                             'please chose an existing member.')
+                             ugettext('Not a valid member, '
+                                      'please chose an existing member.'))
 
     def _test_referent_information_without_errors(self):
         pk = Member.objects.get(firstname="First").id
@@ -1509,7 +1527,7 @@ class FormTestCase(TestCase):
         response = self.client.post(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': "referent_information"}
+                kwargs={'step': ugettext("referent_information")}
             ),
             referent_information_data,
             follow=True
@@ -1518,7 +1536,7 @@ class FormTestCase(TestCase):
         # Check redirect (successful POST)
         self.assertRedirects(response, reverse_lazy(
             'member:member_step',
-            kwargs={'step': "payment_information"}
+            kwargs={'step': ugettext("payment_information")}
         ))
 
         # The response is the next step of the form with no errors messages.
@@ -1549,7 +1567,7 @@ class FormTestCase(TestCase):
         response_error = self.client.post(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': "payment_information"}
+                kwargs={'step': ugettext("payment_information")}
             ),
             payment_information_data_with_error,
             follow=True
@@ -1559,13 +1577,15 @@ class FormTestCase(TestCase):
         self.assertTrue(response_error.context['form'].errors)
         self.assertFormError(response_error, 'form',
                              'billing_payment_type',
-                             'Select a valid choice. INVALID is not '
-                             'one of the available choices.')
+                             ugettext('Select a valid choice. %(value)s is '
+                                      'not one of the available '
+                                      'choices.') % {'value': 'INVALID'})
         self.assertFormError(response_error, 'form',
                              'member',
-                             'This member has not a valid address, '
-                             'please add a valid address to this member, '
-                             'so it can be used for the billing.')
+                             ugettext('This member has not a valid address, '
+                                      'please add a valid address to this '
+                                      'member, '
+                                      'so it can be used for the billing.'))
 
         # Data for the address_information step with errors.
         payment_information_data_with_error = {
@@ -1586,7 +1606,7 @@ class FormTestCase(TestCase):
         response_error = self.client.post(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': "payment_information"}
+                kwargs={'step': ugettext("payment_information")}
             ),
             payment_information_data_with_error,
             follow=True
@@ -1596,13 +1616,13 @@ class FormTestCase(TestCase):
         self.assertTrue(response_error.context['form'].errors)
         self.assertFormError(response_error, 'form',
                              'street',
-                             'This field is required')
+                             ugettext('This field is required'))
         self.assertFormError(response_error, 'form',
                              'city',
-                             'This field is required')
+                             ugettext('This field is required'))
         self.assertFormError(response_error, 'form',
                              'postal_code',
-                             'This field is required')
+                             ugettext('This field is required'))
 
     def _test_payment_information_without_errors(self):
         # Data for the address_information step without errors.
@@ -1625,7 +1645,7 @@ class FormTestCase(TestCase):
         response = self.client.post(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': "payment_information"}
+                kwargs={'step': ugettext("payment_information")}
             ),
             payment_information_data,
             follow=True
@@ -1634,7 +1654,7 @@ class FormTestCase(TestCase):
         # Check redirect (successful POST)
         self.assertRedirects(response, reverse_lazy(
             'member:member_step',
-            kwargs={'step': "dietary_restriction"}
+            kwargs={'step': ugettext("dietary_restriction")}
         ))
 
         # The response is the next step of the form with no errors messages.
@@ -1660,7 +1680,7 @@ class FormTestCase(TestCase):
         response_error = self.client.post(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': "dietary_restriction"}
+                kwargs={'step': ugettext("dietary_restriction")}
             ),
             restriction_information_data_with_error,
             follow=True
@@ -1670,11 +1690,12 @@ class FormTestCase(TestCase):
         self.assertTrue(response_error.context['form'].errors)
         self.assertFormError(response_error, 'form',
                              'delivery_type',
-                             'This field is required.')
+                             ugettext('This field is required.'))
         self.assertFormError(response_error, 'form',
                              'meals_schedule',
-                             'Select a valid choice.  is not '
-                             'one of the available choices.')
+                             ugettext('Select a valid choice. %(value)s is '
+                                      'not one of the available '
+                                      'choices.') % {'value': ''})
 
     def _test_step_dietary_restriction_without_errors(self):
         # Data for the address_information step without errors.
@@ -1691,7 +1712,7 @@ class FormTestCase(TestCase):
         response = self.client.post(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': "dietary_restriction"}
+                kwargs={'step': ugettext("dietary_restriction")}
             ),
             restriction_information_data,
             follow=True
@@ -1700,7 +1721,7 @@ class FormTestCase(TestCase):
         # Check redirect (successful POST)
         self.assertRedirects(response, reverse_lazy(
             'member:member_step',
-            kwargs={'step': "emergency_contacts"}
+            kwargs={'step': ugettext("emergency_contacts")}
         ))
 
         # The response is the next step of the form with no errors messages.
@@ -1714,7 +1735,7 @@ class FormTestCase(TestCase):
             # New form field in the next step
             self.assertIn('relationship', form.fields)
 
-    def _test_step_emergency_contact_with_errors(self):
+    def _test_step_emergency_contacts_with_errors(self):
         # Data for the address_information step with errors.
         emergency_contact_data_with_error = {
             "client_wizard-current_step": "emergency_contacts",
@@ -1734,7 +1755,7 @@ class FormTestCase(TestCase):
         response_error = self.client.post(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': "emergency_contacts"}
+                kwargs={'step': ugettext("emergency_contacts")}
             ),
             emergency_contact_data_with_error,
             follow=True
@@ -1744,23 +1765,26 @@ class FormTestCase(TestCase):
         self.assertTrue(response_error.context['form'].errors)
         self.assertFormsetError(response_error, 'form', 0,
                                 'cell_phone',
-                                'At least one emergency contact is required.')
+                                ugettext('At least one emergency contact '
+                                         'is required.'))
         self.assertFormsetError(response_error, 'form', 0,
                                 'work_phone',
-                                'At least one emergency contact is required.')
+                                ugettext('At least one emergency contact '
+                                         'is required.'))
         self.assertFormsetError(response_error, 'form', 0,
                                 'email',
-                                'At least one emergency contact is required.')
+                                ugettext('At least one emergency contact '
+                                         'is required.'))
         self.assertFormsetError(response_error, 'form', 0,
                                 'lastname',
-                                'This field is required unless '
-                                'you chose an existing member.')
+                                ugettext('This field is required unless '
+                                         'you chose an existing member.'))
         self.assertFormsetError(response_error, 'form', 0,
                                 'firstname',
-                                'This field is required unless '
-                                'you chose an existing member.')
+                                ugettext('This field is required unless '
+                                         'you chose an existing member.'))
 
-    def _test_step_emergency_contact_without_errors(self):
+    def _test_step_emergency_contacts_without_errors(self):
         # Data for the address_information step without errors.
         pk = Member.objects.get(firstname="First").id
         emergency_contact_data = {
@@ -1780,7 +1804,7 @@ class FormTestCase(TestCase):
         response = self.client.post(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': "emergency_contacts"}
+                kwargs={'step': ugettext("emergency_contact")}
             ),
             emergency_contact_data,
             follow=True
@@ -1911,11 +1935,12 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
         )
         out = StringIO()
         call_command('processscheduledstatuschange', stdout=out)
-        self.assertIn('client «{}» status updated from {} to {}'.format(
-            self.active_client.member,
-            scheduled_change.get_status_from_display(),
-            scheduled_change.get_status_to_display()
-        ), out.getvalue())
+        with translation.override('en'):
+            self.assertIn('client «{}» status updated from {} to {}'.format(
+                self.active_client.member,
+                scheduled_change.get_status_from_display(),
+                scheduled_change.get_status_to_display()
+            ), out.getvalue())
         # Reload
         scheduled_change = ClientScheduledStatus.objects.get(
             id=scheduled_change.id)
@@ -1943,7 +1968,10 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
             HTTP_X_REQUESTED_WITH='XMLHttpRequest',
             follow=True
         )
-        self.assertTrue(b'This field is required' in response.content)
+        self.assertIn(
+            ugettext('This field is required.').encode(response.charset),
+            response.content
+        )
 
     def test_view_client_status_update_future_date(self):
         admin = User.objects.create_superuser(

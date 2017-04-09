@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-31 14:17-0400\n"
+"POT-Creation-Date: 2017-04-04 14:50-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
@@ -471,6 +471,10 @@ msgid "Include a bill"
 msgstr ""
 
 #: delivery/tests.py
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr ""
+
+#: delivery/tests.py
 #, fuzzy
 #| msgid "Main dish"
 msgid "Main Dish"
@@ -478,66 +482,64 @@ msgstr "Plat principal"
 
 #: delivery/urls.py
 msgid "^order/$"
-msgstr "^order/$"
+msgstr "^commande/$"
 
 #: delivery/urls.py
 msgid "^meal/$"
-msgstr "^meal/$"
+msgstr "^repas/$"
 
 #: delivery/urls.py
 msgid "^meal/(?P<id>\\d+)/$"
-msgstr "^meal/(?P<id>\\d+)/$"
+msgstr "^repas/(?P<id>\\d+)/$"
 
 #: delivery/urls.py
 msgid "^route/$"
-msgstr "^route/$"
+msgstr "^itinéraire/$"
 
 #: delivery/urls.py
 msgid "^routes/$"
-msgstr ""
+msgstr "^itinéraires/$"
 
 #: delivery/urls.py
 msgid "^route/(?P<id>\\d+)$"
-msgstr ""
+msgstr "^itinéraire/(?P<id>\\d+)$"
 
 #: delivery/urls.py
 msgid "^kitchen_count/$"
-msgstr "^kitchen_count/$"
+msgstr "^inventaire_des_repas/$"
 
 #: delivery/urls.py
 #, python-brace-format
 msgid "^kitchen_count/(?P<year>\\d{4})/(?P<month>\\d{2})/(?P<day>\\d+)/$"
-msgstr "^kitchen_count/(?P<year>\\d{4})/(?P<month>\\d{2})/(?P<day>\\d+)/$"
+msgstr "^inventaire_des_repas/(?P<year>\\d{4})/(?P<month>\\d{2})/(?P<day>\\d+)/$"
 
 #: delivery/urls.py
-#, fuzzy
-#| msgid "^kitchen_count/$"
 msgid "^viewDownloadKitchenCount/$"
-msgstr "^kitchen_count/$"
+msgstr "^téléchargerInventaireDesRepas/$"
 
 #: delivery/urls.py
 msgid "^viewMealLabels/$"
-msgstr ""
+msgstr "^téléchargerLesÉtiquettes/$"
 
 #: delivery/urls.py
 msgid "^route_sheet/(?P<id>\\d+)/$"
-msgstr "^route_sheet/(?P<id>\\d+)/$"
+msgstr "^itinéraire_de_route/(?P<id>\\d+)/$"
 
 #: delivery/urls.py
 msgid "^getDailyOrders/$"
-msgstr "^getDailyOrders/$"
+msgstr "^commandesDuJour/$"
 
 #: delivery/urls.py
 msgid "^refresh_orders/$"
-msgstr "^refresh_orders/$"
+msgstr "^actualiser_les_commandes/$"
 
 #: delivery/urls.py
 msgid "^save_route/$"
-msgstr ""
+msgstr "^sauvegarder_itinéraire/$"
 
 #: delivery/urls.py
 msgid "^save_route_vehicle/$"
-msgstr ""
+msgstr "^sauvegarder_itinéraire_véhicule/$"
 
 #: delivery/views.py
 msgid "LARGE"
