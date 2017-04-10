@@ -2,7 +2,8 @@ from django.contrib import admin
 
 from member.models import (
     Member, Client, Contact, Address,
-    Referencing, Route, Option, EmergencyContact
+    Referencing, Route, Option, EmergencyContact,
+    DeliveryHistory
 )
 
 
@@ -75,6 +76,7 @@ class ReferencingAdmin(admin.ModelAdmin):
 admin.site.register(Member, MemberAdmin)
 admin.site.register(Client, ClientAdmin)
 admin.site.register(Route)
+admin.site.register(DeliveryHistory)
 admin.site.register(Contact, ContactAdmin)
 admin.site.register(Address)
 admin.site.register(Referencing, ReferencingAdmin)

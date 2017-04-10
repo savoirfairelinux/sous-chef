@@ -8,15 +8,18 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
 from django.urls import reverse_lazy, reverse
-from django.db.models import Q
+from django.db.models import Q, Count, Prefetch
 from django.db.transaction import atomic
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator, classonlymethod
 from django.utils.encoding import force_text
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 from formtools.wizard.views import NamedUrlSessionWizardView
+
+from delivery.views import calculateRoutePointsEuclidean
 from meal.models import COMPONENT_GROUP_CHOICES, COMPONENT_GROUP_CHOICES_SIDES
 from member.forms import (
     ClientScheduledStatusForm,
@@ -31,6 +34,7 @@ from member.formsets import (CreateEmergencyContactFormset,
 from member.models import (
     Client,
     ClientScheduledStatus,
+    Route, DeliveryHistory,
     Member,
     Address,
     Contact,
@@ -46,7 +50,7 @@ from member.models import (
     EmergencyContact)
 from note.models import Note
 from order.mixins import FormValidAjaxableResponseMixin
-from order.models import SIZE_CHOICES
+from order.models import SIZE_CHOICES, Order
 
 
 class NamedUrlSessionWizardView_i18nURL(NamedUrlSessionWizardView):
@@ -1535,3 +1539,238 @@ class DeleteComponentToAvoid(
     model = Client_avoid_component
     permission_required = 'sous_chef.edit'
     success_url = reverse_lazy('member:list')
+
+
+class RouteListView(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
+    # Display the list of routes
+    context_object_name = 'routes'
+    model = Route
+    queryset = Route.objects.all().annotate(
+        client_count=Count('client')
+    )
+    permission_required = 'sous_chef.read'
+    template_name = 'route/list.html'
+
+
+def get_clients_on_route(route):
+    """
+    Helper function, intended to generate the context variable of
+    Route-related views.
+
+    Returns a list of client instances with an extra attribute
+    `has_been_configured`, ordered by configured then unconfigured.
+    """
+    clients = Client.objects.filter(
+        route=route
+    ).select_related('member', 'member__address')
+    clients_dict = {client.pk: client for client in clients}
+    clients_on_route = []
+    for client_pk in (route.client_id_sequence or []):
+        if client_pk in clients_dict:
+            client = clients_dict[client_pk]
+            client.has_been_configured = True
+            clients_on_route.append(client)
+            del clients_dict[client_pk]
+        else:
+            # This client has been deleted after configuring the route.
+            # We don't include it in the sequence. Thus, when the user updates
+            # the default route sequence the next time, everything will be OK.
+            pass
+
+    for client_pk, client in clients_dict.items():
+        # Remaining clients
+        client.has_been_configured = False
+        clients_on_route.append(client)
+
+    return clients_on_route
+
+
+def get_clients_on_delivery_history(
+        delivery_history, func_add_warning_message=None):
+    """
+    Helper function, intended to generate the context variable of
+    DeliveryHistory-related views.
+
+    Returns a list of client instances with extra attributes
+    `has_been_configured` and `order_of_the_day`, ordered by configured
+    then unconfigured.
+
+    `order_of_the_day` could be none if we can't find the order and the
+    client is on the sequence. We assume that the order was deleted.
+
+    `func_add_warning_message` accepts one single string-like parameter.
+    It is called when we find a data integrity problem. That is when
+    there's a client that doesn't exist or we can't find his order
+    on that day any more.
+
+    See also: member.tests.RouteDeliveryHistoryDetailViewTestCase
+    """
+    orders = Order.objects.get_shippable_orders_by_route(
+        delivery_history.route.pk,
+        delivery_date=delivery_history.date,
+        exclude_non_geolocalized=True
+    ).select_related(
+        'client', 'client__member',
+        'client__member__address'
+    )
+    clients = []
+    clients_dict = {}
+    for order in orders:
+        c = order.client
+        c.order_of_the_day = order
+        clients.append(c)
+        clients_dict[c.pk] = c
+
+    clients_on_delivery_history = []
+
+    # First, check the clients on `id_sequence` and see if we put them in the
+    # display sequence.
+    for client_pk in (delivery_history.client_id_sequence or []):
+        if client_pk in clients_dict:
+            client = clients_dict[client_pk]
+            client.has_been_configured = True
+            clients_on_delivery_history.append(client)
+            del clients_dict[client_pk]
+        else:
+            # Oops, a data integrity error. Let user know.
+            if func_add_warning_message:
+                try:
+                    client = Client.objects.select_related('member').get(
+                        pk=int(client_pk))
+                    func_add_warning_message(mark_safe(_(
+                        "The client <a href=%(url)s>%(firstname)s %(lastname)s"
+                        "</a> is found on this delivery sequence but is no "
+                        "longer valid for this delivery." % {
+                            'firstname': client.member.firstname,
+                            'lastname': client.member.lastname,
+                            'url': reverse('member:client_information',
+                                           args=(client.pk, ))
+                        })))
+                except (Client.DoesNotExist, ValueError, TypeError):
+                    func_add_warning_message(_(
+                        "The delivery sequence contains a client with ID"
+                        "%(client_id)s that no longer exists in the "
+                        "database." % {
+                            'client_id': client_pk
+                        }))
+
+    # Then, check if there are clients that exist on default route sequence.
+    # They are considered as "by default".
+    for cpk in (delivery_history.route.client_id_sequence or []):
+        if cpk in clients_dict:
+            client = clients_dict[cpk]
+            client.has_been_configured = False
+            clients_on_delivery_history.append(client)
+            del clients_dict[cpk]
+
+    # Finally, check the clients that had delivery on that day but were not
+    # configured on the delivery sequence. Append them to the display sequence.
+    for client_pk, client in clients_dict.items():
+        client.has_been_configured = False
+        clients_on_delivery_history.append(client)
+    return clients_on_delivery_history
+
+
+class RouteDetailView(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+    model = Route
+    queryset = Route.objects.prefetch_related(Prefetch(
+        'delivery_histories',
+        queryset=DeliveryHistory.objects.order_by('-date')
+    ))
+    permission_required = 'sous_chef.read'
+    template_name = 'route/detail.html'
+
+    def get_context_data(self, **kwargs):
+        """
+        Get detailed information on route clients and out-of-route clients
+        that are to be rendered on the template.
+        """
+        context = super(RouteDetailView, self).get_context_data(**kwargs)
+        route = context['route']
+        context['clients_on_route'] = get_clients_on_route(route)
+        return context
+
+
+class RouteEditView(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.edit.UpdateView):
+    model = Route
+    fields = ('name', 'description', 'vehicle', 'client_id_sequence')
+    permission_required = 'sous_chef.edit'
+    template_name = 'route/edit.html'
+
+    def get_context_data(self, **kwargs):
+        """
+        Get detailed information on route clients and out-of-route clients
+        that are to be rendered on the template.
+        """
+        context = super(RouteEditView, self).get_context_data(**kwargs)
+        route = context['route']
+        context['clients_on_route'] = get_clients_on_route(route)
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('member:route_detail', args=[self.object.pk])
+
+    def form_valid(self, form):
+        response = super(RouteEditView, self).form_valid(form)
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _("This route has been updated.")
+        )
+        return response
+
+
+@login_required
+def get_minimised_euclidean_distances_route_sequence(request, pk):
+    """
+    Return the sequence of clients on the given route that minimises
+    euclidean distances, as a JSON list of client IDs.
+    """
+    route = get_object_or_404(Route, pk=pk)
+    clients_on_route = get_clients_on_route(route)
+    waypoints = list(map(
+        lambda c: {
+            'id': c.pk,
+            'latitude': c.member.address.latitude,
+            'longitude': c.member.address.longitude
+        }, clients_on_route
+    ))
+    optimised_waypoints = calculateRoutePointsEuclidean(waypoints)
+    return JsonResponse(
+        list(map(lambda w: w['id'], optimised_waypoints)),
+        safe=False
+    )
+
+
+class DeliveryHistoryDetailView(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+    model = DeliveryHistory
+    permission_required = 'sous_chef.read'
+    template_name = 'route/delivery_history_detail.html'
+
+    def get_object(self, *args, **kwargs):
+        return DeliveryHistory.objects.select_related('route').get(
+            route=self.kwargs.get('route_pk'),
+            date=self.kwargs.get('date')
+        )
+
+    def get_context_data(self, **kwargs):
+        """
+        Get detailed information on route clients and out-of-route clients
+        that are to be rendered on the template.
+        """
+        context = super(
+            DeliveryHistoryDetailView, self
+        ).get_context_data(**kwargs)
+        delivery_history = self.object
+        context['delivery_history'] = delivery_history
+        context['clients_on_delivery_history'] = (
+            get_clients_on_delivery_history(
+                delivery_history,
+                func_add_warning_message=lambda msg: messages.add_message(
+                    self.request, messages.WARNING, msg)
+            )
+        )
+        return context

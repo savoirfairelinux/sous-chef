@@ -14,7 +14,7 @@ from order.models import SIZE_CHOICES
 from member.models import (
     Member, Client, RATE_TYPE, Option,
     GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE,
-    DAYS_OF_WEEK, Route, ClientScheduledStatus
+    DAYS_OF_WEEK, Route, ClientScheduledStatus,
 )
 
 

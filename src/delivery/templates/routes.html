@@ -27,37 +27,62 @@
 
 <div class="row">
     <div class="column">
-        <a href="?print=yes" class="ui big labeled icon right basic pink button" title="{% trans 'Print the route sheets' %}" target="_blank">
+        <a href="?print=yes" class="ui big labeled icon right basic pink button {% if not all_configured %}disabled{% endif %}" title="{% trans 'Print the route sheets' %}" target="_blank">
             <i class="print icon"></i>{% trans 'Route Sheets' %}
         </a>
+        <i class="help-text question pink icon link" data-content="{% trans 'This is activated after organising all deliverable routes.' %}"></i>
     </div>
 </div>
 
 <div class="row">
     <div class="sixteen wide column">
       <div class="ui middle aligned divided list">
-          {% for route, orders in routes %}
+          {% for route, order_count, has_organised, delivery_history in route_details %}
           <div class="item">
             <div class="right floated content">
-              <a href="{% url 'delivery:organize_route' id=route.id %}" class="ui compact labeled {% if orders == 0 %} disabled {% endif %} icon button" title="{% trans 'Organize the route' %}">
-                  <i class="marker icon"></i>{% trans 'Organize' %}
+              {% if order_count == 0 %}
+              {# This route has no orders. No need to display useless buttons. #}
+              {% elif has_organised == 'no' %}
+              {# The delivery history instance doesn't exist yet. #}
+              <form action="{% url 'delivery:create_delivery_of_today' pk=route.pk %}" method="post">
+                {% csrf_token %}
+                <button class="ui compact labeled icon button" title="{% trans "View, adjust and confirm today's route sequence" %}">
+                  <i class="marker icon"></i>{% trans 'Confirm' %}
+                </button>
+                <a class="ui compact labeled disabled icon button">
+                  <i class="list layout icon"></i>{% trans 'Route sheet' %}
+                </a>
+              </form>
+              {% elif has_organised == 'invalid' %}
+              {# The client sequence of the delivery history doesn't match the orders. #}
+              <a href="{% url 'delivery:edit_delivery_of_today' pk=route.pk %}" class="ui compact labeled red icon button" title="{% trans 'Clients have changed, please reconfirm.' %}">
+                  <i class="warning icon"></i>{% trans 'Modified' %}
               </a>
-              <a href="{% url 'delivery:route_sheet_id' id=route.id %}" class="ui compact labeled {% if orders == 0 %} disabled {% endif %} icon button" title="{% trans 'Print the route sheet' %}">
+              <a class="ui compact labeled disabled icon button">
+                <i class="list layout icon"></i>{% trans 'Route sheet' %}
+              </a>
+              {% else %}
+              {# Configured. #}
+              <a href="{% url 'delivery:edit_delivery_of_today' pk=route.pk %}" class="ui compact labeled gray icon button" title="{% trans 'View or edit the organised route' %}">
+                  <i class="checkmark icon"></i>{% trans 'Organised' %}
+              </a>
+              <a href="{% url 'delivery:route_sheet' pk=route.pk %}" class="ui compact labeled icon button" title="{% trans 'Print the route sheet' %}">
                   <i class="list layout icon"></i>{% trans 'Route sheet' %}
               </a>
+              {% endif %}
             </div>
             <i class="large location arrow icon"></i>
             <div class="content">
               <div class="header">{{ route.name }}</div>
               <div class="description">
-                {% if route.vehicle == 'cycling' %}
+                {% if delivery_history.vehicle == 'cycling' or route.vehicle == 'cycling' %}
                   <i class="bicycle circular icon" title="{% trans 'Cycling' %}"></i>
-                {% elif route.vehicle == 'driving' %}
+                {% elif delivery_history.vehicle == 'driving' or route.vehicle == 'driving' %}
                   <i class="car circular icon" title="{% trans 'Driving' %}"></i>
-                {% elif route.vehicle == 'walking' %}
+                {% elif delivery_history.vehicle == 'walking' or route.vehicle == 'walking' %}
                   <i class="male circular icon" title="{% trans 'Walking' %}"></i>
                 {% endif %}
-                  <div class="ui circular pink basic label" title="{% trans 'Number of orders on this route' %}">{{ orders }}</div>
+                  <div class="ui circular pink basic label" title="{% trans 'Number of orders on this route' %}">{{ order_count }}</div>
               </div>
             </div>
           </div>

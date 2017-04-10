@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load l10n %}
+{% load static %}
+{% load rules %}
+
+{% block title %} {% trans 'View delivery history:' %} {{ delivery_history.route.name }} - {{ delivery_history.date|date:"j F Y" }} {% endblock %}
+
+{% block extrahead %}
+{% load leaflet_tags %}
+    {% leaflet_css %}
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
+
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">{% trans 'View delivery history:' %} {{ delivery_history.route.name }}</h1>
+    <div class="right menu">
+      <div class="ui item"><h3><i class="calendar icon"></i>{{ delivery_history.date|date:"j F Y" }}</h3></div>
+    </div>
+</div>
+
+<div class="sixteen wide column">
+
+  <h4 class="ui dividing header">
+    {% trans 'Delivery vehicle' %}
+  </h4>
+  <p>{{ delivery_history.get_vehicle_display }}</p>
+
+  <h4 class="ui dividing header">
+    {% trans 'Comments' %}
+  </h4>
+  <p>{{ delivery_history.comments }}</p>
+
+  <h4 class="ui dividing header">{% trans 'Delivery sequence' %}</h4>
+  <table class="ui table striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>{% trans 'Name' %}</th>
+        <th>{% trans 'Status' %}</th>
+        <th>{% trans 'Delivery type' %}</th>
+            <th>{% trans 'View order' %}</th>
+        <th>{% trans 'Address' %}</th>
+        <th>{% trans 'Status' %}<i class="help-text question grey icon link" data-content="{% trans 'Configured or unconfigured. Unconfigured clients are placed at the end of the delivery sequence by default.' %}"></i></th>
+      </tr>
+    </thead>
+    <tbody id="clients-on-delivery-history">
+      {% for client in clients_on_delivery_history %}
+      <tr data-latitude="{{ client.member.address.latitude|unlocalize }}" data-longitude="{{ client.member.address.longitude|unlocalize }}" data-id="{{ client.pk }}">
+        <td data-property="delivery_sequence">{{ forloop.counter }}</td>
+        <td data-property="name"><a href="{% url 'member:client_information' pk=client.pk %}" title="{% trans "Access the client's file" %}">{{ client.member.firstname }} {{ client.member.lastname }}</a></td>
+        <td>{{ client.get_status_display }}</td>
+        <td>{{ client.get_delivery_type_display }}</td>
+        <td>
+          {% if client.order_of_the_day %}
+          <a href="{% url 'order:view' client.order_of_the_day.pk %}" title="{% trans "View the order" %}">{% trans 'Order #' %}{{ client.order_of_the_day.pk }}</a>
+          {% else %}
+            {% trans "[DELETED]" %}
+          {% endif %}
+        </td>
+        <td data-property="address">{{ client.member.address }}</td>
+        <td data-property="status">
+          {% if client.has_been_configured %}
+          <i class="checkmark icon" title="{% trans 'Configured' %}"></i>
+          {% else %}
+          <i class="remove icon" title="{% trans 'Unconfigured' %}"></i>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h4 class="ui dividing header">{% trans 'Map Review' %}</h4>
+
+  <div class="ui grid">
+    <div class="row">
+      <div class="sixteen wide column">
+        {% leaflet_map "delivery_history_view_map" callback="__map_init" %}
+        <script type="text/javascript">
+            function __map_init (map, options) {
+              function _getWaypoints () {
+                var waypoints = [
+                  [
+                    45.516564, -73.575145, {
+                      popup_html: "<div class='ui list'>"
+                        + "<div class='item'><i class='food icon'></i> Santropol Roulant </div>"
+                        + "</div>",
+                      icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
+                    }
+                  ]
+                ];
+                $("#clients-on-delivery-history > tr").each(function (idx, tr) {
+                  var latitude = parseFloat($(tr).data('latitude'));
+                  var longitude = parseFloat($(tr).data('longitude'));
+                  waypoints.push([
+                    latitude, longitude, {
+                      popup_html: "<div class='ui list'>"
+                        + "<div class='item'><i class='user icon'></i><div class='content'>" + $(tr).find('[data-property="name"]').text() + " (#" + (idx+1).toString() + ")" + "</div></div>"
+                        + "<div class='item'><i class='home icon'></i><div class='content'>" + $(tr).find('[data-property="address"]').text() + "</div></div>"
+                        + "</div>",
+                      icon: L.icon.glyph({
+                        prefix: '',
+                        glyph: (idx+1).toString()
+                      })
+                    }
+                  ]);
+                });
+                waypoints.push([waypoints[0][0], waypoints[0][1], {}]);  // Back to Santropol.
+                return waypoints;
+              }
+
+              sous_chef_leaflet_map_init(map, options, {
+                vehicle: "{{ delivery_history.vehicle }}",
+                waypoints: _getWaypoints()
+              });
+            }
+        </script>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div class="action">
+    <a href="{% url 'member:route_detail' delivery_history.route.pk %}" class="ui big labeled icon button">
+      <i class="chevron left icon"></i>{% trans 'Back' %}
+    </a>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+    {% leaflet_js %}
+    {% if debug %}
+        <script src="{% static 'js/leaflet.js' %}" type="application/javascript"></script>
+    {% else %}
+        <script src="{% static 'js/leaflet.min.js' %}" type="application/javascript"></script>
+    {% endif %}
+{% endblock %}

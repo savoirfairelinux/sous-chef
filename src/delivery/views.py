@@ -12,7 +12,8 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.serializers.json import DjangoJSONEncoder
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext
 from django.utils.translation import ugettext_lazy as _
@@ -50,7 +51,7 @@ from meal.models import (
     Component,
     Menu, Menu_component,
     Component_ingredient)
-from member.models import Client, Route, ROUTE_VEHICLES
+from member.models import Client, Route, ROUTE_VEHICLES, DeliveryHistory
 from order.models import (
     Order, component_group_sorting, SIZE_CHOICES_REGULAR, SIZE_CHOICES_LARGE)
 from .models import Delivery
@@ -244,21 +245,6 @@ class MealInformation(
              'form': form})
 
 
-class RouteInformation(
-        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
-    # Display all the route information for a given day
-    model = Delivery
-    permission_required = 'sous_chef.read'
-    template_name = "route.html"
-
-    def get_context_data(self, **kwargs):
-
-        context = super(RouteInformation, self).get_context_data(**kwargs)
-        context['routes'] = Route.objects.all()
-
-        return context
-
-
 class RoutesInformation(
         LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
     # Display all the route information for a given day
@@ -273,27 +259,58 @@ class RoutesInformation(
         context = super(RoutesInformation, self).get_context_data(**kwargs)
 
         routes = Route.objects.all()
-        orders = []
+        route_details = []
+        all_configured = True
         for route in routes:
-            order_count = Order.objects.get_shippable_orders_by_route(
-                route.id, exclude_non_geolocalized=True).count()
-            orders.append((route, order_count))
+            clients = Order.objects.get_shippable_orders_by_route(
+                route.id, exclude_non_geolocalized=True).values_list(
+                    'client__pk', flat=True)
+            order_count = len(clients)
+            try:
+                delivery_history = DeliveryHistory.objects.get(
+                    route=route,
+                    date=timezone.datetime.today()
+                )
+                set1 = set(delivery_history.client_id_sequence)
+                set2 = set(clients)
+                has_organised = 'yes' if set1 == set2 else 'invalid'
+            except DeliveryHistory.DoesNotExist:
+                delivery_history = None
+                has_organised = 'no'
+            except TypeError:
+                # `client_id_sequence` is not iterable.
+                has_organised = 'invalid'
 
-        context['routes'] = orders
+            route_details.append(
+                (route, order_count, has_organised, delivery_history)
+            )
+            if order_count > 0 and has_organised != 'yes':
+                all_configured = False
+        context['route_details'] = route_details
+        context['all_configured'] = all_configured
 
         # Embeds additional information if we are displaying the print version
         # of the routes information page.
         if self.doprint:
-            date = datetime.date.today()
+            if not context['all_configured']:
+                raise Http404
+            today = timezone.datetime.today()
             routes_dict = {}
-            for route in routes:
-                date_stored, route_client_ids = route.get_client_sequence()
-                route_list = Order.get_delivery_list(date, route.id)
-                route_list = sort_sequence_ids(route_list, route_client_ids)
+            for delivery_history in DeliveryHistory.objects.filter(
+                    date=today
+            ):
+                route_list = Order.get_delivery_list(
+                    today, delivery_history.route_id
+                )
+                route_list = sort_sequence_ids(
+                    route_list, delivery_history.client_id_sequence
+                )
                 summary_lines, detail_lines = drs_make_lines(route_list, date)
-                routes_dict[route.id] = {
-                    'route': route, 'summary_lines': summary_lines,
-                    'detail_lines': detail_lines}
+                routes_dict[delivery_history.route_id] = {
+                    'route': delivery_history.route,
+                    'summary_lines': summary_lines,
+                    'detail_lines': detail_lines
+                }
             context['routes_dict'] = routes_dict
 
         return context
@@ -302,21 +319,72 @@ class RoutesInformation(
         return ['routes_print.html', ] if self.doprint else ['routes.html', ]
 
 
-class OrganizeRoute(
-        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
-    # Display all the route information for a given day
-    model = Delivery
-    permission_required = 'sous_chef.read'
-    template_name = "organize_route.html"
+class CreateDeliveryOfToday(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.View):
+    permission_required = 'sous_chef.edit'
+
+    def post(self, request, pk, *args, **kwargs):
+        route = get_object_or_404(Route, pk=pk)
+        if not Order.objects.get_shippable_orders_by_route(
+                route.id, exclude_non_geolocalized=True).exists():
+            # No clients on this route.
+            raise Http404
+
+        try:
+            delivery_history = DeliveryHistory.objects.get(
+                route=route, date=timezone.datetime.today()
+            )
+        except DeliveryHistory.DoesNotExist:
+            delivery_history = DeliveryHistory.objects.create(
+                route=route, date=timezone.datetime.today(),
+                vehicle=route.vehicle
+            )
+        return HttpResponseRedirect(
+            reverse('delivery:edit_delivery_of_today', kwargs={'pk': pk})
+        )
+
+
+class EditDeliveryOfToday(
+        LoginRequiredMixin, PermissionRequiredMixin, generic.edit.UpdateView):
+    model = DeliveryHistory
+    fields = ('vehicle', 'client_id_sequence', 'comments')
+    permission_required = 'sous_chef.edit'
+    template_name = 'edit_delivery_of_today.html'
+
+    def get_object(self, *args, **kwargs):
+        return get_object_or_404(
+            DeliveryHistory.objects.select_related('route'),
+            route=self.kwargs.get('pk'),
+            date=timezone.datetime.today()
+        )
 
     def get_context_data(self, **kwargs):
-
-        context = super(OrganizeRoute, self).get_context_data(**kwargs)
-        context['route'] = Route.objects.get(id=self.kwargs['id'])
-        context['vehicle_choices_json'] = json.dumps(
-            ROUTE_VEHICLES, cls=DjangoJSONEncoder
+        context = super(EditDeliveryOfToday, self).get_context_data(**kwargs)
+        context['delivery_history'] = self.object
+        # This needs to be placed on the top when refactoring Route module.
+        # It causes circular dependancy in current code structure.
+        from member.views import get_clients_on_delivery_history  # noqa
+        context['clients_on_delivery_history'] = (
+            get_clients_on_delivery_history(
+                self.object,
+                func_add_warning_message=lambda m: messages.add_message(
+                    self.request, messages.ERROR, m)
+            )
         )
         return context
+
+    def get_success_url(self):
+        return reverse_lazy('delivery:routes')
+
+    def form_valid(self, form):
+        response = super(EditDeliveryOfToday, self).form_valid(form)
+        messages.add_message(
+            self.request, messages.SUCCESS,
+            _("Today's delivery on route %(route_name)s has been updated.") % {
+                'route_name': self.object.route.name
+            }
+        )
+        return response
 
 
 # Kitchen count report view, helper classes and functions
@@ -1083,18 +1151,19 @@ class DeliveryRouteSheet(
     permission_required = 'sous_chef.read'
 
     def get(self, request, **kwargs):
-        # Display today's delivery sheet for given route
-        route_id = int(kwargs['id'])
-        date = datetime.date.today()
-
-        route = Route.objects.get(id=route_id)
-        # date_stored is not used here
-        date_stored, route_client_ids = route.get_client_sequence()
-        route_list = Order.get_delivery_list(date, route_id)
-        route_list = sort_sequence_ids(route_list, route_client_ids)
+        today = timezone.datetime.today()
+        delivery_history = get_object_or_404(
+            DeliveryHistory,
+            route__pk=kwargs['pk'],
+            date=today
+        )
+        route_list = Order.get_delivery_list(today, delivery_history.route_id)
+        route_list = sort_sequence_ids(
+            route_list, delivery_history.client_id_sequence
+        )
         summary_lines, detail_lines = drs_make_lines(route_list, date)
         return render(request, 'route_sheet.html',
-                      {'route': route,
+                      {'route': delivery_history.route,
                        'summary_lines': summary_lines,
                        'detail_lines': detail_lines})
 
@@ -1201,160 +1270,6 @@ def calculateRoutePointsEuclidean(data):
     # Guard against starting point which is not in node_to_waypoint
     return [node_to_waypoint[node] for
             node in nodes if node in node_to_waypoint]
-
-
-def retrieveRoutePoints(route_id, data):
-    """Attempt to sort a route according to previously saved points.
-
-    If we find a sequence of client ids saved for the route having 'route_id',
-    sort the list of waypoints in 'data' accordingly.
-
-    Args:
-        route_id : The id of a delivery route.
-        data : A list of waypoints for leaflet.js
-
-    Returns:
-        A list of waypoints.
-    """
-    route = Route.objects.get(id=route_id)
-    # date_stored is not used here
-    date_stored, route_client_ids = route.get_client_sequence()
-    if route_client_ids:
-        # sort waypoints according to previously saved route
-        member_ids = \
-            [Client.objects.get(id=cid).member.id
-             for cid in route_client_ids]
-        unsorted_dic = {waypoint['id']: waypoint for waypoint in data}
-        sorted_dic = sort_sequence_ids(unsorted_dic, member_ids)
-        return list(sorted_dic.values())
-    else:
-        # no saved route found, return none
-        return None
-
-
-@never_cache
-@login_required
-def dailyOrders(request):
-    """Get the sequence of points for a delivery route.
-
-    Args:
-        request : an http request having parameters 'route' and 'mode'.
-
-    Returns:
-        A json response containing waypoints for leaflet.js.
-    """
-    data = []
-    route_id = request.GET.get('route')
-    # mode is one of :
-    #   'euclidean' to calculate shortest path of points assuming
-    #      a 2D euclidean plane for the TSP algorithm
-    #   'cycling' : shortest path using mapbox durations NOT YET IMPLEMENTED
-    #   'driving' : shortest path using mapbox durations NOT YET IMPLEMENTED
-    #   'walking' : shortest path using mapbox durations NOT YET IMPLEMENTED
-    mode = request.GET.get('mode')
-    # if_exist_then_retrieve : if it is set, try retrieving previously saved
-    #   if not previously saved, calculate it using "mode"
-    if_exist_then_retrieve = request.GET.get('if_exist_then_retrieve')
-    # Load all orders for the day
-    orders = Order.objects.get_shippable_orders_by_route(
-        route_id,
-        exclude_non_geolocalized=True
-    )
-
-    for order in orders:
-        waypoint = {
-            'id': order.client.member.id,
-            'latitude': order.client.member.address.latitude,
-            'longitude': order.client.member.address.longitude,
-            'distance': order.client.member.address.distance,
-            'member': "{} {}".format(
-                order.client.member.firstname,
-                order.client.member.lastname),
-            'address': order.client.member.address.street
-        }
-        data.append(waypoint)
-
-    if if_exist_then_retrieve:
-        retrieved = retrieveRoutePoints(route_id, data)
-        if retrieved is not None:
-            return JsonResponse({'waypoints': retrieved}, safe=False)
-
-    # don't retrieve or nothing retrieved
-    if mode == 'euclidean':
-        data = calculateRoutePointsEuclidean(data)
-    else:
-        # unknown mode
-        raise Exception(
-            "delivery dailyOrders mode '{}' unknown".format(mode))
-
-    waypoints = {'waypoints': data}
-
-    return JsonResponse(waypoints, safe=False)
-
-
-class SaveRouteView(
-        LoginRequiredMixin, PermissionRequiredMixin, generic.View):
-    permission_required = 'sous_chef.edit'
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super(SaveRouteView, self).dispatch(request, *args, **kwargs)
-
-    def post(self, request):
-        """Save the sequence of points for a delivery route.
-
-        Saves a sequence of client ids for the delivery route.
-
-        Args:
-            request : an http request having parameters 'members' and 'route'.
-
-        Returns:
-            A json response confirming success.
-        """
-        data = json.loads(request.body.decode('utf-8'))
-        member_ids = [member['id'] for member in data['members']]
-        member_client_ids_dict = dict(Client.objects.filter(
-            member__in=member_ids
-        ).values_list('member__pk', 'pk'))
-        route_client_ids = list(map(
-            lambda mid: member_client_ids_dict[mid],
-            member_ids
-        ))
-
-        route_id = data['route'][0]['id']
-        route = Route.objects.get(id=route_id)
-        route.set_client_sequence(datetime.date.today(), route_client_ids)
-        route.save()
-        return JsonResponse('OK', safe=False)
-
-
-class SaveRouteVehicleView(
-        LoginRequiredMixin, PermissionRequiredMixin, generic.View):
-    permission_required = 'sous_chef.edit'
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super(
-            SaveRouteVehicleView, self
-        ).dispatch(request, *args, **kwargs)
-
-    def post(self, request):
-        """
-        Save the vehicle of a delivery route.
-
-        Args:
-            request : an http request having parameter 'vehicle'.
-
-        Returns:
-            A json response confirming success.
-        """
-        data = json.loads(request.body.decode('utf-8'))
-        vehicle = data['vehicle']
-        route_id = data['route'][0]['id']
-        route = Route.objects.get(id=route_id)
-        route.vehicle = vehicle
-        route.save()
-        return JsonResponse('OK', safe=False)
 
 
 class RefreshOrderView(

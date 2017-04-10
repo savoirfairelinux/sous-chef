@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from member.models import Client
+from member.models import Client, Route
 from order.models import Order, ORDER_STATUS_ORDERED
 from note.models import Note, NoteFilter
 import datetime
@@ -11,12 +11,14 @@ def total(request):
 
     clients = Client.objects.count()
     orders = Order.objects.count()
+    routes = Route.objects.count()
     # Only unread messages
     notes = Note.unread.count()
 
     COMMON_CONTEXT = {
         'CLIENTS_TOTAL': clients,
         'ORDERS_TOTAL': orders,
+        'ROUTES_TOTAL': routes,
         'NOTES_TOTAL': notes,
         # This is pretty bad separation of concert to puth the following here
         # But since there is no actual view associated with menu.html (it's

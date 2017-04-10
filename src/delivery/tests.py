@@ -17,9 +17,9 @@ from meal.factories import (IngredientFactory, ComponentFactory,
                             IncompatibilityFactory, RestrictedItemFactory)
 from order.models import Order
 from member.models import (Client, Member, Route, Restriction,
-                           Client_avoid_ingredient)
+                           Client_avoid_ingredient, DeliveryHistory)
 from member.factories import (AddressFactory, MemberFactory, ClientFactory,
-                              RouteFactory)
+                              RouteFactory, DeliveryHistoryFactory)
 from sous_chef.tests import TestMixin as SousChefTestMixin
 
 from .filters import KitchenCountOrderFilter
@@ -429,14 +429,15 @@ class DeliveryRouteSheetTestCase(SousChefTestMixin, TestCase):
 
     def test_sheet(self):
         """Sample route sheet page."""
-        member = Member.objects.filter(lastname='Blondin')[0]
-        dic = {"route": [{"id": self.route_id}],
-               "members": [{"id": member.id}]}
-        response = self.client.post(reverse_lazy('delivery:save_route'),
-                                    json.dumps(dic),
-                                    content_type="application/json")
+        client = Client.objects.filter(member__lastname='Blondin')[0]
+        route = Route.objects.get(pk=self.route_id)
+        delivery_history = DeliveryHistoryFactory(
+            route=route,
+            date=tz.datetime.today(),
+            client_id_sequence=[client.id]
+        )
         response = self.client.get(
-            reverse_lazy('delivery:route_sheet_id', args=[self.route_id]))
+            reverse_lazy('delivery:route_sheet', args=[self.route_id]))
         self.assertTrue(b'Blondin' in response.content)
 
     def test_redirects_users_who_do_not_have_read_permission(self):
@@ -444,7 +445,7 @@ class DeliveryRouteSheetTestCase(SousChefTestMixin, TestCase):
         User.objects.create_user(
             username='foo', email='foo@example.com', password='secure')
         self.client.login(username='foo', password='secure')
-        url = reverse('delivery:route_sheet_id', args=[self.route_id])
+        url = reverse('delivery:route_sheet', args=[self.route_id])
         # Run & check
         self.assertRedirectsWithAllMethods(url)
 
@@ -455,115 +456,13 @@ class DeliveryRouteSheetTestCase(SousChefTestMixin, TestCase):
         user.is_staff = True
         user.save()
         self.client.login(username='foo', password='secure')
-        url = reverse('delivery:route_sheet_id', args=[self.route_id])
+        dh = DeliveryHistoryFactory(
+            route=Route.objects.get(pk=self.route_id),
+            date=tz.datetime.today()
+        )
+        url = reverse('delivery:route_sheet', args=[self.route_id])
         # Run
         response = self.client.get(url)
-        # Check
-        self.assertEqual(response.status_code, 200)
-
-
-class RouteSequencingTestCase(SousChefTestMixin, TestCase):
-
-    fixtures = ['sample_data']
-
-    def setUp(self):
-        self.force_login()
-        # This data set includes 'Dallaire' and 'Taylor' client lastnames
-        # generate orders today
-        self.today = datetime.date.today()
-        clients = Client.active.all()
-        numorders = Order.objects.auto_create_orders(
-            self.today, clients)
-        self.route_id = Route.objects.get(name='Mile-End').id
-
-    def test_get_orders_euclidean(self):
-        """Route get orders with Euclidean optimized sequence."""
-        response = self.client.get(
-            reverse_lazy('delivery:dailyOrders'),
-            {'route': str(self.route_id), 'mode': 'euclidean'}
-        )
-        self.assertTrue(b'Dallaire' in response.content)
-
-    def test_save_route(self):
-        """Route save sequence."""
-        dic = {"route": [{"id": "4"}],
-               "members": [{"id": 864}, {"id": 867}, {"id": 868},
-                           {"id": 869}, {"id": 861}, {"id": 862}, {"id": 863}]}
-        response = self.client.post(reverse_lazy('delivery:save_route'),
-                                    json.dumps(dic),
-                                    content_type="application/json")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(b'"OK"', response.content)
-
-    def test_save_route_and_retrieve(self):
-        """Route sequence save then retrieve."""
-        mem_dal = Member.objects.filter(lastname='Dallaire')[0]
-        mem_tay = Member.objects.filter(lastname='Taylor')[0]
-        dic = {"route": [{"id": self.route_id}],
-               "members": [{"id": mem_dal.id}, {"id": mem_tay.id}]}
-        response = self.client.post(reverse_lazy('delivery:save_route'),
-                                    json.dumps(dic),
-                                    content_type="application/json")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(b'"OK"', response.content)
-        response = self.client.get(
-            reverse_lazy('delivery:dailyOrders'),
-            {'route': str(self.route_id), 'if_exist_then_retrieve': 'true'}
-        )
-        self.assertEqual(response.status_code, 200)
-        content = response.content.decode(response.charset)
-        waypoints = json.loads(content)['waypoints']
-        self.assertEqual(waypoints[0]['id'], mem_dal.id)
-        self.assertEqual(waypoints[1]['id'], mem_tay.id)
-
-    def test_route_sequence_not_saved(self):
-        """Attempt retrieving a route sequence that was not saved."""
-        route_id_none = Route.objects.get(name='Centre Sud').id
-        with self.assertRaises(Exception) as cm:
-            response = self.client.get(
-                reverse_lazy('delivery:dailyOrders'),
-                {'route': str(route_id_none), 'if_exist_then_retrieve': 'true'}
-            )
-        self.assertIn('unknown', str(cm.exception))
-
-    def test_get_orders_unknown_mode(self):
-        """Route get orders with unknown transportation mode."""
-        with self.assertRaises(Exception) as cm:
-            response = self.client.get(
-                reverse_lazy('delivery:dailyOrders'),
-                {'route': str(self.route_id), 'mode': 'swimming'}
-            )
-
-    def test_redirects_users_who_do_not_have_edit_permission(self):
-        # Setup
-        user = User.objects.create_user(
-            username='foo', email='foo@example.com', password='secure')
-        user.is_staff = True
-        user.save()
-        self.client.login(username='foo', password='secure')
-        dic = {"route": [{"id": "4"}],
-               "members": [{"id": 864}, {"id": 867}, {"id": 868},
-                           {"id": 869}, {"id": 861}, {"id": 862}, {"id": 863}]}
-        url = reverse('delivery:save_route')
-        # Run
-        response = self.client.post(
-            url, json.dumps(dic), content_type="application/json")
-        # Check
-        self.assertEqual(response.status_code, 302)
-
-    def test_allow_access_to_users_with_edit_permission(self):
-        # Setup
-        user = User.objects.create_superuser(
-            username='foo', email='foo@example.com', password='secure')
-        user.save()
-        self.client.login(username='foo', password='secure')
-        dic = {"route": [{"id": "4"}],
-               "members": [{"id": 864}, {"id": 867}, {"id": 868},
-                           {"id": 869}, {"id": 861}, {"id": 862}, {"id": 863}]}
-        url = reverse('delivery:save_route')
-        # Run
-        response = self.client.post(
-            url, json.dumps(dic), content_type="application/json")
         # Check
         self.assertEqual(response.status_code, 200)
 
@@ -579,9 +478,7 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
         meal = Component.objects.first()
         meal_id = meal.id
         check(reverse('delivery:meal_id', kwargs={'id': meal_id}))
-        check(reverse('delivery:route'))
         check(reverse('delivery:routes'))
-        check(reverse('delivery:organize_route', kwargs={'id': 1}))
         check(reverse('delivery:kitchen_count'))
         check(reverse('delivery:kitchen_count_date', kwargs={
             'year': 2016,
@@ -589,11 +486,8 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
             'day': 30
         }))
         check(reverse('delivery:mealLabels'))
-        check(reverse('delivery:route_sheet_id', kwargs={'id': 1}))
-        check(reverse('delivery:dailyOrders'))
+        check(reverse('delivery:route_sheet', kwargs={'pk': 1}))
         check(reverse('delivery:refresh_orders'))
-        check(reverse('delivery:save_route'))
-        check(reverse('delivery:save_route_vehicle'))
 
 
 class OrderlistViewTestCase(SousChefTestMixin, TestCase):
@@ -702,32 +596,6 @@ class RoutesInformationViewTestCase(SousChefTestMixin, TestCase):
         user.save()
         self.client.login(username='foo', password='secure')
         url = reverse('delivery:routes')
-        # Run
-        response = self.client.get(url)
-        # Check
-        self.assertEqual(response.status_code, 200)
-
-
-class OrganizeRouteViewTestCase(SousChefTestMixin, TestCase):
-    fixtures = ['sample_data']
-
-    def test_redirects_users_who_do_not_have_read_permission(self):
-        # Setup
-        User.objects.create_user(
-            username='foo', email='foo@example.com', password='secure')
-        self.client.login(username='foo', password='secure')
-        url = reverse('delivery:organize_route', kwargs={'id': 1})
-        # Run & check
-        self.assertRedirectsWithAllMethods(url)
-
-    def test_allow_access_to_users_with_read_permission(self):
-        # Setup
-        user = User.objects.create_user(
-            username='foo', email='foo@example.com', password='secure')
-        user.is_staff = True
-        user.save()
-        self.client.login(username='foo', password='secure')
-        url = reverse('delivery:organize_route', kwargs={'id': 1})
         # Run
         response = self.client.get(url)
         # Check
@@ -1080,32 +948,128 @@ class ExcludeMalconfiguredClientsTestCase(SousChefTestMixin, TestCase):
         num_labels = response.context['num_labels']
         self.assertEqual(num_labels, 1)  # only c_valid
 
-    def test_step_4__routes_overview(self):
+    def test_step_4__routes_before_organizing(self):
+        """
+        Should ignore route==None and non geolocalized clients.
+        When the delivery history doesn't exist or it's invalid,
+        don't let route sheet and route sheets work.
+        """
+        _ = self._refresh_orders()
+        _ = self._today_meal()
+        response = self.client.get(reverse("delivery:routes"))
+        route_orders_tuples = response.context['route_details']
+        route_orders_dict = dict(map(
+            lambda t: (t[0], t[1:]), route_orders_tuples
+        ))
+        self.assertIn(self.route1, route_orders_dict)
+        self.assertEqual(route_orders_dict[self.route1][0], 1)
+        self.assertIn(self.route2, route_orders_dict)
+        self.assertEqual(route_orders_dict[self.route2][0], 0)
+        # Assert not configured
+        self.assertFalse(response.context['all_configured'])
+        self.assertFalse(DeliveryHistory.objects.filter(
+            route=self.route1,
+            date=tz.datetime.today()
+        ).exists())
+        self.assertFalse(DeliveryHistory.objects.filter(
+            route=self.route2,
+            date=tz.datetime.today()
+        ).exists())
+        # Assert print doesn't work
+        response = self.client.get(reverse("delivery:routes"),
+                                   {'print': 'yes'})
+        self.assertEqual(response.status_code, 404)
+        # Assert route sheets don't exist
+        response = self.client.get(
+            reverse("delivery:route_sheet", args=[self.route1.pk])
+        )
+        self.assertEqual(response.status_code, 404)
+        response = self.client.get(
+            reverse("delivery:route_sheet", args=[self.route2.pk])
+        )
+        self.assertEqual(response.status_code, 404)
+
+        # Try invalid DeliveryHistory
+        d = DeliveryHistory.objects.create(
+            route=self.route1,
+            date=tz.datetime.today(),
+            # As long as this sequence is not exactly same as the clients',
+            # it's always invalid, even if it contains all the clients.
+            client_id_sequence=[999999, 888888, self.c_valid.pk]
+        )
+        # Assert print doesn't work
+        response = self.client.get(reverse("delivery:routes"),
+                                   {'print': 'yes'})
+        self.assertEqual(response.status_code, 404)
+
+    def test_step_4__routes_after_organizing(self):
         """
         Should ignore route==None and not geolocalized
         """
         _ = self._refresh_orders()
         _ = self._today_meal()
-        response = self.client.get(reverse("delivery:routes"))
-        route_orders_tuples = response.context['routes']
-        route_orders_dict = dict(route_orders_tuples)
-        self.assertIn(self.route1, route_orders_dict)
-        self.assertEqual(route_orders_dict[self.route1], 1)
-        self.assertIn(self.route2, route_orders_dict)
-        self.assertEqual(route_orders_dict[self.route2], 0)
+        # Work on Route 1
+        response = self.client.post(
+            reverse("delivery:create_delivery_of_today", args=[self.route1.pk])
+        )
+        self.assertRedirects(
+            response,
+            reverse("delivery:edit_delivery_of_today", args=[self.route1.pk])
+        )
+        self.assertTrue(DeliveryHistory.objects.filter(
+            route=self.route1,
+            date=tz.datetime.today()
+        ).exists())
+        response = self.client.get(
+            reverse("delivery:edit_delivery_of_today", args=[self.route1.pk])
+        )
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(
+            reverse("delivery:edit_delivery_of_today", args=[self.route1.pk]),
+            {
+                'vehicle': 'walking',
+                'comments': 'My bicycle is broken',
+                'client_id_sequence': json.dumps([self.c_valid.pk])
+            }
+        )
+        self.assertRedirects(
+            response,
+            reverse("delivery:routes")
+        )
 
-    def test_step_4__routes_overview_print(self):
-        _ = self._refresh_orders()
-        _ = self._today_meal()
+        # Assert configured because Route 2 is empty.
+        response = self.client.get(reverse("delivery:routes"))
+        self.assertTrue(response.context['all_configured'])
+
+        # Assert Route 2 doesn't allow the creation of delivery
+        response = self.client.post(
+            reverse("delivery:create_delivery_of_today", args=[self.route2.pk])
+        )
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(DeliveryHistory.objects.filter(
+            route=self.route2,
+            date=tz.datetime.today()
+        ).exists())
+        response = self.client.get(
+            reverse("delivery:edit_delivery_of_today", args=[self.route2.pk])
+        )
+        self.assertEqual(response.status_code, 404)
+        response = self.client.post(
+            reverse("delivery:edit_delivery_of_today", args=[self.route2.pk])
+        )
+        self.assertEqual(response.status_code, 404)
+
+        # Assert print works
         response = self.client.get(reverse("delivery:routes"),
                                    {'print': 'yes'})
+        self.assertEqual(response.status_code, 200)
+        # Check print result
         routes_dict = response.context['routes_dict']
-
         # only route1 has one client
         route1 = routes_dict[self.route1.id]
-        route2 = routes_dict[self.route2.id]
         self.assertEqual(len(route1['detail_lines']), 1)
-        self.assertEqual(len(route2['detail_lines']), 0)
+        # route2 doesn't exist.
+        self.assertNotIn(self.route2.id, routes_dict)
 
         # check output page
         self.assertIn(
@@ -1117,13 +1081,12 @@ class ExcludeMalconfiguredClientsTestCase(SousChefTestMixin, TestCase):
             response.content
         )
 
-    def test_step_4__route_sheet_detail(self):
-        _ = self._refresh_orders()
-        _ = self._today_meal()
-
+        # Assert route sheets exist and check route sheets
         # Route 1
-        response1 = self.client.get(reverse(
-            "delivery:route_sheet_id", kwargs={'id': self.route1.id}))
+        response1 = self.client.get(
+            reverse("delivery:route_sheet", args=[self.route1.pk])
+        )
+        self.assertEqual(response1.status_code, 200)
         # 1 dessert 1 L main_dish
         summary_line1 = response1.context['summary_lines']
         main_dish_line1 = next(
@@ -1141,90 +1104,8 @@ class ExcludeMalconfiguredClientsTestCase(SousChefTestMixin, TestCase):
         self.assertEqual(detail_line1[0].firstname, 'Valid')
         self.assertEqual(detail_line1[0].lastname, 'Valid')
 
-        # Route 2 - nothing
-        response2 = self.client.get(reverse(
-            "delivery:route_sheet_id", kwargs={'id': self.route2.id}))
-        summary_line2 = response2.context['summary_lines']
-        self.assertRaises(StopIteration, lambda: next(
-            l for l in summary_line2 if l.component_group == 'main_dish'
-        ))
-        self.assertRaises(StopIteration, lambda: next(
-            l for l in summary_line2 if l.component_group == 'dessert'
-        ))
-        # 0 client
-        detail_line2 = response2.context['detail_lines']
-        self.assertEqual(len(detail_line2), 0)
-
-    def test_step_4__route_organize(self):
-        _ = self._refresh_orders()
-        _ = self._today_meal()
-
-        # Route 1
-        response1 = self.client.get(reverse("delivery:dailyOrders"),
-                                    {'route': self.route1.id,
-                                     'mode': 'euclidean',
-                                     'if_exist_then_retrieve': 'yes'})
-        waypoints = response1.json()['waypoints']
-        self.assertEqual(len(waypoints), 1)
-        self.assertIn("Valid Valid", waypoints[0]['member'])
-
-        # Route 2 (nothing)
-        response2 = self.client.get(reverse("delivery:dailyOrders"),
-                                    {'route': self.route2.id,
-                                     'mode': 'euclidean',
-                                     'if_exist_then_retrieve': 'yes'})
-        waypoints = response2.json()['waypoints']
-        self.assertEqual(len(waypoints), 0)
-
-
-class SaveRouteAjaxViewsTestCase(SousChefTestMixin, TestCase):
-
-    @classmethod
-    def setUpTestData(cls):
-        cls.route = RouteFactory()
-        cls.clients = ClientFactory.create_batch(
-            10,
-            route=cls.route
+        # Route 2 - not found
+        response2 = self.client.get(
+            reverse("delivery:route_sheet", args=[self.route2.pk])
         )
-
-    def setUp(self):
-        self.force_login()
-
-    def test_save_route_vehicle(self):
-        response = self.client.post(
-            reverse('delivery:save_route_vehicle'),
-            json.dumps({
-                'route': [{'id': self.route.pk}],
-                'vehicle': 'walking'
-            }),
-            content_type="application/json"
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content, b'"OK"')
-        route = Route.objects.get(pk=self.route.pk)
-        self.assertEqual(route.vehicle, 'walking')
-
-    def test_save_route_sequence(self):
-        response = self.client.post(
-            reverse('delivery:save_route'),
-            json.dumps({
-                'route': [{'id': self.route.pk}],
-                'members': list(map(
-                    lambda i: {'id': self.clients[i].member.pk},
-                    [1, 3, 5, 7, 9, 0, 2, 4, 6, 8]
-                ))
-            }),
-            content_type="application/json"
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content, b'"OK"')
-        route = Route.objects.get(pk=self.route.pk)
-        self.assertEqual(
-            route.client_id_sequence,
-            {
-                tz.now().strftime('%Y-%m-%d'): list(map(
-                    lambda i: self.clients[i].pk,
-                    [1, 3, 5, 7, 9, 0, 2, 4, 6, 8]
-                ))
-            }
-        )
+        self.assertEqual(response2.status_code, 404)

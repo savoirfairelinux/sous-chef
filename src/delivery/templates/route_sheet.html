@@ -95,12 +95,8 @@
 </table>
 
 <div class="actions">
-<a href="{% url 'delivery:organize_route' id=route.id %}" class="ui big labeled {% if orders == 0 %} disabled {% endif %} icon button" title="{% trans 'Organize the route' %}">
-  <i class="marker icon"></i>{% trans 'Organize' %}
-</a>
-<a href="{% url 'delivery:routes' %}" class="ui big labeled {% if orders == 0 %} disabled {% endif %} icon button" title="{% trans 'View routes list' %}">
-  <i class="chevron left icon"></i>{% trans 'View routes' %}
-</a>
-
+  <a href="{% url 'delivery:routes' %}" class="ui big labeled {% if orders == 0 %} disabled {% endif %} icon button" title="{% trans 'View routes list' %}">
+    <i class="chevron left icon"></i>{% trans 'View routes' %}
+  </a>
 </div>
 {% endblock %}
