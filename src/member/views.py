@@ -46,6 +46,7 @@ from member.models import (
     EmergencyContact)
 from note.models import Note
 from order.mixins import FormValidAjaxableResponseMixin
+from order.models import SIZE_CHOICES
 
 
 class NamedUrlSessionWizardView_i18nURL(NamedUrlSessionWizardView):
@@ -454,9 +455,6 @@ class ClientWizard(
             preferences.get('meals_schedule')
         )
 
-        # Save episodic prefs form client
-        client.set_meals_prefs(preferences)
-
         # Save restricted items
         for restricted_item in preferences.get('restrictions'):
             Restriction.objects.create(
@@ -764,6 +762,20 @@ class ClientAllergiesView(ClientView):
         context = super(ClientAllergiesView, self).get_context_data(**kwargs)
         context['active_tab'] = 'prefs'
         context['client_status'] = Client.CLIENT_STATUS
+        context['weekdays'] = DAYS_OF_WEEK
+        sms = self.object.simple_meals_schedule
+        if sms:
+            weekdays_dict = dict(DAYS_OF_WEEK)
+            context['delivery_days'] = list(map(
+                lambda d: (d, weekdays_dict[d]), sms
+            ))
+
+        context['components'] = list(filter(
+            lambda t: t[0] != COMPONENT_GROUP_CHOICES_SIDES,
+            COMPONENT_GROUP_CHOICES
+        ))
+        context['meals_default'] = dict(self.object.meals_default)
+        context['size_choices'] = dict(SIZE_CHOICES)
 
         """
         Here we need to add some variable of context to send to template :
@@ -815,14 +827,6 @@ class ClientNotesView(ClientView):
         context['filter'] = uf
 
         return context
-
-
-@login_required
-def clientMealsPrefsAsJSON(request, pk):
-    # Display detail of one client
-    client = get_object_or_404(Client, pk=pk)
-    prefs = client.get_meals_prefs()
-    return JsonResponse(prefs)
 
 
 class ClientDetail(ClientView):
@@ -1196,29 +1200,8 @@ class ClientUpdateDietaryRestriction(ClientUpdateInformation):
             'dish_to_avoid': client.components_to_avoid.all,
             'food_preparation': client.food_preparation.all,
         })
-        day_count = 0
-        for day, v in DAYS_OF_WEEK:
-            for component, v in COMPONENT_GROUP_CHOICES:
-                if component is COMPONENT_GROUP_CHOICES_SIDES:
-                    continue  # skip "Sides"
-                meals_default = Client.get_meal_defaults(
-                    client, component, day_count)
-                initial[component + '_' + day + '_quantity'] = meals_default[0]
-                if component == 'main_dish':
-                    initial['size_' + day] = meals_default[1]
-            day_count += 1
-
-        prefs = client.get_meals_prefs()
-        if (bool(prefs)):
-            initial['size_default'] = prefs['maindish_s']
-            initial['main_dish_default_quantity'] = prefs['maindish_q']
-            initial['dessert_default_quantity'] = prefs['dst_q']
-            initial['diabetic_default_quantity'] = prefs['diabdst_q']
-            initial['fruit_salad_default_quantity'] = prefs['fruitsld_q']
-            initial['green_salad_default_quantity'] = prefs['greensld_q']
-            initial['pudding_default_quantity'] = prefs['pudding_q']
-            initial['compote_default_quantity'] = prefs['compot_q']
-
+        for k, v in (client.meal_default_week or {}).items():
+            initial[k] = v
         return initial
 
     def save(self, form, client):
@@ -1229,9 +1212,6 @@ class ClientUpdateDietaryRestriction(ClientUpdateInformation):
         client.set_meals_schedule(
             form['meals_schedule']
         )
-
-        # Save episodic prefs form client
-        client.set_meals_prefs(form)
 
         # Save restricted items
         client.restrictions.clear()

@@ -1663,9 +1663,6 @@ class CommandsTestCase(TestCase):
             ClientFactory(status=Client.DECEASED)
         )
 
-    # mock function for testing purpose.
-    # always return a positive result.
-    @patch.object(Client, 'get_meal_defaults', lambda a, b, c: (1, 'L'))
     def test_generateorders_1day(self):
         """Generate one day's orders"""
 
@@ -1677,9 +1674,6 @@ class CommandsTestCase(TestCase):
             len(self.ongoing_clients)
         )
 
-    # mock function for testing purpose.
-    # always return a positive result.
-    @patch.object(Client, 'get_meal_defaults', lambda a, b, c: (1, 'L'))
     def test_generateorders_10day_norepeat(self):
         """Generate 10 days' orders"""
 

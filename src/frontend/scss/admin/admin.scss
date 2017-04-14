@@ -324,3 +324,19 @@ ul.doughnut-legend {
     clear: both;
     height: 0;
 }
+
+
+.meal-defaults-table-edit-wrapper {
+    $headcol_width: 10em;
+
+    overflow-x: scroll;
+    width: calc(100% - $headcol_width);
+    margin-left: $headcol_width;
+
+    input {width: 5em!important}
+    .ui.dropdown.selection {width: 100%!important;min-width:inherit;}
+    .headcol {
+      white-space:nowrap;text-overflow:ellipsis;overflow:hidden;
+      position:absolute;left:0;width:$headcol_width;top:auto;
+    }
+}

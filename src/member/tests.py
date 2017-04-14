@@ -397,12 +397,10 @@ class ClientMealDefaultWeekTestCase(TestCase):
                 "size_tuesday": "L",
                 "compote_tuesday_quantity": 1,
 
-                # wednesday invalid
                 "main_dish_wednesday_quantity": 0,
                 "dessert_wednesday_quantity": 0,
                 "size_wednesday": "R",
 
-                # thursday invalid (no size)
                 "main_dish_thursday_quantity": 1,
                 "diabetic_thursday_quantity": 2,
                 "fruit_salad_thursday_quantity": 1,
@@ -427,28 +425,56 @@ class ClientMealDefaultWeekTestCase(TestCase):
         self.assertEqual(md['monday'], {
             'main_dish': 1,
             'size': 'R',
-            'dessert': 0,
+            'dessert': None,
             'diabetic': 2,
             'fruit_salad': 1,
-            'green_salad': 0,
-            'pudding': 0,
-            'compote': 0
+            'green_salad': None,
+            'pudding': None,
+            'compote': None
         })
         self.assertEqual(md['tuesday'], {
-            'main_dish': 0,
+            'main_dish': 0,  # Client said zero
             'size': 'L',
-            'dessert': 0,
-            'diabetic': 0,
-            'fruit_salad': 0,
-            'green_salad': 0,
-            'pudding': 0,
+            'dessert': None,
+            'diabetic': None,
+            'fruit_salad': None,
+            'green_salad': None,
+            'pudding': None,
             'compote': 1
         })
-        self.assertEqual(md['wednesday'], None)
-        self.assertEqual(md['thursday'], None)
-        self.assertEqual(md['friday'], None)
-        self.assertEqual(md['saturday'], None)
-        self.assertEqual(md['sunday'], None)
+        self.assertEqual(md['wednesday'], {
+            'main_dish': 0,  # Client said zero
+            'size': 'R',
+            'dessert': 0,    # Client said zero
+            'diabetic': None,
+            'fruit_salad': None,
+            'green_salad': None,
+            'pudding': None,
+            'compote': None
+        })
+        self.assertEqual(md['thursday'], {
+            'main_dish': 1,
+            'size': None,
+            'dessert': None,
+            'diabetic': 2,
+            'fruit_salad': 1,
+            'green_salad': None,
+            'pudding': None,
+            'compote': None
+        })
+        not_set = {
+            'main_dish': None,
+            'size': None,
+            'dessert': None,
+            'diabetic': None,
+            'fruit_salad': None,
+            'green_salad': None,
+            'pudding': None,
+            'compote': None
+        }
+        self.assertEqual(md['friday'], not_set)
+        self.assertEqual(md['saturday'], not_set)
+        self.assertEqual(md['sunday'], not_set)
 
     def test_client_meals_schedule(self):
         """
@@ -458,70 +484,45 @@ class ClientMealDefaultWeekTestCase(TestCase):
         self.assertEqual(ms['monday'], {
             'main_dish': 1,
             'size': 'R',
-            'dessert': 0,
+            'dessert': None,
             'diabetic': 2,
             'fruit_salad': 1,
-            'green_salad': 0,
-            'pudding': 0,
-            'compote': 0
+            'green_salad': None,
+            'pudding': None,
+            'compote': None
         })
-        self.assertEqual(ms['tuesday'], None)  # no delivery scheduled
-        self.assertEqual(ms['wednesday'], None)
-        self.assertEqual(ms['thursday'], None)
-        self.assertEqual(ms['friday'], None)
-        self.assertEqual(ms['saturday'], None)
-        self.assertEqual(ms['sunday'], None)
+        self.assertEqual(ms['wednesday'], {
+            'main_dish': 0,  # Client said zero
+            'size': 'R',
+            'dessert': 0,    # Client said zero
+            'diabetic': None,
+            'fruit_salad': None,
+            'green_salad': None,
+            'pudding': None,
+            'compote': None
+        })
+        self.assertEqual(ms['friday'], {
+            'main_dish': None,
+            'size': None,
+            'dessert': None,
+            'diabetic': None,
+            'fruit_salad': None,
+            'green_salad': None,
+            'pudding': None,
+            'compote': None
+        })
+        self.assertNotIn('tuesday', ms)
+        self.assertNotIn('thursday', ms)
+        self.assertNotIn('saturday', ms)
+        self.assertNotIn('sunday', ms)
 
     def test_client_meals_schedule_without_option(self):
         """
         Test when the client option 'meals_schedule' is not set.
-        Refs #706.
         """
         self.clientOptionTest.delete()
-        ms = dict(self.clientTest.meals_schedule)
-        self.assertEqual(ms['monday'], None)
-        self.assertEqual(ms['tuesday'], None)
-        self.assertEqual(ms['wednesday'], None)
-        self.assertEqual(ms['thursday'], None)
-        self.assertEqual(ms['friday'], None)
-        self.assertEqual(ms['saturday'], None)
-        self.assertEqual(ms['sunday'], None)
-
-
-class ClientEpisodicMealsPrefsTestCase(TestCase):
-
-    fixtures = ['routes']
-
-    @classmethod
-    def setUpTestData(cls):
-        cls.clientTest = ClientFactory()
-        cls.posted_prefs = {
-            'delivery_type': 'E',
-            'size_default': 'L',
-            'main_dish_default_quantity': 1,
-            'dessert_default_quantity': 1,
-            'diabetic_default_quantity': 0,
-            'fruit_salad_default_quantity': 0,
-            'green_salad_default_quantity': 1,
-            'pudding_default_quantity': 0,
-            'compote_default_quantity': 0,
-        }
-
-    def test_episodic_meals_prefs(self):
-        """
-        A Client_option's string representation includes the name
-        of the client and the name of the option.
-        """
-        self.clientTest.set_meals_prefs(self.posted_prefs)
-        clientPrefs = self.clientTest.get_meals_prefs()
-        self.assertEqual(clientPrefs["maindish_s"], 'L')
-        self.assertEqual(clientPrefs["maindish_q"], 1)
-        self.assertEqual(clientPrefs["dst_q"], 1)
-        self.assertEqual(clientPrefs["diabdst_q"], 0)
-        self.assertEqual(clientPrefs["fruitsld_q"], 0)
-        self.assertEqual(clientPrefs["greensld_q"], 1)
-        self.assertEqual(clientPrefs["pudding_q"], 0)
-        self.assertEqual(clientPrefs["compot_q"], 0)
+        ms = self.clientTest.meals_schedule
+        self.assertEqual(ms, ())
 
 
 class RestrictionTestCase(TestCase):
@@ -813,6 +814,17 @@ class FormTestCase(TestCase):
             "dietary_restriction-dish_to_avoid": self.component.id,
             "wizard_goto_step": ""
         }
+        for day in restriction_information_data[
+                "dietary_restriction-meals_schedule"
+        ]:
+            restriction_information_data[
+                'dietary_restriction-size_{}'.format(day)
+            ] = 'R'
+            for component, _ in COMPONENT_GROUP_CHOICES:
+                name = "dietary_restriction-{}_{}_quantity".format(
+                    component, day
+                )
+                restriction_information_data[name] = 1
 
         emergency_contact_data = {
             "client_wizard-current_step": "emergency_contacts",
@@ -1081,6 +1093,17 @@ class FormTestCase(TestCase):
             "dietary_restriction-meal_default": "1",
             "wizard_goto_step": ""
         }
+        for day in [restriction_information_data[
+                "dietary_restriction-meals_schedule"
+        ]]:
+            restriction_information_data[
+                'dietary_restriction-size_{}'.format(day)
+            ] = 'R'
+            for component, _ in COMPONENT_GROUP_CHOICES:
+                name = "dietary_restriction-{}_{}_quantity".format(
+                    component, day
+                )
+                restriction_information_data[name] = 1
 
         emergency_contact_data = {
             "client_wizard-current_step": "emergency_contacts",
@@ -1707,6 +1730,17 @@ class FormTestCase(TestCase):
             "dietary_restriction-meal_default": "1",
             "wizard_goto_step": ""
         }
+        for day in [restriction_information_data[
+                "dietary_restriction-meals_schedule"
+        ]]:
+            restriction_information_data[
+                'dietary_restriction-size_{}'.format(day)
+            ] = 'R'
+            for component, _ in COMPONENT_GROUP_CHOICES:
+                name = "dietary_restriction-{}_{}_quantity".format(
+                    component, day
+                )
+                restriction_information_data[name] = 1
 
         # Send the data to the form.
         response = self.client.post(
@@ -2632,15 +2666,11 @@ class ClientUpdateDietaryRestrictionTestCase(ClientUpdateTestCase):
             'delivery_type': client.delivery_type,
             'meals_schedule': ['monday']
         })
-        day_count = 0
-        for day, v in DAYS_OF_WEEK:
-            for component, v in COMPONENT_GROUP_CHOICES:
-                meals_default = Client.get_meal_defaults(
-                    client, component, day_count)
-                data[component + '_' + day + '_quantity'] = meals_default[0]
-                if component == 'main_dish':
-                    data['size_' + day] = meals_default[1]
-            day_count += 1
+        for day in data['meals_schedule']:
+            data['size_{}'.format(day)] = 'R'
+            for component, _ in COMPONENT_GROUP_CHOICES:
+                name = "{}_{}_quantity".format(component, day)
+                data[name] = 1
 
         form = ClientRestrictionsInformation(data=data)
         self.assertTrue(form.is_valid())
@@ -2661,6 +2691,11 @@ class ClientUpdateDietaryRestrictionTestCase(ClientUpdateTestCase):
             'delivery_type': "O",
             'meals_schedule': ["monday"],
         })
+        for day in data['meals_schedule']:
+            data['size_{}'.format(day)] = 'R'
+            for component, _ in COMPONENT_GROUP_CHOICES:
+                name = "{}_{}_quantity".format(component, day)
+                data[name] = 1
 
         # Login as admin
         self.login_as_admin()
@@ -2679,6 +2714,92 @@ class ClientUpdateDietaryRestrictionTestCase(ClientUpdateTestCase):
         client = Client.objects.get(id=client.id)
         self.assertEqual(client.status, status)
         self.assertEqual(client.delivery_type, "O")
+
+    def test_meal_default_should_be_set_for_scheduled_delivery_days(self):
+        """
+        On delivery days, at least one of the quantities should be set for an
+        ongoing client.
+        """
+        client = ClientFactory()
+        data = load_initial_data(client)
+        form = ClientRestrictionsInformation(data=data)
+        self.assertFalse(form.is_valid())
+
+        data.update({
+            'status': True if client.status == Client.ACTIVE else False,
+            'delivery_type': 'O',
+            'meals_schedule': ['monday']
+        })
+        for day in ['tuesday', 'sunday']:
+            data['size_{}'.format(day)] = 'R'
+            for component, _ in COMPONENT_GROUP_CHOICES:
+                name = "{}_{}_quantity".format(component, day)
+                data[name] = 1
+
+        form = ClientRestrictionsInformation(data=data)
+        self.assertFalse(form.is_valid())
+
+        data['compote_monday_quantity'] = 1
+        form = ClientRestrictionsInformation(data=data)
+        self.assertTrue(form.is_valid())
+
+        data['compote_monday_quantity'] = 0
+        data['main_dish_monday_quantity'] = 1
+        data['size_monday'] = 'L'
+        form = ClientRestrictionsInformation(data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_meal_default_should_not_be_enforced_for_episodic_client(self):
+        """
+        For episodic client, the restrictions above should not be applied.
+        """
+        client = ClientFactory()
+        data = load_initial_data(client)
+        form = ClientRestrictionsInformation(data=data)
+        self.assertFalse(form.is_valid())
+
+        data.update({
+            'status': True if client.status == Client.ACTIVE else False,
+            'delivery_type': 'E',
+            'meals_schedule': ['monday']
+        })
+        for day in ['tuesday', 'sunday']:
+            data['size_{}'.format(day)] = 'R'
+            for component, _ in COMPONENT_GROUP_CHOICES:
+                name = "{}_{}_quantity".format(component, day)
+                data[name] = 1
+
+        form = ClientRestrictionsInformation(data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_main_dish_enforces_size(self):
+        """
+        Whenever the quantity of main dish is set, the size should also be set.
+        """
+        client = ClientFactory()
+        data = load_initial_data(client)
+        form = ClientRestrictionsInformation(data=data)
+        self.assertFalse(form.is_valid())
+
+        data.update({
+            'status': True if client.status == Client.ACTIVE else False,
+            'delivery_type': 'E',
+            'meals_schedule': []
+        })
+        form = ClientRestrictionsInformation(data=data)
+        self.assertTrue(form.is_valid())
+
+        data['main_dish_tuesday_quantity'] = 1
+        form = ClientRestrictionsInformation(data=data)
+        self.assertFalse(form.is_valid())
+
+        data['size_wednesday'] = 'L'
+        form = ClientRestrictionsInformation(data=data)
+        self.assertFalse(form.is_valid())
+
+        data['size_tuesday'] = 'R'
+        form = ClientRestrictionsInformation(data=data)
+        self.assertTrue(form.is_valid())
 
 
 class ClientUpdateEmergencyInformationTestCase(ClientUpdateTestCase):
@@ -2852,7 +2973,6 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
         check(reverse('member:client_option_delete', kwargs={'pk': 1}))
         check(reverse('member:ingredient_to_avoid_delete', kwargs={'pk': 1}))
         check(reverse('member:component_to_avoid_delete', kwargs={'pk': 1}))
-        check(reverse('member:client_meals_pref', kwargs={'pk': 1}))
         check(reverse('member:member_update_basic_information', kwargs={
             'pk': 1
         }))

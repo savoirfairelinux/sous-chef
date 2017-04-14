@@ -23,26 +23,6 @@ class UpdateOrderItem(CreateOrderItem):
     extra = 0
 
 
-class BatchFormClientSelect(forms.Select):
-    def render_option(self, selected_choices, option_value, option_label):
-        if option_value is None:
-            option_value = ''
-        option_value = force_text(option_value)
-        if option_value in selected_choices:
-            selected_html = mark_safe(' selected="selected"')
-            if not self.allow_multiple_selected:
-                # Only allow for a single selection.
-                selected_choices.remove(option_value)
-        else:
-            selected_html = ''
-
-        data_url = reverse('member:client_meals_pref',
-                           kwargs={'pk': option_value}) if option_value else ''
-        return format_html('<option value="{}" data-url="{}"{}>{}</option>',
-                           option_value,
-                           data_url, selected_html, force_text(option_label))
-
-
 class CreateOrdersBatchForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
@@ -70,22 +50,20 @@ class CreateOrdersBatchForm(forms.Form):
                     required=False
                 )
 
-                for meal, placeholder in COMPONENT_GROUP_CHOICES:
+                for meal, meal_translation in COMPONENT_GROUP_CHOICES:
                     if meal is COMPONENT_GROUP_CHOICES_SIDES:
                         continue  # don't put "sides" on the form
                     self.fields[
                         '{}_{}_quantity'.format(meal, d)
                     ] = forms.IntegerField(
-                        widget=forms.TextInput(
-                            attrs={'placeholder': placeholder}
-                        ),
+                        min_value=0,
                         required=True
                     )
 
     client = forms.ModelChoiceField(
         required=True,
         label=_('Client'),
-        widget=BatchFormClientSelect(attrs={'class': 'ui search dropdown'}),
+        widget=forms.Select(attrs={'class': 'ui search dropdown'}),
         queryset=Client.objects.all().select_related(
             'member'
         ).only(

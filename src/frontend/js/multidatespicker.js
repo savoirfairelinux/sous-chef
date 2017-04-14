@@ -86,21 +86,28 @@ $(function() {
                 return;
             }
             var date = $(elem).attr('id').slice(5);
-            // fill in data
+            // fill in default data only if this delivery date is completely empty.
+            var isCompletelyEmpty = true;
             $.each(client_meals_default, function (key, value) {
                 var selector = "#id_"+key+"_"+date+"_quantity";
-                if (!$(selector).val()) {
-                    $(selector).val(value);
-                    dismissFieldError($(selector));
-                }
+                var value = $(selector).val();
+                if (value || value === 0) isCompletelyEmpty = false;
             });
-            if (client_meals_default.hasOwnProperty('size')) {
-                var selector = "#id_size_"+date;
-                if (!$(selector).dropdown('get value')[0]) {
-                    $(selector).dropdown('set selected', client_meals_default.size);
+            var size_selector = "#id_size_"+date;
+            var size_value = $(size_selector).dropdown('get value')[0]
+            if (size_value) isCompletelyEmpty = false;
+
+            if (isCompletelyEmpty) {
+                $.each(client_meals_default, function (key, value) {
+                    var selector = "#id_"+key+"_"+date+"_quantity";
+                    $(selector).val(value || 0);
                     dismissFieldError($(selector));
+                });
+                if (client_meals_default.hasOwnProperty('size')) {
+                    $(size_selector).dropdown('set selected', client_meals_default.size);
+                    dismissFieldError($(size_selector));
                 }
-            };
+            }
         });
     })();
 
