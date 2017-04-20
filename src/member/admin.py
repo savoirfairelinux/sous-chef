@@ -3,7 +3,7 @@ from django.contrib import admin
 from member.models import (
     Member, Client, Contact, Address,
     Route, Option, Relationship,
-    DeliveryHistory
+    DeliveryHistory, ClientScheduledStatus
 )
 
 
@@ -79,6 +79,7 @@ class RelationshipAdmin(admin.ModelAdmin):
 
 admin.site.register(Member, MemberAdmin)
 admin.site.register(Client, ClientAdmin)
+admin.site.register(ClientScheduledStatus)
 admin.site.register(Route)
 admin.site.register(DeliveryHistory)
 admin.site.register(Contact, ContactAdmin)

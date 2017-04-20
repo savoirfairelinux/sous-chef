@@ -294,6 +294,22 @@ msgstr "Au moins un contact d'urgence est requis."
 msgid "This field is required for a referent relationship."
 msgstr "Ce champ est requis sauf si vous souhaitez ajouter un nouveau membre."
 
+#: member/forms.py
+#, fuzzy
+#| msgid "The status has been changed"
+msgid "The client status has been changed."
+msgstr "Le statut a été changé"
+
+#: member/forms.py
+#, fuzzy
+#| msgid "The status has been changed"
+msgid "This status change has been scheduled."
+msgstr "Le statut a été changé"
+
+#: member/forms.py
+msgid "The end date of this status change has been scheduled."
+msgstr ""
+
 #: member/models.py
 msgid "Female"
 msgstr "Femme"
@@ -575,10 +591,6 @@ msgid "Client Scheduled Status Pair"
 msgstr "Paire de Statut Planifié du Client"
 
 #: member/models.py
-msgid "All"
-msgstr "Tout"
-
-#: member/models.py
 msgid "Search by name"
 msgstr "Recherche par nom"
 
@@ -644,6 +656,30 @@ msgid "Client since %(created_at)s"
 msgstr ""
 "\n"
 "Client depuis %(created_at)s"
+
+#: member/templates/client/base.html
+msgid "Client status scheduler may not work properly. Please verify."
+msgstr ""
+
+#: member/templates/client/base.html
+msgid "Upcoming change"
+msgstr ""
+
+#: member/templates/client/base.html
+msgid "View upcoming changes"
+msgstr ""
+
+#: member/templates/client/base.html
+msgid "This cannot be undone. Are you sure?"
+msgstr ""
+
+#: member/templates/client/base.html
+msgid "Cancel this upcoming change"
+msgstr ""
+
+#: member/templates/client/base.html
+msgid "Reschedule this upcoming change"
+msgstr ""
 
 #: member/templates/client/base.html
 msgid "Important notice"
@@ -1351,10 +1387,6 @@ msgstr "Statut"
 msgid "No status modification."
 msgstr "Aucun changement de statut."
 
-#: member/templates/client/view/status.html
-msgid "Remove"
-msgstr "Supprimer"
-
 #: member/templates/client/view/summary.html
 msgid "Home"
 msgstr "Domicile"
@@ -1580,6 +1612,10 @@ msgid "^client/(?P<pk>\\d+)/status/scheduler$"
 msgstr "^client/(?P<pk>\\d+)/statut/planificateur$"
 
 #: member/urls.py
+msgid "^client/(?P<pk>\\d+)/status/scheduler/reschedule/(?P<scheduled_status_1_pk>\\d+),(?P<scheduled_status_2_pk>\\d+)?/$"
+msgstr "^client/(?P<pk>\\d+)/statut/planificateur/replanifier/(?P<scheduled_status_1_pk>\\d+),(?P<scheduled_status_2_pk>\\d+)?/$"
+
+#: member/urls.py
 msgid "^restriction/(?P<pk>\\d+)/delete/$"
 msgstr "^restriction/(?P<pk>\\d+)/supprimer/$"
 
@@ -1628,9 +1664,11 @@ msgstr "Le client a été crée"
 msgid "The client has been updated"
 msgstr "Le client a été mis à jour"
 
-#: member/views.py
-msgid "The status has been changed"
-msgstr "Le statut a été changé"
+#~ msgid "All"
+#~ msgstr "Tout"
+
+#~ msgid "Remove"
+#~ msgstr "Supprimer"
 
 #: member/views.py
 #, python-format

@@ -17,6 +17,7 @@ from member.views import (
     DeleteComponentToAvoid,
     geolocateAddress,
     ClientStatusScheduler,
+    ClientStatusSchedulerReschedule,
     ClientStatusView,
     ClientStatusSchedulerDeleteView,
     ClientUpdateBasicInformation,
@@ -101,6 +102,12 @@ urlpatterns = [
         ClientStatusView.as_view(), name='client_status'),
     url(_(r'^client/(?P<pk>\d+)/status/scheduler$'),
         ClientStatusScheduler.as_view(), name='clientStatusScheduler'),
+    url(_(r'^client/(?P<pk>\d+)/status/scheduler/reschedule/'
+          r'(?P<scheduled_status_1_pk>\d+)'
+          r',(?P<scheduled_status_2_pk>\d+)?'
+          r'/$'),
+        ClientStatusSchedulerReschedule.as_view(),
+        name='clientStatusSchedulerReschedule'),
     url(
         r'^status/(?P<pk>\d+)/delete$',
         ClientStatusSchedulerDeleteView.as_view(),

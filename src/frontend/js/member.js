@@ -5,17 +5,34 @@ $(function() {
     var today = new Date();
 
     $('.ui.dropdown.member.status > .menu > .item').click(function () {
-        var value = $(this).data('value');
-        var modalCtntURL = $('.ui.dropdown.status').attr('data-url');
-        $.get(modalCtntURL, {status:value}, function(data, modalCtntURL){
-            $('.ui.modal.status').html(data).modal("setting", {
+        // Don't change the dropdown content. There's a bug with two labels.
+        // This prevents the default behavior.
+        return false;
+    });
+    $('.ui.dropdown.member.status > .menu > .item.member-view-upcoming-changes').click(function () {
+        location.replace($(this).data('url'));
+    });
+    $('.ui.dropdown.member.status > .menu > .item.member-cancel-this-upcoming-change').click(function () {
+        var $form = $(this).find('form');
+        if (window.confirm($(this).data('prompt'))) {
+            $form.submit();
+        }
+    });
+
+    $('.ui.dropdown.member.status > .menu > .item.member-update-status, .ui.dropdown.member.status > .menu > .item.member-reschedule-this-upcoming-change').click(function () {
+        var modalCtntURL = $(this).data('url');
+        var modalTarget = $(this).data('modalTarget').toString();
+
+        $.get(modalCtntURL, function (data) {
+            $(modalTarget).html(data).modal("setting", {
                 closable: false,
                 // Inside modal init
                 onVisible: function () {
+                    var $modal = $(this);
                     // Enable status confirmation dropdown
-                    $('.ui.status_to.dropdown').dropdown();
+                    $modal.find('.ui.status_to.dropdown').dropdown();
                     // Init dates field (start and end)
-                    $('#rangestart').calendar({
+                    $modal.find('#rangestart').calendar({
                         type: 'date',
                         on: 'click',
                         minDate: today,
@@ -24,30 +41,31 @@ $(function() {
                                 return date ? dateFormat(date, 'yyyy-mm-dd') : '';
                             }
                         },
-                        endCalendar: $('#rangeend'),
+                        endCalendar: $modal.find('#rangeend')
                     });
-                    $('#rangeend').calendar({
+                    $modal.find('#rangeend').calendar({
                         type: 'date',
                         formatter: {
                             date: function (date, settings) {
                                 return date ? dateFormat(date, 'yyyy-mm-dd') : '';
                             }
                         },
-                        startCalendar: $('#rangestart'),
+                        startCalendar: $modal.find('#rangestart')
                     });
                 },
                 // When approvind modal, submit form
-                onApprove: function($element, modalCtntURL) {
+                onApprove: function () {
+                    var $modal = $(this);
                     $.ajax({
                          type: 'POST',
-                         url: $('.ui.dropdown.status').attr('data-url'),
-                         data: $('#change-status-form').serialize(),
+                         url: modalCtntURL,
+                         data: $modal.find('#change-status-form').serialize(),
                          success: function (xhr, ajaxOptions, thrownError) {
                              if ( $(xhr).find('.errorlist').length > 0 ) {
-                                 $('.ui.modal.status').html(xhr);
-                                 $('.ui.status_to.dropdown').dropdown();
+                                 $modal.html(xhr);
+                                 $modal.find('.ui.status_to.dropdown').dropdown();
                              } else {
-                                 $('.ui.modal.status').modal("hide");
+                                 $modal.modal("hide");
                                  location.reload();
                              }
                          },
@@ -55,9 +73,8 @@ $(function() {
                     return false; // don't hide modal until we have the response
                 },
                 // When denying modal, restore default value for status dropdown
-                onDeny: function($element) {
-                    $('.ui.dropdown.status').dropdown('restore defaults');
-                    $('.ui.modal.status').modal("hide");
+                onDeny: function () {
+                    location.reload();
                 }
             }).modal('setting', 'autofocus', false).modal("show");
         });
@@ -71,13 +88,6 @@ $(function() {
                 return date ? dateFormat(date, 'yyyy-mm-dd') : '';
             }
         },
-    });
-
-    var removeStatusConfirmationModal = $('#remove-status-confirmation');
-    $('a.remove-status').click(function (e) {
-        e.preventDefault();
-        removeStatusConfirmationModal.load(this.href);
-        removeStatusConfirmationModal.modal('show');
     });
 
     if($('#dietary_restriction-delivery_type select').val() == 'E') {

@@ -8,10 +8,12 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
 from django.urls import reverse_lazy, reverse
-from django.db.models import Q, Count, Prefetch
+from django.db import transaction
+from django.db.models import Q, Prefetch, Count
 from django.db.transaction import atomic
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from django.utils.decorators import method_decorator, classonlymethod
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
@@ -563,6 +565,14 @@ class ClientView(
         LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     # Display detail of one client
     model = Client
+    queryset = Client.objects.prefetch_related(Prefetch(
+        'scheduled_statuses',
+        queryset=ClientScheduledStatus.objects.filter(
+            operation_status__in=[
+                ClientScheduledStatus.TOBEPROCESSED,
+                ClientScheduledStatus.ERROR
+            ]).order_by('change_date'),
+        to_attr='unprocessed_scheduled_statuses'))
     permission_required = 'sous_chef.read'
 
 
@@ -622,11 +632,7 @@ class ClientStatusView(ClientView):
     template_name = 'client/view/status.html'
 
     def get_default_ops_value(self):
-        operation_status_value = self.request.GET.get(
-            'operation_status', ClientScheduledStatus.TOBEPROCESSED)
-        if operation_status_value == ClientScheduledStatusFilter.ALL:
-            operation_status_value = None
-        return operation_status_value
+        return self.request.GET.get('operation_status', None)
 
     def get_context_data(self, **kwargs):
         context = super(ClientStatusView, self).get_context_data(**kwargs)
@@ -1211,10 +1217,6 @@ class ClientStatusScheduler(
     permission_required = 'sous_chef.edit'
     template_name = "client/update/status.html"
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ClientStatusScheduler, self).dispatch(*args, **kwargs)
-
     def get_context_data(self, **kwargs):
         context = super(ClientStatusScheduler, self).get_context_data(**kwargs)
         context['client'] = get_object_or_404(
@@ -1232,12 +1234,89 @@ class ClientStatusScheduler(
         }
 
     def form_valid(self, form):
-        response = super(ClientStatusScheduler, self).form_valid(form)
-        messages.add_message(
-            self.request, messages.SUCCESS,
-            _("The status has been changed")
+        """
+        Override the default behavior of saving instance, because we may have
+        two objects to save.
+        """
+        form.save_scheduled_statuses(
+            callback_add_message=lambda m: messages.add_message(
+                self.request, messages.SUCCESS, m))
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse(
+            'member:client_information', kwargs={'pk': self.kwargs.get('pk')}
         )
-        return response
+
+
+class ClientStatusSchedulerReschedule(
+        LoginRequiredMixin,
+        PermissionRequiredMixin,
+        FormValidAjaxableResponseMixin,
+        generic.UpdateView
+):
+    form_class = ClientScheduledStatusForm
+    model = ClientScheduledStatus
+    permission_required = 'sous_chef.edit'
+    template_name = "client/update/status.html"
+
+    def dispatch(self, *args, **kwargs):
+        """
+        Fetch related objects at the very beginning of request process.
+        """
+        self.cs1 = get_object_or_404(
+            ClientScheduledStatus, pk=int(
+                self.kwargs.get('scheduled_status_1_pk')))
+
+        if self.kwargs.get('scheduled_status_2_pk'):
+            try:
+                self.cs2 = ClientScheduledStatus.objects.get(
+                    pk=int(self.kwargs.get('scheduled_status_2_pk')))
+                if self.cs2.get_pair != self.cs1:
+                    self.cs2 = None  # Ignore
+            except ClientScheduledStatus.DoesNotExist:
+                self.cs2 = None
+        else:
+            self.cs2 = None
+        return super().dispatch(*args, **kwargs)
+
+    def get_object(self, *args, **kwargs):
+        return get_object_or_404(
+            Client, pk=self.kwargs.get('pk')
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['client'] = get_object_or_404(
+            Client, pk=self.kwargs.get('pk')
+        )
+        context['client_status'] = Client.CLIENT_STATUS
+        return context
+
+    def get_initial(self):
+        return {
+            'client': self.kwargs.get('pk'),
+            'status_from': self.cs1.status_from,
+            'status_to': self.cs1.status_to,
+            'reason': self.cs1.reason,
+            'change_date': self.cs1.change_date,
+            'end_date': self.cs2.change_date if self.cs2 else None
+        }
+
+    def form_valid(self, form):
+        """
+        Replace original ClientScheduledStatus objects.
+        """
+        # Unbind pairs and delete
+        with transaction.atomic():
+            self.cs1.delete()
+            if self.cs2:
+                self.cs2.delete()
+
+        form.save_scheduled_statuses(
+            callback_add_message=lambda m: messages.add_message(
+                self.request, messages.SUCCESS, m))
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         return reverse(

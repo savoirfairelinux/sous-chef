@@ -876,15 +876,17 @@ class ClientScheduledStatus(models.Model):
         )
         note.save()
 
+    @property
+    def needs_attention(self):
+        """
+        Return True if the status is ERROR or the scheduled date has passed.
+        """
+        return (self.operation_status == self.ERROR) or (
+            self.change_date <= timezone.datetime.date(
+                timezone.datetime.today()))
+
 
 class ClientScheduledStatusFilter(FilterSet):
-
-    ALL = 'ALL'
-
-    operation_status = ChoiceFilter(
-        choices=((ALL, _('All')),) + ClientScheduledStatus.OPERATION_STATUS,
-        # initial=ClientScheduledStatus.PROCESSED
-    )
 
     class Meta:
         model = ClientScheduledStatus
