@@ -82,10 +82,21 @@ python3 manage.py loaddata sample_data
 
 ## Generate Django assets using gulp
 
-### Run gulp from the web service
+### Run gulp
+
+**From container:**
 
 ```
 $> docker-compose exec web sh -c "cd tools/gulp && npm install --unsafe-perm && gulp"
+```
+
+Or **from host machine:**
+
+```
+$> cd tools/gulp && npm install --unsafe-perm && gulp
+
+# If you don't have the gulp command, try: 
+$> cd tools/gulp && node node_modules/gulp/bin/gulp.js
 ```
 
 Please rest assured that the "unsafe-perm" option will not bring any security risk to sous-chef. The Node.js packages that we are installing here are only used for generating static files, such as images, CSS, JavaScript, etc., and will never be executed from external.
