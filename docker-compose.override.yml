@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   web:
     command: python src/manage.py runserver 0.0.0.0:8000
