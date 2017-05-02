@@ -1,5 +1,7 @@
-version: '2'
+version: '3'
+
 services:
+
   db:
     restart: always
     image: mariadb
@@ -7,21 +9,38 @@ services:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: feast
     volumes:
-      - ./tools/mariadb:/var/lib/mysql
+      - souschef_data:/var/lib/mysql
+    networks:
+      - backend
+
   web:
     restart: always
     build: .
     volumes:
-      - /code/src/static
+      - souschef_static:/code/src/static
     depends_on:
       - db
+    networks:
+      - backend
+
   nginx:
     restart: always
     build: tools/nginx
     command: /bin/bash -c "nginx"
     ports:
       - "80:80"
-    volumes_from:
-      - web
+    volumes:
+      - souschef_static:/code/src/static
     depends_on:
       - web
+    networks:
+      - frontend
+      - backend
+
+volumes:
+  souschef_data:
+  souschef_static:
+
+networks:
+  frontend:
+  backend:
