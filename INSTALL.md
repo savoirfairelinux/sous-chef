@@ -110,7 +110,11 @@ $> docker run --rm --volumes-from souschef_db_1 -v %cd%:/backup ubuntu tar cvf /
 $> docker run --rm --volumes-from souschef_db_1 -v $(pwd):/backup ubuntu bash -c "cd /var/lib/mysql && tar xvf /backup/backup.tar --strip 1"
 ```
 
-In Windows console, replace `$(pwd)` as `%cd%`.
+In Windows console:
+
+```
+$> docker run --rm --volumes-from souschef_db_1 -v %cd%:/backup ubuntu bash -c "cd /var/lib/mysql && tar xvf /backup/backup.tar --strip 1"
+```
 
 Refs: https://docs.docker.com/engine/tutorials/dockervolumes/#backup-restore-or-migrate-data-volumes
 
