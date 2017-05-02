@@ -9,29 +9,15 @@ As a first step, you must install the following dependencies:
 1. **docker-engine**: https://docs.docker.com/engine/installation/
 2. **docker-compose**: https://docs.docker.com/compose/install/
 
-Then continue to the docker initialization step.
-
 ### OS X
 
-As a first step, you must install the following dependencies:
-
-1. **Docker Toolbox**: https://www.docker.com/toolbox
-
-You must do the next set of command from the docker quickstart terminal.
-
-Then continue to the docker initialization step.
+As a first step, you must install **Docker For Mac**: https://docs.docker.com/docker-for-mac/install/
 
 ### Windows
 
-As a first step, you must install the following dependencies:
+For Windows 10, it is recommended to use **Docker For Windows**: https://docs.docker.com/docker-for-windows/install/ (**notice**: Hyper-V must be enabled. Follow the instructions during installation.) Make sure that Docker icon appears in task tray and prompts "Docker is running". You can then use `cmd` or `PowerShell` to run the following commands.
 
-1. **Docker Toolbox** :https://www.docker.com/toolbox
-
-**Notice**: Virtualisation must be enable on your computer
-
-You must do the next set of command from the docker quickstart terminal.
-
-Then continue to the docker initialization step.
+For older Windows versions, you may have to use **Docker Toolbox** (https://www.docker.com/toolbox) and you must run commands from the **docker quickstart terminal** (a shortcut on desktop).
 
 ## Docker initialization
 
@@ -41,43 +27,35 @@ $> docker-compose build
 $> docker-compose up
 ```
 
-If you want to run docker-compose with the production settings
+**Notice**: if you see the error "Can't connect to database" in `souschef_web_1`, try Ctrl+C and re-run `docker-compose up`.
+
+(Optional) Running docker-compose with production settings:
 
 ```
 $> docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
 ```
 
-Docker must be up and running at this point.
-
 ## Django initialization
 
-You need the Docker **container ID** to run the next steps. You can get the container_id by running ```docker ps```.
-Ex: *44fcfefb015e*
+In your console:
 
 ```
-docker exec -it [container_id] bash
+$> docker-compose exec web bash
+```
 
-# Move to the application root dir
-cd src
+Then you should be inside a container as you can see, e.g., `root@d157a3f57426:/code#`. Then run:
 
-# Run development server
-python manage.py runserver 0.0.0.0:8080
-
-# Access to the development server
-http://0.0.0.0:8080
-
-# Access to Nginx server
-http://127.0.0.1
+```
+$> cd src
 
 # Run existing migrations
-python manage.py migrate
+$> python3 manage.py migrate
 
 # Create a user with administrator privileges
-python manage.py createsuperuser
+$> python3 manage.py createsuperuser
 
 # Optional: Load the initial data set
-python3 manage.py loaddata sample_data
-
+$> python3 manage.py loaddata sample_data
 ```
 
 ## Generate Django assets using gulp
@@ -106,12 +84,35 @@ If you have an error with this command, try deleting the folder `tools/gulp/node
 
 ## Connection to application
 
+A Django development server is automatically started unless you have run with production settings. It is accessible at `http://localhost:8000`.
 
-You should now be ready to run the Django application by pointing your browser to the container address.
+## Backup and restore database
 
-On Linux and OS X, open http://localhost:8000.
+The database content is stored in a Docker named volume that is not directly accessible.
 
-On Windows, use the container IP address.
+**For backup**, running:
+
+```
+$> docker run --rm --volumes-from souschef_db_1 -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /var/lib/mysql
+```
+
+In Windows console, running:
+
+```
+$> docker run --rm --volumes-from souschef_db_1 -v %cd%:/backup ubuntu tar cvf /backup/backup.tar /var/lib/mysql
+```
+
+`souschef_db_1` is the container's name that can be found by running `docker ps`. This command creates a temporary Ubuntu container, connects it with both the volume that `souschef_db_1` uses and current directory on host machine. You will find `backup.tar` in current directory after this command.
+
+**For restoring**:
+
+```
+$> docker run --rm --volumes-from souschef_db_1 -v $(pwd):/backup ubuntu bash -c "cd /var/lib/mysql && tar xvf /backup/backup.tar --strip 1"
+```
+
+In Windows console, replace `$(pwd)` as `%cd%`.
+
+Refs: https://docs.docker.com/engine/tutorials/dockervolumes/#backup-restore-or-migrate-data-volumes
 
 ## Troubleshooting
 
