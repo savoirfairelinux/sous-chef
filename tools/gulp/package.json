@@ -31,7 +31,7 @@
     "leaflet-routing-machine": "^3.2.5",
     "leaflet.awesome-markers": "^2.0.4",
     "leaflet.icon.glyph": "^0.2.0",
-    "semantic-ui-calendar": "0.0.7",
+    "semantic-ui-calendar": "0.0.8",
     "sortablejs": "^1.5.1",
     "dateformat": "^2.0.0"
   }
