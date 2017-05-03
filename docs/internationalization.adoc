@@ -37,13 +37,6 @@ If commits in your pull request have introduced new translatable content, you mu
 3. `python3 manage.py makemessages -l fr --no-wrap --add-location=file` to update the various django.po files with your new strings.
 4. Commit the changes to your branch to be included in the pull request. Commit only the `django.po` files related to the module that you have worked on, even if Django has updated the `django.po` files in other modules as well.
 
-Note: for steps 3 and 4, it is also possible to execute makemessages for a specific package by:
-
-```
-cd package_name
-python3 ../manage.py makemessages -l fr --no-wrap --add-location=file
-```
-
 ### How the project gets translated
 
 We use Transifex to translate the sous-chef project. In a nutshell, Transifex regularly obtains the translation (.po) files from this Django project, and translators can contribute on the [Transifex website](https://www.transifex.com/savoirfairelinux/sous-chef). Once in a while, a project member can run `tx pull` in the Docker container's root directory to pull (and then commit) the new translations.
