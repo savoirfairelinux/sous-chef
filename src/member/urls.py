@@ -26,6 +26,11 @@ from member.views import (
     ClientUpdatePaymentInformation,
     ClientUpdateDietaryRestriction,
     ClientUpdateEmergencyContactInformation,
+    RouteListView,
+    RouteDetailView,
+    RouteEditView,
+    DeliveryHistoryDetailView,
+    get_minimised_euclidean_distances_route_sequence,
 )
 
 from member.forms import (
@@ -119,6 +124,17 @@ urlpatterns = [
         DeleteIngredientToAvoid.as_view(), name='ingredient_to_avoid_delete'),
     url(_(r'^component_to_avoid/(?P<pk>\d+)/delete/$'),
         DeleteComponentToAvoid.as_view(), name='component_to_avoid_delete'),
+
+    url(_(r'^routes/$'), RouteListView.as_view(), name='route_list'),
+    url(_(r'^route/(?P<pk>\d+)/$'),
+        RouteDetailView.as_view(), name='route_detail'),
+    url(_(r'^route/(?P<pk>\d+)/edit/$'),
+        RouteEditView.as_view(), name='route_edit'),
+    url(_(r'^route/(?P<pk>\d+)/optimised_sequence/$'),
+        get_minimised_euclidean_distances_route_sequence,
+        name='route_get_optimised_sequence'),
+    url(_(r'^route/(?P<route_pk>\d+)/(?P<date>\d{4}-\d{2}-\d{2})/$'),
+        DeliveryHistoryDetailView.as_view(), name='delivery_history_detail'),
 ]
 
 # Handle client update forms URL

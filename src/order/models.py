@@ -85,14 +85,16 @@ class OrderManager(models.Manager):
 
     def get_shippable_orders_by_route(self,
                                       route_id,
+                                      delivery_date=None,
                                       exclude_non_geolocalized=False):
         """
         Return the orders ready to be delivered for a given route.
-        It is assumed here that the delivery date is today.
+        If delivery date is not provided, it is assumed to today.
         A shippable order must be created in the database, and its ORDER_STATUS
         must be 'O' (Ordered).
         """
-        delivery_date = date.today()
+        if delivery_date is None:
+            delivery_date = date.today()
         extra_kwargs = {}
         if exclude_non_geolocalized is True:
             extra_kwargs['client__member__address__latitude__isnull'] = False

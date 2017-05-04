@@ -34,12 +34,15 @@
         </form>
     </div>
     <a class="item" href="{% url 'order:list' %}?status={{ ORDER_FILTER_DEFAULT_STATUS | urlencode }}&amp;delivery_date={{ ORDER_FILTER_DEFAULT_DATE | date:'Y-m-d' | urlencode }}">{% trans 'Orders' %}
-        <div class="ui label">{{ ORDERS_TOTAL }}</div>
+        <div class="ui label">{{ ORDERS_TOTAL }}</div>
     </a>
     <a class="item" href="{% url 'note:note_list' %}?is_read={{ NOTE_FILTER_DEFAULT_IS_READ | urlencode }}&amp;date={% now 'Y-m-d' %}">{% trans 'Staff Notes' %}
-        <div class="ui label">{{ NOTES_TOTAL }}</div>
+        <div class="ui label">{{ NOTES_TOTAL }}</div>
     </a>
 
+    <a class="item" href="{% url 'member:route_list' %}">{% trans 'Routes' %}
+        <div class="ui label">{{ ROUTES_TOTAL }}</div>
+    </a>
 </div>
 
 <div class="item">

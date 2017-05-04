@@ -6,7 +6,7 @@ from member.models import (
     Member, Client, Contact, Route, Address, Referencing,
     EmergencyContact, GENDER_CHOICES, PAYMENT_TYPE,
     DELIVERY_TYPE, DAYS_OF_WEEK, RATE_TYPE,
-    ClientScheduledStatus
+    ClientScheduledStatus, DeliveryHistory
 )
 from meal.models import COMPONENT_GROUP_CHOICES
 
@@ -20,8 +20,12 @@ class AddressFactory (factory.DjangoModelFactory):
     apartment = factory.Faker('random_number')
     city = 'Montreal'
     postal_code = factory.Faker('postalcode', locale="en_CA")
-    latitude = "75.048439"
-    longitude = "40.232434"
+    latitude = factory.LazyAttribute(
+        lambda x: random.choice(["75.0", "75.1", "75.2"])
+    )
+    longitude = factory.LazyAttribute(
+        lambda x: random.choice(["40.2", "40.1", "40.0"])
+    )
 
 
 class MemberFactory (factory.DjangoModelFactory):
@@ -46,6 +50,11 @@ class RouteFactory(factory.DjangoModelFactory):
         model = Route
 
     name = factory.Faker('name')
+
+
+class DeliveryHistoryFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = DeliveryHistory
 
 
 def generate_json():

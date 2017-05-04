@@ -286,7 +286,17 @@ class Address(models.Model):
     )
 
     def __str__(self):
-        return self.street
+        first_line = []
+        first_line.append(str(self.street))
+        if self.apartment:
+            first_line.append("Apt.{}".format(self.apartment))
+        if self.floor:
+            first_line.append("{} Floor".format(self.floor))
+
+        first_line = " ".join(first_line)
+        second_line = "{}, {}".format(self.city, self.postal_code)
+
+        return "{}, {}".format(first_line, second_line)
 
 
 class Contact(models.Model):
@@ -334,7 +344,6 @@ class Route(models.Model):
         verbose_name_plural = _('Routes')
         ordering = ['name']
 
-    # Information about options added to the meal
     name = models.CharField(
         max_length=50,
         verbose_name=_('name')
@@ -353,26 +362,51 @@ class Route(models.Model):
         default=DEFAULT_VEHICLE
     )
 
-    # ordered client ids for the current delivery
-    #   saved by Organize Routes sequencing page
     client_id_sequence = JSONField(
-        blank=True, null=True
+        verbose_name=_('IDs of clients on this route (as a JSON list)'),
+        default=[]
     )
 
     def __str__(self):
         return self.name
 
-    def set_client_sequence(self, date, route_client_ids):
-        # save sequence of points for a delivery route
-        self.client_id_sequence = {date.strftime('%Y-%m-%d'): route_client_ids}
 
-    def get_client_sequence(self):
-        # retrieve sequence of points for a delivery route
-        if self.client_id_sequence:
-            # ['date on which sequence was stored', [client_id, ...]]
-            return list(self.client_id_sequence.items())[0]
-        else:
-            return (None, None)
+class DeliveryHistory(models.Model):
+
+    class Meta:
+        verbose_name = _('Delivery History')
+        verbose_name_plural = _('Delivery Histories')
+        ordering = ['route', '-date']
+        unique_together = ('route', 'date')
+
+    route = models.ForeignKey(
+        'member.Route',
+        on_delete=models.CASCADE,
+        verbose_name=_('route'),
+        related_name='delivery_histories'
+    )
+    date = models.DateField(
+        verbose_name=_('date of the delivery')
+    )
+    vehicle = models.CharField(
+        max_length=20,
+        choices=ROUTE_VEHICLES,
+        verbose_name=_('vehicle')
+    )
+    client_id_sequence = JSONField(
+        verbose_name=_('IDs of clients on this route (as a JSON list)'),
+        default=[]
+    )
+    comments = models.TextField(
+        verbose_name=_('comments'),
+        blank=True,
+        null=True,
+    )
+
+    def __str__(self):
+        return "DeliveryHistory: Route {} delivered on {}".format(
+            self.route.name, self.date
+        )
 
 
 class ClientManager(models.Manager):

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load rules %}
+
+{% block title %}{% trans "Routes" %}{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<i class="right arrow icon divider"></i>
+<div class="active section">{% trans 'Routes' %}</div>
+{% endblock breadcrumb %}
+
+{% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
+
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">{% trans 'Routes' %}</h1>
+</div>
+
+{% if can_edit_data %}
+<div class="ui padded basic segment">
+  <h4>{% trans 'For creating a new route or deleting an existing route, please go to "Admin" menu.' %}</h4>
+</div>
+{% endif %}
+
+{% if routes %}
+<table class="ui very basic stripped celled table">
+    <thead>
+        <tr>
+            <th class="">{% trans 'Name' %}</th>
+            <th class="">{% trans 'Description' %}</th>
+            <th class="">{% trans 'Default delivery vehicle' %}</th>
+            <th class="">{% trans 'Number of clients' %}</th>
+            <th class="">{% trans 'Actions' %}
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for route in routes %}
+        <tr>
+            <td><b>{{ route.name }}</b></td>
+            <td>{{ route.description|truncatechars:50 }}</td>
+            <td>{{ route.get_vehicle_display }}</td>
+            <td>{{ route.client_count }}</td>
+            <td>
+              <a class="ui basic icon button"  href="{% url 'member:route_detail' pk=route.id %}"><i class="icon unhide"></i></a>
+              {% if can_edit_data %}<a class="ui basic icon button"  href="{% url 'member:route_edit' pk=route.id %}"><i class="icon edit"></i></a>{% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+  <div class="ui row"><p>{% trans 'Sorry, no result found.' %}</p></div>
+{% endif %}
+
+{% endblock %}

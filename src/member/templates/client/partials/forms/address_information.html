@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load leaflet_tags %}
 <h4 class="ui dividing header">{% trans 'Address' %}</h4>
 
 <div class="field">
@@ -52,7 +53,7 @@
 </div>
 
 <div class="map_address">
-    <div id="mapid"></div>
+  {% leaflet_map "client_address_map" callback="__client_address_map_init" %}
 </div>
 <br>
 

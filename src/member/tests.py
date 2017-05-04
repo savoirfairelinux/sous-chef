@@ -1,10 +1,12 @@
 import json
 
 from datetime import date, timedelta
+from decimal import Decimal
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.forms import BaseFormSet
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.utils.six import StringIO
 from django.test import TestCase, Client
 
@@ -21,7 +23,7 @@ from meal.models import (
 from order.models import Order
 from member.factories import(
     RouteFactory, ClientFactory, ClientScheduledStatusFactory,
-    MemberFactory, EmergencyContactFactory
+    MemberFactory, EmergencyContactFactory, DeliveryHistoryFactory
 )
 from meal.factories import IngredientFactory, ComponentFactory
 from django.core.management import call_command
@@ -30,6 +32,7 @@ from django.utils import translation
 from django.utils.translation import ugettext
 
 from order.factories import OrderFactory
+from order.models import ORDER_STATUS_ORDERED
 from member.forms import(
     ClientBasicInformation, ClientAddressInformation,
     ClientReferentInformation, ClientPaymentInformation,
@@ -2457,10 +2460,10 @@ class ClientUpdateAddressInformation(ClientUpdateTestCase):
         self.assertEqual(client.member.address.city, data.get('city'))
         self.assertEqual(client.route.id, data.get('route'))
         self.assertEqual(client.delivery_note, data.get('delivery_note'))
-        self.assertEqual(str(client.member.address.latitude),
-                         data.get('latitude'))
-        self.assertEqual(str(client.member.address.longitude),
-                         data.get('longitude'))
+        self.assertEqual(Decimal(client.member.address.latitude),
+                         Decimal(data.get('latitude')))
+        self.assertEqual(Decimal(str(client.member.address.longitude)),
+                         Decimal(data.get('longitude')))
 
 
 class ClientUpdateReferentInformationTestCase(ClientUpdateTestCase):
@@ -2994,6 +2997,21 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
 
         check(reverse('member:member_update_emergency_contacts', kwargs={
             'pk': 1
+        }))
+
+        check(reverse('member:route_list'))
+        check(reverse('member:route_detail', kwargs={
+            'pk': 1
+        }))
+        check(reverse('member:route_edit', kwargs={
+            'pk': 1
+        }))
+        check(reverse('member:route_get_optimised_sequence', kwargs={
+            'pk': 1
+        }))
+        check(reverse('member:delivery_history_detail', kwargs={
+            'route_pk': 1,
+            'date': '2000-01-01'
         }))
 
 
@@ -3973,3 +3991,356 @@ class TestMigrationApply0029(TestMigrations):
             lastname="Address"
         )
         self.assertEqual(member_no_addr.address, None)
+
+
+class RouteListViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        url = reverse('member:route_list')
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('member:route_list')
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+
+class RouteDetailViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        url = reverse('member:route_detail', kwargs={'pk': 1})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('member:route_detail', kwargs={'pk': 1})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+    def test_parsing_client_id_sequence(self):
+        """
+        Unorganised clients should be placed at the end.
+        Invalid clients should be ignored.
+        """
+        route = RouteFactory()
+        clients_on_route = ClientFactory.create_batch(
+            10,
+            route=route
+        )
+        clients_organised = (
+            clients_on_route[1], clients_on_route[3],
+            clients_on_route[5], clients_on_route[7],
+            clients_on_route[9]
+        )
+        clients_unorganised = (
+            clients_on_route[0], clients_on_route[2],
+            clients_on_route[4], clients_on_route[6],
+            clients_on_route[8]
+        )
+        route.client_id_sequence = [
+            "N/A", clients_organised[0].pk,
+            299999, clients_organised[1].pk,
+            "INVALID", clients_organised[2].pk,
+            "[DELETED]", clients_organised[3].pk,
+            599999, clients_organised[4].pk,
+        ]
+        route.save()
+
+        self.force_login()
+        url = reverse('member:route_detail', kwargs={'pk': route.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        clients_on_route = response.context['clients_on_route']
+        self.assertEqual(len(clients_on_route), 10)
+        self.assertEqual(clients_on_route[0].pk, clients_organised[0].pk)
+        self.assertEqual(clients_on_route[1].pk, clients_organised[1].pk)
+        self.assertEqual(clients_on_route[2].pk, clients_organised[2].pk)
+        self.assertEqual(clients_on_route[3].pk, clients_organised[3].pk)
+        self.assertEqual(clients_on_route[4].pk, clients_organised[4].pk)
+        self.assertTrue(clients_on_route[0].has_been_configured)
+        self.assertTrue(clients_on_route[1].has_been_configured)
+        self.assertTrue(clients_on_route[2].has_been_configured)
+        self.assertTrue(clients_on_route[3].has_been_configured)
+        self.assertTrue(clients_on_route[4].has_been_configured)
+        self.assertEqual(
+            set(map(lambda c: c.pk, clients_unorganised)),
+            set(map(lambda c: c.pk, clients_on_route[5:]))
+        )
+        self.assertFalse(clients_on_route[5].has_been_configured)
+        self.assertFalse(clients_on_route[6].has_been_configured)
+        self.assertFalse(clients_on_route[7].has_been_configured)
+        self.assertFalse(clients_on_route[8].has_been_configured)
+        self.assertFalse(clients_on_route[9].has_been_configured)
+
+
+class RouteEditViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_edit_permission(self):
+        # Setup
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        route = RouteFactory()
+        url = reverse(
+            'member:route_edit',
+            kwargs={'pk': route.pk})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_edit_permission(self):
+        # Setup
+        user = User.objects.create_superuser(
+            username='foo', email='foo@example.com', password='secure')
+        user.save()
+        self.client.login(username='foo', password='secure')
+        route = RouteFactory()
+        url = reverse(
+            'member:route_edit',
+            kwargs={'pk': route.pk})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_valid_form(self):
+        route = RouteFactory()
+        self.force_login()
+        url = reverse(
+            'member:route_edit',
+            kwargs={'pk': route.pk})
+        response = self.client.post(url, {
+            'name': 'new name',
+            'description': 'test',
+            'vehicle': 'driving',
+            'client_id_sequence': '[100, 110]'
+        })
+        self.assertRedirects(response, reverse_lazy(
+            'member:route_detail', args=[route.pk]))
+
+
+class RouteGetOptimisedSequenceViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        url = reverse('member:route_get_optimised_sequence', kwargs={'pk': 1})
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        url = reverse('member:route_get_optimised_sequence', kwargs={'pk': 1})
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+    def test_client_numbers_should_be_the_same(self):
+        # Setup data
+        route = RouteFactory()
+        clients = ClientFactory.create_batch(
+            10,
+            route=route)
+
+        self.force_login()
+        url = reverse(
+            'member:route_get_optimised_sequence', kwargs={'pk': route.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        try:
+            result = json.loads(response.content.decode(response.charset))
+            self.assertEqual(len(result), 10)
+        except (TypeError, ValueError) as e:
+            self.fail("Response is not valid JSON.")
+
+
+class RouteDeliveryHistoryDetailViewTestCase(SousChefTestMixin, TestCase):
+    fixtures = ['routes.json']
+
+    def test_redirects_users_who_do_not_have_read_permission(self):
+        # Setup
+        User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        self.client.login(username='foo', password='secure')
+        r = RouteFactory()
+        dh = DeliveryHistoryFactory(
+            route=r,
+            date=timezone.datetime.date(
+                timezone.datetime(2001, 1, 1)
+            )
+        )
+        url = reverse('member:delivery_history_detail', kwargs={
+            'route_pk': r.pk,
+            'date': '2001-01-01'
+        })
+        # Run & check
+        self.assertRedirectsWithAllMethods(url)
+
+    def test_allow_access_to_users_with_read_permission(self):
+        # Setup
+        user = User.objects.create_user(
+            username='foo', email='foo@example.com', password='secure')
+        user.is_staff = True
+        user.save()
+        self.client.login(username='foo', password='secure')
+        r = RouteFactory()
+        dh = DeliveryHistoryFactory(
+            route=r,
+            date=timezone.datetime.date(
+                timezone.datetime(2001, 1, 1)
+            )
+        )
+        url = reverse('member:delivery_history_detail', kwargs={
+            'route_pk': r.pk,
+            'date': '2001-01-01'
+        })
+        # Run
+        response = self.client.get(url)
+        # Check
+        self.assertEqual(response.status_code, 200)
+
+    def test_parsing_client_id_sequence(self):
+        """
+        Should be in the order:
+        (1) Delivery history sequence
+        (2) Then route sequence
+        (3) Then random order
+
+        Except for the problematic ones, which means:
+        (1) Invalid client ID or client doesn't exist
+        (2) The client's order on that day was not found and we think the
+            client is invalid on this delivery sequence.
+        """
+        route = RouteFactory()
+        dh = DeliveryHistoryFactory(
+            route=route,
+            date=timezone.datetime.date(
+                timezone.datetime(2001, 1, 1)
+            )
+        )
+        clients = ClientFactory.create_batch(
+            10,
+            route=route,
+            status=Client.ACTIVE
+        )
+        route.client_id_sequence = list(map(
+            lambda x: clients[x].pk,
+            [1, 3, 5, 7, 9, 0, 2, 4, 6, 8]
+        ))
+        route.save(update_fields=['client_id_sequence'])
+
+        # We delivered clients[7, 9, 0, 2, 4, 6]:
+        orders_dict = {}
+        for x in [7, 9, 0, 2, 4, 6]:
+            c = clients[x]
+            o = OrderFactory(
+                client=c,
+                delivery_date=timezone.datetime.date(
+                    timezone.datetime(2001, 1, 1)
+                ),
+                status=ORDER_STATUS_ORDERED
+            )
+            orders_dict[x] = o
+
+        # We imagine to have delivered clients[5] but deleted his order.
+        # We then change clients[2]'s route to make it invalid.
+        clients[2].route = RouteFactory()
+        clients[2].save(update_fields=['route'])
+
+        dh.client_id_sequence = [
+            "N/A",  # Invalid client ID
+            clients[0].pk,
+            999999,  # Client doesn't exist for sure
+            clients[2].pk,  # Invalid because of route
+            clients[5].pk,  # Invalid because order doesn't exist
+            clients[7].pk,
+            # clients[9], clients[4], clients[6] are not in this list
+            # and should be placed by default seq.
+        ]
+        dh.save(update_fields=['client_id_sequence'])
+
+        # The expected sequence should be:
+        # [0, 7, 9, 4, 6]
+        self.force_login()
+        url = reverse('member:delivery_history_detail', kwargs={
+            'route_pk': route.pk,
+            'date': '2001-01-01'
+        })
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        clients_on_dh = response.context['clients_on_delivery_history']
+
+        # 5 clients who had delivery
+        self.assertEqual(len(clients_on_dh), 5)
+        self.assertEqual(clients_on_dh[0].pk, clients[0].pk)
+        self.assertEqual(clients_on_dh[1].pk, clients[7].pk)
+        self.assertEqual(clients_on_dh[2].pk, clients[9].pk)
+        self.assertEqual(clients_on_dh[3].pk, clients[4].pk)
+        self.assertEqual(clients_on_dh[4].pk, clients[6].pk)
+
+        # 4 invalid messages
+        messages = response.context['messages']
+        self.assertEqual(len(messages), 4)
+        iter_messages = iter(messages)
+        message0 = next(iter_messages)
+        self.assertIn('N/A', message0.message)
+        message1 = next(iter_messages)
+        self.assertIn('999999', message1.message)
+        message2 = next(iter_messages)
+        self.assertIn(clients[2].member.firstname, message2.message)
+        self.assertIn(clients[2].member.lastname, message2.message)
+        message3 = next(iter_messages)
+        self.assertIn(clients[5].member.firstname, message3.message)
+        self.assertIn(clients[5].member.lastname, message3.message)
+
+        # configured?
+        self.assertTrue(clients_on_dh[0].has_been_configured)
+        self.assertTrue(clients_on_dh[1].has_been_configured)
+        self.assertFalse(clients_on_dh[2].has_been_configured)
+        self.assertFalse(clients_on_dh[3].has_been_configured)
+        self.assertFalse(clients_on_dh[4].has_been_configured)
+
+        # order?
+        self.assertEqual(clients_on_dh[0].order_of_the_day, orders_dict[0])
+        self.assertEqual(clients_on_dh[1].order_of_the_day, orders_dict[7])
+        self.assertEqual(clients_on_dh[2].order_of_the_day, orders_dict[9])
+        self.assertEqual(clients_on_dh[3].order_of_the_day, orders_dict[4])
+        self.assertEqual(clients_on_dh[4].order_of_the_day, orders_dict[6])

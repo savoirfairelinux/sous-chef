@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-10 10:30-0400\n"
+"POT-Creation-Date: 2017-05-03 16:40-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
@@ -430,7 +430,7 @@ msgstr "valeur"
 msgid "member"
 msgstr "membre"
 
-#: member/models.py
+#: member/models.py member/templates/route/list.html
 msgid "Routes"
 msgstr "Routes"
 
@@ -445,6 +445,38 @@ msgstr "description"
 #: member/models.py
 msgid "vehicle"
 msgstr ""
+
+#: member/models.py
+msgid "IDs of clients on this route (as a JSON list)"
+msgstr ""
+
+#: member/models.py
+#, fuzzy
+#| msgid "Delivery type"
+msgid "Delivery History"
+msgstr "Type de Livraison"
+
+#: member/models.py member/templates/route/detail.html
+#, fuzzy
+#| msgid "Delivery Note"
+msgid "Delivery Histories"
+msgstr "Notes de Livraison"
+
+#: member/models.py
+msgid "route"
+msgstr "route"
+
+#: member/models.py
+#, fuzzy
+#| msgid "No delivery."
+msgid "date of the delivery"
+msgstr "Pas de livraison"
+
+#: member/models.py
+#, fuzzy
+#| msgid "clients"
+msgid "comments"
+msgstr "clients"
 
 #: member/models.py
 msgid "Pending"
@@ -497,10 +529,6 @@ msgstr "contacts d'urgence"
 #: member/models.py
 msgid "alert client"
 msgstr "alerte client"
-
-#: member/models.py
-msgid "route"
-msgstr "route"
 
 #: member/models.py
 msgid "Start"
@@ -674,6 +702,8 @@ msgstr "Prénom, nom de famille, ..."
 #: member/templates/client/view/information.html
 #: member/templates/client/view/payment.html
 #: member/templates/client/view/summary.html
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html member/templates/route/edit.html
 msgid "Address"
 msgstr "Adresse"
 
@@ -727,22 +757,23 @@ msgid "Emergency contact information"
 msgstr "Contact d'urgence"
 
 #: member/templates/client/create/form.html
-#: member/templates/client/update/base.html
+#: member/templates/client/update/base.html member/templates/route/edit.html
 msgid "Required information missing"
 msgstr "Information requise manquante"
 
 #: member/templates/client/create/form.html
-#: member/templates/client/update/base.html
+#: member/templates/client/update/base.html member/templates/route/edit.html
 msgid "Please review the form to make sure that all required fields are filled."
 msgstr "Veuillez réviser le formulaire afin de valider que tous les champs requis sont remplis."
 
 #: member/templates/client/create/form.html
 #: member/templates/client/update/base.html
+#: member/templates/route/delivery_history_detail.html
 msgid "Back"
 msgstr "Précédent"
 
 #: member/templates/client/create/form.html
-#: member/templates/client/update/base.html
+#: member/templates/client/update/base.html member/templates/route/edit.html
 msgid "Save"
 msgstr "Enregistrer"
 
@@ -786,7 +817,7 @@ msgstr ""
 msgid "This client is currently"
 msgstr "Le statut du client est"
 
-#: member/templates/client/list.html
+#: member/templates/client/list.html member/templates/route/list.html
 msgid "Sorry, no result found."
 msgstr "Désolé, aucun résultat trouvé."
 
@@ -796,6 +827,9 @@ msgstr "Désolé, aucun résultat trouvé."
 #: member/templates/client/partials/forms/emergency_contacts.html
 #: member/templates/client/partials/forms/payment_information.html
 #: member/templates/client/partials/forms/referent_information.html
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html member/templates/route/edit.html
+#: member/templates/route/list.html
 msgid "Name"
 msgstr "Nom"
 
@@ -807,6 +841,8 @@ msgstr "Nom complet et âge du client."
 #: member/templates/client/partials/filters.html
 #: member/templates/client/partials/menu.html
 #: member/templates/client/view/orders.html
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html member/templates/route/edit.html
 msgid "Status"
 msgstr "Statut"
 
@@ -817,6 +853,8 @@ msgstr ""
 #: member/templates/client/list.html
 #: member/templates/client/view/allergies.html
 #: member/templates/client/view/summary.html
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html member/templates/route/edit.html
 msgid "Delivery type"
 msgstr "Type de Livraison"
 
@@ -849,7 +887,7 @@ msgid "Age"
 msgstr "Âge"
 
 #: member/templates/client/partials/birthdays.html
-#: member/templates/client/view/status.html
+#: member/templates/client/view/status.html member/templates/route/detail.html
 msgid "Date"
 msgstr "Date"
 
@@ -1029,6 +1067,7 @@ msgstr "Date de fin"
 
 #: member/templates/client/update/status.html
 #: member/templates/client/view/delete_status_confirmation.html
+#: member/templates/route/edit.html
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -1048,6 +1087,7 @@ msgstr ""
 #: member/templates/client/view/information.html
 #: member/templates/client/view/payment.html
 #: member/templates/client/view/referent.html
+#: member/templates/route/detail.html
 msgid "Edit"
 msgstr "Éditer"
 
@@ -1237,7 +1277,7 @@ msgstr "Montant"
 msgid "Total amount in $CAD."
 msgstr "Montant total en $CAD"
 
-#: member/templates/client/view/orders.html
+#: member/templates/client/view/orders.html member/templates/route/list.html
 msgid "Actions"
 msgstr "Actions"
 
@@ -1305,6 +1345,159 @@ msgstr "Supprimer"
 #: member/templates/client/view/summary.html
 msgid "Home"
 msgstr "Domicile"
+
+#: member/templates/route/delivery_history_detail.html
+msgid "View delivery history:"
+msgstr ""
+
+#: member/templates/route/delivery_history_detail.html
+#, fuzzy
+#| msgid "Delivery Note"
+msgid "Delivery vehicle"
+msgstr "Notes de Livraison"
+
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html
+#, fuzzy
+#| msgid "Clients"
+msgid "Comments"
+msgstr "Clients"
+
+#: member/templates/route/delivery_history_detail.html
+#, fuzzy
+#| msgid "Delivery Route"
+msgid "Delivery sequence"
+msgstr "Route de Livraison"
+
+#: member/templates/route/delivery_history_detail.html
+msgid "View order"
+msgstr ""
+
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html
+msgid "Configured or unconfigured. Unconfigured clients are placed at the end of the delivery sequence by default."
+msgstr ""
+
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html member/templates/route/edit.html
+msgid "Access the client's file"
+msgstr ""
+
+#: member/templates/route/delivery_history_detail.html
+#, fuzzy
+#| msgid "Other order item"
+msgid "View the order"
+msgstr "Autre élément de commande"
+
+#: member/templates/route/delivery_history_detail.html
+#, fuzzy
+#| msgid "Order"
+msgid "Order #"
+msgstr "Commande"
+
+#: member/templates/route/delivery_history_detail.html
+msgid "[DELETED]"
+msgstr ""
+
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html member/templates/route/edit.html
+msgid "Configured"
+msgstr ""
+
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html member/templates/route/edit.html
+msgid "Unconfigured"
+msgstr ""
+
+#: member/templates/route/delivery_history_detail.html
+msgid "Map Review"
+msgstr ""
+
+#: member/templates/route/detail.html
+#, fuzzy
+#| msgid "route"
+msgid "View route:"
+msgstr "route"
+
+#: member/templates/route/detail.html member/templates/route/edit.html
+#: member/templates/route/list.html
+#, fuzzy
+#| msgid "description"
+msgid "Description"
+msgstr "description"
+
+#: member/templates/route/detail.html member/templates/route/edit.html
+#: member/templates/route/list.html
+msgid "Default delivery vehicle"
+msgstr ""
+
+#: member/templates/route/detail.html member/templates/route/edit.html
+msgid "Default delivery sequence"
+msgstr ""
+
+#: member/templates/route/detail.html member/templates/route/edit.html
+#, fuzzy
+#| msgid "Delivery Note"
+msgid "Delivery Preview"
+msgstr "Notes de Livraison"
+
+#: member/templates/route/detail.html
+#, fuzzy
+#| msgid "No delivery."
+msgid "No delivery histories."
+msgstr "Pas de livraison"
+
+#: member/templates/route/detail.html
+msgid "Vehicle"
+msgstr ""
+
+#: member/templates/route/detail.html
+#, fuzzy
+#| msgid "Actions"
+msgid "Action"
+msgstr "Actions"
+
+#: member/templates/route/detail.html
+msgid "Return to route list"
+msgstr ""
+
+#: member/templates/route/edit.html
+#, fuzzy
+#| msgid "route"
+msgid "Edit route:"
+msgstr "route"
+
+#: member/templates/route/edit.html
+#, fuzzy
+#| msgid "Basic information"
+msgid "Basic Information"
+msgstr "Informations de base"
+
+#: member/templates/route/edit.html
+msgid "Dragging a row in the table to change the delivery sequence of the client. Changes will not be saved until clicking the \"Save\" button."
+msgstr ""
+
+#: member/templates/route/edit.html
+msgid "Configured, edited or unconfigured."
+msgstr ""
+
+#: member/templates/route/edit.html
+msgid "Minimise euclidean distances"
+msgstr ""
+
+#: member/templates/route/edit.html
+msgid "This previews a possible delivery sequence that minimises the total euclidean distance. It will update the table and the map, but no changes will be applied until clicking \"Save\" button."
+msgstr ""
+
+#: member/templates/route/list.html
+msgid "For creating a new route or deleting an existing route, please go to \"Admin\" menu."
+msgstr ""
+
+#: member/templates/route/list.html
+#, fuzzy
+#| msgid "New client"
+msgid "Number of clients"
+msgstr "Nouveau client"
 
 #: member/tests.py
 #, fuzzy
@@ -1400,6 +1593,27 @@ msgid "^component_to_avoid/(?P<pk>\\d+)/delete/$"
 msgstr "^plats_à_éviter/(?P<pk>\\d+)/supprimer/$"
 
 #: member/urls.py
+msgid "^routes/$"
+msgstr "^itinéraires/$"
+
+#: member/urls.py
+msgid "^route/(?P<pk>\\d+)/$"
+msgstr "^itinéraire/(?P<pk>\\d+)/$"
+
+#: member/urls.py
+msgid "^route/(?P<pk>\\d+)/edit/$"
+msgstr "^itinéraire/(?P<pk>\\d+)/éditer/$"
+
+#: member/urls.py
+msgid "^route/(?P<pk>\\d+)/optimised_sequence/$"
+msgstr "^itinéraire/(?P<pk>\\d+)/ordre_optimisé/$"
+
+#: member/urls.py
+#, python-brace-format
+msgid "^route/(?P<route_pk>\\d+)/(?P<date>\\d{4}-\\d{2}-\\d{2})/$"
+msgstr "^itinéraire/(?P<route_pk>\\d+)/(?P<date>\\d{4}-\\d{2}-\\d{2})/$"
+
+#: member/urls.py
 msgid "^(?P<pk>\\d+)/update/"
 msgstr "^(?P<pk>\\d+)/mettre_à_jour/"
 
@@ -1415,17 +1629,24 @@ msgstr "Le client a été mis à jour"
 msgid "The status has been changed"
 msgstr "Le statut a été changé"
 
+#: member/views.py
+#, python-format
+msgid "The client <a href=%(url)s>%(firstname)s %(lastname)s</a> is found on this delivery sequence but is no longer valid for this delivery."
+msgstr ""
+
+#: member/views.py
+#, python-format
+msgid "The delivery sequence contains a client with ID%(client_id)s that no longer exists in the database."
+msgstr ""
+
+#: member/views.py
+#, fuzzy
+#| msgid "The client has been updated"
+msgid "This route has been updated."
+msgstr "Le client a été mis à jour"
+
 #~ msgid "^client/(?P<pk>\\d+)/meals/preferences$"
 #~ msgstr "^client/(?P<pk>\\d+)/repas/préférences$"
-
-#~ msgid "Component"
-#~ msgstr "Composant"
-
-#~ msgid "Quantity"
-#~ msgstr "Quantité"
-
-#~ msgid "Meal schedule"
-#~ msgstr "Calendrier des repas"
 
 #~ msgid "emergency contact relationship"
 #~ msgstr "lien avec le contact d'urgence"

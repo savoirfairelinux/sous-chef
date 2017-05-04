@@ -1682,7 +1682,7 @@
         "fields": {
             "description": "Mile-end route.",
             "name": "Mile-End",
-            "client_id_sequence": null
+            "client_id_sequence": []
         }
     },
     {
@@ -1691,7 +1691,7 @@
         "fields": {
             "description": "Westmount route.",
             "name": "Westmount",
-            "client_id_sequence": null
+            "client_id_sequence": []
         }
     },
     {
@@ -1700,7 +1700,7 @@
         "fields": {
             "description": "Centre Sud route.",
             "name": "Centre Sud",
-            "client_id_sequence": null
+            "client_id_sequence": []
         }
     },
     {
@@ -1709,7 +1709,7 @@
         "fields": {
             "description": "McGill route.",
             "name": "McGill",
-            "client_id_sequence": null
+            "client_id_sequence": []
         }
     },
     {
@@ -1718,7 +1718,7 @@
         "fields": {
             "description": "Downtown route.",
             "name": "Centre-Ville / Downtown",
-            "client_id_sequence": null
+            "client_id_sequence": []
         }
     },
     {
@@ -1727,7 +1727,7 @@
         "fields": {
             "description": "CDN route.",
             "name": "C\u00f4te-des-Neiges",
-            "client_id_sequence": null
+            "client_id_sequence": []
         }
     },
     {
@@ -1736,7 +1736,7 @@
         "fields": {
             "description": "McGill West route.",
             "name": "McGill West",
-            "client_id_sequence": null
+            "client_id_sequence": []
         }
     },
     {
@@ -1745,7 +1745,7 @@
         "fields": {
             "description": "Notre Dame de Grace route.",
             "name": "Notre Dame de Grace",
-            "client_id_sequence": null
+            "client_id_sequence": []
         }
     },
     {
