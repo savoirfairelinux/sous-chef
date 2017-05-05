@@ -455,7 +455,7 @@ class ClientWizard(
         preferences = self.form_dict['dietary_restriction'].cleaned_data
 
         # Save meals schedule as a Client option
-        client.set_meals_schedule(
+        client.set_simple_meals_schedule(
             preferences.get('meals_schedule')
         )
 
@@ -1213,7 +1213,7 @@ class ClientUpdateDietaryRestriction(ClientUpdateInformation):
         Save the basic information step data.
         """
         # Save meals schedule as a Client option
-        client.set_meals_schedule(
+        client.set_simple_meals_schedule(
             form['meals_schedule']
         )
 

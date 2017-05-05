@@ -99,4 +99,4 @@ class Command(BaseCommand):
                 client.member.save()
 
                 # Add Client option meals_schedule
-                # client.set_meals_schedule([])
+                # client.set_simple_meals_schedule([])
