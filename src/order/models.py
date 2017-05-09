@@ -9,7 +9,7 @@ from django_filters import FilterSet, ChoiceFilter, CharFilter
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 
-from member.models import (Client, Member, Route,
+from member.models import (Client, Member, Route, DAYS_OF_WEEK,
                            RATE_TYPE_LOW_INCOME, RATE_TYPE_SOLIDARY,
                            Address, Option, Client_option, Restriction,
                            Client_avoid_ingredient, Client_avoid_component,
@@ -149,7 +149,7 @@ class OrderManager(models.Manager):
         """
         Automatically creates orders and order items for the given delivery
         date and given client list.
-        Order items will be created based on client's meals default.
+        Order items will be created based on client's meals schedule.
 
         Parameters:
           delivery_date : date on which orders are to be delivered
@@ -160,7 +160,8 @@ class OrderManager(models.Manager):
         """
         created_orders = []
         messages = []
-        day = delivery_date.weekday()  # Monday is 0, Sunday is 6
+        weekday = delivery_date.weekday()  # Monday is 0, Sunday is 6
+        day = DAYS_OF_WEEK[weekday][0]     # 0 -> 'monday', 6 -> 'sunday'
         for client in clients:
             try:
                 order = Order.objects.get(client=client,
@@ -169,13 +170,17 @@ class OrderManager(models.Manager):
                 continue
             except Order.DoesNotExist:
                 # If no order for this client/date, create it and attach items
-                prices = self.get_client_prices(client)
-                items = client.meals_default[day][1]
+                items = dict(client.meals_schedule).get(day, None)
+
+                # Skip this client if no scheduled delivery
+                if items is None:
+                    continue
+
                 filtered_items = {
                     k: v for k, v in items.items() if v is not None
                 }
 
-                # Skip this client if no default is set
+                # Skip this client if nothing to order
                 if not filtered_items:
                     continue
 
@@ -186,6 +191,8 @@ class OrderManager(models.Manager):
                     else:
                         replaced_key = key + '_default_quantity'
                     individual_items[replaced_key] = value
+
+                prices = self.get_client_prices(client)
                 order = self.create_order(
                     delivery_date, client, individual_items, prices
                 )

@@ -16,7 +16,7 @@ from meal.factories import (IngredientFactory, ComponentFactory,
                             ComponentIngredientFactory,
                             IncompatibilityFactory, RestrictedItemFactory)
 from order.models import Order
-from member.models import (Client, Member, Route, Restriction,
+from member.models import (Client, Member, Route, Restriction, DAYS_OF_WEEK,
                            Client_avoid_ingredient, DeliveryHistory)
 from member.factories import (AddressFactory, MemberFactory, ClientFactory,
                               RouteFactory, DeliveryHistoryFactory)
@@ -655,7 +655,6 @@ class MealLabelsViewTestCase(SousChefTestMixin, TestCase):
 
 
 class RefreshOrderViewTestCase(SousChefTestMixin, TestCase):
-    fixtures = ['sample_data']
 
     def test_redirects_users_who_do_not_have_edit_permission(self):
         # Setup
@@ -679,6 +678,53 @@ class RefreshOrderViewTestCase(SousChefTestMixin, TestCase):
         response = self.client.get(url)
         # Check
         self.assertEqual(response.status_code, 200)
+
+    def test_refresh_create_only_if_scheduled_today(self):
+        """
+        Refs bug #734.
+        If a client is ongoing but don't have scheduled delivery,
+        then don't create his order.
+        """
+        meals_default = {}
+        data = {
+            'main_dish_{}_quantity': 2,
+            'size_{}': 'R',
+            'dessert_{}_quantity': 0,
+            'diabetic_dessert_{}_quantity': 0,
+            'fruit_salad_{}_quantity': 1,
+            'green_salad_{}_quantity': 1,
+            'pudding_{}_quantity': 1,
+            'compote_{}_quantity': 0,
+        }
+        for day, _ in DAYS_OF_WEEK:
+            for key_tmpl, value in data.items():
+                meals_default[key_tmpl.format(day)] = value
+
+        ongoing_clients = ClientFactory.create_batch(
+            10, status=Client.ACTIVE, delivery_type='O',
+            meal_default_week=meals_default,
+            route=RouteFactory()
+        )
+
+        # The meal schedule should exclude today.
+        schedule_delivery = []
+        weekday = datetime.date.today().weekday()
+        for i, t in enumerate(DAYS_OF_WEEK):
+            if i != weekday:
+                schedule_delivery.append(t[0])
+
+        for c in ongoing_clients:
+            c.set_simple_meals_schedule(schedule_delivery)
+
+        self.force_login()
+        url = reverse('delivery:refresh_orders')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(
+            Order.objects.all().count(),
+            0  # No order should be created.
+        )
 
 
 class ExcludeMalconfiguredClientsTestCase(SousChefTestMixin, TestCase):
@@ -790,6 +836,11 @@ class ExcludeMalconfiguredClientsTestCase(SousChefTestMixin, TestCase):
         cls.ingred_chickens = []
         cls.ingred_wines = []
         for client in (cls.c_valid, cls.c_nr, cls.c_ng, cls.c_nrng):
+            # Ensure that orders are created when refrshing orders.
+            client.set_simple_meals_schedule([
+                'monday', 'tuesday', 'wednesday', 'thursday', 'friday',
+                'saturday', 'sunday'])
+
             # client-specific ingredient (for testing clashes)
             this_chicken = IngredientFactory(
                 name="chicken_{0}".format(client.id),

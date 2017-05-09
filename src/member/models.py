@@ -748,32 +748,17 @@ class Client(models.Model):
                     prefs.append((day, meal_schedule))
             return prefs
 
-    def set_meals_schedule(self, schedule):
+    def set_simple_meals_schedule(self, schedule):
         """
-        [LXYANG] Rename to set_simple_meals_schedule.
         Set the delivery days for the client.
         @param schedule
             A python list of days.
         """
-        id = None
-        try:
-            option, created = Option.objects.get_or_create(
-                name='meals_schedule')
-            meals_schedule_option = Client_option.objects.get(
-                client=self, option=option
-            )
-            id = meals_schedule_option.id
-        except Client_option.DoesNotExist:
-            pass
-
-        option, created = Client_option.objects.update_or_create(
-            id=id,
-            defaults={
-                'client': self,
-                'option': option,
-                'value': json.dumps(schedule),
-            }
-        )
+        meal_schedule_option, _ = Option.objects.get_or_create(
+            name='meals_schedule')
+        client_option, _ = Client_option.objects.update_or_create(
+            client=self, option=meal_schedule_option,
+            defaults={'value': json.dumps(schedule)})
 
 
 class ClientScheduledStatus(models.Model):

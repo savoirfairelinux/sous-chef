@@ -2,7 +2,6 @@
 
 import random
 import urllib.parse
-import random
 import importlib
 import datetime
 from unittest.mock import patch
@@ -17,7 +16,7 @@ from django.core.exceptions import ValidationError
 from django.core.management import call_command
 from django.db.models import Q, Sum
 
-from member.models import Client, Address, Member, Route
+from member.models import (Client, Address, Member, Route, DAYS_OF_WEEK)
 from member.factories import RouteFactory, ClientFactory
 from meal.factories import ComponentFactory
 from order.models import Order, Order_item, MAIN_PRICE_DEFAULT, \
@@ -350,6 +349,11 @@ class OrderAutoCreateOnDefaultsTestCase(TestCase):
             delivery_type='O',
             rate_type='default',
             meal_default_week=meals_default)
+        for c in cls.ongoing_clients:
+            c.set_simple_meals_schedule([
+                'monday', 'tuesday', 'wednesday', 'thursday', 'friday',
+                'saturday', 'sunday'])
+
         # The delivery date must be a Friday, to match the meals defaults
         cls.delivery_date = date(2016, 7, 15)
 
@@ -1651,6 +1655,11 @@ class CommandsTestCase(TestCase):
             10, status=Client.ACTIVE, delivery_type='O',
             meal_default_week=meals_default
         )
+        for c in cls.ongoing_clients:
+            c.set_simple_meals_schedule([
+                'monday', 'tuesday', 'wednesday', 'thursday', 'friday',
+                'saturday', 'sunday'])
+
         cls.episodic_clients = ClientFactory.create_batch(
             10, status=Client.ACTIVE, delivery_type='E',
             meal_default_week=meals_default
@@ -1666,7 +1675,7 @@ class CommandsTestCase(TestCase):
     def test_generateorders_1day(self):
         """Generate one day's orders"""
 
-        args = ["2016-11-25"]
+        args = ["2016-11-25"]  # Friday
         opts = {}
         call_command('generateorders', *args, **opts)
         self.assertEqual(
@@ -1691,6 +1700,27 @@ class CommandsTestCase(TestCase):
         self.assertEqual(
             Order.objects.all().count(),
             len(self.ongoing_clients) * 2
+        )
+
+    def test_generateorders_create_only_if_scheduled_today(self):
+        """
+        Refs bug #734.
+        If a client is ongoing but don't have scheduled delivery,
+        then don't generate his order.
+        """
+        for c in self.ongoing_clients[:4]:
+            # No delivery on Friday for 4 clients.
+            c.set_simple_meals_schedule([
+                'monday', 'tuesday', 'wednesday', 'thursday',  # No Fridays
+                'saturday', 'sunday'])
+
+        args = ["2016-11-25"]  # Friday
+        opts = {}
+        call_command('generateorders', *args, **opts)
+        self.assertEqual(
+            Order.objects.all().count(),
+            # The 4 clients should be excluded.
+            len(self.ongoing_clients) - 4
         )
 
 

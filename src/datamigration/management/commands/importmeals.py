@@ -91,7 +91,7 @@ class Command(BaseCommand):
                             prefs['diabetic_' + row[day] + '_quantity'] = \
                                 int(row[11 + (delivery_day * 10) + 4])
 
-                    client.set_meals_schedule(meals_schedule)
+                    client.set_simple_meals_schedule(meals_schedule)
                     client.meal_default_week = prefs
                     client.save()
 
