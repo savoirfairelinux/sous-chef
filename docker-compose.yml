@@ -5,6 +5,7 @@ services:
   db:
     restart: always
     image: mariadb
+    user: "1000"
     environment:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: feast
