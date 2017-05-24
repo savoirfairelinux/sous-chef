@@ -3,8 +3,8 @@ import factory
 import random
 
 from member.models import (
-    Member, Client, Contact, Route, Address, Referencing,
-    EmergencyContact, GENDER_CHOICES, PAYMENT_TYPE,
+    Member, Client, Contact, Route, Address,
+    Relationship, GENDER_CHOICES, PAYMENT_TYPE,
     DELIVERY_TYPE, DAYS_OF_WEEK, RATE_TYPE,
     ClientScheduledStatus, DeliveryHistory
 )
@@ -104,35 +104,35 @@ class ClientFactory (factory.DjangoModelFactory):
 
     meal_default_week = factory.LazyAttribute(lambda x: generate_json())
 
-    referencing = factory.RelatedFactory(
-        'member.factories.ReferencingFactory',
-        'client'
-    )
+
+def random_combination(iterable, r):
+    """
+    Random selection from itertools.combinations(iterable, r)
+    From Python docs (itertools)
+    """
+    pool = tuple(iterable)
+    n = len(pool)
+    indices = sorted(random.sample(xrange(n), r))
+    return tuple(pool[i] for i in indices)
 
 
-class EmergencyContactFactory(factory.DjangoModelFactory):
+class RelationshipFactory(factory.DjangoModelFactory):
     class Meta:
-        model = EmergencyContact
+        model = Relationship
 
     client = factory.SubFactory(ClientFactory)
     member = factory.SubFactory(MemberFactory)
-    relationship = factory.LazyAttribute(
+    nature = factory.LazyAttribute(
         lambda x: random.choice(['friends', 'family', 'coworkers'])
     )
-
-
-class ReferencingFactory(factory.DjangoModelFactory):
-
-    class Meta:
-        model = Referencing
-
-    referent = factory.SubFactory(MemberFactory)
-
-    client = factory.SubFactory(ClientFactory)
-
-    referral_reason = factory.Faker('sentence')
-
-    date = factory.Faker('date')
+    type = factory.LazyAttribute(
+        lambda x: list(random_combination(
+            map(lambda tup: tup[0], Relationship.TYPE_CHOICES),
+            random.randint(0, len(Relationship.TYPE_CHOICES))))
+    )
+    extra_fields = factory.LazyAttribute(
+        lambda x: {})
+    remark = factory.Faker('sentence')
 
 
 class ContactFactory (factory.DjangoModelFactory):

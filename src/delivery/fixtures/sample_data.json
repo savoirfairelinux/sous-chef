@@ -1769,11 +1769,12 @@
     },
     {
         "pk": 1,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 606,
             "member": 863,
-            "relationship": "Nephew"
+            "nature": "Nephew",
+            "type": []
         }
     },
     {
@@ -1797,11 +1798,12 @@
     },
     {
         "pk": 2,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 607,
             "member": 861,
-            "relationship": "Friend"
+            "nature": "Friend",
+            "type": []
         }
     },
     {
@@ -1825,11 +1827,12 @@
     },
     {
         "pk": 3,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 608,
             "member": 866,
-            "relationship": "Friend"
+            "nature": "Friend",
+            "type": []
         }
     },
     {
@@ -1853,11 +1856,12 @@
     },
     {
         "pk": 4,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 609,
             "member": 862,
-            "relationship": "Friend"
+            "nature": "Friend",
+            "type": []
         }
     },
     {
@@ -1881,11 +1885,12 @@
     },
     {
         "pk": 5,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 610,
             "member": 868,
-            "relationship": "Friend"
+            "nature": "Friend",
+            "type": []
         }
     },
     {
@@ -1909,11 +1914,12 @@
     },
     {
         "pk": 6,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 611,
             "member": 867,
-            "relationship": "Friend"
+            "nature": "Friend",
+            "type": []
         }
     },
     {
@@ -1937,41 +1943,54 @@
     },
     {
         "pk": 7,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 612,
             "member": 868,
-            "relationship": "Friend"
+            "nature": "Friend",
+            "type": ["emergency"]
         }
     },
     {
         "pk": 255,
-        "model": "member.referencing",
+        "model": "member.relationship",
         "fields": {
-            "referent": 865,
-            "date": "2015-11-02",
+            "member": 865,
             "client": 606,
-            "referral_reason": "Can hardly walk."
+            "nature": "doctor",
+            "type": ["referent"],
+            "extra_fields": {
+                "referral_reason": "Can hardly walk.",
+                "referral_date": "2015-11-02"
+            }
         }
     },
     {
         "pk": 256,
-        "model": "member.referencing",
+        "model": "member.relationship",
         "fields": {
-            "referent": 866,
-            "date": "2014-01-12",
+            "member": 866,
             "client": 607,
-            "referral_reason": "Had an operation."
+            "nature": "doctor",
+            "type": ["referent"],
+            "extra_fields": {
+                "referral_reason": "Had an operation.",
+                "referral_date": "2014-01-12"
+            }
         }
     },
     {
         "pk": 257,
-        "model": "member.referencing",
+        "model": "member.relationship",
         "fields": {
-            "referent": 865,
-            "date": "2016-05-04",
+            "member": 865,
             "client": 609,
-            "referral_reason": "Needs help."
+            "nature": "friend",
+            "type": ["referent"],
+            "extra_fields": {
+                "referral_reason": "Needs help.",
+                "referral_date": "2016-05-04"
+            }
         }
     },
     {
@@ -16130,21 +16149,26 @@
     },
     {
         "pk": 8,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 100,
             "member": 197,
-            "relationship": "friend"
+            "nature": "friend",
+            "type": []
         }
     },
     {
-        "model": "member.referencing",
+        "model": "member.relationship",
         "pk": 100,
         "fields": {
-            "referent": 198,
+            "member": 198,
             "client": 100,
-            "referral_reason": "Needs help.",
-            "date": "2016-12-21"
+            "nature": "friend",
+            "type": ["referent"],
+            "extra_fields": {
+                "referral_reason": "Needs help.",
+                "referral_date": "2016-12-21"
+            }
         }
     },
     {
@@ -16215,21 +16239,26 @@
     },
     {
         "pk": 9,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 101,
             "member": 197,
-            "relationship": "friend"
+            "nature": "friend",
+            "type": []
         }
     },
     {
-        "model": "member.referencing",
+        "model": "member.relationship",
         "pk": 101,
         "fields": {
-            "referent": 198,
+            "member": 198,
             "client": 101,
-            "referral_reason": "Needs help.",
-            "date": "2016-12-21"
+            "nature": "friend",
+            "type": ["referent"],
+            "extra_fields": {
+                "referral_reason": "Needs help.",
+                "referral_date": "2016-12-21"
+            }
         }
     },
     {
@@ -16291,21 +16320,26 @@
     },
     {
         "pk": 10,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 102,
             "member": 197,
-            "relationship": "friend"
+            "nature": "friend",
+            "type": []
         }
     },
     {
-        "model": "member.referencing",
+        "model": "member.relationship",
         "pk": 102,
         "fields": {
-            "referent": 198,
+            "member": 198,
             "client": 102,
-            "referral_reason": "Needs help.",
-            "date": "2016-12-21"
+            "nature": "friend",
+            "type": ["referent"],
+            "extra_fields": {
+                "referral_reason": "Needs help.",
+                "referral_date": "2016-12-21"
+            }
         }
     },
     {
@@ -16376,21 +16410,26 @@
     },
     {
         "pk": 11,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 103,
             "member": 197,
-            "relationship": "friend"
+            "nature": "friend",
+            "type": []
         }
     },
     {
-        "model": "member.referencing",
+        "model": "member.relationship",
         "pk": 103,
         "fields": {
-            "referent": 198,
+            "member": 198,
             "client": 103,
-            "referral_reason": "Needs help.",
-            "date": "2016-12-21"
+            "nature": "friend",
+            "type": ["referent"],
+            "extra_fields": {
+                "referral_reason": "Needs help.",
+                "referral_date": "2016-12-21"
+            }
         }
     },
     {
@@ -16453,21 +16492,26 @@
     },
     {
         "pk": 12,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 104,
             "member": 197,
-            "relationship": "friend"
+            "nature": "friend",
+            "type": []
         }
     },
     {
-        "model": "member.referencing",
+        "model": "member.relationship",
         "pk": 104,
         "fields": {
-            "referent": 198,
+            "member": 198,
             "client": 104,
-            "referral_reason": "Needs help.",
-            "date": "2016-12-21"
+            "nature": "friend",
+            "type": ["referent"],
+            "extra_fields": {
+                "referral_reason": "Needs help.",
+                "referral_date": "2016-12-21"
+            }
         }
     },
     {
@@ -16529,21 +16573,26 @@
     },
     {
         "pk": 13,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 105,
             "member": 197,
-            "relationship": "friend"
+            "nature": "friend",
+            "type": []
         }
     },
     {
-        "model": "member.referencing",
+        "model": "member.relationship",
         "pk": 105,
         "fields": {
-            "referent": 198,
+            "member": 198,
             "client": 105,
-            "referral_reason": "Needs help.",
-            "date": "2016-12-21"
+            "nature": "friend",
+            "type": ["referent"],
+            "extra_fields": {
+                "referral_reason": "Needs help.",
+                "referral_date": "2016-12-21"
+            }
         }
     },
     {
@@ -16614,21 +16663,26 @@
     },
     {
         "pk": 14,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 106,
             "member": 197,
-            "relationship": "friend"
+            "nature": "friend",
+            "type": []
         }
     },
     {
-        "model": "member.referencing",
+        "model": "member.relationship",
         "pk": 106,
         "fields": {
-            "referent": 198,
+            "member": 198,
             "client": 106,
-            "referral_reason": "Needs help.",
-            "date": "2016-12-21"
+            "nature": "friend",
+            "type": ["referent"],
+            "extra_fields": {
+                "referral_reason": "Needs help.",
+                "referral_date": "2016-12-21"
+            }
         }
     },
     {
@@ -16699,21 +16753,26 @@
     },
     {
         "pk": 15,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 107,
             "member": 197,
-            "relationship": "friend"
+            "nature": "friend",
+            "type": []
         }
     },
     {
-        "model": "member.referencing",
+        "model": "member.relationship",
         "pk": 107,
         "fields": {
-            "referent": 198,
+            "member": 198,
             "client": 107,
-            "referral_reason": "Needs help.",
-            "date": "2016-12-21"
+            "nature": "friend",
+            "type": ["referent"],
+            "extra_fields": {
+                "referral_reason": "Needs help.",
+                "referral_date": "2016-12-21"
+            }
         }
     },
     {
@@ -16776,21 +16835,26 @@
     },
     {
         "pk": 16,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 108,
             "member": 197,
-            "relationship": "friend"
+            "nature": "friend",
+            "type": []
         }
     },
     {
-        "model": "member.referencing",
+        "model": "member.relationship",
         "pk": 108,
         "fields": {
-            "referent": 198,
+            "member": 198,
             "client": 108,
-            "referral_reason": "Needs help.",
-            "date": "2016-12-21"
+            "nature": "friend",
+            "type": ["referent"],
+            "extra_fields": {
+                "referral_reason": "Needs help.",
+                "referral_date": "2016-12-21"
+            }
         }
     },
     {
@@ -16852,21 +16916,26 @@
     },
     {
         "pk": 17,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 109,
             "member": 197,
-            "relationship": "friend"
+            "nature": "friend",
+            "type": []
         }
     },
     {
-        "model": "member.referencing",
+        "model": "member.relationship",
         "pk": 109,
         "fields": {
-            "referent": 198,
+            "member": 198,
             "client": 109,
-            "referral_reason": "Needs help.",
-            "date": "2016-12-21"
+            "nature": "friend",
+            "type": ["referent"],
+            "extra_fields": {
+                "referral_reason": "Needs help.",
+                "referral_date": "2016-12-21"
+            }
         }
     },
     {
@@ -16929,21 +16998,26 @@
     },
     {
         "pk": 18,
-        "model": "member.emergencycontact",
+        "model": "member.relationship",
         "fields": {
             "client": 110,
             "member": 197,
-            "relationship": "friend"
+            "nature": "friend",
+            "type": []
         }
     },
     {
-        "model": "member.referencing",
+        "model": "member.relationship",
         "pk": 110,
         "fields": {
-            "referent": 198,
+            "member": 198,
             "client": 110,
-            "referral_reason": "Needs help.",
-            "date": "2016-12-21"
+            "nature": "friend",
+            "type": ["referent"],
+            "extra_fields": {
+                "referral_reason": "Needs help.",
+                "referral_date": "2016-12-21"
+            }
         }
     },
     {

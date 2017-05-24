@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-03 16:40-0400\n"
+"POT-Creation-Date: 2017-06-06 15:17-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
@@ -135,7 +135,7 @@ msgstr "Notes de Livraison"
 msgid "Delivery Note here ..."
 msgstr "Vos notes de livraison ici ..."
 
-#: member/forms.py member/models.py member/tests.py
+#: member/forms.py member/models.py
 msgid "Active"
 msgstr "Actif"
 
@@ -188,7 +188,7 @@ msgstr "Tapez 3 ou plus caractères pour rechercher des membres"
 msgid "Work phone"
 msgstr "Téléphone professionnel"
 
-#: member/forms.py member/tests.py
+#: member/forms.py
 msgid "This field is required unless you add a new member."
 msgstr "Ce champ est requis sauf si vous souhaitez ajouter un nouveau membre."
 
@@ -196,25 +196,9 @@ msgstr "Ce champ est requis sauf si vous souhaitez ajouter un nouveau membre."
 msgid "This field is required unless you chose an existing member."
 msgstr "Ce champ est requis à moins que vous ne choisissiez un membre existant."
 
-#: member/forms.py member/tests.py
+#: member/forms.py
 msgid "Not a valid member, please chose an existing member."
 msgstr "Membre non valide. Veuillez choisir un membre existant."
-
-#: member/forms.py member/models.py
-msgid "Work information"
-msgstr "Lieu de travail"
-
-#: member/forms.py
-msgid "Hotel-Dieu, St-Anne Hospital, ..."
-msgstr "Hôtel-Dieu, Hôpital Sainte-Anne, ..."
-
-#: member/forms.py member/templates/client/view/referent.html
-msgid "Referral Reason"
-msgstr "Raison du référencement"
-
-#: member/forms.py member/templates/client/view/referent.html
-msgid "Referral Date"
-msgstr "Date du référencement"
 
 #: member/forms.py
 msgid "Billing Type"
@@ -259,16 +243,56 @@ msgid "This field is required"
 msgstr "Ce champ est requis"
 
 #: member/forms.py member/templates/client/view/information.html
-msgid "Relationship"
+#, fuzzy
+#| msgid "Relationship"
+msgid "Nature of Relationship"
 msgstr "Lien"
 
 #: member/forms.py
-msgid "Parent, friend, ..."
-msgstr "Parent, ami(e), ..."
+msgid "Doctor, Friend, Daughter, ..."
+msgstr ""
+
+#: member/forms.py member/templates/client/view/information.html
+#, fuzzy
+#| msgid "Relationship"
+msgid "Type of Relationship"
+msgstr "Lien"
+
+#: member/forms.py member/templates/client/partials/forms/relationships.html
+#: member/templates/client/view/information.html
+msgid "Remark"
+msgstr ""
+
+#: member/forms.py member/models.py
+#: member/templates/client/partials/forms/relationships.html
+msgid "Work information"
+msgstr "Lieu de travail"
+
+#: member/forms.py
+msgid "Hotel-Dieu, St-Anne Hospital, ..."
+msgstr "Hôtel-Dieu, Hôpital Sainte-Anne, ..."
+
+#: member/forms.py member/templates/client/view/information.html
+#: member/templates/client/view/referent.html
+msgid "Referral Date"
+msgstr "Date du référencement"
+
+#: member/forms.py member/templates/client/view/information.html
+#: member/templates/client/view/referent.html
+msgid "Referral Reason"
+msgstr "Raison du référencement"
 
 #: member/forms.py member/tests.py
-msgid "At least one emergency contact is required."
+#, fuzzy
+#| msgid "At least one emergency contact is required."
+msgid "At least one contact is required."
 msgstr "Au moins un contact d'urgence est requis."
+
+#: member/forms.py member/tests.py
+#, fuzzy
+#| msgid "This field is required unless you add a new member."
+msgid "This field is required for a referent relationship."
+msgstr "Ce champ est requis sauf si vous souhaitez ajouter un nouveau membre."
 
 #: member/models.py
 msgid "Female"
@@ -310,7 +334,7 @@ msgstr "Carte de crédit"
 msgid "EFT"
 msgstr "TFE"
 
-#: member/models.py member/tests.py
+#: member/models.py
 msgid "Ongoing"
 msgstr "Régulier"
 
@@ -523,10 +547,6 @@ msgid "rate type"
 msgstr "type de taux"
 
 #: member/models.py
-msgid "emergency contacts"
-msgstr "contacts d'urgence"
-
-#: member/models.py
 msgid "alert client"
 msgstr "alerte client"
 
@@ -562,29 +582,23 @@ msgstr "Tout"
 msgid "Search by name"
 msgstr "Recherche par nom"
 
-#: member/models.py
-msgid "referents"
-msgstr "référents"
+#: member/models.py member/templates/client/view/referent.html
+msgid "Referent"
+msgstr "Référent"
 
 #: member/models.py
-msgid "referent"
-msgstr "référent"
+msgid "Emergency"
+msgstr "Urgence"
 
 #: member/models.py
-msgid "client"
-msgstr "client"
+msgid "Unknown type"
+msgstr ""
 
-#: member/models.py
-#: member/templates/client/partials/forms/referent_information.html
-msgid "Referral reason"
-msgstr "Raison du référencement"
-
-#: member/models.py
-msgid "Referral date"
-msgstr "Date du référencement"
-
-#: member/models.py
-msgid "relationship"
+#: member/models.py member/templates/client/create/form.html member/tests.py
+#: member/urls.py
+#, fuzzy
+#| msgid "relationship"
+msgid "relationships"
 msgstr "lien"
 
 #: member/models.py
@@ -594,6 +608,10 @@ msgstr "options"
 #: member/models.py
 msgid "option group"
 msgstr "groupe d'options"
+
+#: member/models.py
+msgid "client"
+msgstr "client"
 
 #: member/models.py
 msgid "option"
@@ -668,22 +686,12 @@ msgid "address_information"
 msgstr "adresse"
 
 #: member/templates/client/create/form.html member/tests.py member/urls.py
-msgid "referent_information"
-msgstr "référent"
-
-#: member/templates/client/create/form.html member/tests.py member/urls.py
 msgid "payment_information"
 msgstr "paiement"
 
 #: member/templates/client/create/form.html member/tests.py member/urls.py
 msgid "dietary_restriction"
 msgstr "préférences"
-
-#: member/templates/client/create/form.html member/tests.py
-#, fuzzy
-#| msgid "emergency_contacts"
-msgid "emergency_contact"
-msgstr "contacts_d'urgence"
 
 #: member/templates/client/create/form.html
 #: member/templates/client/partials/menu.html
@@ -713,17 +721,19 @@ msgid "Street number, city, ..."
 msgstr "Rue, ville, ..."
 
 #: member/templates/client/create/form.html
-#: member/templates/client/partials/forms/referent_information.html
-#: member/templates/client/partials/menu.html
+#: member/templates/client/partials/forms/relationships.html
 #: member/templates/client/update/base.html
-#: member/templates/client/view/referent.html
-msgid "Referent"
-msgstr "Référent"
+#, fuzzy
+#| msgid "Relationship"
+msgid "Relationships"
+msgstr "Lien"
 
 #: member/templates/client/create/form.html
 #: member/templates/client/update/base.html
-msgid "Referent contact information"
-msgstr "Informations du référent"
+#, fuzzy
+#| msgid "emergency contacts"
+msgid "Referents, emergency contacts, ..."
+msgstr "contacts d'urgence"
 
 #: member/templates/client/create/form.html
 #: member/templates/client/update/base.html
@@ -745,16 +755,6 @@ msgstr "Préférences"
 #: member/templates/client/update/base.html
 msgid "Deliveries, restrictions, ..."
 msgstr "Livraisons, restrictions, ..."
-
-#: member/templates/client/create/form.html
-#: member/templates/client/update/base.html
-msgid "Emergency"
-msgstr "Urgence"
-
-#: member/templates/client/create/form.html
-#: member/templates/client/update/base.html
-msgid "Emergency contact information"
-msgstr "Contact d'urgence"
 
 #: member/templates/client/create/form.html
 #: member/templates/client/update/base.html member/templates/route/edit.html
@@ -790,14 +790,12 @@ msgid "New client"
 msgstr "Nouveau client"
 
 #: member/templates/client/list.html
-#: member/templates/client/partials/forms/emergency_contacts.html
 #: member/templates/client/partials/forms/payment_information.html
-#: member/templates/client/partials/forms/referent_information.html
+#: member/templates/client/partials/forms/relationships.html
 msgid "Or"
 msgstr "Ou"
 
 #: member/templates/client/list.html member/templates/client/view/summary.html
-#: member/tests.py
 msgid "years old"
 msgstr "ans"
 
@@ -824,9 +822,8 @@ msgstr "Désolé, aucun résultat trouvé."
 #: member/templates/client/list.html
 #: member/templates/client/partials/filters.html
 #: member/templates/client/partials/forms/basic_information.html
-#: member/templates/client/partials/forms/emergency_contacts.html
 #: member/templates/client/partials/forms/payment_information.html
-#: member/templates/client/partials/forms/referent_information.html
+#: member/templates/client/partials/forms/relationships.html
 #: member/templates/route/delivery_history_detail.html
 #: member/templates/route/detail.html member/templates/route/edit.html
 #: member/templates/route/list.html
@@ -943,7 +940,7 @@ msgid "Identity"
 msgstr "Identité"
 
 #: member/templates/client/partials/forms/basic_information.html
-#: member/templates/client/partials/forms/emergency_contacts.html
+#: member/templates/client/partials/forms/relationships.html
 msgid "Contact information"
 msgstr "Information de contact"
 
@@ -968,26 +965,6 @@ msgstr "Préférences alimentaires    "
 msgid "Meal defaults"
 msgstr "Statut de livraison"
 
-#: member/templates/client/partials/forms/emergency_contacts.html
-msgid "Emergency contacts"
-msgstr "Contacts d'urgence"
-
-#: member/templates/client/partials/forms/emergency_contacts.html
-msgid "Add contact"
-msgstr "Ajouter contact"
-
-#: member/templates/client/partials/forms/emergency_contacts.html
-msgid "Remove contact"
-msgstr "Supprimer contact"
-
-#: member/templates/client/partials/forms/emergency_contacts.html
-msgid "Create new emergency contact"
-msgstr "Créer un contact d'urgence"
-
-#: member/templates/client/partials/forms/emergency_contacts.html
-msgid "Contact relationship"
-msgstr "Relation de contact"
-
 #: member/templates/client/partials/forms/meal_defaults.html
 msgid "Size"
 msgstr "Taille"
@@ -1004,13 +981,43 @@ msgstr "Ajouter un nouveau membre à facturer"
 msgid "Street"
 msgstr "Rue"
 
-#: member/templates/client/partials/forms/referent_information.html
-msgid "Create new referent member"
-msgstr "Ajouter un nouveau référent"
+#: member/templates/client/partials/forms/relationships.html
+#, fuzzy
+#| msgid "relationship"
+msgid "Add relationship"
+msgstr "lien"
 
-#: member/templates/client/partials/forms/referent_information.html
-msgid "Please describe the referral reason(s)"
-msgstr "Veuillez décrire les raisons pour lesquelles le client est référé"
+#: member/templates/client/partials/forms/relationships.html
+#, fuzzy
+#| msgid "relationship"
+msgid "Remove relationship"
+msgstr "lien"
+
+#: member/templates/client/partials/forms/relationships.html
+#, fuzzy
+#| msgid "Create new payment member"
+msgid "Create new member"
+msgstr "Ajouter un nouveau membre à facturer"
+
+#: member/templates/client/partials/forms/relationships.html
+#, fuzzy
+#| msgid "relationship"
+msgid "Type of relationship"
+msgstr "lien"
+
+#: member/templates/client/partials/forms/relationships.html
+#, fuzzy
+#| msgid "Contact relationship"
+msgid "Nature of relationship"
+msgstr "Relation de contact"
+
+#: member/templates/client/partials/forms/relationships.html
+msgid "Referral date"
+msgstr "Date du référencement"
+
+#: member/templates/client/partials/forms/relationships.html
+msgid "Referral reason"
+msgstr "Raison du référencement"
 
 #: member/templates/client/partials/menu.html
 #: member/templates/client/view/information.html
@@ -1018,14 +1025,6 @@ msgstr "Veuillez décrire les raisons pour lesquelles le client est référé"
 #: member/templates/client/view/status.html
 msgid "Information"
 msgstr "Information"
-
-#: member/templates/client/partials/menu.html
-msgid "Add a referent"
-msgstr "Ajouter un référent"
-
-#: member/templates/client/partials/menu.html
-msgid "No referent available"
-msgstr "Pas de référent"
 
 #: member/templates/client/partials/menu.html
 #: member/templates/client/view/payment.html
@@ -1201,13 +1200,27 @@ msgid "Delivery Type"
 msgstr "Type de Livraison"
 
 #: member/templates/client/view/information.html
-msgid "Emergency Contacts"
-msgstr "Contacts d'Urgence"
+#, fuzzy
+#| msgid "Contact relationship"
+msgid "Client relationships"
+msgstr "Relation de contact"
 
 #: member/templates/client/view/information.html
 #, fuzzy
-msgid "Information of the people to contact in case of an emergency"
+msgid "Information of the people that are related to the client."
 msgstr "Information sur les personnes à contacter en cas d'urgence"
+
+#: member/templates/client/view/information.html
+msgid "Unknown"
+msgstr ""
+
+#: member/templates/client/view/information.html
+msgid "N/A"
+msgstr ""
+
+#: member/templates/client/view/information.html
+msgid "No related members."
+msgstr ""
 
 #: member/templates/client/view/notes.html
 msgid "Staff Notes"
@@ -1510,12 +1523,6 @@ msgstr "Ce champ est requis"
 msgid "Select a valid choice. %(value)s is not one of the available choices."
 msgstr ""
 
-#: member/tests.py member/urls.py
-#, fuzzy
-#| msgid "emergency_contacts"
-msgid "emergency_contacts"
-msgstr "contacts_d'urgence"
-
 #: member/urls.py
 msgid "^create/$"
 msgstr ""
@@ -1543,10 +1550,6 @@ msgstr "^voir/(?P<pk>\\d+)/commandes$"
 #: member/urls.py
 msgid "^view/(?P<pk>\\d+)/information$"
 msgstr "^voir/(?P<pk>\\d+)/information$"
-
-#: member/urls.py
-msgid "^view/(?P<pk>\\d+)/referent$"
-msgstr "^voir/(?P<pk>\\d+)/référent$"
 
 #: member/urls.py
 msgid "^view/(?P<pk>\\d+)/billing$"
@@ -1644,6 +1647,64 @@ msgstr ""
 #| msgid "The client has been updated"
 msgid "This route has been updated."
 msgstr "Le client a été mis à jour"
+
+#~ msgid "Parent, friend, ..."
+#~ msgstr "Parent, ami(e), ..."
+
+#~ msgid "referents"
+#~ msgstr "référents"
+
+#~ msgid "referent"
+#~ msgstr "référent"
+
+#~ msgid "referent_information"
+#~ msgstr "référent"
+
+#, fuzzy
+#~| msgid "emergency_contacts"
+#~ msgid "emergency_contact"
+#~ msgstr "contacts_d'urgence"
+
+#~ msgid "Referent contact information"
+#~ msgstr "Informations du référent"
+
+#~ msgid "Emergency contact information"
+#~ msgstr "Contact d'urgence"
+
+#~ msgid "Emergency contacts"
+#~ msgstr "Contacts d'urgence"
+
+#~ msgid "Add contact"
+#~ msgstr "Ajouter contact"
+
+#~ msgid "Remove contact"
+#~ msgstr "Supprimer contact"
+
+#~ msgid "Create new emergency contact"
+#~ msgstr "Créer un contact d'urgence"
+
+#~ msgid "Create new referent member"
+#~ msgstr "Ajouter un nouveau référent"
+
+#~ msgid "Please describe the referral reason(s)"
+#~ msgstr "Veuillez décrire les raisons pour lesquelles le client est référé"
+
+#~ msgid "Add a referent"
+#~ msgstr "Ajouter un référent"
+
+#~ msgid "No referent available"
+#~ msgstr "Pas de référent"
+
+#~ msgid "Emergency Contacts"
+#~ msgstr "Contacts d'Urgence"
+
+#, fuzzy
+#~| msgid "emergency_contacts"
+#~ msgid "emergency_contacts"
+#~ msgstr "contacts_d'urgence"
+
+#~ msgid "^view/(?P<pk>\\d+)/referent$"
+#~ msgstr "^voir/(?P<pk>\\d+)/référent$"
 
 #~ msgid "^client/(?P<pk>\\d+)/meals/preferences$"
 #~ msgstr "^client/(?P<pk>\\d+)/repas/préférences$"

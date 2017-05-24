@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from member.models import (
     Member, Client, Contact, Address,
-    Referencing, Route, Option, EmergencyContact,
+    Route, Option, Relationship,
     DeliveryHistory
 )
 
@@ -27,8 +27,9 @@ class ContactInline(admin.TabularInline):
     model = Contact
 
 
-class ReferencingInline(admin.TabularInline):
-    model = Referencing
+class RelationshipInline(admin.TabularInline):
+    model = Relationship
+    extra = 0
 
 
 class MemberAdmin(admin.ModelAdmin):
@@ -54,7 +55,7 @@ class ClientAdmin(admin.ModelAdmin):
         'gender',
         'route')
     inlines = [
-        ReferencingInline,
+        RelationshipInline,
         OptionsInline,
         RestrictionsInline,
         ComponentsToAvoidInline,
@@ -68,9 +69,12 @@ class ContactAdmin(admin.ModelAdmin):
     list_filter = ('type',)
 
 
-class ReferencingAdmin(admin.ModelAdmin):
-    search_fields = ['referent__lastname', 'referent__firstname']
-    list_display = ('referent', 'client', 'referral_reason', 'date')
+class RelationshipAdmin(admin.ModelAdmin):
+    search_fields = ['member__lastname', 'member__firstname',
+                     'client__member__lastname', 'client__member__firstname',
+                     'type', 'nature', 'extra_fields']
+    list_display = ('__str__', 'member', 'type', 'nature', 'client',
+                    'extra_fields')
 
 
 admin.site.register(Member, MemberAdmin)
@@ -79,6 +83,5 @@ admin.site.register(Route)
 admin.site.register(DeliveryHistory)
 admin.site.register(Contact, ContactAdmin)
 admin.site.register(Address)
-admin.site.register(Referencing, ReferencingAdmin)
+admin.site.register(Relationship, RelationshipAdmin)
 admin.site.register(Option)
-admin.site.register(EmergencyContact)

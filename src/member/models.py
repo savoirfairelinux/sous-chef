@@ -5,6 +5,7 @@ from django.db import models
 from django.db.models import Q
 from django.db.models.functions import Extract
 from django.forms import ValidationError
+from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django_filters import (
@@ -527,13 +528,6 @@ class Client(models.Model):
         on_delete=models.CASCADE
     )
 
-    emergency_contacts = models.ManyToManyField(
-        'member.Member',
-        verbose_name=_('emergency contacts'),
-        related_name="emergency_contacts_of",
-        through='member.EmergencyContact'
-    )
-
     status = models.CharField(
         max_length=1,
         choices=CLIENT_STATUS,
@@ -938,61 +932,44 @@ class ClientFilter(FilterSet):
         return queryset.filter(name_contains)
 
 
-class Referencing (models.Model):
-
-    class Meta:
-        verbose_name_plural = _('referents')
-
-    referent = models.ForeignKey(
-        'member.Member',
-        verbose_name=_('referent'),
-        on_delete=models.CASCADE
+class Relationship(models.Model):
+    REFERENT = 'referent'
+    EMERGENCY = 'emergency'
+    TYPE_CHOICES = (
+        (REFERENT, _('Referent')),
+        (EMERGENCY, _('Emergency')),
     )
+    TYPE_CHOICES_DICT = dict(TYPE_CHOICES)
 
-    client = models.ForeignKey(
-        'member.Client',
-        verbose_name=_('client'),
-        related_name='client_referent',
-        on_delete=models.CASCADE
-    )
-
-    referral_reason = models.TextField(
-        verbose_name=_("Referral reason")
-    )
-
-    date = models.DateField(
-        verbose_name=_("Referral date"),
-        auto_now=False, auto_now_add=False,
-        default=datetime.date.today
-    )
+    member = models.ForeignKey('member.Member', on_delete=models.CASCADE)
+    client = models.ForeignKey('member.Client', on_delete=models.CASCADE)
+    nature = models.CharField(max_length=100)
+    # Relationship.type is linked with a forms.MultipleChoiceField
+    type = JSONField(default=[], blank=True)
+    extra_fields = JSONField(default={}, blank=True)
+    remark = models.TextField(blank=True)
 
     def __str__(self):
-        return "{} {} referred {} {} on {}".format(
-            self.referent.firstname, self.referent.lastname,
-            self.client.member.firstname, self.client.member.lastname,
-            str(self.date))
+        return "{} {} is {} member of {} {}".format(
+            self.member.firstname, self.member.lastname,
+            self.get_type_display(),
+            self.client.member.firstname, self.client.member.lastname)
 
-
-class EmergencyContact(models.Model):
-    client = models.ForeignKey(
-        Client, verbose_name=_("client"), on_delete=models.CASCADE)
-    member = models.ForeignKey(
-        Member, verbose_name=_("member"), on_delete=models.CASCADE)
-    relationship = models.CharField(
-        max_length=100,
-        verbose_name=_('relationship'),
-        blank=True,
-        null=True,
-    )
+    def get_type_display(self):
+        return '+'.join(map(
+            force_text,
+            list(map(lambda t: self.TYPE_CHOICES_DICT[t], self.type)) or (
+                [_('Unknown type')])))
 
     class Meta:
-        verbose_name_plural = _('emergency contacts')
+        verbose_name_plural = _('relationships')
         unique_together = ('client', 'member')
 
-    def __str__(self):
-        return "{} is an emergency contact of {}".format(
-            self.member, self.client
-        )
+    def is_referent(self):
+        return self.REFERENT in self.type
+
+    def is_emergency(self):
+        return self.EMERGENCY in self.type
 
 
 class Option(models.Model):

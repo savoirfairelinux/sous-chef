@@ -25,12 +25,11 @@ from member.forms import (
     ClientScheduledStatusForm,
     ClientBasicInformation,
     ClientAddressInformation,
-    ClientReferentInformation,
     ClientRestrictionsInformation,
     ClientPaymentInformation,
 )
-from member.formsets import (CreateEmergencyContactFormset,
-                             UpdateEmergencyContactFormset)
+from member.formsets import (CreateRelationshipFormset,
+                             UpdateRelationshipFormset)
 from member.models import (
     Client,
     ClientScheduledStatus,
@@ -38,16 +37,15 @@ from member.models import (
     Member,
     Address,
     Contact,
-    Referencing,
     Restriction,
+    Relationship,
     Client_option,
     ClientFilter,
     ClientScheduledStatusFilter,
     DAYS_OF_WEEK,
     Client_avoid_ingredient,
     Client_avoid_component,
-    HOME, WORK, CELL, EMAIL,
-    EmergencyContact)
+    HOME, WORK, CELL, EMAIL)
 from note.models import Note
 from order.mixins import FormValidAjaxableResponseMixin
 from order.models import SIZE_CHOICES, Order
@@ -124,14 +122,12 @@ class ClientWizard(
             step_template = 'client/partials/forms/basic_information.html'
         elif isinstance(form, ClientAddressInformation):
             step_template = 'client/partials/forms/address_information.html'
-        elif isinstance(form, ClientReferentInformation):
-            step_template = 'client/partials/forms/referent_information.html'
         elif isinstance(form, ClientPaymentInformation):
             step_template = 'client/partials/forms/payment_information.html'
         elif isinstance(form, ClientRestrictionsInformation):
             step_template = 'client/partials/forms/dietary_restriction.html'
-        elif isinstance(form, CreateEmergencyContactFormset):
-            step_template = 'client/partials/forms/emergency_contacts.html'
+        elif isinstance(form, CreateRelationshipFormset):
+            step_template = 'client/partials/forms/relationships.html'
         else:
             step_template = None
         context['step_template'] = step_template
@@ -189,11 +185,6 @@ class ClientWizard(
             'latitude': client.member.address.latitude,
             'longitude': client.member.address.longitude,
             'distance': client.member.address.distance,
-            'work_information': (
-                client.client_referent.get().referent.work_information
-            ),
-            'referral_reason': client.client_referent.get().referral_reason,
-            'date': client.client_referent.get().date,
             'member': client.id,
             'same_as_client': True,
             'facturation': '',
@@ -230,8 +221,8 @@ class ClientWizard(
         basic_information = self.form_dict['basic_information'].cleaned_data
         address_information = self.form_dict[
             'address_information'].cleaned_data
-        referent_information = self.form_dict[
-            'referent_information'].cleaned_data
+        relationships = self.form_dict[
+            'relationships'].cleaned_data
         payment_information = self.form_dict[
             'payment_information'].cleaned_data
         dietary_restriction = self.form_dict[
@@ -292,13 +283,7 @@ class ClientWizard(
             }
         )
 
-        emergency_contacts = self.save_emergency_contacts(
-            billing_member, client
-        )
-
-        self.save_referent_information(
-            client, billing_member, emergency_contacts
-        )
+        self.save_relationships(billing_member, client)
         self.save_preferences(client)
 
     def save_billing_member(self, member):
@@ -336,120 +321,60 @@ class ClientWizard(
 
         return billing_member
 
-    def save_emergency_contacts(self, billing_member, client):
-        emergency_contacts = self.form_dict['emergency_contacts']
+    def save_relationships(self, billing_member, client):
+        relationships = self.form_dict['relationships']
         results = []
-        for emergency_contact in emergency_contacts:
-            # Avoid empty forms, at least one emergency contact form is
+        for relationship in relationships:
+            # Avoid empty forms, at least one relationship form is
             # required by django formset validation. If we have
             # one form good filled and several empty forms, the 'is_valid'
             # method return True
-            if emergency_contact.changed_data:
-                e_emergency_member = emergency_contact.cleaned_data.get(
-                    'member'
-                )
-                if self.billing_member_is_emergency_contact(
-                        emergency_contact, billing_member
-                ):
+            if relationship.changed_data:
+                data = relationship.cleaned_data
+                relationship_member = data.get('member')
+                if self.billing_member_is_relationship(
+                        relationship, billing_member):
                     member = billing_member
-                elif e_emergency_member:
-                    e_emergency_member_id = e_emergency_member.split(' ')[0]\
+                elif relationship_member:
+                    relationship_member_id = relationship_member.split(' ')[0]\
                         .replace('[', '')\
                         .replace(']', '')
-                    member = Member.objects.get(pk=e_emergency_member_id)
+                    member = Member.objects.get(pk=relationship_member_id)
                 else:
                     member = Member.objects.create(
-                        firstname=emergency_contact.cleaned_data.get(
-                            "firstname"
-                        ),
-                        lastname=emergency_contact.cleaned_data.get(
-                            'lastname'
-                        ),
+                        firstname=data.get("firstname"),
+                        lastname=data.get('lastname')
                     )
+                    if relationship.has_referent_relationship:
+                        member.work_information = data.get('work_information')
                     member.save()
-                    emgc_email = emergency_contact.cleaned_data.get(
-                        "email", None)
-                    emgc_work_phone = emergency_contact.cleaned_data.get(
-                        "work_phone", None)
-                    emgc_cell_phone = emergency_contact.cleaned_data.get(
-                        "cell_phone", None)
-                    if emgc_email:
-                        member.add_contact_information(EMAIL, emgc_email)
-                    if emgc_work_phone:
-                        member.add_contact_information(WORK, emgc_work_phone)
-                    if emgc_cell_phone:
-                        member.add_contact_information(CELL, emgc_cell_phone)
+                    r_email = data.get("email", None)
+                    r_work_phone = data.get("work_phone", None)
+                    r_cell_phone = data.get("cell_phone", None)
+                    if r_email:
+                        member.add_contact_information(EMAIL, r_email)
+                    if r_work_phone:
+                        member.add_contact_information(WORK, r_work_phone)
+                    if r_cell_phone:
+                        member.add_contact_information(CELL, r_cell_phone)
 
-                results.append(EmergencyContact.objects.create(
+                extra_fields = {}
+                if relationship.has_referent_relationship:
+                    extra_fields[
+                        'referral_date'] = data.get('referral_date')
+                    extra_fields[
+                        'referral_reason'] = data.get('referral_reason')
+
+                results.append(Relationship.objects.create(
                     client=client,
                     member=member,
-                    relationship=emergency_contact.cleaned_data.get(
-                        "relationship"
-                    )
+                    nature=data.get('nature'),
+                    type=data.get('type'),
+                    remark=data.get('remark'),
+                    extra_fields=extra_fields
                 ))
 
         return results
-
-    def save_referent_information(
-            self, client, billing_member, emergency_contacts
-    ):
-        referent_info = self.form_dict['referent_information']
-        e_referent = referent_info.cleaned_data.get('member')
-        if (
-            self.referent_is_billing_member() and
-            client.pk != billing_member.pk
-        ):
-            referent = billing_member
-            referent.work_information = referent_info.cleaned_data.get(
-                'work_information'
-            )
-            referent.save(update_fields=['work_information'])
-        else:
-            referent = self.referent_in_emergency_contacts(emergency_contacts)
-            if referent:
-                referent.work_information = referent_info.cleaned_data.get(
-                    'work_information'
-                )
-                referent.save(update_fields=['work_information'])
-            elif e_referent:
-                e_referent_id = e_referent.split(' ')[0]\
-                    .replace('[', '')\
-                    .replace(']', '')
-                referent = Member.objects.get(pk=e_referent_id)
-            else:
-                referent = Member.objects.create(
-                    firstname=referent_info.cleaned_data.get("firstname"),
-                    lastname=referent_info.cleaned_data.get("lastname"),
-                    work_information=referent_info.cleaned_data.get(
-                        'work_information'
-                    ),
-                )
-                referent.save()
-                ref_email = referent_info.cleaned_data.get(
-                    "email", None)
-                ref_work_phone = referent_info.cleaned_data.get(
-                    "work_phone", None)
-                ref_cell_phone = referent_info.cleaned_data.get(
-                    "cell_phone", None)
-                if ref_email:
-                    referent.add_contact_information(EMAIL, ref_email)
-                if ref_work_phone:
-                    referent.add_contact_information(WORK, ref_work_phone)
-                if ref_cell_phone:
-                    referent.add_contact_information(CELL, ref_cell_phone)
-
-        referencing = Referencing.objects.create(
-            referent=referent,
-            client=client,
-            referral_reason=referent_info.cleaned_data.get(
-                "referral_reason"
-            ),
-            date=referent_info.cleaned_data.get(
-                'date'
-            ),
-        )
-        referencing.save()
-        return referencing
 
     def save_preferences(self, client):
         preferences = self.form_dict['dietary_restriction'].cleaned_data
@@ -501,49 +426,18 @@ class ClientWizard(
             return True
         return False
 
-    def billing_member_is_emergency_contact(
-            self, emergency_contact, billing_member
+    def billing_member_is_relationship(
+            self, relationship, billing_member
     ):
-        e_firstname = emergency_contact.cleaned_data.get('firstname')
-        e_lastname = emergency_contact.cleaned_data.get('lastname')
+        r_firstname = relationship.cleaned_data.get('firstname')
+        r_lastname = relationship.cleaned_data.get('lastname')
 
         if (
-            e_firstname == billing_member.firstname and
-            e_lastname == billing_member.lastname
+            r_firstname == billing_member.firstname and
+            r_lastname == billing_member.lastname
         ):
             return True
 
-        return False
-
-    def referent_in_emergency_contacts(self, emergency_contacts):
-        referent_information = self.form_dict['referent_information']
-        r_firstname = referent_information.cleaned_data.get("firstname")
-        r_lastname = referent_information.cleaned_data.get("lastname")
-
-        for emergency_contact in emergency_contacts:
-            e_firstname = emergency_contact.member.firstname
-            e_lastname = emergency_contact.member.lastname
-
-            if (e_firstname or r_firstname or e_lastname or r_lastname) and (
-                e_firstname == r_firstname and e_lastname == r_lastname
-            ):
-                return emergency_contact.member
-        return None
-
-    def referent_is_billing_member(self):
-        referent_information = self.form_dict['referent_information']
-        payment_information = self.form_dict['payment_information']
-
-        r_firstname = referent_information.cleaned_data.get("firstname")
-        r_lastname = referent_information.cleaned_data.get("lastname")
-
-        p_firstname = payment_information.cleaned_data.get('firstname')
-        p_lastname = payment_information.cleaned_data.get('lastname')
-
-        if (r_firstname or p_firstname or r_lastname or p_lastname) and (
-            r_firstname == p_firstname and r_lastname == p_lastname
-        ):
-            return True
         return False
 
 
@@ -627,7 +521,7 @@ def ExportCSV(self, queryset):
         "Client Route",
         "Client Billing Type",
         "Billing Member",
-        "Emergency Contacts",
+        "Relationships",
         "Meal Default",
     ])
 
@@ -658,7 +552,7 @@ def ExportCSV(self, queryset):
             route,
             obj.billing_payment_type,
             obj.billing_member,
-            ", ".join(str(c) for c in obj.emergency_contacts.all()),
+            ", ".join(str(c) for c in obj.relationships.all()),
             obj.meal_default_week,
         ])
 
@@ -679,40 +573,6 @@ class ClientInfoView(ClientView):
         context = super(ClientInfoView, self).get_context_data(**kwargs)
         context['active_tab'] = 'information'
         context['client_status'] = Client.CLIENT_STATUS
-        """
-        Here we need to add some variable of context to send to template :
-         1 - A string active_tab who can be:
-            'info'
-            'referent'
-            'address'
-            'payment'
-            'allergies'
-            'preferences'
-        """
-        context['myVariableOfContext'] = 0
-
-        return context
-
-
-class ClientReferentView(ClientView):
-    template_name = 'client/view/referent.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(ClientReferentView, self).get_context_data(**kwargs)
-        context['active_tab'] = 'referent'
-        context['client_status'] = Client.CLIENT_STATUS
-        """
-        Here we need to add some variable of context to send to template :
-         1 - A string active_tab who can be:
-            'info'
-            'referent'
-            'address'
-            'payment'
-            'allergies'
-            'preferences'
-        """
-        context['myVariableOfContext'] = 0
-
         return context
 
 
@@ -721,19 +581,6 @@ class ClientAddressView(ClientView):
 
     def get_context_data(self, **kwargs):
         context = super(ClientAddressView, self).get_context_data(**kwargs)
-
-        """
-        Here we need to add some variable of context to send to template :
-         1 - A string active_tab who can be:
-            'info'
-            'referent'
-            'address'
-            'payment'
-            'allergies'
-            'preferences'
-        """
-        context['myVariableOfContext'] = 0
-
         return context
 
 
@@ -744,18 +591,6 @@ class ClientPaymentView(ClientView):
         context = super(ClientPaymentView, self).get_context_data(**kwargs)
         context['active_tab'] = 'billing'
         context['client_status'] = Client.CLIENT_STATUS
-        """
-        Here we need to add some variable of context to send to template :
-         1 - A string active_tab who can be:
-            'info'
-            'referent'
-            'address'
-            'payment'
-            'allergies'
-            'preferences'
-        """
-        context['myVariableOfContext'] = 0
-
         return context
 
 
@@ -780,19 +615,6 @@ class ClientAllergiesView(ClientView):
         ))
         context['meals_default'] = dict(self.object.meals_default)
         context['size_choices'] = dict(SIZE_CHOICES)
-
-        """
-        Here we need to add some variable of context to send to template :
-         1 - A string active_tab who can be:
-            'info'
-            'referent'
-            'address'
-            'payment'
-            'allergies'
-            'preferences'
-        """
-        context['myVariableOfContext'] = 0
-
         return context
 
 
@@ -883,10 +705,6 @@ class ClientUpdateInformation(
             ).prefetch_related('member__member_contact'),
             pk=self.kwargs.get('pk')
         )
-        if client.client_referent.exists():
-            c_ref = client.client_referent.first()
-        else:
-            c_ref = None
         initial = {
             'firstname': client.member.firstname,
             'lastname': client.member.lastname,
@@ -909,10 +727,6 @@ class ClientUpdateInformation(
             'latitude': client.member.address.latitude,
             'longitude': client.member.address.longitude,
             'distance': client.member.address.distance,
-            'work_information': c_ref.referent.work_information
-            if c_ref and c_ref.referent else '',
-            'referral_reason': c_ref.referral_reason if c_ref else '',
-            'date': c_ref.date if c_ref else '',
         }
         return initial
 
@@ -1013,83 +827,6 @@ class ClientUpdateAddressInformation(ClientUpdateInformation):
         client.route = form['route']
         client.delivery_note = form['delivery_note']
         client.save()
-
-
-class ClientUpdateReferentInformation(ClientUpdateInformation):
-    form_class = ClientReferentInformation
-
-    def get_context_data(self, **kwargs):
-        context = super(
-            ClientUpdateReferentInformation,
-            self).get_context_data(
-            **kwargs)
-        context.update({'current_step': 'referent_information'})
-        context.update({'pk': self.kwargs['pk']})
-        context["step_template"] = 'client/partials/forms/' \
-                                   'referent_information.html'
-        return context
-
-    def get_initial(self):
-        initial = super(ClientUpdateReferentInformation, self).get_initial()
-        client = get_object_or_404(
-            Client, pk=self.kwargs.get('pk')
-        )
-        if client.client_referent.exists():
-            c_ref = client.client_referent.first()
-        else:
-            c_ref = None
-        initial.update({
-            'firstname': None,
-            'lastname': None,
-            'number': None,
-            'street': None,
-            'city': None,
-            'apartment': None,
-            'postal_code': None,
-            'member': '[{}] {} {}'.format(
-                c_ref.referent.id,
-                c_ref.referent.firstname,
-                c_ref.referent.lastname
-            ) if c_ref else None,
-        })
-        return initial
-
-    def save(self, referent_information, client):
-        """
-        Save the basic information step data.
-        """
-        e_referent = referent_information.get('member')
-        if e_referent:
-            e_referent_id = e_referent.split(' ')[0] \
-                .replace('[', '') \
-                .replace(']', '')
-            referent = Member.objects.get(pk=e_referent_id)
-        else:
-            referent = Member.objects.create(
-                firstname=referent_information.get("firstname"),
-                lastname=referent_information.get("lastname"),
-                work_information=referent_information.get(
-                    'work_information'
-                ),
-            )
-            referent.save()
-
-        # TODO: Find out if a client can really be refered by more
-        # that one person in the system.
-        # Before save a new referencing, remove the existing ones.
-        Referencing.objects.filter(client=client).delete()
-
-        referencing, updated = Referencing.objects.update_or_create(
-            referent=referent,
-            client=client,
-            referral_reason=referent_information.get(
-                "referral_reason"
-            ),
-            date=referent_information.get(
-                'date'
-            ),
-        )
-        referencing.save()
 
 
 class ClientUpdatePaymentInformation(ClientUpdateInformation):
@@ -1272,19 +1009,19 @@ class ClientUpdateDietaryRestriction(ClientUpdateInformation):
         client.save()
 
 
-class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
-    form_class = UpdateEmergencyContactFormset
-    prefix = 'emergency_contacts'
+class ClientUpdateRelationshipsInformation(ClientUpdateInformation):
+    form_class = UpdateRelationshipFormset
+    prefix = 'relationships'
 
     def get_context_data(self, **kwargs):
         context = super(
-            ClientUpdateEmergencyContactInformation,
+            ClientUpdateRelationshipsInformation,
             self).get_context_data(
             **kwargs)
-        context.update({'current_step': 'emergency_contacts'})
+        context.update({'current_step': 'relationships'})
         context.update({'pk': self.kwargs['pk']})
         context["step_template"] = 'client/partials/forms/' \
-                                   'emergency_contacts.html'
+                                   'relationships.html'
         return context
 
     def get_initial(self):
@@ -1294,10 +1031,10 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
         initial = {}
 
         if self.request.method == 'GET':
-            for i, emergency_contact in enumerate(
-                    client.emergencycontact_set.all()
+            for i, relationship in enumerate(
+                    client.relationship_set.all()
             ):
-                contact = emergency_contact.member.member_contact.first()
+                contact = relationship.member.member_contact.first()
                 if contact:
                     contact_type = contact.type
                     contact_value = contact.value
@@ -1306,90 +1043,98 @@ class ClientUpdateEmergencyContactInformation(ClientUpdateInformation):
                     contact_value = None
 
                 initial[i] = {
-                    'firstname'.format(i): None,
-                    'lastname'.format(i): None,
-                    'member'.format(i): '[{}] {} {}'.format(
-                        emergency_contact.member.id,
-                        emergency_contact.member.firstname,
-                        emergency_contact.member.lastname
+                    'firstname': None,
+                    'lastname': None,
+                    'member': '[{}] {} {}'.format(
+                        relationship.member.id,
+                        relationship.member.firstname,
+                        relationship.member.lastname
                     ),
-                    'contact_type'.format(i): contact_type,
-                    'contact_value'.format(i): contact_value,
-                    'relationship'.format(i):
-                        emergency_contact.relationship
+                    'contact_type': contact_type,
+                    'contact_value': contact_value,
+                    'nature': relationship.nature,
+                    'type': relationship.type,
+                    'remark': relationship.remark
                 }
+                if relationship.is_referent:
+                    initial[i]['referral_date'] = \
+                        relationship.extra_fields.get('referral_date')
+                    initial[i]['referral_reason'] = \
+                        relationship.extra_fields.get('referral_reason')
+
         return initial
 
-    def save(self, emergency_contacts, client):
+    def save(self, relationships, client):
         """
-        Save the basic information step data.
+        Save relationships data.
         """
-        emergency_contacts_posted = []
-        for emergency_contact in emergency_contacts:
-            # Avoid empty forms, at least one emergency contact form is
+        relationships_posted = []
+        for relationship in relationships:
+            # Avoid empty forms, at least one relationship form is
             # required by django formset validation. If we have
             # one form good filled and several empty forms, the 'is_valid'
             # method return True
-            if emergency_contact:
-                e_emergency_member = emergency_contact.get('member')
-                if e_emergency_member:
-                    e_emergency_member_id = e_emergency_member.split(' ')[0] \
+            if relationship:
+                r_member = relationship.get('member')
+                if r_member:
+                    r_member_id = r_member.split(' ')[0] \
                         .replace('[', '') \
                         .replace(']', '')
-                    member = Member.objects.get(pk=e_emergency_member_id)
+                    member = Member.objects.get(pk=r_member_id)
                 else:
                     member = Member.objects.create(
-                        firstname=emergency_contact.get("firstname"),
-                        lastname=emergency_contact.get('lastname'),
+                        firstname=relationship.get("firstname"),
+                        lastname=relationship.get('lastname'),
                     )
+                    if Relationship.REFERENT in relationship.get('type', []):
+                        member.work_information = relationship.get(
+                            'work_information')
                     member.save()
 
                     # save emergency contact
-                    if emergency_contact.get('work_phone'):
+                    if relationship.get('work_phone'):
                         Contact.objects.create(
                             type=WORK,
-                            value=emergency_contact.get('work_phone'),
+                            value=relationship.get('work_phone'),
                             member=member
                         )
-                    elif emergency_contact.get('cell_phone'):
+                    elif relationship.get('cell_phone'):
                         Contact.objects.create(
                             type=CELL,
-                            value=emergency_contact.get('cell_phone'),
+                            value=relationship.get('cell_phone'),
                             member=member
                         )
-                    elif emergency_contact.get('home_phone'):
+                    elif relationship.get('home_phone'):
                         Contact.objects.create(
                             type=HOME,
-                            value=emergency_contact.get('home_phone'),
+                            value=relationship.get('home_phone'),
                             member=member
                         )
-                    elif emergency_contact.get('email'):
+                    elif relationship.get('email'):
                         Contact.objects.create(
                             type=EMAIL,
-                            value=emergency_contact.get('email'),
+                            value=relationship.get('email'),
                             member=member
                         )
 
-                try:
-                    to_update = EmergencyContact.objects.get(
-                        client__pk=client.pk, member__pk=member.pk
-                    )
-                    to_update.relationship = emergency_contact.get(
-                        "relationship"
-                    )
-                    to_update.save()
-                    emergency_contacts_posted.append(to_update)
-                except EmergencyContact.DoesNotExist:
-                    emergency_contacts_posted.append(
-                        EmergencyContact.objects.create(
-                            client=client,
-                            member=member,
-                            relationship=emergency_contact.get("relationship")
-                        )
-                    )
+                to_update, _ = Relationship.objects.get_or_create(
+                    client=client, member=member)
+                to_update.nature = relationship.get('nature')
+                to_update.type = relationship.get('type')
+                extra_fields = {}
+                if Relationship.REFERENT in relationship.get('type', []):
+                    extra_fields[
+                        'referral_date'] = relationship.get('referral_date')
+                    extra_fields[
+                        'referral_reason'] = relationship.get(
+                            'referral_reason')
+                to_update.extra_fields = extra_fields
+                to_update.remark = relationship.get('remark')
+                to_update.save()
+                relationships_posted.append(to_update)
 
-        EmergencyContact.objects.filter(client=client).exclude(
-            pk__in=[c.pk for c in emergency_contacts_posted]
+        Relationship.objects.filter(client=client).exclude(
+            pk__in=[c.pk for c in relationships_posted]
         ).delete()
 
 

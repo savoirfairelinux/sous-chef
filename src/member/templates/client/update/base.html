@@ -35,10 +35,9 @@
     <div class="ui vertical steps">
         {% include 'client/update/step.html' with url='member_update_basic_information' step='basic_information' icon='male' name=_('Personal') description=_('First name, last name, ...') %}
         {% include 'client/update/step.html' with url='member_update_address_information' step='address_information' icon='home' name=_('Address') description=_('Street number, city, ...') %}
-        {% include 'client/update/step.html' with url='member_update_referent_information' step='referent_information' icon='treatment' name=_('Referent') description=_('Referent contact information') %}
+        {% include 'client/update/step.html' with url='member_update_relationships' step='relationships' icon='treatment' name=_('Relationships') description=_('Referents, emergency contacts, ...') %}
         {% include 'client/update/step.html' with url='member_update_payment_information' step='payment_information' icon='payment' name=_('Payment') description=_('Payment method, card, ...') %}
         {% include 'client/update/step.html' with url='member_update_dietary_restriction' step='dietary_restriction' icon='food' name=_('Preferences') description=_('Deliveries, restrictions, ...') %}
-        {% include 'client/update/step.html' with url='member_update_emergency_contacts' step='emergency_contact' icon='first aid' name=_('Emergency') description=_('Emergency contact information') %}
     </div>
  </div>
 

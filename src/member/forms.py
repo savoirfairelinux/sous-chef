@@ -15,6 +15,7 @@ from member.models import (
     Member, Client, RATE_TYPE, Option,
     GENDER_CHOICES, PAYMENT_TYPE, DELIVERY_TYPE,
     DAYS_OF_WEEK, Route, ClientScheduledStatus,
+    Relationship
 )
 
 
@@ -383,49 +384,6 @@ class MemberForm(forms.Form):
         return cleaned_data
 
 
-class ClientReferentInformation(MemberForm):
-
-    work_information = forms.CharField(
-        max_length=200,
-        label=_('Work information'),
-        widget=forms.TextInput(attrs={
-            'placeholder': _('Hotel-Dieu, St-Anne Hospital, ...')
-        }),
-        required=False
-    )
-
-    referral_reason = forms.CharField(
-        label=_("Referral Reason"),
-        widget=forms.Textarea(attrs={'rows': 4})
-    )
-
-    date = forms.DateField(
-        label=_("Referral Date"),
-        widget=forms.TextInput(
-            attrs={
-                'class': 'ui calendar',
-                'placeholder': _('YYYY-MM-DD')
-            }
-        ),
-        help_text=_('Format: YYYY-MM-DD'),
-    )
-
-    def clean(self):
-        """
-        Add an error message for referent.
-        """
-        cleaned_data = super(ClientReferentInformation, self).clean()
-
-        member = cleaned_data.get('member')
-        work_information = cleaned_data.get('work_information')
-        if not member and not work_information:
-            msg = _(
-                'This field is required unless you chose an existing member.'
-            )
-            self.add_error('work_information', msg)
-        return cleaned_data
-
-
 class ClientPaymentInformation(MemberForm):
 
     facturation = forms.ChoiceField(
@@ -490,15 +448,66 @@ class ClientPaymentInformation(MemberForm):
         return cleaned_data
 
 
-class ClientEmergencyContactInformation(MemberForm):
+class ClientRelationshipInformation(MemberForm):
 
-    relationship = forms.CharField(
-        label=_("Relationship"),
+    nature = forms.CharField(
+        label=_("Nature of Relationship"),
         widget=forms.TextInput(
-            attrs={'placeholder': _('Parent, friend, ...')}
+            attrs={'placeholder': _('Doctor, Friend, Daughter, ...')}
         ),
+    )
+
+    type = forms.MultipleChoiceField(
+        label=_("Type of Relationship"),
+        choices=Relationship.TYPE_CHOICES,
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'onchange': '$(this).closest(".formset-item.relationship")'
+                        '.find(".souschef-referent-only")'
+                        '[($(this).closest("ul").find('
+                        '        "input[type=checkbox][value=%s]:checked"'
+                        '    ).length > 0) ? '
+                        ' "show" : "hide"]()' % Relationship.REFERENT,
+            'class': 'sc-checkbox-select-multiple'
+        }),
+        initial=[],
         required=False
     )
+
+    remark = forms.CharField(
+        label=_("Remark"),
+        widget=forms.Textarea(attrs={'rows': 4}),
+        required=False
+    )
+
+    # Extra fields
+    work_information = forms.CharField(
+        max_length=200,
+        label=_('Work information'),
+        widget=forms.TextInput(attrs={
+            'placeholder': _('Hotel-Dieu, St-Anne Hospital, ...')
+        }),
+        required=False
+    )
+    referral_date = forms.DateField(
+        label=_("Referral Date"),
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui calendar',
+                'placeholder': _('YYYY-MM-DD')
+            }
+        ),
+        help_text=_('Format: YYYY-MM-DD'),
+        required=False,
+    )
+    referral_reason = forms.CharField(
+        label=_("Referral Reason"),
+        widget=forms.Textarea(attrs={'rows': 4}),
+        required=False
+    )
+
+    @property
+    def has_referent_relationship(self):
+        return Relationship.REFERENT in self.cleaned_data.get('type', [])
 
     def clean(self):
         member = self.cleaned_data.get('member')
@@ -525,11 +534,23 @@ class ClientEmergencyContactInformation(MemberForm):
             if not (self.cleaned_data.get('email') or
                     self.cleaned_data.get('work_phone') or
                     self.cleaned_data.get('cell_phone')):
-                msg = _('At least one emergency contact is required.')
+                msg = _('At least one contact is required.')
                 self.add_error('email', msg)
                 self.add_error('work_phone', msg)
                 self.add_error('cell_phone', msg)
+            if self.has_referent_relationship:
+                if not self.cleaned_data.get('work_information'):
+                    msg = _('This field is required for a referent '
+                            'relationship.')
+                    self.add_error('work_information', msg)
 
+        if self.has_referent_relationship:
+            if not self.cleaned_data.get('referral_date'):
+                msg = _('This field is required for a referent relationship.')
+                self.add_error('referral_date', msg)
+            if not self.cleaned_data.get('referral_reason'):
+                msg = _('This field is required for a referent relationship.')
+                self.add_error('referral_reason', msg)
         return self.cleaned_data
 
 

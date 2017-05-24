@@ -1,0 +1,116 @@
+{% load i18n %}
+{% load sous_chef_extras %}
+{% comment %} This is the template of a single relationship form. It needs to be included with value "item_form". {% endcomment %}
+
+
+<div class="formset-item ui raised segment relationship" {% if is_template %}x-template style="display:none"{% endif %}>
+  {% if item_form.errors %}
+  <div class="ui error message">
+    {{ item_form.errors }}
+  </div>
+  {% endif %}
+
+  <div class="ui center aligned basic segment">
+    <div class="ui fluid category search">
+      <div class="ui icon fluid input" data-url="{% url 'member:search' %}">
+        {{item_form.member}}
+        <i class="search icon"></i>
+      </div>
+      <div class="results"></div>
+    </div>
+    <div class="ui horizontal divider">
+      {% trans 'Or' %}
+    </div>
+    <div class="ui teal labeled icon button add relationship member">
+      {% trans 'Create new member' %}
+      <i class="add icon"></i>
+    </div>
+
+    <div class="ui form add relationship member transition hidden">
+      <div class="content">
+        <div class="ui icon button cancel add relationship member right floated">
+          <i class="close icon"></i>
+        </div>
+
+        <div class="field">
+          <label>{% trans 'Name' %}</label>
+          <div class="two fields">
+            <div class="field {% if item_form.firstname.errors %} error {% endif %}">
+              {{item_form.firstname}}
+            </div>
+            <div class="field {% if item_form.lastname.errors %} error {% endif %}">
+              {{item_form.lastname}}
+            </div>
+          </div>
+
+          <label>{% trans 'Contact information' %}</label>
+          <div class="three fields">
+            <div class="field {% if item_form.email.errors %} error {% endif %}">
+              <div class="ui left icon input">
+                <i class="at grey icon"></i>
+                {{ item_form.email }}
+              </div>
+            </div>
+            <div class="field {% if item_form.work_phone.errors %} error {% endif %}">
+              <div class="ui left icon input">
+                <i class="building icon"></i>
+                {{ item_form.work_phone }}
+              </div>
+            </div>
+            <div class="field {% if item_form.cell_phone.errors %} error {% endif %}">
+              <div class="ui left icon input">
+                <i class="call icon"></i>
+                {{ item_form.cell_phone }}
+              </div>
+            </div>
+          </div>
+
+          <label class="souschef-referent-only" {% if "referent" not in item_form.type.value %}style="display:none"{% endif %}>{% trans 'Work information' %}</label>
+          <div class="field {% if item_form.email.errors %} error {% endif %} souschef-referent-only" {% if "referent" not in item_form.type.value %}style="display:none"{% endif %}>
+            <div class="ui left icon input">
+              <i class="at grey icon"></i>
+              {{ item_form.work_information }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="field">
+    <label>{% trans 'Type of relationship' %}</label>
+    <div class="field {% if item_form.type.errors %} error {% endif %}">
+      {{item_form.type}}
+    </div>
+  </div>
+  <div class="field">
+    <label>{% trans 'Nature of relationship' %}</label>
+    <div class="field {% if item_form.nature.errors %} error {% endif %}">
+      {{item_form.nature}}
+    </div>
+  </div>
+  <div class="field souschef-referent-only" {% if "referent" not in item_form.type.value %}style="display:none"{% endif %}>
+    <label>{% trans 'Referral date' %}</label>
+    <div class="field {% if item_form.referral_date.errors %} error {% endif %}">
+      <div class="ui calendar">
+        <div class="ui input left icon">
+          <i class="calendar icon"></i>
+          {{item_form.referral_date}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="field souschef-referent-only" {% if "referent" not in item_form.type.value %}style="display:none"{% endif %}>
+    <label>{% trans 'Referral reason' %}</label>
+    <div class="field {% if item_form.referral_reason.errors %} error {% endif %}">
+      {{item_form.referral_reason}}
+    </div>
+  </div>
+  <div class="field">
+    <label>{% trans 'Remark' %}</label>
+    <div class="field {% if item_form.remark.errors %} error {% endif %}">
+      {{item_form.remark}}
+    </div>
+  </div>
+</div>

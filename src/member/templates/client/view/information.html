@@ -52,37 +52,47 @@
 </div>
 
 
-{% if client.emergencycontact_set.all.exists %}
 <div class="ui segment">
     <h2 class="ui header">
         <div class="content">
-            {% trans 'Emergency Contacts' %}
-            <div class="sub header">{% trans "Information of the people to contact in case of an emergency" %}.</div>
+            {% trans 'Client relationships' %}
+            <div class="sub header">{% trans "Information of the people that are related to the client." %}</div>
         </div>
     </h2>
     {% if can_edit_data %}
-    <a class="ui right floated small button" href="{% url 'member:member_update_emergency_contacts' pk=client.id %}">
+    <a class="ui right floated small button" href="{% url 'member:member_update_relationships' pk=client.id %}">
         <i class="icon edit"></i>{% trans "Edit" %}
     </a>
     {% endif %}
 
     <div class="ui divider"></div>
 
-    {% for emergency_contact in client.emergencycontact_set.all %}
-        <div class="ui horizontal list">
-            <div class="item"><div class="header">{% trans 'First Name' %}</div>{{emergency_contact.member.firstname}}</div>
-            <div class="item"><div class="header">{% trans 'Last Name' %}</div>{{emergency_contact.member.lastname}}</div>
-            <div class="item"><div class="header">{% trans 'Relationship' %}</div>{{emergency_contact.relationship}}</div>
-            {% for contact in emergency_contact.member.member_contact.all %}
+    {% for relationship in client.relationship_set.all %}
+        <div class="ui list">
+            <div class="item"><div class="header">{% trans 'First Name' %}</div>{{relationship.member.firstname}}</div>
+            <div class="item"><div class="header">{% trans 'Last Name' %}</div>{{relationship.member.lastname}}</div>
+            <div class="item"><div class="header">{% trans 'Nature of Relationship' %}</div>{{relationship.nature}}</div>
+            <div class="item">
+              <div class="header">{% trans 'Type of Relationship' %}</div>
+              {{ relationship.get_type_display }}
+            </div>
+            {% for contact in relationship.member.member_contact.all %}
                 {% if contact.value is not empty %}
                     <div class="item"><div class="header">{{contact.type}}</div>{{contact.display_value}}</div>
                 {% endif %}
             {% endfor %}
+            {% if relationship.is_referent %}
+            <div class="item"><div class="header">{% trans 'Work Information' %}</div>{{relationship.member.work_information|default:_("Unknown")}}</div>
+            <div class="item"><div class="header">{% trans 'Referral Date' %}</div>{{relationship.extra_fields.referral_date|default:_("Unknown")}}</div>
+            <div class="item"><div class="header">{% trans 'Referral Reason' %}</div>{{relationship.extra_fields.referral_reason|default:_("Unknown")}}</div>
+            {% endif %}
+            <div class="item"><div class="header">{% trans 'Remark' %}</div>{{relationship.remark|default:_("N/A")}}</div>
         </div>
-        <br/><br/>
+        <div class="ui divider"></div>
+    {% empty %}
+        <p>{% trans 'No related members.' %}</p>
     {% endfor %}
 </div>
-{% endif %}
 
 
 {% endblock %}
