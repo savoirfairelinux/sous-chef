@@ -576,8 +576,8 @@ class RoutesInformationViewTestCase(SousChefTestMixin, TestCase):
         response_1 = self.client.get(url)
         response_2 = self.client.get(url, {'print': 'yes'})
         # Check
-        self.assertNotIn('routes_dict', response_1.context)
-        self.assertIn('routes_dict', response_2.context)
+        self.assertNotIn('routes_dict', response_1)
+        self.assertIn('routes_dict', response_2)
 
     def test_redirects_users_who_do_not_have_read_permission(self):
         # Setup
@@ -1115,22 +1115,18 @@ class ExcludeMalconfiguredClientsTestCase(SousChefTestMixin, TestCase):
                                    {'print': 'yes'})
         self.assertEqual(response.status_code, 200)
         # Check print result
-        routes_dict = response.context['routes_dict']
+        routes_dict = json.loads(response['routes_dict'])
         # only route1 has one client
-        route1 = routes_dict[self.route1.id]
+        route1 = routes_dict[str(self.route1.id)]
         self.assertEqual(len(route1['detail_lines']), 1)
         # route2 doesn't exist.
-        self.assertNotIn(self.route2.id, routes_dict)
+        self.assertNotIn(str(self.route2.id), routes_dict)
 
-        # check output page
-        self.assertIn(
-            self.route1.name.encode(encoding=response.charset),
-            response.content
-        )
-        self.assertNotIn(
-            self.route2.name.encode(encoding=response.charset),
-            response.content
-        )
+        # check output page : use data in header because cannot read PDF
+        route_name_list = \
+            [item['route'] for item in routes_dict.values()]
+        self.assertIn(self.route1.name, route_name_list)
+        self.assertNotIn(self.route2.name, route_name_list)
 
         # Assert route sheets exist and check route sheets
         # Route 1
@@ -1160,3 +1156,69 @@ class ExcludeMalconfiguredClientsTestCase(SousChefTestMixin, TestCase):
             reverse("delivery:route_sheet", args=[self.route2.pk])
         )
         self.assertEqual(response2.status_code, 404)
+
+
+class RouteSheetReportTestCase(SousChefTestMixin, TestCase):
+    # PDF route sheets report generation
+    fixtures = ['sample_data']
+
+    def setUp(self):
+        self.force_login()
+
+    def test_route_sheet_report(self):
+        # generate orders today
+        Order.objects.auto_create_orders(
+            datetime.date.today(), Client.active.all())
+
+        # list all the routes
+        response = self.client.get(reverse("delivery:routes"))
+        self.assertEqual(response.status_code, 200)
+        # get details of each route : {route:(order_count, ...), ...}
+        route_orders_dict = dict(map(
+            lambda t: (t[0], t[1:]),
+            response.context['route_details']
+        ))
+
+        # create history and organize clients for the non empty routes
+        for route, num in route_orders_dict.items():
+            if num[0] > 0:
+
+                # route has clients with orders : create delivery history
+                response = self.client.post(
+                    reverse("delivery:create_delivery_of_today",
+                            args=[route.pk])
+                )
+                self.assertRedirects(
+                    response,
+                    reverse("delivery:edit_delivery_of_today",
+                            args=[route.pk])
+                )
+
+                # get the clients in the route
+                response = self.client.get(
+                    reverse("delivery:edit_delivery_of_today",
+                            args=[route.pk])
+                )
+                self.assertEqual(response.status_code, 200)
+                client_pks = [
+                    item.pk for item
+                    in response.context['clients_on_delivery_history']]
+
+                # organize the clients in the route
+                response = self.client.post(
+                    reverse("delivery:edit_delivery_of_today",
+                            args=[route.pk]),
+                    {
+                        'vehicle': 'walking',
+                        'comments': 'Nice day !',
+                        'client_id_sequence': json.dumps(client_pks)
+                    }
+                )
+                self.assertRedirects(
+                    response, reverse("delivery:routes"))
+
+        # generate the PDF route sheets of all the routes
+        response = self.client.get(reverse("delivery:routes"),
+                                   {'print': 'yes'})
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('ReportLab' in repr(response.content))

@@ -38,6 +38,7 @@ from reportlab.lib.styles import (
 from reportlab.lib.units import inch as rl_inch
 from reportlab.pdfbase import pdfmetrics as rl_pdfmetrics
 from reportlab.platypus import (
+    PageBreak as RLPageBreak,
     Paragraph as RLParagraph,
     SimpleDocTemplate as RLSimpleDocTemplate,
     Spacer as RLSpacer,
@@ -61,6 +62,7 @@ from . import tsp
 
 MEAL_LABELS_FILE = os.path.join(settings.BASE_DIR, "meal_labels.pdf")
 KITCHEN_COUNT_FILE = os.path.join(settings.BASE_DIR, "kitchen_count.pdf")
+ROUTE_SHEETS_FILE = os.path.join(settings.BASE_DIR, "route_sheets.pdf")
 LOGO_IMAGE = os.path.join(settings.BASE_DIR,
                           "160widthSR-Logo-Screen-PurpleGreen-HI-RGB1.jpg")
 DELIVERY_STARTING_POINT_LAT_LONG = (45.516564, -73.575145)  # Santropol Roulant
@@ -246,18 +248,31 @@ class MealInformation(
 
 
 class RoutesInformation(
-        LoginRequiredMixin, PermissionRequiredMixin, generic.ListView):
-    # Display all the route information for a given day
+        LoginRequiredMixin, PermissionRequiredMixin, generic.View):
+    """Display route list page or download the route sheets report.
+
+    Display all the route information for a given day.
+
+    The view must first determine whether each of the routes with orders
+    has been "organized by the user".
+
+    By default the view displays a list of all the known routes
+    indicating for each route the number of orders today and its
+    organize state. The view then creates the context to be rendered
+    on the page.
+
+    If the request includes argument "print=yes", the view obtains
+    for each route the detailed orders to be delivered, sorts them in the
+    chosen sequence and combines all the routes in a PDF report that
+    is stored in the BASE_DIR and then downloaded by the browser.
+    """
     permission_required = 'sous_chef.read'
-    model = Delivery
 
     @property
     def doprint(self):
         return self.request.GET.get('print', False)
 
-    def get_context_data(self, **kwargs):
-        context = super(RoutesInformation, self).get_context_data(**kwargs)
-
+    def get(self, request, *args, **kwargs):
         routes = Route.objects.all()
         route_details = []
         all_configured = True
@@ -286,13 +301,15 @@ class RoutesInformation(
             )
             if order_count > 0 and has_organised != 'yes':
                 all_configured = False
-        context['route_details'] = route_details
-        context['all_configured'] = all_configured
 
-        # Embeds additional information if we are displaying the print version
-        # of the routes information page.
-        if self.doprint:
-            if not context['all_configured']:
+        if not self.doprint:
+            # display list of delivery routes on web page
+            return render(request, 'routes.html',
+                          {'route_details': route_details,
+                           'all_configured': all_configured})
+        else:
+            # download route sheets report as PDF
+            if not all_configured:
                 raise Http404
             today = timezone.datetime.today()
             routes_dict = {}
@@ -305,18 +322,35 @@ class RoutesInformation(
                 route_list = sort_sequence_ids(
                     route_list, delivery_history.client_id_sequence
                 )
-                summary_lines, detail_lines = drs_make_lines(route_list, date)
+                summary_lines, detail_lines = drs_make_lines(route_list)
                 routes_dict[delivery_history.route_id] = {
                     'route': delivery_history.route,
                     'summary_lines': summary_lines,
                     'detail_lines': detail_lines
                 }
-            context['routes_dict'] = routes_dict
-
-        return context
-
-    def get_template_names(self):
-        return ['routes_print.html', ] if self.doprint else ['routes.html', ]
+            # generate PDF report
+            MultiRouteReport.routes_make_pages(routes_dict)
+            try:
+                f = open(ROUTE_SHEETS_FILE, "rb")
+            except:
+                raise Http404("File " + ROUTE_SHEETS_FILE + " does not exist")
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = \
+                'attachment; filename="routesheets{}.pdf"'. \
+                format(datetime.date.today().strftime("%Y%m%d"))
+            # add serializable data in response header to be used in unit tests
+            routes_dict_fortest = {}
+            for key, item in routes_dict.items():
+                routes_dict_fortest[key] = {
+                    'route': item['route'].name,
+                    'detail_lines': [client.lastname
+                                     for client in item['detail_lines']],
+                }
+            response['routes_dict'] = json.dumps(routes_dict_fortest)
+            #
+            response.write(f.read())
+            f.close()
+            return response
 
 
 class CreateDeliveryOfToday(
@@ -385,6 +419,372 @@ class EditDeliveryOfToday(
             }
         )
         return response
+
+
+# Route sheet report classes and functions.
+
+def defineStyles(my_styles):
+    """Define common styles for ReportLab objects.
+
+    Adds reportlab.lib.styles.ParagraphStyle objects to my_styles.
+
+    Args:
+        my_styles: A reportlab.lib.styles.StyleSheet1 object.
+    """
+    my_styles.add(RLParagraphStyle(
+        name='SmallRight', fontName='Helvetica',
+        fontSize=7, alignment=rl_enums.TA_RIGHT))
+
+    my_styles.add(RLParagraphStyle(
+        name='NormalLeft', fontName='Helvetica',
+        fontSize=10, alignment=rl_enums.TA_LEFT))
+    my_styles.add(RLParagraphStyle(
+        name='NormalLeftBold', fontName='Helvetica-Bold',
+        fontSize=10, alignment=rl_enums.TA_LEFT))
+    my_styles.add(RLParagraphStyle(
+        name='NormalCenter', fontName='Helvetica',
+        fontSize=10, alignment=rl_enums.TA_CENTER))
+    my_styles.add(RLParagraphStyle(
+        name='NormalCenterBold', fontName='Helvetica-Bold',
+        fontSize=10, alignment=rl_enums.TA_CENTER))
+    my_styles.add(RLParagraphStyle(
+        name='NormalRight', fontName='Helvetica',
+        fontSize=10, alignment=rl_enums.TA_RIGHT))
+    my_styles.add(RLParagraphStyle(
+        name='NormalRightBold', fontName='Helvetica-Bold',
+        fontSize=10, alignment=rl_enums.TA_RIGHT))
+
+    my_styles.add(RLParagraphStyle(
+        name='LargeLeft', fontName='Helvetica',
+        fontSize=12, alignment=rl_enums.TA_LEFT))
+    my_styles.add(RLParagraphStyle(
+        name='LargeCenter', fontName='Helvetica',
+        fontSize=12, alignment=rl_enums.TA_CENTER))
+    my_styles.add(RLParagraphStyle(
+        name='LargeRight', fontName='Helvetica',
+        fontSize=12, alignment=rl_enums.TA_RIGHT))
+    my_styles.add(RLParagraphStyle(
+        name='LargeBoldLeft', fontName='Helvetica-Bold',
+        fontSize=12, alignment=rl_enums.TA_LEFT))
+    my_styles.add(RLParagraphStyle(
+        name='LargeBoldRight', fontName='Helvetica-Bold',
+        fontSize=12, alignment=rl_enums.TA_RIGHT))
+
+    my_styles.add(RLParagraphStyle(
+        name='VeryLargeBoldLeft', fontName='Helvetica-Bold',
+        fontSize=14, alignment=rl_enums.TA_LEFT,
+        spaceAfter=5))
+
+    my_styles.add(RLParagraphStyle(
+        name='HugeBoldCenter', fontName='Helvetica-Bold',
+        fontSize=20, alignment=rl_enums.TA_CENTER))
+
+
+class MultiRouteReport(object):
+    """Namespace for Route sheet report data structures and logic.
+
+    This class is never instantiated.
+
+    Uses ReportLab see http://www.reportlab.com/documentation/faq/
+    """
+    # (class attribute) last page number on which a ReportLab Table has split
+    table_split = None
+
+    # (class attribute) report document instance
+    document = None
+
+    # (class attribute) page number on which route starts
+    route_start_page = None
+
+    class RLMultiRouteTable(RLTable):
+        """Custom table for route sheets that is monitored for table splits.
+        """
+        def onSplit(self, table, **kwargs):
+            """Override method to detect table splits.
+
+            ReportLab calls this twice for each split :
+              first call has the table with rows that fit on current page,
+              second call has the table with the rest of the rows.
+            """
+            MultiRouteReport.table_split = MultiRouteReport.document.page
+            # @lamontfr 20170522 : Please do not remove, used for DEBUGGING
+            # print("onSplit **********************",
+            #       "page=", MultiRouteReport.document.page,
+            #       "FIRST CLIENT _cellvalues[1][0][0].text=",
+            #       repr(table._cellvalues[1][0][0].text),
+            #       "LAST CLIENT _cellvalues[-1][0][0].text=",
+            #       repr(table._cellvalues[-1][0][0].text),
+            # )
+            super().onSplit(table, **kwargs)
+
+    class RLMultiRouteDocTemplate(RLSimpleDocTemplate):
+        """Custom document template for route sheets having multiple tables.
+
+        """
+        def __init__(self, *args, **kwargs):
+            """Init class and ensure that we have a page footer function.
+
+            Args:
+                *args
+                    (required)
+                        route_sheets_file : string, a file name.
+                **kwargs
+                    (required)
+                        footerFunc : callable, draws the footer.
+                    (optional, see also reportlab SimpleDocTemplate)
+                        leftMargin : integer, inches.
+                        rightMargin : integer, inches.
+                        bottomMargin : integer, inches.
+            """
+            try:
+                self.footerFunc = kwargs.pop('footerFunc')
+            except KeyError:
+                raise KeyError(self.__class__.__name__ +
+                               " missing kwarg : footerFunc")
+            super().__init__(*args, **kwargs)
+
+        def afterPage(self, *args, **kwargs):
+            """Override method for footer and blanks based on table splits.
+
+            If table has split on this page, insert footer that tells reader
+            to look for continuation on back side or on next sheet.
+            If table finishes on the front side of a page, insert a blank
+            page after it if necessary to ensure that two sided printing will
+            show the next table on the front side of the next sheet.
+            """
+            if MultiRouteReport.table_split == self.page:
+                # table has split, therefore route continues on next page
+                if (self.page -
+                        MultiRouteReport.route_start_page + 1) % 2 != 0:
+                    # split occured at bottom of front side of sheet (odd page)
+                    self.footerFunc(
+                        self,
+                        '** SUITE AU VERSO / CONTINUED ON REVERSE SIDE **')
+                else:
+                    # split occured at bottom of back side of sheet (even page)
+                    self.footerFunc(
+                        self,
+                        '** VOIR FEUILLE SUIVANTE / SEE NEXT SHEET **')
+            else:
+                # no table split means route finishes on this page
+                if (self.page -
+                        MultiRouteReport.route_start_page + 1) % 2 != 0:
+                    # route finishes on odd page, add a blank page
+                    self.canv.showPage()
+                # the next route, if any, will start on next document page
+                MultiRouteReport.route_start_page = self.page + 1
+
+    # static method
+    def routes_make_pages(routes_dict):
+        """Generate the route sheets pages as a PDF file.
+
+        Ensures that a new route starts on the front side of a sheet,
+        by adding a blank page if necessary.
+        The page footer indicates whether the delivery route continues
+        on the reverse side of the sheet or on the next sheet.
+
+        Args:
+            routes_dict : A dictionary {<route id>:<value>, ...} where
+              <value> is a dictionary containing 3 items :
+                'route' : a Route object.
+                'summary_lines' : A list of RouteSummaryLine objects, sorted by
+                                  component_group name (main dish first).
+                'detail_lines' : A list of DeliveryClient objects
+                                 (see order/models.py),
+                                 sorted according to delivery history sequence.
+
+        Returns:
+            An integer : The number of pages generated.
+        """
+        PAGE_HEIGHT = 11.0 * rl_inch
+        PAGE_WIDTH = 8.5 * rl_inch
+
+        styles = rl_getSampleStyleSheet()
+        defineStyles(styles)
+
+        def drawHeader(canvas, doc):
+            """Draw the header and footer.
+
+            Args:
+                canvas : A reportlab.pdfgen.canvas.Canvas object.
+                doc : A reportlab.platypus.SimpleDocTemplate object.
+            """
+            canvas.saveState()
+            canvas.setFont('Helvetica-Bold', 12)
+            canvas.drawString(
+                x=1.5 * rl_inch, y=PAGE_HEIGHT + 0.30 * rl_inch,
+                text='Santropol Roulant')
+            canvas.setFont('Helvetica', 12)
+            canvas.drawString(
+                x=1.5 * rl_inch, y=PAGE_HEIGHT + 0.15 * rl_inch,
+                text='Tel. : (514) 284-9335')
+            canvas.setFont('Helvetica', 10)
+            canvas.drawString(
+                x=1.5 * rl_inch, y=PAGE_HEIGHT - 0.0 * rl_inch,
+                text='{}'.format(
+                    datetime.date.today().strftime('%a., %d %B %Y')))
+            canvas.drawString(
+                x=3.25 * rl_inch, y=PAGE_HEIGHT + 0.30 * rl_inch,
+                text='(Ce document contient des informations CONFIDENTIELLES.)'
+            )
+            canvas.drawString(
+                x=3.25 * rl_inch, y=PAGE_HEIGHT + 0.15 * rl_inch,
+                text='(This document contains CONFIDENTIAL information.)')
+            canvas.drawRightString(
+                x=PAGE_WIDTH - 0.75 * rl_inch, y=PAGE_HEIGHT + 0.30 * rl_inch,
+                text='Page {:d}'.format(
+                    doc.page - MultiRouteReport.route_start_page + 1))
+            canvas.drawInlineImage(
+                LOGO_IMAGE,
+                0.5 * rl_inch, PAGE_HEIGHT - 0.2 * rl_inch,
+                width=0.8 * rl_inch, height=0.7 * rl_inch)
+            canvas.restoreState()
+
+        def drawFooter(doc, text):
+            """Draw the page footer.
+
+            Args:
+                doc : A reportlab.platypus.SimpleDocTemplate object.
+                text : A string to place in the footer.
+            """
+            doc.canv.saveState()
+            doc.canv.setFont('Helvetica', 14)
+            doc.canv.drawCentredString(
+                x=4.0 * rl_inch,
+                y=PAGE_HEIGHT - 10.5 * rl_inch,
+                text=text)
+            doc.canv.restoreState()
+
+        def go():
+            """Generate the pages.
+
+            Returns:
+                An integer : The number of pages generated.
+            """
+            doc = MultiRouteReport.RLMultiRouteDocTemplate(
+                ROUTE_SHEETS_FILE,
+                leftMargin=0.5 * rl_inch,
+                rightMargin=0.5 * rl_inch,
+                bottomMargin=0.5 * rl_inch,
+                footerFunc=drawFooter)
+            # initialize
+            MultiRouteReport.table_split = 0
+            MultiRouteReport.document = doc
+            MultiRouteReport.route_start_page = 1
+            story = []
+            first_route = True
+
+            # TODO Loop over routes
+            for route in routes_dict.values():
+                if not route['summary_lines']:
+                    # empty route : skip it
+                    continue
+                # begin Summary section
+                if not first_route:
+                    # next route must start on a new page
+                    story.append(RLPageBreak())
+                rows = []
+                rows.append(
+                    [RLParagraph('PLAT / DISH', styles['NormalLeftBold']),
+                     RLParagraph('Qté / Qty', styles['NormalCenterBold'])])
+                for sl in route['summary_lines']:
+                    rows.append([RLParagraph(sl.component_group_trans,
+                                             styles['NormalLeft']),
+                                 RLParagraph(str(sl.rqty + sl.lqty),
+                                             styles['NormalCenter'])])
+                tab = MultiRouteReport.RLMultiRouteTable(
+                    rows,
+                    colWidths=(100, 60),
+                    style=[('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                           ('GRID', (0, 0), (-1, -1), 1, rl_colors.black),
+                           ('ALIGN', (0, 0), (-1, -1), 'RIGHT')],
+                    hAlign='LEFT')
+                story.append(tab)
+                # end Summary section
+
+                # Route name
+                story.append(RLSpacer(1, 0.25 * rl_inch))
+                story.append(RLParagraph(route['route'].name,
+                                         styles['HugeBoldCenter']))
+                story.append(RLSpacer(1, 0.25 * rl_inch))
+                story.append(RLParagraph('- DÉBUT DE LA ROUTE / START ROUTE -',
+                                         styles['LargeLeft']))
+                story.append(RLSpacer(1, 0.125 * rl_inch))
+
+                # begin Detail section
+                rows = []
+                line = 0
+                tab_style = RLTableStyle(
+                    [('VALIGN', (0, 0), (-1, -1), 'TOP')])
+                rows.append([RLParagraph('Client', styles['NormalLeft']),
+                             RLParagraph('Note', styles['NormalLeft']),
+                             RLParagraph('Items', styles['NormalLeft']),
+                             RLParagraph('', styles['NormalLeft'])])
+                tab_style.add('LINEABOVE',
+                              (0, 0), (-1, 0), 1, rl_colors.black)
+                line += 1
+                for c in route['detail_lines']:
+                    tab_style.add('LINEABOVE',
+                                  (0, line), (-1, line), 1, rl_colors.black)
+                    items = c.delivery_items
+                    rows.append([
+                        # client
+                        [RLParagraph(c.firstname + ' ' + c.lastname,
+                                     styles['VeryLargeBoldLeft']),
+                         RLParagraph(c.street,
+                                     styles['LargeLeft']),
+                         RLParagraph(
+                             'Apt ' + c.apartment,
+                             styles['LargeLeft']) if c.apartment else [],
+                         RLParagraph(c.phone,
+                                     styles['LargeLeft'])],
+                        # note
+                        RLParagraph(c.delivery_note,
+                                    styles['LargeLeft']),
+                        # items
+                        ([RLParagraph(i.component_group_trans,
+                                      styles['LargeLeft'])
+                          for i in c.delivery_items] +
+                         [RLParagraph("Facture / Bill",
+                                      styles['LargeLeft'])
+                          if c.include_a_bill else []]),
+                        # quantity
+                        [RLParagraph(str(i.total_quantity),
+                                     styles['LargeRight'])
+                         for i in c.delivery_items]])
+                    line += 1
+                # END for
+                # add row for number of clients
+                rows.append([
+                    [RLParagraph("- FIN DE LA ROUTE -", styles['LargeLeft']),
+                     RLParagraph("- END OF ROUTE- ", styles['LargeLeft'])],
+                    [RLParagraph("Nombre d'arrêts :", styles['LargeRight']),
+                     RLParagraph("Number of Stops :", styles['LargeRight'])],
+                    RLParagraph(str(line - 1), styles['LargeLeft']),
+                    RLParagraph("", styles['LargeLeft'])])
+                #
+                tab_style.add('LINEBELOW',
+                              (0, line - 1), (-1, line - 1), 1,
+                              rl_colors.black)
+                tab = MultiRouteReport.RLMultiRouteTable(
+                              rows,
+                              colWidths=(140, 255, 100, 20),
+                              repeatRows=1)
+                tab.setStyle(tab_style)
+                story.append(tab)
+                # end Detail section
+                first_route = False
+            # END for
+
+            # build full document
+            doc.build(story,
+                      onFirstPage=drawHeader, onLaterPages=drawHeader)
+            return doc.page  # number of last page
+        # END def
+
+        return go()  # returns number of pages generated
+
+# END Route sheet report.
 
 
 # Kitchen count report view, helper classes and functions
@@ -532,12 +932,13 @@ def kcr_make_lines(kitchen_list, date):
     special client requirements such as disliked ingredients and
     restrictions.
 
-    Args: kitchen_list : A dictionary of KitchenItem objects (see
-              order/models) which contain detailed information about
-              all the meals that have to be prepared for the day and
-              the client requirements and restrictions.
-          date : A date.datetime object giving the date on which the
-              meals will be delivered.
+    Args:
+        kitchen_list : A dictionary of KitchenItem objects (see
+            order/models) which contain detailed information about
+            all the meals that have to be prepared for the day and
+            the client requirements and restrictions.
+        date : A date.datetime object giving the date on which the
+            meals will be delivered.
 
     Returns:
         A tuple. First value is the component (dishes) summary lines. The
@@ -551,6 +952,7 @@ def kcr_make_lines(kitchen_list, date):
             component_lines.setdefault(
                 component_group,
                 ComponentLine(
+                    # find the translated name of the component group
                     component_group=next(cg for cg in COMPONENT_GROUP_CHOICES
                                          if cg[0] == component_group)[1],
                     rqty=0,
@@ -662,33 +1064,7 @@ def kcr_make_pages(date, component_lines, meal_lines):
     PAGE_WIDTH = 8.5 * rl_inch
 
     styles = rl_getSampleStyleSheet()
-    styles.add(RLParagraphStyle(
-        name='NormalLeft', fontName='Helvetica',
-        fontSize=10, alignment=rl_enums.TA_LEFT))
-    styles.add(RLParagraphStyle(
-        name='NormalCenter', fontName='Helvetica',
-        fontSize=10, alignment=rl_enums.TA_CENTER))
-    styles.add(RLParagraphStyle(
-        name='NormalRight', fontName='Helvetica',
-        fontSize=10, alignment=rl_enums.TA_RIGHT))
-
-    styles.add(RLParagraphStyle(
-        name='BoldLeft', fontName='Helvetica-Bold',
-        fontSize=10, alignment=rl_enums.TA_LEFT))
-    styles.add(RLParagraphStyle(
-        name='BoldRight', fontName='Helvetica-Bold',
-        fontSize=10, alignment=rl_enums.TA_RIGHT))
-
-    styles.add(RLParagraphStyle(
-        name='SmallRight', fontName='Helvetica',
-        fontSize=7, alignment=rl_enums.TA_RIGHT))
-
-    styles.add(RLParagraphStyle(
-        name='LargeBoldLeft', fontName='Helvetica-Bold',
-        fontSize=12, alignment=rl_enums.TA_LEFT))
-    styles.add(RLParagraphStyle(
-        name='LargeBoldRight', fontName='Helvetica-Bold',
-        fontSize=12, alignment=rl_enums.TA_RIGHT))
+    defineStyles(styles)
 
     def drawHeader(canvas, doc):
         """Draw the header part common to all pages.
@@ -797,9 +1173,10 @@ def kcr_make_pages(date, component_lines, meal_lines):
         for ml in meal_lines:
             if ml.ingr_clash and not ml.client:
                 # Total line at the bottom
-                rows.append([RLParagraph(ml.ingr_clash, styles['BoldLeft']),
-                             RLParagraph(ml.rqty, styles['BoldRight']),
-                             RLParagraph(ml.lqty, styles['BoldRight']),
+                rows.append([RLParagraph(ml.ingr_clash,
+                                         styles['NormalLeftBold']),
+                             RLParagraph(ml.rqty, styles['NormalRightBold']),
+                             RLParagraph(ml.lqty, styles['NormalRightBold']),
                              '',
                              '',
                              ''])
@@ -845,7 +1222,7 @@ def kcr_make_pages(date, component_lines, meal_lines):
                         ml.rest_ingr +
                         (' ;' if ml.rest_ingr and ml.rest_item else ''),
                         styles['NormalLeft']),
-                     RLParagraph(ml.rest_item, styles['BoldLeft'])]])
+                     RLParagraph(ml.rest_item, styles['NormalLeftBold'])]])
                 # END IF
                 line += 1
             # END IF
@@ -863,6 +1240,10 @@ def kcr_make_pages(date, component_lines, meal_lines):
         return doc.page
     return go()  # returns number of pages generated
 
+# END Kitchen count report view, helper classes and functions
+
+
+# Meal labels generation data structures and functions.
 
 meal_label_fields = [                         # Contents for Meal Labels.
     # field name, default value
@@ -1123,9 +1504,10 @@ def kcr_make_labels(kitchen_list, main_dish_name, main_dish_ingredients):
         sheet.save(MEAL_LABELS_FILE)
     return sheet.label_count
 
-# END Kitchen count report view, helper classes and functions
+# END Meal labels
 
-# Delivery route sheet view, helper classes and functions
+
+# Delivery route sheet view, helper classes and functions.
 
 
 class MealLabels(
@@ -1161,7 +1543,7 @@ class DeliveryRouteSheet(
         route_list = sort_sequence_ids(
             route_list, delivery_history.client_id_sequence
         )
-        summary_lines, detail_lines = drs_make_lines(route_list, date)
+        summary_lines, detail_lines = drs_make_lines(route_list)
         return render(request, 'route_sheet.html',
                       {'route': delivery_history.route,
                        'summary_lines': summary_lines,
@@ -1172,16 +1554,16 @@ RouteSummaryLine = \
     collections.namedtuple(
         'RouteSummaryLine',
         ['component_group',
+         'component_group_trans',
          'rqty',
          'lqty'])
 
 
-def drs_make_lines(route_list, date):
+def drs_make_lines(route_list):
     # generate all the lines for the delivery route sheet
 
     summary_lines = {}
     for k, item in route_list.items():
-        # print("\nitem = ", item)
         for delivery_item in item.delivery_items:
             component_group = delivery_item.component_group
             if component_group:
@@ -1189,9 +1571,11 @@ def drs_make_lines(route_list, date):
                     component_group,
                     RouteSummaryLine(
                         component_group,
+                        # find the translated name of the component group
+                        next(cg for cg in COMPONENT_GROUP_CHOICES
+                             if cg[0] == component_group)[1],
                         rqty=0,
                         lqty=0))
-                # print("\nline", line)
                 if (component_group == COMPONENT_GROUP_CHOICES_MAIN_DISH and
                         delivery_item.size == SIZE_CHOICES_LARGE):
                     summary_lines[component_group] = \
@@ -1201,16 +1585,10 @@ def drs_make_lines(route_list, date):
                     summary_lines[component_group] = \
                         line._replace(rqty=line.rqty +
                                       delivery_item.total_quantity)
-                # END IF
-            # END IF
-        # END FOR
-    # END FOR
 
-    # print("values before sort", summary_lines.values())
     summary_lines_sorted = sorted(
         summary_lines.values(),
         key=component_group_sorting)
-    # print("values after sort", summary_lines_sorted)
     return summary_lines_sorted, list(route_list.values())
 
 

@@ -605,6 +605,9 @@ class Order(models.Model):
                     route_list[oi.order.client.id].delivery_items.append(
                         DeliveryItem(
                             oi.component_group,
+                            # find the translated name of the component group
+                            next(cg for cg in COMPONENT_GROUP_CHOICES
+                                 if cg[0] == oi.component_group)[1],
                             oi.total_quantity or 0,
                             oi.order_item_type,
                             oi.remark or '',
@@ -1013,6 +1016,7 @@ DeliveryClient = collections.namedtuple(  # Delivery details for client order.
 DeliveryItem = collections.namedtuple(    # Item contained in a delivery.
     'DeliveryItem',
     ['component_group',    # String if item is a meal component, else None
+     'component_group_trans',  # String or None
      'total_quantity',     # Quantity of item to deliver
      'order_item_type',    # Type of item to deliver (ex. dish, bill, grocery)
      'remark',
