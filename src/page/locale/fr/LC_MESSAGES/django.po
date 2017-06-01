@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-04 14:50-0400\n"
+"POT-Creation-Date: 2017-05-31 16:10-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
@@ -60,15 +60,32 @@ msgid "%(count)s orders delivered this year."
 msgstr ""
 
 #: page/templates/pages/home.html
-msgid "Routes"
+msgid "An overview of the number of main dishes delivered on each route. All active, paused and pending clients are taken into account. Format: \"ongoing scheduled dishes (+ episodic and ongoing unscheduled default dishes)\""
 msgstr ""
 
 #: page/templates/pages/home.html
-#, python-format
-msgid "%(count)s route."
-msgid_plural "%(count)s routes."
-msgstr[0] ""
-msgstr[1] ""
+msgid "Route Size Monitoring"
+msgstr ""
+
+#: page/templates/pages/home.html
+msgid "Mon"
+msgstr ""
+
+#: page/templates/pages/home.html
+msgid "Tue"
+msgstr ""
+
+#: page/templates/pages/home.html
+msgid "Wed"
+msgstr ""
+
+#: page/templates/pages/home.html
+msgid "Fri"
+msgstr ""
+
+#: page/templates/pages/home.html
+msgid "Sat"
+msgstr ""
 
 #: page/templates/registration/login.html
 msgid "Login"

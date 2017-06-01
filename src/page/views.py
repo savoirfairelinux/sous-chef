@@ -1,13 +1,15 @@
 # coding: utf-8
 
+import collections
+
 from django.contrib.auth.views import login
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
-from django.db.models import Count, Case, When, IntegerField
+from django.db.models import Prefetch
 from django.views.generic import TemplateView
-from member.models import Client, Route
+from member.models import Client, Route, Client_option, DAYS_OF_WEEK
 from order.models import Order
 from datetime import datetime
 
@@ -29,28 +31,56 @@ class HomeView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
         billable_orders_year = Order.objects.filter(
             status='D',
             delivery_date__year=datetime.today().year).count()
-        routes = Route.objects.annotate(
-            num_clients=Count(
-                Case(
-                    # Count only active and paused clients
-                    When(client__status=Client.ACTIVE, then=1),
-                    When(client__status=Client.PAUSED, then=1),
-                    output_field=IntegerField()
-                )
-            )
-        )
         context['active_clients'] = active_clients
         context['pending_clients'] = pending_clients
         context['birthday'] = clients
         context['billable_orders_month'] = billable_orders
         context['billable_orders_year'] = billable_orders_year
-        context['routes'] = sorted(
-            map(lambda r: (r.name, r.num_clients), routes),
-            key=lambda t: t[1],
-            reverse=True
-        )
-
+        context['routes'] = self.calculate_route_table()
         return context
+
+    def calculate_route_table(self):
+        routes = Route.objects.prefetch_related(Prefetch(
+            'client_set',
+            to_attr='selected_clients',
+            queryset=Client.objects.filter(
+                status__in=(Client.ACTIVE, Client.PAUSED, Client.PENDING)
+            ).prefetch_related(Prefetch(
+                'client_option_set',
+                queryset=Client_option.objects.select_related(
+                    'option', 'client'
+                ).filter(
+                    option__name='meals_schedule'
+                ).only(
+                    'value', 'option__name', 'client', 'client__route'
+                )
+            )).only(
+                'route',
+                'meal_default_week',
+                'delivery_type'
+            )
+        )).order_by('name').only('name')
+
+        route_table = []
+        for route in routes:
+            defaults = collections.defaultdict(int)
+            schedules = collections.defaultdict(int)
+            for client in route.selected_clients:
+                meals_schedule = dict(client.meals_schedule)
+                meals_default = dict(client.meals_default)
+
+                # For each day, if there's a schedule, count schedule.
+                # Otherwise, count default.
+                for day, _ in DAYS_OF_WEEK:
+                    if day in meals_schedule:
+                        schedules[day] += meals_schedule[day].get(
+                            'main_dish') or 0
+                    else:
+                        defaults[day] += meals_default[day].get(
+                            'main_dish') or 0
+
+            route_table.append((route.name, defaults, schedules))
+        return route_table
 
 
 def custom_login(request):
