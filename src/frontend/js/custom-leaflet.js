@@ -168,9 +168,16 @@ function sous_chef_leaflet_map_init (map, options, settings) {
 
                 }
                 if (wps.length > 1) {
-                    // Tweak icon content
+                    // Tweak icon content and text size when there are multiple clients
+                    var MAGNIFY_FACTOR = 1.5
                     if ((wps[0].settings.icon || {}).options.glyph) {
                         wps[0].settings.icon.options.glyph += '*';
+                        var text_size = wps[0].settings.icon.options.glyphSize;  // e.g.: 11px
+                        var number = parseInt(text_size);  // 11
+                        var unit = text_size.slice(number.toString().length); // px
+                        var new_number = Math.round(number * MAGNIFY_FACTOR);
+                        var new_text_size = new_number.toString() + unit;
+                        wps[0].settings.icon.options.glyphSize = new_text_size;
                     }
                 }
             }
