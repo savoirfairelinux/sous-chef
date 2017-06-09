@@ -43,17 +43,15 @@
     <div class="ui vertical steps">
       {% trans 'basic_information' as i18n_basic_information %}
       {% trans 'address_information' as i18n_address_information %}
-      {% trans 'referent_information' as i18n_referent_information %}
+      {% trans 'relationships' as i18n_relationships %}
       {% trans 'payment_information' as i18n_payment_information %}
       {% trans 'dietary_restriction' as i18n_dietary_restriction %}
-      {% trans 'emergency_contact' as i18n_emergency_contact %}
 
       {% include 'client/create/steps.html' with step=1 url=i18n_basic_information icon='male' name=_('Personal') description=_('First name, last name, ...') %}
       {% include 'client/create/steps.html' with step=2 url=i18n_address_information icon='home' name=_('Address') description=_('Street number, city, ...') %}
-      {% include 'client/create/steps.html' with step=3 url=i18n_referent_information icon='treatment' name=_('Referent') description=_('Referent contact information') %}
+      {% include 'client/create/steps.html' with step=3 url=i18n_relationships icon='treatment' name=_('Relationships') description=_('Referents, emergency contacts, ...') %}
       {% include 'client/create/steps.html' with step=4 url=i18n_payment_information icon='payment' name=_('Payment') description=_('Payment method, card, ...') %}
       {% include 'client/create/steps.html' with step=5 url=i18n_dietary_restriction icon='food' name=_('Preferences') description=_('Deliveries, restrictions, ...') %}
-      {% include 'client/create/steps.html' with step=6 url=i18n_emergency_contact icon='first aid' name=_('Emergency') description=_('Emergency contact information') %}
     </div>
  </div>
 

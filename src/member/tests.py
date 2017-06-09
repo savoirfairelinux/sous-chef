@@ -11,10 +11,10 @@ from django.utils.six import StringIO
 from django.test import TestCase, Client
 
 from member.models import (
-    Member, Client, Address, Referencing,
+    Member, Client, Address,
     Contact, Option, Client_option, Restriction, Route,
     Client_avoid_ingredient, Client_avoid_component,
-    ClientScheduledStatus,
+    ClientScheduledStatus, Relationship,
     CELL, HOME, EMAIL, DAYS_OF_WEEK
 )
 from meal.models import (
@@ -23,7 +23,7 @@ from meal.models import (
 from order.models import Order
 from member.factories import(
     RouteFactory, ClientFactory, ClientScheduledStatusFactory,
-    MemberFactory, EmergencyContactFactory, DeliveryHistoryFactory
+    MemberFactory, DeliveryHistoryFactory, RelationshipFactory
 )
 from meal.factories import IngredientFactory, ComponentFactory
 from django.core.management import call_command
@@ -35,8 +35,8 @@ from order.factories import OrderFactory
 from order.models import ORDER_STATUS_ORDERED
 from member.forms import(
     ClientBasicInformation, ClientAddressInformation,
-    ClientReferentInformation, ClientPaymentInformation,
-    ClientRestrictionsInformation, ClientEmergencyContactInformation
+    ClientPaymentInformation,
+    ClientRestrictionsInformation, ClientRelationshipInformation
 )
 from sous_chef.tests import TestMigrations
 from sous_chef.tests import TestMixin as SousChefTestMixin
@@ -68,18 +68,6 @@ def load_initial_data(client):
         'latitude': client.member.address.latitude,
         'longitude': client.member.address.longitude,
         'distance': client.member.address.distance,
-        'work_information':
-            client.client_referent.get().referent.work_information
-            if client.client_referent.count()
-            else '',
-        'referral_reason':
-            client.client_referent.get().referral_reason
-            if client.client_referent.count()
-            else '',
-        'date':
-            client.client_referent.get().date
-            if client.client_referent.count()
-            else '',
         'member': client.id,
         'same_as_client': True,
         'facturation': '',
@@ -195,34 +183,6 @@ class MemberTestCase(TestCase):
         """Test that the email property is valid"""
         member = Member.objects.get(firstname="Katrina")
         self.assertEqual(member.email, "test@test.com")
-
-
-class ReferencingTestCase(TestCase):
-
-    @classmethod
-    def setUpTestData(cls):
-        professional_member = Member.objects.create(firstname='Dr. John',
-                                                    lastname='Taylor')
-        billing_address = Address.objects.create(
-            number=123, street='De Bullion',
-            city='Montreal', postal_code='H3C4G5')
-        beneficiary_member = Member.objects.create(firstname='Angela',
-                                                   lastname='Desousa',
-                                                   address=billing_address)
-        client = Client.objects.create(
-            member=beneficiary_member, billing_member=beneficiary_member)
-        Referencing.objects.create(referent=professional_member, client=client,
-                                   date=date(2015, 3, 15))
-
-    def test_str_includes_all_names(self):
-        """A reference listing shows by which member for which client"""
-        professional_member = Member.objects.get(firstname='Dr. John')
-        beneficiary_member = Member.objects.get(firstname='Angela')
-        reference = Referencing.objects.get(referent=professional_member)
-        self.assertTrue(professional_member.firstname in str(reference))
-        self.assertTrue(professional_member.lastname in str(reference))
-        self.assertTrue(beneficiary_member.firstname in str(reference))
-        self.assertTrue(beneficiary_member.lastname in str(reference))
 
 
 class ContactTestCase(TestCase):
@@ -710,11 +670,11 @@ class FormTestCase(TestCase):
         )
         self.assertEqual(result.status_code, 200)
 
-    def test_acces_to_form_by_url_referent_information(self):
+    def test_acces_to_form_by_url_relationship_information(self):
         result = self.client.get(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': ugettext('referent_information')}
+                kwargs={'step': ugettext('relationships')}
             ),
             follow=False
         )
@@ -750,7 +710,7 @@ class FormTestCase(TestCase):
         )
         self.assertEqual(result.status_code, 200)
 
-    def test_form_save_data_all_different_members(self):
+    def test_form_save_data(self):
         basic_information_data = {
             "client_wizard-current_step": "basic_information",
             "basic_information-firstname": "User",
@@ -775,18 +735,6 @@ class FormTestCase(TestCase):
             "address_information-latitude": 45.5343077,
             "address_information-longitude": -73.620735,
             "address_information-distance": 4.062611162244175,
-            "wizard_goto_step": "",
-        }
-
-        referent_information_data = {
-            "client_wizard-current_step": "referent_information",
-            "referent_information-firstname": "Referent",
-            "referent_information-lastname": "Testing",
-            "referent_information-email": "referent@testing.com",
-            "referent_information-work_phone": "458-458-4584 #458",
-            "referent_information-work_information": "CLSC",
-            "referent_information-date": "2012-12-12",
-            "referent_information-referral_reason": "Testing referral reason",
             "wizard_goto_step": "",
         }
 
@@ -829,25 +777,29 @@ class FormTestCase(TestCase):
                 )
                 restriction_information_data[name] = 1
 
-        emergency_contact_data = {
-            "client_wizard-current_step": "emergency_contacts",
-            "emergency_contacts-TOTAL_FORMS": "1",
-            "emergency_contacts-INITIAL_FORMS": "1",
-            "emergency_contacts-MIN_NUM_FORMS": "0",
-            "emergency_contacts-MAX_NUM_FORMS": "1000",
-            "emergency_contacts-0-firstname": "Emergency",
-            "emergency_contacts-0-lastname": "User",
-            "emergency_contacts-0-work_phone": "555-444-5555",
-            "emergency_contacts-0-relationship": "friend",
+        relationships_data = {
+            "client_wizard-current_step": "relationships",
+            "relationships-TOTAL_FORMS": "1",
+            "relationships-INITIAL_FORMS": "1",
+            "relationships-MIN_NUM_FORMS": "0",
+            "relationships-MAX_NUM_FORMS": "1000",
+            "relationships-0-firstname": "Relationship",
+            "relationships-0-lastname": "Testing",
+            "relationships-0-work_phone": "555-444-5555",
+            "relationships-0-nature": "friend",
+            "relationships-0-type": [
+                Relationship.EMERGENCY, Relationship.REFERENT],
+            "relationships-0-work_information": "CLSC",
+            "relationships-0-referral_date": "2012-12-12",
+            "relationships-0-referral_reason": "Testing referral reason",
         }
 
         stepsdata = [
             ('basic_information', basic_information_data),
             ('address_information', address_information_data),
-            ('referent_information', referent_information_data),
+            ('relationships', relationships_data),
             ('payment_information', payment_information_data),
             ('dietary_restriction', restriction_information_data),
-            ('emergency_contacts', emergency_contact_data)
         ]
 
         for step, data in stepsdata:
@@ -859,16 +811,16 @@ class FormTestCase(TestCase):
             )
 
         member = Member.objects.get(firstname="User")
-        self._test_assert_member_info_all_different_members(member)
+        self._test_assert_member_info(member)
 
         client = Client.objects.get(member=member)
-        self._test_assert_client_info_all_different_members(client)
+        self._test_assert_client_info(client)
 
         # Test the client view
-        self._test_client_detail_view_all_different_members(client)
+        self._test_client_detail_view(client)
         self._test_client_view_preferences(client)
 
-    def _test_assert_member_info_all_different_members(self, member):
+    def _test_assert_member_info(self, member):
         # test firstname and lastname
         self.assertEqual(member.firstname, "User")
         self.assertEqual(member.lastname, "Testing")
@@ -887,7 +839,7 @@ class FormTestCase(TestCase):
         self.assertEqual(member.address.apartment, "222")
         self.assertEqual(member.address.city, "montreal")
 
-    def _test_assert_client_info_all_different_members(self, client):
+    def _test_assert_client_info(self, client):
         # test_client_alert:
         self.assertEqual(client.alert, "Testing alert message")
 
@@ -903,43 +855,33 @@ class FormTestCase(TestCase):
         # test client delivery type
         self.assertEqual(client.delivery_type, 'O')
 
-        # test_referent_name:
+        # test_relationship_name:
         self.assertEqual(
-            client.client_referent.first().referent.firstname,
-            "Referent"
+            client.relationship_set.first().member.firstname,
+            "Relationship"
         )
         self.assertEqual(
-            client.client_referent.first().referent.lastname,
+            client.relationship_set.first().member.lastname,
             "Testing"
         )
 
-        # test referent contact infos (email and work phone)
+        # test relationship contact infos (email and work phone)
         self.assertEqual(
-            client.client_referent.first().referent.email,
-            "referent@testing.com"
-        )
-        self.assertEqual(
-            client.client_referent.first().referent.work_phone,
-            "458-458-4584 #458"
+            client.relationship_set.first().member.work_phone,
+            "555-444-5555"
         )
 
-        # test_referent_work_information:
+        # test_relationship_referent_work_information:
         self.assertEqual(
-            client.client_referent.first().referent.work_information,
+            client.relationship_set.first().member.work_information,
             "CLSC"
         )
 
-        # test_referral_date(self):
+        # test_referral_extras:
         self.assertEqual(
-            client.client_referent.first().date,
-            date(2012, 12, 12)
-        )
-
-        # test_referral_reason:
-        self.assertEqual(
-            client.client_referent.first().referral_reason,
-            "Testing referral reason"
-        )
+            client.relationship_set.first().extra_fields, {
+                'referral_date': '2012-12-12',
+                'referral_reason': "Testing referral reason"})
 
         # test_billing_name:
         self.assertEqual(client.billing_member.firstname, "Billing")
@@ -955,35 +897,6 @@ class FormTestCase(TestCase):
 
         #  test_billing_rate_type:
         self.assertEqual(client.rate_type, 'default')
-
-        emergency_contacts = client.emergency_contacts.all()
-        #  test_emergency_contact_name:
-        self.assertIn(
-            "Emergency",
-            [c.firstname for c in emergency_contacts]
-        )
-        self.assertIn(
-            "User",
-            [c.lastname for c in emergency_contacts]
-        )
-
-        #  test_emergency_contact_type:
-        self.assertIn(
-            "Work phone",
-            [c.member_contact.first().type for c in emergency_contacts],
-        )
-
-        #  test_emergency_contact_value:
-        self.assertIn(
-            "555-444-5555",
-            [c.member_contact.first().value for c in emergency_contacts],
-        )
-
-        # test emergency_contact.relationship:
-        self.assertIn(
-            "friend",
-            [ec.relationship for ec in client.emergencycontact_set.all()],
-        )
 
         # Test meals schedule
         self.assertEqual(client.simple_meals_schedule, ['monday', 'wednesday'])
@@ -1025,7 +938,7 @@ class FormTestCase(TestCase):
         self.assertContains(resp, self.ingredient.name)
         self.assertContains(resp, self.component.name)
 
-    def _test_client_detail_view_all_different_members(self, client):
+    def _test_client_detail_view(self, client):
         response = self.client.get(
             reverse_lazy('member:client_information', kwargs={'pk': client.id})
         )
@@ -1039,272 +952,18 @@ class FormTestCase(TestCase):
         self.assertTrue(b"Testing alert message" in response.content)
         self.assertTrue(b"555-444-5555" in response.content)
 
-    def test_form_save_data_same_members(self):
-        basic_information_data = {
-            "client_wizard-current_step": "basic_information",
-            "basic_information-firstname": "Same",
-            "basic_information-lastname": "User",
-            "basic_information-language": "fr",
-            "basic_information-gender": "M",
-            "basic_information-birthdate": "1986-06-06",
-            "basic_information-home_phone": "514-868-8686",
-            "basic_information-cell_phone": "438-000-0000",
-            "basic_information-email": "test@example.com",
-            "basic_information-alert": "Testing alert message",
-            "wizard_goto_step": ""
-        }
-
-        address_information_data = {
-            "client_wizard-current_step": "address_information",
-            "address_information-street": "8686 rue clark",
-            "address_information-apartment": "86",
-            "address_information-city": "Montreal",
-            "address_information-postal_code": "H8C6C8",
-            "address_information-route": self.route.id,
-            "address_information-latitude": 45.5343077,
-            "address_information-longitude": -73.620735,
-            "address_information-distance": 4.062611162244175,
-            "wizard_goto_step": "",
-        }
-
-        referent_information_data = {
-            "client_wizard-current_step": "referent_information",
-            "referent_information-firstname": "Same",
-            "referent_information-lastname": "User",
-            "referent_information-work_information": "CLSC",
-            "referent_information-date": "2012-06-06",
-            "referent_information-referral_reason": "Testing referral reason",
-            "wizard_goto_step": "",
-        }
-
-        payment_information_data = {
-            "client_wizard-current_step": "payment_information",
-            "payment_information-same_as_client": True,
-            "payment_information-billing_payment_type": "3rd",
-            "payment_information-facturation": "default",
-            "address_information-latitude": 0.0,
-            "address_information-longitude": 0.0,
-            "address_information-distance": 0.0,
-            "wizard_goto_step": "",
-        }
-
-        restriction_information_data = {
-            "client_wizard-current_step": "dietary_restriction",
-            "dietary_restriction-status": "on",
-            "dietary_restriction-delivery_type": "O",
-            "dietary_restriction-meals_schedule": "monday",
-            "dietary_restriction-meal_default": "1",
-            "wizard_goto_step": ""
-        }
-        for day in [restriction_information_data[
-                "dietary_restriction-meals_schedule"
-        ]]:
-            restriction_information_data[
-                'dietary_restriction-size_{}'.format(day)
-            ] = 'R'
-            for component, _ in COMPONENT_GROUP_CHOICES:
-                name = "dietary_restriction-{}_{}_quantity".format(
-                    component, day
-                )
-                restriction_information_data[name] = 1
-
-        emergency_contact_data = {
-            "client_wizard-current_step": "emergency_contacts",
-            "emergency_contacts-TOTAL_FORMS": "1",
-            "emergency_contacts-INITIAL_FORMS": "1",
-            "emergency_contacts-MIN_NUM_FORMS": "0",
-            "emergency_contacts-MAX_NUM_FORMS": "1000",
-            "emergency_contacts-0-firstname": "Same",
-            "emergency_contacts-0-lastname": "User",
-            "emergency_contacts-0-cell_phone": "514-868-8686",
-            "emergency_contacts-0-relationship": "friend"
-        }
-
-        stepsdata = [
-            ('basic_information', basic_information_data),
-            ('address_information', address_information_data),
-            ('referent_information', referent_information_data),
-            ('payment_information', payment_information_data),
-            ('dietary_restriction', restriction_information_data),
-            ('emergency_contacts', emergency_contact_data)
-        ]
-
-        for step, data in stepsdata:
-            self.client.post(
-                reverse_lazy('member:member_step', kwargs={'step': step}),
-                data,
-                follow=True
-            )
-
-        member = Member.objects.get(firstname="Same")
-        self._test_assert_member_info_same_members(member)
-
-        client = Client.objects.get(member=member)
-        self._test_assert_client_info_same_members(client)
-
-        self._test_client_detail_view_same_members(client)
-        self._test_client_list_view_same_members()
-
-    def _test_assert_member_info_same_members(self, member):
-        # test firstname and lastname
-        self.assertEqual(member.firstname, "Same")
-        self.assertEqual(member.lastname, "User")
-
-        # test_home_phone_member:
-        self.assertEqual(member.home_phone, '514-868-8686')
-        self.assertTrue(member.home_phone.startswith('514'))
-        self.assertEqual(member.email, 'test@example.com')
-        self.assertEqual(member.cell_phone, '438-000-0000')
-
-        # test_client_contact_type:
-        self.assertEqual(member.member_contact.first().type, "Home phone")
-
-        # test_client_address:
-        self.assertEqual(member.address.street, "8686 rue clark")
-        self.assertEqual(member.address.postal_code, "H8C 6C8")
-        self.assertEqual(member.address.apartment, "86")
-        self.assertEqual(member.address.city, "Montreal")
-
-    def _test_assert_client_info_same_members(self, client):
-        # test_client_alert:
-        self.assertEqual(client.alert, "Testing alert message")
-
-        # test_client_languages:
-        self.assertEqual(client.language, "fr")
-
-        # test_client_birthdate:
-        self.assertEqual(client.birthdate, date(1986, 6, 6))
-
-        # test_client_gender:
-        self.assertEqual(client.gender, "M")
-
-        # test client delivery type
-        self.assertEqual(client.delivery_type, 'O')
-
-        # test referent member is emergency member
-        self.assertIn(
-            client.client_referent.first().referent.id,
-            [c.pk for c in client.emergency_contacts.all()]
-        )
-
-        # test_referent_name:
-        self.assertEqual(
-            client.client_referent.first().referent.firstname,
-            "Same"
-        )
-        self.assertEqual(
-            client.client_referent.first().referent.lastname,
-            "User"
-        )
-
-        # test_referent_work_information:
-        self.assertEqual(
-            client.client_referent.first().referent.work_information,
-            "CLSC"
-        )
-
-        # test_referral_date(self):
-        self.assertEqual(
-            client.client_referent.first().date,
-            date(2012, 6, 6)
-        )
-
-        # test_referral_reason:
-        self.assertEqual(
-            client.client_referent.first().referral_reason,
-            "Testing referral reason"
-        )
-
-        # test client member is billing member
-        self.assertEqual(client.member.id, client.billing_member.id)
-
-        # test_billing_name:
-        self.assertEqual(client.billing_member.firstname, "Same")
-        self.assertEqual(client.billing_member.lastname, "User")
-
-        #  test_billing_type:
-        self.assertEqual(client.billing_payment_type, "3rd")
-
-        #  test_billing_address:
-        self.assertEqual(client.billing_member.address.city, "Montreal")
-
-        self.assertEqual(
-            client.billing_member.address.street,
-            "8686 rue clark"
-        )
-        self.assertEqual(client.billing_member.address.postal_code, "H8C 6C8")
-
-        #  test_billing_rate_type:
-        self.assertEqual(client.rate_type, 'default')
-
-        emergency_contacts = client.emergency_contacts.all()
-        #  test_emergency_contact_name:
-        self.assertIn("Same", [c.firstname for c in emergency_contacts])
-        self.assertIn("User", [c.lastname for c in emergency_contacts])
-
-        #  test_emergency_contact_type:
-        self.assertIn(
-            "Home phone",
-            [c.member_contact.first().type for c in emergency_contacts],
-        )
-
-        #  test_emergency_contact_value:
-        self.assertIn(
-            "514-868-8686",
-            [c.member_contact.first().value for c in emergency_contacts],
-        )
-
-        # test emergency_contact.relationship:
-        self.assertIn(
-            "friend",
-            [ec.relationship for ec in client.emergencycontact_set.all()],
-        )
-
-    def _test_client_detail_view_same_members(self, client):
-        response = self.client.get(
-            reverse_lazy('member:client_information', kwargs={'pk': client.id})
-        )
-        self.assertTrue(b"User" in response.content)
-        self.assertTrue(b"Same" in response.content)
-        self.assertTrue(b"Home phone" in response.content)
-        self.assertTrue(b"8686 rue clark" in response.content)
-        self.assertTrue(b"H8C 6C8" in response.content)
-        self.assertTrue(b"Montreal" in response.content)
-        self.assertTrue(b"Testing alert message" in response.content)
-        self.assertTrue(b"514-868-8686" in response.content)
-
-    def _test_client_list_view_same_members(self):
-        response = self.client.get(reverse_lazy('member:list'))
-        self.assertTrue(b"User" in response.content)
-        self.assertTrue(b"Same" in response.content)
-        self.assertIn(
-            ("30 " + ugettext('years old')).encode(response.charset),
-            response.content
-        )
-        self.assertIn(
-            ugettext('Active').encode(response.charset),
-            response.content
-        )
-        self.assertIn(
-            ugettext('Ongoing').encode(response.charset),
-            response.content
-        )
-        self.assertTrue(b"514-868-8686" in response.content)
-
     def test_form_validate_data(self):
         """Test all the step of the form with and without wrong data"""
         self._test_basic_information_with_errors()
         self._test_basic_information_without_errors()
         self._test_address_information_with_errors()
         self._test_address_information_without_errors()
-        self._test_referent_information_with_errors()
-        self._test_referent_information_without_errors()
+        self._test_step_relationships_with_errors()
+        self._test_step_relationships_without_errors()
         self._test_payment_information_with_errors()
         self._test_payment_information_without_errors()
         self._test_step_dietary_restriction_with_errors()
         self._test_step_dietary_restriction_without_errors()
-        self._test_step_emergency_contacts_with_errors()
-        self._test_step_emergency_contacts_without_errors()
 
     def _test_basic_information_with_errors(self):
         # Data for the basic_information step with errors.
@@ -1447,115 +1106,112 @@ class FormTestCase(TestCase):
         )
 
         # Check redirect (successful POST)
-        self.assertRedirects(response, reverse_lazy(
+        self.assertRedirects(response, reverse(
             'member:member_step',
-            kwargs={'step': ugettext("referent_information")}
+            kwargs={'step': ugettext("relationships")}
         ))
 
         # The response is the next step of the form with no errors messages.
         form = response.context['form']
         self.assertFalse(form.errors)
-        self.assertNotIn('street', form.fields)
-        self.assertNotIn('apartment', form.fields)
-        # New form field in the next step
-        self.assertIn('work_information', form.fields)
+        self.assertEqual(form.prefix, 'relationships')
 
-    def _test_referent_information_with_errors(self):
+    def _test_step_relationships_with_errors(self):
         # Data for the address_information step with errors.
-        referent_information_data_with_error = {
-            "client_wizard-current_step": "referent_information",
-            "referent_information-member": "",
-            "referent_information-firstname": "",
-            "referent_information-lastname": "",
-            "referent_information-work_information": "",
-            "referent_information-date": "",
-            "referent_information-referral_reason": "",
-            "wizard_goto_step": "",
+        emergency_contact_data_with_error = {
+            "client_wizard-current_step": "relationships",
+            "relationships-TOTAL_FORMS": "1",
+            "relationships-INITIAL_FORMS": "1",
+            "relationships-MIN_NUM_FORMS": "0",
+            "relationships-MAX_NUM_FORMS": "1000",
+            "relationships-0-firstname": "",
+            "relationships-0-lastname": "",
+            "relationships-0-work_phone": "",
+            "relationships-0-nature": "",
+            "relationships-0-type": [
+                Relationship.EMERGENCY, Relationship.REFERENT],
+            "relationships-0-work_information": "",
+            "relationships-0-referral_date": "",
+            "relationships-0-referral_reason": "",
         }
 
         # Send the data to the form.
         response_error = self.client.post(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': ugettext("referent_information")}
+                kwargs={'step': ugettext("relationships")}
             ),
-            referent_information_data_with_error,
+            emergency_contact_data_with_error,
             follow=True
         )
 
         # Validate that the response is the same form with the errors messages.
         self.assertTrue(response_error.context['form'].errors)
-        self.assertFormError(response_error, 'form',
-                             'member',
-                             ugettext('This field is required '
-                                      'unless you add a new member.'))
-        self.assertFormError(response_error, 'form',
-                             'firstname',
-                             ugettext('This field is required unless '
-                                      'you chose an existing member.'))
-        self.assertFormError(response_error, 'form',
-                             'lastname',
-                             ugettext('This field is required unless '
-                                      'you chose an existing member.'))
-        self.assertFormError(response_error, 'form',
-                             'work_information',
-                             ugettext('This field is required unless '
-                                      'you chose an existing member.'))
-        self.assertFormError(response_error, 'form',
-                             'date',
-                             ugettext('This field is required.'))
-        self.assertFormError(response_error, 'form',
-                             'referral_reason',
-                             ugettext('This field is required.'))
+        self.assertFormsetError(response_error, 'form', 0,
+                                'cell_phone',
+                                ugettext('At least one contact '
+                                         'is required.'))
+        self.assertFormsetError(response_error, 'form', 0,
+                                'work_phone',
+                                ugettext('At least one contact '
+                                         'is required.'))
+        self.assertFormsetError(response_error, 'form', 0,
+                                'email',
+                                ugettext('At least one contact '
+                                         'is required.'))
+        self.assertFormsetError(response_error, 'form', 0,
+                                'lastname',
+                                ugettext('This field is required unless '
+                                         'you chose an existing member.'))
+        self.assertFormsetError(response_error, 'form', 0,
+                                'firstname',
+                                ugettext('This field is required unless '
+                                         'you chose an existing member.'))
+        self.assertFormsetError(response_error, 'form', 0,
+                                'firstname',
+                                ugettext('This field is required unless '
+                                         'you chose an existing member.'))
+        self.assertFormsetError(response_error, 'form', 0,
+                                'work_information',
+                                ugettext('This field is required '
+                                         'for a referent relationship.'))
+        self.assertFormsetError(response_error, 'form', 0,
+                                'referral_date',
+                                ugettext('This field is required '
+                                         'for a referent relationship.'))
+        self.assertFormsetError(response_error, 'form', 0,
+                                'referral_reason',
+                                ugettext('This field is required '
+                                         'for a referent relationship.'))
 
-        referent_information_data_with_error = {
-            "client_wizard-current_step": "referent_information",
-            "referent_information-member": "[0] NotValid Member",
-            "referent_information-firstname": "",
-            "referent_information-lastname": "",
-            "referent_information-work_information": "CLSC",
-            "referent_information-date": "2012-12-12",
-            "referent_information-referral_reason": "Testing referral reason",
-            "wizard_goto_step": "",
-        }
-
-        # Send the data to the form.
-        response_error = self.client.post(
-            reverse_lazy(
-                'member:member_step',
-                kwargs={'step': ugettext("referent_information")}
-            ),
-            referent_information_data_with_error,
-            follow=True
-        )
-
-        # Validate that the response is the same form with the errors messages.
-        self.assertTrue(response_error.context['form'].errors)
-        self.assertFormError(response_error, 'form',
-                             'member',
-                             ugettext('Not a valid member, '
-                                      'please chose an existing member.'))
-
-    def _test_referent_information_without_errors(self):
+    def _test_step_relationships_without_errors(self):
+        # Data for the address_information step without errors.
         pk = Member.objects.get(firstname="First").id
-        referent_information_data = {
-            "client_wizard-current_step": "referent_information",
-            "referent_information-member": "[{}] First Member".format(pk),
-            "referent_information-firstname": "",
-            "referent_information-lastname": "",
-            "referent_information-work_information": "CLSC",
-            "referent_information-date": "2012-12-12",
-            "referent_information-referral_reason": "Testing referral reason",
-            "wizard_goto_step": "",
+        relationships_data = {
+            "client_wizard-current_step": "relationships",
+            "relationships-TOTAL_FORMS": "1",
+            "relationships-INITIAL_FORMS": "1",
+            "relationships-MIN_NUM_FORMS": "0",
+            "relationships-MAX_NUM_FORMS": "1000",
+            "relationships-0-member": "[{}] First Member".format(pk),
+            "relationships-0-firstname": "",
+            "relationships-0-lastname": "",
+            "relationships-0-work_phone": "",
+            "relationships-0-work_information": "",
+            "relationships-0-nature": "friend",
+            "relationships-0-type": [
+                Relationship.EMERGENCY, Relationship.REFERENT],
+            "relationships-0-referral_date": "2012-12-12",
+            "relationships-0-referral_reason": "Test reason",
         }
 
         # Send the data to the form.
         response = self.client.post(
             reverse_lazy(
                 'member:member_step',
-                kwargs={'step': ugettext("referent_information")}
+                kwargs={'step': ugettext("relationships")}
             ),
-            referent_information_data,
+            relationships_data,
             follow=True
         )
 
@@ -1571,6 +1227,7 @@ class FormTestCase(TestCase):
         self.assertNotIn('work_information', form.fields)
         # New form field in the next step
         self.assertIn('billing_payment_type', form.fields)
+        self.assertIn('facturation', form.fields)
 
     def _test_payment_information_with_errors(self):
         # Data for the address_information step with errors.
@@ -1678,7 +1335,7 @@ class FormTestCase(TestCase):
         )
 
         # Check redirect (successful POST)
-        self.assertRedirects(response, reverse_lazy(
+        self.assertRedirects(response, reverse(
             'member:member_step',
             kwargs={'step': ugettext("dietary_restriction")}
         ))
@@ -1752,98 +1409,6 @@ class FormTestCase(TestCase):
                 kwargs={'step': ugettext("dietary_restriction")}
             ),
             restriction_information_data,
-            follow=True
-        )
-
-        # Check redirect (successful POST)
-        self.assertRedirects(response, reverse_lazy(
-            'member:member_step',
-            kwargs={'step': ugettext("emergency_contacts")}
-        ))
-
-        # The response is the next step of the form with no errors messages.
-        formset = response.context['form']
-        self.assertIsInstance(formset, BaseFormSet)
-        self.assertFalse(formset.errors)
-        for form in formset.forms:
-            self.assertNotIn('status', form.fields)
-            self.assertNotIn('delivery_type', form.fields)
-            self.assertNotIn('meals_schedule', form.fields)
-            # New form field in the next step
-            self.assertIn('relationship', form.fields)
-
-    def _test_step_emergency_contacts_with_errors(self):
-        # Data for the address_information step with errors.
-        emergency_contact_data_with_error = {
-            "client_wizard-current_step": "emergency_contacts",
-            "emergency_contacts-TOTAL_FORMS": "1",
-            "emergency_contacts-INITIAL_FORMS": "1",
-            "emergency_contacts-MIN_NUM_FORMS": "0",
-            "emergency_contacts-MAX_NUM_FORMS": "1000",
-            "emergency_contacts-0-firstname": "",
-            "emergency_contacts-0-lastname": "",
-            "emergency_contacts-0-home_phone": "",
-            "emergency_contacts-0-work_phone": "",
-            "emergency_contacts-0-cell_phone": "",
-            "emergency_contacts-0-email": "",
-        }
-
-        # Send the data to the form.
-        response_error = self.client.post(
-            reverse_lazy(
-                'member:member_step',
-                kwargs={'step': ugettext("emergency_contacts")}
-            ),
-            emergency_contact_data_with_error,
-            follow=True
-        )
-
-        # Validate that the response is the same form with the errors messages.
-        self.assertTrue(response_error.context['form'].errors)
-        self.assertFormsetError(response_error, 'form', 0,
-                                'cell_phone',
-                                ugettext('At least one emergency contact '
-                                         'is required.'))
-        self.assertFormsetError(response_error, 'form', 0,
-                                'work_phone',
-                                ugettext('At least one emergency contact '
-                                         'is required.'))
-        self.assertFormsetError(response_error, 'form', 0,
-                                'email',
-                                ugettext('At least one emergency contact '
-                                         'is required.'))
-        self.assertFormsetError(response_error, 'form', 0,
-                                'lastname',
-                                ugettext('This field is required unless '
-                                         'you chose an existing member.'))
-        self.assertFormsetError(response_error, 'form', 0,
-                                'firstname',
-                                ugettext('This field is required unless '
-                                         'you chose an existing member.'))
-
-    def _test_step_emergency_contacts_without_errors(self):
-        # Data for the address_information step without errors.
-        pk = Member.objects.get(firstname="First").id
-        emergency_contact_data = {
-            "client_wizard-current_step": "emergency_contacts",
-            "emergency_contacts-TOTAL_FORMS": "1",
-            "emergency_contacts-INITIAL_FORMS": "1",
-            "emergency_contacts-MIN_NUM_FORMS": "0",
-            "emergency_contacts-MAX_NUM_FORMS": "1000",
-            "emergency_contacts-0-member": "[{}] First Member".format(pk),
-            "emergency_contact-0-firstname": "Emergency",
-            "emergency_contact-0-lastname": "User",
-            "emergency_contact-0-work_phone": "514-222-3333",
-            "emergency_contact-0-relationship": "friend"
-        }
-
-        # Send the data to the form.
-        response = self.client.post(
-            reverse_lazy(
-                'member:member_step',
-                kwargs={'step': ugettext("emergency_contact")}
-            ),
-            emergency_contact_data,
             follow=True
         )
 
@@ -2466,102 +2031,6 @@ class ClientUpdateAddressInformation(ClientUpdateTestCase):
                          Decimal(data.get('longitude')))
 
 
-class ClientUpdateReferentInformationTestCase(ClientUpdateTestCase):
-
-    def test_form_validation(self):
-        """
-        Test validation form.
-        """
-        client = ClientFactory()
-        data = load_initial_data(client)
-        data.update({
-            'firstname': None,
-            'lastname': None,
-            'street': None,
-            'city': None,
-            'apartment': None,
-            'postal_code': None,
-            'member': '[0] Not Valid',
-            'information': 'CLSC',
-            'date': '2012-12-12',
-            'referral_reason': 'Testing referral reason',
-        })
-        form = ClientReferentInformation(data=data)
-        self.assertFalse(form.is_valid())
-        data.update({
-            'firstname': None,
-            'lastname': None,
-            'street': None,
-            'city': None,
-            'apartment': None,
-            'postal_code': None,
-            'member': '[{}] {} {}'.format(
-                client.client_referent.first().referent.id,
-                client.client_referent.first().referent.firstname,
-                client.client_referent.first().referent.lastname
-            ),
-            'information': 'CLSC',
-            'date': '2012-12-12',
-            'referral_reason': 'Testing referral reason'
-        })
-        form = ClientReferentInformation(data=data)
-        self.assertTrue(form.is_valid())
-
-    def test_update_referent_information(self):
-        """
-        Test the update basic information form.
-        """
-        client = ClientFactory()
-        referent = MemberFactory()
-        # Load initial data related to the client
-        data = load_initial_data(client)
-        # Update some data
-        data.update({
-            'firstname': None,
-            'lastname': None,
-            'street': None,
-            'city': None,
-            'apartment': None,
-            'postal_code': None,
-            'member': '[{}] {} {}'.format(
-                referent.id,
-                referent.firstname,
-                referent.lastname
-            ),
-            'information': 'CLSC',
-            'date': '2012-12-12',
-            'referral_reason': 'Testing referral reason',
-        })
-
-        # Login as admin
-        self.login_as_admin()
-
-        # Send the data to the form.
-        self.client.post(
-            reverse_lazy(
-                'member:member_update_referent_information',
-                kwargs={'pk': client.id}
-            ),
-            data,
-            follow=True
-        )
-
-        # Reload client data as it should have been changed in the database
-        client = Client.objects.get(id=client.id)
-        self.assertEqual(
-            client.client_referent.first().referent.id,
-            referent.id
-        )
-        self.assertEqual(
-            client.client_referent.first().referent.firstname,
-            referent.firstname
-        )
-        self.assertEqual(
-            client.client_referent.first().referent.lastname,
-            referent.lastname
-        )
-
-
 class ClientUpdatePaymentInformationTestCase(ClientUpdateTestCase):
 
     def test_form_validation(self):
@@ -2805,23 +2274,23 @@ class ClientUpdateDietaryRestrictionTestCase(ClientUpdateTestCase):
         self.assertTrue(form.is_valid())
 
 
-class ClientUpdateEmergencyInformationTestCase(ClientUpdateTestCase):
+class ClientUpdateRelationshipsTestCase(ClientUpdateTestCase):
 
     def test_form_validation_existing_member(self):
         """
         Test validation form.
         """
-        emergency_contact = EmergencyContactFactory()
-        client = emergency_contact.client
+        relationship = RelationshipFactory()
+        client = relationship.client
         data = load_initial_data(client)
         data.update({
             'firstname': None,
             'lastname': None,
             'member': '[0] Not Valid',
         })
-        form = ClientEmergencyContactInformation(data=data)
+        form = ClientRelationshipInformation(data=data)
         self.assertFalse(form.is_valid())
-        member = emergency_contact.member
+        member = relationship.member
         data.update({
             'firstname': None,
             'lastname': None,
@@ -2830,13 +2299,13 @@ class ClientUpdateEmergencyInformationTestCase(ClientUpdateTestCase):
                 member.firstname,
                 member.lastname
             ),
-            'relationship': None,
+            'nature': 'friend',
         })
 
-        form = ClientEmergencyContactInformation(data=data)
+        form = ClientRelationshipInformation(data=data)
         self.assertTrue(form.is_valid())
 
-    def test_form_validation_new_emergency_member(self):
+    def test_form_validation_new_relationship_member(self):
         """
         Test validation form.
         """
@@ -2846,64 +2315,68 @@ class ClientUpdateEmergencyInformationTestCase(ClientUpdateTestCase):
             'firstname': None,
             'lastname': None,
             'member': None,
+            'type': [],
+            'nature': 'friend'
         })
-        form = ClientEmergencyContactInformation(data=data)
+        form = ClientRelationshipInformation(data=data)
         self.assertFalse(form.is_valid())
 
         data.update({
             'firstname': 'test',
             'lastname': 'test',
         })
-        form = ClientEmergencyContactInformation(data=data)
+        form = ClientRelationshipInformation(data=data)
         self.assertFalse(form.is_valid())
 
         data.update({
             'cell_phone': '514-122-3333'
         })
-        form = ClientEmergencyContactInformation(data=data)
+        form = ClientRelationshipInformation(data=data)
         self.assertTrue(form.is_valid())
 
         data['cell_phone'] = None
         data.update({
             'work_phone': '514-122-3333'
         })
-        form = ClientEmergencyContactInformation(data=data)
+        form = ClientRelationshipInformation(data=data)
         self.assertTrue(form.is_valid())
 
         data['work_phone'] = None
         data.update({
             'email': 'invalid email'
         })
-        form = ClientEmergencyContactInformation(data=data)
+        form = ClientRelationshipInformation(data=data)
         self.assertFalse(form.is_valid())
 
         data.update({
             'email': 'valid@email.com'
         })
-        form = ClientEmergencyContactInformation(data=data)
+        form = ClientRelationshipInformation(data=data)
         self.assertTrue(form.is_valid())
 
-    def test_update_emergency_information(self):
+    def test_update_relationship_information(self):
         """
         Test the update basic information form.
         """
         client = ClientFactory()
-        emergency = MemberFactory()  # new emergency
+        member = MemberFactory()  # Another member
         # Load initial data related to the client
         data = load_initial_data(client)
         # Update some data
         data.update({
-            "emergency_contacts-TOTAL_FORMS": "1",
-            "emergency_contacts-INITIAL_FORMS": "1",
-            "emergency_contacts-MIN_NUM_FORMS": "0",
-            "emergency_contacts-MAX_NUM_FORMS": "1000",
-            "emergency_contacts-0-firstname": None,
-            "emergency_contacts-0-lastname": None,
-            'emergency_contacts-0-member': '[{}] {} {}'.format(
-                emergency.id,
-                emergency.firstname,
-                emergency.lastname
-            )
+            "relationships-TOTAL_FORMS": "1",
+            "relationships-INITIAL_FORMS": "1",
+            "relationships-MIN_NUM_FORMS": "0",
+            "relationships-MAX_NUM_FORMS": "1000",
+            "relationships-0-firstname": None,
+            "relationships-0-lastname": None,
+            'relationships-0-member': '[{}] {} {}'.format(
+                member.id,
+                member.firstname,
+                member.lastname
+            ),
+            'relationships-0-type': [],
+            'relationships-0-nature': 'friend'
         })
 
         # Login as admin
@@ -2912,7 +2385,7 @@ class ClientUpdateEmergencyInformationTestCase(ClientUpdateTestCase):
         # Send the data to the form.
         self.client.post(
             reverse_lazy(
-                'member:member_update_emergency_contacts',
+                'member:member_update_relationships',
                 kwargs={'pk': client.id}
             ),
             data,
@@ -2922,16 +2395,16 @@ class ClientUpdateEmergencyInformationTestCase(ClientUpdateTestCase):
         # Reload client data as it should have been changed in the database
         client = Client.objects.get(id=client.id)
         self.assertIn(
-            emergency.id,
-            [c.pk for c in client.emergency_contacts.all()]
+            member.id,
+            [c.member.pk for c in client.relationship_set.all()]
         )
         self.assertIn(
-            emergency.firstname,
-            [c.firstname for c in client.emergency_contacts.all()]
+            member.firstname,
+            [c.member.firstname for c in client.relationship_set.all()]
         )
         self.assertIn(
-            emergency.lastname,
-            [c.lastname for c in client.emergency_contacts.all()]
+            member.lastname,
+            [c.member.lastname for c in client.relationship_set.all()]
         )
 
 
@@ -2949,7 +2422,7 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
             'step': 'address_information'
         }))
         check(reverse('member:member_step', kwargs={
-            'step': 'referent_information'
+            'step': 'relationships'
         }))
         check(reverse('member:member_step', kwargs={
             'step': 'payment_information'
@@ -2957,15 +2430,11 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
         check(reverse('member:member_step', kwargs={
             'step': 'dietary_restriction'
         }))
-        check(reverse('member:member_step', kwargs={
-            'step': 'emergency_contact'
-        }))
         check(reverse('member:list'))
         check(reverse('member:search'))
         check(reverse('member:view', kwargs={'pk': 1}))
         check(reverse('member:list_orders', kwargs={'pk': 1}))
         check(reverse('member:client_information', kwargs={'pk': 1}))
-        check(reverse('member:client_referent', kwargs={'pk': 1}))
         check(reverse('member:client_payment', kwargs={'pk': 1}))
         check(reverse('member:client_allergies', kwargs={'pk': 1}))
         check(reverse('member:client_notes', kwargs={'pk': 1}))
@@ -2983,10 +2452,6 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
             'pk': 1
         }))
 
-        check(reverse('member:member_update_referent_information', kwargs={
-            'pk': 1
-        }))
-
         check(reverse('member:member_update_payment_information', kwargs={
             'pk': 1
         }))
@@ -2995,7 +2460,7 @@ class RedirectAnonymousUserTestCase(SousChefTestMixin, TestCase):
             'pk': 1
         }))
 
-        check(reverse('member:member_update_emergency_contacts', kwargs={
+        check(reverse('member:member_update_relationships', kwargs={
             'pk': 1
         }))
 
@@ -3042,34 +2507,6 @@ class ClientListViewTestCase(SousChefTestMixin, TestCase):
 
 
 class ClientInfoViewTestCase(SousChefTestMixin, TestCase):
-    fixtures = ['routes.json']
-
-    def test_redirects_users_who_do_not_have_read_permission(self):
-        # Setup
-        User.objects.create_user(
-            username='foo', email='foo@example.com', password='secure')
-        self.client.login(username='foo', password='secure')
-        client = ClientFactory()
-        url = reverse('member:client_information', kwargs={'pk': client.id})
-        # Run & check
-        self.assertRedirectsWithAllMethods(url)
-
-    def test_allow_access_to_users_with_read_permission(self):
-        # Setup
-        user = User.objects.create_user(
-            username='foo', email='foo@example.com', password='secure')
-        user.is_staff = True
-        user.save()
-        self.client.login(username='foo', password='secure')
-        client = ClientFactory()
-        url = reverse('member:client_information', kwargs={'pk': client.id})
-        # Run
-        response = self.client.get(url)
-        # Check
-        self.assertEqual(response.status_code, 200)
-
-
-class ClientReferentViewTestCase(SousChefTestMixin, TestCase):
     fixtures = ['routes.json']
 
     def test_redirects_users_who_do_not_have_read_permission(self):
@@ -3303,39 +2740,6 @@ class ClientUpdateAddressInformationViewTestCase(SousChefTestMixin, TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class ClientUpdateReferentInformationViewTestCase(SousChefTestMixin, TestCase):
-    fixtures = ['routes.json']
-
-    def test_redirects_users_who_do_not_have_edit_permission(self):
-        # Setup
-        user = User.objects.create_user(
-            username='foo', email='foo@example.com', password='secure')
-        user.is_staff = True
-        user.save()
-        self.client.login(username='foo', password='secure')
-        client = ClientFactory()
-        url = reverse(
-            'member:member_update_referent_information',
-            kwargs={'pk': client.id})
-        # Run & check
-        self.assertRedirectsWithAllMethods(url)
-
-    def test_allow_access_to_users_with_edit_permission(self):
-        # Setup
-        user = User.objects.create_superuser(
-            username='foo', email='foo@example.com', password='secure')
-        user.save()
-        self.client.login(username='foo', password='secure')
-        client = ClientFactory()
-        url = reverse(
-            'member:member_update_referent_information',
-            kwargs={'pk': client.id})
-        # Run
-        response = self.client.get(url)
-        # Check
-        self.assertEqual(response.status_code, 200)
-
-
 class ClientUpdatePaymentInformationViewTestCase(SousChefTestMixin, TestCase):
     fixtures = ['routes.json']
 
@@ -3403,7 +2807,7 @@ class ClientUpdateDietaryRestrictionViewTestCase(SousChefTestMixin, TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class ClientUpdateEmergencyContactInformationViewTestCase(
+class ClientUpdateRelationshipsViewTestCase(
         SousChefTestMixin, TestCase):
     fixtures = ['routes.json']
 
@@ -3416,7 +2820,7 @@ class ClientUpdateEmergencyContactInformationViewTestCase(
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
         url = reverse(
-            'member:member_update_emergency_contacts',
+            'member:member_update_relationships',
             kwargs={'pk': client.id})
         # Run & check
         self.assertRedirectsWithAllMethods(url)
@@ -3429,7 +2833,7 @@ class ClientUpdateEmergencyContactInformationViewTestCase(
         self.client.login(username='foo', password='secure')
         client = ClientFactory()
         url = reverse(
-            'member:member_update_emergency_contacts',
+            'member:member_update_relationships',
             kwargs={'pk': client.id})
         # Run
         response = self.client.get(url)
@@ -4344,3 +3748,411 @@ class RouteDeliveryHistoryDetailViewTestCase(SousChefTestMixin, TestCase):
         self.assertEqual(clients_on_dh[2].order_of_the_day, orders_dict[9])
         self.assertEqual(clients_on_dh[3].order_of_the_day, orders_dict[4])
         self.assertEqual(clients_on_dh[4].order_of_the_day, orders_dict[6])
+
+
+class TestMigrationApply0032(TestMigrations):
+    """
+    Refs #740.
+
+    Naming rules in testing:
+    - client000: 0 referent; 0 emergency; 0 referent AND emergency.
+    - client010: 0 referent; 1 emergency; 0 referent AND emergency.
+    - client100: 1 referent; 0 emergency; 0 referent AND emergency.
+    - client001: 0 referent; 0 emergency; 1 referent AND emergency.
+    - client234: 2 referent; 3 emergency; 4 referent AND emergency.
+
+    I'm going to test client000 through client333.
+    So 4*4*4=64 test cases in total.
+
+    Additionally, because member.Referencing doesn't define unique_together,
+    for client3xx test cases, I'm having 2 referents exactly the same.
+    (member.EmergencyContact doesn't have this problem.)
+    """
+    migrate_from = '0031_client_option_allow_reverse_relation'
+    migrate_to = '0032_relationship'
+
+    # EmergencyContact.relationship has blank=True, null=True
+    emgc_relationships = ['friend', None, 'son']
+    referral_reasons = ['test1', '', '']
+    referral_dates = [date(2001, 1, 1), date(2002, 2, 2), date(2003, 3, 3)]
+
+    def setUpBeforeMigration(self, apps):
+        Member = apps.get_model('member', 'Member')
+        Client = apps.get_model('member', 'Client')
+        Referencing = apps.get_model('member', 'Referencing')
+        EmergencyContact = apps.get_model('member', 'EmergencyContact')
+
+        for num_r in range(4):  # [0, 1, 2, 3]
+            for num_e in range(4):
+                for num_re in range(4):
+                    # Create main client
+                    name_main = "{}{}{}".format(num_r, num_e, num_re)
+                    member_main = Member.objects.create(
+                        firstname=name_main,  # Later we use this to query
+                        lastname="main")
+                    client_main = Client.objects.create(
+                        billing_member=member_main,
+                        member=member_main)
+
+                    # Create referents
+                    for i in range(num_r):
+                        # Special case as described in docstring
+                        if num_r == 3 and i == 2:  # last referent
+                            member_ref = Member.objects.get(
+                                firstname=name_main,
+                                lastname='ref_#1')
+                        else:
+                            member_ref = Member.objects.create(
+                                firstname=name_main,
+                                lastname='ref_#{}'.format(i))
+                        Referencing.objects.create(
+                            referent=member_ref,
+                            client=client_main,
+                            referral_reason=self.referral_reasons[i],
+                            date=self.referral_dates[i])
+                        del member_ref  # avoid myself making errors below
+
+                    # Create emergency contacts
+                    for i in range(num_e):
+                        member_emgc = Member.objects.create(
+                            firstname=name_main,
+                            lastname='emgc_#{}'.format(i))
+                        EmergencyContact.objects.create(
+                            member=member_emgc,
+                            client=client_main,
+                            relationship=self.emgc_relationships[i])
+                        del member_emgc
+
+                    # Create referent+emergency contacts
+                    for i in range(num_re):
+                        member_re = Member.objects.create(
+                            firstname=name_main,
+                            lastname='ref+emgc_#{}'.format(i))
+                        Referencing.objects.create(
+                            referent=member_re,
+                            client=client_main,
+                            referral_reason=self.referral_reasons[i],
+                            date=self.referral_dates[i])
+                        EmergencyContact.objects.create(
+                            member=member_re,
+                            client=client_main,
+                            relationship=self.emgc_relationships[i])
+                        del member_re
+
+    def test_migrated_relationships(self):
+        Member = self.apps.get_model('member', 'Member')
+        Client = self.apps.get_model('member', 'Client')
+        Relationship = self.apps.get_model('member', 'Relationship')
+
+        from member.models import Relationship as _ref_Relationship  # noqa
+
+        for num_r in range(4):  # [0, 1, 2, 3]
+            for num_e in range(4):
+                for num_re in range(4):
+                    name_main = "{}{}{}".format(num_r, num_e, num_re)
+                    fail_msg = (
+                        "while testing: client{} "
+                        "(see docstring)".format(name_main))
+                    client_main = Client.objects.get(
+                        member__firstname=name_main,
+                        member__lastname="main")
+
+                    # Check number of Relationship objects
+                    self.assertEqual(
+                        Relationship.objects.filter(
+                            client=client_main,
+                            # Attention: DB filter JSON field
+                            type__contains=_ref_Relationship.REFERENT).count(),
+                        # Special case when num_r == 3
+                        (num_r if num_r != 3 else 2) + num_re,
+                        msg=fail_msg)
+                    self.assertEqual(
+                        Relationship.objects.filter(
+                            client=client_main,
+                            # Attention: DB filter JSON field
+                            type__contains=_ref_Relationship.EMERGENCY
+                        ).count(),
+                        num_e + num_re,
+                        msg=fail_msg)
+                    self.assertEqual(
+                        Relationship.objects.filter(
+                            client=client_main).count(),
+                        # Special case when num_r == 3
+                        (num_r if num_r != 3 else 2) + num_e + num_re,
+                        msg=fail_msg)
+
+                    # Check referents
+                    for i in range(num_r):
+                        sub_fail_msg = "{} -- Referent #{}".format(
+                            fail_msg, i)
+                        # Special case when num_r == 3
+                        member_ref = Member.objects.get(
+                            firstname=name_main,
+                            lastname='ref_#{}'.format(
+                                1 if (num_r == 3 and i == 2) else i))
+                        r = Relationship.objects.get(
+                            client=client_main,
+                            member=member_ref)
+                        self.assertEqual(r.nature, '??? (migration 0032)',
+                                         msg=sub_fail_msg)
+                        self.assertEqual(r.type,
+                                         [_ref_Relationship.REFERENT],
+                                         msg=sub_fail_msg)
+
+                        # Special case when num_r == 3
+                        # The ref_#1 will be overwritten by ref_#2, because
+                        # in migrate 0032, Referencing objects are ordered by
+                        # 'pk'.
+                        correct_i = 2 if (num_r == 3 and i == 1) else i
+                        self.assertEqual(r.extra_fields, {
+                            'referral_date': str(
+                                self.referral_dates[correct_i]),
+                            'referral_reason': self.referral_reasons[correct_i]
+                        }, msg=sub_fail_msg)
+                        self.assertEqual(r.remark, '', msg=sub_fail_msg)
+                        del member_ref  # avoid myself making errors below
+
+                    # Check emergency contacts
+                    for i in range(num_e):
+                        sub_fail_msg = "{} -- Emergency #{}".format(
+                            fail_msg, i)
+                        member_emgc = Member.objects.get(
+                            firstname=name_main,
+                            lastname='emgc_#{}'.format(i))
+                        r = Relationship.objects.get(
+                            client=client_main,
+                            member=member_emgc)
+                        self.assertEqual(r.nature,
+                                         self.emgc_relationships[i] or (
+                                             "??? (migration 0032)"),
+                                         msg=sub_fail_msg)
+                        self.assertEqual(r.type,
+                                         [_ref_Relationship.EMERGENCY],
+                                         msg=sub_fail_msg)
+                        self.assertEqual(r.extra_fields, {}, msg=sub_fail_msg)
+                        self.assertEqual(r.remark, '', msg=sub_fail_msg)
+                        del member_emgc
+
+                    # Check referents+emergency contacts
+                    for i in range(num_re):
+                        sub_fail_msg = "{} -- Ref+Emgc #{}".format(
+                            fail_msg, i)
+                        member_re = Member.objects.get(
+                            firstname=name_main,
+                            lastname='ref+emgc_#{}'.format(i))
+                        r = Relationship.objects.get(
+                            client=client_main,
+                            member=member_re)
+                        self.assertEqual(r.nature,
+                                         self.emgc_relationships[i] or (
+                                             '??? (migration 0032)'),
+                                         msg=sub_fail_msg)
+                        self.assertEqual(sorted(r.type),
+                                         sorted([_ref_Relationship.EMERGENCY,
+                                                 _ref_Relationship.REFERENT]),
+                                         msg=sub_fail_msg)
+                        self.assertEqual(r.extra_fields, {
+                            'referral_date': str(self.referral_dates[i]),
+                            'referral_reason': self.referral_reasons[i]
+                        }, msg=sub_fail_msg)
+                        self.assertEqual(r.remark, '', msg=sub_fail_msg)
+                        del member_re
+
+
+class TestMigrationUnapply0032(TestMigrations):
+    """
+    Refs #740.
+
+    Same naming rules as TestMigrationApply0032 (see docstring there).
+    Also test from client000 through client333.
+    But no special case for client3xx because of unique_together constraint.
+    """
+
+    migrate_from = '0032_relationship'
+    migrate_to = '0031_client_option_allow_reverse_relation'
+
+    natures = ['friend', 'son', 'government']
+    remarks = ['remark1', 'remark2', 'remark3']
+    extra_fields = [
+        {'referral_reason': 'reason1', 'referral_date': date(2001, 1, 1)},
+        # These invalid values may exist in database...
+        {},
+        ['a', 'b', 'c']
+    ]
+
+    def setUpBeforeMigration(self, apps):
+        Member = apps.get_model('member', 'Member')
+        Client = apps.get_model('member', 'Client')
+        Relationship = apps.get_model('member', 'Relationship')
+
+        from member.models import Relationship as _ref_Relationship  # noqa
+
+        for num_r in range(4):  # [0, 1, 2, 3]
+            for num_e in range(4):
+                for num_re in range(4):
+                    # Create main client
+                    name_main = "{}{}{}".format(num_r, num_e, num_re)
+                    member_main = Member.objects.create(
+                        firstname=name_main,  # Later we use this to query
+                        lastname="main")
+                    client_main = Client.objects.create(
+                        billing_member=member_main,
+                        member=member_main)
+
+                    # Create referents
+                    for i in range(num_r):
+                        member_ref = Member.objects.create(
+                            firstname=name_main,
+                            lastname='ref_#{}'.format(i))
+                        Relationship.objects.create(
+                            member=member_ref,
+                            client=client_main,
+                            nature=self.natures[i],
+                            type=[_ref_Relationship.REFERENT],
+                            extra_fields=self.extra_fields[i],
+                            remark=self.remarks[i])
+                        del member_ref  # avoid myself making errors below
+
+                    # Create emergency contacts
+                    for i in range(num_e):
+                        member_emgc = Member.objects.create(
+                            firstname=name_main,
+                            lastname='emgc_#{}'.format(i))
+                        Relationship.objects.create(
+                            member=member_emgc,
+                            client=client_main,
+                            nature=self.natures[i],
+                            type=[_ref_Relationship.EMERGENCY],
+                            extra_fields=self.extra_fields[i],
+                            remark=self.remarks[i])
+                        del member_emgc  # avoid myself making errors below
+
+                    # Create referent+emergency contacts
+                    for i in range(num_re):
+                        member_re = Member.objects.create(
+                            firstname=name_main,
+                            lastname='ref+emgc_#{}'.format(i))
+                        Relationship.objects.create(
+                            member=member_re,
+                            client=client_main,
+                            nature=self.natures[i],
+                            type=[_ref_Relationship.EMERGENCY,
+                                  _ref_Relationship.REFERENT],
+                            extra_fields=self.extra_fields[i],
+                            remark=self.remarks[i])
+                        del member_re  # avoid myself making errors below
+
+    def test_reversed_referencings_and_emergencycontacts(self):
+        Member = self.apps.get_model('member', 'Member')
+        Client = self.apps.get_model('member', 'Client')
+        Referencing = self.apps.get_model('member', 'Referencing')
+        EmergencyContact = self.apps.get_model('member', 'EmergencyContact')
+
+        for num_r in range(4):  # [0, 1, 2, 3]
+            for num_e in range(4):
+                for num_re in range(4):
+                    name_main = "{}{}{}".format(num_r, num_e, num_re)
+                    fail_msg = (
+                        "while testing: client{} "
+                        "(see docstring)".format(name_main))
+                    client_main = Client.objects.get(
+                        member__firstname=name_main,
+                        member__lastname="main")
+
+                    # Check number of Referencing and EmergencyContact objects
+                    self.assertEqual(
+                        Referencing.objects.filter(
+                            client=client_main).count(),
+                        num_r + num_re,
+                        msg=fail_msg)
+                    self.assertEqual(
+                        EmergencyContact.objects.filter(
+                            client=client_main).count(),
+                        num_e + num_re,
+                        msg=fail_msg)
+
+                    # Check referents
+                    for i in range(num_r):
+                        sub_fail_msg = "{} -- Referent #{}".format(
+                            fail_msg, i)
+                        member_ref = Member.objects.get(
+                            firstname=name_main,
+                            lastname='ref_#{}'.format(i))
+                        r = Referencing.objects.get(
+                            client=client_main,
+                            referent=member_ref)
+                        if isinstance(self.extra_fields[i], dict):
+                            correct_referral_reason = self.extra_fields[i].get(
+                                'referral_reason')
+                            correct_date = self.extra_fields[i].get(
+                                'referral_date')
+                        else:
+                            correct_referral_reason = None
+                            correct_date = None
+
+                        self.assertEqual(
+                            r.referral_reason,
+                            correct_referral_reason or (
+                                '??? (reverse migration 0032)'),
+                            msg=sub_fail_msg)
+                        self.assertEqual(
+                            r.date,
+                            correct_date or date(1970, 1, 1),
+                            msg=sub_fail_msg)
+                        del member_ref  # avoid myself making errors below
+
+                    # Check emergency contacts
+                    for i in range(num_e):
+                        sub_fail_msg = "{} -- Emergency #{}".format(
+                            fail_msg, i)
+                        member_emgc = Member.objects.get(
+                            firstname=name_main,
+                            lastname='emgc_#{}'.format(i))
+                        ec = EmergencyContact.objects.get(
+                            client=client_main,
+                            member=member_emgc)
+                        self.assertEqual(
+                            ec.relationship,
+                            self.natures[i],
+                            msg=sub_fail_msg)
+                        del member_emgc
+
+                    # Check referents+emergency contacts
+                    for i in range(num_re):
+                        sub_fail_msg = "{} -- Ref+Emgc #{}".format(
+                            fail_msg, i)
+                        member_re = Member.objects.get(
+                            firstname=name_main,
+                            lastname='ref+emgc_#{}'.format(i))
+
+                        r = Referencing.objects.get(
+                            client=client_main,
+                            referent=member_re)
+                        if isinstance(self.extra_fields[i], dict):
+                            correct_referral_reason = self.extra_fields[i].get(
+                                'referral_reason')
+                            correct_date = self.extra_fields[i].get(
+                                'referral_date')
+                        else:
+                            correct_referral_reason = None
+                            correct_date = None
+
+                        self.assertEqual(
+                            r.referral_reason,
+                            correct_referral_reason or (
+                                '??? (reverse migration 0032)'),
+                            msg=sub_fail_msg)
+                        self.assertEqual(
+                            r.date,
+                            correct_date or date(1970, 1, 1),
+                            msg=sub_fail_msg)
+
+                        ec = EmergencyContact.objects.get(
+                            client=client_main,
+                            member=member_re)
+                        self.assertEqual(
+                            ec.relationship,
+                            self.natures[i],
+                            msg=sub_fail_msg)
+
+                        del member_re  # avoid myself making errors below

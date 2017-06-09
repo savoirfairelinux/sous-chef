@@ -124,7 +124,7 @@ $(function() {
         commonParent.find('.existing--member').removeAttr('disabled');
     });
 
-    // Emergency contact formset
+    // Relationships formset
     var formsetContainer = $('form.ui.form div.formset-container'),
         formsetItems = $('form.ui.form div.formset-item'),
         $search_url = $('.ui.search .ui.input').first().attr('data-url'),
@@ -141,12 +141,21 @@ $(function() {
 
     if (formsetItems.length > 0) {
         formsetItems.formset({
-            'prefix': 'emergency_contacts',
+            'prefix': 'relationships',
             'addText': '<i class="plus icon"></i> ' + formsetContainer.data('addLabel'),
             'deleteText': '<i class="remove icon"></i> ' + formsetContainer.data('removeLabel'),
             'added': function (row) {
                 initMemberQuickSearch(row.find('.ui.search'));
-            }
+                row.find('.ui.calendar').calendar({
+                    type: 'date',
+                    formatter: {
+                        date: function (date, settings) {
+                            return date ? dateFormat(date, 'yyyy-mm-dd') : '';
+                        }
+                    }
+                });
+            },
+            'formTemplate': '[x-template]'
         });
     } else {
         if( $('.firstname').val() !== '' || $('.lastname').val() !== ''

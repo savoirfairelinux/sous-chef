@@ -9,7 +9,6 @@ from member.views import (
     SearchMembers,
     ClientOrderList,
     ClientInfoView,
-    ClientReferentView,
     ClientPaymentView,
     ClientAllergiesView,
     DeleteRestriction,
@@ -22,10 +21,9 @@ from member.views import (
     ClientStatusSchedulerDeleteView,
     ClientUpdateBasicInformation,
     ClientUpdateAddressInformation,
-    ClientUpdateReferentInformation,
     ClientUpdatePaymentInformation,
     ClientUpdateDietaryRestriction,
-    ClientUpdateEmergencyContactInformation,
+    ClientUpdateRelationshipsInformation,
     RouteListView,
     RouteDetailView,
     RouteEditView,
@@ -35,10 +33,9 @@ from member.views import (
 
 from member.forms import (
     ClientBasicInformation, ClientAddressInformation,
-    ClientReferentInformation, ClientPaymentInformation,
-    ClientRestrictionsInformation
+    ClientPaymentInformation, ClientRestrictionsInformation
 )
-from member.formsets import CreateEmergencyContactFormset
+from member.formsets import CreateRelationshipFormset
 
 from note.views import ClientNoteList, ClientNoteListAdd
 
@@ -55,10 +52,10 @@ member_forms = ({
     'create_form': ClientAddressInformation,
     'update_form': ClientUpdateAddressInformation
 }, {
-    'name':        'referent_information',
-    'step_url':    _('referent_information'),
-    'create_form': ClientReferentInformation,
-    'update_form': ClientUpdateReferentInformation
+    'name':        'relationships',
+    'step_url':    _('relationships'),
+    'create_form': CreateRelationshipFormset,
+    'update_form': ClientUpdateRelationshipsInformation
 }, {
     'name':        'payment_information',
     'step_url':    _('payment_information'),
@@ -69,11 +66,6 @@ member_forms = ({
     'step_url':    _('dietary_restriction'),
     'create_form': ClientRestrictionsInformation,
     'update_form': ClientUpdateDietaryRestriction,
-}, {
-    'name':        'emergency_contacts',
-    'step_url':    _('emergency_contacts'),
-    'create_form': CreateEmergencyContactFormset,
-    'update_form': ClientUpdateEmergencyContactInformation
 })
 
 member_wizard = ClientWizard.as_view(
@@ -96,8 +88,6 @@ urlpatterns = [
         ClientOrderList.as_view(), name='list_orders'),
     url(_(r'^view/(?P<pk>\d+)/information$'),
         ClientInfoView.as_view(), name='client_information'),
-    url(_(r'^view/(?P<pk>\d+)/referent$'),
-        ClientReferentView.as_view(), name='client_referent'),
     url(_(r'^view/(?P<pk>\d+)/billing$'),
         ClientPaymentView.as_view(), name='client_payment'),
     url(_(r'^view/(?P<pk>\d+)/preferences$'),

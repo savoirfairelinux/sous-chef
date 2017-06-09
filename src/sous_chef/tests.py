@@ -1,6 +1,7 @@
 from django.apps import apps
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.management import call_command
 from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
 from django.test import TransactionTestCase
@@ -81,3 +82,9 @@ class TestMigrations(TransactionTestCase):
             "TestCase '{}' must define the method "
             "setUpBeforeMigration(self, apps)".format(type(self).__name__)
         )
+
+    def tearDown(self):
+        """
+        In the end, ensure that the tested app has its latest migration.
+        """
+        call_command('migrate', self.app, verbosity=0)

@@ -1,10 +1,10 @@
 from django.forms import formset_factory
-from .forms import ClientEmergencyContactInformation
+from .forms import ClientRelationshipInformation
 
 
-CreateEmergencyContactFormset = formset_factory(
-    ClientEmergencyContactInformation, min_num=1, extra=1
+CreateRelationshipFormset = formset_factory(
+    ClientRelationshipInformation, min_num=0, extra=0
 )
-UpdateEmergencyContactFormset = formset_factory(
-    ClientEmergencyContactInformation, min_num=1, extra=0
+UpdateRelationshipFormset = formset_factory(
+    ClientRelationshipInformation, min_num=0, extra=0
 )
