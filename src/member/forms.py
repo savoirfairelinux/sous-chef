@@ -2,6 +2,7 @@ from datetime import date
 
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from member.formsfield import CAPhoneNumberExtField
@@ -581,28 +582,58 @@ class ClientScheduledStatusForm(forms.ModelForm):
             help_text=_('Format: YYYY-MM-DD'),
         )
 
-    def save(self, commit=True):
-        if commit:
-            instance = super().save(commit)
-            end_date = self.cleaned_data.get('end_date')
+    def save(self, *args, **kwargs):
+        """
+        Override the default behavior of a ModelForm.
+        We may have two ClientScheduledStatus instances to save. The .save()
+        method is not expressive enough for what we want to do.
+        Thus, we raise an error when trying to call form.save() to remind
+        other people of using the custom save method.
+        """
+        raise NotImplementedError(
+            "This method is intentionally bypassed. Please use "
+            "save_scheduled_statuses method.")
 
-            # Immediate status update (schedule and process)
-            if self.cleaned_data.get('change_date') == date.today():
-                instance.process()
+    def save_scheduled_statuses(self, callback_add_message=lambda m: None):
+        """
+        Create one or two ClientScheduledStatus instances according to
+        `self.cleaned_data`.
+        """
+        if not hasattr(self, 'cleaned_data') or self.errors:
+            raise ValueError("The form data doesn't validate.")
+        data = self.cleaned_data
+        today = timezone.datetime.date(timezone.datetime.today())
 
-            if end_date:
-                # Schedule a time range during which status will be different,
-                # then back to current (double schedule)
-                ClientScheduledStatus.objects.create(
-                    client=instance.client,
-                    status_from=instance.status_to,
-                    status_to=instance.status_from,
-                    reason=instance.reason,
-                    change_date=end_date,
-                    change_state=ClientScheduledStatus.END,
-                    operation_status=ClientScheduledStatus.TOBEPROCESSED,
-                    pair=instance
-                )
+        # Save and process instance(s)
+        c1 = ClientScheduledStatus.objects.create(
+            client=data['client'],
+            status_from=data['status_from'],
+            status_to=data['status_to'],
+            reason=data['reason'],
+            change_date=data['change_date'],
+            change_state=ClientScheduledStatus.END,
+            operation_status=ClientScheduledStatus.TOBEPROCESSED
+        )
+        if data['change_date'] == today:
+            c1.process()
+            callback_add_message(_("The client status has been changed."))
+        else:
+            callback_add_message(_("This status change has been scheduled."))
 
-            return instance
-        return super().save(commit)
+        if data.get('end_date'):
+            c2 = ClientScheduledStatus.objects.create(
+                client=data['client'],
+                status_from=data['status_to'],
+                status_to=data['status_from'],
+                reason=data['reason'],
+                change_date=data['end_date'],
+                change_state=ClientScheduledStatus.END,
+                operation_status=ClientScheduledStatus.TOBEPROCESSED,
+                pair=c1
+            )
+            if data.get('end_date') == today:
+                c2.process()
+                callback_add_message(_("The client status has been changed."))
+            else:
+                callback_add_message(_("The end date of this status change "
+                                       "has been scheduled."))

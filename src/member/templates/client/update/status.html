@@ -2,7 +2,7 @@
 <div class="header">
     {% trans 'Status modification' %}
 </div>
-<form class="content ui form" id="change-status-form" method="POST" action="{% url 'member:clientStatusScheduler' client.id %}">
+<form class="content ui form" id="change-status-form" method="POST" action="">
     {% csrf_token %}
     <input type="hidden" name="client" value="{{form.client.value}}">
     <input type="hidden" name="status_from" value="{{form.status_from.value}}">

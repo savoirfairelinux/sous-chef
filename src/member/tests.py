@@ -21,7 +21,7 @@ from meal.models import (
     Restricted_item, Ingredient, Component, COMPONENT_GROUP_CHOICES
 )
 from order.models import Order
-from member.factories import(
+from member.factories import (
     RouteFactory, ClientFactory, ClientScheduledStatusFactory,
     MemberFactory, DeliveryHistoryFactory, RelationshipFactory
 )
@@ -33,10 +33,11 @@ from django.utils.translation import ugettext
 
 from order.factories import OrderFactory
 from order.models import ORDER_STATUS_ORDERED
-from member.forms import(
+from member.forms import (
     ClientBasicInformation, ClientAddressInformation,
     ClientPaymentInformation,
-    ClientRestrictionsInformation, ClientRelationshipInformation
+    ClientRestrictionsInformation, ClientRelationshipInformation,
+    ClientScheduledStatusForm
 )
 from sous_chef.tests import TestMigrations
 from sous_chef.tests import TestMixin as SousChefTestMixin
@@ -1456,7 +1457,7 @@ class MemberSearchTestCase(SousChefTestMixin, TestCase):
         self.assertTrue(b'Katrina Heide' in result.content)
 
 
-class ClientStatusUpdateAndScheduleCase(TestCase):
+class ClientStatusUpdateAndScheduleCase(SousChefTestMixin, TestCase):
 
     fixtures = ['routes.json']
 
@@ -1489,6 +1490,44 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
             status_to=Client.PAUSED
         )
         self.assertFalse(scheduled_change.is_valid())
+
+    def test_scheduled_change_needs_attention(self):
+        """
+        Needs attention when the status is ERROR or the scheduled date has
+        passed.
+        """
+        scheduled_change = ClientScheduledStatusFactory(
+            client=self.active_client,
+            change_date=date.today() - timedelta(days=1),
+            status_from=Client.ACTIVE,
+            status_to=Client.PAUSED,
+            operation_status=ClientScheduledStatus.TOBEPROCESSED
+        )
+        self.assertTrue(scheduled_change.needs_attention)
+        scheduled_change = ClientScheduledStatusFactory(
+            client=self.active_client,
+            change_date=date.today(),
+            status_from=Client.ACTIVE,
+            status_to=Client.PAUSED,
+            operation_status=ClientScheduledStatus.ERROR
+        )
+        self.assertTrue(scheduled_change.needs_attention)
+        scheduled_change = ClientScheduledStatusFactory(
+            client=self.active_client,
+            change_date=date.today(),
+            status_from=Client.ACTIVE,
+            status_to=Client.PAUSED,
+            operation_status=ClientScheduledStatus.TOBEPROCESSED
+        )
+        self.assertTrue(scheduled_change.needs_attention)
+        scheduled_change = ClientScheduledStatusFactory(
+            client=self.active_client,
+            change_date=date.today() + timedelta(days=1),
+            status_from=Client.ACTIVE,
+            status_to=Client.PAUSED,
+            operation_status=ClientScheduledStatus.TOBEPROCESSED
+        )
+        self.assertFalse(scheduled_change.needs_attention)
 
     def test_scheduled_change_process_success(self):
         scheduled_change = ClientScheduledStatusFactory(
@@ -1549,6 +1588,32 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
         self.assertEqual(
             scheduled_change.operation_status,
             ClientScheduledStatus.PROCESSED)
+
+    def test_form_save_bypassed(self):
+        form = ClientScheduledStatusForm()
+        with self.assertRaises(NotImplementedError):
+            form.save()
+
+    def test_form_save_scheduled_statuses_invalid_data(self):
+        form = ClientScheduledStatusForm(initial={})
+        self.assertFalse(form.is_valid())
+        with self.assertRaises(ValueError):
+            form.save_scheduled_statuses()
+
+    def test_form_save_scheduled_statuses_process_immediately(self):
+        test_client = ClientFactory(status=Client.ACTIVE)
+        form = ClientScheduledStatusForm({
+            'client': test_client.pk,
+            'status_from': Client.ACTIVE,
+            'status_to': Client.PAUSED,
+            'change_date': date.today(),
+            'end_date': date.today()
+        })
+        self.assertTrue(form.is_valid())
+        form.save_scheduled_statuses()
+        self.assertEqual(ClientScheduledStatus.objects.filter(
+            client=test_client,
+            operation_status=ClientScheduledStatus.PROCESSED).count(), 2)
 
     def test_view_client_status_update_empty_dates(self):
         admin = User.objects.create_superuser(
@@ -1725,82 +1790,6 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
 
         self.assertEqual(0, ClientScheduledStatus.objects.count())
 
-    def test_view_client_status_delete_pair_base(self):
-        admin = User.objects.create_superuser(
-            username='admin@example.com',
-            email='admin@example.com',
-            password='test1234'
-        )
-        self.client.login(username=admin.username, password='test1234')
-        self.client.post(
-            reverse_lazy(
-                'member:clientStatusScheduler',
-                kwargs={'pk': self.active_client.id}
-            ),
-            {
-                'client': self.active_client.id,
-                'status_from': self.active_client.status,
-                'status_to': Client.PAUSED,
-                'reason': 'Holidays',
-                'change_date': '2018-09-23',
-                'end_date': '2018-10-02',
-            },
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
-            follow=True
-        )
-
-        self.assertEqual(2, ClientScheduledStatus.objects.count())
-
-        client_status_base = ClientScheduledStatus.objects.get(
-            change_date='2018-09-23'
-        )
-        self.client.post(
-            reverse_lazy(
-                'member:delete_status',
-                kwargs={'pk': client_status_base.id}
-            )
-        )
-
-        self.assertEqual(0, ClientScheduledStatus.objects.count())
-
-    def test_view_client_status_delete_pair_automatically_created(self):
-        admin = User.objects.create_superuser(
-            username='admin@example.com',
-            email='admin@example.com',
-            password='test1234'
-        )
-        self.client.login(username=admin.username, password='test1234')
-        self.client.post(
-            reverse_lazy(
-                'member:clientStatusScheduler',
-                kwargs={'pk': self.active_client.id}
-            ),
-            {
-                'client': self.active_client.id,
-                'status_from': self.active_client.status,
-                'status_to': Client.PAUSED,
-                'reason': 'Holidays',
-                'change_date': '2018-09-23',
-                'end_date': '2018-10-02',
-            },
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
-            follow=True
-        )
-
-        self.assertEqual(2, ClientScheduledStatus.objects.count())
-
-        client_status_base = ClientScheduledStatus.objects.get(
-            change_date='2018-10-02'
-        )
-        self.client.post(
-            reverse_lazy(
-                'member:delete_status',
-                kwargs={'pk': client_status_base.id}
-            )
-        )
-
-        self.assertEqual(0, ClientScheduledStatus.objects.count())
-
     def test_view_client_status_delete_with_not_logged_user(self):
         admin = User.objects.create_superuser(
             username='admin@example.com',
@@ -1882,6 +1871,166 @@ class ClientStatusUpdateAndScheduleCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 302)
+
+    def test_view_reschedule_pair_valid(self):
+        """
+        A valid pair is retrieved (GET) and replaced (POST) together.
+        """
+        test_client = ClientFactory(status=Client.ACTIVE)
+        c1 = ClientScheduledStatusFactory(
+            client=test_client,
+            status_from=Client.ACTIVE,
+            status_to=Client.PAUSED,
+            change_date=date.today() + timedelta(days=1),
+            operation_status=ClientScheduledStatus.TOBEPROCESSED)
+        c2 = ClientScheduledStatusFactory(
+            client=test_client,
+            status_from=Client.PAUSED,
+            status_to=Client.ACTIVE,
+            change_date=date.today() + timedelta(days=7),
+            operation_status=ClientScheduledStatus.TOBEPROCESSED,
+            pair=c1)
+
+        self.force_login()
+
+        # GET
+        response = self.client.get(
+            reverse(
+                'member:clientStatusSchedulerReschedule',
+                kwargs={
+                    'pk': test_client.pk,
+                    'scheduled_status_1_pk': c1.pk,
+                    'scheduled_status_2_pk': c2.pk,
+                }
+            )
+        )
+        self.assertEqual(response.status_code, 200)
+        cf = response.context['form'].initial
+        self.assertEqual(cf['client'], str(test_client.pk))
+        self.assertEqual(cf['status_from'], Client.ACTIVE)
+        self.assertEqual(cf['status_to'], Client.PAUSED)
+        self.assertEqual(cf['change_date'], date.today() + timedelta(days=1))
+        self.assertEqual(cf['end_date'], date.today() + timedelta(days=7))
+
+        # POST
+        response = self.client.post(
+            reverse(
+                'member:clientStatusSchedulerReschedule',
+                kwargs={
+                    'pk': test_client.pk,
+                    'scheduled_status_1_pk': c1.pk,
+                    'scheduled_status_2_pk': c2.pk,
+                }
+            ), {
+                'client': str(test_client.pk),
+                'status_from': Client.ACTIVE,
+                'status_to': Client.STOPCONTACT,
+                'reason': 'some reason',
+                'change_date': date.today() + timedelta(days=2),
+                'end_date': date.today() + timedelta(days=12)
+            }
+        )
+        # Successful
+        self.assertRedirects(response, reverse(
+            'member:client_information', kwargs={'pk': test_client.pk}))
+
+        self.assertEqual(ClientScheduledStatus.objects.filter(
+            client=test_client).count(), 2)
+        self.assertEqual(ClientScheduledStatus.objects.filter(
+            client=test_client,
+            status_from=Client.ACTIVE,
+            status_to=Client.STOPCONTACT,
+            change_date=date.today() + timedelta(days=2)
+        ).count(), 1)
+        self.assertEqual(ClientScheduledStatus.objects.filter(
+            client=test_client,
+            status_from=Client.STOPCONTACT,
+            status_to=Client.ACTIVE,
+            change_date=date.today() + timedelta(days=12)
+        ).count(), 1)
+
+    def test_view_reschedule_pair_invalid(self):
+        """
+        In an invalid pair, only the first ClientScheduledStatus instance
+        is retrieved (GET) and replaced (POST).
+        """
+        test_client = ClientFactory(status=Client.ACTIVE)
+        c1 = ClientScheduledStatusFactory(
+            client=test_client,
+            status_from=Client.ACTIVE,
+            status_to=Client.PAUSED,
+            change_date=date.today() + timedelta(days=1),
+            operation_status=ClientScheduledStatus.TOBEPROCESSED)
+        c2 = ClientScheduledStatusFactory(
+            client=test_client,
+            status_from=Client.PAUSED,
+            status_to=Client.ACTIVE,
+            reason='invalid pair',
+            change_date=date.today() + timedelta(days=7),
+            operation_status=ClientScheduledStatus.TOBEPROCESSED,
+            pair=ClientScheduledStatusFactory(client=ClientFactory()))
+
+        self.force_login()
+
+        # GET
+        response = self.client.get(
+            reverse(
+                'member:clientStatusSchedulerReschedule',
+                kwargs={
+                    'pk': test_client.pk,
+                    'scheduled_status_1_pk': c1.pk,
+                    'scheduled_status_2_pk': c2.pk,
+                }
+            )
+        )
+        self.assertEqual(response.status_code, 200)
+        cf = response.context['form'].initial
+        self.assertEqual(cf['client'], str(test_client.pk))
+        self.assertEqual(cf['status_from'], Client.ACTIVE)
+        self.assertEqual(cf['status_to'], Client.PAUSED)
+        self.assertEqual(cf['change_date'], date.today() + timedelta(days=1))
+        self.assertEqual(cf['end_date'], None)
+
+        # POST
+        response = self.client.post(
+            reverse(
+                'member:clientStatusSchedulerReschedule',
+                kwargs={
+                    'pk': test_client.pk,
+                    'scheduled_status_1_pk': c1.pk,
+                    'scheduled_status_2_pk': c2.pk,
+                }
+            ), {
+                'client': str(test_client.pk),
+                'status_from': Client.ACTIVE,
+                'status_to': Client.STOPCONTACT,
+                'reason': 'some reason',
+                'change_date': date.today() + timedelta(days=2),
+                'end_date': date.today() + timedelta(days=12)
+            }
+        )
+        # Successful
+        self.assertRedirects(response, reverse(
+            'member:client_information', kwargs={'pk': test_client.pk}))
+
+        self.assertEqual(ClientScheduledStatus.objects.filter(
+            client=test_client).count(), 3)
+        self.assertEqual(ClientScheduledStatus.objects.filter(
+            client=test_client,
+            status_from=Client.ACTIVE,
+            status_to=Client.STOPCONTACT,
+            change_date=date.today() + timedelta(days=2)
+        ).count(), 1)
+        self.assertEqual(ClientScheduledStatus.objects.filter(
+            client=test_client,
+            status_from=Client.STOPCONTACT,
+            status_to=Client.ACTIVE,
+            change_date=date.today() + timedelta(days=12)
+        ).count(), 1)
+        self.assertEqual(ClientScheduledStatus.objects.filter(
+            client=test_client,
+            reason='invalid pair'
+        ).count(), 1)
 
 
 class ClientUpdateTestCase(TestCase):

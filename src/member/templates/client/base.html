@@ -23,17 +23,50 @@
     </h1>
     <div class="right menu">
       <div class="ui item">
-          <div class="ui dropdown member status{% if not can_edit_data %} disabled{% endif %}" data-url="{% url 'member:clientStatusScheduler' client.id %}">
-              <div class="ui large yellow label text">{{ client.get_status_display }}</div>
-              <i class="dropdown icon"></i>
-              <div class="menu">
-                  {% for k,s in client_status %}
-                      <div class="item" data-value={{k}}>
-                           {{s}}
-                      </div>
-                  {% endfor %}
-              </div>
+        {% with sc0=client.unprocessed_scheduled_statuses.0 sc1=client.unprocessed_scheduled_statuses.1 %}
+        <div class="ui dropdown member status{% if not can_edit_data %} disabled{% endif %}">
+
+          <div class="ui large yellow label text">
+            {{ client.get_status_display }}
           </div>
+
+          {% if sc0 %}
+          <div class="ui large {% if sc0.needs_attention %}red{% else %}gray{% endif %} label text" {% if sc0.needs_attention %}title="{% trans 'Client status scheduler may not work properly. Please verify.' %}"{% endif %}>
+            {% if sc0.needs_attention %}
+            <i class="warning sign icon"></i>
+            {% endif %}
+            {% trans 'Upcoming change' %}
+            <div class="detail">
+                {{ sc0.get_status_to_display }}
+                {% if sc1.get_pair == sc0 %}
+                  ({{ sc0.change_date|date:"SHORT_DATE_FORMAT" }}&ndash;{{ sc1.change_date|date:"SHORT_DATE_FORMAT" }})
+                {% else %}
+                  ({{ sc0.change_date|date:"SHORT_DATE_FORMAT" }})
+                {% endif %}
+            </div>
+          </div>
+          {% endif %}
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            {% if not sc0 %}
+              {% for k,s in client_status %}
+              <div class="item member-update-status" data-url="{% url 'member:clientStatusScheduler' client.id %}?status={{k}}" data-modal-target=".ui.modal.status">
+                {{s}}
+              </div>
+              {% endfor %}
+            {% else %}
+              <div class="item member-view-upcoming-changes" data-url="{% url 'member:client_status' client.id %}">{% trans 'View upcoming changes' %}</div>
+              {% if can_edit_data %}
+              <div class="item member-cancel-this-upcoming-change" data-prompt="{% trans 'This cannot be undone. Are you sure?' %}">
+                {% trans 'Cancel this upcoming change' %}
+                <form style="display:none" action="{% url 'member:delete_status' sc0.id %}" method="post">{% csrf_token %}</form>
+              </div>
+              <div class="item member-reschedule-this-upcoming-change" data-url="{% if sc1.get_pair != sc0 %}{% url 'member:clientStatusSchedulerReschedule' client.id sc0.pk %}{% else %}{% url 'member:clientStatusSchedulerReschedule' client.id sc0.pk sc1.pk %}{% endif %}" data-modal-target=".ui.modal.status">{% trans 'Reschedule this upcoming change' %}</div>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+        {% endwith %}
       </div>
     </div>
 </div>

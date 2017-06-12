@@ -47,7 +47,6 @@
                 <th>{% trans 'To' %}</th>
                 <th>{% trans 'Reason' %}</th>
                 <th>{% trans 'Operation status' %}</th>
-                {% if can_edit_data %}<th></th>{% endif %}
             </tr>
         </thead>
         <tbody>
@@ -58,22 +57,16 @@
         {% else %}
             {% for status in client_statuses %}
             <tr>
-                <td>{{ status.change_date }}</td>
+                <td>{{ status.change_date|date:"SHORT_DATE_FORMAT" }}</td>
                 <td>{{ status.get_status_from_display }}</td>
                 <td>{{ status.get_status_to_display }}</td>
                 <td>{{ status.reason }}</td>
                 <td>{{ status.get_operation_status_display }}</td>
-                {% if can_edit_data %}<td><a href="{% url 'member:delete_status' pk=status.pk %}" class="mini ui red button remove-status">{% trans "Remove" %}</a></td>{% endif %}
             </tr>
             {% endfor %}
         {% endif %}
         </tbody>
     </table>
 </div>
-
-<!-- Modal confirmation -->
-{% if can_edit_data %}
-    <div id="remove-status-confirmation" class="ui modal"></div>
-{% endif %}
 
 {% endblock %}
