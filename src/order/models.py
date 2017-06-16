@@ -32,6 +32,7 @@ ORDER_STATUS = (
 )
 
 ORDER_STATUS_ORDERED = ORDER_STATUS[0][0]
+ORDER_STATUS_CANCELLED = ORDER_STATUS[3][0]
 
 SIZE_CHOICES = (
     ('', ''),
@@ -551,9 +552,13 @@ class Order(models.Model):
         """
         orditms = Order_item.objects.\
             select_related('order__client__member__address').\
+            exclude(
+                order__status=ORDER_STATUS_CANCELLED,
+            ).\
             filter(
                 order__delivery_date=delivery_date,
-                order__client__route__id=route_id).\
+                order__client__route__id=route_id
+            ).\
             order_by('order__client_id')
 
         route_list = {}
@@ -792,12 +797,16 @@ def day_avoid_ingredient(delivery_date):
       LEFT OUTER JOIN meal_menu_component ON
         meal_menu_component.component_id = meal_component.id AND
           meal_menu_component.menu_id = meal_menu.id
-    WHERE order_order.delivery_date =                         %(delivery_date)s
+    WHERE order_order.delivery_date =                     %(delivery_date)s AND
+      order_order.status !=                                 %(order_cancelled)s
     ORDER BY member_client.id
     """
-    values = {'delivery_date': delivery_date,
-              'comp_grp_sides': COMPONENT_GROUP_CHOICES_SIDES,
-              'comp_grp_main_dish': COMPONENT_GROUP_CHOICES_MAIN_DISH}
+    values = {
+        'delivery_date': delivery_date,
+        'comp_grp_sides': COMPONENT_GROUP_CHOICES_SIDES,
+        'comp_grp_main_dish': COMPONENT_GROUP_CHOICES_MAIN_DISH,
+        'order_cancelled': ORDER_STATUS_CANCELLED,
+    }
     return sql_exec(query, values, "****** Avoid ingredients ******")
 
 
@@ -856,12 +865,16 @@ def day_restrictions(delivery_date):
       LEFT OUTER JOIN meal_menu_component ON
         meal_menu_component.component_id = meal_component.id AND
           meal_menu_component.menu_id = meal_menu.id
-    WHERE order_order.delivery_date =                         %(delivery_date)s
+    WHERE order_order.delivery_date =                     %(delivery_date)s AND
+      order_order.status !=                                 %(order_cancelled)s
     ORDER BY member_client.id
     """
-    values = {'delivery_date': delivery_date,
-              'comp_grp_sides': COMPONENT_GROUP_CHOICES_SIDES,
-              'comp_grp_main_dish': COMPONENT_GROUP_CHOICES_MAIN_DISH}
+    values = {
+        'delivery_date': delivery_date,
+        'comp_grp_sides': COMPONENT_GROUP_CHOICES_SIDES,
+        'comp_grp_main_dish': COMPONENT_GROUP_CHOICES_MAIN_DISH,
+        'order_cancelled': ORDER_STATUS_CANCELLED,
+    }
     return sql_exec(query, values, "****** Restrictions ******")
 
 
@@ -895,12 +908,16 @@ def day_preparations(delivery_date):
         order_order_item.component_group =           %(comp_grp_main_dish)s AND
           order_order_item.order_id = order_order.id
     WHERE order_order.delivery_date =                     %(delivery_date)s AND
+      order_order.status !=                             %(order_cancelled)s AND
       member_option.option_group =                             %(option_group)s
     ORDER BY member_member.lastname, member_member.firstname
     """
-    values = {'delivery_date': delivery_date,
-              'option_group': OPTION_GROUP_CHOICES_PREPARATION,
-              'comp_grp_main_dish': COMPONENT_GROUP_CHOICES_MAIN_DISH}
+    values = {
+        'delivery_date': delivery_date,
+        'option_group': OPTION_GROUP_CHOICES_PREPARATION,
+        'comp_grp_main_dish': COMPONENT_GROUP_CHOICES_MAIN_DISH,
+        'order_cancelled': ORDER_STATUS_CANCELLED,
+    }
     return sql_exec(query, values, "****** Preparations ******")
 
 
@@ -938,10 +955,14 @@ def day_delivery_items(delivery_date):
       JOIN meal_component ON
         meal_component.id = meal_menu_component.component_id AND
           meal_component.component_group = order_order_item.component_group
-    WHERE order_order.delivery_date =                         %(delivery_date)s
+    WHERE order_order.delivery_date =                     %(delivery_date)s AND
+      order_order.status !=                                 %(order_cancelled)s
     ORDER BY member_member.lastname, member_member.firstname
     """
-    values = {'delivery_date': delivery_date}
+    values = {
+        'delivery_date': delivery_date,
+        'order_cancelled': ORDER_STATUS_CANCELLED,
+    }
     return sql_exec(query, values, "****** Delivery List ******")
 
 
