@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.conf import settings
 from member.models import Client, Route
 from order.models import Order, ORDER_STATUS_ORDERED
 from note.models import Note, NoteFilter
@@ -26,7 +27,9 @@ def total(request):
         'CLIENT_FILTER_DEFAULT_STATUS': Client.ACTIVE,
         'ORDER_FILTER_DEFAULT_STATUS': ORDER_STATUS_ORDERED,
         'ORDER_FILTER_DEFAULT_DATE': datetime.datetime.now(),
-        'NOTE_FILTER_DEFAULT_IS_READ': NoteFilter.NOTE_STATUS_UNREAD
+        'NOTE_FILTER_DEFAULT_IS_READ': NoteFilter.NOTE_STATUS_UNREAD,
+        'SC_ENVIRONMENT_NAME': settings.SOUSCHEF_ENVIRONMENT_NAME,
+        'SC_VERSION': settings.SOUSCHEF_VERSION,
     }
 
     return COMMON_CONTEXT
