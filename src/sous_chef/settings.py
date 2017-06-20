@@ -207,3 +207,7 @@ AVATAR_PROVIDERS = (
     'avatar.providers.GravatarAvatarProvider',
     'avatar.providers.DefaultAvatarProvider',
 )
+
+# Displayable information
+SOUSCHEF_VERSION = os.environ.get('SOUSCHEF_VERSION') or ''
+SOUSCHEF_ENVIRONMENT_NAME = os.environ.get('SOUSCHEF_ENVIRONMENT_NAME') or ''
