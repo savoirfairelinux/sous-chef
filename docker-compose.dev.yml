@@ -1,0 +1,10 @@
+# use as `docker-compose -f docker-compose.yml -f docker-compose.dev.yml up`
+# this causes the the local folder to be loop-mounted into the container
+# so that you can edit code with your normal editors and have the changes
+# immediately be reflected in the running container, without a `docker-compose build`.
+
+version: '3'
+services:
+  web:
+    volumes:
+      - .:/code
