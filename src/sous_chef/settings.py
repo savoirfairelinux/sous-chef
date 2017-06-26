@@ -22,19 +22,30 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '15ine$#^qas4_h2u7yk&lxat*&g*b8+)@wp$2x@vi2#v9)i2#u'
+SECRET_KEY = os.environ.get(
+    'SOUSCHEF_DJANGO_SECRET_KEY',
+    '15ine$#^qas4_h2u7yk&lxat*&g*b8+)@wp$2x@vi2#v9)i2#u')  # For dev purposes
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.environ.get('SOUSCHEF_ENVIRONMENT_NAME') == 'PROD':
+    DEBUG = False
+else:
+    DEBUG = True
 
 # This IP may change for different computers and should be the
 # request.META.get('REMOTE_ADDR') for your local computer.
 # Don't run with this in production and don't
 # commit any changes to this INTERNAL_IPS settings.
 # WE NEED THIS IN ORDER TO USE 'debug' IN TEMPLATES!!!
-INTERNAL_IPS = ['172.19.0.1']
+INTERNAL_IPS = os.environ.get(
+    'SOUSCHEF_DJANGO_INTERNAL_IPS',
+    # Default value is an example: use space-separated string in env
+    '172.19.0.1  172.19.0.101').strip().split()
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get(
+    'SOUSCHEF_DJANGO_ALLOWED_HOSTS',
+    # Default value is an example: use space-separated string in env
+    'souschef.example.com  test.souschef.example.com').strip().split()
 
 
 # Application definition
