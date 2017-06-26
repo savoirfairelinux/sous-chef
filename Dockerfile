@@ -5,7 +5,7 @@ WORKDIR /code
 ADD requirements.txt /code/
 RUN apt-get update
 RUN apt-get install curl gettext -y
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get install nodejs build-essential -y
 RUN apt-get install binutils libproj-dev gdal-bin -y
 RUN pip3 install -r requirements.txt
