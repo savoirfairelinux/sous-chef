@@ -87,8 +87,6 @@ To run gulp, use:
 $> docker-compose exec web sh -c "cd tools/gulp && gulp"
 ```
 
-Please rest assured that the "unsafe-perm" option will not bring any security risk to sous-chef. The Node.js packages that we are installing here are only used for generating static files, such as images, CSS, JavaScript, etc., and will never be executed from external.
-
 If you have an error with this command, try deleting the folder `tools/gulp/node_modules` completely and rerun it. If the problem still exists, please let us know, including the versions of node, npm, and gulp that you have.
 
 [collectstatic](https://docs.djangoproject.com/en/1.11/ref/contrib/staticfiles/#collectstatic) is similar, but built into Django.

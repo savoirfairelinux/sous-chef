@@ -26,7 +26,7 @@ RUN npm install gulp -g
 run mkdir /code/src/sous_chef/static/
 RUN python3 src/manage.py collectstatic --noinput
 WORKDIR /code/tools/gulp
-RUN npm install --unsafe-perms  # gulp dependencies
+RUN npm install  # gulp dependencies
 RUN gulp
 WORKDIR /code/
 
