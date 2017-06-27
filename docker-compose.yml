@@ -15,7 +15,7 @@ services:
 
   web:
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     environment:
       - SOUSCHEF_ENVIRONMENT_NAME=DEV
       - SOUSCHEF_VERSION=v1.0-beta
