@@ -2,8 +2,8 @@ FROM python:3.5
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /code
 WORKDIR /code
-ADD requirements.txt /code/
-ADD . /code/
+COPY requirements.txt /code/
+COPY . /code/
 
 # install underlying debian dependencies
 RUN apt-get update
