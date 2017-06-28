@@ -219,6 +219,10 @@ msgstr "Précédent"
 msgid "Next: Print Kitchen Count"
 msgstr "Suivant: Imprimer l'inventaire"
 
+#: delivery/templates/ingredients.html
+msgid "Confirm all ingredients"
+msgstr "Confirmer tous les ingrédients"
+
 #: delivery/templates/kitchen_count.html
 msgid "Kitchen Count report"
 msgstr "Inventaire des repas"
@@ -256,7 +260,7 @@ msgstr ""
 
 #: delivery/templates/kitchen_count.html
 msgid "No labels available"
-msgstr ""
+msgstr "Étiquettes non disponibles"
 
 #: delivery/templates/kitchen_count.html
 msgid "Component"
@@ -265,6 +269,10 @@ msgstr "Composant"
 #: delivery/templates/kitchen_count.html
 msgid "TOTAL"
 msgstr "TOTAL"
+
+#: delivery/templates/kitchen_count.html
+msgid "Please check main dish and confirm all ingredients before proceeding to kitchen count"
+msgstr "SVP vérifier le plat principal et confirmer tous les ingrédients avant de procéder à l'inventaire des repas"
 
 #: delivery/templates/kitchen_count.html delivery/templates/route_sheet.html
 #: delivery/templates/routes_print.html
