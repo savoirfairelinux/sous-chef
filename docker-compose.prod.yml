@@ -2,3 +2,5 @@ version: '3'
 services:
   web:
     command: /bin/bash -c "cd tools/gulp && gulp && cd ../../src && python manage.py collectstatic --noinput && /usr/local/bin/gunicorn sous_chef.wsgi:application -w 2 -b :8000"
+    environment:
+      - SOUSCHEF_ENVIRONMENT_NAME=PROD
