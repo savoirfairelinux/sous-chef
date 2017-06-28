@@ -23,19 +23,32 @@ For older Windows versions, you may have to use **Docker Toolbox** (https://www.
 
 ```
 $> git clone https://github.com/savoirfairelinux/sous-chef
-$> docker-compose build
+$> cd sous-chef
 $> docker-compose up
 ```
 
+After this, test it worked by going to http://localhost:8000.
+
 **Notice**: if you see the error "Can't connect to database" in `souschef_web_1`, try Ctrl+C and re-run `docker-compose up`.
 
-(Optional) Running docker-compose with production settings:
+To make changes to the running image, you could re-run it with `docker-compose up --build`, but to speed up development
+you can instead loop-mount the `sous-chef/` directory into the container by running
+
+```
+$> docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+```
+
+Similarly, you could use the production settings file that uses `gunicorn` to better handle load:
 
 ```
 $> docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
 ```
 
 ## Django initialization
+
+Unfortunately, the bulk of the Django configuration cannot happen until the containers are already built
+and running, because it needs to talk to the database which is in a different container, managed by docker-compose.
+So after you do the first build, you need to manually do some more steps.
 
 In your console:
 
@@ -58,29 +71,26 @@ $> python3 manage.py createsuperuser
 $> python3 manage.py loaddata sample_data
 ```
 
-## Generate Django assets using gulp
+## (Optional) Generate frontend assets
 
-### Run gulp
+You do not need to run these commands to deploy Sous-Chef, but if during development
+you make changes to anything in the frontend you will need to know at least gulp.
 
-**From container:**
+[gulp](http://gulpjs.com/) is a javascript-based build system.
+We use it to compile and optimize files from `src/frontend/` to `src/sous_chef/static/`.
+We specifically use it to compile scss to css, javascript to minified javascript,
+and images to further-compressed images.
+
+To run gulp, use:
 
 ```
-$> docker-compose exec web sh -c "cd tools/gulp && npm install --unsafe-perm && gulp"
+$> docker-compose exec web sh -c "cd tools/gulp && gulp"
 ```
 
-Or **from host machine:**
+If you have an error with this command, try deleting the folder `tools/gulp/node_modules` completely and rerun it. If the problem still exists, please let us know, including the versions of node, npm, and gulp that you have.
 
-```
-$> cd tools/gulp && npm install --unsafe-perm && gulp
-
-# If you don't have the gulp command, try: 
-$> cd tools/gulp && node node_modules/gulp/bin/gulp.js
-```
-
-Please rest assured that the "unsafe-perm" option will not bring any security risk to sous-chef. The Node.js packages that we are installing here are only used for generating static files, such as images, CSS, JavaScript, etc., and will never be executed from external.
-
-If you have an error with this command, try deleting the folder `tools/gulp/node_modules` completely and rerun it. If the problem still exists, please let us know.
-
+[collectstatic](https://docs.djangoproject.com/en/1.11/ref/contrib/staticfiles/#collectstatic) is similar, but built into Django.
+We are not using it to manage our own static files, but some of our Django dependencies might need this to be run.
 
 ## Connection to application
 

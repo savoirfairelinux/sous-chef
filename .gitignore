@@ -106,3 +106,8 @@ src/sous_chef/static
 
 # Ignore generated pdf files.
 src/*.pdf
+
+# the magic docker-compose override file is for overriding settings locally
+# it should not be a part of the repo. If you want per-environment settings,
+# use an explicit `docker-compose -f docker-compose.yml -f docker-compose.environment.yml`
+docker-compose.override.yml
