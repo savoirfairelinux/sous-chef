@@ -1,7 +1,24 @@
 .pusher {
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+}
+
+.ui.grid.container {
+    flex: 1;
     margin-bottom: 4em;
+}
+
+.ui.main.grid {
+    display: block;
 }
 
 div.ui.segment > a.ui.right.floated.button {
     margin-top: -3.5em;
+}
+
+@media only screen and (max-width: 1199px) {
+    .ui.main.grid {
+        margin-top: 2em;
+    }
 }
