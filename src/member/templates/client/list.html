@@ -102,6 +102,9 @@
             <th class="">{% trans 'Route' %}
                 <i class="help-text question grey icon link" data-content="{% trans 'The delivery route for the client.' %}"></i>
             </th>
+            <th class="">{% trans 'Geolocalized' %}
+                <i class="help-text question grey icon link" data-content="{% trans 'Is the client address geolocalized ?' %}"></i>
+            </th>
             <th class="">{% trans 'Last update' %}
                 <i class="help-text question grey icon link" data-content="{% trans 'Last modification of the file.' %}"></i>
             </th>
@@ -114,6 +117,7 @@
             <td>{{ obj.get_status_display }}</td>
             <td>{{ obj.get_delivery_type_display }}</td>
             <td>{{ obj.route }}</td>
+            <td>{% if obj.is_geolocalized %} {% trans 'Yes' %} {% else %} {% trans 'No' %} {% endif %}</td>
             <td>{{ obj.member.updated_at|date:"Y/m/d H:h:m"  }}</td>
         </tr>
         {% endfor %}

@@ -1,4 +1,5 @@
 import json
+import random
 
 from datetime import date, timedelta
 from decimal import Decimal
@@ -3607,6 +3608,11 @@ class RouteDetailViewTestCase(SousChefTestMixin, TestCase):
             10,
             route=route
         )
+        for client in clients_on_route:
+            client.status = \
+                [Client.PAUSED, Client.ACTIVE, Client.PENDING][
+                    random.randint(0, 2)]
+            client.save()
         clients_organised = (
             clients_on_route[1], clients_on_route[3],
             clients_on_route[5], clients_on_route[7],
@@ -3732,6 +3738,11 @@ class RouteGetOptimisedSequenceViewTestCase(SousChefTestMixin, TestCase):
         clients = ClientFactory.create_batch(
             10,
             route=route)
+        for client in clients:
+            client.status = \
+                [Client.PAUSED, Client.ACTIVE, Client.PENDING][
+                    random.randint(0, 2)]
+            client.save()
 
         self.force_login()
         url = reverse(
