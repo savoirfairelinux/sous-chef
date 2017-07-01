@@ -4,8 +4,7 @@ services:
   - docker
 
 before_install:
-  - docker-compose build
-  - docker-compose up -d
+  - docker-compose -f docker-compose.yml -f docker-compose.travis.yml up -d
 
 install:
   - docker-compose exec web sh -c "pip install pep8 coveralls"
@@ -16,4 +15,4 @@ script:
   - docker-compose exec web sh -c "pep8 --count --show-source --exclude=migrations src/"
 
 after_success:
-  - docker-compose run -e TRAVIS=$TRAVIS -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID -e TRAVIS_BRANCH=$TRAVIS_BRANCH web sh -c "pip install coveralls && coveralls"
+  - docker-compose exec web sh -c "coveralls"

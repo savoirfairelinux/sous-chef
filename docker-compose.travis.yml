@@ -1,0 +1,9 @@
+version: '3'
+services:
+  web:
+    environment:
+      - SOUSCHEF_ENVIRONMENT_NAME=TRAVIS
+      - SOUSCHEF_DJANGO_ALLOWED_HOSTS=0.0.0.0
+      - TRAVIS=$TRAVIS
+      - TRAVIS_JOB_ID=$TRAVIS_JOB_ID
+      - TRAVIS_BRANCH=$TRAVIS_BRANCH
