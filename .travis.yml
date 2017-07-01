@@ -1,7 +1,5 @@
 sudo: required
 
-language: python
-
 services:
   - docker
 
@@ -10,8 +8,7 @@ before_install:
   - docker-compose up -d
 
 install:
-  - docker-compose exec web sh -c "pip install coveralls"
-  - docker-compose exec web sh -c "pip install pep8"
+  - docker-compose exec web sh -c "pip install pep8 coveralls"
 
 script:
   - docker-compose exec web sh -c "PYTHONWARNINGS=once coverage run --omit=*.virtualenvs*,*virtualenv* src/manage.py test --settings=sous_chef.settings_test member meal order notification delivery note billing page"
@@ -19,4 +16,4 @@ script:
   - docker-compose exec web sh -c "pep8 --count --show-source --exclude=migrations src/"
 
 after_success:
-  - docker-compose exec web sh -c "coveralls"
+  - docker-compose run -e TRAVIS=$TRAVIS -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID -e TRAVIS_BRANCH=$TRAVIS_BRANCH web sh -c "pip install coveralls && coveralls"
