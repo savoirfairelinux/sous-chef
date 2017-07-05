@@ -904,8 +904,20 @@ msgid "Last update"
 msgstr "Dernière modification"
 
 #: member/templates/client/list.html
+msgid "Is the client address geolocalized ?"
+msgstr "Est-ce que l'adresse du client est géolocalisée ?"
+
+#: member/templates/client/list.html
+msgid "Yes"
+msgstr "Oui"
+
+#: member/templates/client/list.html
+msgid "No"
+msgstr "Non"
+
+#: member/templates/client/list.html
 msgid "Last modification of the file."
-msgstr ""
+msgstr "Dernière modification du dossier."
 
 #: member/templates/client/list.html
 msgid "of"

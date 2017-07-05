@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
 from django.urls import reverse_lazy, reverse
 from django.db import transaction
-from django.db.models import Q, Prefetch, Count
+from django.db.models import Q, Prefetch, When, Case, Sum, IntegerField
 from django.db.transaction import atomic
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
@@ -1371,7 +1371,15 @@ class RouteListView(
     context_object_name = 'routes'
     model = Route
     queryset = Route.objects.all().annotate(
-        client_count=Count('client')
+        client_count=Sum(
+            Case(
+                When(client__status__in=[
+                    Client.PENDING, Client.ACTIVE, Client.PAUSED],
+                     then=1),
+                default=0,
+                output_field=IntegerField()
+            )
+        )
     )
     permission_required = 'sous_chef.read'
     template_name = 'route/list.html'
@@ -1385,9 +1393,11 @@ def get_clients_on_route(route):
     Returns a list of client instances with an extra attribute
     `has_been_configured`, ordered by configured then unconfigured.
     """
-    clients = Client.objects.filter(
-        route=route
-    ).select_related('member', 'member__address')
+    clients = Client.objects. \
+        filter(route=route,
+               status__in=[
+                   Client.PENDING, Client.ACTIVE, Client.PAUSED]). \
+        select_related('member', 'member__address')
     clients_dict = {client.pk: client for client in clients}
     clients_on_route = []
     for client_pk in (route.client_id_sequence or []):
