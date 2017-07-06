@@ -7,6 +7,17 @@ $(function() {
         window.location.replace($url+value);
     });
 
+    $('.ui.dropdown.mainingredients.selection').dropdown('setting', 'onChange', function(value, text, $selectedItem) {
+        $('.button.confirmingredients').removeClass('disabled');
+        $('.button.nextkitchencount').addClass('disabled');
+        $('.button.restorerecipe').removeClass('disabled');
+    });
+
+    $('.ui.dropdown.sidesingredients.selection').dropdown('setting', 'onChange', function(value, text, $selectedItem) {
+        $('.button.confirmingredients').removeClass('disabled');
+        $('.button.nextkitchencount').addClass('disabled');
+    });
+
     $('.button.orders').click(function(){
         $('.button.orders i').addClass('loading');
         $.ajax({

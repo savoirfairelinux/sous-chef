@@ -112,15 +112,27 @@ class MealInformation(
     def get(self, request, **kwargs):
         # Display today's main dish and its ingredients
 
+        #  get sides component
+        try:
+            sides_component = Component.objects.get(
+                component_group=COMPONENT_GROUP_CHOICES_SIDES)
+        except Component.DoesNotExist:
+            raise Exception(
+                "The database must contain exactly one component " +
+                "having 'Component group' = 'Sides' ")
+
         date = datetime.date.today()
         main_dishes = Component.objects.order_by(Lower('name')).filter(
             component_group=COMPONENT_GROUP_CHOICES_MAIN_DISH)
+
         if 'id' in kwargs:
-            # today's main dish has been chosen by user
+            # today's main dish has been chosen by user (onchange)
             main_dish = Component.objects.get(id=int(kwargs['id']))
-            # delete existing ingredients for the date + dish
-            Component_ingredient.objects.filter(
-                component=main_dish, date=date).delete()
+            # delete all existing ingredients for the date except for sides
+            Component_ingredient.objects. \
+                filter(date=date). \
+                exclude(component=sides_component). \
+                delete()
         else:
             # see if a menu exists for today
             menu_comps = Menu_component.objects.filter(
@@ -133,31 +145,33 @@ class MealInformation(
                 # take first main dish
                 main_dish = main_dishes[0]
 
+        recipe_ingredients = Component.get_recipe_ingredients(
+            main_dish.id)
         # see if existing chosen ingredients for the main dish
         dish_ingredients = Component.get_day_ingredients(
             main_dish.id, date)
-        if not dish_ingredients:
-            # get recipe ingredients for the main dish
-            dish_ingredients = Component.get_recipe_ingredients(
-                main_dish.id)
         # see if existing chosen ingredients for the sides
-        # FIXME use a manager in meal / models to get sides component
-        try:
-            sides_component = Component.objects.get(
-                component_group=COMPONENT_GROUP_CHOICES_SIDES)
-        except Component.DoesNotExist:
-            raise Exception(
-                "The database must contain exactly one component " +
-                "having 'Component group' = 'Sides' ")
         sides_ingredients = Component.get_day_ingredients(
             sides_component.id, date)
+        # need this for restore button
+        recipe_changed = (
+            len(dish_ingredients) > 0 and
+            set(dish_ingredients) != set(recipe_ingredients)
+        )
+        # need this for update ingredients button
+        ingredients_changed = (
+            len(dish_ingredients) == 0 or
+            len(sides_ingredients) == 0
+        )
 
+        if not dish_ingredients:
+            # get recipe ingredients for the main dish
+            dish_ingredients = recipe_ingredients
         form = DishIngredientsForm(
             initial={
                 'maindish': main_dish.id,
                 'ingredients': dish_ingredients,
                 'sides_ingredients': sides_ingredients})
-
         # The form should be read-only if the user does not have the
         # permission to edit data.
         if not request.user.has_perm('sous_chef.edit'):
@@ -167,7 +181,10 @@ class MealInformation(
             request,
             'ingredients.html',
             {'form': form,
-             'date': str(date)})
+             'date': str(date),
+             'recipe_changed': recipe_changed,
+             'ingredients_changed': ingredients_changed}
+        )
 
     def post(self, request):
         # Choose ingredients in today's main dish and in Sides
@@ -177,38 +194,35 @@ class MealInformation(
         if not request.user.has_perm('sous_chef.edit'):
             raise PermissionDenied
 
-        # print("Pick Ingredients POST request=", request.POST)  # For testing
+        # print("Pick Ingredients POST request=", request.POST)  # For DEBUG
         date = datetime.date.today()
         form = DishIngredientsForm(request.POST)
+        # get sides component
+        try:
+            sides_component = Component.objects.get(
+                component_group=COMPONENT_GROUP_CHOICES_SIDES)
+        except Component.DoesNotExist:
+            raise Exception(
+                "The database must contain exactly one component " +
+                "having 'Component group' = 'Sides' ")
+
         if '_restore' in request.POST:
             # restore ingredients of main dish to those in recipe
-            if form.is_valid():
-                component = form.cleaned_data['maindish']
-                # delete existing ingredients for the date + dish
-                Component_ingredient.objects.filter(
-                    component=component, date=date).delete()
-                return HttpResponseRedirect(
-                    reverse_lazy("delivery:meal_id", args=[component.id]))
-        elif '_next' in request.POST:
-            # forward to kitchen count
+            # delete all existing ingredients for the date except for sides
+            Component_ingredient.objects. \
+                filter(date=date). \
+                exclude(component=sides_component). \
+                delete()
+            return HttpResponseRedirect(
+                reverse_lazy("delivery:meal"))
+        elif '_update' in request.POST:
+            # update ingredients of main dish and ingredients of sides
             if form.is_valid():
                 ingredients = form.cleaned_data['ingredients']
                 sides_ingredients = form.cleaned_data['sides_ingredients']
                 component = form.cleaned_data['maindish']
-                # delete existing main dish ingredients for the date
-                Component_ingredient.objects.filter(
-                    component=component, date=date).delete()
-                # delete existing sides ingredients for the date
-                # FIXME use a manager in meal / models to get sides component
-                try:
-                    sides_component = Component.objects.get(
-                        component_group=COMPONENT_GROUP_CHOICES_SIDES)
-                except Component.DoesNotExist:
-                    raise Exception(
-                        "The database must contain exactly one component " +
-                        "having 'Component group' = 'Sides' ")
-                Component_ingredient.objects.filter(
-                    component=sides_component, date=date).delete()
+                # delete all main dish and sides ingredients for the date
+                Component_ingredient.objects.filter(date=date).delete()
                 # add revised ingredients for the date + dish
                 for ing in ingredients:
                     ci = Component_ingredient(
@@ -223,7 +237,6 @@ class MealInformation(
                         ingredient=ing,
                         date=date)
                     ci.save()
-
                 # Create menu and its components for today
                 compnames = [component.name]  # main dish
                 # take first sorted name of each other component group
@@ -237,14 +250,16 @@ class MealInformation(
                             compnames.append(compname[0].name)
                 Menu.create_menu_and_components(date, compnames)
                 return HttpResponseRedirect(
-                    reverse_lazy("delivery:kitchen_count"))
-            # END IF
+                    reverse_lazy("delivery:meal"))
         # END IF
         return render(
             request,
             'ingredients.html',
-            {'date': date,
-             'form': form})
+            {'form': form,
+             'date': str(date),
+             'recipe_changed': False,
+             'ingredients_changed': True}
+        )
 
 
 class RoutesInformation(
@@ -816,6 +831,30 @@ class KitchenCount(
                     int(kwargs['day']))
             else:
                 date = datetime.date.today()
+            #  get sides component
+            try:
+                sides_component = Component.objects.get(
+                    component_group=COMPONENT_GROUP_CHOICES_SIDES)
+            except Component.DoesNotExist:
+                raise Exception(
+                    "The database must contain exactly one component " +
+                    "having 'Component group' = 'Sides' ")
+            # check if main dish ingredients were confirmed
+            main_ingredients = Component_ingredient.objects. \
+                filter(date=date). \
+                exclude(component=sides_component)
+            # check if sides ingredients were confirmed
+            sides_ingredients = Component_ingredient.objects. \
+                filter(component=sides_component, date=date)
+            if len(main_ingredients) == 0 or len(sides_ingredients) == 0:
+                # some ingredients not confirmed, must go back one step
+                messages.add_message(
+                    self.request, messages.WARNING,
+                    _("Please check main dish and confirm" +
+                      " all ingredients before proceeding to kitchen count")
+                )
+                return HttpResponseRedirect(
+                    reverse_lazy("delivery:meal"))
 
             kitchen_list_unfiltered = Order.get_kitchen_items(date)
 

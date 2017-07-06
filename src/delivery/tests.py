@@ -70,6 +70,15 @@ class KitchenCountReportTestCase(SousChefTestMixin, TestCase):
             ingredient=extra,
             date=self.today)
         ci.save()
+        # add sides ingredient
+        sides_component = Component.objects.get(
+            component_group=COMPONENT_GROUP_CHOICES_SIDES)
+        extra = Ingredient.objects.get(name='Cabbage')
+        ci = Component_ingredient(
+            component=sides_component,
+            ingredient=extra,
+            date=self.today)
+        ci.save()
         # menu today
         Menu.create_menu_and_components(
             self.today,
@@ -160,6 +169,28 @@ class KitchenCountReportTestCase(SousChefTestMixin, TestCase):
              'Green Salad', 'Fruit Salad',
              'Day s Dessert', 'Day s Diabetic Dessert',
              'Day s Pudding', 'Day s Compote'])
+
+        # main dish and its ingredients today
+        main_dishes = Component.objects.filter(name='Ginger pork')
+        main_dish = main_dishes[0]
+        dish_ingredients = Component.get_recipe_ingredients(
+            main_dish.id)
+        for ing in dish_ingredients:
+            ci = Component_ingredient(
+                component=main_dish,
+                ingredient=ing,
+                date=self.today)
+            ci.save()
+        # Add sides ingredient
+        sides_component = Component.objects.get(
+            component_group=COMPONENT_GROUP_CHOICES_SIDES)
+        sides_ingredient = Ingredient.objects.get(name='Brussel sprouts')
+        ci = Component_ingredient(
+            component=sides_component,
+            ingredient=sides_ingredient,
+            date=self.today)
+        ci.save()
+
         # Add two separate extra compote order items for 'Tracy'
         member = Member.objects.filter(lastname='Tracy')[0]
         client = Client.objects.get(member=member.id)
@@ -211,7 +242,7 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
             date=None, component=maindish)
         ing_ids = [ci.ingredient.id for ci in cis]
         req = {}
-        req['_next'] = 'Next: Print Kitchen Count'
+        req['_update'] = 'Confirm all ingredients'
         req['maindish'] = str(maindish.id)
         req['ingredients'] = ing_ids
         req['sides_ingredients'] = [
@@ -228,7 +259,7 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
             date=None, component=maindish)
         ing_ids = [ci.ingredient.id for ci in cis]
         req = {}
-        req['_next'] = 'Next: Print Kitchen Count'
+        req['_update'] = 'Confirm all ingredients'
         req['maindish'] = str(maindish.id)
         req['ingredients'] = ing_ids
         req['sides_ingredients'] = [
@@ -241,23 +272,33 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
 
     def test_restore_dish_recipe(self):
         """Restore dish ingredients to those of recipe."""
-        # dish : Ginger pork with added Spinach
+        # dish : Ginger pork with added Pepper
         response = self.client.get(reverse_lazy('delivery:meal'))
         maindish = Component.objects.get(name='Ginger pork')
         cis = Component_ingredient.objects.filter(
             date=None, component=maindish)
         ing_ids = [ci.ingredient.id for ci in cis]
-        ing_ids.append(Ingredient.objects.get(name='Pepper').id)
+        # dish and added ingredient must be in kitchen count
         req = {}
-        req['_next'] = 'Next: Print Kitchen Count'
+        req['_update'] = 'Confirm all ingredients'
         req['maindish'] = str(maindish.id)
-        req['ingredients'] = ing_ids
+        req['ingredients'] = ing_ids + \
+            [Ingredient.objects.get(name='Pepper').id]
         req['sides_ingredients'] = [Ingredient.objects.all().first().id]
         response = self.client.post(reverse_lazy('delivery:meal'), req)
+        response = self.client.get(reverse_lazy('delivery:kitchen_count'))
+        self.assertTrue(b'Ginger pork' in response.content and
+                        b'Pepper' in response.content)
         # restore recipe
+        response = self.client.post(
+            reverse_lazy('delivery:meal'),
+            {'_restore': 'Restore recipe'}
+        )
+        # update ingredients
         req = {}
-        req['_restore'] = 'Restore recipe'
+        req['_update'] = 'Confirm all ingredients'
         req['maindish'] = str(maindish.id)
+        req['ingredients'] = ing_ids
         req['sides_ingredients'] = [Ingredient.objects.all().first().id]
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         # check that we have Ginger pork with no Pepper in Kitchen count
@@ -268,12 +309,16 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
     def test_change_main_dish(self):
         """Change dish then go directly to Kitchen Count Report."""
         maindish = Component.objects.get(name='Coq au vin')
+        cis = Component_ingredient.objects.filter(
+            date=None, component=maindish)
+        ing_ids = [ci.ingredient.id for ci in cis]
 
         response = self.client.get(
             reverse_lazy('delivery:meal_id', args=[maindish.id]))
         req = {}
-        req['_next'] = 'Next: Print Kitchen Count'
+        req['_update'] = 'Update ingredients'
         req['maindish'] = str(maindish.id)
+        req['ingredients'] = ing_ids
         req['sides_ingredients'] = [Ingredient.objects.all().first().id]
         response = self.client.post(reverse_lazy('delivery:meal'), req)
         response = self.client.get(reverse_lazy('delivery:kitchen_count'))
@@ -283,7 +328,7 @@ class ChooseDayMainDishIngredientsTestCase(SousChefTestMixin, TestCase):
         """Invalid form."""
         response = self.client.get(reverse_lazy('delivery:meal'))
         req = {}
-        req['_restore'] = 'Next: Print Kitchen Count'
+        req['_update'] = 'Next: Print Kitchen Count'
         req['maindish'] = 'wrong'
         response = self.client.post(reverse_lazy('delivery:meal'), req)
 
@@ -622,6 +667,28 @@ class KitchenCountViewTestCase(SousChefTestMixin, TestCase):
         user.save()
         self.client.login(username='foo', password='secure')
         url = reverse('delivery:kitchen_count')
+
+        # main dish and its ingredients today
+        main_dishes = Component.objects.filter(name='Ginger pork')
+        main_dish = main_dishes[0]
+        dish_ingredients = Component.get_recipe_ingredients(
+            main_dish.id)
+        for ing in dish_ingredients:
+            ci = Component_ingredient(
+                component=main_dish,
+                ingredient=ing,
+                date=datetime.date.today())
+            ci.save()
+        # Add sides ingredient
+        sides_component = Component.objects.get(
+            component_group=COMPONENT_GROUP_CHOICES_SIDES)
+        sides_ingredient = Ingredient.objects.get(name='Brussel sprouts')
+        ci = Component_ingredient(
+            component=sides_component,
+            ingredient=sides_ingredient,
+            date=datetime.date.today())
+        ci.save()
+
         # Run
         response = self.client.get(url)
         # Check
@@ -885,7 +952,7 @@ class ExcludeMalconfiguredClientsTestCase(SousChefTestMixin, TestCase):
     def _today_meal(self):
         return self.client.post(reverse('delivery:meal'), {
             'maindish': [str(self.main_dish.id)],
-            '_next': ['Next: Print Kitchen Count'],
+            '_update': ['Next: Print Kitchen Count'],
             'ingredients': map(
                 lambda ingred: str(ingred.id),
                 self.ingred_chickens + self.ingred_wines
@@ -920,7 +987,7 @@ class ExcludeMalconfiguredClientsTestCase(SousChefTestMixin, TestCase):
     def test_step_3__component_table(self):
         _ = self._refresh_orders()
         response = self._today_meal()
-        self.assertRedirects(response, reverse("delivery:kitchen_count"))
+        self.assertRedirects(response, reverse("delivery:meal"))
         response = self.client.get(reverse("delivery:kitchen_count"))
         component_lines = response.context['component_lines']
         main_dish_component_line = next(
@@ -934,7 +1001,7 @@ class ExcludeMalconfiguredClientsTestCase(SousChefTestMixin, TestCase):
     def test_step_3__clashing_ingredients_restrictions_table(self):
         _ = self._refresh_orders()
         response = self._today_meal()
-        self.assertRedirects(response, reverse("delivery:kitchen_count"))
+        self.assertRedirects(response, reverse("delivery:meal"))
         response = self.client.get(reverse("delivery:kitchen_count"))
         meal_lines = response.context['meal_lines']
 
@@ -994,7 +1061,7 @@ class ExcludeMalconfiguredClientsTestCase(SousChefTestMixin, TestCase):
     def test_step_3__labels(self):
         _ = self._refresh_orders()
         response = self._today_meal()
-        self.assertRedirects(response, reverse("delivery:kitchen_count"))
+        self.assertRedirects(response, reverse("delivery:meal"))
         response = self.client.get(reverse("delivery:kitchen_count"))
         num_labels = response.context['num_labels']
         self.assertEqual(num_labels, 1)  # only c_valid

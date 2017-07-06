@@ -62,8 +62,8 @@
                 {{ form.ingredients }}
             </div>
             {% if can_edit_data %}
-            <div class="ui field">
-                <input class="ui button" type="submit" value="{% trans "Restore recipe" %}" name="_restore" />
+            <div class="ui row">
+                <input class="ui red button restorerecipe {% if not recipe_changed %}disabled{% endif %}" type="submit" value="{% trans "Restore recipe" %}" name="_restore" />
             </div>
             {% endif %}
         </div>
@@ -76,13 +76,14 @@
         </div>
 
         {% if can_edit_data %}
-        <div class="ten wide column">
-            <div class="ui row">
-                <a class="ui labeled icon big button" href="{% url 'delivery:order' %}">
-                    <i class="chevron left icon"></i>{% trans "Back" %}
-                </a>
-                <input class="ui big yellow button" type="submit" value="{% trans "Next: Print Kitchen Count" %}" name="_next" </>
-            </div>
+        <div class="actions">
+          <a class="ui labeled icon big button" href="{% url 'delivery:order' %}">
+            <i class="chevron left icon"></i>{% trans "Back" %}
+          </a>
+          <input class="ui big yellow button confirmingredients {% if not ingredients_changed %}disabled{% endif %}" type="submit" value="{% trans "Confirm all ingredients" %}" name="_update" />
+          <a class="ui labeled icon yellow big button nextkitchencount {% if ingredients_changed %}disabled{% endif %}" href="{% url 'delivery:kitchen_count' %}">
+            <i class="chevron right icon"></i>{% trans "Next: Print Kitchen Count" %}
+          </a>
         </div>
         {% endif %}
     </div>

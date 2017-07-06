@@ -18,7 +18,7 @@ class DishIngredientsForm(forms.Form):
         label=_('Select main dish ingredients:'),
         queryset=Ingredient.objects.order_by(Lower('name')).all(),
         widget=forms.SelectMultiple(
-            attrs={'class': 'ui fluid search dropdown'}),
+            attrs={'class': 'ui fluid search dropdown mainingredients'}),
         required=False,
     )
 
@@ -26,7 +26,7 @@ class DishIngredientsForm(forms.Form):
         label=_('Select sides ingredients:'),
         queryset=Ingredient.objects.order_by(Lower('name')).all(),
         widget=forms.SelectMultiple(
-            attrs={'class': 'ui fluid search dropdown'}),
+            attrs={'class': 'ui fluid search dropdown sidesingredients'}),
         required=False,
     )
 
