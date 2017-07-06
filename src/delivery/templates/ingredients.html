@@ -80,8 +80,9 @@
           <a class="ui labeled icon big button" href="{% url 'delivery:order' %}">
             <i class="chevron left icon"></i>{% trans "Back" %}
           </a>
-          <input class="ui big green button confirmingredients {% if not ingredients_changed %}disabled{% endif %}" type="submit" value="{% trans "Confirm all ingredients" %}" name="_update" />
-          <a class="ui big yellow button nextkitchencount {% if ingredients_changed %}disabled{% endif %}" href="{% url 'delivery:kitchen_count' %}"> {% trans "Next: Print Kitchen Count" %}
+          <input class="ui big yellow button confirmingredients {% if not ingredients_changed %}disabled{% endif %}" type="submit" value="{% trans "Confirm all ingredients" %}" name="_update" />
+          <a class="ui labeled icon yellow big button nextkitchencount {% if ingredients_changed %}disabled{% endif %}" href="{% url 'delivery:kitchen_count' %}">
+            <i class="chevron right icon"></i>{% trans "Next: Print Kitchen Count" %}
           </a>
         </div>
         {% endif %}
