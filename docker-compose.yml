@@ -5,9 +5,6 @@ services:
   db:
     restart: always
     image: mariadb
-    environment:
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: feast
     volumes:
       - souschef_data:/var/lib/mysql
     networks:
@@ -15,7 +12,6 @@ services:
 
   web:
     environment:
-      - SOUSCHEF_ENVIRONMENT_NAME=DEV
       - SOUSCHEF_VERSION=v1.0-beta
     restart: always
     build: .
