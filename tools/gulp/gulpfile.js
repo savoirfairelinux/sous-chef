@@ -29,8 +29,10 @@ const sources = {
   js: {
     scripts: {
       vendor: [
+        'node_modules/jquery/dist/jquery.js',
         'node_modules/jquery-tablesort/jquery-tablesort.js',
         'node_modules/jquery.formset/src/jquery.formset.js',
+        'node_modules/semantic-ui-css/semantic.js',
         'node_modules/semantic-ui-calendar/dist/calendar.js',
         'node_modules/dateformat/lib/dateformat.js',
       ],
@@ -68,6 +70,7 @@ const sources = {
 
   css: {
     vendor: [
+      'node_modules/semantic-ui-css/semantic.css',
       'node_modules/semantic-ui-calendar/dist/calendar.css',
       'node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.css',
       'node_modules/leaflet-control-geocoder/dist/Control.Geocoder.css',
@@ -80,6 +83,7 @@ const sources = {
 
   img: {
     vendor: [
+      'node_modules/semantic-ui-css/themes/default/assets/images/*.{png,svg}',
       'node_modules/leaflet-routing-machine/dist/*.{png,svg}',
       'node_modules/leaflet-control-geocoder/dist/images/*',
       'node_modules/leaflet.awesome-markers/dist/images/*',
@@ -88,6 +92,12 @@ const sources = {
     site: [
       `${SRC_IMG}/**/*`,
     ]
+  },
+
+  fonts: {
+    vendor: [
+      'node_modules/semantic-ui-css/themes/default/assets/fonts/*',
+    ]
   }
 };
 
@@ -95,7 +105,8 @@ const sources = {
 const destinations = {
   css: '../../src/sous_chef/static/css',
   js: '../../src/sous_chef/static/js',
-  img: '../../src/sous_chef/static/images'
+  img: '../../src/sous_chef/static/images',
+  fonts: '../../src/sous_chef/static/fonts'
 };
 
 // Tasks
@@ -160,9 +171,14 @@ gulp.task('images', () =>
     .pipe(gulp.dest(destinations.img))
 );
 
+gulp.task('fonts', () =>
+  gulp.src([].concat(sources.fonts.vendor))
+    .pipe(gulp.dest(destinations.fonts))
+);
+
 gulp.task('default', () => {
   gulp.start('styles', 'scripts-multidatespicker', 'scripts-leaflet', 'scripts',
-  'images');
+  'images', 'fonts');
 });
 
 gulp.task('watch', ['default'], () => {
