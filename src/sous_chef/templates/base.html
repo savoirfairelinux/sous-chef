@@ -26,16 +26,15 @@
             <div class="ui left fixed vertical inverted menu">
                 {% include "system/menu.html" %}
             </div>
-            <div class="ui main grid">
-                <!-- Responsive top menu -->
-                <div class="ui fixed inverted main menu">
-                    <div class="ui container">
-                        <a class="launch icon item sidebar-toggle ui open-menu">
-                            <i class="sidebar icon"></i>
-                        </a>
-                    </div>
+            <!-- Responsive top menu -->
+            <div class="ui fixed inverted main menu">
+                <div class="ui container">
+                    <a class="launch icon item sidebar-toggle ui open-menu">
+                        <i class="sidebar icon"></i>
+                    </a>
                 </div>
-
+            </div>
+            <div class="ui main grid">
                 {% for message in messages %}
                 <div class="ui {{ message.tags }} message sixteen wide column">
                     <i class="close icon"></i>
@@ -49,17 +48,16 @@
                 <br><br>
             </div>
         </div>
-    </div>
-    <div class="ui inverted vertical footer segment">
-        <br>
-        <div class="ui center aligned container">
-            <img src="{% static 'images/logo-souschef-coul.png' %}" class="ui centered small image">
-            <div class="ui horizontal inverted small divided link list">
-                <p><i class="code yellow icon"></i> {% trans "with" %} &nbsp;<i class="heart yellow icon"></i> {% trans "in Montreal" %}</p>
-            </div>
-        </div>
-    </div>
 
+        <footer class="ui inverted vertical footer segment">
+            <div class="ui center aligned container">
+                <img src="{% static 'images/logo-souschef-coul.png' %}" class="ui centered small image">
+                <div class="ui horizontal inverted small divided link list">
+                    <p><i class="code yellow icon"></i> {% trans "with" %} &nbsp;<i class="heart yellow icon"></i> {% trans "in Montreal" %}</p>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="application/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js" type="application/javascript"></script>
