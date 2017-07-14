@@ -9,7 +9,6 @@
         {% block title %}{% trans "Sous-Chef" %}{% endblock %}
     </title>
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css" rel="stylesheet">
     <link href="{% static 'css/main.min.css' %}" type="text/css" rel="stylesheet">
     {% block extrahead %}{% endblock %}
 </head>
@@ -59,8 +58,6 @@
         </footer>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="application/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js" type="application/javascript"></script>
     {% if debug %}
         <script src="{% static 'js/sous-chef.js' %}" type="application/javascript"></script>
     {% else %}
