@@ -216,6 +216,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 AVATAR_STORAGE_DIR = 'avatars/'
 AVATAR_PROVIDERS = (
+    'avatar.providers.PrimaryAvatarProvider',
     'avatar.providers.GravatarAvatarProvider',
     'avatar.providers.DefaultAvatarProvider',
 )
