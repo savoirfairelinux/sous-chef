@@ -39,7 +39,9 @@
     </h1>
 </div>
 
-<div class="six wide column">
+<div class="ui stackable relaxed grid container">
+
+    <div class="six wide column">
     <div class="ui vertical steps">
       {% trans 'basic_information' as i18n_basic_information %}
       {% trans 'address_information' as i18n_address_information %}
@@ -55,7 +57,7 @@
     </div>
  </div>
 
-<div class="ten wide column form-steps">
+    <div class="ten wide column form-steps">
     <form action="" method="post" class="ui form error">{% csrf_token %}
         {% if wizard.form.errors %}
         <div class="ui error message">
@@ -85,6 +87,8 @@
         {% endif %}
 
     </form>
+</div>
+
 </div>
 {% endblock %}
 
