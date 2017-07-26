@@ -206,7 +206,7 @@ FORMAT_MODULE_PATH = (
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_DIRS = (
-    BASE_DIR + '/sous_chef/static/',
+    BASE_DIR + '/sous_chef/assets/',
 )
 STATIC_URL = '/static/'
 

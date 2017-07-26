@@ -103,10 +103,10 @@ const sources = {
 
 // - Destination path folders
 const destinations = {
-  css: '../../src/sous_chef/static/css',
-  js: '../../src/sous_chef/static/js',
-  img: '../../src/sous_chef/static/images',
-  fonts: '../../src/sous_chef/static/fonts'
+  css: '../../src/sous_chef/assets/css',
+  js: '../../src/sous_chef/assets/js',
+  img: '../../src/sous_chef/assets/images',
+  fonts: '../../src/sous_chef/assets/fonts'
 };
 
 // Tasks

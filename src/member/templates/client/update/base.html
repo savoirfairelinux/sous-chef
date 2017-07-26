@@ -31,7 +31,9 @@
     </h1>
 </div>
 
-<div class="six wide column">
+<div class="ui stackable relaxed grid container">
+
+    <div class="six wide column">
     <div class="ui vertical steps">
         {% include 'client/update/step.html' with url='member_update_basic_information' step='basic_information' icon='male' name=_('Personal') description=_('First name, last name, ...') %}
         {% include 'client/update/step.html' with url='member_update_address_information' step='address_information' icon='home' name=_('Address') description=_('Street number, city, ...') %}
@@ -41,7 +43,7 @@
     </div>
  </div>
 
-<div class="ten wide column form-steps">
+    <div class="ten wide column form-steps">
 
     <form action="" method="post" class="ui form error">{% csrf_token %}
         {% if form.errors %}
@@ -63,6 +65,8 @@
 
 
     </form>
+</div>
+
 </div>
 {% endblock %}
 
