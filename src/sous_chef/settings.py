@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import subprocess
 from django.urls import reverse_lazy
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -222,3 +223,10 @@ AVATAR_PROVIDERS = (
 # Displayable information
 SOUSCHEF_VERSION = os.environ.get('SOUSCHEF_VERSION') or ''
 SOUSCHEF_ENVIRONMENT_NAME = os.environ.get('SOUSCHEF_ENVIRONMENT_NAME') or ''
+
+try:
+    GIT_HEAD = subprocess.check_output(['git', 'rev-parse', 'HEAD'])
+    GIT_TAG = subprocess.check_output(['git', 'describe', '--tags'])
+except Exception as e:
+    GIT_HEAD = None
+    GIT_TAG = None
