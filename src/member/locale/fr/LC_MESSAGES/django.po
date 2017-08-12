@@ -310,6 +310,10 @@ msgstr "Le statut a été changé"
 msgid "The end date of this status change has been scheduled."
 msgstr ""
 
+#: member/formsfield.py
+msgid "Phone numbers must be in XXX-XXX-XXXX # XXXXX format."
+msgstr "Le format du numéro de téléphone doit être XXX-XXX-XXXX # XXXXX."
+
 #: member/models.py
 msgid "Female"
 msgstr "Femme"

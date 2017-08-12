@@ -1,6 +1,7 @@
 import re
 from django import forms
 from django.utils.encoding import smart_text
+from django.utils.translation import ugettext_lazy as _
 from localflavor.ca.forms import (
     CAPhoneNumberField, CAPostalCodeField
 )
@@ -14,6 +15,11 @@ class CAPhoneNumberExtField(CAPhoneNumberField):
     phone_digits_with_ext = re.compile(
             r'^(?:1-?)?(\d{3})[-\.]?(\d{3})[-\.]?(\d{4})#?(\d*)$'
         )
+
+    default_error_messages = {
+        'invalid':
+        _('Phone numbers must be in XXX-XXX-XXXX # XXXXX format.'),
+    }
 
     def clean(self, value):
         try:
