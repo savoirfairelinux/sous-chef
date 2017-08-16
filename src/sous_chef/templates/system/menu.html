@@ -50,5 +50,9 @@
     <a class="item" href="{% url 'billing:list' %}"><i class="dollar icon"></i>{% trans 'Billing' %}</a>
     {% if request.user.is_superuser %}<a class="item" href="{% url 'admin:index' %}"><i class="settings icon"></i>{% trans 'Admin' %}</a>{% endif %}
     <a href="{% url 'page:logout' %}" class="item"><i class="sign out icon"></i>{% trans 'Logout' %}</a>
-    <p style="color:aqua;"> {{ SC_ENVIRONMENT_NAME }} {{ SC_VERSION }}</p>
+</div>
+<div class="item">
+    <strong class="ui center aligned container" style="color:aqua;">
+        {{ SC_ENVIRONMENT_NAME }} {{ SC_VERSION }}
+    </strong>
 </div>

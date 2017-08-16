@@ -53,6 +53,19 @@
                 <img src="{% static 'images/logo-souschef-coul.png' %}" class="ui centered small image">
                 <div class="ui horizontal inverted small divided link list">
                     <p><i class="code yellow icon"></i> {% trans "with" %} &nbsp;<i class="heart yellow icon"></i> {% trans "in Montreal" %}</p>
+                    <small>
+                        {% if GIT_HEAD %}
+                            <span style="color:aqua;">
+                               | Git HEAD: {{ GIT_HEAD|slice:":7" }} |
+                            </span>
+                        {% endif %}
+
+                        {% if GIT_TAG %}
+                            <span style="color:aqua;">
+                                | Git tag: {{ GIT_TAG }} |
+                            </span>
+                        {% endif %}
+                    </small>
                 </div>
             </div>
         </footer>

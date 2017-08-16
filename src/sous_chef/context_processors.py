@@ -30,6 +30,8 @@ def total(request):
         'NOTE_FILTER_DEFAULT_IS_READ': NoteFilter.NOTE_STATUS_UNREAD,
         'SC_ENVIRONMENT_NAME': settings.SOUSCHEF_ENVIRONMENT_NAME,
         'SC_VERSION': settings.SOUSCHEF_VERSION,
+        'GIT_HEAD': settings.GIT_HEAD,
+        'GIT_TAG': settings.GIT_TAG,
     }
 
     return COMMON_CONTEXT
