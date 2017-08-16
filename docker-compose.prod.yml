@@ -4,3 +4,17 @@ services:
     environment:
       - SOUSCHEF_ENVIRONMENT_NAME=PROD
       - SOUSCHEF_DJANGO_ALLOWED_HOSTS=souschef.santropolroulant.org
+
+  nginx:
+    restart: always
+    build: tools/nginx
+    command: /bin/bash -c "nginx"
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - souschef_static:/code/src/static
+    depends_on:
+      - web
+    networks:
+      - frontend
+      - backend

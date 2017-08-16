@@ -7,3 +7,17 @@ services:
       - TRAVIS=$TRAVIS
       - TRAVIS_JOB_ID=$TRAVIS_JOB_ID
       - TRAVIS_BRANCH=$TRAVIS_BRANCH
+
+  nginx:
+    restart: always
+    build: tools/nginx
+    command: /bin/bash -c "nginx"
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - souschef_static:/code/src/static
+    depends_on:
+      - web
+    networks:
+      - frontend
+      - backend

@@ -22,20 +22,6 @@ services:
     networks:
       - backend
 
-  nginx:
-    restart: always
-    build: tools/nginx
-    command: /bin/bash -c "nginx"
-    ports:
-      - "80:80"
-    volumes:
-      - souschef_static:/code/src/static
-    depends_on:
-      - web
-    networks:
-      - frontend
-      - backend
-
 volumes:
   souschef_data:
   souschef_static:
