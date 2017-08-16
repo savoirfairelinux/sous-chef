@@ -96,10 +96,12 @@ class Member(models.Model):
         verbose_name_plural = _('members')
 
     mid = models.IntegerField(
+        blank=True,
         null=True
     )
 
     rid = models.IntegerField(
+        blank=True,
         null=True
     )
 
