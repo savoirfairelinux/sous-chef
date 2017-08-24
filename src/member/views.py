@@ -554,7 +554,7 @@ def ExportCSV(self, queryset):
             route,
             obj.billing_payment_type,
             obj.billing_member,
-            ", ".join(str(c) for c in obj.relationships.all()),
+            ", ".join(str(c) for c in obj.relationship_set.all()),
             obj.meal_default_week,
         ])
 
