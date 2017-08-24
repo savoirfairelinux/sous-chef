@@ -530,6 +530,12 @@ class Client(models.Model):
         on_delete=models.CASCADE
     )
 
+    relationships = models.ManyToManyField(
+        'member.Member',
+        related_name="relationships_of",
+        through='member.Relationship'
+    )
+
     status = models.CharField(
         max_length=1,
         choices=CLIENT_STATUS,
