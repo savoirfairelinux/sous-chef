@@ -103,6 +103,9 @@ $(function() {
                     $(selector).val(value || 0);
                     dismissFieldError($(selector));
                 });
+                dismissFieldError($('#id_delivery_' + date));
+                dismissFieldError($('#id_pickup_' + date));
+                dismissFieldError($('#id_visit_' + date));
                 if (client_meals_default.hasOwnProperty('size')) {
                     $(size_selector).dropdown('set selected', client_meals_default.size);
                     dismissFieldError($(size_selector));

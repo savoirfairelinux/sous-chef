@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-04 14:50-0400\n"
+"POT-Creation-Date: 2017-08-25 16:12-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
@@ -39,6 +39,10 @@ msgstr ""
 
 #: order/forms.py
 msgid "This field must be 1 to submit the form."
+msgstr ""
+
+#: order/forms.py
+msgid "Empty order is not allowed."
 msgstr ""
 
 #: order/forms.py
