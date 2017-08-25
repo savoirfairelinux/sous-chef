@@ -52,6 +52,10 @@ Please refer to the https://github.com/savoirfairelinux/sous-chef/blob/dev/CONTR
 
 Sous-Chef is an open-source software published under the GNU AFFERO GENERAL PUBLIC licence, version 3.
 
+## Talks at conferences
+
+https://github.com/savoirfairelinux/sous-chef/blob/dev/docs/meetup/DebConf17%20SousChef%20Talk%2020170805.pdf[Sous-Chef : Free software for the meals-on-wheels communities - DebConf17 in Montreal].
+
 ## About the Santropol Roulant
 
 Santropol Roulant is an intergenerational community food hub where we grow, prepare and deliver food. In doing so, we create a continuum of engaging services that help build a stronger social fabric, and increase food security and social inclusion for Montrealers.
