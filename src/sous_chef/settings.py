@@ -203,7 +203,7 @@ FORMAT_MODULE_PATH = (
 )
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
+# https://docs.djangoproject.com/en/1.11/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_DIRS = (
@@ -212,10 +212,19 @@ STATICFILES_DIRS = (
 STATIC_URL = '/static/'
 
 # Avatar files
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-AVATAR_STORAGE_DIR = 'avatars/'
+if DEBUG:
+    # When using the development server, serve files directly from /media/
+    # https://docs.djangoproject.com/en/1.11/howto/static-files/#serving-files-uploaded-by-a-user-during-development
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    MEDIA_URL = '/media/'
+else:
+    # In non development mode, serve files from /static/ using gninx as
+    # dedicated server
+    # https://docs.djangoproject.com/en/1.11/howto/static-files/deployment/#serving-static-files-from-a-dedicated-server
+    MEDIA_ROOT = os.path.join(STATIC_ROOT, 'media')
+    MEDIA_URL = '/static/media/'
 AVATAR_PROVIDERS = (
+    'avatar.providers.PrimaryAvatarProvider',
     'avatar.providers.GravatarAvatarProvider',
     'avatar.providers.DefaultAvatarProvider',
 )
