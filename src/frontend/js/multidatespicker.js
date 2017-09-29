@@ -101,19 +101,13 @@ $(function() {
                 $.each(client_meals_default, function (key, value) {
                     var selector = "#id_"+key+"_"+date+"_quantity";
                     $(selector).val(value || 0);
-                    dismissFieldError($(selector));
                 });
                 if (client_meals_default.hasOwnProperty('size')) {
                     $(size_selector).dropdown('set selected', client_meals_default.size);
-                    dismissFieldError($(size_selector));
                 }
             }
         });
     })();
-
-    function dismissFieldError(elem) {
-        $(elem).closest('.error').removeClass('error');
-    }
 
     $('#form_create_batch #id_client .ui.dropdown').dropdown('setting', 'onChange', function (value, text, $selectedItem) {
         // on client change, update the form to update the client default.

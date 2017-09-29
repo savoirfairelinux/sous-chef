@@ -66,6 +66,7 @@
                               {% with form|get_item:field_name as field %}
                               <div class="field {% if field.errors %}error{% endif %}">
                               {{ field }}
+                              {{ field.errors }}
                               </div>
                               {% endwith %}
                             {% endwith %}
@@ -77,6 +78,7 @@
                               {% with form|get_item:field_name as field %}
                               <div class="field {% if field.errors %}error{% endif %}">
                               {{ field }}
+                              {{ field.errors }}
                               </div>
                               {% endwith %}
                             {% endwith %}
@@ -94,6 +96,7 @@
                         <div class="ui toggle checkbox">
                           {{ field }}
                           <label>{% trans "Delivery" %}</label>
+                          {{ field.errors }}
                         </div>
                       </div>
                       {% endwith %}
@@ -107,6 +110,7 @@
                         <div class="ui toggle checkbox">
                           {{ field }}
                           <label>{% trans "Pickup" %}</label>
+                          {{ field.errors }}
                         </div>
                       </div>
                       {% endwith %}
@@ -120,6 +124,7 @@
                         <div class="ui toggle checkbox">
                           {{ field }}
                           <label>{% trans "Visit" %}</label>
+                          {{ field.errors }}
                         </div>
                       </div>
                       {% endwith %}

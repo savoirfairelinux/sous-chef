@@ -98,6 +98,47 @@ class CreateOrdersBatchForm(forms.Form):
             )
         return is_submit
 
+    def clean(self):
+        """
+        For each delivery date, the quantities and options should
+        not be all empty. Refs #803.
+        """
+        cleaned_data = super(CreateOrdersBatchForm, self).clean()
+        delivery_dates_str = cleaned_data.get('delivery_dates')
+        if delivery_dates_str:
+            delivery_dates = delivery_dates_str.split('|')
+        else:
+            delivery_dates = []
+        fields_not_null_check = [
+            ('delivery_{}', lambda x: x is True),
+            ('pickup_{}', lambda x: x is True),
+            ('visit_{}', lambda x: x is True),
+        ]
+        for meal, meal_translation in COMPONENT_GROUP_CHOICES:
+            if meal is COMPONENT_GROUP_CHOICES_SIDES:
+                continue  # "sides" not in the form
+            else:
+                fields_not_null_check.append(
+                    ('%s_{}_quantity' % meal, lambda x: x and x > 0))
+        for delivery_date in delivery_dates:
+            if all([
+                    bool(check_fn(
+                        cleaned_data.get(field_template.format(delivery_date))
+                    )) is False
+                    for field_template, check_fn in fields_not_null_check
+            ]):
+                # Error-highlight all fields on that date.
+                for field_template, check_fn in fields_not_null_check:
+                    self.add_error(
+                        field_template.format(delivery_date),
+                        forms.ValidationError(
+                            _("Empty order is not allowed."),
+                            code='empty_delivery_date'
+                        )
+                    )
+
+        return cleaned_data
+
 
 class OrderStatusChangeForm(forms.ModelForm):
 

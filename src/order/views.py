@@ -221,16 +221,21 @@ class CreateOrdersBatch(
         # open accordions if there's an invalid field in it.
         context = self.get_context_data(**kwargs)
         context['form'] = form
-        for field in form.errors.keys():
-            try:
-                # next() - find first occurence
-                invalid_date = next(
-                    date for date in context['accordions_inactive']
-                    if date in field
-                )
-                context['accordions_inactive'].remove(invalid_date)
-            except StopIteration:
-                pass
+        if form.cleaned_data.get('is_submit') != 1:
+            form._errors = {}
+        else:
+            for field in form.errors.keys():
+                try:
+                    # next() - find first occurence
+                    invalid_date = next(
+                        date for date in context['accordions_inactive']
+                        if date in field
+                    )
+                    print(invalid_date)
+                    context['accordions_inactive'].remove(invalid_date)
+                except StopIteration:
+                    pass
+
         return self.render_to_response(context)
 
     def form_valid(self, form):
