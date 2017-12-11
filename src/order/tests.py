@@ -21,7 +21,9 @@ from member.factories import RouteFactory, ClientFactory
 from meal.factories import ComponentFactory
 from order.models import Order, Order_item, MAIN_PRICE_DEFAULT, \
     OrderStatusChange, COMPONENT_GROUP_CHOICES_MAIN_DISH, \
-    ORDER_ITEM_TYPE_CHOICES_COMPONENT
+    ORDER_ITEM_TYPE_CHOICES_COMPONENT, \
+    ORDER_STATUS_ORDERED, ORDER_STATUS_DELIVERED, ORDER_STATUS_CANCELLED
+
 from order.factories import OrderFactory
 from sous_chef.tests import TestMixin as SousChefTestMixin
 
@@ -1721,6 +1723,45 @@ class CommandsTestCase(TestCase):
             Order.objects.all().count(),
             # The 4 clients should be excluded.
             len(self.ongoing_clients) - 4
+        )
+
+    def test_setordersdelivered(self):
+        """Set status to delivered for orders on a given day"""
+        delivery_date_str = "2017-12-09"
+        delivery_date = datetime.datetime.strptime(
+            delivery_date_str, '%Y-%m-%d').date()
+
+        # status should be set to Delivered
+        OrderFactory(
+            delivery_date=delivery_date,
+            status=ORDER_STATUS_ORDERED
+        )
+        # status should be set to Delivered
+        OrderFactory(
+            delivery_date=delivery_date,
+            status=ORDER_STATUS_ORDERED
+        )
+        orders_to_be_set = 2
+
+        # status should NOT be set to Delivered
+        OrderFactory(
+            delivery_date=delivery_date,
+            status=ORDER_STATUS_CANCELLED
+        )
+        # status should NOT be set to Delivered
+        OrderFactory(
+            delivery_date=datetime.datetime.strptime(
+                "2017-12-31", '%Y-%m-%d').date(),
+            status=ORDER_STATUS_ORDERED
+        )
+        args = [delivery_date_str]
+        opts = {}
+        call_command('setordersdelivered', *args, **opts)
+        self.assertEqual(
+            Order.objects.filter(
+                delivery_date=delivery_date,
+                status=ORDER_STATUS_DELIVERED).count(),
+            orders_to_be_set
         )
 
 
