@@ -19,12 +19,12 @@ class Command(BaseCommand):
             options['delivery_date'], '%Y-%m-%d'
         ).date()
 
-        orders = Order.objects.filter(
+        numorders = Order.objects.filter(
             status=ORDER_STATUS_ORDERED,
-            delivery_date=delivery_date)
-        for order in orders:
-            order.status = ORDER_STATUS_DELIVERED
-            order.save()
+            delivery_date=delivery_date
+        ).update(
+            status=ORDER_STATUS_DELIVERED
+        )
 
         # Log the execution
         LogEntry.objects.log_action(
@@ -35,4 +35,4 @@ class Command(BaseCommand):
             action_flag=ADDITION,
         )
         print("Status set to Delivered for {0} orders whose "
-              "delivery date is {1}.".format(len(orders), delivery_date))
+              "delivery date is {1}.".format(numorders, delivery_date))
