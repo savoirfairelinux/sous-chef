@@ -879,6 +879,7 @@ class KitchenCount(
                     component_lines,                    # summary
                     meal_lines)                         # detail
                 num_labels = kcr_make_labels(   # meal labels as PDF
+                    date,
                     kitchen_list,                       # KitchenItems
                     component_lines[0].name,            # main dish name
                     component_lines[0].ingredients)     # main dish ingredients
@@ -1289,8 +1290,7 @@ meal_label_fields = [                         # Contents for Meal Labels.
     'sortkey', '',          # key for sorting
     'route', '',            # String : Route name
     'name', '',             # String : Last + First abbreviated
-    #                         String : Delivery date
-    'date', "{}".format(datetime.date.today().strftime("%a, %b-%d")),
+    'date', '',             # String : Delivery date
     'size', '',             # String : Regular or Large
     'main_dish_name', '',   # String
     'dish_clashes', [],   # List of strings
@@ -1393,7 +1393,8 @@ def draw_label(label, width, height, data):
             vertic_pos -= 9
 
 
-def kcr_make_labels(kitchen_list, main_dish_name, main_dish_ingredients):
+def kcr_make_labels(date, kitchen_list,
+                    main_dish_name, main_dish_ingredients):
     """Generate Meal Labels sheets as a PDF file.
 
     Generate a label for each main dish serving to be delivered. The
@@ -1403,6 +1404,7 @@ def kcr_make_labels(kitchen_list, main_dish_name, main_dish_ingredients):
     and ReportLab
 
     Args:
+        date : The delivery date of the meals.
         kitchen_list : A dictionary of KitchenItem objects (see
             order/models) which contain detailed information about
             all the meals that have to be prepared for the day and
@@ -1444,6 +1446,7 @@ def kcr_make_labels(kitchen_list, main_dish_name, main_dish_ingredients):
         meal_label = MealLabel(*meal_label_fields[1::2])
         meal_label = meal_label._replace(
             route=kititm.routename.upper(),
+            date="{}".format(date.strftime("%a, %b-%d")),
             main_dish_name=main_dish_name,
             name=kititm.lastname + ", " + kititm.firstname[0:2] + ".")
         if kititm.meal_size == SIZE_CHOICES_LARGE:
