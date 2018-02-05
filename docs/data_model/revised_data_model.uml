@@ -1,0 +1,322 @@
+'Diagram in plantuml language : see http://plantuml.com/
+'To generate image : see http://www.plantuml.com/plantuml
+@startuml
+scale 1.0
+title SousChef Data Model (revised_data_model.uml, 2017-02-08 at 9:00)\n(this may be out of sync with the django models)\n
+hide methods
+'hide fields
+skinparam shadowing false
+skinparam classArrowColor Black
+skinparam classBorderColor Black
+skinparam classBackgroundColor White
+'skinparam classArrowFontColor Green
+skinparam classArrowFontStyle bold
+
+'relationships are in alphabetical order on the "many side"
+'  and we place on the left the entity that :
+'    is the many-to-many connecting table
+'    is the child in a child-parent relationship
+'and the direction is almost always -u- meaning UP
+
+legend left
+  <u>LEGEND</u>
+  <b>App : Meal=<color:green>green</color> Member=<color:red>red</color> Order=<color:blue>blue</color> Notification=<color:orange>=orange</color> Billing=<color:purple>purple</color> Note=<color:pink>pink</color></b>
+  <b>(C)</b> : ORM class + DB table
+  <b>(m)</b> : Many-to-many DB table
+endlegend
+
+Client "0..1" -u- "1" Member
+Client "*" -u- "1" Member : Bill
+Client "*" -u- "0..1" Member : Emer
+Client "*" -u- "1" Route
+Client_avoid_component "*" -u- "1" Client
+Client_avoid_component "*" -d- "1" Component
+Client_avoid_ingredient "*" -u- "1" Client
+Client_avoid_ingredient "*" -d- "1" Ingredient
+Client_option "*" -d- "1" Client
+Client_option "*" -u- "1" Option
+ClientScheduledStatus "*" -d- "1" Client
+ClientScheduledStatus "0..1" -- "1" ClientScheduledStatus
+Component_Ingredient "*" -u- "1" Ingredient
+Component_Ingredient "*" -l- "1" Component
+Contact "*" -r- "1" Member
+Incompatibility "*" -d- "1" Ingredient
+Incompatibility "*" -u- "1" Restricted_item
+Member "*" -u- "0..1" Address
+Menu_component "*" -r- "1" Component
+Menu_component "*" -u- "1" Menu
+Note "*" -u- "1" Client
+Note "*" -d- "1" NoteCategory
+Note "*" -d- "1" NotePriority
+Note "*" -d- "1" User
+Notification "*" -d- "1" Member
+Order "*" -u- "1" Client
+OrderBilling "*" -d- "1" Billing
+OrderBilling "*" -d- "1" Order
+Order_item "*" -u- "1" Order
+OrderStatusChange "*" -u- "1" Order
+Referencing "*" -r- "1" Client
+Referencing "*" -u- "1" Member
+Restriction "*" -l- "1" Client
+Restriction "*" -d- "1" Restricted_item
+
+'---------------------------------------------------------------------
+'classes are in Alphabetical order
+
+class Address << (C,red) >> {
+    id
+    number
+    street
+    apartment
+    floor
+    city
+    postal_code
+    longitude
+    latitude
+    distance
+}
+
+class Billing << (C,purple) >> {
+    id
+    total_amount
+    billing_month
+    billing_year
+    created
+    detail
+}
+
+class Client << (C,red) >> {
+    id
+    billing_member_id
+    billing_payment_type
+    rate_type
+      'ex. low income, solidary, default
+    member_id
+    emergency_contact_member_id
+    emergency_contact_relationship
+      'ex. son, daughter, friend
+    status
+    language
+    alert
+    delivery_type
+    gender
+    birthdate
+    route_id
+    meal_default_week
+    delivery_note
+}
+
+class Client_avoid_component << (m,white) >> {
+    id
+    client_id
+    component_id
+}
+
+class Client_avoid_ingredient << (m,white) >> {
+    id
+    client_id
+    ingredient_id
+}
+
+class Client_option << (C,red) >> {
+    id
+    client_id
+    option_id
+    value
+      'if option_group = main_dish_size : 'Regular', 'Large'
+      'if option_group = dish : qty/day as json {0, 1, 0, 0, 0, 2, 0}
+      'if option_group = preparation : Null
+      'if option_group = other_order_item : No occurrence
+}
+
+class ClientScheduledStatus << (C,red) >> {
+    id
+    client_id
+    linked_scheduled_status_id
+    status_from
+    status_to
+    reason
+    change_date
+    change_state
+    operation_status
+}
+
+class Component << (C,green) >> {
+    id
+    name
+    description
+    component_group
+      'maindish, dessert, diabetic dessert, fruit salad, green salad, pudding, compote
+      'OLD main dish, vegetable, seasonal, side dish
+}
+
+class Component_Ingredient << (C,green) >> {
+    id
+    component_id
+    ingredient_id
+    date
+}
+
+class Contact << (C,red) >> {
+    id
+    type
+    value
+    member_id
+}
+
+class Incompatibility << (m,white) >> {
+    id
+    restricted_item_id
+    ingredient_id
+}
+
+class Ingredient << (C,green) >>  {
+    id
+    name
+    description
+    ingredient_group
+}
+
+class Member << (C,red) >> {
+    id
+    mid
+    rid
+    firstname
+    lastname
+    address_id
+    work_information
+    created_at
+    updated_at
+}
+
+class Menu << (C,green) >> {
+    id
+    date
+}
+
+class Menu_component << (m,white) >> {
+    id
+    menu_id
+    component_id
+}
+
+class Note << (C,pink) >> {
+    id
+    note
+    author_user_id
+    date
+    is_read
+    client_id
+    category_id
+    priority_id
+      'choices: normal, urgent
+}
+
+class NoteCategory << (C,pink) >> {
+    id
+    name
+}
+
+class NotePriority << (C,pink) >> {
+    id
+    name
+}
+
+class Notification << (C,orange) >> {
+    id
+    description
+    member_id
+    date
+}
+
+class Option << (C,red) >> {
+    'Client can choose more that one per option group
+    id
+    name
+      '(main_dish_size) size
+      '(dish) maindish, dessert, diabetic dessert, fruit salad, green salad, pudding, compote
+      '(preparation) puree all, puree side, cut meat
+      '(other_order_item) Deliver commercial item, Pickup payment, Deliver invitation, Visit
+    description
+    option_group
+      'main_dish_size, dish, preparation, other_order_item
+}
+
+class Order << (C,blue) >> {
+    id
+    creation_date
+    delivery_date
+    status
+      'Ordered, Delivered, Billed, Paid
+    client_id
+}
+
+class OrderBilling << (m,white) >> {
+    id
+    order_id
+    billing_id
+}
+
+class Order_item << (C,blue) >> {
+    id
+    order_id
+    price
+    billable_flag
+    size
+      'regular, large
+    order_item_type
+      'billable meal component
+      'billable delivery (ex. general store item)
+      'non billable delivery (ex. invitation card to an event)
+      'non billable pickup (ex. payment check)
+    remark
+      'ex. name of general store item to deliver
+    total_quantity
+    free_quantity
+    component_group
+}
+
+class OrderStatusChange << (C,blue) >> {
+    id
+    order_id
+    status_from
+    status_to
+    reason
+    change_time
+}
+
+class Referencing << (C,red) >> {
+    id
+    referent_member_id
+    client_id
+    referral_reason
+    date
+}
+
+class Restricted_item << (C,green) >> {
+    id
+    name
+    description
+      'ex. gluten
+    restricted_item_group
+      'dairy, meat, vegetables
+}
+
+class Restriction << (m,white) >> {
+    id
+    client_id
+    restricted_item__id
+}
+
+class Route << (C,red) >> {
+    id
+    name
+    description
+    vehicle
+    client_id_sequence
+}
+
+class User << (C,white) >> {
+    id
+}
+@enduml

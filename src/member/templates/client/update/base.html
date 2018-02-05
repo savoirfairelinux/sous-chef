@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load staticfiles %}
+
+{% block extrahead %}
+    <style> #mapid {height: 250px;}</style>
+    {% load leaflet_tags %}
+    {% leaflet_js %}
+    {% leaflet_css %}
+{% endblock %}
+
+{% block title %}
+    {% trans "Update Client" %}
+{% endblock %}
+
+{% block message %}
+<div class="ui text container">
+    <div class="ui warning small message">
+        <div class="header">{% trans "Tip" %}</div>
+        <p>{% trans "In update mode, each step can be saved individually" %}.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">
+        {% trans "Update Client" %}
+    </h1>
+</div>
+
+<div class="ui stackable relaxed grid container">
+
+    <div class="six wide column">
+    <div class="ui vertical steps">
+        {% include 'client/update/step.html' with url='member_update_basic_information' step='basic_information' icon='male' name=_('Personal') description=_('First name, last name, ...') %}
+        {% include 'client/update/step.html' with url='member_update_address_information' step='address_information' icon='home' name=_('Address') description=_('Street number, city, ...') %}
+        {% include 'client/update/step.html' with url='member_update_relationships' step='relationships' icon='treatment' name=_('Relationships') description=_('Referents, emergency contacts, ...') %}
+        {% include 'client/update/step.html' with url='member_update_payment_information' step='payment_information' icon='payment' name=_('Payment') description=_('Payment method, card, ...') %}
+        {% include 'client/update/step.html' with url='member_update_dietary_restriction' step='dietary_restriction' icon='food' name=_('Preferences') description=_('Deliveries, restrictions, ...') %}
+    </div>
+ </div>
+
+    <div class="ten wide column form-steps">
+
+    <form action="" method="post" class="ui form error">{% csrf_token %}
+        {% if form.errors %}
+        <div class="ui error message">
+            <div class="header">{% trans 'Required information missing' %}</div>
+            <p>{% trans 'Please review the form to make sure that all required fields are filled.' %}</p>
+            <!-- Show only if form is not a formset instance -->
+            {% if not form.forms %}
+                {{ form.errors }}
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% block subcontent %}
+            <!-- A block used by all children to include content here-->
+        {% endblock %}
+        <a class="big ui gray button" href="{{request.META.HTTP_REFERER}}"> {% trans "Back" %} </a>
+        <input class="big ui right floated yellow button" type="submit" value="{% trans "Save" %}"/>
+
+
+    </form>
+</div>
+
+</div>
+{% endblock %}
+
+{% block extrajs %}
+    {% if debug %}
+        <script src="{% static 'js/leaflet.js' %}" type="application/javascript"></script>
+    {% else %}
+        <script src="{% static 'js/leaflet.min.js' %}" type="application/javascript"></script>
+    {% endif %}
+{% endblock %}

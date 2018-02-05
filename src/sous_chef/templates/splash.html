@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% load i18n %}
+{% load staticfiles %}
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}{% trans "Sous-Chef" %}{% endblock %}
+    </title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css" rel="stylesheet">
+
+    {% block extrahead %}{% endblock %}
+
+    <style type="text/css">
+        body {
+          background-color: #DADADA;
+        }
+        body > .grid {
+          height: 100%;
+        }
+        .image {
+          margin-top: -100px;
+        }
+        .column {
+          max-width: 450px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ui middle aligned center aligned grid">
+
+        <div class="column">
+            {%block content%}{%endblock%}
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js" type="application/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js" type="application/javascript"></script>
+    <script src="{% static 'js/sous-chef.js' %}" type="application/javascript"></script></script>
+
+    <!-- WARNING :  Do not move this line before a manual import of script! -->
+    {% block extrajs %}{% endblock %}
+</body>
+
+</html>

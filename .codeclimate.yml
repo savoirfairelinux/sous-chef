@@ -1,0 +1,23 @@
+engines:
+  eslint:
+    enabled: false
+  pep8:
+    enabled: true
+  fixme:
+    enabled: true
+  radon:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - javascript:
+      - python:
+ratings:
+   paths:
+   - "src/**/*.py"
+   # - src/**/*.js
+exclude_paths:
+- "**/tests.py"
+- "docs/**/*"
+- "*.csv"

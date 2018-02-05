@@ -1,0 +1,106 @@
+{% load i18n %}
+
+{% if form.errors %}
+    <div class="ui error message">
+      <div class="header">{% trans 'Required information missing' %}</div>
+      <p>{% trans 'Please review the form to make sure that all required fields are filled.' %}</p>
+    </div>
+{% endif %}
+
+<div class="order">
+    <h4 class="ui dividing header">Order Information</h4>
+    <div class="field {% if form.client.errors %} error {% endif %}">
+        <label>{{ form.client.label }}</label>
+        {% if form.client.errors %} {{ form.client.errors }} {% endif %}
+        <div class="ui fluid search selection dropdown">
+          <input type="hidden" name="{{ form.client.name }}" value={{form.client.value}}>
+          <i class="dropdown icon"></i>
+          <div class="default text">{% trans 'Select a client' %}</div>
+          <div class="menu">
+            {% for value, option in form.client.field.choices %}
+              <div class="item" data-value="{{value}}">{{option}}</div>
+            {% endfor %}
+          </div>
+        </div>
+    </div>
+
+    <div class="field {% if form.delivery_date.errors %} error {% endif %}">
+        <label>{{ form.delivery_date.label }}</label>
+        <div class="ui calendar" id="form_delivery_date">
+            <div class="ui input left icon">
+                  <i class="calendar icon"></i>
+                  {{ form.delivery_date }}
+            </div>
+        </div>
+        {% if form.delivery_date.errors %} {{ form.delivery_date.errors }} {% endif %}
+    </div>
+
+</div>
+
+<h4 class="ui dividing header">Order items</h4>
+
+<div class="ui styled fluid accordion order items">
+
+    {% for formset in inlines %}
+        {{ formset.management_form }}
+        <div id="{{ formset.prefix }}">
+            {% if formset.errors %}
+                <div class="ui error message">
+                  <div class="header">{% trans 'Required information missing' %}</div>
+                  <p>{% trans 'Please review the form to make sure that all required fields are filled.' %}</p>
+                </div>
+            {% endif %}
+            {% for subform in formset.forms %}
+                <div id="{{ subform.prefix }}">
+                    <div class="title active">
+                        <i class="dropdown icon"></i> {% trans "Order item" %}
+                    </div>
+                    <div class="content active">
+                        {% if subform.instance.pk %}
+                            {{ subform.DELETE }}
+                            {{ subform.id }}
+                        {% endif %}
+                        <div class="field {% if subform.component_group.errors %} error {% endif %}">
+                            <label> {{ subform.component_group.label }}</label>
+                            {{ subform.component_group }}
+                            {% if subform.component_group.errors %} {{ subform.component_group.errors }} {% endif %}
+                        </div>
+                        <div class="field {% if subform.price.errors %} error {% endif %}">
+                            <label> {{ subform.price.label }} </label>
+                            {{ subform.price }}
+                            {% if subform.price.errors %} {{ subform.price.errors }} {% endif %}
+                        </div>
+                        <div class="field {% if subform.billable_flag.errors %} error {% endif %}">
+                            <div class="ui toggle checkbox">
+                                {{ subform.billable_flag }}
+
+                            <label> {{ subform.billable_flag.label }} </label>
+                            {% if subform.billable_flag.errors %} {{ subform.billable_flag }} {% endif %}
+                        </div>
+                        </div>
+                        <div class="field {% if subform.size.errors %} error {% endif %}">
+                            <label> {{ subform.size.label }} </label>
+                            {{ subform.size }}
+                            {% if subform.size.errors %} {{ subform.size.errors }} {% endif %}
+                        </div>
+                        <div class="field {% if subform.order_item_type.errors %} error {% endif %}">
+                            <label> {{ subform.order_item_type.label }} </label>
+                            {% if subform.order_item_type.errors %} {{ subform.order_item_type.errors }} {% endif %}
+                            {{ subform.order_item_type }}
+                        </div>
+                        <div class="field {% if subform.remark.errors %} error {% endif %}">
+                            <label> {{ subform.remark.label }} </label>
+                            {{ subform.remark }}
+                            {% if subform.remark.errors %} {{ subform.remark.errors }} {% endif %}
+                        </div>
+                        <div class="field {% if subform.total_quantity.errors %} error {% endif %}">
+                            <label> {{ subform.total_quantity.label }} </label>
+                            {{ subform.total_quantity }}
+                            {% if subform.total_quantity.errors %} {{ subform.total_quantity.errors }} {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>

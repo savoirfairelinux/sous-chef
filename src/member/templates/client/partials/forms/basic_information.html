@@ -1,0 +1,73 @@
+{% load i18n %}
+<h4 class="ui dividing header">{% trans 'Identity' %}</h4>
+<div class="field">
+    <label>{% trans 'Name' %}</label>
+    <div class="two fields">
+        <div class="field {% if form.firstname.errors %} error {% endif %}">
+            {{form.firstname}}
+        </div>
+        <div class="field {% if form.lastname.errors %} error {% endif %}">
+            {{form.lastname}}
+        </div>
+    </div>
+</div>
+
+
+<div class="field">
+    <label>{{ form.gender.label }}</label>
+    {{ form.gender }}
+</div>
+
+<div class="field {% if form.birthdate.errors %} error {% endif %}">
+    <label>
+        {{ form.birthdate.label }}
+        <i class="help-text question yellow icon link" data-content="{{ form.birthdate.help_text }}"></i>
+    </label>
+    <div class="ui calendar" id="wizard_form_birthdate">
+        <div class="ui input left icon">
+              <i class="calendar icon"></i>
+              {{ form.birthdate }}
+        </div>
+    </div>
+</div>
+
+<h4 class="ui dividing header">{% trans 'Contact information' %}</h4>
+
+<div class="field">
+    <label>{{ form.language.label }}</label>
+    {{ form.language }}
+</div>
+
+
+<div class="field">
+    <label>{% trans 'Contact information' %}</label>
+    <div class="three fields">
+        <div class="field">
+            <div class="ui left icon input">
+                <i class="at grey icon"></i>
+                {{ form.email }}
+            </div>
+        </div>
+        <div class="field">
+            <div class="ui left icon input">
+                <i class="home icon"></i>
+                {{ form.home_phone }}
+            </div>
+        </div>
+        <div class="field">
+            <div class="ui left icon input">
+                <i class="call icon"></i>
+                {{ form.cell_phone }}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<h4 class="ui dividing header">{% trans 'Alert' %}</h4>
+<div class="field {% if form.alert.errors %} error {% endif %}">
+    <div class="ui message attached">
+        <p>{% trans 'This message will be hightlighted on the client record.' %}</p>
+    </div>
+    {{ form.alert }}
+</div>

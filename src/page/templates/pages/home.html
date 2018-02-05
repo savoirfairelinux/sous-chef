@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+
+{% load staticfiles %}
+
+{% block title %}{% trans "Homepage" %}{% endblock %}
+
+{% block content %}
+
+<div class="ui secondary pointing fluid menu">
+  <h1 class="ui header datetime">{% now "j F Y" %}</h1>
+</div>
+
+<div class="ui three column row">
+
+  <div class="dashboard-stat column">
+    <div class="ui segments">
+      <div class="ui segment">
+        <h3 class="ui teal header">{% trans "Clients" %}</h3>
+      </div>
+      <div class="ui secondary teal inverted dashboard center aligned segment">
+        <div class="ui dashboard statistic">
+          <div class="value">
+            {{ active_clients }}
+          </div>
+          <div class="label">
+            {% trans "Active clients" %}
+          </div>
+        </div>
+      </div>
+      <div class="ui segment">
+        <p><i class="warning icon"></i><strong>{{ pending_clients }}</strong> {% trans "clients are" %} <a href="{% url "member:list" %}?status=D">{% trans "pending" %}</a>.</p>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard-stat column">
+    <div class="ui segments">
+      <div class="ui segment">
+        <h3 class="ui yellow header">{% trans "Delivered this month" %}</h3>
+      </div>
+      <div class="ui yellow  inverted dashboard center aligned segment">
+        <div class="ui dashboard statistic">
+          <div class="value">
+            {{ billable_orders_month }}
+          </div>
+          <div class="label">
+            {% trans "Orders" %}
+          </div>
+        </div>
+      </div>
+      <div class="ui segment">
+        <p><em>
+            {% blocktrans trimmed with count=billable_orders_year %}
+              {{ count }} orders delivered this year.
+            {% endblocktrans %}
+        </em></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-stat column">
+    <div class="ui segments">
+      {% include "client/partials/birthdays.html" %}
+    </div>
+  </div>
+</div>
+
+<div class="ui one column row">
+  <div class="dashboard-stat column">
+    <div class="ui segments">
+      <div class="ui segment">
+        {% trans 'An overview of the number of main dishes delivered on each route. All active, paused and pending clients are taken into account. Format: "ongoing scheduled dishes (+ episodic and ongoing unscheduled default dishes)"' as route_help_text %}
+        <h3 class="ui blue header">{% trans "Route Size Monitoring" %}<small><i class="help-text question grey icon link" data-content="{{ route_help_text|force_escape }}"></i></small></h3>
+      </div>
+      <div class="ui secondary blue inverted dashboard left aligned segment" style="justify-content: flex-start; height: inherit">
+        <div>
+          <table class="ui very compact striped table">
+            <thead>
+              <tr>
+                <th class="four wide"></th>
+                <th class="one wide center aligned">
+                  *
+                </th>
+                <th class="two wide center aligned">
+                  {% trans 'Mon' %}
+                </th>
+                <th class="two wide center aligned">
+                  {% trans 'Tue' %}
+                </th>
+                <th class="two wide center aligned">
+                  {% trans 'Wed' %}
+                </th>
+                <th class="one wide center aligned">
+                  *
+                </th>
+                <th class="two wide center aligned">
+                  {% trans 'Fri' %}
+                </th>
+                <th class="two wide center aligned">
+                  {% trans 'Sat' %}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for route_name, route_defaults, route_schedules in routes %}
+              <tr>
+                <td>
+                  <b>{{ route_name }}</b>
+                </td>
+                <td class="center aligned"></td>
+                <td class="center aligned">
+                  <b>{{ route_schedules.monday }}</b>
+                  {% if route_defaults.monday %}
+                  (+{{route_defaults.monday}})
+                  {% endif %}
+                </td>
+                <td class="center aligned">
+                  <b>{{ route_schedules.tuesday }}</b>
+                  {% if route_defaults.tuesday %}
+                  (+{{route_defaults.tuesday}})
+                  {% endif %}
+                </td>
+                <td class="center aligned">
+                  <b>{{ route_schedules.wednesday }}</b>
+                  {% if route_defaults.wednesday %}
+                  (+{{route_defaults.wednesday}})
+                  {% endif %}
+                </td>
+                <td class="center aligned"></td>
+                <td class="center aligned">
+                  <b>{{ route_schedules.friday }}</b>
+                  {% if route_defaults.friday %}
+                  (+{{route_defaults.friday}})
+                  {% endif %}
+                </td>
+                <td class="center aligned">
+                  <b>{{ route_schedules.saturday }}</b>
+                  {% if route_defaults.saturday %}
+                  (+{{route_defaults.saturday}})
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

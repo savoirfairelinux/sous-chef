@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load rules %}
+
+{% block title %}{% trans "Clients" %}{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<i class="right arrow icon divider"></i>
+<div class="active section">{% trans 'Clients' %}</div>
+{% endblock breadcrumb %}
+
+{% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
+
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">{% trans 'Clients' %}</h1>
+
+    <div class="right menu">
+      <a class="ui item {% if display == 'block' %} active {% endif %}"
+         href="{{ request.path }}{{ get }}display=block">
+          <i class="block layout icon"></i>
+      </a>
+      <a class="ui item {% if display == 'list' %} active {% endif %}"
+         href="{{ request.path }}{{ get }}display=list">
+          <i class="list layout icon"></i>
+      </a>
+    </div>
+</div>
+
+<div class="ui padded basic segment">
+    {% if can_edit_data %}
+    <a href="{% url 'member:member_step' %}" class="ui labeled icon right basic big button"><i class="add icon"></i>{% trans 'New client' %}</a>
+
+    <div class="ui horizontal divider">
+        {% trans 'Or' %}
+    </div>
+    {% endif %}
+
+    {% include 'client/partials/filters.html' %}
+
+</div>
+
+{% if display == 'block' %}
+  {% if clients %}
+<div class="ui cards">
+    {% for obj in clients %}
+    <a class="ui card" href="{% url 'member:client_information' pk=obj.id %}">
+      <div class="content">
+        <div class="header">{{ obj.member }}</div>
+        <div class="meta">
+            <span class="right floated time">
+                <i class="help-text info icon link" data-content="Language: {{ obj.get_language_display }}"></i>
+            </span>
+            <span class="category">{{ obj.age }} {% trans "years old" %}</span>
+        </div>
+        <div class="description">
+            <p>
+                {% blocktrans trimmed with member_firstname=obj.member.firstname delivery_type=obj.get_delivery_type_display route=obj.route %}
+                    {{ member_firstname }} is an <strong>{{ delivery_type }}</strong> client on the <strong>{{ route }}</strong> route.
+                {% endblocktrans %}
+            </p>
+                <p>{% trans "This client is currently" %} <strong>{{ obj.get_status_display }}</strong>.</p>
+            </div>
+        </div>
+        <div class="extra content">
+            <i class="phone icon"></i>
+            {{ obj.member.home_phone }}
+            <div class="right floated author">
+                <span class="category">
+                    {% if obj.alert %}
+                    <i class="help-text warning circle orange icon link" data-content="{{ obj.alert }}"></i>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </a>
+
+    {% endfor %}
+
+</div>
+{% else %}
+    <div class="ui row"><p>{% trans 'Sorry, no result found.' %}</p></div>
+
+{% endif %}
+{% else %}
+
+{% if clients %}
+<table class="ui very basic stripped compact celled table">
+    <thead>
+        <tr>
+            <th class="">{% trans 'Name' %}
+                <i class="help-text question grey icon link" data-content="{% trans 'Full name and age of the client.' %}"></i>
+            </th>
+            <th class="">{% trans 'Status' %}
+                <i class="help-text question grey icon link" data-content="{% trans 'Meal status. Available status are: Pending, Active, Paused, Stop: no contact, Stop: contact and Deceased.' %}"></i>
+            </th>
+            <th class="">{% trans 'Delivery type' %}
+                <i class="help-text question grey icon link" data-content="{% trans 'A client can be either an ongoing or an episodic client.' %}"></i>
+            </th>
+            <th class="">{% trans 'Route' %}
+                <i class="help-text question grey icon link" data-content="{% trans 'The delivery route for the client.' %}"></i>
+            </th>
+            <th class="">{% trans 'Geolocalized' %}
+                <i class="help-text question grey icon link" data-content="{% trans 'Is the client address geolocalized ?' %}"></i>
+            </th>
+            <th class="">{% trans 'Last update' %}
+                <i class="help-text question grey icon link" data-content="{% trans 'Last modification of the file.' %}"></i>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for obj in clients %}
+        <tr>
+            <td><a href="{% url 'member:client_information' pk=obj.id %}">{{ obj.member }}</a><br/>{{ obj.age }} {% trans "years old" %}</td>
+            <td>{{ obj.get_status_display }}</td>
+            <td>{{ obj.get_delivery_type_display }}</td>
+            <td>{{ obj.route }}</td>
+            <td>{% if obj.is_geolocalized %} {% trans 'Yes' %} {% else %} {% trans 'No' %} {% endif %}</td>
+            <td>{{ obj.member.updated_at|date:"Y/m/d H:h:m"  }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th></th>
+            <th colspan="5">
+                {% include "system/_button_export.html" %}
+            </th>
+          </tr>
+    </tfoot>
+</table>
+{% else %}
+  <div class="ui row"><p>{% trans 'Sorry, no result found.' %}</p></div>
+{% endif %}
+{% endif %}
+
+{% if is_paginated %}
+
+<div class="ui pagination menu" style="margin: 2em auto; width=100%;";>
+    {% if page_obj.has_previous %}
+    <a class="icon item"
+       href="{{ request.path }}{{ get }}display={{ display }}&page={{ page_obj.previous_page_number }}">
+        <i class="left arrow icon"></i>
+    </a>
+    {% endif %}
+    <a class="active item">
+        {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}
+    </a>
+    {% if page_obj.has_next %}
+    <a class="icon item"
+       href="{{ request.path }}{{ get }}display={{ display }}&page={{ page_obj.next_page_number }}">
+        <i class="right arrow icon"></i>
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

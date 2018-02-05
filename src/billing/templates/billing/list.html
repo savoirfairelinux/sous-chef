@@ -1,0 +1,89 @@
+{% extends "base_billing.html" %}
+{% load i18n %}
+{% load static %}
+{% load rules %}
+
+{% block title %}{% trans 'Billing' %}{% endblock %}
+
+{% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
+
+<div class="ui secondary pointing fluid menu">
+  <h1 class="ui header">{% trans 'Billing' %}</h1>
+
+  {% if can_edit_data %}
+  <div class="right menu">
+    <a class="ui item"
+       href="{% url 'billing:add' %}">
+        <i class="add icon" data-content="Add a new billing cycle"></i>
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+<div class="ui mobile reversed equal width grid">
+  <div class="column">
+
+    <form action="" method="get" class="ui form">
+
+        <div class="inline fields">
+            <div class="field">
+                <label>{% trans "Billing Period" %}</label>
+                <div class="field">
+                    <div class="ui calendar" id="billing_delivery_date">
+                        <div class="ui input left icon">
+                              <i class="time icon"></i>
+                              {{ filter.form.date }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <a href="{% url 'billing:list' %}" class="ui button">{% trans "Reset" %}</a>
+            <button class="ui yellow button" type="submit">{% trans "Search" %}</button>
+        </div>
+    </form>
+    <br/><br/>
+  </div>
+</div>
+
+{% if billings %}
+<table class="ui very basic stripped celled table">
+  <thead>
+      <th class="">{% trans "Billing ID" %}
+          <i class="help-text question grey icon link" data-content="{% trans 'A unique identifier for the billing.' %}"></i>
+      </th>
+    <th class="">{% trans "Billing Period" %}
+        <i class="help-text question grey icon link" data-content="{% trans 'A billing period represents a month and includes all orders delivered during the period.' %}"></i>
+    </th>
+    <th class="center aligned">{% trans 'Amount' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Total amount in $CAD delivered for the period.' %}"></i>
+    </th>
+    <th class="center aligned">{% trans 'Orders' %}
+        <i class="help-text question grey icon link" data-content="{% trans 'Number of orders delivered included in the period.' %}"></i>
+    </th>
+    <th class="">{% trans 'Actions' %}</th>
+  </thead>
+  <tbody>
+    {% for billing in billings %}
+      <tr>
+          <td><i class="hashtag icon"></i>{{billing.id}}</td>
+        <td><i class="calendar icon"></i><strong>{{billing.billing_period|date:"F Y"}}</strong></td>
+        <td class="center aligned"><i class="dollar icon"></i>{{billing.total_amount}}</td>
+        <td class="center aligned">{{billing.orders__count}}</td>
+        <td>
+          <a class="ui basic icon button"  href="{% url 'billing:view' pk=billing.id %}"><i class="icon unhide"></i></a>
+          {% if can_edit_data %}<a class="ui basic icon button billing-delete" href="#" data-billing-id="{{billing.id}}"><i class="icon trash"></i></a>{% endif %}
+        </td>
+      </tr>
+      {% include "billing/billing_confirm_delete.html" %}
+    {% endfor %}
+  </tbody>
+</table>
+
+{% else %}
+    <div class="ui row"><p>{% trans "Sorry, no result found" %}.</p></div>
+{% endif %}
+
+{% endblock %}

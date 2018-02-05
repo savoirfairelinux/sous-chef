@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load static %}
+
+{% block title %} {% trans 'Orders' %} {% endblock %}
+
+{% block content %}
+
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">{% trans "New Order" %}</h1>
+</div>
+
+<form action="" method="post" class="ui form error">
+    {% csrf_token %}
+    {% include "_form.html" %}
+    <button class="ui primary button" type="submit">{% trans "Create" %}</button>
+</form>
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+
+    // We need this JavaScript inline to generate new inlines from the django formset object.
+
+    $(function() {
+        {% for formset in inlines %}
+            $('div#{{ formset.prefix }}').formset({
+                prefix: '{{ formset.prefix }}',
+                formCssClass: 'dynamic-formset{{ forloop.counter }}',
+                addText: '<i class="ui add icon item"></i> Add order item',
+                deleteText: '<i class="ui remove icon order item"></i> Remove order item',
+                addCssClass: 'positive ui button right floated',
+                deleteCssClass: 'negative ui button'
+            });
+       {% endfor %}
+    })
+</script>
+{% endblock %}

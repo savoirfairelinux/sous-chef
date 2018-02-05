@@ -1,0 +1,730 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-05-03 16:40-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
+"Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: delivery/filters.py
+msgid "Search by client name"
+msgstr ""
+
+#: delivery/forms.py
+msgid "Today's main dish:"
+msgstr "Plat du jour:"
+
+#: delivery/forms.py
+#, fuzzy
+#| msgid "Select Ingredients:"
+msgid "Select main dish ingredients:"
+msgstr "Sélectionner les ingrédients:"
+
+#: delivery/forms.py
+#, fuzzy
+#| msgid "Select Ingredients:"
+msgid "Select sides ingredients:"
+msgstr "Sélectionner les ingrédients:"
+
+#: delivery/forms.py
+msgid "Please choose some Sides ingredients"
+msgstr ""
+
+#: delivery/models.py
+msgid "deliveries"
+msgstr "livraisons"
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "Edit today's delivery:"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "Print the map and directions"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "Map and Directions"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+#, fuzzy
+#| msgid "Routes Information"
+msgid "Required information missing"
+msgstr "Information de routes"
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "Please review the form to make sure that all required fields are filled."
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "Delivery vehicle of the day"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "default vehicle:"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+#, fuzzy
+#| msgid "Orders of the day"
+msgid "Delivery sequence of the day"
+msgstr "Commandes du jour"
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "Dragging a row in the table to change the delivery sequence of the client. Changes will not be saved until clicking \"Save\" button. By default, it loads the default sequence of the route."
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "Name"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+#: delivery/templates/partials/generated_orders.html
+msgid "Status"
+msgstr "État"
+
+#: delivery/templates/edit_delivery_of_today.html
+#, fuzzy
+#| msgid "Delivery Date"
+msgid "Delivery type"
+msgstr "Date de livraison"
+
+#: delivery/templates/edit_delivery_of_today.html
+#, fuzzy
+#| msgid "View Order"
+msgid "View order"
+msgstr "Voir la commande"
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "Address"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "Configured, edited or unconfigured."
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "Access the client's file"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+#, fuzzy
+#| msgid "View Order"
+msgid "View the order"
+msgstr "Voir la commande"
+
+#: delivery/templates/edit_delivery_of_today.html
+#, fuzzy
+#| msgid "Order"
+msgid "Order #"
+msgstr "Commande"
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "[DELETED]"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "Configured"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "Unconfigured"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+#, fuzzy
+#| msgid "Delivery route"
+msgid "Delivery Preview"
+msgstr "Route de livraison"
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "Additional comments of the day"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "Save"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "Cancel"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+#, fuzzy
+#| msgid "Delivery route"
+msgid "Delivery of the day"
+msgstr "Route de livraison"
+
+#: delivery/templates/edit_delivery_of_today.html
+#: delivery/templates/routes_print.html
+msgid "Print"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+#, fuzzy
+#| msgid "Route sheet"
+msgid "Route Sequence"
+msgstr "Itinéraire de route"
+
+#: delivery/templates/edit_delivery_of_today.html
+msgid "kilometers"
+msgstr ""
+
+#: delivery/templates/edit_delivery_of_today.html
+#, fuzzy
+#| msgid "Routes"
+msgid "minutes"
+msgstr "Routes"
+
+#: delivery/templates/edit_delivery_of_today.html
+#, fuzzy
+#| msgid "Client"
+msgid "Client Name"
+msgstr "Client"
+
+#: delivery/templates/ingredients.html
+msgid "Pick Ingredients"
+msgstr "Sélectionner les ingrédients"
+
+#: delivery/templates/ingredients.html
+msgid "Pick ingredients"
+msgstr "Sélectionner les ingrédients"
+
+#: delivery/templates/ingredients.html
+msgid "Main dish"
+msgstr "Plat principal"
+
+#: delivery/templates/ingredients.html
+msgid "Restore recipe"
+msgstr "Restaurer la recette"
+
+#: delivery/templates/ingredients.html delivery/templates/kitchen_count.html
+#: delivery/templates/routes.html
+msgid "Back"
+msgstr "Précédent"
+
+#: delivery/templates/ingredients.html
+msgid "Next: Print Kitchen Count"
+msgstr "Suivant: Imprimer l'inventaire"
+
+#: delivery/templates/ingredients.html
+msgid "Confirm all ingredients"
+msgstr "Confirmer tous les ingrédients"
+
+#: delivery/templates/kitchen_count.html
+msgid "Kitchen Count report"
+msgstr "Inventaire des repas"
+
+#: delivery/templates/kitchen_count.html
+msgid "Kitchen Count Report"
+msgstr "Inventaire des repas"
+
+#: delivery/templates/kitchen_count.html
+#, fuzzy
+#| msgid "Kitchen Count report"
+msgid "Download the kitchen count report"
+msgstr "Inventaire des repas"
+
+#: delivery/templates/kitchen_count.html
+#: delivery/templates/kitchen_count_steps.html
+msgid "Kitchen Count"
+msgstr "Kitchen Count"
+
+#: delivery/templates/kitchen_count.html
+#, fuzzy
+#| msgid "Kitchen Count report"
+msgid "No kitchen count report available"
+msgstr "Inventaire des repas"
+
+#: delivery/templates/kitchen_count.html
+#, fuzzy
+#| msgid "Download Labels"
+msgid "Download the labels"
+msgstr "Télécharger les étiquettes"
+
+#: delivery/templates/kitchen_count.html
+msgid "Labels"
+msgstr ""
+
+#: delivery/templates/kitchen_count.html
+msgid "No labels available"
+msgstr "Étiquettes non disponibles"
+
+#: delivery/templates/kitchen_count.html
+msgid "Component"
+msgstr "Composant"
+
+#: delivery/templates/kitchen_count.html
+msgid "TOTAL"
+msgstr "TOTAL"
+
+#: delivery/templates/kitchen_count.html
+msgid "Please check main dish and confirm all ingredients before proceeding to kitchen count"
+msgstr "SVP vérifier le plat principal et confirmer tous les ingrédients avant de procéder à l'inventaire des repas"
+
+#: delivery/templates/kitchen_count.html delivery/templates/route_sheet.html
+#: delivery/templates/routes_print.html
+msgid "Regular"
+msgstr "Régulier"
+
+#: delivery/templates/kitchen_count.html delivery/templates/route_sheet.html
+#: delivery/templates/routes_print.html
+msgid "Large"
+msgstr "Grand"
+
+#: delivery/templates/kitchen_count.html
+msgid "Dish today"
+msgstr "Plat du jour"
+
+#: delivery/templates/kitchen_count.html
+msgid "Ingredients today"
+msgstr "Ingrédients du jour"
+
+#: delivery/templates/kitchen_count.html
+#, fuzzy
+#| msgid "Pick ingredients"
+msgid "Clashing ingredients"
+msgstr "Sélectionner les ingrédients"
+
+#: delivery/templates/kitchen_count.html delivery/templates/route_sheet.html
+#: delivery/templates/routes_print.html
+msgid "Qty"
+msgstr "Qte"
+
+#: delivery/templates/kitchen_count.html
+msgid "Reg"
+msgstr "Rég"
+
+#: delivery/templates/kitchen_count.html
+msgid "Lge"
+msgstr "Lrg"
+
+#: delivery/templates/kitchen_count.html
+#: delivery/templates/partials/generated_orders.html
+#: delivery/templates/route_sheet.html delivery/templates/routes_print.html
+msgid "Client"
+msgstr "Client"
+
+#: delivery/templates/kitchen_count.html delivery/views.py
+msgid "Restrictions"
+msgstr "Restrictions"
+
+#: delivery/templates/kitchen_count.html
+msgid "Next: Organize Routes"
+msgstr "Suivant: Organiser les itinéraires"
+
+#: delivery/templates/kitchen_count_steps.html
+#: delivery/templates/review_orders.html
+msgid "Review Orders"
+msgstr "Réviser les commandes"
+
+#: delivery/templates/kitchen_count_steps.html
+msgid "Review orders for the day."
+msgstr "Réviser les commandes du jour."
+
+#: delivery/templates/kitchen_count_steps.html delivery/views.py
+msgid "Ingredients"
+msgstr "Ingrédients"
+
+#: delivery/templates/kitchen_count_steps.html
+msgid "Pick ingredients for the day."
+msgstr "Sélectionner les ingrédients du jour."
+
+#: delivery/templates/kitchen_count_steps.html
+msgid "Print the kitchen count."
+msgstr "Imprimer le Kitchen Count."
+
+#: delivery/templates/kitchen_count_steps.html
+msgid "Routes"
+msgstr "Routes"
+
+#: delivery/templates/kitchen_count_steps.html
+msgid "Organize delivery routes."
+msgstr "Organiser les routes de livraison."
+
+#: delivery/templates/partials/generated_orders.html
+msgid "Order"
+msgstr "Commande"
+
+#: delivery/templates/partials/generated_orders.html
+msgid "A unique identifier for the order."
+msgstr ""
+
+#: delivery/templates/partials/generated_orders.html
+msgid "Quickly access the client file."
+msgstr ""
+
+#: delivery/templates/partials/generated_orders.html
+msgid "Delivery Date"
+msgstr "Date de livraison"
+
+#: delivery/templates/partials/generated_orders.html
+msgid "The delivery date planned for the order."
+msgstr ""
+
+#: delivery/templates/partials/generated_orders.html
+msgid "Route"
+msgstr "Route"
+
+#: delivery/templates/partials/generated_orders.html
+#, fuzzy
+#| msgid "Delivery route"
+msgid "The delivery route."
+msgstr "Route de livraison"
+
+#: delivery/templates/partials/generated_orders.html
+msgid "Display only Ordered orders."
+msgstr "Affiche seulement les commandes Commandées."
+
+#: delivery/templates/partials/generated_orders.html
+msgid "Amount"
+msgstr "Montant"
+
+#: delivery/templates/partials/generated_orders.html
+msgid "Total amount in $CAD."
+msgstr ""
+
+#: delivery/templates/partials/generated_orders.html
+msgid "Please fix geolocalization. Otherwise this client will be excluded in the next steps."
+msgstr ""
+
+#: delivery/templates/partials/generated_orders.html
+msgid "Please fix delivery route. Otherwise this client will be excluded in the next steps."
+msgstr ""
+
+#: delivery/templates/partials/generated_orders.html
+msgid "Review or change the status of the order."
+msgstr ""
+
+#: delivery/templates/partials/generated_orders.html
+msgid "Change the details of the order."
+msgstr ""
+
+#: delivery/templates/partials/generated_orders.html
+msgid "Cancel the order."
+msgstr ""
+
+#: delivery/templates/review_orders.html
+msgid "Orders"
+msgstr "Commandes"
+
+#: delivery/templates/review_orders.html
+msgid "Orders of the day"
+msgstr "Commandes du jour"
+
+#: delivery/templates/review_orders.html
+msgid "Orders of the day include ongoing and episodic clients. Only Ordered orders from Active clients are included."
+msgstr ""
+
+#: delivery/templates/review_orders.html
+msgid "Generate orders"
+msgstr ""
+
+#: delivery/templates/review_orders.html
+msgid "Orders for ongoing clients are automatically generated at midnight every day, based on their default preferences. Press the <em>Generate orders</em> button to manually run the script."
+msgstr ""
+
+#: delivery/templates/review_orders.html
+msgid "Geolocation"
+msgstr ""
+
+#: delivery/templates/review_orders.html
+msgid "Highlighted orders are not properly geolocated. Edit the client information to fix it."
+msgstr ""
+
+#. Translators: This text is displayed in the kitchen count -> step 1: order review -> pink button
+#: delivery/templates/review_orders.html
+#, python-format
+msgid "%(count)s today"
+msgstr ""
+
+#: delivery/templates/review_orders.html
+#, fuzzy
+#| msgid "Review Orders"
+msgid "Review"
+msgstr "Réviser les commandes"
+
+#: delivery/templates/review_orders.html
+#, fuzzy
+#| msgid "Client"
+msgid "Client name"
+msgstr "Client"
+
+#: delivery/templates/review_orders.html
+msgid "Reset"
+msgstr ""
+
+#: delivery/templates/review_orders.html
+msgid "Search"
+msgstr ""
+
+#: delivery/templates/review_orders.html
+msgid "OK, I'm ready"
+msgstr "Allons-y!"
+
+#: delivery/templates/route_sheet.html
+msgid "Delivery Route Sheet"
+msgstr "Itinéraire de livraison"
+
+#: delivery/templates/route_sheet.html
+#, fuzzy
+#| msgid "Print the route sheet"
+msgid "Print the route sheet."
+msgstr "Imprimer l'itinéraire de la route."
+
+#: delivery/templates/route_sheet.html
+#, fuzzy
+#| msgid "Route sheet"
+msgid "Route Sheet"
+msgstr "Itinéraire de route"
+
+#: delivery/templates/route_sheet.html delivery/templates/routes_print.html
+msgid "Dish"
+msgstr "Plat"
+
+#: delivery/templates/route_sheet.html delivery/templates/routes_print.html
+msgid "Note"
+msgstr "Note"
+
+#: delivery/templates/route_sheet.html delivery/templates/routes_print.html
+msgid "Item"
+msgstr "Article"
+
+#: delivery/templates/route_sheet.html
+msgid "Bill"
+msgstr ""
+
+#: delivery/templates/route_sheet.html delivery/templates/routes_print.html
+msgid "Apt"
+msgstr "App"
+
+#: delivery/templates/route_sheet.html delivery/templates/routes_print.html
+msgid "Yes"
+msgstr ""
+
+#: delivery/templates/route_sheet.html delivery/templates/routes_print.html
+#, fuzzy
+#| msgid "Note"
+msgid "No"
+msgstr "Note"
+
+#: delivery/templates/route_sheet.html
+msgid "View routes list"
+msgstr "Afficher la liste des itinéraires"
+
+#: delivery/templates/route_sheet.html
+msgid "View routes"
+msgstr "Afficher les routes"
+
+#: delivery/templates/routes.html delivery/templates/routes_print.html
+msgid "Routes Information"
+msgstr "Information de routes"
+
+#: delivery/templates/routes.html
+msgid "Delivery routes"
+msgstr "Itinéraires de livraisons"
+
+#: delivery/templates/routes.html
+#, fuzzy
+#| msgid "Print the route sheet"
+msgid "Print the route sheets"
+msgstr "Imprimer l'itinéraire de la route."
+
+#: delivery/templates/routes.html
+#, fuzzy
+#| msgid "Route sheet"
+msgid "Route Sheets"
+msgstr "Itinéraire de route"
+
+#: delivery/templates/routes.html
+msgid "This is activated after organising all deliverable routes."
+msgstr ""
+
+#: delivery/templates/routes.html
+msgid "View, adjust and confirm today's route sequence"
+msgstr ""
+
+#: delivery/templates/routes.html
+msgid "Confirm"
+msgstr ""
+
+#: delivery/templates/routes.html
+msgid "Route sheet"
+msgstr "Itinéraire de route"
+
+#: delivery/templates/routes.html
+msgid "Clients have changed, please reconfirm."
+msgstr ""
+
+#: delivery/templates/routes.html
+msgid "Modified"
+msgstr ""
+
+#: delivery/templates/routes.html
+msgid "View or edit the organised route"
+msgstr ""
+
+#: delivery/templates/routes.html
+#, fuzzy
+#| msgid "Organize"
+msgid "Organised"
+msgstr "Organiser"
+
+#: delivery/templates/routes.html
+msgid "Print the route sheet"
+msgstr "Imprimer l'itinéraire de la route."
+
+#: delivery/templates/routes.html
+#, fuzzy
+#| msgid "Cycling map"
+msgid "Cycling"
+msgstr "Carte cycliste"
+
+#: delivery/templates/routes.html
+msgid "Driving"
+msgstr ""
+
+#: delivery/templates/routes.html
+msgid "Walking"
+msgstr ""
+
+#: delivery/templates/routes.html
+msgid "Number of orders on this route"
+msgstr "Nombre de commande sur l'itinéraire"
+
+#: delivery/templates/routes_print.html
+msgid "Include a bill"
+msgstr ""
+
+#: delivery/tests.py
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr ""
+
+#: delivery/tests.py
+msgid "Main Dish"
+msgstr "Plat principal"
+
+#: delivery/urls.py
+msgid "^order/$"
+msgstr "^commande/$"
+
+#: delivery/urls.py
+msgid "^meal/$"
+msgstr "^repas/$"
+
+#: delivery/urls.py
+msgid "^meal/(?P<id>\\d+)/$"
+msgstr "^repas/(?P<id>\\d+)/$"
+
+#: delivery/urls.py
+msgid "^routes/$"
+msgstr "^itinéraires/$"
+
+#: delivery/urls.py
+msgid "^route/(?P<pk>\\d+)/$"
+msgstr "^itinéraire/(?P<pk>\\d+)/$"
+
+#: delivery/urls.py
+msgid "^route/(?P<pk>\\d+)/create/$"
+msgstr "^itinéraire/(?P<pk>\\d+)/créer/$"
+
+#: delivery/urls.py
+msgid "^kitchen_count/$"
+msgstr "^inventaire_des_repas/$"
+
+#: delivery/urls.py
+#, python-brace-format
+msgid "^kitchen_count/(?P<year>\\d{4})/(?P<month>\\d{2})/(?P<day>\\d+)/$"
+msgstr "^inventaire_des_repas/(?P<year>\\d{4})/(?P<month>\\d{2})/(?P<day>\\d+)/$"
+
+#: delivery/urls.py
+msgid "^viewDownloadKitchenCount/$"
+msgstr "^téléchargerInventaireDesRepas/$"
+
+#: delivery/urls.py
+msgid "^viewMealLabels/$"
+msgstr "^téléchargerLesÉtiquettes/$"
+
+#: delivery/urls.py
+msgid "^route_sheet/(?P<pk>\\d+)/$"
+msgstr "^itinéraire_de_route/(?P<pk>\\d+)/$"
+
+#: delivery/urls.py
+msgid "^refresh_orders/$"
+msgstr "^actualiser_les_commandes/$"
+
+#: delivery/views.py
+#, python-format
+msgid "Today's delivery on route %(route_name)s has been updated."
+msgstr ""
+
+#: delivery/views.py
+msgid "LARGE"
+msgstr ""
+
+#: delivery/views.py
+msgid "Preparation"
+msgstr "Préparation"
+
+#: delivery/views.py
+msgid "Sides clashes"
+msgstr ""
+
+#: delivery/views.py
+#, fuzzy
+#| msgid "Restrictions"
+msgid "Other restrictions"
+msgstr "Restrictions"
+
+#, fuzzy
+#~| msgid "Organize the route"
+#~ msgid "Organise the route"
+#~ msgstr "Organiser l'itinéraire"
+
+#, fuzzy
+#~| msgid "Organize"
+#~ msgid "Organise"
+#~ msgstr "Organiser"
+
+#, fuzzy
+#~| msgid "Route sheet"
+#~ msgid "Restore default sequence"
+#~ msgstr "Itinéraire de route"
+
+#~ msgid "Organize the delivery route"
+#~ msgstr "Organiser l'itinéraire de livraison"
+
+#~ msgid "^route/$"
+#~ msgstr "^route/$"
+
+#~ msgid "^getDailyOrders/$"
+#~ msgstr "^getDailyOrders/$"
+
+#, fuzzy
+#~| msgid "Restrictions"
+#~ msgid "Directions"
+#~ msgstr "Restrictions"
+
+#~ msgid "Print the Report"
+#~ msgstr "Imprimer l'inventaire des repas"
+
+#~ msgid "No Labels Found"
+#~ msgstr "Aucune étiquette trouvée"
+
+#~ msgid "Clashing"
+#~ msgstr "En conflit"
+
+#~ msgid "orders today"
+#~ msgstr "commandes aujourd'hui"

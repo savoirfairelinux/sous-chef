@@ -1,0 +1,12 @@
+@media only screen and (min-width: 1199px) {
+    .ui.inverted.vertical.menu.left.sidebar {
+        display: none;
+    }
+
+    .ui.visible.left.sidebar ~ .fixed,
+    .ui.visible.left.sidebar ~ .pusher {
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        transform: translate3d(0, 0, 0) !important;
+    }
+
+}

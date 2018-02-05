@@ -1,0 +1,347 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-04-04 14:50-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
+"Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: billing/models.py
+msgid "total_amount"
+msgstr "total_amount"
+
+#: billing/models.py
+msgid "Search by name"
+msgstr "Recherche par nom"
+
+#: billing/templates/billing/add.html billing/templates/billing/list.html
+msgid "Billing"
+msgstr "Facturation"
+
+#: billing/templates/billing/add.html
+#, fuzzy
+#| msgid "Create Billing"
+msgid "Preparing billing"
+msgstr "Créer une facture"
+
+#: billing/templates/billing/add.html
+msgid "Preview a period, then create a billing:"
+msgstr "Prévisualiser la période et créer une facture"
+
+#: billing/templates/billing/add.html
+msgid "1. Preview"
+msgstr "1. Prévisualisation"
+
+#: billing/templates/billing/add.html
+msgid "Create Billing"
+msgstr "Créer une facture"
+
+#: billing/templates/billing/add.html
+msgid "2. Create Billing"
+msgstr "2. Créer une facture"
+
+#: billing/templates/billing/add.html
+#: billing/templates/billing/view_orders.html
+msgid "Order"
+msgstr "Commande"
+
+#: billing/templates/billing/add.html
+#, fuzzy
+#| msgid "A unique identifier for the order."
+msgid "Order's unique identifier."
+msgstr "Identifiant unique pour la commande"
+
+#: billing/templates/billing/add.html
+#: billing/templates/billing/view_orders.html
+msgid "Client"
+msgstr "Client"
+
+#: billing/templates/billing/add.html
+#, fuzzy
+#| msgid "Quickly access the client file."
+msgid "Quickly access the client's file."
+msgstr "Accès rapide à la fiche client"
+
+#: billing/templates/billing/add.html
+#: billing/templates/billing/view_orders.html
+msgid "Delivery Date"
+msgstr "Date de livraison"
+
+#: billing/templates/billing/add.html
+#, fuzzy
+#| msgid "Delivery Date"
+msgid "Order's delivery date."
+msgstr "Date de livraison"
+
+#: billing/templates/billing/add.html
+#: billing/templates/billing/view_orders.html
+msgid "Status"
+msgstr "Statut"
+
+#: billing/templates/billing/add.html
+msgid "Display only Ordered orders."
+msgstr "Affiche seulement les commandes confirmées."
+
+#: billing/templates/billing/add.html billing/templates/billing/list.html
+#: billing/templates/billing/view_orders.html
+msgid "Amount"
+msgstr "Montant"
+
+#: billing/templates/billing/add.html
+#, fuzzy
+#| msgid "total_amount"
+msgid "Order's total amount."
+msgstr "total_amount"
+
+#: billing/templates/billing/add.html billing/templates/billing/list.html
+#: billing/templates/billing/partials/summary.html
+#: billing/templates/billing/view_orders.html
+msgid "Actions"
+msgstr "Actions"
+
+#: billing/templates/billing/add.html
+msgid "of"
+msgstr ""
+
+#: billing/templates/billing/add.html billing/templates/billing/list.html
+msgid "Sorry, no result found"
+msgstr "Désolé, aucun résultat trouvé."
+
+#: billing/templates/billing/billing_confirm_delete.html
+msgid "Delete Billing"
+msgstr "Supprimer facture"
+
+#: billing/templates/billing/billing_confirm_delete.html
+msgid "This billing will be deleted. No orders will be deleted, no worry. Are you sure?"
+msgstr ""
+"Cette facture sera supprimée. Mais pas d'inquiétude, aucune commande ne sera supprimée.\n"
+"Êtes-vous certains?"
+
+#: billing/templates/billing/billing_confirm_delete.html
+msgid "No"
+msgstr "Non"
+
+#: billing/templates/billing/billing_confirm_delete.html
+msgid "Yes"
+msgstr "Oui"
+
+#: billing/templates/billing/list.html
+msgid "Billing Period"
+msgstr "Période de facturation"
+
+#: billing/templates/billing/list.html
+#: billing/templates/billing/view_orders.html
+msgid "Reset"
+msgstr "Réinitialiser"
+
+#: billing/templates/billing/list.html
+msgid "Search"
+msgstr "Recherche"
+
+#: billing/templates/billing/list.html
+msgid "Billing ID"
+msgstr "ID de facture"
+
+#: billing/templates/billing/list.html
+msgid "A unique identifier for the billing."
+msgstr "Identifiant unique de la facture"
+
+#: billing/templates/billing/list.html
+msgid "A billing period represents a month and includes all orders delivered during the period."
+msgstr "Une période de facturation représente un mois et inclut toutes les commandes livrées durant cette période."
+
+#: billing/templates/billing/list.html
+msgid "Total amount in $CAD delivered for the period."
+msgstr "Montant total en $CAS livré pendant la période."
+
+#: billing/templates/billing/list.html
+msgid "Orders"
+msgstr "Commandes"
+
+#: billing/templates/billing/list.html
+msgid "Number of orders delivered included in the period."
+msgstr "Nombre de commande livrées inclus dans la période"
+
+#: billing/templates/billing/partials/statistics.html
+msgid "Delivered orders"
+msgstr "Commandes livrées"
+
+#: billing/templates/billing/partials/statistics.html
+msgid "Revenues"
+msgstr "Revenus"
+
+#: billing/templates/billing/partials/summary.html
+msgid "New"
+msgstr ""
+
+#: billing/templates/billing/partials/summary.html
+msgid "Indicates if the client is a new client in this billing period."
+msgstr ""
+
+#: billing/templates/billing/partials/summary.html
+#: billing/templates/billing/view_orders.html
+#, fuzzy
+#| msgid "Client"
+msgid "Client Name"
+msgstr "Client"
+
+#: billing/templates/billing/partials/summary.html
+#: billing/templates/billing/view_orders.html
+msgid "Quickly access the client file."
+msgstr "Accès rapide à la fiche client"
+
+#: billing/templates/billing/partials/summary.html
+msgid "Payment Method"
+msgstr ""
+
+#: billing/templates/billing/partials/summary.html
+msgid "Price Scale"
+msgstr ""
+
+#: billing/templates/billing/partials/summary.html
+msgid "Meals"
+msgstr ""
+
+#: billing/templates/billing/partials/summary.html
+#, fuzzy
+#| msgid "Number of orders delivered included in the period."
+msgid "Number of main dishes in total in this billing period."
+msgstr "Nombre de commande livrées inclus dans la période"
+
+#: billing/templates/billing/partials/summary.html
+msgid "Extra"
+msgstr ""
+
+#: billing/templates/billing/partials/summary.html
+#, fuzzy
+#| msgid "Number of orders delivered included in the period."
+msgid "Number of extra side dishes in total in this billing period."
+msgstr "Nombre de commande livrées inclus dans la période"
+
+#: billing/templates/billing/partials/summary.html
+#: billing/templates/billing/view_orders.html
+msgid "Total"
+msgstr "Total"
+
+#: billing/templates/billing/partials/summary.html
+#, fuzzy
+#| msgid "Total amount in $CAD delivered for the period."
+msgid "Total amount in this billing period."
+msgstr "Montant total en $CAS livré pendant la période."
+
+#: billing/templates/billing/partials/summary.html
+msgid "Regular"
+msgstr ""
+
+#: billing/templates/billing/partials/summary.html
+msgid "Large"
+msgstr ""
+
+#: billing/templates/billing/partials/summary.html
+#, fuzzy
+#| msgid "Delivered orders"
+msgid "View orders"
+msgstr "Commandes livrées"
+
+#: billing/templates/billing/partials/summary.html
+msgid "Subtotal:"
+msgstr ""
+
+#: billing/templates/billing/partials/summary.html
+msgid "Grand Total:"
+msgstr ""
+
+#: billing/templates/billing/print_summary.html
+#: billing/templates/billing/view.html
+#, fuzzy
+#| msgid "Billing ID"
+msgid "Billing Summary"
+msgstr "ID de facture"
+
+#: billing/templates/billing/print_summary.html
+#: billing/templates/billing/view.html
+#: billing/templates/billing/view_orders.html
+msgid "Print"
+msgstr "Imprimer"
+
+#: billing/templates/billing/view_orders.html
+#, fuzzy
+#| msgid "Billing Details"
+msgid "Billing Order Details"
+msgstr "Détails de facturation"
+
+#: billing/templates/billing/view_orders.html
+msgid "Apply Filter"
+msgstr ""
+
+#: billing/templates/billing/view_orders.html
+msgid "Back to summary"
+msgstr ""
+
+#: billing/templates/billing/view_orders.html
+msgid "A unique identifier for the order."
+msgstr "Identifiant unique pour la commande"
+
+#: billing/templates/billing/view_orders.html
+msgid "The delivery date planned for the order."
+msgstr "Date de livraison prévue pour la commande"
+
+#: billing/templates/billing/view_orders.html
+msgid "Display only included orders."
+msgstr "Affiche seulement les commandes incluses"
+
+#: billing/templates/billing/view_orders.html
+msgid "Total amount in $CAD."
+msgstr "Montant total en $CAD"
+
+#: billing/urls.py
+msgid "^list/$"
+msgstr "^lister/$"
+
+#: billing/urls.py
+msgid "^create/$"
+msgstr "^créer/$"
+
+#: billing/urls.py
+msgid "^add/$"
+msgstr "^ajouter/$"
+
+#: billing/urls.py
+msgid "^view/(?P<pk>\\d+)/$"
+msgstr "^voir/(?P<pk>\\d+)/$"
+
+#: billing/urls.py
+msgid "^view/(?P<pk>\\d+)/orders/$"
+msgstr "^voir/(?P<pk>\\d+)/commandes/$"
+
+#: billing/urls.py
+msgid "^delete/(?P<pk>\\d+)/$"
+msgstr "^supprimer/(?P<pk>\\d+)/$"
+
+#: billing/views.py
+msgid "You must select a period to create a billing and click in the first step 'Preview'"
+msgstr ""
+
+#: billing/views.py
+#, python-format
+msgid "The billing with the identifier #%s has been successfully created."
+msgstr ""
+
+#: billing/views.py
+msgid "Warning: the order(s) below have not set a \"size\" for main dish and thus have been excluded in \"Total Main Dishes\" column."
+msgstr ""
+
+#~ msgid "Order\\"
+#~ msgstr "Commande\\"

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load staticfiles %}
+
+{% block head %}
+{{ wizard.form.media}}
+{% endblock %}
+
+{% block extrahead %}
+    <style> #mapid {height: 250px;}</style>
+    {% load leaflet_tags %}
+    {% leaflet_js %}
+    {% leaflet_css %}
+{% endblock %}
+
+{% block title %}
+    {% if edit == True %}{% trans 'Edit existing client' %}{% else %}{% trans 'Create a new client ' %}{% endif %}
+{% endblock %}
+
+{% block message %}
+<div class="ui text container">
+    <div class="ui warning small message">
+        <div class="header">{% trans "Notice" %}</div>
+        {% if not edit %}
+        <p>{% trans 'No information will be saved until all the steps are completed.' %}</p>
+        {% else %}
+        <p>{% trans 'Save as soon as you are ready.' %}</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">
+        {% if edit == True %}{% trans 'Edit Client' %}{% else %}{% trans 'New Client' %}{% endif %}
+    </h1>
+</div>
+
+<div class="ui stackable relaxed grid container">
+
+    <div class="six wide column">
+    <div class="ui vertical steps">
+      {% trans 'basic_information' as i18n_basic_information %}
+      {% trans 'address_information' as i18n_address_information %}
+      {% trans 'relationships' as i18n_relationships %}
+      {% trans 'payment_information' as i18n_payment_information %}
+      {% trans 'dietary_restriction' as i18n_dietary_restriction %}
+
+      {% include 'client/create/steps.html' with step=1 url=i18n_basic_information icon='male' name=_('Personal') description=_('First name, last name, ...') %}
+      {% include 'client/create/steps.html' with step=2 url=i18n_address_information icon='home' name=_('Address') description=_('Street number, city, ...') %}
+      {% include 'client/create/steps.html' with step=3 url=i18n_relationships icon='treatment' name=_('Relationships') description=_('Referents, emergency contacts, ...') %}
+      {% include 'client/create/steps.html' with step=4 url=i18n_payment_information icon='payment' name=_('Payment') description=_('Payment method, card, ...') %}
+      {% include 'client/create/steps.html' with step=5 url=i18n_dietary_restriction icon='food' name=_('Preferences') description=_('Deliveries, restrictions, ...') %}
+    </div>
+ </div>
+
+    <div class="ten wide column form-steps">
+    <form action="" method="post" class="ui form error">{% csrf_token %}
+        {% if wizard.form.errors %}
+        <div class="ui error message">
+            <div class="header">{% trans 'Required information missing' %}</div>
+            <p>{% trans 'Please review the form to make sure that all required fields are filled.' %}</p>
+            <!-- Show only if wizard.form is not a formset instance -->
+            {% if not wizard.form.forms %}
+                {{ wizard.form.errors }}
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {{wizard.management_form}}
+
+        {% include step_template %}
+
+        {% if wizard.steps.prev and not edit %}
+        <button class="ui left floated button" name="wizard_goto_step" type="submit" value="{{wizard.steps.prev}}">
+            {% trans 'Back' %}
+        </button>
+        {% endif %}
+
+        {% if wizard.steps.step1 == 6 %}
+            <input class="big ui right floated yellow button" type="submit" value="{% trans 'Save' %}"/>
+        {% else %}
+            <button  class="big ui yellow right floated button" name="wizard_goto_step" type="submit">{% trans 'Next' %}</button>
+        {% endif %}
+
+    </form>
+</div>
+
+</div>
+{% endblock %}
+
+{% block extrajs %}
+    {% if debug %}
+        <script src="{% static 'js/leaflet.js' %}" type="application/javascript"></script>
+    {% else %}
+        <script src="{% static 'js/leaflet.min.js' %}" type="application/javascript"></script>
+    {% endif %}
+{% endblock %}

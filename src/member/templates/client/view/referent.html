@@ -1,0 +1,44 @@
+{% extends "client/base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load admin_urls %}
+{% load rules %}
+
+{% block title %}
+
+  {{client}} - {% trans "Referent information" %}
+
+{% endblock %}
+
+{% block subcontent %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
+
+<div class="ui segment">
+    <h2 class="ui header">
+        <div class="content">
+            {% trans 'Referent' %}
+            <div class="sub header">{% trans "Contact information of the referent person" %}.</div>
+        </div>
+    </h2>
+    {% if can_edit_data %}
+    <a class="ui right floated small button" href="{% url 'member:member_update_referent_information' pk=client.id %}">
+        <i class="icon edit"></i>{% trans "Edit" %}
+    </a>
+    {% endif %}
+    <div class="ui divider"></div>
+
+<div class="ui list">
+{% for referent in client.client_referent.all %}
+    <div class="item"><div class="header">{% trans 'First Name' %}</div>{{referent.referent.firstname}}</div>
+    <div class="item"><div class="header">{% trans 'Last Name' %}</div>{{referent.referent.lastname}}</div>
+    <div class="item"><div class="header">{% trans 'Workplace information' %}</div>{{referent.referent.work_information}}</div>
+    <div class="item"><div class="header">{% trans 'Referral Date' %}</div>{{referent.date}}</div>
+    <div class="item"><div class="header">{% trans 'Referral Reason' %}</div>{{referent.referral_reason}}</div>
+    {% for contact in referent.referent.member_contact.all %}
+    <div class="item"><div class="header">{{contact.type}}</div>{{contact.display_value}}</div>
+    {% endfor %}
+{% endfor %}
+</div>
+</div>
+
+{% endblock %}

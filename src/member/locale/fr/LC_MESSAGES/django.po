@@ -1,0 +1,1794 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-06-06 15:17-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
+"Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: member/forms.py member/templates/client/view/information.html
+#: member/templates/client/view/payment.html
+#: member/templates/client/view/referent.html
+msgid "First Name"
+msgstr "Prénom"
+
+#: member/forms.py
+msgid "First name"
+msgstr "Prénom"
+
+#: member/forms.py member/templates/client/view/information.html
+#: member/templates/client/view/payment.html
+#: member/templates/client/view/referent.html
+msgid "Last Name"
+msgstr "Nom de famille"
+
+#: member/forms.py
+msgid "Last name"
+msgstr "Nom de famille"
+
+#: member/forms.py
+msgid "Preferred language"
+msgstr "Langue d'usage"
+
+#: member/forms.py member/templates/client/view/information.html
+msgid "Birthday"
+msgstr "Date de naissance"
+
+#: member/forms.py
+msgid "YYYY-MM-DD"
+msgstr ""
+
+#: member/forms.py
+msgid "Format: YYYY-MM-DD"
+msgstr ""
+
+#: member/forms.py
+msgid "Email"
+msgstr "Courriel"
+
+#: member/forms.py
+msgid "Home phone"
+msgstr "Téléphone au domicile"
+
+#: member/forms.py
+msgid "Cellular"
+msgstr "Cellulaire"
+
+#: member/forms.py
+#: member/templates/client/partials/forms/basic_information.html
+msgid "Alert"
+msgstr "Alerte"
+
+#: member/forms.py
+msgid "Your message here ..."
+msgstr "Votre message ici ..."
+
+#: member/forms.py member/tests.py
+msgid "At least one contact information is required."
+msgstr "Au moins une information de contact est requise."
+
+#: member/forms.py
+msgid "Apt #"
+msgstr "# Appart."
+
+#: member/forms.py
+#, fuzzy
+msgid "Address Information"
+msgstr "Adresse Civile"
+
+#: member/forms.py
+msgid "7275 Rue Saint-Urbain"
+msgstr ""
+
+#: member/forms.py
+msgid "City"
+msgstr "Ville"
+
+#: member/forms.py
+msgid "Montreal"
+msgstr "Montréal"
+
+#: member/forms.py
+msgid "Postal Code"
+msgstr "Code Postal"
+
+#: member/forms.py
+msgid "H2R 2Y5"
+msgstr "H2R 2Y5"
+
+#: member/forms.py
+msgid "Latitude"
+msgstr "Latitude"
+
+#: member/forms.py
+msgid "Longitude"
+msgstr "Longitude"
+
+#: member/forms.py
+msgid "Distance from Santropol"
+msgstr "Distance du Santropol Roulant"
+
+#: member/forms.py member/templates/client/list.html
+#: member/templates/client/partials/filters.html
+#: member/templates/client/view/information.html
+msgid "Route"
+msgstr "Route"
+
+#: member/forms.py member/models.py
+#: member/templates/client/view/information.html
+msgid "Delivery Note"
+msgstr "Notes de Livraison"
+
+#: member/forms.py
+msgid "Delivery Note here ..."
+msgstr "Vos notes de livraison ici ..."
+
+#: member/forms.py member/models.py
+msgid "Active"
+msgstr "Actif"
+
+#: member/forms.py
+msgid "By default, the client meal status is Pending."
+msgstr "Par défaut, le statut sera 'En attente'."
+
+#: member/forms.py
+msgid "Type"
+msgstr "Type"
+
+#: member/forms.py
+msgid "Schedule"
+msgstr "Calendrier"
+
+#: member/forms.py member/templates/client/view/allergies.html
+msgid "Restrictions"
+msgstr "Restrictions"
+
+#: member/forms.py member/models.py
+msgid "Preparation"
+msgstr "Préparation"
+
+#: member/forms.py
+msgid "Ingredient To Avoid"
+msgstr "Ingrédients à éviter"
+
+#: member/forms.py
+msgid "Dish(es) To Avoid"
+msgstr "Plats à éviter"
+
+#: member/forms.py
+#, python-format
+msgid "At least one of the quantities should be set because %(weekday)s is scheduled for delivery."
+msgstr ""
+
+#: member/forms.py
+msgid "Size is required when the main dish is set."
+msgstr ""
+
+#: member/forms.py
+msgid "Member"
+msgstr "Membre"
+
+#: member/forms.py
+msgid "Type 3 characters or more to search members"
+msgstr "Tapez 3 ou plus caractères pour rechercher des membres"
+
+#: member/forms.py
+msgid "Work phone"
+msgstr "Téléphone professionnel"
+
+#: member/forms.py
+msgid "This field is required unless you add a new member."
+msgstr "Ce champ est requis sauf si vous souhaitez ajouter un nouveau membre."
+
+#: member/forms.py member/tests.py
+msgid "This field is required unless you chose an existing member."
+msgstr "Ce champ est requis à moins que vous ne choisissiez un membre existant."
+
+#: member/forms.py
+msgid "Not a valid member, please chose an existing member."
+msgstr "Membre non valide. Veuillez choisir un membre existant."
+
+#: member/forms.py
+msgid "Billing Type"
+msgstr "Type de Facturation"
+
+#: member/forms.py
+msgid "Same As Client"
+msgstr "Identique au Client"
+
+#: member/forms.py
+#, fuzzy
+#| msgid "If checked, the personal information             of the client will be used as billing information."
+msgid "If checked, the personal information of the client will be used as billing information."
+msgstr "Si sélectionné, les informations personnelles du client seront utilisées pour la facturation.."
+
+#: member/forms.py member/models.py
+msgid "Payment Type"
+msgstr "Type de Paiement"
+
+#: member/forms.py
+msgid "Street Number"
+msgstr "Numéro de rue"
+
+#: member/forms.py
+msgid "Floor"
+msgstr "Étage"
+
+#: member/forms.py
+msgid "Street Name"
+msgstr "Rue"
+
+#: member/forms.py
+msgid "City Name"
+msgstr "Ville"
+
+#: member/forms.py member/tests.py
+msgid "This member has not a valid address, please add a valid address to this member, so it can be used for the billing."
+msgstr "Ce membre ne possède pas une adresse valide. Veillez ajouter une adresse valide afin qu'elle puisse être utilisée pour la facturation."
+
+#: member/forms.py member/tests.py
+msgid "This field is required"
+msgstr "Ce champ est requis"
+
+#: member/forms.py member/templates/client/view/information.html
+#, fuzzy
+#| msgid "Relationship"
+msgid "Nature of Relationship"
+msgstr "Lien"
+
+#: member/forms.py
+msgid "Doctor, Friend, Daughter, ..."
+msgstr ""
+
+#: member/forms.py member/templates/client/view/information.html
+#, fuzzy
+#| msgid "Relationship"
+msgid "Type of Relationship"
+msgstr "Lien"
+
+#: member/forms.py member/templates/client/partials/forms/relationships.html
+#: member/templates/client/view/information.html
+msgid "Remark"
+msgstr ""
+
+#: member/forms.py member/models.py
+#: member/templates/client/partials/forms/relationships.html
+msgid "Work information"
+msgstr "Lieu de travail"
+
+#: member/forms.py
+msgid "Hotel-Dieu, St-Anne Hospital, ..."
+msgstr "Hôtel-Dieu, Hôpital Sainte-Anne, ..."
+
+#: member/forms.py member/templates/client/view/information.html
+#: member/templates/client/view/referent.html
+msgid "Referral Date"
+msgstr "Date du référencement"
+
+#: member/forms.py member/templates/client/view/information.html
+#: member/templates/client/view/referent.html
+msgid "Referral Reason"
+msgstr "Raison du référencement"
+
+#: member/forms.py member/tests.py
+#, fuzzy
+#| msgid "At least one emergency contact is required."
+msgid "At least one contact is required."
+msgstr "Au moins un contact d'urgence est requis."
+
+#: member/forms.py member/tests.py
+#, fuzzy
+#| msgid "This field is required unless you add a new member."
+msgid "This field is required for a referent relationship."
+msgstr "Ce champ est requis sauf si vous souhaitez ajouter un nouveau membre."
+
+#: member/forms.py
+#, fuzzy
+#| msgid "The status has been changed"
+msgid "The client status has been changed."
+msgstr "Le statut a été changé"
+
+#: member/forms.py
+#, fuzzy
+#| msgid "The status has been changed"
+msgid "This status change has been scheduled."
+msgstr "Le statut a été changé"
+
+#: member/forms.py
+msgid "The end date of this status change has been scheduled."
+msgstr ""
+
+#: member/formsfield.py
+msgid "Phone numbers must be in XXX-XXX-XXXX # XXXXX format."
+msgstr "Le format du numéro de téléphone doit être XXX-XXX-XXXX # XXXXX."
+
+#: member/models.py
+msgid "Female"
+msgstr "Femme"
+
+#: member/models.py
+msgid "Male"
+msgstr "Homme"
+
+#: member/models.py
+msgid "Other"
+msgstr "Autre"
+
+#: member/models.py
+msgid "Default"
+msgstr "Par Défaut"
+
+#: member/models.py
+msgid "Low income"
+msgstr "Revenu faible"
+
+#: member/models.py
+msgid "Solidary"
+msgstr "Solidaire"
+
+#: member/models.py
+msgid "----"
+msgstr ""
+
+#: member/models.py
+msgid "3rd Party"
+msgstr ""
+
+#: member/models.py
+msgid "Credit card"
+msgstr "Carte de crédit"
+
+#: member/models.py
+msgid "EFT"
+msgstr "TFE"
+
+#: member/models.py
+msgid "Ongoing"
+msgstr "Régulier"
+
+#: member/models.py
+msgid "Episodic"
+msgstr "Occasionnel"
+
+#: member/models.py
+msgid "Main dish size"
+msgstr "Taille du plat principal"
+
+#: member/models.py
+msgid "Dish"
+msgstr "Plat"
+
+#: member/models.py
+msgid "Other order item"
+msgstr "Autre élément de commande"
+
+#: member/models.py
+msgid "Monday"
+msgstr "Lundi"
+
+#: member/models.py
+msgid "Tuesday"
+msgstr "Mardi"
+
+#: member/models.py
+msgid "Wednesday"
+msgstr "Mercredi"
+
+#: member/models.py
+msgid "Thursday"
+msgstr "Jeudi"
+
+#: member/models.py
+msgid "Friday"
+msgstr "Vendredi"
+
+#: member/models.py
+msgid "Saturday"
+msgstr "Samedi"
+
+#: member/models.py
+msgid "Sunday"
+msgstr "Dimanche"
+
+#: member/models.py
+msgid "Cycling"
+msgstr ""
+
+#: member/models.py
+msgid "Walking"
+msgstr ""
+
+#: member/models.py
+msgid "Driving"
+msgstr ""
+
+#: member/models.py
+msgid "members"
+msgstr "membres"
+
+#: member/models.py
+msgid "firstname"
+msgstr "prénom"
+
+#: member/models.py
+msgid "lastname"
+msgstr "nom"
+
+#: member/models.py
+msgid "address"
+msgstr "adresse"
+
+#: member/models.py
+msgid "addresses"
+msgstr "adresses"
+
+#: member/models.py
+msgid "street number"
+msgstr "numéro"
+
+#: member/models.py
+msgid "street"
+msgstr "rue"
+
+#: member/models.py
+msgid "apartment"
+msgstr "appartement"
+
+#: member/models.py
+msgid "floor"
+msgstr "étage"
+
+#: member/models.py
+msgid "city"
+msgstr "ville"
+
+#: member/models.py
+msgid "postal code"
+msgstr "code postal"
+
+#: member/models.py
+msgid "contacts"
+msgstr "contacts"
+
+#: member/models.py
+msgid "contact type"
+msgstr "type de contact"
+
+#: member/models.py
+msgid "value"
+msgstr "valeur"
+
+#: member/models.py
+msgid "member"
+msgstr "membre"
+
+#: member/models.py member/templates/route/list.html
+msgid "Routes"
+msgstr "Routes"
+
+#: member/models.py
+msgid "name"
+msgstr "nom"
+
+#: member/models.py
+msgid "description"
+msgstr "description"
+
+#: member/models.py
+msgid "vehicle"
+msgstr ""
+
+#: member/models.py
+msgid "IDs of clients on this route (as a JSON list)"
+msgstr ""
+
+#: member/models.py
+#, fuzzy
+#| msgid "Delivery type"
+msgid "Delivery History"
+msgstr "Type de Livraison"
+
+#: member/models.py member/templates/route/detail.html
+#, fuzzy
+#| msgid "Delivery Note"
+msgid "Delivery Histories"
+msgstr "Notes de Livraison"
+
+#: member/models.py
+msgid "route"
+msgstr "route"
+
+#: member/models.py
+#, fuzzy
+#| msgid "No delivery."
+msgid "date of the delivery"
+msgstr "Pas de livraison"
+
+#: member/models.py
+#, fuzzy
+#| msgid "clients"
+msgid "comments"
+msgstr "clients"
+
+#: member/models.py
+msgid "Pending"
+msgstr "En Attente"
+
+#: member/models.py
+msgid "Paused"
+msgstr "Pause"
+
+#: member/models.py
+msgid "Stop: no contact"
+msgstr "Stop: pas de contact"
+
+#: member/models.py
+msgid "Stop: contact"
+msgstr "Stop: contact"
+
+#: member/models.py
+msgid "Deceased"
+msgstr "Décédé"
+
+#: member/models.py
+msgid "English"
+msgstr "Anglais"
+
+#: member/models.py
+msgid "French"
+msgstr "Français"
+
+#: member/models.py
+msgid "Allophone"
+msgstr "Allophone"
+
+#: member/models.py
+msgid "clients"
+msgstr "clients"
+
+#: member/models.py
+msgid "billing member"
+msgstr "personne à facturer"
+
+#: member/models.py
+msgid "rate type"
+msgstr "type de taux"
+
+#: member/models.py
+msgid "alert client"
+msgstr "alerte client"
+
+#: member/models.py
+msgid "Start"
+msgstr "Début"
+
+#: member/models.py
+msgid "End"
+msgstr "Fin"
+
+#: member/models.py
+msgid "To be processed"
+msgstr "À traiter"
+
+#: member/models.py
+msgid "Processed"
+msgstr "Traité"
+
+#: member/models.py
+msgid "Error"
+msgstr "Erreur"
+
+#: member/models.py
+msgid "Client Scheduled Status Pair"
+msgstr "Paire de Statut Planifié du Client"
+
+#: member/models.py
+msgid "Search by name"
+msgstr "Recherche par nom"
+
+#: member/models.py member/templates/client/view/referent.html
+msgid "Referent"
+msgstr "Référent"
+
+#: member/models.py
+msgid "Emergency"
+msgstr "Urgence"
+
+#: member/models.py
+msgid "Unknown type"
+msgstr ""
+
+#: member/models.py member/templates/client/create/form.html member/tests.py
+#: member/urls.py
+#, fuzzy
+#| msgid "relationship"
+msgid "relationships"
+msgstr "lien"
+
+#: member/models.py
+msgid "options"
+msgstr "options"
+
+#: member/models.py
+msgid "option group"
+msgstr "groupe d'options"
+
+#: member/models.py
+msgid "client"
+msgstr "client"
+
+#: member/models.py
+msgid "option"
+msgstr "option"
+
+#: member/models.py
+msgid "restricted item"
+msgstr "item restreint"
+
+#: member/models.py
+msgid "ingredient"
+msgstr "ingrédient"
+
+#: member/models.py
+msgid "component"
+msgstr "composant"
+
+#: member/templates/client/base.html
+#: member/templates/client/partials/birthdays.html
+msgid "Client"
+msgstr "Client"
+
+#: member/templates/client/base.html
+#, fuzzy, python-format
+#| msgid ""
+#| "\n"
+#| "                  Client since %(created_at)s\n"
+#| "                "
+msgid "Client since %(created_at)s"
+msgstr ""
+"\n"
+"Client depuis %(created_at)s"
+
+#: member/templates/client/base.html
+msgid "Client status scheduler may not work properly. Please verify."
+msgstr ""
+
+#: member/templates/client/base.html
+msgid "Upcoming change"
+msgstr ""
+
+#: member/templates/client/base.html
+msgid "View upcoming changes"
+msgstr ""
+
+#: member/templates/client/base.html
+msgid "This cannot be undone. Are you sure?"
+msgstr ""
+
+#: member/templates/client/base.html
+msgid "Cancel this upcoming change"
+msgstr ""
+
+#: member/templates/client/base.html
+msgid "Reschedule this upcoming change"
+msgstr ""
+
+#: member/templates/client/base.html
+msgid "Important notice"
+msgstr "Remarque importante"
+
+#: member/templates/client/create/form.html
+msgid "Edit existing client"
+msgstr "Modifier un client existant"
+
+#: member/templates/client/create/form.html
+msgid "Create a new client "
+msgstr "Créer un nouveau client"
+
+#: member/templates/client/create/form.html
+msgid "Notice"
+msgstr "Remarque"
+
+#: member/templates/client/create/form.html
+msgid "No information will be saved until all the steps are completed."
+msgstr "Aucune information ne sera sauvegardée tant que toutes les étapes ne sont pas complétées."
+
+#: member/templates/client/create/form.html
+msgid "Save as soon as you are ready."
+msgstr "Sauvegarder dès que vous êtes prêts."
+
+#: member/templates/client/create/form.html
+msgid "Edit Client"
+msgstr "Modifier le Client"
+
+#: member/templates/client/create/form.html
+msgid "New Client"
+msgstr "Nouveau client"
+
+#: member/templates/client/create/form.html member/tests.py member/urls.py
+msgid "basic_information"
+msgstr "personnel"
+
+#: member/templates/client/create/form.html member/tests.py member/urls.py
+msgid "address_information"
+msgstr "adresse"
+
+#: member/templates/client/create/form.html member/tests.py member/urls.py
+msgid "payment_information"
+msgstr "paiement"
+
+#: member/templates/client/create/form.html member/tests.py member/urls.py
+msgid "dietary_restriction"
+msgstr "préférences"
+
+#: member/templates/client/create/form.html
+#: member/templates/client/partials/menu.html
+#: member/templates/client/update/base.html
+msgid "Personal"
+msgstr "Personnel"
+
+#: member/templates/client/create/form.html
+#: member/templates/client/update/base.html
+msgid "First name, last name, ..."
+msgstr "Prénom, nom de famille, ..."
+
+#: member/templates/client/create/form.html
+#: member/templates/client/partials/forms/address_information.html
+#: member/templates/client/update/base.html
+#: member/templates/client/view/information.html
+#: member/templates/client/view/payment.html
+#: member/templates/client/view/summary.html
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html member/templates/route/edit.html
+msgid "Address"
+msgstr "Adresse"
+
+#: member/templates/client/create/form.html
+#: member/templates/client/update/base.html
+msgid "Street number, city, ..."
+msgstr "Rue, ville, ..."
+
+#: member/templates/client/create/form.html
+#: member/templates/client/partials/forms/relationships.html
+#: member/templates/client/update/base.html
+#, fuzzy
+#| msgid "Relationship"
+msgid "Relationships"
+msgstr "Lien"
+
+#: member/templates/client/create/form.html
+#: member/templates/client/update/base.html
+#, fuzzy
+#| msgid "emergency contacts"
+msgid "Referents, emergency contacts, ..."
+msgstr "contacts d'urgence"
+
+#: member/templates/client/create/form.html
+#: member/templates/client/update/base.html
+msgid "Payment"
+msgstr "Paiement"
+
+#: member/templates/client/create/form.html
+#: member/templates/client/update/base.html
+msgid "Payment method, card, ..."
+msgstr "Méthode de paiement, carte, ..."
+
+#: member/templates/client/create/form.html
+#: member/templates/client/partials/menu.html
+#: member/templates/client/update/base.html
+msgid "Preferences"
+msgstr "Préférences"
+
+#: member/templates/client/create/form.html
+#: member/templates/client/update/base.html
+msgid "Deliveries, restrictions, ..."
+msgstr "Livraisons, restrictions, ..."
+
+#: member/templates/client/create/form.html
+#: member/templates/client/update/base.html member/templates/route/edit.html
+msgid "Required information missing"
+msgstr "Information requise manquante"
+
+#: member/templates/client/create/form.html
+#: member/templates/client/update/base.html member/templates/route/edit.html
+msgid "Please review the form to make sure that all required fields are filled."
+msgstr "Veuillez réviser le formulaire afin de valider que tous les champs requis sont remplis."
+
+#: member/templates/client/create/form.html
+#: member/templates/client/update/base.html
+#: member/templates/route/delivery_history_detail.html
+msgid "Back"
+msgstr "Précédent"
+
+#: member/templates/client/create/form.html
+#: member/templates/client/update/base.html member/templates/route/edit.html
+msgid "Save"
+msgstr "Enregistrer"
+
+#: member/templates/client/create/form.html
+msgid "Next"
+msgstr "Suivant"
+
+#: member/templates/client/list.html
+msgid "Clients"
+msgstr "Clients"
+
+#: member/templates/client/list.html
+msgid "New client"
+msgstr "Nouveau client"
+
+#: member/templates/client/list.html
+#: member/templates/client/partials/forms/payment_information.html
+#: member/templates/client/partials/forms/relationships.html
+msgid "Or"
+msgstr "Ou"
+
+#: member/templates/client/list.html member/templates/client/view/summary.html
+msgid "years old"
+msgstr "ans"
+
+#: member/templates/client/list.html
+#, fuzzy, python-format
+#| msgid ""
+#| "\n"
+#| "                    %(member_firstname)s is an <strong>%(delivery_type)s</strong> client on the <strong>%(route)s</strong> route.\n"
+#| "                "
+msgid "%(member_firstname)s is an <strong>%(delivery_type)s</strong> client on the <strong>%(route)s</strong> route."
+msgstr ""
+"\n"
+"                    %(member_firstname)s est un(e) client(e) <strong>%(delivery_type)s</strong> sur la route <strong>%(route)s</strong>.\n"
+"                "
+
+#: member/templates/client/list.html
+msgid "This client is currently"
+msgstr "Le statut du client est"
+
+#: member/templates/client/list.html member/templates/route/list.html
+msgid "Sorry, no result found."
+msgstr "Désolé, aucun résultat trouvé."
+
+#: member/templates/client/list.html
+#: member/templates/client/partials/filters.html
+#: member/templates/client/partials/forms/basic_information.html
+#: member/templates/client/partials/forms/payment_information.html
+#: member/templates/client/partials/forms/relationships.html
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html member/templates/route/edit.html
+#: member/templates/route/list.html
+msgid "Name"
+msgstr "Nom"
+
+#: member/templates/client/list.html
+msgid "Full name and age of the client."
+msgstr "Nom complet et âge du client."
+
+#: member/templates/client/list.html
+#: member/templates/client/partials/filters.html
+#: member/templates/client/partials/menu.html
+#: member/templates/client/view/orders.html
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html member/templates/route/edit.html
+msgid "Status"
+msgstr "Statut"
+
+#: member/templates/client/list.html
+msgid "Meal status. Available status are: Pending, Active, Paused, Stop: no contact, Stop: contact and Deceased."
+msgstr ""
+
+#: member/templates/client/list.html
+#: member/templates/client/view/allergies.html
+#: member/templates/client/view/summary.html
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html member/templates/route/edit.html
+msgid "Delivery type"
+msgstr "Type de Livraison"
+
+#: member/templates/client/list.html
+msgid "A client can be either an ongoing or an episodic client."
+msgstr ""
+
+#: member/templates/client/list.html
+msgid "The delivery route for the client."
+msgstr ""
+
+#: member/templates/client/list.html
+msgid "Last update"
+msgstr "Dernière modification"
+
+#: member/templates/client/list.html
+msgid "Is the client address geolocalized ?"
+msgstr "Est-ce que l'adresse du client est géolocalisée ?"
+
+#: member/templates/client/list.html
+msgid "Yes"
+msgstr "Oui"
+
+#: member/templates/client/list.html
+msgid "No"
+msgstr "Non"
+
+#: member/templates/client/list.html
+msgid "Last modification of the file."
+msgstr "Dernière modification du dossier."
+
+#: member/templates/client/list.html
+msgid "of"
+msgstr ""
+
+#: member/templates/client/partials/birthdays.html
+msgid "Happy Birthday"
+msgstr "Bonne Fête"
+
+#: member/templates/client/partials/birthdays.html
+msgid "Age"
+msgstr "Âge"
+
+#: member/templates/client/partials/birthdays.html
+#: member/templates/client/view/status.html member/templates/route/detail.html
+msgid "Date"
+msgstr "Date"
+
+#: member/templates/client/partials/birthdays.html
+#, python-format
+msgid "%(count)s birthday."
+msgid_plural "%(count)s birthdays."
+msgstr[0] ""
+msgstr[1] ""
+
+#: member/templates/client/partials/filters.html
+#: member/templates/client/partials/forms/dietary_restriction.html
+msgid "Delivery"
+msgstr "Livraison"
+
+#: member/templates/client/partials/filters.html
+#: member/templates/client/view/notes.html
+#: member/templates/client/view/status.html
+msgid "Reset"
+msgstr "Réinitialiser"
+
+#: member/templates/client/partials/filters.html
+#: member/templates/client/view/notes.html
+msgid "Search"
+msgstr "Recherche"
+
+#: member/templates/client/partials/forms/address_information.html
+msgid "Geolocation"
+msgstr "Localisation"
+
+#: member/templates/client/partials/forms/address_information.html
+msgid "Address not Found !!"
+msgstr "Adresse introuvable !!"
+
+#: member/templates/client/partials/forms/address_information.html
+msgid "Geolocate"
+msgstr "Localiser"
+
+#: member/templates/client/partials/forms/address_information.html
+msgid "Geolocation is mandatory."
+msgstr "Localisation is requise."
+
+#: member/templates/client/partials/forms/address_information.html
+msgid "km"
+msgstr "km"
+
+#: member/templates/client/partials/forms/address_information.html
+msgid "Delivery Route"
+msgstr "Route de Livraison"
+
+#: member/templates/client/partials/forms/basic_information.html
+msgid "Identity"
+msgstr "Identité"
+
+#: member/templates/client/partials/forms/basic_information.html
+#: member/templates/client/partials/forms/relationships.html
+msgid "Contact information"
+msgstr "Information de contact"
+
+#: member/templates/client/partials/forms/basic_information.html
+msgid "This message will be hightlighted on the client record."
+msgstr "Ce message sera affiché sur la fiche client."
+
+#: member/templates/client/partials/forms/dietary_restriction.html
+#: member/templates/client/view/allergies.html
+msgid "Meal status"
+msgstr "Statut de livraison"
+
+#: member/templates/client/partials/forms/dietary_restriction.html
+#: member/templates/client/view/allergies.html
+msgid "Food preferences"
+msgstr "Préférences alimentaires    "
+
+#: member/templates/client/partials/forms/dietary_restriction.html
+#: member/templates/client/view/allergies.html
+#, fuzzy
+#| msgid "Meal status"
+msgid "Meal defaults"
+msgstr "Statut de livraison"
+
+#: member/templates/client/partials/forms/meal_defaults.html
+msgid "Size"
+msgstr "Taille"
+
+#: member/templates/client/partials/forms/payment_information.html
+msgid "Billing information"
+msgstr "Information de facturation"
+
+#: member/templates/client/partials/forms/payment_information.html
+msgid "Create new payment member"
+msgstr "Ajouter un nouveau membre à facturer"
+
+#: member/templates/client/partials/forms/payment_information.html
+msgid "Street"
+msgstr "Rue"
+
+#: member/templates/client/partials/forms/relationships.html
+#, fuzzy
+#| msgid "relationship"
+msgid "Add relationship"
+msgstr "lien"
+
+#: member/templates/client/partials/forms/relationships.html
+#, fuzzy
+#| msgid "relationship"
+msgid "Remove relationship"
+msgstr "lien"
+
+#: member/templates/client/partials/forms/relationships.html
+#, fuzzy
+#| msgid "Create new payment member"
+msgid "Create new member"
+msgstr "Ajouter un nouveau membre à facturer"
+
+#: member/templates/client/partials/forms/relationships.html
+#, fuzzy
+#| msgid "relationship"
+msgid "Type of relationship"
+msgstr "lien"
+
+#: member/templates/client/partials/forms/relationships.html
+#, fuzzy
+#| msgid "Contact relationship"
+msgid "Nature of relationship"
+msgstr "Relation de contact"
+
+#: member/templates/client/partials/forms/relationships.html
+msgid "Referral date"
+msgstr "Date du référencement"
+
+#: member/templates/client/partials/forms/relationships.html
+msgid "Referral reason"
+msgstr "Raison du référencement"
+
+#: member/templates/client/partials/menu.html
+#: member/templates/client/view/information.html
+#: member/templates/client/view/notes.html
+#: member/templates/client/view/status.html
+msgid "Information"
+msgstr "Information"
+
+#: member/templates/client/partials/menu.html
+#: member/templates/client/view/payment.html
+msgid "Billing"
+msgstr "Facturation"
+
+#: member/templates/client/partials/menu.html
+msgid "Notes"
+msgstr "Notes"
+
+#: member/templates/client/partials/menu.html
+#: member/templates/client/view/orders.html
+msgid "Orders"
+msgstr "Commandes"
+
+#: member/templates/client/update/base.html
+msgid "Update Client"
+msgstr "Mise à jour du client"
+
+#: member/templates/client/update/base.html
+msgid "Tip"
+msgstr "Astuce"
+
+#: member/templates/client/update/base.html
+msgid "In update mode, each step can be saved individually"
+msgstr "Pour la mise à jour, chaque étape peut être enregistré séparément"
+
+#: member/templates/client/update/status.html
+msgid "Status modification"
+msgstr "Changement de statut"
+
+#: member/templates/client/update/status.html
+msgid "If you want to schedule a status modification, feel free to fill one or two of theses date fields."
+msgstr "Pour planifier une modification de statut, veuillez de remplir les champs de dates ci-dessous"
+
+#: member/templates/client/update/status.html
+msgid "End date"
+msgstr "Date de fin"
+
+#: member/templates/client/update/status.html
+#: member/templates/client/view/delete_status_confirmation.html
+#: member/templates/route/edit.html
+msgid "Cancel"
+msgstr "Annuler"
+
+#: member/templates/client/update/status.html
+msgid "OK"
+msgstr "Ok"
+
+#: member/templates/client/view/allergies.html
+msgid "Meal information"
+msgstr "Information sur le repas"
+
+#: member/templates/client/view/allergies.html
+msgid "Meal information of the referent person"
+msgstr ""
+
+#: member/templates/client/view/allergies.html
+#: member/templates/client/view/information.html
+#: member/templates/client/view/payment.html
+#: member/templates/client/view/referent.html
+#: member/templates/route/detail.html
+msgid "Edit"
+msgstr "Éditer"
+
+#: member/templates/client/view/allergies.html
+#, fuzzy
+#| msgid "No delivery."
+msgid "Ongoing delivery"
+msgstr "Pas de livraison"
+
+#: member/templates/client/view/allergies.html
+#, fuzzy
+#| msgid "Work information"
+msgid "No information provided."
+msgstr "Lieu de travail"
+
+#: member/templates/client/view/allergies.html
+msgid "Yipee! No restriction"
+msgstr "Parfait! Aucune restriction"
+
+#: member/templates/client/view/allergies.html
+msgid "Food preparation"
+msgstr "Préparation de la nourriture"
+
+#: member/templates/client/view/allergies.html
+msgid "Nope! Nothing specific"
+msgstr "Rien à signaler!"
+
+#: member/templates/client/view/allergies.html
+msgid "Ingredients to avoid"
+msgstr "Ingrédients à éviter"
+
+#: member/templates/client/view/allergies.html
+msgid "Yeah! Likes everything"
+msgstr "Parfait! Aucune restriction"
+
+#: member/templates/client/view/allergies.html
+msgid "Dish(es) to avoid"
+msgstr "Plats à éviter"
+
+#: member/templates/client/view/delete_status_confirmation.html
+msgid "Remove Scheduled Status Confirmation"
+msgstr "Supprimer Statut Planifié du Client"
+
+#: member/templates/client/view/delete_status_confirmation.html
+#, fuzzy, python-format
+#| msgid ""
+#| "\n"
+#| "            Your are trying to remove the scheduled status related to the client <strong>%(client)s</strong>,\n"
+#| "            in order to change the status from <strong>%(from)s</strong> to <strong>%(to)s</strong> the\n"
+#| "            next <strong>%(date)s</strong>.\n"
+#| "        "
+msgid "Your are trying to remove the scheduled status related to the client <strong>%(client)s</strong>, in order to change the status from <strong>%(from)s</strong> to <strong>%(to)s</strong> the next <strong>%(date)s</strong>."
+msgstr ""
+"\n"
+"            Vous etes en train de supprimer le statut planifié lié au client <strong>%(client)s</strong>,\n"
+"            afin de modifier le statut de <strong>%(from)s</strong> à <strong>%(to)s</strong> le\n"
+"            prochaine <strong>%(date)s</strong>.\n"
+"        "
+
+#: member/templates/client/view/delete_status_confirmation.html
+#, fuzzy, python-format
+#| msgid ""
+#| "\n"
+#| "                    The scheduled status to be removed, is directly related to the scheduled status to change the status from\n"
+#| "                    <strong>%(from)s</strong> to <strong>%(to)s</strong> the next <strong>%(date)s</strong>.\n"
+#| "                    If you finally accept, both scheduled status will be removed.\n"
+#| "                "
+msgid "The scheduled status to be removed, is directly related to the scheduled status to change the status from <strong>%(from)s</strong> to <strong>%(to)s</strong> the next <strong>%(date)s</strong>. If you finally accept, both scheduled status will be removed."
+msgstr ""
+"\n"
+"                    Le statut qui va être supprimé, c'est directement lié à le status planifié pour changer le statut de\n"
+"                    <strong>%(from)s</strong> à <strong>%(to)s</strong> le prochaine <strong>%(date)s</strong>.\n"
+"                    Si vous acceptez finalement, les deux statuts programmés seront supprimés.\n"
+"                "
+
+#: member/templates/client/view/delete_status_confirmation.html
+#, fuzzy
+#| msgid ""
+#| "\n"
+#| "            Press <strong>Cancel</strong> to avoid or <strong>Accept</strong> to complete this operation.\n"
+#| "        "
+msgid "Press <strong>Cancel</strong> to avoid or <strong>Accept</strong> to complete this operation."
+msgstr ""
+"\n"
+"            Appuyez sur <strong>Annuler</strong> pour éviter ou <strong>Accepter</strong> pour terminer cette opération.\n"
+"        "
+
+#: member/templates/client/view/delete_status_confirmation.html
+msgid "Accept"
+msgstr "Accepter"
+
+#: member/templates/client/view/information.html
+msgid "Basic information"
+msgstr "Informations de base"
+
+#: member/templates/client/view/information.html
+msgid "Contact information of the client"
+msgstr "Coordonnées du client"
+
+#: member/templates/client/view/information.html
+msgid "Gender"
+msgstr "Sexe"
+
+#: member/templates/client/view/information.html
+#: member/templates/client/view/summary.html
+msgid "Language"
+msgstr "Langue"
+
+#: member/templates/client/view/information.html
+msgid "Delivery Type"
+msgstr "Type de Livraison"
+
+#: member/templates/client/view/information.html
+#, fuzzy
+#| msgid "Contact relationship"
+msgid "Client relationships"
+msgstr "Relation de contact"
+
+#: member/templates/client/view/information.html
+#, fuzzy
+msgid "Information of the people that are related to the client."
+msgstr "Information sur les personnes à contacter en cas d'urgence"
+
+#: member/templates/client/view/information.html
+msgid "Unknown"
+msgstr ""
+
+#: member/templates/client/view/information.html
+msgid "N/A"
+msgstr ""
+
+#: member/templates/client/view/information.html
+msgid "No related members."
+msgstr ""
+
+#: member/templates/client/view/notes.html
+msgid "Staff Notes"
+msgstr "Notes du Staff"
+
+#: member/templates/client/view/notes.html
+msgid "Notes added to"
+msgstr "Notes ajoutées à"
+
+#: member/templates/client/view/notes.html
+msgid "s file"
+msgstr ""
+
+#: member/templates/client/view/notes.html
+msgid "Priority"
+msgstr "Priorité"
+
+#: member/templates/client/view/notes.html
+msgid "Is read"
+msgstr "Lu"
+
+#: member/templates/client/view/notes.html
+msgid "New Note"
+msgstr "Nouvelle Note"
+
+#: member/templates/client/view/notes.html
+msgid "Done/Read"
+msgstr "Fait/Lu"
+
+#: member/templates/client/view/notes.html
+msgid "New"
+msgstr "Nouveau"
+
+#: member/templates/client/view/orders.html
+msgid "Orders list"
+msgstr "Liste des commandes"
+
+#: member/templates/client/view/orders.html
+msgid "List of all orders from"
+msgstr "Liste de toutes les commandes depuis"
+
+#: member/templates/client/view/orders.html
+msgid "Order"
+msgstr "Commande"
+
+#: member/templates/client/view/orders.html
+msgid "A unique identifier for the order."
+msgstr "Identifiant unique de la commande."
+
+#: member/templates/client/view/orders.html
+msgid "Delivery Date"
+msgstr "Date de Livraison"
+
+#: member/templates/client/view/orders.html
+msgid "The delivery date planned for the order."
+msgstr "Date de livraison prévue pour la commande"
+
+#: member/templates/client/view/orders.html
+msgid "The order status"
+msgstr "statut de la commande"
+
+#: member/templates/client/view/orders.html
+msgid "Amount"
+msgstr "Montant"
+
+#: member/templates/client/view/orders.html
+msgid "Total amount in $CAD."
+msgstr "Montant total en $CAD"
+
+#: member/templates/client/view/orders.html member/templates/route/list.html
+msgid "Actions"
+msgstr "Actions"
+
+#: member/templates/client/view/payment.html
+#: member/templates/client/view/referent.html
+msgid "Referent information"
+msgstr "Informations du référent"
+
+#: member/templates/client/view/payment.html
+msgid "Billing and payment information"
+msgstr "Information de facturation"
+
+#: member/templates/client/view/payment.html
+msgid "Payment method"
+msgstr "Méthode de paiement"
+
+#: member/templates/client/view/payment.html
+msgid "Rate type"
+msgstr "Type de taux"
+
+#: member/templates/client/view/referent.html
+msgid "Contact information of the referent person"
+msgstr "Coordonnées de la personne référente"
+
+#: member/templates/client/view/referent.html
+msgid "Workplace information"
+msgstr "Lieu de travail"
+
+#: member/templates/client/view/status.html
+msgid "Scheduled status modifications"
+msgstr "Changement(s) de statut planifié(s)"
+
+#: member/templates/client/view/status.html
+msgid "Here are listed all scheduled status modifications."
+msgstr "Voici l'historique des changements de statut."
+
+#: member/templates/client/view/status.html
+msgid "Apply"
+msgstr "Appliquer"
+
+#: member/templates/client/view/status.html
+msgid "From"
+msgstr "De"
+
+#: member/templates/client/view/status.html
+msgid "To"
+msgstr "À"
+
+#: member/templates/client/view/status.html
+msgid "Reason"
+msgstr "Raison"
+
+#: member/templates/client/view/status.html
+msgid "Operation status"
+msgstr "Statut"
+
+#: member/templates/client/view/status.html
+msgid "No status modification."
+msgstr "Aucun changement de statut."
+
+#: member/templates/client/view/summary.html
+msgid "Home"
+msgstr "Domicile"
+
+#: member/templates/route/delivery_history_detail.html
+msgid "View delivery history:"
+msgstr ""
+
+#: member/templates/route/delivery_history_detail.html
+#, fuzzy
+#| msgid "Delivery Note"
+msgid "Delivery vehicle"
+msgstr "Notes de Livraison"
+
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html
+#, fuzzy
+#| msgid "Clients"
+msgid "Comments"
+msgstr "Clients"
+
+#: member/templates/route/delivery_history_detail.html
+#, fuzzy
+#| msgid "Delivery Route"
+msgid "Delivery sequence"
+msgstr "Route de Livraison"
+
+#: member/templates/route/delivery_history_detail.html
+msgid "View order"
+msgstr ""
+
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html
+msgid "Configured or unconfigured. Unconfigured clients are placed at the end of the delivery sequence by default."
+msgstr ""
+
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html member/templates/route/edit.html
+msgid "Access the client's file"
+msgstr ""
+
+#: member/templates/route/delivery_history_detail.html
+#, fuzzy
+#| msgid "Other order item"
+msgid "View the order"
+msgstr "Autre élément de commande"
+
+#: member/templates/route/delivery_history_detail.html
+#, fuzzy
+#| msgid "Order"
+msgid "Order #"
+msgstr "Commande"
+
+#: member/templates/route/delivery_history_detail.html
+msgid "[DELETED]"
+msgstr ""
+
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html member/templates/route/edit.html
+msgid "Configured"
+msgstr ""
+
+#: member/templates/route/delivery_history_detail.html
+#: member/templates/route/detail.html member/templates/route/edit.html
+msgid "Unconfigured"
+msgstr ""
+
+#: member/templates/route/delivery_history_detail.html
+msgid "Map Review"
+msgstr ""
+
+#: member/templates/route/detail.html
+#, fuzzy
+#| msgid "route"
+msgid "View route:"
+msgstr "route"
+
+#: member/templates/route/detail.html member/templates/route/edit.html
+#: member/templates/route/list.html
+#, fuzzy
+#| msgid "description"
+msgid "Description"
+msgstr "description"
+
+#: member/templates/route/detail.html member/templates/route/edit.html
+#: member/templates/route/list.html
+msgid "Default delivery vehicle"
+msgstr ""
+
+#: member/templates/route/detail.html member/templates/route/edit.html
+msgid "Default delivery sequence"
+msgstr ""
+
+#: member/templates/route/detail.html member/templates/route/edit.html
+#, fuzzy
+#| msgid "Delivery Note"
+msgid "Delivery Preview"
+msgstr "Notes de Livraison"
+
+#: member/templates/route/detail.html
+#, fuzzy
+#| msgid "No delivery."
+msgid "No delivery histories."
+msgstr "Pas de livraison"
+
+#: member/templates/route/detail.html
+msgid "Vehicle"
+msgstr ""
+
+#: member/templates/route/detail.html
+#, fuzzy
+#| msgid "Actions"
+msgid "Action"
+msgstr "Actions"
+
+#: member/templates/route/detail.html
+msgid "Return to route list"
+msgstr ""
+
+#: member/templates/route/edit.html
+#, fuzzy
+#| msgid "route"
+msgid "Edit route:"
+msgstr "route"
+
+#: member/templates/route/edit.html
+#, fuzzy
+#| msgid "Basic information"
+msgid "Basic Information"
+msgstr "Informations de base"
+
+#: member/templates/route/edit.html
+msgid "Dragging a row in the table to change the delivery sequence of the client. Changes will not be saved until clicking the \"Save\" button."
+msgstr ""
+
+#: member/templates/route/edit.html
+msgid "Configured, edited or unconfigured."
+msgstr ""
+
+#: member/templates/route/edit.html
+msgid "Minimise euclidean distances"
+msgstr ""
+
+#: member/templates/route/edit.html
+msgid "This previews a possible delivery sequence that minimises the total euclidean distance. It will update the table and the map, but no changes will be applied until clicking \"Save\" button."
+msgstr ""
+
+#: member/templates/route/list.html
+msgid "For creating a new route or deleting an existing route, please go to \"Admin\" menu."
+msgstr ""
+
+#: member/templates/route/list.html
+#, fuzzy
+#| msgid "New client"
+msgid "Number of clients"
+msgstr "Nouveau client"
+
+#: member/tests.py
+#, fuzzy
+#| msgid "This field is required"
+msgid "This field is required."
+msgstr "Ce champ est requis"
+
+#: member/tests.py
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+
+#: member/urls.py
+msgid "^create/$"
+msgstr ""
+
+#: member/urls.py
+msgid "^create/(?P<step>.+)/$"
+msgstr "^créer/(?P<step>.+)/$"
+
+#: member/urls.py
+msgid "^list/$"
+msgstr ""
+
+#: member/urls.py
+msgid "^search/$"
+msgstr "^rechercher/$"
+
+#: member/urls.py
+msgid "^view/(?P<pk>\\d+)/$"
+msgstr "^voir/(?P<pk>\\d+)/$"
+
+#: member/urls.py
+msgid "^view/(?P<pk>\\d+)/orders$"
+msgstr "^voir/(?P<pk>\\d+)/commandes$"
+
+#: member/urls.py
+msgid "^view/(?P<pk>\\d+)/information$"
+msgstr "^voir/(?P<pk>\\d+)/information$"
+
+#: member/urls.py
+msgid "^view/(?P<pk>\\d+)/billing$"
+msgstr "^voir/(?P<pk>\\d+)/facturation$"
+
+#: member/urls.py
+msgid "^view/(?P<pk>\\d+)/preferences$"
+msgstr "^voir/(?P<pk>\\d+)/préférences$"
+
+#: member/urls.py
+msgid "^view/(?P<pk>\\d+)/notes$"
+msgstr "^voir/(?P<pk>\\d+)/notes$"
+
+#: member/urls.py
+msgid "^view/(?P<pk>\\d+)/notes/add$"
+msgstr "^voir/(?P<pk>\\d+)/notes/ajouter$"
+
+#: member/urls.py
+msgid "^geolocateAddress/$"
+msgstr "^géolocaliser_l'adresse/$"
+
+#: member/urls.py
+msgid "^view/(?P<pk>\\d+)/status$"
+msgstr "^voir/(?P<pk>\\d+)/statut$"
+
+#: member/urls.py
+msgid "^client/(?P<pk>\\d+)/status/scheduler$"
+msgstr "^client/(?P<pk>\\d+)/statut/planificateur$"
+
+#: member/urls.py
+msgid "^client/(?P<pk>\\d+)/status/scheduler/reschedule/(?P<scheduled_status_1_pk>\\d+),(?P<scheduled_status_2_pk>\\d+)?/$"
+msgstr "^client/(?P<pk>\\d+)/statut/planificateur/replanifier/(?P<scheduled_status_1_pk>\\d+),(?P<scheduled_status_2_pk>\\d+)?/$"
+
+#: member/urls.py
+msgid "^restriction/(?P<pk>\\d+)/delete/$"
+msgstr "^restriction/(?P<pk>\\d+)/supprimer/$"
+
+#: member/urls.py
+msgid "^client_option/(?P<pk>\\d+)/delete/$"
+msgstr "^client_option/(?P<pk>\\d+)/supprimer/$"
+
+#: member/urls.py
+msgid "^ingredient_to_avoid/(?P<pk>\\d+)/delete/$"
+msgstr "^ingrédients_à_éviter/(?P<pk>\\d+)/supprimer/$"
+
+#: member/urls.py
+msgid "^component_to_avoid/(?P<pk>\\d+)/delete/$"
+msgstr "^plats_à_éviter/(?P<pk>\\d+)/supprimer/$"
+
+#: member/urls.py
+msgid "^routes/$"
+msgstr "^itinéraires/$"
+
+#: member/urls.py
+msgid "^route/(?P<pk>\\d+)/$"
+msgstr "^itinéraire/(?P<pk>\\d+)/$"
+
+#: member/urls.py
+msgid "^route/(?P<pk>\\d+)/edit/$"
+msgstr "^itinéraire/(?P<pk>\\d+)/éditer/$"
+
+#: member/urls.py
+msgid "^route/(?P<pk>\\d+)/optimised_sequence/$"
+msgstr "^itinéraire/(?P<pk>\\d+)/ordre_optimisé/$"
+
+#: member/urls.py
+#, python-brace-format
+msgid "^route/(?P<route_pk>\\d+)/(?P<date>\\d{4}-\\d{2}-\\d{2})/$"
+msgstr "^itinéraire/(?P<route_pk>\\d+)/(?P<date>\\d{4}-\\d{2}-\\d{2})/$"
+
+#: member/urls.py
+msgid "^(?P<pk>\\d+)/update/"
+msgstr "^(?P<pk>\\d+)/mettre_à_jour/"
+
+#: member/views.py
+msgid "The client has been created"
+msgstr "Le client a été crée"
+
+#: member/views.py
+msgid "The client has been updated"
+msgstr "Le client a été mis à jour"
+
+#~ msgid "All"
+#~ msgstr "Tout"
+
+#~ msgid "Remove"
+#~ msgstr "Supprimer"
+
+#: member/views.py
+#, python-format
+msgid "The client <a href=%(url)s>%(firstname)s %(lastname)s</a> is found on this delivery sequence but is no longer valid for this delivery."
+msgstr ""
+
+#: member/views.py
+#, python-format
+msgid "The delivery sequence contains a client with ID%(client_id)s that no longer exists in the database."
+msgstr ""
+
+#: member/views.py
+#, fuzzy
+#| msgid "The client has been updated"
+msgid "This route has been updated."
+msgstr "Le client a été mis à jour"
+
+#~ msgid "Parent, friend, ..."
+#~ msgstr "Parent, ami(e), ..."
+
+#~ msgid "referents"
+#~ msgstr "référents"
+
+#~ msgid "referent"
+#~ msgstr "référent"
+
+#~ msgid "referent_information"
+#~ msgstr "référent"
+
+#, fuzzy
+#~| msgid "emergency_contacts"
+#~ msgid "emergency_contact"
+#~ msgstr "contacts_d'urgence"
+
+#~ msgid "Referent contact information"
+#~ msgstr "Informations du référent"
+
+#~ msgid "Emergency contact information"
+#~ msgstr "Contact d'urgence"
+
+#~ msgid "Emergency contacts"
+#~ msgstr "Contacts d'urgence"
+
+#~ msgid "Add contact"
+#~ msgstr "Ajouter contact"
+
+#~ msgid "Remove contact"
+#~ msgstr "Supprimer contact"
+
+#~ msgid "Create new emergency contact"
+#~ msgstr "Créer un contact d'urgence"
+
+#~ msgid "Create new referent member"
+#~ msgstr "Ajouter un nouveau référent"
+
+#~ msgid "Please describe the referral reason(s)"
+#~ msgstr "Veuillez décrire les raisons pour lesquelles le client est référé"
+
+#~ msgid "Add a referent"
+#~ msgstr "Ajouter un référent"
+
+#~ msgid "No referent available"
+#~ msgstr "Pas de référent"
+
+#~ msgid "Emergency Contacts"
+#~ msgstr "Contacts d'Urgence"
+
+#, fuzzy
+#~| msgid "emergency_contacts"
+#~ msgid "emergency_contacts"
+#~ msgstr "contacts_d'urgence"
+
+#~ msgid "^view/(?P<pk>\\d+)/referent$"
+#~ msgstr "^voir/(?P<pk>\\d+)/référent$"
+
+#~ msgid "^client/(?P<pk>\\d+)/meals/preferences$"
+#~ msgstr "^client/(?P<pk>\\d+)/repas/préférences$"
+
+#~ msgid "emergency contact relationship"
+#~ msgstr "lien avec le contact d'urgence"
+
+#~ msgid "emergency contact"
+#~ msgstr "contact d'urgence"
+
+#~ msgid "Emergency contact"
+#~ msgstr "Contact d'urgence"
+
+#~ msgid "Emergency Contact"
+#~ msgstr "Contact d'Urgence"
+
+#~ msgid "Information of the person to contact in case of an emergency"
+#~ msgstr "Information sur la personne contact en cas d'urgence"
+
+#~ msgid "Contact Type"
+#~ msgstr "Type de contact"
+
+#~ msgid "Contact"
+#~ msgstr "Contact"
+
+#~ msgid "Cheque"
+#~ msgstr "Chèque"
+
+#~ msgid "Cash"
+#~ msgstr "Argent"
+
+#~ msgid "Address information"
+#~ msgstr "Adresse civile"

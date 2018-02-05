@@ -88,3 +88,21 @@ ENV/
 # Rope project settings
 .ropeproject
 
+# IDE project settings
+.idea
+
+# Ignore all emacs backup files
+*~
+
+# Ignore vim swap files
+*.swp
+
+# Ignore some tools directories.
+tools/gulp
+tools/mariadb
+
+# Ignore generated assets.
+src/sous_chef/assets
+
+# Ignore generated pdf files.
+src/*.pdf

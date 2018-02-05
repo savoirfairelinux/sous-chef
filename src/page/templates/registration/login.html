@@ -1,0 +1,56 @@
+{% extends "splash.html" %}
+
+{% load staticfiles %}
+
+<!-- Load internationalisation utils-->
+{% load i18n %}
+
+{% block title %}{% trans "Login" %}{% endblock %}
+
+{% block content %}
+<h2 class="ui yellow image header">
+    <img src="{% static 'images/logo-souschef-coul.png' %}" class="ui large image">
+    <div class="content">
+        {% trans "Log-in to your account" %}
+    </div>
+</h2>
+
+{% if not user.username %}
+<form method="post" action='' class="ui large form"
+    data-username-empty-msg="{% trans 'Please enter a username' %}"
+    data-password-empty-msg="{% trans 'Please enter a password' %}"
+    data-password-min-length-msg="{% trans 'Your password must be at least {ruleValue} characters' %}"
+    >
+    {% csrf_token%}
+    <div class="ui error message"></div>
+    <div class="ui stacked segment">
+        <div class="field">
+            <div class="ui left icon input">
+                <i class="user icon"></i>
+                <input id="id_username" maxlength="254" name="username" type="text" placeholder="Username" pb-role="username">
+            </div>
+        </div>
+        <div class="field">
+            <div class="ui left icon input">
+                <i class="lock icon"></i>
+                <input id="id_password" name="password" placeholder="Password" type="password">
+            </div>
+        </div>
+
+        <input type="hidden" name="next" value="{{ next }}"/>
+
+        <button class="ui fluid large yellow button" type="submit">{% trans "Login" %}</button>
+    </div>
+</form>
+
+
+<script type="text/javascript">
+
+
+</script>
+
+{% else %}
+    <p>{% trans "Connect" %}é</p>
+{% endif %}
+
+{% endblock %}

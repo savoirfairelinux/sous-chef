@@ -1,0 +1,53 @@
+{% load i18n %}
+{% load sous_chef_extras %}
+
+<div class="meal-defaults-table-edit-wrapper">
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      {% for day, day_display in weekday %}
+      <th class="three wide">{{ day_display }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+  {% for meal, meal_display in meals %}
+    <tr>
+      <td class="headcol" title="{{ meal_display }}">
+        {{ meal_display }}
+      </td>
+      {% for day, day_display in weekday %}
+      <td>
+        {% with field_name=meal|add:"_"|add:day|add:"_quantity" %}
+        {% with field=form|get_item:field_name %}
+        <div class="field {% if field.errors %}error{% endif %}">
+          {{ field }}
+        </div>
+        {% endwith %}
+        {% endwith %}
+      </td>
+      {% endfor %}
+    </tr>
+
+    {% if meal == "main_dish" %}
+    <tr>
+      <td class="headcol" title="{% trans 'Size' %}">{% trans 'Size' %}</td>
+      {% for day, Day in weekday %}
+      <td>
+        {% with field_name="size_"|add:day %}
+        {% with field=form|get_item:field_name %}
+        <div class="field {% if field.errors %}error{% endif %}">
+          {{ field }}
+        </div>
+        {% endwith %}
+        {% endwith %}
+      </td>
+      {% endfor %}
+    </tr>
+    {% endif %}
+
+  {% endfor %}
+  </tbody>
+</table>
+</div>

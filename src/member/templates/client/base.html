@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load static %}
+{% load rules %}
+
+{% block title %}{% trans "Client" %}{% endblock %}
+
+{% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
+
+<div class="ui secondary pointing fluid menu">
+
+    <h1 class="ui header">
+        <div class="content">
+            {{client}}
+            <div class="sub header">
+                {% blocktrans trimmed with created_at=client.member.created_at|date:"d F Y" %}
+                  Client since {{ created_at }}
+                {% endblocktrans %}
+            </div>
+        </div>
+    </h1>
+    <div class="right menu">
+      <div class="ui item">
+        {% with sc0=client.unprocessed_scheduled_statuses.0 sc1=client.unprocessed_scheduled_statuses.1 %}
+        <div class="ui dropdown member status{% if not can_edit_data %} disabled{% endif %}">
+
+          <div class="ui large yellow label text">
+            {{ client.get_status_display }}
+          </div>
+
+          {% if sc0 %}
+          <div class="ui large {% if sc0.needs_attention %}red{% else %}gray{% endif %} label text" {% if sc0.needs_attention %}title="{% trans 'Client status scheduler may not work properly. Please verify.' %}"{% endif %}>
+            {% if sc0.needs_attention %}
+            <i class="warning sign icon"></i>
+            {% endif %}
+            {% trans 'Upcoming change' %}
+            <div class="detail">
+                {{ sc0.get_status_to_display }}
+                {% if sc1.get_pair == sc0 %}
+                  ({{ sc0.change_date|date:"SHORT_DATE_FORMAT" }}&ndash;{{ sc1.change_date|date:"SHORT_DATE_FORMAT" }})
+                {% else %}
+                  ({{ sc0.change_date|date:"SHORT_DATE_FORMAT" }})
+                {% endif %}
+            </div>
+          </div>
+          {% endif %}
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            {% if not sc0 %}
+              {% for k,s in client_status %}
+              <div class="item member-update-status" data-url="{% url 'member:clientStatusScheduler' client.id %}?status={{k}}" data-modal-target=".ui.modal.status">
+                {{s}}
+              </div>
+              {% endfor %}
+            {% else %}
+              <div class="item member-view-upcoming-changes" data-url="{% url 'member:client_status' client.id %}">{% trans 'View upcoming changes' %}</div>
+              {% if can_edit_data %}
+              <div class="item member-cancel-this-upcoming-change" data-prompt="{% trans 'This cannot be undone. Are you sure?' %}">
+                {% trans 'Cancel this upcoming change' %}
+                <form style="display:none" action="{% url 'member:delete_status' sc0.id %}" method="post">{% csrf_token %}</form>
+              </div>
+              <div class="item member-reschedule-this-upcoming-change" data-url="{% if sc1.get_pair != sc0 %}{% url 'member:clientStatusSchedulerReschedule' client.id sc0.pk %}{% else %}{% url 'member:clientStatusSchedulerReschedule' client.id sc0.pk sc1.pk %}{% endif %}" data-modal-target=".ui.modal.status">{% trans 'Reschedule this upcoming change' %}</div>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+        {% endwith %}
+      </div>
+    </div>
+</div>
+
+<div class="ui modal status"></div>
+
+<div class="sixteen wide column">
+    {% include 'client/view/summary.html' %}
+</div>
+
+{% if client.alert %}
+<div class="sixteen wide column">
+    <div class="ui warning message">
+        <div class="header">
+            {% trans "Important notice" %}
+        </div>
+        <p>{{ client.alert }}</p>
+    </div>
+</div>
+{% endif %}
+
+
+<div class="ui stackable relaxed grid container">
+
+    <div class="four wide column">
+        {% include 'client/partials/menu.html' %}
+    </div>
+
+    <div class="twelve wide column">
+        {% block subcontent %}
+        <!-- A block used by all children to include content here-->
+        {% endblock %}
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "client/base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load admin_urls %}
+{% load rules %}
+
+{% block title %}
+
+  {{client}} - {% trans "Referent information" %}
+
+{% endblock %}
+
+{% block subcontent %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
+
+<div class="ui segment">
+    <h2 class="ui header">
+        <div class="content">
+            {% trans 'Billing' %}
+            <div class="sub header">{% trans "Billing and payment information" %}.</div>
+        </div>
+    </h2>
+    {% if can_edit_data %}
+    <a class="ui right floated small button" href="{% url 'member:member_update_payment_information' pk=client.id %}">
+        <i class="edit icon"></i>
+        {% trans "Edit" %}
+    </a>
+    {% endif %}
+    <div class="ui divider"></div>
+    <div class="ui list">
+        <div class="item">
+            <div class="header">{% trans 'First Name' %}</div>{{client.billing_member.firstname}}
+        </div>
+        <div class="item">
+            <div class="header">{% trans 'Last Name' %}</div>{{client.billing_member.lastname}}
+        </div>
+        <div class="item">
+            <div class="header">{% trans 'Payment method' %}</div>{{client.get_billing_payment_type_display}}
+        </div>
+        <div class="item">
+            <div class="header">{% trans 'Rate type' %}</div>{{client.get_rate_type_display}}
+        </div>
+        <div class="item">
+            <div class="header"><i class="icon home"></i>{% trans "Address" %}</div>
+            {{client.billing_member.address.street}}
+            {% if client.billing_member.address.apartment %}, {{client.billing_member.address.apartment}}{% endif %}
+            <br/>{{client.billing_member.address.city}} ({{client.billing_member.address.postal_code}})
+        </div>
+    </div>
+
+</div>
+{% endblock %}

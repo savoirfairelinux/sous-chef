@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load static %}
+{% load rules %}
+
+{% block title %} {% trans 'Orders' %} {% endblock %}
+
+{% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
+
+{% include 'kitchen_count_steps.html' with step='orders' %}
+
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">{% trans "Review Orders" %}</h1>
+    <div class="right menu">
+      <div class="ui item"><h3><i class="calendar icon"></i>{% now "j F Y" %}</h3></div>
+    </div>
+</div>
+
+<div class="ui stackable relaxed grid container">
+
+    <div class="sixteen wide column">
+
+        <div class="ui list">
+            <a class="item">
+                <i class="right triangle icon"></i>
+                <div class="content">
+                    <div class="header">{% trans 'Orders of the day' %}</div>
+                    <div class="description">
+                        {% trans 'Orders of the day include ongoing and episodic clients. Only Ordered orders from Active clients are included.' %}
+                    </div>
+                </div>
+            </a>
+            <a class="item">
+                <i class="refresh icon"></i>
+                <div class="content">
+                    <div class="header">{% trans 'Generate orders' %}</div>
+                    <div class="description">
+                      {% blocktrans trimmed %}
+                      Orders for ongoing clients are automatically generated at midnight every day, based on their default preferences. Press the <em>Generate orders</em> button to manually run the script.
+                      {% endblocktrans %}
+                    </div>
+                </div>
+            </a>
+            <a class="item">
+                <i class="marker icon"></i>
+                <div class="content">
+                    <div class="header">{% trans 'Geolocation' %}</div>
+                    <div class="description">{% trans 'Highlighted orders are not properly geolocated. Edit the client information to fix it.' %}</div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    {% if can_edit_data %}
+    <div class="sixteen wide center aligned column">
+        <div class="ui row">
+            <div class="ui labeled button" tabindex="0">
+                <div class="ui pink big button orders" data-url="{% url 'delivery:refresh_orders'%}">
+                    <i class="refresh icon"></i> {% trans 'Generate orders' %}
+                </div>
+                {% with count=orders.count %}
+                <a class="ui basic left pointing pink label orders-count" data-order-count={{count}}>
+                  {# Translators: This text is displayed in the kitchen count -> step 1: order review -> pink button #}
+                  {% blocktrans trimmed %}
+                    {{ count }} today
+                  {% endblocktrans %}
+                </a>
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <h4 class="ui horizontal divider header">
+        <i class="unhide icon"></i>
+        {% trans 'Review' %}
+    </h4>
+
+    <div class="sixteen wide column">
+        <form action="" method="get" class="ui form">
+            <div class="inline fields">
+                <div class="field">
+                    <label for="{{ filter.form.client_name.auto_id }}">{% trans 'Client name' %}</label>
+                    <div class="field">
+                        <div class="ui large left icon input">
+                            <i class="users icon"></i>
+                            {{ filter.form.client_name }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field padded">
+                <a href="{% url 'delivery:order' %}" class="ui basic button">{% trans 'Reset' %}</a>
+                <button class="ui yellow button" type="submit">{% trans 'Search' %}</button>
+            </div>
+        </form>
+        {% include 'partials/generated_orders.html' %}
+    </div>
+
+    {% if can_edit_data %}
+    <div class="sixteen wide column">
+        <a class="ui labeled icon right yellow big button" href="{% url 'delivery:meal' %}">
+            <i class="chevron right icon"></i>{% trans "OK, I'm ready" %}
+        </a>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

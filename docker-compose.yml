@@ -1,17 +1,31 @@
-db:
-  image: mariadb
+version: '3'
 
+services:
 
-  environment:
-    MYSQL_ROOT_PASSWORD: 123456
-    MYSQL_DATABASE: feast
+  db:
+    restart: always
+    image: mariadb
+    volumes:
+      - souschef_data:/var/lib/mysql
+    networks:
+      - backend
 
-web:
-  build: .
-  command: python3 django/santropolFeast/manage.py runserver 0.0.0.0:8000
-  volumes:
-    - .:/code
-  ports:
-    - "8000:8000"
-  links:
-    - db
+  web:
+    environment:
+      - SOUSCHEF_VERSION=v1.0-beta
+    restart: always
+    build: .
+    volumes:
+      - souschef_static:/code/src/static
+    depends_on:
+      - db
+    networks:
+      - backend
+
+volumes:
+  souschef_data:
+  souschef_static:
+
+networks:
+  frontend:
+  backend:

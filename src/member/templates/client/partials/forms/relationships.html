@@ -1,0 +1,12 @@
+{% load i18n %}
+{% load sous_chef_extras %}
+<h4 class="ui dividing header">{% trans 'Relationships' %}</h4>
+
+<div class="formset-container ui basic segment" data-add-label="{% trans 'Add relationship' %}" data-remove-label="{% trans 'Remove relationship' %}">
+  {{ form.management_form }}
+  {% for item_form in form.forms %}
+    {% include 'client/partials/forms/relationship_form.html' with item_form=item_form %}
+  {% endfor %}
+
+  {% include 'client/partials/forms/relationship_form.html' with item_form=form.empty_form is_template=True %}
+</div>

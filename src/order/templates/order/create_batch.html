@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load l10n %}
+{% load static %}
+{% load sous_chef_extras %}
+
+{% block title %} {% trans 'Place orders' %} {% endblock %}
+
+{% block extrahead %}
+<link href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet">
+{% comment %} Wash out jquery UI css on other semantic UI elements by importing it again. {% endcomment %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">{% trans 'Place orders' %}</h2>
+</div>
+
+<div class="sixteen wide column">
+
+    <form action="" method="post" class="ui form {% if form.errors %}error{% endif %}" novalidate id="form_create_batch">
+        {% csrf_token %}
+        <input id="id_override_dates" type="hidden" name="override_dates" value="{{ override_dates }}"></input>
+
+        <div class="thirteen wide field {% if form.client.errors %}error{% endif %}" id="id_client">
+            <label for="{{ form.client.id_for_label }}">{% trans 'Client' %}</label>
+            {{ form.client }}
+            {{ form.client.errors }}
+        </div>
+
+        <div class="thirteen wide field">
+            <label for="{{ form.delivery_dates.id_for_label }}">{% trans 'Delivery dates' %}</label>
+            <div id="delivery_dates" data-ordered-dates="{{ ordered_dates }}" data-ordered-date-tooltip="{% trans 'An order already exists on this day.' %}"></div>{{ form.delivery_dates }}
+        </div>
+
+        {% if delivery_dates %}
+        <div class="thirteen wide field ui styled meals">
+            <label>{% trans 'Order items' %}</label>
+
+            <div class="content" id="order_create_batch_items">
+              {% for date, date_obj, default_json in delivery_dates %}
+              <div class="ui styled fluid accordion meals" id="date-{{ date }}" data-client-meals-default="{{ default_json }}">
+                <div class="title">
+                  <i class="dropdown icon"></i>
+                  {{ date_obj|date:"DATE_FORMAT"|capfirst }}
+                </div>
+                <div class="content {% if date not in accordions_inactive %}active{% endif %}">
+                  <table class="ui compact single line table">
+                    <thead>
+                      <tr>
+                        <th>{% trans 'Size' %}</th>
+                        <th>{% trans 'Component' %}</th>
+                        <th>{% trans 'Quantity' %}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for meal, Meal in meals %}
+                      <tr>
+                        <td>
+                          {% if meal == "main_dish" %}
+                            {% with "size_"|add:date as field_name %}
+                              {% with form|get_item:field_name as field %}
+                              <div class="field {% if field.errors %}error{% endif %}">
+                              {{ field }}
+                              </div>
+                              {% endwith %}
+                            {% endwith %}
+                          {% endif %}
+                        </td>
+                        <td>{{ Meal }}</td>
+                        <td>
+                            {% with meal|add:"_"|add:date|add:"_quantity" as field_name %}
+                              {% with form|get_item:field_name as field %}
+                              <div class="field {% if field.errors %}error{% endif %}">
+                              {{ field }}
+                              </div>
+                              {% endwith %}
+                            {% endwith %}
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+
+                  <div class="ui stackable three column grid">
+                    <div class="column">
+                      {% with "delivery_"|add:date as field_name %}
+                      {% with form|get_item:field_name as field %}
+                      <div class="field {% if field.errors %}error{% endif %}">
+                        <div class="ui toggle checkbox">
+                          {{ field }}
+                          <label>{% trans "Delivery" %}</label>
+                        </div>
+                      </div>
+                      {% endwith %}
+                      {% endwith %}
+                    </div>
+
+                    <div class="column">
+                      {% with "pickup_"|add:date as field_name %}
+                      {% with form|get_item:field_name as field %}
+                      <div class="field {% if field.errors %}error{% endif %}">
+                        <div class="ui toggle checkbox">
+                          {{ field }}
+                          <label>{% trans "Pickup" %}</label>
+                        </div>
+                      </div>
+                      {% endwith %}
+                      {% endwith %}
+                    </div>
+
+                    <div class="column">
+                      {% with "visit_"|add:date as field_name %}
+                      {% with form|get_item:field_name as field %}
+                      <div class="field {% if field.errors %}error{% endif %}">
+                        <div class="ui toggle checkbox">
+                          {{ field }}
+                          <label>{% trans "Visit" %}</label>
+                        </div>
+                      </div>
+                      {% endwith %}
+                      {% endwith %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+        </div>
+        <div class="wide field">
+            <button id="original-form-submit" class="ui button primary" type="submit">{% trans 'Place orders' %}</button>
+        </div>
+        {% else %}
+        <div class="ui message">
+          {% trans 'Please select one or multiple delivery dates.' %}
+        </div>
+        <div class="wide field">
+            <button class="ui button primary" disabled="disabled" type="submit">{% trans 'Place orders' %}</button>
+        </div>
+        {% endif %}
+
+        <input type="hidden" name="is_submit" value="1" id="id_is_submit">
+        <input type="hidden" name="accordions_inactive" value="" id="id_accordions_active">
+
+        {% if show_override_modal %}
+        <div class="ui order-override modal" data-order-dates="{% for order in override_orders %}{{ order.delivery_date | date:'Y-m-d' }}|{% endfor %}">
+            <div class="header">
+              <i class="warning sign icon"></i>
+              {% trans 'Override Order?' %}
+            </div>
+            <div class="content">
+              <p>{% blocktrans with firstname=client.member.firstname lastname=client.member.lastname %}The following order(s) already exist(s) for <strong>{{ firstname }} {{ lastname }}</strong>:{% endblocktrans %}</p>
+              <ul>
+                {% for order in override_orders %}
+                  <li><strong>{{ order.delivery_date|date:"DATE_FORMAT"|capfirst }}</strong>: {{ order.simple_summary }} {% if order.status != 'O' %}({% trans 'Status' %}: {{ order.get_status_display }}){% endif %}</li>
+                {% endfor %}
+              </ul>
+              <br />
+              <p>{% trans 'Would you like to override the above order(s), or cancel?' %}</p>
+            </div>
+            <div class="actions">
+               <button class="ui order-override cancel button">{% trans 'Cancel' %}</button>
+               <button id="order-override-submit" class="ui order-override yellow override button">{% trans 'Override' %}</button>
+            </div>
+        </div>
+        {% endif %}
+    </form>
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js" type="application/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js" type="application/javascript"></script>
+    <script type="application/javascript">
+      $.datepicker.setDefaults( $.datepicker.regional[ "{{ LANGUAGE_CODE }}" ] );
+    </script>
+    {% if debug %}
+        <script src="{% static 'js/multidatespicker.js' %}" type="application/javascript"></script>
+    {% else %}
+        <script src="{% static 'js/multidatespicker.min.js' %}" type="application/javascript"></script>
+    {% endif %}
+
+{% comment %} Wash out jquery UI js on other semantic UI elements by importing it again. {% endcomment %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.js" type="application/javascript"></script>
+{% endblock %}

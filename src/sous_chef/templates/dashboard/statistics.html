@@ -1,0 +1,39 @@
+{% load i18n %}
+{% load staticfiles %}
+
+<div class="ui four statistics">
+  <div class="statistic">
+    <div class="value">
+      1304
+    </div>
+    <div class="label">
+      {% trans "Active clients" %}
+    </div>
+  </div>
+  <div class="statistic">
+    <div class="text value">
+      {% trans "One" %}<br>
+      {% trans "Hundred" %}
+    </div>
+    <div class="label">
+      {% trans "Meals a day" %}
+    </div>
+  </div>
+  <div class="statistic">
+    <div class="value">
+      <i class="map icon"></i> 7
+    </div>
+    <div class="label">
+      {% trans "Routes" %}
+    </div>
+  </div>
+  <div class="statistic">
+    <div class="value">
+      <i class="spy icon"></i>
+      142
+    </div>
+    <div class="label">
+      {% trans "Volunteers" %}
+    </div>
+  </div>
+</div>

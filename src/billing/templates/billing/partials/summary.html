@@ -1,0 +1,93 @@
+{% load i18n %}
+<style>
+  {% comment %}define table width/border...{% endcomment %}
+  #sc_bs {width:100%;border-collapse:collapse}
+  #sc_bs th {text-align:left}
+  #sc_bs .border-top {border-top: 1px solid black}
+  #sc_bs .border-right {border-right: 1px solid black}
+  #sc_bs .center.aligned {text-align:center}
+  #sc_bs .right.aligned {text-align:right}
+  #sc_bs .top.aligned {vertical-align:top}
+  #sc_bs .bottom.aligned {vertical-align:bottom}
+  #sc_bs .padding-x {padding-left:1em;padding-right:1em}
+  #sc_bs .nowrap {white-space:nowrap}
+</style>
+<table id="sc_bs">
+  <thead>
+    <tr class="border-top">
+      <th class="bottom aligned">{% trans 'New' as tr_n %}{{ tr_n|upper }}
+        <i class="help-text question grey icon link no-print" data-content="{% trans 'Indicates if the client is a new client in this billing period.' %}"></i>
+      </th>
+      <th class="bottom aligned">{% trans 'Client Name' as tr_cn %}{{ tr_cn|upper }}
+        <i class="help-text question grey icon link no-print" data-content="{% trans 'Quickly access the client file.' %}"></i>
+      </th>
+      <th width="1" class="center aligned bottom aligned padding-x">{% trans 'Payment Method' as tr_pm %}{{ tr_pm|upper }}</th>
+      <th width="1" class="center aligned bottom aligned padding-x">{% trans 'Price Scale' as tr_ps %}{{ tr_ps|upper }}</th>
+      <th colspan="2" class="center aligned bottom aligned">
+        {% trans 'Meals' as tr_m %}{{ tr_m|upper }}
+        <i class="help-text question grey icon link no-print" data-content="{% trans 'Number of main dishes in total in this billing period.' %}"></i>
+      </th>
+      <th class="bottom aligned center aligned">
+        {% trans 'Extra' as tr_e %}{{ tr_e|upper }}
+        <i class="help-text question grey icon link no-print" data-content="{% trans 'Number of extra side dishes in total in this billing period.' %}"></i>
+      </th>
+      <th class="right aligned bottom aligned">
+        {% trans 'Total' as tr_t %}{{ tr_t|upper }}
+        <i class="help-text question grey icon link no-print" data-content="{% trans 'Total amount in this billing period.' %}"></i>
+      </th>
+      <th class="no-print center aligned bottom aligned">{% trans 'Actions' %}</th>
+    </tr>
+    <tr class="border-top">
+      <th colspan="4"></th>
+      <th class="center aligned border-right" style="font-weight:normal">{% trans 'Regular' %}</th>
+      <th class="center aligned" style="font-weight:normal">{% trans 'Large' %}</th>
+      <th colspan="2"></th>
+      <th class="no-print"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for payment_type, statistics in summary.payment_types %}
+      {% for client in statistics.clients %}
+    <tr>
+      <td>{% comment 'column NEW' %}{% endcomment %}</td>
+      <td class="nowrap"><a href="{% url 'member:client_information' pk=client.id %}">{{ client.lastname|upper }}, {{ client.firstname }}</a></td>
+      <td class="center aligned nowrap">{{client.payment_type}}</td>
+      <td class="center aligned nowrap padding-x">{{client.rate_type}}</td>
+      <td class="center aligned border-top border-right">{{client.total_main_dishes.R|default:""}}</td>
+      <td class="center aligned border-top">{{client.total_main_dishes.L|default:""}}</td>
+      <td class="center aligned border-top">{{client.total_billable_sides|default:""}}</td>
+      <td class="right aligned border-top">${{client.total_amount}}</td>
+      <td class="no-print center aligned">
+        <a class="ui basic icon button" href="{% url 'billing:view_orders' pk=billing.id %}?client={{ client.id }}" title="{% trans 'View orders' %}">
+          <i class="icon unhide"></i>
+        </a>
+      </td>
+    </tr>
+      {% endfor %}
+    <tr>
+      <th style="padding-bottom:3em"></th>
+      <th colspan="3" class="top aligned nowrap">{% trans 'Subtotal:' as tr_s %}{{ tr_s|upper }}</th>
+      <th class="center aligned border-top top aligned">{{statistics.total_main_dishes.R}}</th>
+      <th class="center aligned border-top top aligned">{{statistics.total_main_dishes.L}}</th>
+      <th class="center aligned border-top top aligned">{{statistics.total_billable_sides}}</th>
+      <th class="right aligned border-top top aligned">${{statistics.total_amount}}</th>
+      <th class="no-print"></th>
+    </tr>
+    {% endfor %}
+
+    {% comment 'tfoot' %}to fix Firefox printing issue: FF prints tfoot on every page!{% endcomment %}
+    <tr class="border-top">
+      <th>{% comment 'column NEW' %}{% endcomment %}</th>
+      <th colspan="3" class="nowrap">{% trans "Grand Total:" as gt %}{{ gt|upper }} {{ summary.total_main_dishes.R|add:summary.total_main_dishes.L }}</th>
+      <th class="center aligned">{{ summary.total_main_dishes.R }}</th>
+      <th class="center aligned">{{ summary.total_main_dishes.L }}</th>
+      <th class="center aligned">{{ summary.total_billable_sides }}</th>
+      <th class="right aligned">${{ summary.total_amount }}</th>
+      <th class="no-print center aligned">
+        <a class="ui basic icon button" href="{% url 'billing:view_orders' pk=billing.id %}" title="{% trans 'View orders' %}">
+          <i class="icon unhide"></i>
+        </a>
+      </th>
+    </tr>
+  </tbody>
+</table>

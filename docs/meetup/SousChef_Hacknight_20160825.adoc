@@ -1,0 +1,65 @@
+= Sous-Chef Hacknight
+Emmanuel Milou <emmanuel.milou@savoirfairelinux.com>
+2016-08-25
+Mentoring new contributors through contributing their first core commit and growing the community.
+
+:keywords: Django
+:page-layout: base
+:page-description: {description}
+:page-keywords: {keywords}
+:icons: font
+:toc: right
+:experimental:
+:mdash: &#8212;
+:language: asciidoc
+:source-language: {language}
+// Refs
+:doc-asciidoctor: http://asciidoctor.org/docs/asciidoc-recommended-practices/
+:meetup-montrealpython: http://www.meetup.com/Montreal-Python/events/233348153/
+:souschef-mailinglist: https://lists.savoirfairelinux.net/mailman/listinfo/sous-chef
+:unittest: https://docs.djangoproject.com/en/1.10/topics/testing/overview/
+
+
+## Venue
+
+This fourth code sprint, or *hackaton*, on Sous-Chef will take place on **Thursday, August 25th, 2016**.
+
+The venue is https://maps.google.com/maps?f=q&hl=en&q=111+Roy+east+Montreal%2C+QC+H2W+1M1%2C+Montr%C3%A9al%2C+QC%2C+ca[Santropol Roulant], in Montréal.
+
+More informations on the {meetup-montrealpython}[Montreal Python Meetup page].
+
+## Agenda
+
+18h:: Welcome!
+18h15:: Introduction of the project and the persons involved / discussion, Maison Du Logiciel Libre and Santropol Roulant
+18h30-21h30:: Coding
+
+Food will be served.
+
+## Resources
+
+The project is hosted on GitHub: https://github.com/savoirfairelinux/sous-chef
+
+Some useful resources:
+
+* https://www.python.org/dev/peps/pep-0008/[Coding style guide]
+* https://travis-ci.org/savoirfairelinux/sous-chef[CI server (Travis)]
+* https://waffle.io/savoirfairelinux/sous-chef[Waffle Dashboard]
+* https://coveralls.io/github/savoirfairelinux/sous-chef?branch=dev[Coveralls]
+* https://help.github.com/articles/creating-a-pull-request/[Creating a Pull Request on GitHub]
+
+## Communication
+
+Please join `#souschef` on *irc.freenode.net*.
+
+A {souschef-mailinglist}[public mailing-list] is also available. Feel free to subscribe.
+
+## Installation
+
+Please refer to the https://github.com/savoirfairelinux/sous-chef/blob/dev/INSTALL.md[installation procedure].
+
+IMPORTANT: Make sure you already have installed the application before arriving.
+
+## How to contribute
+
+Please refer to the official contributions guidelines: https://git.io/contrib.

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block title %}{% trans "Page not found" %}{% endblock %}
+{% block content %}
+    <h1>{% trans "Page not found" %}</h1>
+    <p>{% trans "We couldn't find the page you are looking for." %}</p>
+    {% if request.META.HTTP_REFERER %}
+        <ul>
+            <li><a href="{{ request.META.HTTP_REFERER }}">{% trans "Go back from where you came from" %}</a></li>
+            <li><a href="/">{% trans "Go back to homepage" %}</a></li>
+        </ul>
+    {% else %}
+        <p><a href="/">{% trans "Go back to homepage" %}</a></p>
+    {% endif %}
+{% endblock %}

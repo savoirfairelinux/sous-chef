@@ -1,0 +1,7 @@
+{% load i18n %}
+<div class="ui breadcrumb">
+    {% block breadcrumb %}
+    <a href="{% url 'home' %}" class="section">{% trans "Home" %}</a>
+    {% endblock breadcrumb %}
+</div>
+<div class="ui divider"></div>

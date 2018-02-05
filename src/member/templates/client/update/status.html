@@ -1,0 +1,47 @@
+{% load i18n %}
+<div class="header">
+    {% trans 'Status modification' %}
+</div>
+<form class="content ui form" id="change-status-form" method="POST" action="">
+    {% csrf_token %}
+    <input type="hidden" name="client" value="{{form.client.value}}">
+    <input type="hidden" name="status_from" value="{{form.status_from.value}}">
+    <div class="field">
+        <label>{{ form.status_to.label }}</label>
+        {{ form.status_to }}
+        {% if form.status_to.errors %} {{ form.status_to.errors }} {% endif %}
+    </div>
+    <div class="field">
+        <label>{{ form.reason.label }}</label>
+        {{ form.reason }}
+        {% if form.reason.errors %} {{ form.reason.errors }} {% endif %}
+    </div>
+    <hr>
+    <p>{% trans 'If you want to schedule a status modification, feel free to fill one or two of theses date fields.' %}</p>
+    <div class="two fields">
+        <div class="field">
+            <label>{{ form.change_date.label }}</label>
+            <div class="ui calendar" id="rangestart">
+                <div class="ui input left icon">
+                    <i class="calendar icon"></i>
+                    {{ form.change_date }}
+                </div>
+            </div>
+            {% if form.change_date.errors %} {{ form.change_date.errors }} {% endif %}
+        </div>
+        <div class="field">
+            <label>{% trans 'End date' %}</label>
+            <div class="ui calendar" id="rangeend">
+                <div class="ui input left icon">
+                    <i class="calendar icon"></i>
+                    {{ form.end_date }}
+                </div>
+            </div>
+            {% if form.end_date.errors %} {{ form.end_date.errors }} {% endif %}
+        </div>
+    </div>
+</form>
+<div class="actions">
+    <button class="ui button deny">{% trans "Cancel" %}</button>
+    <input class="ui yellow button approve" type="submit" value="{% trans "OK" %}" />
+</div>

@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load l10n %}
+{% load static %}
+{% load rules %}
+
+{% block title %} {% trans 'View route:' %} {{route.name}} {% endblock %}
+
+{% block extrahead %}
+{% load leaflet_tags %}
+    {% leaflet_css %}
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
+
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">{% trans "View route:" %} {{route.name}}</h1>
+</div>
+
+<div class="sixteen wide column">
+  <h4 class="ui dividing header">{% trans 'Description' %}</h4>
+  <p>{{ route.description }}</p>
+
+
+  <h4 class="ui dividing header">
+    {% trans 'Default delivery vehicle' %}
+  </h4>
+  <p>{{ route.get_vehicle_display }}</p>
+
+
+  <h4 class="ui dividing header">{% trans 'Default delivery sequence' %}</h4>
+  <table class="ui table striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>{% trans 'Name' %}</th>
+        <th>{% trans 'Status' %}</th>
+        <th>{% trans 'Delivery type' %}</th>
+        <th>{% trans 'Address' %}</th>
+        <th>{% trans 'Status' %}<i class="help-text question grey icon link" data-content="{% trans 'Configured or unconfigured. Unconfigured clients are placed at the end of the delivery sequence by default.' %}"></i></th>
+      </tr>
+    </thead>
+    <tbody id="clients-on-route">
+      {% for client in clients_on_route %}
+      <tr data-latitude="{{ client.member.address.latitude|unlocalize }}" data-longitude="{{ client.member.address.longitude|unlocalize }}">
+        <td data-property="delivery_sequence">{{ forloop.counter }}</td>
+        <td data-property="name"><a href="{% url 'member:client_information' pk=client.pk %}" title="{% trans "Access the client's file" %}">{{ client.member.firstname }} {{ client.member.lastname }}</a></td>
+        <td>{{ client.get_status_display }}</td>
+        <td>{{ client.get_delivery_type_display }}</td>
+        <td data-property="address">{{ client.member.address }}</td>
+        <td data-property="status">
+          {% if client.has_been_configured %}
+          <i class="checkmark icon" title="{% trans 'Configured' %}"></i>
+          {% else %}
+          <i class="remove icon" title="{% trans 'Unconfigured' %}"></i>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h4 class="ui dividing header">{% trans 'Delivery Preview' %}</h4>
+
+  <div class="ui grid">
+    <div class="row">
+      <div class="sixteen wide column">
+        {% leaflet_map "route_view_map" callback="__map_init" %}
+        <script type="text/javascript">
+            function __map_init (map, options) {
+              function _refreshWaypoints () {
+                var waypoints = [
+                  [
+                    45.516564, -73.575145, {
+                      popup_html: "<div class='ui list'>"
+                        + "<div class='item'><i class='food icon'></i> Santropol Roulant </div>"
+                        + "</div>",
+                      icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
+                    }
+                  ]
+                ];
+                $("#clients-on-route > tr").each(function (idx, tr) {
+                  var latitude = parseFloat($(tr).data('latitude'));
+                  var longitude = parseFloat($(tr).data('longitude'));
+                  waypoints.push([
+                    latitude, longitude, {
+                      popup_html: "<div class='ui list'>"
+                        + "<div class='item'><i class='user icon'></i><div class='content'>" + $(tr).find('[data-property="name"]').text() + " (#" + (idx+1).toString() + ")" + "</div></div>"
+                        + "<div class='item'><i class='home icon'></i><div class='content'>" + $(tr).find('[data-property="address"]').text() + "</div></div>"
+                        + "</div>",
+                      icon: L.icon.glyph({
+                        prefix: '',
+                        glyph: (idx+1).toString()
+                      })
+                    }
+                  ]);
+                });
+                waypoints.push([waypoints[0][0], waypoints[0][1], {}]);  // Back to Santropol.
+                return waypoints;
+              }
+
+              sous_chef_leaflet_map_init(map, options, {
+                vehicle: "{{route.vehicle}}",
+                waypoints: _refreshWaypoints()
+              });
+            }
+        </script>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="ui dividing header">{% trans 'Delivery Histories' %}</h4>
+  {% if not route.delivery_histories.exists %}
+  <p>{% trans 'No delivery histories.' %}</p>
+  {% else %}
+  <table class="ui table striped compact">
+    <thead>
+      <tr>
+        <th>{% trans 'Date' %}</th>
+        <th>{% trans 'Vehicle' %}</th>
+        <th>{% trans 'Comments' %}</th>
+        <th>{% trans 'Action' %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for delivery_history in route.delivery_histories.all %}
+      <tr>
+        <td>{{ delivery_history.date }}</td>
+        <td>{{ delivery_history.get_vehicle_display }}</td>
+        <td>{{ delivery_history.comments|default_if_none:'' }}</td>
+        <td>
+          <a class="ui basic icon button"  href="{% url 'member:delivery_history_detail' route_pk=route.pk date=delivery_history.date %}"><i class="icon unhide"></i></a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  <div class="ui row">
+      {% if can_edit_data %}<a class="ui big yellow button" href="{% url 'member:route_edit' route.pk %}">{% trans "Edit" %}</a>{% endif %}
+      <a class="ui big gray button" href="{% url 'member:route_list' %}">{% trans "Return to route list" %}</a>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+    {% leaflet_js %}
+    {% if debug %}
+        <script src="{% static 'js/leaflet.js' %}" type="application/javascript"></script>
+    {% else %}
+        <script src="{% static 'js/leaflet.min.js' %}" type="application/javascript"></script>
+    {% endif %}
+{% endblock %}

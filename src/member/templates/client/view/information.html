@@ -1,0 +1,98 @@
+{% extends "client/base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load admin_urls %}
+{% load rules %}
+
+{% block title %}
+
+  {{client}} - {% trans "Information" %}
+
+{% endblock %}
+
+{% block subcontent %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
+
+<div class="ui segment">
+    <h2 class="ui header">
+        <div class="content">
+            {% trans 'Basic information' %}
+            <div class="sub header">
+                {% trans "Contact information of the client" %}.
+            </div>
+        </div>
+    </h2>
+    {% if can_edit_data %}
+    <a class="ui right floated small button" href="{% url 'member:member_update_basic_information' pk=client.id %}">
+        <i class="icon edit"></i>{% trans "Edit" %}
+    </a>
+    {% endif %}
+
+    <div class="ui divider"></div>
+
+<div class="ui list">
+    <div class="item"><div class="header">{% trans 'First Name' %}</div>{{client.member.firstname}}</div>
+    <div class="item"><div class="header">{% trans 'Last Name' %}</div>{{client.member.lastname}}</div>
+    <div class="item"><div class="header">{% trans 'Gender' %}</div>{{client.get_gender_display}}</div>
+    <div class="item"><div class="header">{% trans 'Language' %}</div>{{client.get_language_display}}</div>
+    <div class="item"><div class="header">{% trans 'Delivery Type' %}</div>{{client.get_delivery_type_display}}</div>
+    <div class="item"><div class="header">{% trans 'Birthday' %}</div>{{client.birthdate|date:"d F Y"}}</div>
+    {% for contact in client.member.member_contact.all %}
+        <div class="item"><div class="header">{{contact.type}}</div>{{contact.display_value}}</div>
+    {% endfor %}
+    <div class="item">
+        <div class="header"><i class="icon home"></i>{% trans "Address" %}</div>
+        {{client.member.address.street}}
+        {% if client.member.address.apartment %}, {{client.member.address.apartment}}{% endif %}
+        <br/>{{client.member.address.city}} ({{client.member.address.postal_code}})
+    </div>
+    <div class="item"><div class="header">{% trans "Route" %}</div>{{client.route}}</div>
+    <div class="item"><div class="header">{% trans "Delivery Note" %}</div>{{client.delivery_note}}</div>
+</div>
+</div>
+
+
+<div class="ui segment">
+    <h2 class="ui header">
+        <div class="content">
+            {% trans 'Client relationships' %}
+            <div class="sub header">{% trans "Information of the people that are related to the client." %}</div>
+        </div>
+    </h2>
+    {% if can_edit_data %}
+    <a class="ui right floated small button" href="{% url 'member:member_update_relationships' pk=client.id %}">
+        <i class="icon edit"></i>{% trans "Edit" %}
+    </a>
+    {% endif %}
+
+    <div class="ui divider"></div>
+
+    {% for relationship in client.relationship_set.all %}
+        <div class="ui list">
+            <div class="item"><div class="header">{% trans 'First Name' %}</div>{{relationship.member.firstname}}</div>
+            <div class="item"><div class="header">{% trans 'Last Name' %}</div>{{relationship.member.lastname}}</div>
+            <div class="item"><div class="header">{% trans 'Nature of Relationship' %}</div>{{relationship.nature}}</div>
+            <div class="item">
+              <div class="header">{% trans 'Type of Relationship' %}</div>
+              {{ relationship.get_type_display }}
+            </div>
+            {% for contact in relationship.member.member_contact.all %}
+                {% if contact.value is not empty %}
+                    <div class="item"><div class="header">{{contact.type}}</div>{{contact.display_value}}</div>
+                {% endif %}
+            {% endfor %}
+            {% if relationship.is_referent %}
+            <div class="item"><div class="header">{% trans 'Work Information' %}</div>{{relationship.member.work_information|default:_("Unknown")}}</div>
+            <div class="item"><div class="header">{% trans 'Referral Date' %}</div>{{relationship.extra_fields.referral_date|default:_("Unknown")}}</div>
+            <div class="item"><div class="header">{% trans 'Referral Reason' %}</div>{{relationship.extra_fields.referral_reason|default:_("Unknown")}}</div>
+            {% endif %}
+            <div class="item"><div class="header">{% trans 'Remark' %}</div>{{relationship.remark|default:_("N/A")}}</div>
+        </div>
+        <div class="ui divider"></div>
+    {% empty %}
+        <p>{% trans 'No related members.' %}</p>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

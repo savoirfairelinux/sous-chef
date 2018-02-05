@@ -1,0 +1,137 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-05-31 16:10-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
+"Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: page/templates/pages/card.html
+msgid "Joined in 2010"
+msgstr ""
+
+#: page/templates/pages/card.html
+msgid "Katrina is the coordinator of the clients system"
+msgstr ""
+
+#: page/templates/pages/home.html
+msgid "Homepage"
+msgstr "Page d’accueil"
+
+#: page/templates/pages/home.html
+msgid "Clients"
+msgstr "Clients"
+
+#: page/templates/pages/home.html
+msgid "Active clients"
+msgstr "Clients actifs"
+
+#: page/templates/pages/home.html
+msgid "clients are"
+msgstr "Clients sont"
+
+#: page/templates/pages/home.html
+msgid "pending"
+msgstr "En attente"
+
+#: page/templates/pages/home.html
+msgid "Delivered this month"
+msgstr ""
+
+#: page/templates/pages/home.html
+msgid "Orders"
+msgstr "Commandes"
+
+#: page/templates/pages/home.html
+#, python-format
+msgid "%(count)s orders delivered this year."
+msgstr ""
+
+#: page/templates/pages/home.html
+msgid "An overview of the number of main dishes delivered on each route. All active, paused and pending clients are taken into account. Format: \"ongoing scheduled dishes (+ episodic and ongoing unscheduled default dishes)\""
+msgstr ""
+
+#: page/templates/pages/home.html
+msgid "Route Size Monitoring"
+msgstr ""
+
+#: page/templates/pages/home.html
+msgid "Mon"
+msgstr ""
+
+#: page/templates/pages/home.html
+msgid "Tue"
+msgstr ""
+
+#: page/templates/pages/home.html
+msgid "Wed"
+msgstr ""
+
+#: page/templates/pages/home.html
+msgid "Fri"
+msgstr ""
+
+#: page/templates/pages/home.html
+msgid "Sat"
+msgstr ""
+
+#: page/templates/registration/login.html
+msgid "Login"
+msgstr "Identifiant"
+
+#: page/templates/registration/login.html
+msgid "Log-in to your account"
+msgstr "Se connecter à son compte"
+
+#: page/templates/registration/login.html
+msgid "Please enter a username"
+msgstr "Merci d'entrer un nom d'utilisateur"
+
+#: page/templates/registration/login.html
+msgid "Please enter a password"
+msgstr "Merci d'entrer un mot de passe"
+
+#: page/templates/registration/login.html
+#, python-brace-format
+msgid "Your password must be at least {ruleValue} characters"
+msgstr "Votre mot de passe doit comporter au moins {ruleValue} caractères"
+
+#: page/templates/registration/login.html
+msgid "Connect"
+msgstr "Connexion"
+
+#: page/urls.py
+msgid "^home$"
+msgstr "^accueil$"
+
+#: page/urls.py
+msgid "^login$"
+msgstr "^se_connecter$"
+
+#: page/urls.py
+msgid "^logout$"
+msgstr "^se_déconnecter$"
+
+#~ msgid "Downloads"
+#~ msgstr "Téléchargements"
+
+#~ msgid "Footer"
+#~ msgstr "Pied de page"
+
+#~ msgid "Dashboard"
+#~ msgstr "Tableau de bord"
+
+#~ msgid "Overview"
+#~ msgstr "Vue d'ensemble"

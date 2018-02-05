@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load l10n %}
+{% load static %}
+{% load rules %}
+
+{% block title %} {% trans 'Edit route:' %} {{route.name}} {% endblock %}
+
+{% block extrahead %}
+{% load leaflet_tags %}
+    {% leaflet_css %}
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
+
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">{% trans "Edit route:" %} {{route.name}}</h1>
+</div>
+
+<div class="sixteen wide column">
+  <form action="" method="post" class="ui form {% if form.errors %}error{% endif %}" id="route-edit-form">{% csrf_token %}
+    {% if form.errors %}
+    <div class="ui error message">
+      <div class="header">{% trans 'Required information missing' %}</div>
+      <p>{% trans 'Please review the form to make sure that all required fields are filled.' %}</p>
+      {{ form.errors }}
+    </div>
+    {% endif %}
+    <h4 class="ui dividing header">{% trans 'Basic Information' %}</h4>
+    <div class="field {% if form.name.errors %}error{% endif %}">
+      <label>{% trans 'Name' %}</label>
+      {{ form.name }}
+    </div>
+
+    <div class="field {% if form.description.errors %}error{% endif %}">
+      <label>{% trans 'Description' %}</label>
+      {{ form.description }}
+    </div>
+
+    <div class="field {% if form.vehicle.errors %}error{% endif %}">
+      <label>{% trans 'Default delivery vehicle' %}</label>
+      {{ form.vehicle }}
+    </div>
+
+    <div class="field {% if form.client_id_sequence.errors %}error{% endif %}">
+      <input type="hidden" value="" name="client_id_sequence" id="id_client_id_sequence">
+      <label>{% trans 'Default delivery sequence' %}<i class="help-text question grey icon link" data-content='{% trans 'Dragging a row in the table to change the delivery sequence of the client. Changes will not be saved until clicking the "Save" button.' %}'></i></label>
+
+      <table class="ui table striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>{% trans 'Name' %}</th>
+            <th>{% trans 'Status' %}</th>
+            <th>{% trans 'Delivery type' %}</th>
+            <th>{% trans 'Address' %}</th>
+            <th>{% trans 'Status' %}<i class="help-text question grey icon link" data-content="{% trans 'Configured, edited or unconfigured.' %}"></i></th>
+          </tr>
+        </thead>
+        <tbody id="clients-on-route">
+          {% for client in clients_on_route %}
+          <tr data-latitude="{{ client.member.address.latitude|unlocalize }}" data-longitude="{{ client.member.address.longitude|unlocalize }}" data-id="{{ client.pk }}">
+            <td data-property="delivery_sequence">{{ forloop.counter }}</td>
+            <td data-property="name"><a href="{% url 'member:client_information' pk=client.pk %}" title="{% trans "Access the client's file" %}">{{ client.member.firstname }} {{ client.member.lastname }}</a></td>
+            <td>{{ client.get_status_display }}</td>
+            <td>{{ client.get_delivery_type_display }}</td>
+            <td data-property="address">{{ client.member.address }}</td>
+            <td data-property="status">
+              {% if client.has_been_configured %}
+               <i class="checkmark icon" title="{% trans 'Configured' %}"></i>
+              {% else %}
+               <i class="remove icon" title="{% trans 'Unconfigured' %}"></i>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div>
+        <button class="ui big gray button" type="button" id="minimise-euclidean-distances-button" data-url="{% url 'member:route_get_optimised_sequence' route.pk %}">{% trans "Minimise euclidean distances" %}</button>
+        <i class="help-text question grey icon link" data-content='{% trans 'This previews a possible delivery sequence that minimises the total euclidean distance. It will update the table and the map, but no changes will be applied until clicking "Save" button.' %}'></i>
+      </div>
+    </div>
+
+    <h4 class="ui dividing header">{% trans 'Delivery Preview' %}</h4>
+
+    <div class="ui grid">
+      <div class="row">
+        <div class="sixteen wide column">
+          {% leaflet_map "route_edit_map" callback="__map_init" %}
+          <script type="text/javascript">
+            function __map_init (map, options) {
+              var $vehicle = $('#id_vehicle');
+              function _getWaypoints () {
+                var waypoints = [
+                  [
+                    45.516564, -73.575145, {
+                      popup_html: "<div class='ui list'>"
+                        + "<div class='item'><i class='food icon'></i> Santropol Roulant </div>"
+                        + "</div>",
+                      icon: L.AwesomeMarkers.icon({icon: 'cutlery', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'})
+                    }
+                  ]
+                ];
+                $("#clients-on-route > tr").each(function (idx, tr) {
+                  var latitude = parseFloat($(tr).data('latitude'));
+                  var longitude = parseFloat($(tr).data('longitude'));
+                  waypoints.push([
+                    latitude, longitude, {
+                      popup_html: "<div class='ui list'>"
+                        + "<div class='item'><i class='user icon'></i><div class='content'>" + $(tr).find('[data-property="name"]').text() + " (#" + (idx+1).toString() + ")" + "</div></div>"
+                        + "<div class='item'><i class='home icon'></i><div class='content'>" + $(tr).find('[data-property="address"]').text() + "</div></div>"
+                        + "</div>",
+                      icon: L.icon.glyph({
+                        prefix: '',
+                        glyph: (idx+1).toString()
+                      })
+                    }
+                  ]);
+                });
+                waypoints.push([waypoints[0][0], waypoints[0][1], {}]);  // Back to Santropol.
+                return waypoints;
+              }
+
+              sous_chef_leaflet_map_init(map, options, {
+                vehicle: $vehicle.val(),
+                addListenerOnVehicleChange: function (callback) {
+                  $vehicle.on('change', function () {
+                    callback($vehicle.val());
+                  });
+                },
+                waypoints: _getWaypoints(),
+                addListenerOnWaypointsUpdate: function (setWaypoints) {
+                  var sortable = Sortable.create($('#clients-on-route')[0], {
+                    handle: 'tr',
+                    draggable: 'tr',
+                    onUpdate: function (e) {
+                      $(e.item).find('[data-property="status"]').html('<i class="edit icon"></i>');
+                      $("#clients-on-route > tr").each(function (idx, tr) {
+                        $(tr).find('[data-property="delivery_sequence"]').text(idx+1);
+                      });
+                      setWaypoints(_getWaypoints());
+                    }
+                  });
+                  $('#clients-on-route').data('sortable', sortable);
+                  $('#clients-on-route').data('afterSort', function () {
+                    $("#clients-on-route > tr").each(function (idx, tr) {
+                      $(tr).find("[data-property='status']").html('<i class="edit icon"></i>');
+                      $(tr).find("[data-property='delivery_sequence']").append(" &rarr; " + (idx+1).toString());
+                    });
+                    setWaypoints(_getWaypoints());
+                  });
+                }
+              });
+            }
+          </script>
+        </div>
+      </div>
+    </div>
+    <br />
+    <div class="ui row">
+      <button class="ui big yellow button" type="submit">{% trans "Save" %}</button>
+      <a class="ui big gray button" href="{% url 'member:route_detail' route.pk %}">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+    {% leaflet_js %}
+    {% if debug %}
+        <script src="{% static 'js/leaflet.js' %}" type="application/javascript"></script>
+    {% else %}
+        <script src="{% static 'js/leaflet.min.js' %}" type="application/javascript"></script>
+    {% endif %}
+    <script>
+      $(function () {
+        $("#route-edit-form").on('submit', function () {
+          var client_id_sequence = [];
+          $('#clients-on-route tr').each(function (idx, tr) {
+            var id = $(tr).data('id');
+            client_id_sequence.push(id);
+          });
+          $('#route-edit-form [name=client_id_sequence]').val(
+            JSON.stringify(client_id_sequence)
+          );
+        });
+
+        $("#minimise-euclidean-distances-button").click(function () {
+          var url = $(this).data('url');
+          var sortable = $('#clients-on-route').data('sortable');
+          var afterSort = $('#clients-on-route').data('afterSort');
+          $.get(url, function (client_ids) {
+            sortable.sort(client_ids);
+            afterSort();
+          });
+        });
+      });
+    </script>
+{% endblock %}

@@ -1,0 +1,26 @@
+.print-only {display:none!important}
+
+@media only print {
+    html, body {background:none!important}
+
+    .ui.left.fixed.vertical.inverted.menu
+    {display:none;}
+
+    .ui.four.steps
+    {display:none;}
+
+    .footer
+    {display:none;}
+
+    .ui.main.grid
+    {left:2%;width:100%;}
+
+    .actions
+    {display:none;}
+
+    div{font-size:xx-small;}
+
+    .no-print {
+        display:none!important;}
+    .print-only {display:block!important}
+}

@@ -1,0 +1,27 @@
+{% load i18n %}
+{% load rules %}
+
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
+
+<div class="ui vertical menu">
+  <div class="item">
+    {% trans 'Information' %}
+    <div class="menu">
+      <a class="{% if active_tab == 'information' %}active{% endif %} item" href="{% url 'member:client_information' pk=client.id %}"><i class="user icon"></i>{% trans 'Personal' %}</a>
+      <a class="{% if active_tab == 'billing' %}active{% endif %} item" href="{% url 'member:client_payment' pk=client.id %}"><i class="payment icon"></i>{% trans 'Billing' %}</a>
+      <a class="{% if active_tab == 'status' %}active{% endif %} item" href="{% url 'member:client_status' pk=client.id %}"><i class="history icon"></i>{% trans 'Status' %}</a>
+    </div>
+  </div>
+  <a class="{% if active_tab == 'prefs' %}active{% endif %} item" href="{% url 'member:client_allergies' pk=client.id %}">
+    <i class="food icon"></i>{% trans 'Preferences' %}
+  </a>
+  <a class="{% if active_tab == 'notes' %}active{% endif %} item" href="{% url 'member:client_notes' pk=client.id %}">
+    <div class="ui teal label">{{ client.notes.count }}</div>
+    {% trans 'Notes' %}
+  </a>
+  <a class="{% if active_tab == 'orders' %}active{% endif %} item" href="{% url 'member:list_orders' pk=client.id %}">
+      <div class="ui teal label">{{ client.orders.count }}</div>
+    {% trans 'Orders' %}
+  </a>
+
+</div>

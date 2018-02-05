@@ -1,0 +1,498 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-04-04 14:50-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
+"Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: order/forms.py order/templates/_order_info.html order/templates/list.html
+#: order/templates/order/create_batch.html
+msgid "Client"
+msgstr "Client"
+
+#: order/forms.py order/templates/order/create_batch.html
+msgid "Delivery dates"
+msgstr "Dates de livraison"
+
+#: order/forms.py
+#, fuzzy
+#| msgid "Delivery dates"
+msgid "Override dates"
+msgstr "Dates de livraison"
+
+#: order/forms.py
+msgid "Is form submit"
+msgstr ""
+
+#: order/forms.py
+msgid "This field must be 1 to submit the form."
+msgstr ""
+
+#: order/forms.py
+msgid "A reason is required for No Charge order."
+msgstr ""
+
+#: order/models.py
+msgid "Ordered"
+msgstr "Commandée"
+
+#: order/models.py
+msgid "Delivered"
+msgstr "Livrée"
+
+#: order/models.py
+msgid "No Charge"
+msgstr "Gratuit"
+
+#: order/models.py
+msgid "Cancelled"
+msgstr "Annulé"
+
+#: order/models.py
+msgid "Billed"
+msgstr "Facturée"
+
+#: order/models.py
+msgid "Paid"
+msgstr "Payée"
+
+#: order/models.py
+msgid "Regular"
+msgstr "Standard"
+
+#: order/models.py
+msgid "Large"
+msgstr "Grand"
+
+#: order/models.py
+msgid "Meal component (main dish, vegetable, side dish, seasonal)"
+msgstr "Élément de repas (plat principal, légumes, à côté)"
+
+#: order/models.py
+msgid "Delivery (general store item, invitation, ...)"
+msgstr "Livraison ( article de la boutique, invitation, etc)"
+
+#: order/models.py
+msgid "Pickup (payment)"
+msgstr "Ramassage (paiement)"
+
+#: order/models.py order/templates/order/create_batch.html
+msgid "Visit"
+msgstr "Visite"
+
+#: order/models.py
+msgid "orders"
+msgstr "commandes"
+
+#: order/models.py
+msgid "creation date"
+msgstr "date de création"
+
+#: order/models.py
+msgid "delivery date"
+msgstr "date de livraison"
+
+#: order/models.py
+msgid "order status"
+msgstr "statut de la commande"
+
+#: order/models.py
+msgid "client"
+msgstr "client"
+
+#: order/models.py
+msgid "Search by name"
+msgstr "Chercher par nom"
+
+#: order/models.py
+msgid "order items"
+msgstr "éléments de la commande"
+
+#: order/models.py
+msgid "order"
+msgstr "commande"
+
+#: order/models.py
+msgid "price"
+msgstr "prix"
+
+#: order/models.py
+msgid "billable flag"
+msgstr "facturable"
+
+#: order/models.py
+msgid "size"
+msgstr "taille"
+
+#: order/models.py
+msgid "order item type"
+msgstr "type d'éléments de commande"
+
+#: order/models.py
+msgid "remark"
+msgstr "remarque"
+
+#: order/models.py
+msgid "total quantity"
+msgstr "quantité"
+
+#: order/models.py
+msgid "free quantity"
+msgstr "quantité gratuite"
+
+#: order/models.py
+msgid "component group"
+msgstr "groupe d'article"
+
+#: order/models.py order/templates/order_confirm_delete.html
+msgid "Yes"
+msgstr "Oui"
+
+#: order/models.py order/templates/order_confirm_delete.html
+msgid "No"
+msgstr "Non"
+
+#: order/models.py
+#, fuzzy
+#| msgid "Component"
+msgid "Meal component"
+msgstr "Élément"
+
+#: order/models.py order/templates/order/create_batch.html
+#, fuzzy
+#| msgid "Delivered"
+msgid "Delivery"
+msgstr "Livrée"
+
+#: order/models.py order/templates/order/create_batch.html
+msgid "Pickup"
+msgstr ""
+
+#: order/models.py
+#, fuzzy
+#| msgid "order status"
+msgid "Invalid order status update."
+msgstr "statut de la commande"
+
+#: order/templates/_form.html order/templates/update.html
+msgid "Required information missing"
+msgstr "Information requise manquante"
+
+#: order/templates/_form.html order/templates/update.html
+msgid "Please review the form to make sure that all required fields are filled."
+msgstr "Merci de vérifier que les champs requis sont remplis."
+
+#: order/templates/_form.html
+msgid "Select a client"
+msgstr "Sélectionner un client"
+
+#: order/templates/_form.html
+msgid "Order item"
+msgstr "éléments de la commande"
+
+#: order/templates/_order_info.html order/templates/view.html
+msgid "Price"
+msgstr "Prix"
+
+#: order/templates/_order_info.html
+#: order/templates/order/partials/filters.html
+msgid "Delivery date"
+msgstr "Date de livraison"
+
+#: order/templates/_order_info.html
+msgid "Creation date"
+msgstr "Date de création"
+
+#: order/templates/create.html order/templates/list.html
+#: order/templates/update.html
+msgid "Orders"
+msgstr "Commandes"
+
+#: order/templates/create.html
+msgid "New Order"
+msgstr "Nouvelle commande"
+
+#: order/templates/create.html
+msgid "Create"
+msgstr "Créer"
+
+#: order/templates/list.html
+#, fuzzy
+#| msgid "New order"
+msgid "New orders"
+msgstr "Nouvelle commande"
+
+#: order/templates/list.html
+msgid "Or"
+msgstr "Ou"
+
+#: order/templates/list.html order/templates/view.html
+msgid "Order"
+msgstr "Commande"
+
+#: order/templates/list.html
+msgid "A unique identifier for the order."
+msgstr "Identifiant unique de la commande"
+
+#: order/templates/list.html
+msgid "Quickly access the client file."
+msgstr "Accéder à la fiche client."
+
+#: order/templates/list.html
+msgid "Delivery Date"
+msgstr "Date de Livraison"
+
+#: order/templates/list.html
+msgid "The delivery date planned for the order."
+msgstr "La date de livraison prévue pour la commande."
+
+#: order/templates/list.html order/templates/order/create_batch.html
+#: order/templates/order/partials/filters.html
+msgid "Status"
+msgstr "Statut"
+
+#: order/templates/list.html
+msgid "Use the Status filter to filter this view."
+msgstr "Filtrer cette vue selon le Status."
+
+#: order/templates/list.html
+msgid "Amount"
+msgstr "Montant"
+
+#: order/templates/list.html
+msgid "Total amount in $CAD."
+msgstr "Montant total en $CAD."
+
+#: order/templates/list.html
+msgid "Actions"
+msgstr "Actions"
+
+#: order/templates/list.html
+msgid "of"
+msgstr ""
+
+#: order/templates/list.html
+msgid "Sorry, no result found"
+msgstr "Désolé, aucun résultat trouvé."
+
+#: order/templates/order/create_batch.html
+msgid "Place orders"
+msgstr "Créer des commandes"
+
+#: order/templates/order/create_batch.html
+msgid "An order already exists on this day."
+msgstr ""
+
+#: order/templates/order/create_batch.html
+msgid "Order items"
+msgstr "Éléments de la commande"
+
+#: order/templates/order/create_batch.html
+msgid "Size"
+msgstr "Taille"
+
+#: order/templates/order/create_batch.html order/templates/view.html
+msgid "Component"
+msgstr "Élément"
+
+#: order/templates/order/create_batch.html
+msgid "Quantity"
+msgstr "Quantité"
+
+#: order/templates/order/create_batch.html
+msgid "Please select one or multiple delivery dates."
+msgstr ""
+
+#: order/templates/order/create_batch.html
+#, fuzzy
+#| msgid "View Order"
+msgid "Override Order?"
+msgstr "Voir Commande"
+
+#: order/templates/order/create_batch.html
+#, python-format
+msgid "The following order(s) already exist(s) for <strong>%(firstname)s %(lastname)s</strong>:"
+msgstr ""
+
+#: order/templates/order/create_batch.html
+msgid "Would you like to override the above order(s), or cancel?"
+msgstr ""
+
+#: order/templates/order/create_batch.html
+#: order/templates/order_update_status.html order/templates/update.html
+msgid "Cancel"
+msgstr "Annuler"
+
+#: order/templates/order/create_batch.html
+msgid "Override"
+msgstr ""
+
+#: order/templates/order/partials/filters.html
+msgid "Name"
+msgstr "Nom"
+
+#: order/templates/order/partials/filters.html
+msgid "Reset"
+msgstr "Réinitialiser"
+
+#: order/templates/order/partials/filters.html
+msgid "Search"
+msgstr "Recherche"
+
+#: order/templates/order_confirm_delete.html order/tests.py
+msgid "Delete Order"
+msgstr "Supprimer commande"
+
+#: order/templates/order_confirm_delete.html
+msgid "This order will be deleted and all the info will be lost, are you sure?"
+msgstr "Cette commande et toutes les informations vont être effacées. Êtes-vous sûr(e) ?"
+
+#: order/templates/order_update_status.html
+msgid "Status modification"
+msgstr ""
+
+#: order/templates/order_update_status.html
+msgid "optional"
+msgstr ""
+
+#: order/templates/order_update_status.html
+msgid "required"
+msgstr ""
+
+#: order/templates/order_update_status.html
+msgid "Other:"
+msgstr ""
+
+#: order/templates/order_update_status.html
+msgid "OK"
+msgstr ""
+
+#: order/templates/update.html
+msgid "Update Order"
+msgstr "Mettre à jour la commande"
+
+#: order/templates/update.html order/templates/view.html
+msgid "Update"
+msgstr "Mettre à jour"
+
+#: order/templates/view.html
+msgid "View Order"
+msgstr "Voir Commande"
+
+#: order/templates/view.html
+msgid "Order detail"
+msgstr "Détails de la commande"
+
+#: order/templates/view.html
+msgid "Order items attached to the order"
+msgstr "Articles de la commande"
+
+#: order/templates/view.html
+msgid "Description"
+msgstr "Description"
+
+#: order/templates/view.html
+msgid "Total Quantity"
+msgstr "Quantité totale"
+
+#: order/templates/view.html
+msgid "Billable"
+msgstr "Facturable"
+
+#: order/templates/view.html
+msgid "Total"
+msgstr "Total"
+
+#: order/templates/view.html
+msgid "Delete"
+msgstr "Supprimer"
+
+#: order/urls.py
+msgid "^list/$"
+msgstr "^liste/$"
+
+#: order/urls.py
+msgid "^view/(?P<pk>\\d+)/$"
+msgstr "^voir/(?P<pk>\\d+)/$"
+
+#: order/urls.py
+msgid "^create/$"
+msgstr "^créer/$"
+
+#: order/urls.py
+msgid "^create/batch$"
+msgstr "^créer/multiple$"
+
+#: order/urls.py
+msgid "^update/(?P<pk>\\d+)/$"
+msgstr "^mettre_à_jour/(?P<pk>\\d+)/$"
+
+#: order/urls.py
+msgid "^update/(?P<pk>\\d+)/status$"
+msgstr "^mettre_à_jour/(?P<pk>\\d+)/statut$"
+
+#: order/urls.py
+msgid "^update/(?P<pk>\\d+)/client_bill$"
+msgstr "^mettre_à_jour/(?P<pk>\\d+)/facturation_client$"
+
+#: order/urls.py
+msgid "^delete/(?P<pk>\\d+)/$"
+msgstr "^supprimer/(?P<pk>\\d+)/$"
+
+#: order/views.py
+#, python-format
+msgid "%(n)s order(s) successfully placed for %(client)s on %(dates)s."
+msgstr ""
+
+#: order/views.py
+#, python-format
+msgid "%(n)s existing order(s) skipped for %(client)s on %(dates)s."
+msgstr ""
+
+#: order/views.py
+msgid "Restrictions mistake"
+msgstr ""
+
+#: order/views.py
+#, fuzzy
+#| msgid "Delivery date"
+msgid "Delivery mistake"
+msgstr "Date de livraison"
+
+#: order/views.py
+#, fuzzy
+#| msgid "Select a client"
+msgid "Really unhappy client"
+msgstr "Sélectionner un client"
+
+#: order/views.py
+msgid "The status has been changed"
+msgstr ""
+
+#~ msgid "Serving size"
+#~ msgstr "Taille du repas"
+
+#~ msgid "Multiple orders"
+#~ msgstr "Commandes multiples"
+
+#~ msgid "Place multiple orders for a client"
+#~ msgstr "Placer plusieurs commandes pour un client."
+
+#~ msgid "Place multiple orders"
+#~ msgstr "Placer plusieurs commandes"
+
+#~ msgid "Default"
+#~ msgstr "Défaut"

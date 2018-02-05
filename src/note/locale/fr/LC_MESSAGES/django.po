@@ -1,0 +1,185 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-04-04 14:50-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: PascalPriori <pascal.priori@savoirfairelinux.com>, 2016\n"
+"Language-Team: French (https://www.transifex.com/savoirfairelinux/teams/63058/fr/)\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: note/models.py note/templates/notes_list.html
+msgid "Name"
+msgstr "Nom"
+
+#: note/models.py
+msgid "Note priorities"
+msgstr "Priorités de notes"
+
+#: note/models.py
+msgid "Note categories"
+msgstr "Catégories de notes"
+
+#: note/models.py
+msgid "Notes"
+msgstr "Notes"
+
+#: note/models.py
+msgid "Note"
+msgstr "Note"
+
+#: note/models.py
+msgid "Author"
+msgstr "Auteur"
+
+#: note/models.py note/templates/notes_list.html
+msgid "Date"
+msgstr "Date"
+
+#: note/models.py note/templates/notes_client_list.html
+#: note/templates/notes_list.html
+msgid "Is read"
+msgstr "lu"
+
+#: note/models.py
+msgid "Client"
+msgstr "Client"
+
+#: note/models.py note/templates/notes_client_list.html
+#: note/templates/notes_list.html
+msgid "Priority"
+msgstr "Priorité"
+
+#: note/models.py note/templates/notes_list.html
+msgid "Category"
+msgstr "Catégorie"
+
+#: note/models.py
+msgid "Search by name"
+msgstr "Recherche par nom"
+
+#: note/templates/notes_add.html
+msgid "Add a Note"
+msgstr ""
+
+#: note/templates/notes_add.html
+#, python-format
+msgid "Add a Note for %(firstname)s %(lastname)s"
+msgstr ""
+
+#: note/templates/notes_add.html
+msgid "Create"
+msgstr ""
+
+#: note/templates/notes_add.html
+msgid "Cancel"
+msgstr ""
+
+#: note/templates/notes_client_list.html
+msgid "Information"
+msgstr "Information"
+
+#: note/templates/notes_client_list.html note/templates/notes_list.html
+msgid "Staff Notes"
+msgstr "Notes de l'équipe"
+
+#: note/templates/notes_client_list.html
+msgid "Notes added to"
+msgstr "Notes ajoutées à"
+
+#: note/templates/notes_client_list.html
+msgid "s file"
+msgstr ""
+
+#: note/templates/notes_client_list.html note/templates/notes_list.html
+msgid "Reset"
+msgstr "Réinitialiser"
+
+#: note/templates/notes_client_list.html note/templates/notes_list.html
+msgid "Search"
+msgstr "Recherche"
+
+#: note/templates/notes_client_list.html
+msgid "New Note"
+msgstr "Nouvelle Note"
+
+#: note/templates/notes_client_list.html note/templates/notes_list.html
+msgid "Urgent"
+msgstr ""
+
+#: note/templates/notes_client_list.html
+msgid "Created by"
+msgstr ""
+
+#: note/templates/notes_client_list.html note/templates/notes_list.html
+msgid "Mark as unread"
+msgstr "Marquer comme non lu"
+
+#: note/templates/notes_client_list.html note/templates/notes_list.html
+msgid "Mark as read"
+msgstr "Marquer comme lu"
+
+#: note/templates/notes_client_list.html note/templates/notes_list.html
+#, fuzzy
+#| msgid "Mark as read"
+msgid "Mark all as read"
+msgstr "Marquer comme lu"
+
+#: note/templates/notes_client_list.html note/templates/notes_list.html
+msgid "Commit selected changes"
+msgstr ""
+
+#: note/templates/notes_list.html
+msgid "New note"
+msgstr ""
+
+#: note/templates/notes_list.html
+msgid "Or"
+msgstr ""
+
+#: note/templates/notes_list.html
+msgid "created by"
+msgstr ""
+
+#: note/templates/notes_list.html
+msgid "of"
+msgstr ""
+
+#: note/urls.py
+msgid "^$"
+msgstr "^$"
+
+#: note/urls.py
+msgid "^read/(?P<id>\\d+)/$"
+msgstr "^lu/(?P<id>\\d+)/$"
+
+#: note/urls.py
+msgid "^unread/(?P<id>\\d+)/$"
+msgstr "^nonlu/(?P<id>\\d+)/$"
+
+#: note/urls.py
+msgid "^add/$"
+msgstr "^ajouter/$"
+
+#: note/urls.py
+msgid "^batch_toggle/$"
+msgstr "^batch_toggle/$"
+
+#: note/views.py
+msgid "The note has been created."
+msgstr ""
+
+#: note/views.py
+#, python-format
+msgid "%(count)s note(s) have been updated."
+msgstr ""

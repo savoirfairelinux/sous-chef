@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+{% load static %}
+
+{% block title %} {% trans 'Orders' %} {% endblock %}
+
+{% block content %}
+
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">{% trans "Update Order" %}</h2>
+</div>
+
+<div class="ten wide column form-steps">
+    <form action="" method="post" class="ui form error">
+        {% if form.errors or formset.errors %}
+            <div class="ui error message">
+              <div class="header">{% trans 'Required information missing' %}</div>
+              <p>{% trans 'Please review the form to make sure that all required fields are filled.' %}</p>
+            </div>
+        {% endif %}
+        {% csrf_token %}
+        {% include "_form.html" %}
+        <a class="ui default button" href="{{ request.META.HTTP_REFERER }}">{% trans "Cancel" %}</a>
+        <button class="ui primary button" type="submit">{% trans "Update" %}</button>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+
+    // We need this JavaScript inline to generate new inlines from the django formset object.
+
+    $(function() {
+        {% for formset in inlines %}
+            {% for subform in formset.forms %}
+                $('div#{{ subform.prefix }}').formset({
+                    prefix: '{{ formset.prefix }}',
+                    formCssClass: 'dynamic-formset-{{ forloop.counter }}',
+                    deleteText: '<i class="ui remove icon order item"></i> Remove order item',
+                    deleteCssClass: 'negative ui button',
+                    {% if forloop.counter == formset.forms|length %}
+                        addText: '<i class="ui add icon item"></i> Add order item',
+                        addCssClass: 'positive ui button right floated',
+                    {% else %}
+                        addCssClass: 'ui transition hidden',
+                    {% endif %}
+               });
+           {% endfor %}
+       {% endfor %}
+    })
+</script>
+{% endblock %}

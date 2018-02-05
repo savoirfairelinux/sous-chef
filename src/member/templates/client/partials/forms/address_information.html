@@ -1,0 +1,73 @@
+{% load i18n %}
+{% load leaflet_tags %}
+<h4 class="ui dividing header">{% trans 'Address' %}</h4>
+
+<div class="field">
+    <label>{{ form.street.label }}</label>
+    <div class="fields">
+      <div class="twelve wide field {% if form.street.errors %} error {% endif %}">
+        {{ form.street}}
+      </div>
+      <div class="four wide field">
+        {{ form.apartment }}
+      </div>
+    </div>
+</div>
+
+<div class="equal width fields">
+    <div class="field {% if form.city.errors %} error {% endif %}">
+      <label>{{ form.city.label }}</label>
+      {{ form.city }}
+    </div>
+    <div class="field {% if form.postal_code.errors %} error {% endif %}">
+        <label>{{ form.postal_code.label }}</label>
+        {{ form.postal_code }}
+    </div>
+</div>
+
+<h4 class="ui dividing header">{% trans 'Geolocation' %}</h4>
+
+<div class="field">
+    <button id="geocodeBtn" type="button" class="ui labeled icon right yellow big button" data-not-found-msg="{% trans 'Address not Found !!' %}">
+      <i class="marker icon"></i>{% trans 'Geolocate' %}
+    </button>
+    <i class="help-text question yellow icon link" data-content="{% trans 'Geolocation is mandatory.' %}"></i>
+</div>
+
+<div class="equal width fields">
+    <div class="field {% if form.latitude.errors %} error {% endif %}">
+      <label>{{ form.latitude.label }}</label>
+      {{ form.latitude }}
+    </div>
+    <div class="field {% if form.longitude.errors %} error {% endif %}">
+        <label>{{ form.longitude.label }}</label>
+        {{ form.longitude }}
+    </div>
+    <div class="field {% if form.distance.errors %} error {% endif %}">
+        <label>{{ form.distance.label }}</label>
+        <div class="ui right labeled input">
+            {{ form.distance }}
+            <div class="ui basic label">{% trans "km" %}</div>
+        </div>
+    </div>
+</div>
+
+<div class="map_address">
+  {% leaflet_map "client_address_map" callback="__client_address_map_init" %}
+</div>
+<br>
+
+<h4 class="ui dividing header">{% trans 'Delivery Route' %}</h4>
+
+<div class="equal width fields">
+  <div class="field {% if form.route.errors %} error {% endif %}">
+    <label>{{form.route.label}}</label>
+    {{form.route}}
+  </div>
+</div>
+<div class="equal width fields">
+  <div class="field {% if form.delivery_note.errors %} error {% endif %}">
+    <label>{{ form.delivery_note.label }}</label>
+  {{ form.delivery_note }}
+  </div>
+</div>

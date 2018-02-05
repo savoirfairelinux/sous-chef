@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+{% load staticfiles i18n %}
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}{% trans "Sous-Chef" %}{% endblock %}
+    </title>
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
+    <link href="{% static 'css/main.min.css' %}" type="text/css" rel="stylesheet">
+    {% block extrahead %}{% endblock %}
+</head>
+
+<body>
+    <!-- Responsive sidebar menu -->
+    <div class="ui inverted vertical menu left sidebar">
+        {% include "system/menu.html" %}
+    </div>
+    <!-- Main content grid -->
+    <div class="pusher">
+        <div class="ui grid container">
+            <!-- Non responsive menu -->
+            <div class="ui left fixed vertical inverted menu">
+                {% include "system/menu.html" %}
+            </div>
+            <!-- Responsive top menu -->
+            <div class="ui fixed inverted main menu">
+                <div class="ui container">
+                    <a class="launch icon item sidebar-toggle ui open-menu">
+                        <i class="sidebar icon"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ui main grid">
+                {% for message in messages %}
+                <div class="ui {{ message.tags }} message sixteen wide column">
+                    <i class="close icon"></i>
+                    <div class="center aligned header">{{ message|safe }}</div>
+                </div>
+                {% endfor %}
+                {%block message%}{%endblock%}
+
+                {%block content%}{%endblock%}
+
+                <br><br>
+            </div>
+        </div>
+
+        <footer class="ui inverted vertical footer segment">
+            <div class="ui center aligned container">
+                <img src="{% static 'images/logo-souschef-coul.png' %}" class="ui centered small image">
+                <div class="ui horizontal inverted small divided link list">
+                    <p><i class="code yellow icon"></i> {% trans "with" %} &nbsp;<i class="heart yellow icon"></i> {% trans "in Montreal" %}</p>
+                    <small>
+                        {% if GIT_HEAD %}
+                            <span style="color:aqua;">
+                               | Git HEAD: {{ GIT_HEAD|slice:":7" }} |
+                            </span>
+                        {% endif %}
+
+                        {% if GIT_TAG %}
+                            <span style="color:aqua;">
+                                | Git tag: {{ GIT_TAG }} |
+                            </span>
+                        {% endif %}
+                    </small>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    {% if debug %}
+        <script src="{% static 'js/sous-chef.js' %}" type="application/javascript"></script>
+    {% else %}
+        <script src="{% static 'js/sous-chef.min.js' %}" type="application/javascript"></script>
+    {% endif %}
+    <!-- WARNING :  Do not move this line before a manual import of script! -->
+    {% block extrajs %}{% endblock %}
+
+    <script type="application/javascript">
+      $(function () {
+        $(".ui.dropdown > select[required]").each(function () {
+          $(this).removeAttr('required');
+        });
+      });  // Don't use HTML5 validation on hidden <select> elements that are replaced by Semantic UI.
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,8 @@
+<a class="step link {% if current_step == step %}active{% endif %}"
+    href="{% url 'member:'|add:url pk=pk %}">
+    <i class="{{icon}} icon"></i>
+    <div class="content">
+        <div class="title">{{ name }}</div>
+        <div class="description">{{ description }}</div>
+    </div>
+</a>

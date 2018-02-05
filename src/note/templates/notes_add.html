@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+<!-- Load internationalisation utils-->
+{% load i18n %}
+
+
+{% block content %}
+
+<div class="ui secondary pointing fluid menu">
+  <h1 class="ui header">
+    {% block title %}
+      {% if not client %}
+        {% trans "Add a Note" %}
+      {% else %}
+        {% blocktrans trimmed with firstname=client.member.firstname|title lastname=client.member.lastname|title%}
+         Add a Note for {{firstname}} {{lastname}}
+        {% endblocktrans %}
+      {% endif %}
+    {% endblock %}
+  </h1>
+
+  <div class="right menu">
+
+  </div>
+</div>
+
+<form action="" method="post" class="content ui form {% if form.errors %}error{% endif %}" novalidate>
+  {% csrf_token %}
+  {% if not client %}
+  <div class="field {% if form.client.errors %}error{% endif %}">
+      <label>{{ form.client.label }}</label>
+      {{ form.client }}
+
+      {% if form.client.errors %}
+      <div class="ui error message">
+        {{ form.client.errors }}
+      </div>
+      {% endif %}
+  </div>
+  {% else %}
+  <input type="hidden" name="client" value="{{client.pk}}">
+  {% endif %}
+
+  <div class="field {% if form.note.errors %}error{% endif %}">
+    <label>{{ form.note.label }}</label>
+    {{ form.note }}
+
+    {% if form.note.errors %}
+    <div class="ui error message">
+      {{ form.note.errors }}
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="field {% if form.priority.errors %}error{% endif %}">
+    <label>{{ form.priority.label }}</label>
+    {{ form.priority }}
+
+    {% if form.priority.errors %}
+    <div class="ui error message">
+      {{ form.priority.errors }}
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="field {% if form.category.errors %}error{% endif %}">
+    <label>{{ form.category.label }}</label>
+    {{ form.category }}
+
+    {% if form.category.errors %}
+    <div class="ui error message">
+      {{ form.category.errors }}
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="ui row">
+    <button class="ui primary button" type="submit">{% trans "Create" %}</button>
+    <a class="ui button" href="{% if not client %}{% url 'note:note_list' %}{% else %}{% url 'member:client_notes' client.pk %}{% endif %}">{% trans "Cancel" %}</a>
+  </div>
+</form>
+
+{% endblock %}

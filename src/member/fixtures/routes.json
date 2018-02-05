@@ -1,0 +1,66 @@
+[
+  {
+    "model": "member.route",
+    "pk": 1,
+    "fields": {
+      "name": "Mile-End",
+      "description": "Mile-end route."
+    }
+  },
+  {
+    "model": "member.route",
+    "pk": 2,
+    "fields": {
+      "name": "Westmount",
+      "description": "Westmount route."
+    }
+  },
+  {
+    "model": "member.route",
+    "pk": 3,
+    "fields": {
+      "name": "Centre Sud",
+      "description": "Centre Sud route."
+    }
+  },
+  {
+    "model": "member.route",
+    "pk": 4,
+    "fields": {
+      "name": "McGill",
+      "description": "McGill route."
+    }
+  },
+  {
+    "model": "member.route",
+    "pk": 5,
+    "fields": {
+      "name": "Centre-Ville / Downtown",
+      "description": "Downtown route."
+    }
+  },
+  {
+    "model": "member.route",
+    "pk": 6,
+    "fields": {
+      "name": "Côte-des-Neiges",
+      "description": "CDN route."
+    }
+  },
+  {
+    "model": "member.route",
+    "pk": 7,
+    "fields": {
+      "name": "McGill West",
+      "description": "McGill West route."
+    }
+  },
+  {
+    "model": "member.route",
+    "pk": 8,
+    "fields": {
+      "name": "Notre Dame de Grace",
+      "description": "Notre Dame de Grace route."
+    }
+  }
+]

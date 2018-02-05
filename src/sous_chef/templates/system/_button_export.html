@@ -1,0 +1,5 @@
+{% load i18n %}
+
+<div class="ui import-export blue buttons">
+    <a class="ui button" href="{{request.path}}?{{request.META.QUERY_STRING}}&format=csv" title="{% trans "Export to CSV" %}">{% trans "Export" %}</a>
+</div>

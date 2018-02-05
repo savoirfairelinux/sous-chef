@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+<!-- Load Internationalization utils-->
+{% load i18n %}
+{% load rules %}
+
+{% block title %}{% trans 'Pick Ingredients' %} {% endblock %}
+
+{% block content %}
+{% has_perm 'sous_chef.edit' request.user as can_edit_data %}
+
+{% include 'kitchen_count_steps.html' with step='ingredients' %}
+
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">{% trans "Pick ingredients" %}</h1>
+    <div class="right menu">
+        <div class="ui item"><h3><i class="calendar icon"></i>{% now "j F Y" %}</h3></div>
+    </div>
+</div>
+
+<div class="ui stackable relaxed grid container">
+
+    <div class="sixteen wide column">
+
+        <div class="ui basic segment">
+        <div class="ui list">
+            <a class="item">
+                <i class="food icon"></i>
+                <div class="content">
+                    <div class="header">{% trans 'Main dish' %}</div>
+                    <div class="description">Selecting a main dish in the list will load an editable list of ingredients.</div>
+                </div>
+            </a>
+            <a class="item">
+                <i class="refresh icon"></i>
+                <div class="content">
+                    <div class="header">Restore recipe</div>
+                    <div class="description">The <em>Restore recipe</em> action resets the ingredients list to the default one.</div>
+                </div>
+            </a>
+        </div>
+        <div class="ui row"></div>
+    </div>
+</div>
+</div>
+
+<form class="ui form" action="{% url 'delivery:meal' %}" method="post">
+    <div class="ui stackable relaxed grid container">
+        <div class="six wide column">
+            {{form.errors}}
+            <div class="ui row">
+                {% csrf_token %}
+                <div class="field dish selection" data-url="{% url 'delivery:meal' %}">
+                    <label>{{ form.maindish.label }}</label>
+                    {{ form.maindish }}
+                </div>
+            </div>
+        </div>
+
+        <div class="ten wide column">
+            <div class="field ingredients selection">
+                <label>{{ form.ingredients.label }}</label>
+                {{ form.ingredients }}
+            </div>
+            {% if can_edit_data %}
+            <div class="ui row">
+                <input class="ui red button restorerecipe {% if not recipe_changed %}disabled{% endif %}" type="submit" value="{% trans "Restore recipe" %}" name="_restore" />
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="ten wide column">
+            <div class="field sides_ingredients selection">
+                <label>{{ form.sides_ingredients.label }}</label>
+                {{ form.sides_ingredients }}
+            </div>
+        </div>
+
+        {% if can_edit_data %}
+        <div class="actions">
+          <a class="ui labeled icon big button" href="{% url 'delivery:order' %}">
+            <i class="chevron left icon"></i>{% trans "Back" %}
+          </a>
+          <input class="ui big yellow button confirmingredients {% if not ingredients_changed %}disabled{% endif %}" type="submit" value="{% trans "Confirm all ingredients" %}" name="_update" />
+          <a class="ui labeled icon yellow big button nextkitchencount {% if ingredients_changed %}disabled{% endif %}" href="{% url 'delivery:kitchen_count' %}">
+            <i class="chevron right icon"></i>{% trans "Next: Print Kitchen Count" %}
+          </a>
+        </div>
+        {% endif %}
+    </div>
+</form>
+{% endblock content %}

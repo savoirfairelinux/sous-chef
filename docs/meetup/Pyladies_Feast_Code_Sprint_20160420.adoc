@@ -1,0 +1,159 @@
+= Feast On Wheels: Meetup
+Emmanuel Milou <emmanuel.milou@savoirfairelinux.com>
+2016-04-21
+Mentoring new contributors through contributing their first FOW core commit.
+
+:keywords: Django
+:page-layout: base
+:page-description: {description}
+:page-keywords: {keywords}
+:icons: font
+:toc: right
+:experimental:
+:mdash: &#8212;
+:language: asciidoc
+:source-language: {language}
+// Refs
+:doc-asciidoctor: http://asciidoctor.org/docs/asciidoc-recommended-practices/
+:meetup-pyladies: http://www.meetup.com/fr-FR/PyLadiesMTL/events/230221872/
+
+## Venue
+
+The first code sprint, or *hackaton*, on Feast On Wheels will take place on **Thursday, April 21th**.
+
+The venue is Savoir-faire Linux's office, in Montréal.
+The address is:
+
+ Savoir-faire Linux
+ 7275 rue Saint-Urbain
+ Office 200
+ Montreal, Quebec, H2R2Y5
+
+More informations on the {meetup-pyladies}[PyLadies Meetup page].
+
+## Agenda
+
+17h30:: Welcome!
+17h45:: Introduction of the project and the persons involved / discussion, Maison Du Logiciel Libre and Santropol Roulant
+18h-20h30:: Project installation and coding
+
+Food will be served.
+
+## Resources
+
+Most of the useful resources are hosted on https://github.com/savoirfairelinux/sous-chef[GitHub].
+
+* https://github.com/savoirfairelinux/sous-chef/blob/dev/INSTALL.md[Installation instructions]
+* UI/UX screenshots
+* https://www.python.org/dev/peps/pep-0008/[Coding style guide]
+* https://github.com/savoirfairelinux/sous-chef/issues[Issues]
+* https://help.github.com/articles/creating-a-pull-request/[Creating a Pull Request on GitHub]
+* http://santropolroulant.org/en/[Santropol Roulant]
+
+## How to contribute
+
+Contributions to an open-source project can take multiple forms:
+
+* Code
+* Documentation
+* Tests and bug reporting
+* Translations
+* UX/UI experience
+
+### Code
+
+A pre-requisite is to have Feast installed on your machine. The installation procedure is based on Docker and is described https://github.com/savoirfairelinux/sous-chef/blob/dev/INSTALL.md[on GitHub].
+
+#### Issues
+
+Numerous issues are created and waiting for your love on the https://github.com/savoirfairelinux/sous-chef/issues[issue board].
+
+IMPORTANT: The milestone https://github.com/savoirfairelinux/sous-chef/milestones/Meetup%20PyLadies[Meetup PyLadies] has been created for the occasion. It regroups most of the issues that could be tackled during the meeting.
+
+You may also use https://waffle.io/savoirfairelinux/sous-chef[Waffle] as a more *Agile-like* dashboard.
+
+##### Issue trackers
+
+Issues are categorized with the following labels:
+
+* feature
+* bug
+* i18n (internationalization)
+* docs (documentation)
+* ux/ui
+* tests
+
+##### Issue categories
+
+Besides than those tracker, issues are identified regarding the field of expertise:
+
+* python
+* frontend
+* database
+
+CAUTION: FOW is now using http://semantic-ui.com/[Semantic UI] as a frontend framework, replacing Bootstrap.
+
+#### Workflow
+
+* Fork the repository and work from there
+* Commit and push your changes into your fork
+* When you are done, create a https://github.com/savoirfairelinux/sous-chef/compare[Pull Request] in Feast repository
+
+[IMPORTANT]
+====
+For your PR to be merged, it should respect the following:
+
+    * Tests must pass
+    * PEP-8 coding style must be respected
+    * Code coverage must be complete
+    * The branch can be merged automatically
+====
+
+https://travis-ci.org/[TravisCI] is configured to run those checks on every Pull-Request. It is recommanded you configure your fork to do the same.
+
+### Documentation
+
+Documentation is important and can always be improved:
+
+* Installation instructions
+* Test procedures
+* How to help translating the project
+* Updating the https://github.com/savoirfairelinux/sous-chef/wiki/TODO[Roadmap]
+
+The prefered syntax is {doc-asciidoctor}[Asciidoc]. Markdown is also accepted.
+
+The https://github.com/savoirfairelinux/sous-chef/wiki/[project wiki] on GitHub could also be used.
+
+
+### Tests and bug reporting
+
+It could be manual testing and reporting. The GitHub issues can be used for this.
+
+It could also be functional and unit tests implementation. Each Django module has a *tests.py* file.
+
+### Translations
+
+FOW is a bilingual application and needs your talent of translators !
+
+FOW uses Django multilingual framework, based on Gettext and po files.
+
+Each module has its own set of translation files. To list them all:
+
+ $ find . -name "*.po"
+
+https://poedit.net/[Poedit] can be used to translate those files.
+Follow the workflow described in the Code section to contribute your translations.
+
+NOTE: An alternative way to contribute could be to send the po files through emails.
+
+An other way to contribute there is to review the code and make sure all strings are translatable.
+
+### UX/UI experience
+
+This is a pretty vast domain, but, here it is:
+
+* UX proposition
+* Color schemes
+* Logo
+* Style guide
+* Project name

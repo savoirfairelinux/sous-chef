@@ -1,0 +1,24 @@
+{% extends "base_billing.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans 'Billing Summary' %} ({{billing.billing_period|date:"F Y"}}){% endblock %}
+{% block content %}
+
+<div class="ui secondary pointing fluid menu">
+    <h1 class="ui header">{% trans "Billing Summary" %}</h1>
+    <div class="right menu">
+      <div class="ui item"><h3><i class="calendar icon"></i>{{billing.billing_period|date:"F Y"}}</h3></div>
+    </div>
+</div>
+
+<div class="ui basic segment no-print">
+    <div class="ui row">
+        {% include 'billing/partials/statistics.html' with orders=billing.orders.all %}
+    </div>
+    <a href="?print=yes" target="_blank" class="ui labeled icon right big button"><i class="print icon"></i>{% trans 'Print' %}</a>
+</div>
+
+{% include 'billing/partials/summary.html' %}
+
+{% endblock %}

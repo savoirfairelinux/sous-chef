@@ -1,0 +1,26 @@
+{% load i18n %}
+{% load static %}
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>{% trans 'Billing Summary' %} ({{billing.billing_period|date:"F Y"}})</title>
+    <style>
+      a[href] {color:inherit;text-decoration:none}
+      .no-print {display:none!important;visilibity:hidden!important}
+      @media only screen {
+        body {max-width:1024px}  /* for display */
+      }
+      @media only print {
+        table {font-size:11px}
+        .no-print-when-print {display:none!important;visilibity:hidden!important}
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="ui header">{% trans "Billing Summary" %}</h1>
+    <h3>{{billing.billing_period|date:"F Y"}}</h3>
+    <button onclick="javascript:window.print()" class="no-print-when-print">{% trans 'Print' %}</button>
+    {% include 'billing/partials/summary.html' %}
+  </body>
+</html>
