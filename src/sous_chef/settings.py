@@ -121,8 +121,16 @@ WSGI_APPLICATION = 'sous_chef.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-import dj_database_url
-DATABASES['default'] =  dj_database_url.config()
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'feast',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': 'db',
+        'port': '3306',
+    }
+}
 
 
 # Password validation
