@@ -10,7 +10,7 @@ services:
     command: python src/manage.py runserver 0.0.0.0:8000
     environment:
       - SOUSCHEF_ENVIRONMENT_NAME=DEV
-      - SOUSCHEF_DJANGO_ALLOWED_HOSTS=0.0.0.0
+      - SOUSCHEF_DJANGO_ALLOWED_HOSTS=0.0.0.0 127.0.0.1 localhost
     volumes:
       - .:/code
     ports:
