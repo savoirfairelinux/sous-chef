@@ -27,8 +27,8 @@ msgid "Dessert"
 msgstr "Dessert"
 
 #: meal/models.py
-msgid "Diabetic Dessert"
-msgstr "Dessert pour diabétique"
+msgid "Diabetic"
+msgstr "Diabétique"
 
 #: meal/models.py
 msgid "Fruit Salad"

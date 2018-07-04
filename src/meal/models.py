@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 COMPONENT_GROUP_CHOICES = (
     ('main_dish', _('Main Dish')),
     ('dessert', _('Dessert')),
-    ('diabetic', _('Diabetic Dessert')),
+    ('diabetic', _('Diabetic')),
     ('fruit_salad', _('Fruit Salad')),
     ('green_salad', _('Green Salad')),
     ('pudding', _('Pudding')),
