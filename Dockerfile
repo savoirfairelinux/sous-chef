@@ -9,7 +9,7 @@ COPY . /code/
 # Install underlying debian dependencies
 RUN apt-get update
 RUN apt-get install curl gettext -y
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get install nodejs build-essential -y
 RUN apt-get install binutils libproj-dev gdal-bin -y
 RUN apt-get clean
