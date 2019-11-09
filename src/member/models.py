@@ -470,6 +470,15 @@ class ContactClientManager(ClientManager):
             Q(status=Client.PENDING)
         )
 
+class BirthdayContactClientManager(ClientManager):
+
+    def get_queryset(self):
+
+        return super(BirthdayContactClientManager, self).get_queryset().filter(
+            Q(status=Client.ACTIVE) |
+            Q(status=Client.PAUSED) |
+            Q(status=Client.PENDING)
+        )
 
 class Client(models.Model):
 
@@ -617,6 +626,7 @@ class Client(models.Model):
     pending = PendingClientManager()
     ongoing = OngoingClientManager()
     contact = ContactClientManager()
+    birthday_contact = BirthdayContactClientManager()
 
     @property
     def is_geolocalized(self):
