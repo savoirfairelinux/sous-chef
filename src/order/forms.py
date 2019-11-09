@@ -64,12 +64,12 @@ class CreateOrdersBatchForm(forms.Form):
         required=True,
         label=_('Client'),
         widget=forms.Select(attrs={'class': 'ui search dropdown'}),
-        queryset=Client.objects.all().select_related(
+        queryset=Client.active.select_related(
             'member'
         ).only(
             'member__firstname',
             'member__lastname'
-        )
+        ).order_by('member__lastname')
     )
 
     delivery_dates = forms.CharField(
