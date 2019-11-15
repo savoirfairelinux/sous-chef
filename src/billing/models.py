@@ -68,7 +68,7 @@ class BillingManager(models.Manager):
 class Billing(models.Model):
 
     class Meta:
-        ordering = ["billing_year", "-billing_month"]
+        ordering = ["-billing_year", "-billing_month"]
 
     total_amount = models.DecimalField(
         verbose_name=_('total_amount'),
