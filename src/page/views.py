@@ -24,7 +24,7 @@ class HomeView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
         today = datetime.today()
         active_clients = Client.active.all().count()
         pending_clients = Client.pending.all().count()
-        clients = Client.contact.get_birthday_boys_and_girls()
+        birthday_clients = Client.birthday_contact.get_birthday_boys_and_girls()
         billable_orders = Order.objects.get_billable_orders(
             today.year, today.month
         ).count()
@@ -33,7 +33,7 @@ class HomeView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
             delivery_date__year=datetime.today().year).count()
         context['active_clients'] = active_clients
         context['pending_clients'] = pending_clients
-        context['birthday'] = clients
+        context['birthday'] = birthday_clients
         context['billable_orders_month'] = billable_orders
         context['billable_orders_year'] = billable_orders_year
         context['routes'] = self.calculate_route_table()
