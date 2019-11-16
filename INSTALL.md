@@ -62,13 +62,13 @@ $> python3 manage.py loaddata sample_data
 
 ### Run gulp
 
-**From container:**
+**From host machine:**
 
 ```
 $> docker-compose exec web sh -c "cd tools/gulp && npm install --unsafe-perm && gulp"
 ```
 
-Or **from host machine:**
+Or **from container:**
 
 ```
 $> cd tools/gulp && npm install --unsafe-perm && gulp
