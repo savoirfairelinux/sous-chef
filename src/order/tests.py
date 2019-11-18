@@ -614,9 +614,9 @@ class OrderCreateBatchTestCase(SousChefTestMixin, TestCase):
         Provide a client, 4 delivery dates.
         """
         client = self.episodic_client[0]
-        counter = Order.objects.create_batch_orders(
+        created_orders = Order.objects.create_batch_orders(
             self.delivery_dates, self.episodic_client[0], self.orditems)
-        self.assertEqual(counter, 4)
+        self.assertEqual(len(created_orders), 4)
 
         # check items
         # 2016-12-12

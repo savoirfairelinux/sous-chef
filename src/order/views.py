@@ -249,8 +249,7 @@ class CreateOrdersBatch(
 
         # Place orders using posted datas
         created_orders = Order.objects.create_batch_orders(
-            del_dates, client, items, override_dates=ovr_dates,
-            return_created_orders=True
+            del_dates, client, items, override_dates=ovr_dates
         )
 
         # check created and uncreated dates

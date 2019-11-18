@@ -203,7 +203,20 @@ class OrderManager(models.Manager):
         return created_orders
 
     def create_batch_orders(self, delivery_dates, client, items,
-                            override_dates=[], return_created_orders=False):
+                            override_dates=[]):
+        """
+        Create orders for one or multiple days, for a given client.
+        Order items will be created based on client's meals schedule.
+
+        Parameters:
+          delivery_dates : dates on which orders are to be created
+          client : a client object
+          items: the order items
+          override_dates: dates on which existing orders can be overriden
+
+        Returns:
+          An array of created orders.
+        """
         created_orders = []
         messages = []
 
@@ -238,10 +251,7 @@ class OrderManager(models.Manager):
             )
             created_orders.append(order)
 
-        if not return_created_orders:
-            return len(created_orders)   # LXYANG: TO BE DEPRECATED
-        else:
-            return created_orders
+        return created_orders
 
     @transaction.atomic
     def create_order(self, delivery_date, client, items, prices):
