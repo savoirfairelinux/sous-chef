@@ -27,5 +27,4 @@ volumes:
   souschef_static:
 
 networks:
-  frontend:
   backend:

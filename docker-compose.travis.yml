@@ -19,5 +19,4 @@ services:
     depends_on:
       - web
     networks:
-      - frontend
       - backend
