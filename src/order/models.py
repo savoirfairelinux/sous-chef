@@ -390,36 +390,6 @@ class Order(models.Model):
             if x.order_item_type == 'meal_component' or x.component_group
         ])
 
-    def add_item(self, type, **kwargs):
-        """
-        Add a new item to the given order.
-        """
-        quantity = kwargs.get('total_quantity', 1)
-        billable = kwargs.get('billable', True)
-        Order_item.objects.create(
-            order=self,
-            component_group=kwargs.get('component_group', ''),
-            price=quantity * MAIN_PRICE_DEFAULT if billable else 0,
-            billable_flag=billable,
-            size=kwargs.get('size', 'R'),
-            order_item_type=type,
-            total_quantity=quantity,
-            remark=kwargs.get('remark', ''))
-
-    def remove_item(self, order_item_id):
-        """
-        Remove an existing item from the order.
-        """
-        self.orders.remove(order_item_id)
-
-    def cancel(self):
-        """
-        Cancel the given order.
-        """
-        # 'C' = Cancelled
-        self.status = 'C'
-        self.save()
-
     def __str__(self):
         return "client={}, delivery_date={}".format(
             self.client,

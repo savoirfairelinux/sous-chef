@@ -39,35 +39,6 @@ class OrderTestCase(TestCase):
         """
         cls.order = OrderFactory(order_item=None)
 
-    def test_order_add_item_meal_component(self):
-        """
-        Add a billable meal component item to an order.
-        """
-        self.order.add_item(
-            'B component',
-            component_group='main_dish',
-            total_quantity=2,
-            size='L')
-        self.assertEqual(1, self.order.orders.count())
-        item = self.order.orders.filter(order_item_type='B component').get()
-        self.assertTrue(item.billable_flag)
-        self.assertEqual(item.component_group, 'main_dish')
-        self.assertEqual(item.total_quantity, 2)
-        self.assertEqual(item.size, 'L')
-        self.assertEqual(item.price, MAIN_PRICE_DEFAULT * 2)
-
-    def test_order_add_item_visit(self):
-        """
-        Add a non-billable visit item to an order.
-        """
-        self.order.add_item('N delivery',
-                            billable=False)
-        self.assertEqual(1, self.order.orders.count())
-        item = self.order.orders.filter(order_item_type='N delivery').get()
-        self.assertFalse(item.billable_flag)
-        self.assertEqual(item.total_quantity, 1)
-        self.assertEqual(item.price, 0)
-
 
 class OrderManagerTestCase(TestCase):
 
